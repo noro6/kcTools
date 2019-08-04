@@ -495,8 +495,8 @@ function initAll(callback) {
     setPlaneCategory('艦載機', [1, 2, 3, 4, 5, 6, 7, 8, 9]);
     setPlaneCategory('陸上機', [101, 102, 103, 104]);
 
-    /* 艦戦データ展開 */
-    // createPlaneTable($('.plane_table'), cbFighters);
+    /* 全データ展開 */
+    createPlaneTable($('.plane_table'), getPlanes('0'));
 
     /* 基地航空隊 第1基地航空隊第1中隊を複製 */
     var org = $('#lb_item1').children('div').html();
@@ -1008,7 +1008,8 @@ $(function () {
 
     /* 機体カテゴリ変更時 応じた機体をリストに展開 */
     $(document).on('change', '.planeSelect__select', function () {
-        createPlaneTable($('.plane_table'), getPlanes($(this).val()));
+        var target = $(this);
+        createPlaneTable(target.parent().next().find('.plane_table'), getPlanes(target.val()));
     });
 
     /* 機体選択ボタンクリック -> モーダル展開 */
@@ -1020,35 +1021,7 @@ $(function () {
         var $modalBody = $('.modal-body');
 
         /* モーダル生成処理 */
-        $modalBody.find('.planes__container__tbody').empty();
-
-        createPlaneTable();
-
-        $('#btnCommitPlane').prop('disabled', true);
-        $('#btnRemovePlane').prop('disabled', true);
-
-        if (selectedCategory) {
-            /* 既存のデータがあればカテゴリをそれに合わせる */
-            $('.planeSelect__select').prop('value', selectedCategory).change();
-        }
-        else {
-            /* 既存データがなければ機体選択リストのカテゴリ選択値を流用 */
-            //$modalBody.find('.planeSelect__select').prop('value', $('#planeSelect__content').find('.planeSelect__select').val()).change();
-        }
-
-        if (selectedName) {
-            var $tmp = $modalBody.find('div[data-name="' + selectedName + '"]');
-            var $tmpParent = $tmp.parent();
-
-            /* 既存のデータがあればあらかじめ選択状態にする */
-            $tmp.addClass('plane-selected mb-3');
-
-            /* ついでに、てっぺんに持ってくる */
-            $tmp.remove();
-            $tmpParent.prepend($tmp);
-
-            $('#btnRemovePlane').prop('disabled', false);
-        }
+        $modalBody.html($('#planeSelect__content').html());
 
         /* 調整終了、モーダル展開 */
         $('#planeSelectModal').modal('show');

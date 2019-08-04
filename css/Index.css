@@ -223,6 +223,10 @@
     color: rgb(91, 173, 255)!important;
   }
 
+  /* 機体選択欄 テーブル */
+  .plane_table{
+    overflow: scroll;
+  }
   /* 機体選択欄　機体 */
   .plane{
     cursor: pointer;
