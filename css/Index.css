@@ -1,5 +1,32 @@
-body {
-    font-size: .875rem;
+  body {
+      font-size: .875rem;
+      background: #f0ebe6;
+  }
+
+  .bg-dark1{
+    background: #3b3d3f!important;
+  }
+
+  .bg-dark2{
+    background: #282828!important;
+  }
+
+  /* nav-tabs 書き換え */
+  .nav-tabs{
+    border-color: #aaa!important;
+  }
+  .nav-tabs a.nav-link{
+    color: #aaa;
+  }
+  .nav-tabs a.nav-link:hover{
+    color: #777!important;
+    border-color: #aaa!important;
+  }
+  .nav-tabs a.nav-link.active{
+    color: #333!important;
+    border-color: #aaa!important;
+    background-color: transparent!important;
+    border-bottom-color: #f0ebe6!important;
   }
 
   /* ラジオボタン非表示 */
@@ -65,8 +92,9 @@ body {
 
   .sidebar .nav-link {
     font-weight: 500;
-    color: #333;
+    color: #aaa;
   }
+
 
   .sidebar .nav-link .feather {
     margin-right: 4px;
@@ -74,7 +102,7 @@ body {
   }
 
   .sidebar .nav-link.active {
-    color: #007bff;
+    color: #00b7ff;
   }
 
   .sidebar .nav-link:hover .feather,
@@ -97,19 +125,24 @@ body {
     }
   }
 
+  /* 最初の */
+  #loadingSpinner{
+    margin-top: 200px;
+  }
+
   /* ページトップへ戻るボタン */
   .btn-goPageTop{
     position: relative;
     bottom: 3px;
     font-size: 0;
     padding: 0px;
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
   }
   .btn-goPageTop:before{
     position: relative;
     content: "↑";
-    bottom: 5px;
+    bottom: 2px;
     font-size: 18px;
   }
   .btn-toggleContent_hide{
@@ -117,14 +150,14 @@ body {
     bottom: 3px;
     font-size: 0;
     padding: 0px;
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
   }
   .btn-toggleContent_hide:before{
     content: "";
     position: relative;
-    bottom: 2px;
-    border: 4px solid transparent;
+    bottom: 3px;
+    border: 5px solid transparent;
     border-bottom-color:#000;
   }
   .btn-toggleContent_show{
@@ -132,14 +165,14 @@ body {
     bottom: 3px;
     font-size: 0;
     padding: 0px;
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
   }
   .btn-toggleContent_show:before{
     content: "";
     position: relative;
-    top: 2px;
-    border: 4px solid transparent;
+    top: 3px;
+    border: 5px solid transparent;
     border-top-color:#000;
   }
 
@@ -147,13 +180,13 @@ body {
   .lb_plane__div{
     padding: 10px 10px;
     margin: 10px 0px;
-    background-color:rgb(238, 238, 238);
-    border:2px #ddd solid;
+    background-color:#f3f3f3;
+    border:2px #aaa solid;
     border-radius: .25rem;
   }
   .lb_plane__div:hover{
     cursor: pointer;
-    background-color:rgb(228, 228, 228);
+    background-color:#dddddd;
   }
   /* 艦載機をドラッグしてきた時のスタイル */
   .lb_plane__div-plane-hover{
@@ -168,16 +201,8 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     border:2px #ddd dashed!important;
-    background-color:#fff;
+    background-color:transparent;
     border-radius: .25rem;
-  }
-
-  /* 機体選択ボタン */
-  .btn-SearchPlane{
-    background: #fff;
-  }
-  .btn-SearchPlane:hover{
-    background-color: #6c757d;
   }
 
   .star{
@@ -198,11 +223,6 @@ body {
     color: rgb(91, 173, 255)!important;
   }
 
-  /* 機体選択欄　機体リストのガワ */
-  .planes__container{
-    overflow-y: scroll;
-    height: 235px;
-  }
   /* 機体選択欄　機体 */
   .plane{
     cursor: pointer;
@@ -211,38 +231,10 @@ body {
     border-radius: .25rem;
   }
 
-  /* 機体選択欄　列ヘッダ */
-  .plane-header{
-    padding: 3px 10px;
-    margin: 1px 0px;
-  }
-  /* 機体選択欄　ソートボタンっぽく */
-  .btnSort:hover{
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  /* 降順ソート中 */
-  .btnSort_desc:after{
-    content: ' ';
-    position: relative;
-    top: 12px;
-    left: 5px;
-    height: 0;
-    width: 0;
-    border: 4px solid transparent;
-    border-top-color:#000;
-  }
-  /* 昇順ソート中 */
-  .btnSort_asc:after{
-    content: ' ';
-    position: relative;
-    bottom: 11px;
-    left: 5px;
-    height: 0;
-    width: 0;
-    border: 4px solid transparent;
-    border-bottom-color:#000;
+  /* 機体カテゴリ画像 */
+  .img-size-25{
+    width: 25px;
+    height: auto;
   }
 
   /* 機体選択中(モーダル内限定) */
@@ -323,6 +315,45 @@ body {
     background-color: rgb(150, 150, 245);
   }
 
+  /* なんだっけこれ */
   #modalClose{
     outline: none;
+  }
+
+  /* 結果表示バー　描画領域 */
+  #resultChart {
+    border: 1px #555863 solid;
+  }
+
+  /* 結果表示バー　ツールチップ */
+  .tooltip_resultBar {
+      color: #aaa;
+      border: #aaa;
+      position: absolute;
+      min-width: 250px;
+      width: auto;
+      height: auto;
+      padding: 5px;
+      background: rgba(29, 30, 34, 0.9);
+      -webkit-box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.4);
+      -moz-box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.4);
+      box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.4);
+      visibility: hidden;
+  }
+
+  /* 結果表示バー x軸 */
+  .x_axis .domain {
+      display: none;
+      stroke-dasharray: 5;
+      stroke-dashoffset: 5;
+  }
+
+  /* 結果表示バー y軸  */
+  .y_axis path {
+      display: none;
+  }
+
+  /* 結果表示バー y軸 */
+  .y_axis line {
+      display: none;
   }

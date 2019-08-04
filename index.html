@@ -8,19 +8,21 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     </script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- jQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
         integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="./css/Index.css">
     <script src="./js/AirCalculator.js"></script>
     <title>Index</title>
 </head>
 
 <body data-spy="scroll" data-target="#Navbar" data-offset="380">
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Main</a>
+    <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Top</a>
         <input class="form-control form-control-dark w-100" type="text" placeholder="検索" aria-label="検索">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -32,7 +34,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- 右サイドバー -->
-            <nav class="col-md-2 col-xl-1 d-none d-md-block bg-light sidebar">
+            <nav class="col-md-2 col-xl-1 d-none d-md-block sidebar bg-dark2">
                 <div class="sidebar-sticky" id="Navbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -96,328 +98,335 @@
 
             <!-- メインコンテンツ -->
             <main role="main" class="col-xs-12 col-md-10 col-xl-11 ml-sm-auto px-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h3>制空計算機</h3>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">シェア</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">輸出</button>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            今週
-                        </button>
+                <div class="w-100 text-center" id="loadingSpinner">
+                    <div class="spinner-border m-auto py-auto" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
-
-                <!-- 基地航空隊 -->
-                <div class="border-bottom" id="landBase">
-                    <div class="mt-2">
-                        <h5>
-                            <button type="button"
-                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                data-toggle="collapse" data-target="#lb_content" aria-expanded="false"
-                                aria-controls="lb_content">▲</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                            基地航空隊
-                        </h5>
+                <div class="d-none" id="mainContent">
+                    <div
+                        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-secondary">
+                        <h3>制空計算機</h3>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group mr-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">編成保存</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">リセット</button>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                                <span data-feather="calendar"></span>
+                                編成呼び出し
+                            </button>
+                        </div>
                     </div>
-                    <div class="row collapse show" id="lb_content">
-                        <!-- 基地航空隊設定領域 -->
-                        <div class="col-xs-12 col-xl-8 mt-2">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="lb_item1-tab" data-toggle="tab" href="#lb_item1"
-                                        role="tab" aria-controls="lb_item1" aria-selected="true">第1基地航空隊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="lb_item2-tab" data-toggle="tab" href="#lb_item2" role="tab"
-                                        aria-controls="lb_item2" aria-selected="false">第2基地航空隊</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="lb_item3-tab" data-toggle="tab" href="#lb_item3" role="tab"
-                                        aria-controls="lb_item3" aria-selected="false">第3基地航空隊</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <!-- 第1基地航空隊 -->
-                                <div class="tab-pane fade show active lb_tab" id="lb_item1" role="tabpanel"
-                                    aria-labelledby="lb_item1-tab">
-                                    <!-- 第1基地航空隊 第1中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                        <div class="row">
-                                            <div class="col-12 col-xl-5 py-1 input-group input-group-sm">
-                                                <button type="button"
-                                                    class="btn btn-sm btn-block btn-outline-secondary btn-SearchPlane text-left">機体を選択</button>
-                                            </div>
-                                            <div class="col input-group py-1 input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text star">★</span>
+
+                    <!-- 基地航空隊 -->
+                    <div class="border-bottom border-secondary" id="landBase">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#lb_content" aria-expanded="false"
+                                    aria-controls="lb_content">▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                基地航空隊
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="lb_content">
+                            <!-- 基地航空隊設定領域 -->
+                            <div class="col-xs-12 col-xl-8 mt-2">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="lb_item1-tab" data-toggle="tab" href="#lb_item1"
+                                            role="tab" aria-controls="lb_item1" aria-selected="true">第1基地航空隊</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="lb_item2-tab" data-toggle="tab" href="#lb_item2"
+                                            role="tab" aria-controls="lb_item2" aria-selected="false">第2基地航空隊</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="lb_item3-tab" data-toggle="tab" href="#lb_item3"
+                                            role="tab" aria-controls="lb_item3" aria-selected="false">第3基地航空隊</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <!-- 第1基地航空隊 -->
+                                    <div class="tab-pane fade show active lb_tab" id="lb_item1" role="tabpanel"
+                                        aria-labelledby="lb_item1-tab">
+                                        <!-- 第1基地航空隊 第1中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                            <div class="row">
+                                                <div class="col-12 col-xl-5 py-1 input-group input-group-sm">
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-block text-dark bg-white btn-outline-dark btn-SearchPlane text-left">機体を選択</button>
                                                 </div>
-                                                <select
-                                                    class="form-control form-control-sm remodel__option remodel_select"
-                                                    disabled>
-                                                    <option class="remodel__option" value="10">max</option>
-                                                    <option class="remodel__option" value="9">9</option>
-                                                    <option class="remodel__option" value="8">8</option>
-                                                    <option class="remodel__option" value="7">7</option>
-                                                    <option class="remodel__option" value="6">6</option>
-                                                    <option class="remodel__option" value="5">5</option>
-                                                    <option class="remodel__option" value="4">4</option>
-                                                    <option class="remodel__option" value="3">3</option>
-                                                    <option class="remodel__option" value="2">2</option>
-                                                    <option class="remodel__option" value="1">1</option>
-                                                    <option class="remodel__option" value="0" selected></option>
-                                                </select>
-                                            </div>
-                                            <div class="col input-group py-1 input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">熟練</span>
+                                                <div class="col input-group py-1 input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text star">★</span>
+                                                    </div>
+                                                    <select
+                                                        class="form-control form-control-sm remodel__option remodel_select"
+                                                        disabled>
+                                                        <option class="remodel__option" value="10">max</option>
+                                                        <option class="remodel__option" value="9">9</option>
+                                                        <option class="remodel__option" value="8">8</option>
+                                                        <option class="remodel__option" value="7">7</option>
+                                                        <option class="remodel__option" value="6">6</option>
+                                                        <option class="remodel__option" value="5">5</option>
+                                                        <option class="remodel__option" value="4">4</option>
+                                                        <option class="remodel__option" value="3">3</option>
+                                                        <option class="remodel__option" value="2">2</option>
+                                                        <option class="remodel__option" value="1">1</option>
+                                                        <option class="remodel__option" value="0" selected></option>
+                                                    </select>
                                                 </div>
-                                                <select class="form-control form-control-sm prof prof__select">
-                                                    <option class="prof prof__yellow" value="7">>></option>
-                                                    <option class="prof prof__yellow" value="6">///</option>
-                                                    <option class="prof prof__yellow" value="5">//</option>
-                                                    <option class="prof prof__yellow" value="4">/</option>
-                                                    <option class="prof prof__blue" value="3">|||</option>
-                                                    <option class="prof prof__blue" value="2">||</option>
-                                                    <option class="prof prof__blue" value="1">|</option>
-                                                    <option class="prof" value="0" selected></option>
-                                                </select>
-                                            </div>
-                                            <div class="col input-group py-1 input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">搭載</span>
+                                                <div class="col input-group py-1 input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text ">熟練</span>
+                                                    </div>
+                                                    <select class="form-control form-control-sm prof prof__select">
+                                                        <option class="prof prof__yellow" value="7">>></option>
+                                                        <option class="prof prof__yellow" value="6">///</option>
+                                                        <option class="prof prof__yellow" value="5">//</option>
+                                                        <option class="prof prof__yellow" value="4">/</option>
+                                                        <option class="prof prof__blue" value="3">|||</option>
+                                                        <option class="prof prof__blue" value="2">||</option>
+                                                        <option class="prof prof__blue" value="1">|</option>
+                                                        <option class="prof" value="0" selected></option>
+                                                    </select>
                                                 </div>
-                                                <input type="number" class="form-control form-control-sm slot"
-                                                    value="18" min="0">
+                                                <div class="col input-group py-1 input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text ">搭載</span>
+                                                    </div>
+                                                    <input type="number" class="form-control form-control-sm slot "
+                                                        value="18" min="0">
+                                                </div>
                                             </div>
                                         </div>
+                                        <!-- 第1基地航空隊 第2中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第1基地航空隊 第3中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第1基地航空隊 第4中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
                                     </div>
-                                    <!-- 第1基地航空隊 第2中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
+                                    <!-- 第2基地航空隊 -->
+                                    <div class="tab-pane fade lb_tab" id="lb_item2" role="tabpanel"
+                                        aria-labelledby="lb_item2-tab">
+                                        <!-- 第2基地航空隊 第1中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第2基地航空隊 第2中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第2基地航空隊 第3中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第2基地航空隊 第4中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
                                     </div>
-                                    <!-- 第1基地航空隊 第3中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第1基地航空隊 第4中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                </div>
-                                <!-- 第2基地航空隊 -->
-                                <div class="tab-pane fade lb_tab" id="lb_item2" role="tabpanel"
-                                    aria-labelledby="lb_item2-tab">
-                                    <!-- 第2基地航空隊 第1中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第2基地航空隊 第2中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第2基地航空隊 第3中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第2基地航空隊 第4中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                </div>
-                                <!-- 第3基地航空隊 -->
-                                <div class="tab-pane fade lb_tab" id="lb_item3" role="tabpanel"
-                                    aria-labelledby="lb_item3-tab">
-                                    <!-- 第3基地航空隊 第1中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第3基地航空隊 第2中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第3基地航空隊 第3中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
-                                    </div>
-                                    <!-- 第3基地航空隊 第4中隊　選択領域 -->
-                                    <div class="lb_plane__div container">
+                                    <!-- 第3基地航空隊 -->
+                                    <div class="tab-pane fade lb_tab" id="lb_item3" role="tabpanel"
+                                        aria-labelledby="lb_item3-tab">
+                                        <!-- 第3基地航空隊 第1中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第3基地航空隊 第2中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第3基地航空隊 第3中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
+                                        <!-- 第3基地航空隊 第4中隊　選択領域 -->
+                                        <div class="lb_plane__div container">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- 基地航空隊用 機体選択リスト xl時限定 -->
-                        <div class="col d-none d-xl-block">
-                            <div class="card mb-5">
-                                <div class="card-header">
-                                    機体一覧
-                                </div>
-                                <div class="card-body" id="planeSelect__content">
-                                    <div class="row">
-                                        <div class="dropdown my-1 input-group input-group-sm col-7"
-                                            id="cmb_PlaneCategory">
+                            <!-- 基地航空隊用 機体選択リスト xl時限定 -->
+                            <div class="col d-none d-xl-block">
+                                <div class="card mb-5">
+                                    <div class="card-header">
+                                        機体一覧
+                                    </div>
+                                    <div class="card-body" id="planeSelect__content">
+                                        <div class="dropdown my-1 input-group input-group-sm" id="card__cmbPlaneSearch">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm">カテゴリ</span>
+                                                <span class="input-group-text">カテゴリ</span>
                                             </div>
                                             <select class="form-control form-control-sm planeSelect__select">
                                             </select>
                                         </div>
-                                        <div class="col">
-
+                                        <div>
+                                            <table class="w-100 plane_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="35"></th>
+                                                        <th>装備名</th>
+                                                        <th class="text-center">対空</th>
+                                                        <th class="text-center">半径</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </div>
-                                    <div class="row plane-header pl-4 pr-5 ">
-                                        <div class="col-8 col-md-6 col-lg-7 text-left">
-                                            <span class="btnSort">機体名</span></div>
-                                        <div class="col text-center">
-                                            <span class="btnSort">対空</span>
-                                        </div>
-                                        <div class="col text-center">
-                                            <span class="btnSort">半径</span>
-                                        </div>
-                                    </div>
-                                    <div class="border-top pt-2 planes__container container">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 艦隊選択欄 -->
-                <div class="border-bottom" id="friendShip">
-                    <div class="mt-2">
-                        <h5>
-                            <button type="button"
-                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                data-toggle="collapse" data-target="#friendShip_content" aria-expanded="false"
-                                aria-controls="friendShip_content">▲</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                            艦隊
-                        </h5>
-                    </div>
-                    <div class="row collapse show" id="friendShip_content">
-                        <div style="height: 600px;">
-                            艦隊予定地
+                    <!-- 艦隊選択欄 -->
+                    <div class="border-bottom border-secondary" id="friendShip">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#friendShip_content" aria-expanded="false"
+                                    aria-controls="friendShip_content">▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                艦隊
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="friendShip_content">
+                            <div style="height: 600px;">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 敵艦選択欄 -->
-                <div class="border-bottom" id="enemyShip">
-                    <div class="mt-2">
-                        <h5>
-                            <button type="button"
-                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                data-toggle="collapse" data-target="#enemyShip_content" aria-expanded="false"
-                                aria-controls="enemyShip_content">▲</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                            敵艦隊
-                        </h5>
-                    </div>
-                    <div class="row collapse show" id="enemyShip_content">
-                        <div style="height: 600px;">
-                            敵艦隊予定地
+                    <!-- 敵艦選択欄 -->
+                    <div class="border-bottom border-secondary" id="enemyShip">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#enemyShip_content" aria-expanded="false"
+                                    aria-controls="enemyShip_content">▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                敵艦隊
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="enemyShip_content">
+                            <div style="height: 600px;">
+                                敵艦隊予定地
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 計算結果 -->
-                <div class="border-bottom" id="result">
-                    <div class="mt-2">
-                        <h5>
-                            <button type="button"
-                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                data-toggle="collapse" data-target="#result_content" aria-expanded="false"
-                                aria-controls="result_content">▲</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                            計算結果
-                        </h5>
-                    </div>
-                    <div class="row collapse show" id="result_content">
-                        <div style="height: 600px;">
-                            計算結果予定地
+                    <!-- 計算結果 -->
+                    <div class="border-bottom border-secondary pb-3" id="result">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#result_content" aria-expanded="false"
+                                    aria-controls="result_content">▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                計算結果
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="result_content">
+                            <div class="container-fluid mt-5">
+                                <div>
+                                    <button class="btn btn-secondary" id="update">更新</button>
+                                </div>
+                                <div>
+                                    <div class="col-6" id="resultChart"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <!-- フッター -->
+                    <footer class="page-footer font-small indigo">
+                        <div class="container text-center text-md-left">
+                            <div class="row">
+                                <div class="col-md-3 mx-auto">
+                                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <a href="#!">Very long link 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Very long link 2</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Very long link 3</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Very long link 4</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <hr class="clearfix w-100 d-md-none">
+                                <div class="col-md-3 mx-auto">
+                                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <a href="#!">Link 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 2</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 3</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 4</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <hr class="clearfix w-100 d-md-none">
+                                <div class="col-md-3 mx-auto">
+                                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
+
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <a href="#!">Link 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 2</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 3</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 4</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <hr class="clearfix w-100 d-md-none">
+                                <div class="col-md-3 mx-auto">
+                                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
+
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <a href="#!">Link 1</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 2</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 3</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">Link 4</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Copyright -->
+                        <div class="footer-copyright text-center py-3">© 2019 Copyright:
+                            <a href="https://twitter.com/noro_006">あああああ</a>
+                        </div>
+                    </footer>
                 </div>
-                <!-- フッター -->
-                <footer class="page-footer font-small indigo">
-                    <div class="container text-center text-md-left">
-                        <div class="row">
-                            <div class="col-md-3 mx-auto">
-                                <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="#!">Very long link 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Very long link 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Very long link 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Very long link 4</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <hr class="clearfix w-100 d-md-none">
-                            <div class="col-md-3 mx-auto">
-                                <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="#!">Link 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 4</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <hr class="clearfix w-100 d-md-none">
-                            <div class="col-md-3 mx-auto">
-                                <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-        
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="#!">Link 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 4</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <hr class="clearfix w-100 d-md-none">
-                            <div class="col-md-3 mx-auto">
-                                <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-        
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <a href="#!">Link 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#!">Link 4</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Copyright -->
-                    <div class="footer-copyright text-center py-3">© 2018 Copyright:
-                        <a href="https://mdbootstrap.com/education/bootstrap/"> MDBootstrap.com</a>
-                    </div>
-                </footer>
             </main>
         </div>
 
@@ -435,6 +444,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="dropdown my-1 input-group input-group-sm" id="modal__cmbPlaneSearch">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">カテゴリ</span>
+                        </div>
+                        <select class="form-control form-control-sm planeSelect__select">
+                        </select>
+                    </div>
+                    <div>
+                        <table class="table table-sm" id="modal__planeTable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>カテゴリ</th>
+                                    <th>機体名</th>
+                                    <th>対空</th>
+                                    <th>半径</th>
+                                    <th>改修</th>
+                                </tr>
+                            </thead>
+                            <tbody class="planes__container__tbody">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary px-4" id="btnCommitPlane" disabled>変更</button>
