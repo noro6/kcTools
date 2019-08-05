@@ -16,7 +16,9 @@ var isOut = false;
 /* 機体カテゴリ */
 const planeCategory = {
     '艦上戦闘機': 1,
+    '夜間戦闘機': -1,
     '艦上攻撃機': 2,
+    '夜間攻撃機': -2,
     '艦上爆撃機': 3,
     '艦上偵察機': 4,
     '水上偵察機': 5,
@@ -25,6 +27,7 @@ const planeCategory = {
     '大型飛行艇': 8,
     '噴式爆撃機': 9,
     '陸上攻撃機': 101,
+    '対潜哨戒機': -101,
     '陸軍戦闘機': 102,
     '局地戦闘機': 103,
     '陸上偵察機': 104
@@ -316,19 +319,19 @@ function getPlanes(category) {
     switch (category) {
         case "0":
             let all = []
-            .concat(cbFighters)
-            .concat(cbTorpedoBombers)
-            .concat(cbDiveBombers)
-            .concat(cbReconnaissances)
-            .concat(spReconnaissances)
-            .concat(spBombers)
-            .concat(spFighters)
-            .concat(lgFlyingBoats)
-            .concat(jetBombers)
-            .concat(lbAttackAircrafts)
-            .concat(lbInterceptors)
-            .concat(lbFighters)
-            .concat(lbReconnaissances);
+                .concat(cbFighters)
+                .concat(cbTorpedoBombers)
+                .concat(cbDiveBombers)
+                .concat(cbReconnaissances)
+                .concat(spReconnaissances)
+                .concat(spBombers)
+                .concat(spFighters)
+                .concat(lgFlyingBoats)
+                .concat(jetBombers)
+                .concat(lbAttackAircrafts)
+                .concat(lbInterceptors)
+                .concat(lbFighters)
+                .concat(lbReconnaissances);
             return all;
         case "1":
             return cbFighters;
@@ -361,24 +364,25 @@ function getPlanes(category) {
     }
 }
 
-/* 選択されている機体カテゴリ用のスタイルクラスを返却 */
-function getPlaneCss(plane) {
+/**
+ * カテゴリコードからcssクラスを返却
+ * @param {number} categoryCd
+ * @returns {string} cssクラス名
+ */
+function getPlaneCss(categoryCd) {
     var return_css = "";
-    switch (plane.category) {
+    switch (categoryCd) {
         case 1:
-        case 102:
             return_css = "css_fighter";
-            if (plane.id == 254 || plane.id == 255 || plane.id == 338 || plane.id == 339) {
-                /* 夜間戦闘機 */
-                return_css = "css_cb_night_aircraft";
-            }
+            break;
+        case -1:
+            return_css = "css_cb_night_aircraft";
             break;
         case 2:
             return_css = "css_torpedo_bomber";
-            if (plane.id == 257 || plane.id == 344 || plane.id == 345) {
-                /* 夜間攻撃機 */
-                return_css = "css_cb_night_aircraft";
-            }
+            break;
+        case -2:
+            return_css = "css_cb_night_aircraft";
             break;
         case 3:
             return_css = "css_dive_bomber";
@@ -395,17 +399,14 @@ function getPlaneCss(plane) {
             return_css = "css_sp";
             break;
         case 101:
-            if (plane.id == 269 || plane.id == 270) {
-                /* 対潜哨戒機 */
-                return_css = "css_lb_asw_aircraft";
-            }
-            else if (plane.id == 224) {
-                /* 爆装一式戦 */
-                return_css = "css_fighter";
-            }
-            else {
-                return_css = "css_lb_attack_aircraft";
-            }
+        case 103:
+            return_css = "css_lb_attack_aircraft";
+            break;
+        case -101:
+            return_css = "css_lb_asw_aircraft";
+            break;
+        case 102:
+            return_css = "css_lb_fighter";
             break;
         default:
             break;
@@ -413,55 +414,43 @@ function getPlaneCss(plane) {
     return return_css;
 }
 
-/* 引数で渡された lb_plane__div 要素をクリアする */
+/* 引数で渡された lb_plane 要素をクリアする */
 function clearLbPlaneDiv($div) {
     /* 選択状況をリセット */
+    $div.removeClass(getPlaneCss($div.data('category')));
     $div.removeData();
+    $div.find('.lb_plane_img').attr('src','');
     $div.find('button').text('機体を選択');
     $div.find('select').val('0').change();
-
-    /* 選択した対象のスタイルを適用 */
-    $div.removeClass(function (index, className) {
-        return (className.match(/\bcss_\S+/g) || []).join(' ');
-    });
 }
 
-/* 第1引数で渡された lb_plane__div に第2引数で渡された 機体データ入り要素のデータを挿入する */
+/* 第1引数で渡された lb_plane に第2引数で渡された 機体データ入り要素のデータを挿入する */
 function setLbPlaneDiv($div, $original) {
-    /* 複製対象のスタイルを適用 */
     $div
-        .removeClass(function (index, className) { return (className.match(/\bcss_\S+/g) || []).join(' '); })
-        .addClass($original.data('cssname').match(/\bcss_\S+/g))
-
+        /* デザイン */
+        .removeClass(getPlaneCss($div.data('category')))
+        .addClass(getPlaneCss($original.data('category')))
         /* 機体データ取得 */
-        .data('name', $original.text())
+        .data('name', $original.data('name'))
         .data('aa', $original.data('aa'))
         .data('dist', $original.data('dist'))
-        .data('category', $original.data('cate'))
-        .find('button').text($original.text());
+        .data('category', $original.data('category'));
+
+    $div.find('.plane_name_span').text($original.data('name'));
+    $div.find('.lb_plane_img').attr('src', './img/e/category' + $original.data('category') + '.png');
 
     /* 改修の有効無効設定 */
     var $remodelInput = $div.find('.remodel_select');
     $remodelInput.prop('disabled', !$original.data('remodel'));
-    if ($remodelInput.prop('disabled')) {
-        $remodelInput.val('0');
-    }
+    if ($remodelInput.prop('disabled')) $remodelInput.val('0');
 
     /* 熟練度初期値 戦闘機系は最初から熟練Maxで */
-    if ($.inArray($original.data('cate'), levelMaxCate) != -1) {
-        $div.find('.prof__select').val('7').change();
-    }
-    else {
-        $div.find('.prof__select').val('0').change();
-    }
+    if ($.inArray($original.data('category'), levelMaxCate) != -1) $div.find('.prof__select').val('7').change();
+    else $div.find('.prof__select').val('0').change();
 
     /* 搭載数初期値 偵察機系は4 */
-    if ($.inArray($original.data('cate'), reconnaissances) != -1) {
-        $div.find('.slot').val('4').change();
-    }
-    else {
-        $div.find('.slot').val('18').change();
-    }
+    if ($.inArray($original.data('category'), reconnaissances) != -1) $div.find('.slot').val('4').change();
+    else $div.find('.slot').val('18').change();
 }
 
 /**
@@ -475,16 +464,29 @@ function createPlaneTable($table, planes) {
 
     planes.forEach(function (plane) {
         $target.append(`
-        <tr class="border-bottom">
-            <td><img src="./img/e/category`+ plane.category + `.png" class="img-size-25" alt="` + plane.category + `"></td>
-            <td>`+ plane.name + `</td>
-            <td class="text-center">`+ plane.AA + `</td>
-            <td class="text-center">`+ plane.dist + `</td>
+        <tr class="border-bottom plane" data-name="`+ plane.name + `" data-aa="` + plane.aa + `" data-dist="` + plane.dist + `" data-category="` + plane.category + `"  data-remodel="` + plane.remodel + `">
+            <td width="8%"><img src="./img/e/category`+ plane.category + `.png" class="img-size-25" alt="` + plane.category + `"></td>
+            <td width="72%">`+ plane.name + `</td>
+            <td class="text-center" width="10%">`+ plane.AA + `</td>
+            <td class="text-center" width="10%">`+ plane.dist + `</td>
         </tr>
     `);
     });
 
-
+    // draggeble 処理
+    $('.plane').draggable({
+        scroll: false,
+        helper: 'clone',
+        distance: 10,
+        start: function (e, ui) {
+            $helper = $(ui.helper);
+            $helper
+                .addClass('plane_helper')
+                .removeClass('border-bottom')
+                .width($('.plane').width());
+            $helper.html($helper.find('td:eq(0)').html() + $helper.find('td:eq(1)').html());
+        }
+    });
 }
 
 /* 画面初期化用メソッド */
@@ -500,11 +502,9 @@ function initAll(callback) {
 
     /* 基地航空隊 第1基地航空隊第1中隊を複製 */
     var org = $('#lb_item1').children('div').html();
-    $('.lb_plane__div').each(function () {
+    $('.lb_plane').each(function () {
         $(this).html(org);
     });
-
-
 
     callback();
 }
@@ -673,8 +673,6 @@ function updateEnemyAp(enemy) {
     enemy.lbAp += enemy.ap;
 }
 
-
-
 /**
  * 計算前の初期化作業
  * @param {boolean} isAll 全て初期化するかどうか
@@ -741,7 +739,6 @@ function startCaluclate() {
 function rateCaluclate() {
     var st = Date.now();
     var maxCount = 50000;
-    var check = 1;
     var dist = [{}, {}, {}, {}, {}, {}, {}, {}];
     dist.forEach(function (object) {
         airStatus.forEach(function (value) { object[value.abbr] = 0 });
@@ -764,7 +761,6 @@ function rateCaluclate() {
             }
 
             if (lbData.status[j] == 2) {
-                //if (j == 0) console.log(count + '回目 : ' + lbAp + ' / ' + getEnemyFleetLandBaseAirPower(enemyFleet) + ' = ' + airStatus[getAirStatusIndex(lbAp, getEnemyFleetLandBaseAirPower(enemyFleet))].abbr);
                 // 第二波
                 dist[j * 2 + 1][airStatus[getAirStatusIndex(lbAp, getEnemyFleetLandBaseAirPower(enemyFleet))].abbr]++;
                 ShootDown(enemyFleet, lbAp);
@@ -779,7 +775,7 @@ function rateCaluclate() {
             obj[key] = Math.floor((obj[key] / maxCount * 10000)) / 100 + ' %';
         });
     });
-    console.log('checkpoint' + check++ + ' : ' + (Date.now() - st) + ' msec.');
+    console.log('time : ' + (Date.now() - st) + ' msec.');
     return dist;
 }
 
@@ -966,7 +962,7 @@ $(function () {
     $('div.lb_tab').sortable({
         delay: 100,
         scroll: false,
-        placeholder: "lb_plane__div-drag",
+        placeholder: "lb_plane-drag",
         forcePlaceholderSize: true,
         tolerance: "pointer",
         stop: function (event, ui) {
@@ -978,16 +974,16 @@ $(function () {
         }
     });
     /* 範囲外に機体を持って行ったときを拾う */
-    $('div.lb_tab').droppable({
-        accept: ".plane, .lb_plane__div",
+    $('div#lb_content_main').droppable({
+        accept: ".plane, .lb_plane",
         tolerance: "pointer",
         over: function () { isOut = false; },
         out: function () { isOut = true; }
     });
     /* 機体をドラッグしてきた時の処理 */
-    $('div.lb_plane__div').droppable({
-        accept: ".lbPlane__div",
-        hoverClass: "lb_plane__div-plane-hover",
+    $('div.lb_plane').droppable({
+        accept: ".plane",
+        hoverClass: "lb_plane-hover",
         tolerance: "pointer",
         drop: function (event, ui) { setLbPlaneDiv($(this), ui.draggable); }
     });
@@ -1013,15 +1009,16 @@ $(function () {
     });
 
     /* 機体選択ボタンクリック -> モーダル展開 */
-    $('.btn-SearchPlane').on('click', function () {
+    $('.plane_name_span').on('click', function () {
         /* 機体選択画面の結果を返却するターゲットのdiv要素を取得 */
-        $target = $(this).closest('.lb_plane__div');
+        $target = $(this).closest('.lb_plane');
         var selectedCategory = $target.data('category');
         var selectedName = $target.data('name');
         var $modalBody = $('.modal-body');
 
         /* モーダル生成処理 */
         $modalBody.html($('#planeSelect__content').html());
+        $modalBody.find('.planeSelect__select').val(selectedCategory).change();
 
         /* 調整終了、モーダル展開 */
         $('#planeSelectModal').modal('show');
