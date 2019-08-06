@@ -38,7 +38,7 @@
         var touch = event.originalEvent.changedTouches[0],
             simulatedEvent = document.createEvent('MouseEvents');
 
-        if ($(touch.target).is('input')) {
+        if ($(touch.target).is('input') || $(touch.target).is('select')) {
             event.stopPropagation();
         } else {
             event.preventDefault();
