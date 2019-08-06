@@ -971,7 +971,6 @@ $(function () {
         placeholder: "lb_plane-drag",
         forcePlaceholderSize: true,
         tolerance: "pointer",
-        cancel: 'select',
         stop: function (event, ui) {
             if (isOut) {
                 // 選択状況をリセット
