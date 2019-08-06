@@ -1,19 +1,19 @@
 /*==================================
     定数
 ==================================*/
-/* 機体選択画面の返却先 */
+// 機体選択画面の返却先
 var $target = undefined;
 
-/* 熟練を最初からMaxにする機体カテゴリ */
+// 熟練を最初からMaxにする機体カテゴリ
 const levelMaxCate = [1, 4, 5, 7, 8, 102, 103];
 
-/* 搭載数が基地で最大4の機体カテゴリ */
+// 搭載数が基地で最大4の機体カテゴリ
 const reconnaissances = [4, 5, 8, 104];
 
-/* ドラッグした要素が範囲外かどうかフラグ */
+// ドラッグした要素が範囲外かどうかフラグ
 var isOut = false;
 
-/* 機体カテゴリ */
+// 機体カテゴリ
 const planeCategory = {
     '艦上戦闘機': 1,
     '夜間戦闘機': -1,
@@ -33,7 +33,7 @@ const planeCategory = {
     '陸上偵察機': 104
 }
 
-/* 艦上戦闘機 : 1 */
+// 艦上戦闘機 : 1
 const cbFighters = [
     { id: 19, category: 1, name: "九六式艦戦", AA: 2, dist: 3, remodel: true },
     { id: 20, category: 1, name: "零式艦戦21型", AA: 5, dist: 7, remodel: true },
@@ -72,7 +72,7 @@ const cbFighters = [
     { id: 339, category: -1, name: "烈風改二戊型(一航戦/熟練)", AA: 12, dist: 6, remodel: false }
 ];
 
-/* 艦上攻撃機 : 2 */
+// 艦上攻撃機 : 2
 const cbTorpedoBombers = [
     { id: 16, category: 2, name: "九七式艦攻", AA: 0, dist: 4, remodel: true },
     { id: 17, category: 2, name: "天山", AA: 0, dist: 5, remodel: true },
@@ -101,7 +101,7 @@ const cbTorpedoBombers = [
     { id: 345, category: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, dist: 4, remodel: false }
 ];
 
-/* 艦上爆撃機 : 3 */
+// 艦上爆撃機 : 3
 const cbDiveBombers = [
     { id: 23, category: 3, name: "九九式艦爆", AA: 0, dist: 4, remodel: false },
     { id: 24, category: 3, name: "彗星", AA: 0, dist: 4, remodel: false },
@@ -128,7 +128,7 @@ const cbDiveBombers = [
     { id: 320, category: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", AA: 0, dist: 5, remodel: false }
 ];
 
-/* 艦上偵察機 : 4 */
+// 艦上偵察機 : 4
 const cbReconnaissances = [
     { id: 54, category: 4, name: "彩雲", AA: 0, dist: 8, remodel: true },
     { id: 61, category: 4, name: "二式艦上偵察機", AA: 1, dist: 5, remodel: true },
@@ -137,7 +137,7 @@ const cbReconnaissances = [
     { id: 273, category: 4, name: "彩雲(偵四)", AA: 2, dist: 7, remodel: false }
 ];
 
-/* 水上偵察機 : 5 */
+// 水上偵察機 : 5
 const spReconnaissances = [
     { id: 25, category: 5, name: "零式水上偵察機", AA: 1, dist: 7, remodel: true },
     { id: 59, category: 5, name: "零式水上観測機", AA: 2, dist: 3, remodel: false },
@@ -151,7 +151,7 @@ const spReconnaissances = [
     { id: 304, category: 5, name: "S9 Osprey", AA: 1, dist: 3, remodel: false }
 ];
 
-/* 水上爆撃機 : 6 */
+// 水上爆撃機 : 6
 const spBombers = [
     { id: 26, category: 6, name: "瑞雲", AA: 2, dist: 5, remodel: true },
     { id: 62, category: 6, name: "試製晴嵐", AA: 0, dist: 4, remodel: false },
@@ -166,7 +166,7 @@ const spBombers = [
     { id: 323, category: 6, name: "瑞雲改二(六三四空/熟練)", AA: 5, dist: 5, remodel: false }
 ];
 
-/* 水上戦闘機 : 7 */
+// 水上戦闘機 : 7
 const spFighters = [
     { id: 164, category: 7, name: "Ro.44水上戦闘機", AA: 2, dist: 3, remodel: true },
     { id: 165, category: 7, name: "二式水戦改", AA: 3, dist: 4, remodel: true },
@@ -175,19 +175,19 @@ const spFighters = [
     { id: 217, category: 7, name: "強風改", AA: 5, dist: 3, remodel: true }
 ];
 
-/* 大型飛行艇 : 8 */
+// 大型飛行艇 : 8
 const lgFlyingBoats = [
     { id: 138, category: 8, name: "二式大艇", AA: 0, dist: 20, remodel: false },
     { id: 178, category: 8, name: "PBY-5A Catalina", AA: 0, dist: 10, remodel: false }
 ];
 
-/* 噴式爆撃機 : 9 */
+// 噴式爆撃機 : 9
 const jetBombers = [
     { id: 199, category: 9, name: "噴式景雲改", AA: 6, dist: 3, remodel: false },
     { id: 200, category: 9, name: "橘花改", AA: 12, dist: 2, remodel: false }
 ];
 
-/* 陸上攻撃機 : 101 */
+// 陸上攻撃機 : 101
 const lbAttackAircrafts = [
     { id: 168, category: 101, name: "九六式陸攻", AA: 1, dist: 8, remodel: false },
     { id: 169, category: 101, name: "一式陸攻", AA: 2, dist: 9, remodel: false },
@@ -200,7 +200,7 @@ const lbAttackAircrafts = [
     { id: 270, category: -101, name: "東海(九〇一空)", AA: 0, dist: 8, remodel: false }
 ];
 
-/* 陸軍戦闘機 : 102 */
+// 陸軍戦闘機 : 102
 const lbInterceptors = [
     { id: 176, category: 102, name: "三式戦 飛燕", AA: 8, dist: 3, remodel: false },
     { id: 177, category: 102, name: "三式戦 飛燕(飛行第244戦隊)", AA: 9, dist: 4, remodel: true },
@@ -215,7 +215,7 @@ const lbInterceptors = [
     { id: 253, category: 102, name: "Spitfire Mk.IX(熟練)", AA: 10, dist: 4, remodel: false }
 ];
 
-/* 局地戦闘機 : 103 */
+// 局地戦闘機 : 103
 const lbFighters = [
     { id: 175, category: 103, name: "雷電", AA: 6, dist: 2, remodel: false },
     { id: 201, category: 103, name: "紫電一一型", AA: 8, dist: 3, remodel: true },
@@ -225,13 +225,13 @@ const lbFighters = [
     { id: 334, category: 103, name: "烈風改(三五二空/熟練)", AA: 11, dist: 4, remodel: false }
 ];
 
-/* 陸上偵察機 : 104 */
+// 陸上偵察機 : 104
 const lbReconnaissances = [
     { id: 311, category: 104, name: "二式陸上偵察機", AA: 3, dist: 8, remodel: false },
     { id: 312, category: 104, name: "二式陸上偵察機(熟練)", AA: 3, dist: 9, remodel: false }
 ];
 
-/* 制空状態オブジェクト */
+// 制空状態オブジェクト
 const airStatus = [
     { name: '制空権確保', abbr: '確保', rate: 10 },
     { name: '航空優勢', abbr: '優勢', rate: 8 },
@@ -240,7 +240,7 @@ const airStatus = [
     { name: '制空権喪失', abbr: '喪失', rate: 1 },
 ];
 
-/* 敵艦データ */
+// 敵艦データ
 const enemyData = [
     [510, 1, "light_", [2], [18], [0]],
     [523, 1, "light_1", [5], [24], [0]],
@@ -269,10 +269,10 @@ const enemyData = [
     [618, 2, "heavy__v2_2_r", [12, 5, 5], [36, 36, 36], [0, 0, 0]],
 ];
 
-/* 軽空母のみ */
+// 軽空母のみ
 const lightCarrier = enemyData.filter(mainData => mainData[1] == 1);
 
-/* 結果表示バー用データ */
+// 結果表示バー用データ
 var chartData =
 {
     friend: [],
@@ -309,12 +309,7 @@ function setPlaneCategory(groupName, array) {
     });
 }
 
-/* 機体を選択欄に展開 */
-
-function setPlanes(array) {
-}
-
-/* 引数に渡されたカテゴリに紐づく配列を返却 */
+// 引数に渡されたカテゴリに紐づく配列を返却
 function getPlanes(category) {
     switch (category) {
         case "0":
@@ -414,23 +409,29 @@ function getPlaneCss(categoryCd) {
     return return_css;
 }
 
-/* 引数で渡された lb_plane 要素をクリアする */
+// 引数で渡された lb_plane 要素をクリアする
 function clearLbPlaneDiv($div) {
-    /* 選択状況をリセット */
+    // 選択状況をリセット
     $div.removeClass(getPlaneCss($div.data('category')));
     $div.removeData();
-    $div.find('.lb_plane_img').attr('src','');
-    $div.find('button').text('機体を選択');
+    $div.attr('id', '');
+    $div.find('.lb_plane_img').attr('src', './img/e/undefined.png');
+    $div.find('.plane_name_span').text('機体を選択');
     $div.find('select').val('0').change();
 }
 
-/* 第1引数で渡された lb_plane に第2引数で渡された 機体データ入り要素のデータを挿入する */
+/**
+ * 第1引数で渡された lb_plane に第2引数で渡された 機体データ入り要素のデータを挿入する
+ * @param {JqueryDomObject} $div
+ * @param {JqueryDomObject} $original
+ */
 function setLbPlaneDiv($div, $original) {
     $div
-        /* デザイン */
+        // デザイン
         .removeClass(getPlaneCss($div.data('category')))
         .addClass(getPlaneCss($original.data('category')))
-        /* 機体データ取得 */
+        // 機体データ取得
+        .attr('id', $original.attr('id'))
         .data('name', $original.data('name'))
         .data('aa', $original.data('aa'))
         .data('dist', $original.data('dist'))
@@ -439,16 +440,16 @@ function setLbPlaneDiv($div, $original) {
     $div.find('.plane_name_span').text($original.data('name'));
     $div.find('.lb_plane_img').attr('src', './img/e/category' + $original.data('category') + '.png');
 
-    /* 改修の有効無効設定 */
+    // 改修の有効無効設定
     var $remodelInput = $div.find('.remodel_select');
     $remodelInput.prop('disabled', !$original.data('remodel'));
     if ($remodelInput.prop('disabled')) $remodelInput.val('0');
 
-    /* 熟練度初期値 戦闘機系は最初から熟練Maxで */
+    // 熟練度初期値 戦闘機系は最初から熟練Maxで
     if ($.inArray($original.data('category'), levelMaxCate) != -1) $div.find('.prof__select').val('7').change();
     else $div.find('.prof__select').val('0').change();
 
-    /* 搭載数初期値 偵察機系は4 */
+    // 搭載数初期値 偵察機系は4
     if ($.inArray($original.data('category'), reconnaissances) != -1) $div.find('.slot').val('4').change();
     else $div.find('.slot').val('18').change();
 }
@@ -459,12 +460,12 @@ function setLbPlaneDiv($div, $original) {
  * @param {Array.<Object>} planes
  */
 function createPlaneTable($table, planes) {
-    var $target = $table.find('tbody');
-    $target.empty();
+    var $tbody = $table.find('tbody');
+    $tbody.empty();
 
     planes.forEach(function (plane) {
-        $target.append(`
-        <tr class="border-bottom plane" data-name="`+ plane.name + `" data-aa="` + plane.aa + `" data-dist="` + plane.dist + `" data-category="` + plane.category + `"  data-remodel="` + plane.remodel + `">
+        $tbody.append(`
+        <tr class="border-bottom plane" id="` + plane.id + `" data-name="` + plane.name + `" data-aa="` + plane.AA + `" data-dist="` + plane.dist + `" data-category="` + plane.category + `"  data-remodel="` + plane.remodel + `">
             <td width="8%"><img src="./img/e/category`+ plane.category + `.png" class="img-size-25" alt="` + plane.category + `"></td>
             <td width="72%">`+ plane.name + `</td>
             <td class="text-center" width="10%">`+ plane.AA + `</td>
@@ -474,7 +475,7 @@ function createPlaneTable($table, planes) {
     });
 
     // draggeble 処理
-    $('.plane').draggable({
+    $('.card-body .plane').draggable({
         scroll: false,
         helper: 'clone',
         distance: 10,
@@ -487,20 +488,24 @@ function createPlaneTable($table, planes) {
             $helper.html($helper.find('td:eq(0)').html() + $helper.find('td:eq(1)').html());
         }
     });
+
+    // モーダル内のボタン非活性
+    $('#btnCommitPlane').prop('disabled', true);
+    $('#btnRemovePlane').prop('disabled', true);
 }
 
-/* 画面初期化用メソッド */
+// 画面初期化用メソッド
 function initAll(callback) {
-    /* 機体カテゴリ初期化 */
+    // 機体カテゴリ初期化
     $('.planeSelect__select').empty();
     $('.planeSelect__select').append('<option value="0">全て</option>');
     setPlaneCategory('艦載機', [1, 2, 3, 4, 5, 6, 7, 8, 9]);
     setPlaneCategory('陸上機', [101, 102, 103, 104]);
 
-    /* 全データ展開 */
+    // 全データ展開
     createPlaneTable($('.plane_table'), getPlanes('0'));
 
-    /* 基地航空隊 第1基地航空隊第1中隊を複製 */
+    // 基地航空隊 第1基地航空隊第1中隊を複製
     var org = $('#lb_item1').children('div').html();
     $('.lb_plane').each(function () {
         $(this).html(org);
@@ -730,6 +735,7 @@ function startCaluclate() {
 
     // 上位 n % のデータを拾う?
 
+    // 結果バー描画
     drawResultBar(chartData);
 }
 
@@ -898,7 +904,7 @@ function drawResultBar(data) {
                 .style("visibility", "visible")
                 .html(infoText)
                 .style("top", (d3.event.pageY - 60) + "px")
-                .style("left", (xScale(d) + 200) + "px");
+                .style("left", (xScale(d) + d3.event.pageX) + "px");
         })
         .on('mouseout', function (d, i) {
             d3.select(this)
@@ -930,14 +936,14 @@ function getBarColor(opacity) {
     メイン
 ==================================*/
 $(function () {
-    /* 画面初期化 */
+    // 画面初期化
     initAll(function () {
-        /* 終わったらLoading画面お片付け */
+        // 終わったらLoading画面お片付け
         $('#loadingSpinner').remove();
         $('#mainContent').removeClass('d-none');
     });
 
-    /* 目次クリックで移動 */
+    // 目次クリックで移動
     $('.sidebar-sticky a[href^="#"]').on('click', function () {
         var speed = 300;
         var href = $(this).attr("href");
@@ -947,18 +953,18 @@ $(function () {
         return false;
     });
 
-    /* ページトップへボタン */
+    // ページトップへボタン
     $('.btn-goPageTop').on('click', function () {
         $(this).blur();
         $('body,html').animate({ scrollTop: 0 }, 300, 'swing');
     });
 
-    /* 折り畳みボタン */
+    // 折り畳みボタン
     $('.btn_toggleContent').on('click', function () {
         $(this).toggleClass('btn-toggleContent_show').toggleClass('btn-toggleContent_hide').blur();
     });
 
-    /* 基地入れ替え設定 */
+    // 基地入れ替え設定
     $('div.lb_tab').sortable({
         delay: 100,
         scroll: false,
@@ -967,20 +973,20 @@ $(function () {
         tolerance: "pointer",
         stop: function (event, ui) {
             if (isOut) {
-                /* 選択状況をリセット */
+                // 選択状況をリセット
                 clearLbPlaneDiv(ui.item);
                 $(this).sortable('cancel');
             }
         }
     });
-    /* 範囲外に機体を持って行ったときを拾う */
+    // 範囲外に機体を持って行ったときを拾う
     $('div#lb_content_main').droppable({
         accept: ".plane, .lb_plane",
         tolerance: "pointer",
         over: function () { isOut = false; },
         out: function () { isOut = true; }
     });
-    /* 機体をドラッグしてきた時の処理 */
+    // 機体をドラッグしてきた時の処理
     $('div.lb_plane').droppable({
         accept: ".plane",
         hoverClass: "lb_plane-hover",
@@ -988,7 +994,7 @@ $(function () {
         drop: function (event, ui) { setLbPlaneDiv($(this), ui.draggable); }
     });
 
-    /* 基地航空隊　熟練度を選択時 */
+    // 基地航空隊　熟練度を選択時
     $('.prof__select').on('change', function () {
         var prof = $(this).val();
         if (prof >= 4) {
@@ -1002,60 +1008,114 @@ $(function () {
         }
     });
 
-    /* 機体カテゴリ変更時 応じた機体をリストに展開 */
+    // 機体カテゴリ変更時 応じた機体を table に展開
     $(document).on('change', '.planeSelect__select', function () {
-        var target = $(this);
-        createPlaneTable(target.parent().next().find('.plane_table'), getPlanes(target.val()));
+        createPlaneTable($(this).parent().next().find('.plane_table'), getPlanes($(this).val()));
     });
 
-    /* 機体選択ボタンクリック -> モーダル展開 */
-    $('.plane_name_span').on('click', function () {
-        /* 機体選択画面の結果を返却するターゲットのdiv要素を取得 */
+    // table クリック行でソート
+    $(document).on('click', '.plane_table_ td', function () {
+        var $parent = $(this).parents('.plane_table_content');
+        var sortKey = $(this).attr('id');
+        var selectedCategory = $parent.prev().find('.planeSelect__select').val();
+        var org = getPlanes(selectedCategory).concat();
+        var order = $(this).parent().data('order');
+        var nextOrder = order == 'asc' ? 'desc' : 'asc';
+
+        org.sort(function (a, b) {
+            switch (sortKey) {
+                case 'th_name':
+                    if (a.name < b.name) return order == 'desc' ? -1 : 1;
+                    if (a.name > b.name) return order == 'desc' ? 1 : -1;
+                case 'th_aa':
+                    if (a.AA < b.AA) return order == 'desc' ? -1 : 1;
+                    if (a.AA > b.AA) return order == 'desc' ? 1 : -1;
+                case 'th_range':
+                    if (a.dist < b.dist) return order == 'desc' ? -1 : 1;
+                    if (a.dist > b.dist) return order == 'desc' ? 1 : -1;
+                default:
+                    return 0;
+            }
+        });
+        createPlaneTable($parent.find('.plane_table'), org);
+
+        $('.plane_table_ td').removeClass('sorted')
+
+        // 順序反転
+        $(this).parent().data('order', nextOrder);
+        $(this).addClass('sorted');
+    });
+
+    // 機体選択ボタンクリック -> モーダル展開
+    $(document).on('click', '.plane_name_span', function () {
+        // 機体選択画面の結果を返却するターゲットのdiv要素を取得
         $target = $(this).closest('.lb_plane');
-        var selectedCategory = $target.data('category');
-        var selectedName = $target.data('name');
+        var selectedID = $target.attr('id');
+        var selectedCategory = Math.abs($target.data('category'));
         var $modalBody = $('.modal-body');
 
-        /* モーダル生成処理 */
+        // モーダル生成処理
         $modalBody.html($('#planeSelect__content').html());
-        $modalBody.find('.planeSelect__select').val(selectedCategory).change();
 
-        /* 調整終了、モーダル展開 */
+        // カテゴリ初期選択処理
+        if (selectedCategory) {
+            $modalBody.find('.planeSelect__select').val(selectedCategory).change();
+        }
+        else{
+            $modalBody.find('.planeSelect__select').val($('.card-body .planeSelect__select').val()).change();
+        }
+
+        // 選択機体ピックアップ
+        if (selectedID) {
+            var $selected = $modalBody.find('#' + selectedID)
+            $selected.addClass('plane-selected');
+            $modalBody.find('tbody').prepend($selected.clone());
+            $selected.remove();
+            $('#btnRemovePlane').prop('disabled', false);
+        }
+        else {
+            $('#btnRemovePlane').prop('disabled', true);
+        }
+
+        // 調整終了、モーダル展開
         $('#planeSelectModal').modal('show');
     });
 
-    /* 機体選択画面(モーダル)　機体をクリック時 */
+    // 機体選択画面(モーダル)　機体をクリック時
     $(document).on('click', '.modal-body .plane', function () {
-        var $clickedPlane = $(this);
-        $clickedPlane.data('checked', !$clickedPlane.data('checked'));
         $('.modal-body .plane').removeClass('plane-selected');
-        if ($clickedPlane.data('checked')) {
-            $clickedPlane.addClass('plane-selected');
-            /* OKボタン活性化 */
-            $('#btnCommitPlane').prop('disabled', false);
-        }
+        $(this).addClass('plane-selected');
+        // OKボタン活性化
+        $('#btnCommitPlane').prop('disabled', false);
     });
 
-    /* OKボタンクリック(モーダル内) */
+    $(document).on('')
+
+    // OKボタンクリック(モーダル内)
     $('#btnCommitPlane').on('click', function () {
         if ($(this).prop('disabled')) return false;
 
-        /* 機体セット */
+        if(!$('.plane-selected').attr('class')){
+            $('#btnCommitPlane').prop('disabled', true);
+            return false;
+        }
+
+        // 機体セット
         setLbPlaneDiv($target, $('.plane-selected'));
 
         $('#planeSelectModal').modal('hide');
     });
 
-    /* はずすボタンクリック(モーダル内) */
+    // はずすボタンクリック(モーダル内)
     $('#btnRemovePlane').on('click', function () {
         if ($(this).prop('disabled')) return false;
 
-        /* 選択状況をリセット */
+        // 選択状況をリセット
         clearLbPlaneDiv($target);
 
         $('#planeSelectModal').modal('hide');
     });
 
-    /* とりあえず計算結果表示デバッグ用 */
+    // とりあえず計算結果表示デバッグ用
     $(document).on('click', '#update', function () { startCaluclate(); });
 });

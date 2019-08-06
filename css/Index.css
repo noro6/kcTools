@@ -11,6 +11,10 @@
     background: #282828 !important;
   }
 
+  .w-33 {
+    width: 33% !important;
+  }
+
   /* nav-tabs 書き換え */
   .nav-tabs {
     border-color: #aaa !important;
@@ -210,16 +214,20 @@
   }
 
   /* 機体アイコン */
-  .lb_plane_canvas{
+  .lb_plane_canvas {
+    width: 35px;
+    height: 35px;
   }
 
   /* 機体名 */
-  .plane_name_span{
-    height:31px;
-    width: auto;
-    background-color: #fff;
-    border: 1px #aaa solid;
+  .plane_name_span {
+    background-color: rgba(255, 255, 255, 0.8);
     border-radius: .2rem;
+  }
+
+  .plane_name_span:hover {
+    transition: .5s;
+    background-color: rgba(220, 255, 250, 0.8);
   }
 
   /* 艦載機をドラッグしてきた時のスタイル */
@@ -240,11 +248,11 @@
   }
 
   .star {
-    color: teal !important;
+    color: rgb(0, 170, 170) !important;
   }
 
   .remodel__option {
-    color: teal !important;
+    color: rgb(0, 170, 170) !important;
   }
 
   /* 熟練度関連 */
@@ -265,6 +273,15 @@
     overflow-x: hidden;
     overflow-y: overlay;
     height: 300px;
+  }
+
+  /* テーブルヘッダ */
+  .plane_table_ td:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .plane_table_ td.sorted {
+    font-weight: bold;
   }
 
   /* 機体カテゴリ画像 */
@@ -292,6 +309,7 @@
   .plane_helper {
     padding: 3px 20px 3px 10px;
     background-color: rgba(255, 255, 255, 0.8) !important;
+    border-radius: .2rem;
     -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
@@ -299,7 +317,7 @@
 
   /* 機体選択中(モーダル内限定) */
   .plane-selected {
-    color: #fff !important;
+    color: #fff;
     background-color: #70bfff !important;
   }
 
@@ -385,12 +403,12 @@
 
   /* 夜間機の色など */
   .css_cb_night_aircraft {
-    border: 2px rgb(110, 110, 205) solid;
-    background-color: rgb(160, 160, 255);
+    border: 2px rgb(130, 130, 180) solid;
+    background-color: rgb(215, 215, 230);
   }
 
   .css_cb_night_aircraft:hover {
-    background-color: rgb(150, 150, 245);
+    background-color: rgb(205, 205, 220);
   }
 
   /* モーダル閉じる(×)ボタン */

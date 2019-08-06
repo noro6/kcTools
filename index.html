@@ -34,7 +34,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- 右サイドバー -->
-            <nav class="col-md-2 col-xl-1 d-none d-md-block sidebar bg-dark2">
+            <nav class="col-2 col-xl-1 d-none d-md-block sidebar bg-dark2">
                 <div class="sidebar-sticky" id="Navbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -97,7 +97,7 @@
             </nav>
 
             <!-- メインコンテンツ -->
-            <main role="main" class="col-xs-12 col-md-10 col-xl-11 ml-sm-auto px-4">
+            <main role="main" class="col-12 col-md-10 col-xl-11 ml-sm-auto px-4">
                 <div class="w-100 text-center" id="loadingSpinner">
                     <div class="spinner-border m-auto py-auto" role="status">
                         <span class="sr-only">Loading...</span>
@@ -133,7 +133,7 @@
                         </div>
                         <div class="row collapse show" id="lb_content">
                             <!-- 基地航空隊設定領域 -->
-                            <div class="col-xs-12 col-xl-8 mt-2" id="lb_content_main">
+                            <div class="col-12 col-xl-8 mt-2" id="lb_content_main">
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" id="lb_item1-tab" data-toggle="tab" href="#lb_item1"
@@ -153,103 +153,89 @@
                                     <div class="tab-pane fade show active lb_tab" id="lb_item1" role="tabpanel"
                                         aria-labelledby="lb_item1-tab">
                                         <!-- 第1基地航空隊 第1中隊　選択領域 -->
-                                        <div class="lb_plane container">
+                                        <div class="lb_plane container" id="">
                                             <div class="row">
-                                                <div class="col-12 col-xl-5 ">
-                                                    <div class="d-flex flex-row justify-content-start">
-                                                        <div class="lb_plane_canvas">
-                                                            <img src="" class="lb_plane_img img-size-32" alt="">
+                                                <div class="col-12 col-md-5 col-lg-6 container">
+                                                    <div class="row justify-content-start align-self-center">
+                                                        <div class="lb_plane_canvas mx-1">
+                                                            <img src="./img/e/undefined.png" class="lb_plane_img img-size-32" alt="">
                                                         </div>
-                                                        <div class="plane_name_span text-truncate">
+                                                        <div
+                                                            class="flex-fill plane_name_span text-truncate mt-1 py-1 px-2 mr-1">
                                                             機体を選択
-                                                        </div>                                                        
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col input-group py-1 input-group-sm">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text star">★</span>
+                                                <div class="col container">
+                                                    <div class="row justify-content-start align-self-center">
+                                                        <div class="input-group input-group-sm py-1 pl-1 w-33">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text star">★</span>
+                                                            </div>
+                                                            <select
+                                                                class="form-control form-control-sm remodel__option remodel_select"
+                                                                disabled>
+                                                                <option class="remodel__option" value="10">max</option>
+                                                                <option class="remodel__option" value="9">9</option>
+                                                                <option class="remodel__option" value="8">8</option>
+                                                                <option class="remodel__option" value="7">7</option>
+                                                                <option class="remodel__option" value="6">6</option>
+                                                                <option class="remodel__option" value="5">5</option>
+                                                                <option class="remodel__option" value="4">4</option>
+                                                                <option class="remodel__option" value="3">3</option>
+                                                                <option class="remodel__option" value="2">2</option>
+                                                                <option class="remodel__option" value="1">1</option>
+                                                                <option class="remodel__option" value="0" selected>
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="input-group input-group-sm py-1 pl-1 w-33">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text ">熟練</span>
+                                                            </div>
+                                                            <select
+                                                                class="form-control form-control-sm prof prof__select">
+                                                                <option class="prof prof__yellow" value="7">>></option>
+                                                                <option class="prof prof__yellow" value="6">///</option>
+                                                                <option class="prof prof__yellow" value="5">//</option>
+                                                                <option class="prof prof__yellow" value="4">/</option>
+                                                                <option class="prof prof__blue" value="3">|||</option>
+                                                                <option class="prof prof__blue" value="2">||</option>
+                                                                <option class="prof prof__blue" value="1">|</option>
+                                                                <option class="prof" value="0" selected></option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="input-group input-group-sm py-1 pl-1 w-33">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text ">搭載</span>
+                                                            </div>
+                                                            <input type="number"
+                                                                class="form-control form-control-sm slot " value="18"
+                                                                min="0">
+                                                        </div>
                                                     </div>
-                                                    <select
-                                                        class="form-control form-control-sm remodel__option remodel_select"
-                                                        disabled>
-                                                        <option class="remodel__option" value="10">max</option>
-                                                        <option class="remodel__option" value="9">9</option>
-                                                        <option class="remodel__option" value="8">8</option>
-                                                        <option class="remodel__option" value="7">7</option>
-                                                        <option class="remodel__option" value="6">6</option>
-                                                        <option class="remodel__option" value="5">5</option>
-                                                        <option class="remodel__option" value="4">4</option>
-                                                        <option class="remodel__option" value="3">3</option>
-                                                        <option class="remodel__option" value="2">2</option>
-                                                        <option class="remodel__option" value="1">1</option>
-                                                        <option class="remodel__option" value="0" selected></option>
-                                                    </select>
-                                                </div>
-                                                <div class="col input-group py-1 input-group-sm">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text ">熟練</span>
-                                                    </div>
-                                                    <select class="form-control form-control-sm prof prof__select">
-                                                        <option class="prof prof__yellow" value="7">>></option>
-                                                        <option class="prof prof__yellow" value="6">///</option>
-                                                        <option class="prof prof__yellow" value="5">//</option>
-                                                        <option class="prof prof__yellow" value="4">/</option>
-                                                        <option class="prof prof__blue" value="3">|||</option>
-                                                        <option class="prof prof__blue" value="2">||</option>
-                                                        <option class="prof prof__blue" value="1">|</option>
-                                                        <option class="prof" value="0" selected></option>
-                                                    </select>
-                                                </div>
-                                                <div class="col input-group py-1 input-group-sm">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text ">搭載</span>
-                                                    </div>
-                                                    <input type="number" class="form-control form-control-sm slot "
-                                                        value="18" min="0">
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- 第1基地航空隊 第2中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第1基地航空隊 第3中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第1基地航空隊 第4中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
                                     </div>
                                     <!-- 第2基地航空隊 -->
                                     <div class="tab-pane fade lb_tab" id="lb_item2" role="tabpanel"
                                         aria-labelledby="lb_item2-tab">
-                                        <!-- 第2基地航空隊 第1中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第2基地航空隊 第2中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第2基地航空隊 第3中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第2基地航空隊 第4中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
                                     </div>
                                     <!-- 第3基地航空隊 -->
                                     <div class="tab-pane fade lb_tab" id="lb_item3" role="tabpanel"
                                         aria-labelledby="lb_item3-tab">
-                                        <!-- 第3基地航空隊 第1中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第3基地航空隊 第2中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第3基地航空隊 第3中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
-                                        <!-- 第3基地航空隊 第4中隊　選択領域 -->
-                                        <div class="lb_plane container">
-                                        </div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
+                                        <div class="lb_plane container"></div>
                                     </div>
                                 </div>
                             </div>
@@ -261,27 +247,27 @@
                                         機体一覧
                                     </div>
                                     <div class="card-body" id="planeSelect__content">
-                                        <div class="dropdown my-1 input-group input-group-sm" id="card__cmbPlaneSearch">
+                                        <div class="my-1 input-group input-group-sm">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">カテゴリ</span>
                                             </div>
                                             <select class="form-control form-control-sm planeSelect__select">
                                             </select>
                                         </div>
-                                        <div>
+                                        <div class="plane_table_content">
                                             <div class="pr-3">
                                                 <table class="plane_table_ w-100">
                                                     <thead>
-                                                        <tr>
-                                                            <th width="8%"></th>
-                                                            <th width="72%">装備名</th>
-                                                            <th class="text-center" width="10%">対空</th>
-                                                            <th class="text-center" width="10%">半径</th>
+                                                        <tr data-order="asc">
+                                                            <td width="8%" id="th_category"></td>
+                                                            <td width="72%" id="th_name">装備名</td>
+                                                            <td class="text-center" id="th_aa" width="10%">対空</td>
+                                                            <td class="text-center" id="th_range" width="10%">半径</td>
                                                         </tr>
                                                     </thead>
                                                 </table>
                                             </div>
-                                            <div class="pr-3 div_plane_table">
+                                            <div class="pr-3 mt-1 div_plane_table">
                                                 <table class="plane_table w-100">
                                                     <tbody>
                                                     </tbody>
@@ -344,12 +330,37 @@
                             </h5>
                         </div>
                         <div class="row collapse show" id="result_content">
-                            <div class="container-fluid mt-5">
-                                <div>
-                                    <button class="btn btn-secondary" id="update">更新</button>
+                            <div class="col container mt-5">
+                                <div class="row">
+                                    <div class="col">
+                                        <button class="btn btn-secondary" id="update">更新</button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="col-6" id="resultChart"></div>
+                                <div class="row">
+                                    <div class="col-12 col-md-8">
+                                        <div id="resultChart"></div>
+                                    </div>
+                                    <div class="col d-none d-md-block">
+                                        <table class="resultDetail">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">フェーズ</th>
+                                                    <th>data1</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td rowspan="2">基地1</td>
+                                                    <td>1波目</td>
+                                                    <td>220</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2波目</td>
+                                                    <td>320</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -435,7 +446,7 @@
                         </div>
                         <!-- Copyright -->
                         <div class="footer-copyright text-center py-3">© 2019 Copyright:
-                            <a href="https://twitter.com/noro_006">あああああ</a>
+                            <a href="https://twitter.com/">あああああ</a>
                         </div>
                     </footer>
                 </div>
