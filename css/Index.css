@@ -1,455 +1,468 @@
-  body {
-    font-size: .875rem;
-    background: #f0ebe6;
-  }
+body {
+  font-size: .875rem;
+  background: #f0ebe6;
+}
 
-  .bg-dark1 {
-    background: #3b3d3f !important;
-  }
+.bg-dark1 {
+  background: #3b3d3f !important;
+}
 
-  .bg-dark2 {
-    background: #282828 !important;
-  }
+.bg-dark2 {
+  background: #282828 !important;
+}
 
-  .w-33 {
-    width: 33% !important;
-  }
+.w-33 {
+  width: 33% !important;
+}
 
-  /* nav-tabs 書き換え */
-  .nav-tabs {
-    border-color: #aaa !important;
-  }
+/* nav-tabs 書き換え */
+.nav-tabs {
+  border-color: #aaa !important;
+}
 
-  .nav-tabs a.nav-link {
-    color: #aaa;
-    padding-right: 10px;
-    padding-left: 10px;
-  }
+.nav-tabs a.nav-link {
+  color: #aaa;
+  padding-right: 10px;
+  padding-left: 10px;
+}
 
-  .nav-tabs a.nav-link:hover {
-    color: #777 !important;
-    border-color: #aaa !important;
-  }
+.nav-tabs a.nav-link:hover {
+  color: #777 !important;
+  border-color: #aaa !important;
+}
 
-  .nav-tabs a.nav-link.active {
-    color: #333 !important;
-    border-color: #aaa !important;
-    background-color: transparent !important;
-    border-bottom-color: #f0ebe6 !important;
-  }
+.nav-tabs a.nav-link.active {
+  color: #333 !important;
+  border-color: #aaa !important;
+  background-color: transparent !important;
+  border-bottom-color: #f0ebe6 !important;
+}
 
-  /* ラジオボタン非表示 */
-  input[type=radio] {
-    display: none;
-  }
+/* ラジオボタン非表示 */
+input[type=radio] {
+  display: none;
+}
 
-  .feather {
-    width: 16px;
-    height: 16px;
-    vertical-align: text-bottom;
-  }
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
 
-  .navbar-brand {
-    padding-top: .75rem;
-    padding-bottom: .75rem;
-    font-size: 1rem;
-    background-color: rgba(0, 0, 0, .25);
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-  }
+.navbar-brand {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, .25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
 
-  .navbar .form-control {
-    padding: .75rem 1rem;
-    border-width: 0;
-    border-radius: 0;
-  }
+.navbar .form-control {
+  padding: .75rem 1rem;
+  border-width: 0;
+  border-radius: 0;
+}
 
-  .form-control-dark {
-    color: #fff;
-    background-color: rgba(255, 255, 255, .1);
-    border-color: rgba(255, 255, 255, .1);
-  }
+.form-control-dark {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .1);
+}
 
-  .form-control-dark:focus {
-    border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-  }
+.form-control-dark:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    /* ナビゲーションバーの背面 */
-    padding: 48px 0 0;
-    /* ナビゲーションバーの高さ */
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-  }
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  /* ナビゲーションバーの背面 */
+  padding: 48px 0 0;
+  /* ナビゲーションバーの高さ */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
 
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* ビューポートがコンテンツより短い場合、スクロール可能なコンテンツ */
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
   .sidebar-sticky {
-    position: relative;
-    top: 0;
-    height: calc(100vh - 48px);
-    padding-top: .5rem;
-    overflow-x: hidden;
-    overflow-y: auto;
-    /* ビューポートがコンテンツより短い場合、スクロール可能なコンテンツ */
+      position: -webkit-sticky;
+      position: sticky;
   }
+}
 
-  @supports ((position: -webkit-sticky) or (position: sticky)) {
-    .sidebar-sticky {
-        position: -webkit-sticky;
-        position: sticky;
-    }
-  }
-
-  .sidebar .nav-link {
-    font-weight: 500;
-    color: #aaa;
-  }
+.sidebar .nav-link {
+  font-weight: 500;
+  color: #aaa;
+}
 
 
-  .sidebar .nav-link .feather {
-    margin-right: 4px;
-    color: #999;
-  }
+.sidebar .nav-link .feather {
+  margin-right: 4px;
+  color: #999;
+}
 
-  .sidebar .nav-link.active {
-    color: #00ffff;
-  }
+.sidebar .nav-link.active {
+  color: #00ccff;
+}
 
-  .sidebar .nav-link-active {
-    color: #00ffff;
-  }
+.sidebar .nav-link-active {
+  color: #00ccff;
+}
 
-  .sidebar .nav-link:hover .feather,
-  .sidebar .nav-link.active .feather {
-    color: inherit;
-  }
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+  color: inherit;
+}
 
-  .sidebar-heading {
-    font-size: .75rem;
-    text-transform: uppercase;
-  }
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
 
+[role="main"] {
+  padding-top: 133px;
+  /* 固定ナビゲーションバーの余白 */
+}
+
+@media (min-width: 768px) {
   [role="main"] {
-    padding-top: 133px;
-    /* 固定ナビゲーションバーの余白 */
+      padding-top: 48px;
+      /* 固定ナビゲーションバーの余白 */
   }
+}
 
-  @media (min-width: 768px) {
-    [role="main"] {
-        padding-top: 48px;
-        /* 固定ナビゲーションバーの余白 */
-    }
-  }
+/* 最初の */
+#loadingSpinner {
+  margin-top: 200px;
+}
 
-  /* 最初の */
-  #loadingSpinner {
-    margin-top: 200px;
-  }
+/* ページトップへ戻るボタン */
+.btn-goPageTop {
+  position: relative;
+  bottom: 3px;
+  font-size: 0;
+  padding: 0px;
+  height: 30px;
+  width: 30px;
+}
 
-  /* ページトップへ戻るボタン */
-  .btn-goPageTop {
+.btn-goPageTop:before {
+  position: relative;
+  content: "↑";
+  bottom: 1px;
+  font-size: 18px;
+}
+
+.btn-toggleContent_hide {
+  position: relative;
+  bottom: 3px;
+  font-size: 0;
+  padding: 0px;
+  height: 30px;
+  width: 30px;
+}
+
+.btn-toggleContent_hide:before {
+  content: "";
+  position: relative;
+  bottom: 3px;
+  border: 5px solid transparent;
+  border-bottom-color: #000;
+}
+
+.btn-toggleContent_show {
+  position: relative;
+  bottom: 3px;
+  font-size: 0;
+  padding: 0px;
+  height: 30px;
+  width: 30px;
+}
+
+.btn-toggleContent_show:before {
+  content: "";
+  position: relative;
+  top: 3px;
+  border: 5px solid transparent;
+  border-top-color: #000;
+}
+
+/* 基地選択欄 */
+.lb_plane {
+  margin: 5px 0px 5px 0px;
+  background-color: rgb(243, 243, 243);
+  border: 2px #aaa solid;
+  border-radius: .25rem;
+}
+
+.lb_plane:hover {
+  cursor: pointer;
+  background-color: rgb(233, 233, 233);
+}
+
+/* 機体アイコン */
+.lb_plane_canvas {
+  width: 35px;
+  height: 35px;
+}
+
+/* 機体名 */
+.plane_name_span {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: .2rem;
+}
+
+.plane_name_span:hover {
+  transition: .5s;
+  background-color: rgba(220, 255, 250, 0.8);
+}
+
+/* 艦載機をドラッグしてきた時のスタイル */
+.lb_plane-hover {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin: 5px 0px 5px 0px;
+  transition: .2s;
+  border: 3px rgb(148, 212, 255) solid !important;
+}
+
+/* 艦載機が抜き取られてる時の跡地のスタイル */
+.lb_plane-drag {
+  margin: 5px 0px 5px 0px;
+  border: 2px rgb(255, 153, 0) dashed !important;
+  background-color: transparent;
+  border-radius: .25rem;
+}
+
+.star {
+  color: rgb(0, 170, 170) !important;
+}
+
+.remodel__option {
+  color: rgb(0, 170, 170) !important;
+}
+
+/* 熟練度関連 */
+.prof {
+  font-weight: bold;
+}
+
+.prof__yellow {
+  color: goldenrod !important;
+}
+
+.prof__blue {
+  color: rgb(91, 173, 255) !important;
+}
+
+/* 機体選択欄 テーブル */
+.div_plane_table {
+  overflow-x: hidden;
+  overflow-y: overlay;
+  height: 300px;
+}
+
+/* テーブルヘッダ */
+.plane_table_ td {
+  position: relative;
+}
+.plane_table_ td:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+.plane_table_ td.sorted {
+  font-weight: bold;
+}
+.plane_table_ td.asc:after {
     position: relative;
-    bottom: 3px;
-    font-size: 0;
-    padding: 0px;
-    height: 30px;
-    width: 30px;
-  }
-
-  .btn-goPageTop:before {
-    position: relative;
-    content: "↑";
+    content: "▲";
     bottom: 2px;
-    font-size: 18px;
-  }
+    font-size: 5px;
+}
+.plane_table_ td.desc:after {
+  position: relative;
+  content: "▼";
+  bottom: 2px;
+  font-size: 5px;
+}
 
-  .btn-toggleContent_hide {
-    position: relative;
-    bottom: 3px;
-    font-size: 0;
-    padding: 0px;
-    height: 30px;
-    width: 30px;
-  }
+/* 機体カテゴリ画像 */
+.img-size-25 {
+  width: 25px;
+  height: auto;
+}
 
-  .btn-toggleContent_hide:before {
-    content: "";
-    position: relative;
-    bottom: 3px;
-    border: 5px solid transparent;
-    border-bottom-color: #000;
-  }
+.img-size-32 {
+  padding-top: 3px;
+  width: 32px;
+  height: auto;
+}
 
-  .btn-toggleContent_show {
-    position: relative;
-    bottom: 3px;
-    font-size: 0;
-    padding: 0px;
-    height: 30px;
-    width: 30px;
-  }
+/* 機体選択欄　機体 */
+.plane {
+  min-width: 100px;
+}
 
-  .btn-toggleContent_show:before {
-    content: "";
-    position: relative;
-    top: 3px;
-    border: 5px solid transparent;
-    border-top-color: #000;
-  }
+.plane:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
 
-  /* 基地選択欄 */
-  .lb_plane {
-    margin: 5px 0px 5px 0px;
-    background-color: rgb(243, 243, 243);
-    border: 2px #aaa solid;
-    border-radius: .25rem;
-  }
+.plane_helper {
+  padding: 3px 20px 3px 10px;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: .2rem;
+  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+}
 
-  .lb_plane:hover {
-    cursor: pointer;
-    background-color: rgb(233, 233, 233);
-  }
+/* 機体選択中(モーダル内限定) */
+.plane-selected {
+  color: #fff;
+  background-color: #70bfff !important;
+}
 
-  /* 機体アイコン */
-  .lb_plane_canvas {
-    width: 35px;
-    height: 35px;
-  }
+/* 艦戦の色など */
+.css_fighter {
+  border: 2px rgb(100, 200, 120) solid;
+  background-color: rgb(230, 255, 240);
+}
 
-  /* 機体名 */
-  .plane_name_span {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: .2rem;
-  }
+.css_fighter:hover {
+  background-color: rgb(220, 245, 230);
+}
 
-  .plane_name_span:hover {
-    transition: .5s;
-    background-color: rgba(220, 255, 250, 0.8);
-  }
+/* 艦攻の色など */
+.css_torpedo_bomber {
+  border: 2px rgb(100, 190, 255) solid;
+  background-color: rgb(235, 250, 255);
+}
 
-  /* 艦載機をドラッグしてきた時のスタイル */
-  .lb_plane-hover {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    margin: 5px 0px 5px 0px;
-    transition: .2s;
-    border: 3px rgb(148, 212, 255) solid !important;
-  }
+.css_torpedo_bomber:hover {
+  background-color: rgb(225, 240, 245);
+}
 
-  /* 艦載機が抜き取られてる時の跡地のスタイル */
-  .lb_plane-drag {
-    margin: 5px 0px 5px 0px;
-    border: 2px rgb(255, 153, 0) dashed !important;
-    background-color: transparent;
-    border-radius: .25rem;
-  }
+/* 艦爆の色など */
+.css_dive_bomber {
+  border: 2px rgb(247, 110, 110) solid;
+  background-color: rgb(255, 235, 235);
+}
 
-  .star {
-    color: rgb(0, 170, 170) !important;
-  }
+.css_dive_bomber:hover {
+  background-color: rgb(245, 225, 225);
+}
 
-  .remodel__option {
-    color: rgb(0, 170, 170) !important;
-  }
+/* 艦偵の色など */
+.css_cb_reconnaissance {
+  border: 2px rgb(255, 200, 10) solid;
+  background-color: rgb(255, 255, 230);
+}
 
-  /* 熟練度関連 */
-  .prof {
-    font-weight: bold;
-  }
+.css_cb_reconnaissance:hover {
+  background-color: rgb(245, 245, 220);
+}
 
-  .prof__yellow {
-    color: goldenrod !important;
-  }
+/* 水上機の色など */
+.css_sp {
+  border: 2px rgb(140, 205, 150) solid;
+  background-color: rgb(240, 250, 240);
+}
 
-  .prof__blue {
-    color: rgb(91, 173, 255) !important;
-  }
+.css_sp:hover {
+  background-color: rgb(230, 240, 230);
+}
 
-  /* 機体選択欄 テーブル */
-  .div_plane_table {
-    overflow-x: hidden;
-    overflow-y: overlay;
-    height: 300px;
-  }
+/* 陸攻の色など */
+.css_lb_attack_aircraft {
+  border: 2px rgb(60, 170, 30) solid;
+  background-color: rgb(230, 250, 225);
+}
 
-  /* テーブルヘッダ */
-  .plane_table_ td:hover {
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .plane_table_ td.sorted {
-    font-weight: bold;
-  }
+.css_lb_attack_aircraft:hover {
+  background-color: rgb(220, 240, 215);
+}
 
-  /* 機体カテゴリ画像 */
-  .img-size-25 {
-    width: 25px;
-    height: auto;
-  }
+/* 陸軍戦闘機の色など */
+.css_lb_fighter {
+  border: 2px rgb(150, 230, 165) solid;
+  background-color: rgb(235, 255, 240);
+}
 
-  .img-size-32 {
-    padding-top: 3px;
-    width: 32px;
-    height: auto;
-  }
+.css_lb_fighter:hover {
+  background-color: rgb(225, 245, 230);
+}
 
-  /* 機体選択欄　機体 */
-  .plane {
-    min-width: 100px;
-  }
+/* 対潜哨戒機の色など */
+.css_lb_asw_aircraft {
+  border: 2px rgb(110, 135, 205) solid;
+  background-color: rgb(160, 185, 255);
+}
 
-  .plane:hover {
-    background-color: #f5f5f5;
-    cursor: pointer;
-  }
+.css_lb_asw_aircraft:hover {
+  background-color: rgb(150, 175, 245);
+}
 
-  .plane_helper {
-    padding: 3px 20px 3px 10px;
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    border-radius: .2rem;
-    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-  }
+/* 夜間機の色など */
+.css_cb_night_aircraft {
+  border: 2px rgb(130, 130, 180) solid;
+  background-color: rgb(215, 215, 230);
+}
 
-  /* 機体選択中(モーダル内限定) */
-  .plane-selected {
-    color: #fff;
-    background-color: #70bfff !important;
-  }
+.css_cb_night_aircraft:hover {
+  background-color: rgb(205, 205, 220);
+}
 
-  /* 艦戦の色など */
-  .css_fighter {
-    border: 2px rgb(100, 200, 120) solid;
-    background-color: rgb(230, 255, 240);
-  }
+/* モーダル閉じる(×)ボタン */
+#modalClose {
+  outline: none;
+}
 
-  .css_fighter:hover {
-    background-color: rgb(220, 245, 230);
-  }
+/* 結果表示バー　描画領域 */
+#resultChart {
+}
 
-  /* 艦攻の色など */
-  .css_torpedo_bomber {
-    border: 2px rgb(100, 190, 255) solid;
-    background-color: rgb(235, 250, 255);
-  }
+/* 結果表示バー　ツールチップ */
+.tooltip_resultBar {
+  color: #222;
+  position: absolute;
+  min-width: 250px;
+  width: auto;
+  height: auto;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
+  visibility: hidden;
+}
 
-  .css_torpedo_bomber:hover {
-    background-color: rgb(225, 240, 245);
-  }
+/* 結果表示バー x軸 */
+.x_axis .domain {
+  display: none;
+  stroke-dasharray: 5;
+  stroke-dashoffset: 5;
+}
 
-  /* 艦爆の色など */
-  .css_dive_bomber {
-    border: 2px rgb(247, 110, 110) solid;
-    background-color: rgb(255, 235, 235);
-  }
+/* 結果表示バー y軸  */
+.y_axis path {
+  display: none;
+}
 
-  .css_dive_bomber:hover {
-    background-color: rgb(245, 225, 225);
-  }
-
-  /* 艦偵の色など */
-  .css_cb_reconnaissance {
-    border: 2px rgb(255, 200, 10) solid;
-    background-color: rgb(255, 255, 230);
-  }
-
-  .css_cb_reconnaissance:hover {
-    background-color: rgb(245, 245, 220);
-  }
-
-  /* 水上機の色など */
-  .css_sp {
-    border: 2px rgb(140, 205, 150) solid;
-    background-color: rgb(240, 250, 240);
-  }
-
-  .css_sp:hover {
-    background-color: rgb(230, 240, 230);
-  }
-
-  /* 陸攻の色など */
-  .css_lb_attack_aircraft {
-    border: 2px rgb(60, 170, 30) solid;
-    background-color: rgb(230, 250, 225);
-  }
-
-  .css_lb_attack_aircraft:hover {
-    background-color: rgb(220, 240, 215);
-  }
-
-  /* 陸軍戦闘機の色など */
-  .css_lb_fighter {
-    border: 2px rgb(150, 230, 165) solid;
-    background-color: rgb(235, 255, 240);
-  }
-
-  .css_lb_fighter:hover {
-    background-color: rgb(225, 245, 230);
-  }
-
-  /* 対潜哨戒機の色など */
-  .css_lb_asw_aircraft {
-    border: 2px rgb(110, 135, 205) solid;
-    background-color: rgb(160, 185, 255);
-  }
-
-  .css_lb_asw_aircraft:hover {
-    background-color: rgb(150, 175, 245);
-  }
-
-  /* 夜間機の色など */
-  .css_cb_night_aircraft {
-    border: 2px rgb(130, 130, 180) solid;
-    background-color: rgb(215, 215, 230);
-  }
-
-  .css_cb_night_aircraft:hover {
-    background-color: rgb(205, 205, 220);
-  }
-
-  /* モーダル閉じる(×)ボタン */
-  #modalClose {
-    outline: none;
-  }
-
-  /* 結果表示バー　描画領域 */
-  #resultChart {
-    border: 1px #555863 solid;
-  }
-
-  /* 結果表示バー　ツールチップ */
-  .tooltip_resultBar {
-    color: #aaa;
-    border: #aaa;
-    position: absolute;
-    min-width: 250px;
-    width: auto;
-    height: auto;
-    padding: 5px;
-    background: rgba(29, 30, 34, 0.9);
-    -webkit-box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.4);
-    -moz-box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.4);
-    box-shadow: 0px 0px 10px 4px rgba(255, 255, 255, 0.4);
-    visibility: hidden;
-  }
-
-  /* 結果表示バー x軸 */
-  .x_axis .domain {
-    display: none;
-    stroke-dasharray: 5;
-    stroke-dashoffset: 5;
-  }
-
-  /* 結果表示バー y軸  */
-  .y_axis path {
-    display: none;
-  }
-
-  /* 結果表示バー y軸 */
-  .y_axis line {
-    display: none;
-  }
+/* 結果表示バー y軸 */
+.y_axis line {
+  display: none;
+}
