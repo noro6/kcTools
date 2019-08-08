@@ -3,6 +3,10 @@ body {
   background: #f0ebe6;
 }
 
+.pt-3_5{
+  padding-top: 1.25rem !important;
+}
+
 .bg-dark1 {
   background: #3b3d3f !important;
 }
@@ -200,6 +204,11 @@ input[type=radio] {
   border-top-color: #000;
 }
 
+/* 基地札 */
+.btn-group-toggle label{
+  width: 80px;
+}
+
 /* 基地選択欄 */
 .lb_plane {
   margin: 5px 0px 5px 0px;
@@ -209,18 +218,19 @@ input[type=radio] {
 }
 
 .lb_plane:hover {
-  cursor: pointer;
   background-color: rgb(233, 233, 233);
 }
 
 /* 機体アイコン */
 .lb_plane_canvas {
+  cursor: move;
   width: 35px;
   height: 35px;
 }
 
 /* 機体名 */
 .plane_name_span {
+  cursor: pointer;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: .2rem;
 }

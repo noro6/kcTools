@@ -193,7 +193,7 @@ function setLbPlaneDiv($div, $original) {
     .data('taibaku', $original.data('taibaku'));
 
   $div.find('.plane_name_span').text($original.data('name'));
-  $div.find('.lb_plane_img').attr('src', './img/e/category' + category + '.png');
+  $div.find('.lb_plane_img').attr('src', './img/e/category' + 1 + '.png');
 
   // 改修の有効無効設定
   let $remodelInput = $div.find('.remodel_select');
@@ -208,7 +208,7 @@ function setLbPlaneDiv($div, $original) {
   if ($.inArray(category, reconnaissances) != -1) $div.find('.slot').val('4').change();
   else $div.find('.slot').val('18').change();
 
-  createLBObject();
+  setLBData();
 }
 
 
@@ -348,16 +348,29 @@ function getAirPower($lb_plane) {
   return sumPower;
 }
 
-function createLBObject() {
+function setLBData() {
   startTime = Date.now();
 
   let apList = [];
+  lbData.ap.length = 0;
 
   $('.lb_plane').each(function () {
     apList.push(getAirPower($(this)));
   });
 
   console.log(apList);
+  console.log(Date.now() - startTime + ' ms');
+
+  let sumAP = 0;
+  for (let i = 0; i < apList.length; i++) {
+    sumAP += apList[i];
+    if (i % 4 == 3) {
+      lbData.ap.push(sumAP);
+      sumAP = 0;
+    }
+  }
+
+  console.log(lbData);
   console.log(Date.now() - startTime + ' ms');
 }
 
@@ -373,7 +386,7 @@ function createPlaneTable($table, planes) {
   for (const plane of planes) {
     insertHtml += `
     <tr class="border-bottom plane" id="` + plane.id + `" data-name="` + plane.name + `" data-aa="` + plane.AA + `" data-dist="` + plane.dist + `" data-category="` + plane.category + `" data-remodel="` + plane.remodel + `" data-geigeki="` + plane.geigeki + `" data-taibaku="` + plane.taibaku + `">
-        <td width="8%"><img src="./img/e/category`+ plane.category + `.png" class="img-size-25" alt="` + plane.category + `"></td>
+        <td width="8%"><img src="./img/e/category`+ 1 + `.png" class="img-size-25" alt="` + plane.category + `"></td>
         <td width="62%">`+ plane.name + `</td>
         <td class="text-center" width="15%">`+ plane.AA + `</td>
         <td class="text-center" width="15%">`+ plane.dist + `</td>
@@ -399,11 +412,34 @@ function initAll(callback) {
   // 全データ展開
   createPlaneTable($('.plane_table'), getPlanes('0'));
 
+  // 改修値選択欄生成
+  let text = '';
+  for (let i = 0; i <= 10; i++) {
+    if (i == 0) text += '<option class="remodel__option" value="0" selected></option>';
+    else if (i == 10) text += '<option class="remodel__option" value="10">max</option>';
+    else text += '<option class="remodel__option" value="' + i + '">' + i + '</option>';
+  }
+  $('.remodel_select').append(text);
+
+  // 熟練度選択欄生成
+  text = `
+    <option class="prof prof__yellow" value="7">>></option>
+    <option class="prof prof__yellow" value="6">///</option>
+    <option class="prof prof__yellow" value="5">//</option>
+    <option class="prof prof__yellow" value="4">/</option>
+    <option class="prof prof__blue" value="3">|||</option>
+    <option class="prof prof__blue" value="2">||</option>
+    <option class="prof prof__blue" value="1">|</option>
+    <option class="prof" value="0" selected></option>
+  `;
+  $('.prof__select').append(text);
+
+  // 基地航空隊 第1基地航空隊操作盤を複製
+  $('.lb_ope').html($('#lb_item1').find('.lb_ope').html());
+
   // 基地航空隊 第1基地航空隊第1中隊を複製
-  const org = $('#lb_item1').children('div').html();
-  $('.lb_plane').each(function () {
-    $(this).html(org);
-  });
+  $('.lb_plane').html($('#lb_item1').find('.lb_plane:first').html());
+
 
   callback();
 }
@@ -760,7 +796,14 @@ function drawResultBar(data) {
 
       let addText = '';
       const target = chartData.rate[i];
-      for (const key of Object.keys(target)) if (target[key] != '0 %') addText += key + '( ' + target[key] + ' )　';
+      let isFirst = true;
+      for (const key of Object.keys(target)) {
+        if (target[key] != '0 %') {
+          addText += isFirst ? '' : ' / '
+          addText += key + '( ' + target[key] + ' )';
+          isFirst = false;
+        }
+      }
 
       let addText2 = '';
       const ap = data.friend[i];
@@ -842,6 +885,9 @@ $(function () {
     $('#mainContent').removeClass('d-none');
   });
 
+  // イベント貼り付け
+  $('input').on('input');
+
   // 目次クリックで移動
   $('.sidebar-sticky a[href^="#"]').on('click', function () {
     const speed = 300;
@@ -864,26 +910,35 @@ $(function () {
   });
 
   // 基地入れ替え設定
-  $('div.lb_tab').sortable({
+  $('div.lb_tab_main').sortable({
     delay: 100,
     scroll: false,
     placeholder: "lb_plane-drag",
     forcePlaceholderSize: true,
     tolerance: "pointer",
+    handle: 'img',
     stop: function (event, ui) {
       if (isOut) {
         // 選択状況をリセット
         clearLbPlaneDiv(ui.item);
         $(this).sortable('cancel');
+        ui.item.css('opacity', '0.0');
       }
+      ui.item.animate({ 'opacity': '1.0' }, 500);
     }
   });
   // 範囲外に機体を持って行ったときを拾う
   $('div#lb_content_main').droppable({
     accept: ".plane, .lb_plane",
     tolerance: "pointer",
-    over: function () { isOut = false; },
-    out: function () { isOut = true; }
+    over: function (event, ui) {
+      ui.draggable.animate({ 'opacity': '1.0' }, 100);
+      isOut = false;
+    },
+    out: function (event, ui) {
+      ui.draggable.animate({ 'opacity': '0.2' }, 100);
+      isOut = true;
+    }
   });
   // 機体をドラッグしてきた時の処理
   $('div.lb_plane').droppable({
@@ -973,6 +1028,11 @@ $(function () {
     }
   }, '.card-body .plane');
 
+  // 基地1部隊(4中隊)リセット
+  $(document).on('click', '.btnResetLB', function () {
+    $(this).parents('.lb_tab').find('.lb_plane').each(function () { clearLbPlaneDiv($(this)) })
+  });
+
   // 機体選択ボタンクリック -> モーダル展開
   $(document).on('click', '.plane_name_span', function () {
     // 機体選択画面の結果を返却するターゲットのdiv要素を取得
@@ -1015,8 +1075,6 @@ $(function () {
     // OKボタン活性化
     $('#btnCommitPlane').prop('disabled', false);
   });
-
-  $(document).on('')
 
   // OKボタンクリック(モーダル内)
   $('#btnCommitPlane').on('click', function () {
