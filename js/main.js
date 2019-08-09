@@ -358,9 +358,6 @@ function setLBData() {
     apList.push(getAirPower($(this)));
   });
 
-  console.log(apList);
-  console.log(Date.now() - startTime + ' ms');
-
   let sumAP = 0;
   for (let i = 0; i < apList.length; i++) {
     sumAP += apList[i];
@@ -370,7 +367,27 @@ function setLBData() {
     }
   }
 
-  console.log(lbData);
+  $('.lb_ope').each(function () {
+    var lbNo = $(this).parent().attr('id').slice(-1) - 1;
+    var ope = $(this).find('.active').text().trim();
+    switch (ope) {
+      case '集中':
+        lbData.status[lbNo] = 2;
+        break;
+      case '単発':
+        lbData.status[lbNo] = 1;
+        break;
+      case '防空':
+        lbData.status[lbNo] = 1;
+        break;
+      default:
+        lbData.status[lbNo] = 0;
+        break;
+    }
+  });
+
+  console.log(lbData.ap);
+  console.log(lbData.status);
   console.log(Date.now() - startTime + ' ms');
 }
 
@@ -886,7 +903,7 @@ $(function () {
   });
 
   // イベント貼り付け
-  $('input').on('input');
+  $(document).on('click', '.lb_ope label', function () { setLBData() });
 
   // 目次クリックで移動
   $('.sidebar-sticky a[href^="#"]').on('click', function () {
