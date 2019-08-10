@@ -193,7 +193,7 @@ function setLbPlaneDiv($div, $original) {
     .data('taibaku', $original.data('taibaku'));
 
   $div.find('.plane_name_span').text($original.data('name'));
-  $div.find('.lb_plane_img').attr('src', './img/e/category' + 1 + '.png');
+  $div.find('.lb_plane_img').attr('src', './img/e/category' + category + '.png');
 
   // 改修の有効無効設定
   let $remodelInput = $div.find('.remodel_select');
@@ -403,7 +403,7 @@ function createPlaneTable($table, planes) {
   for (const plane of planes) {
     insertHtml += `
     <tr class="border-bottom plane" id="` + plane.id + `" data-name="` + plane.name + `" data-aa="` + plane.AA + `" data-dist="` + plane.dist + `" data-category="` + plane.category + `" data-remodel="` + plane.remodel + `" data-geigeki="` + plane.geigeki + `" data-taibaku="` + plane.taibaku + `">
-        <td width="8%"><img src="./img/e/category`+ 1 + `.png" class="img-size-25" alt="` + plane.category + `"></td>
+        <td width="8%"><img src="./img/e/category`+ plane.category + `.png" class="img-size-25" alt="` + plane.category + `"></td>
         <td width="62%">`+ plane.name + `</td>
         <td class="text-center" width="15%">`+ plane.AA + `</td>
         <td class="text-center" width="15%">`+ plane.dist + `</td>

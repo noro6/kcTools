@@ -206,7 +206,7 @@ input[type=radio] {
 
 /* 基地札 */
 .btn-group-toggle label{
-  width: 80px;
+  background-color: white;
 }
 
 /* 基地選択欄 */
