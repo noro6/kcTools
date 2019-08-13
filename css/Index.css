@@ -137,9 +137,13 @@ input[type=radio] {
   }
 }
 
-/* 最初の */
+/* 最初のくるくる */
 #loadingSpinner {
   margin-top: 200px;
+}
+
+#main{
+  min-height: 100vh;
 }
 
 /* ページトップへ戻るボタン */
@@ -151,14 +155,12 @@ input[type=radio] {
   height: 30px;
   width: 30px;
 }
-
 .btn-goPageTop:before {
   position: relative;
   content: "↑";
   bottom: 1px;
   font-size: 18px;
 }
-
 .btn-toggleContent_hide {
   position: relative;
   bottom: 3px;
@@ -167,7 +169,6 @@ input[type=radio] {
   height: 30px;
   width: 30px;
 }
-
 .btn-toggleContent_hide:before {
   content: "";
   position: relative;
@@ -175,7 +176,6 @@ input[type=radio] {
   border: 5px solid transparent;
   border-bottom-color: #000;
 }
-
 .btn-toggleContent_show {
   position: relative;
   bottom: 3px;
@@ -184,7 +184,6 @@ input[type=radio] {
   height: 30px;
   width: 30px;
 }
-
 .btn-toggleContent_show:before {
   content: "";
   position: relative;
@@ -193,8 +192,17 @@ input[type=radio] {
   border-top-color: #000;
 }
 
+/* コンテンツ表示 */
+#main .content_title{
+  cursor: move;
+}
+
 /* 基地札 */
 .btn-group-toggle label{
+  background-color: white;
+}
+
+.lb_ope_def{ 
   background-color: white;
 }
 
@@ -231,11 +239,8 @@ input[type=radio] {
 
 /* 艦載機をドラッグしてきた時のスタイル */
 .lb_plane-hover {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  margin: 5px 0px 5px 0px;
-  transition: .2s;
-  border: 3px rgb(148, 212, 255) solid !important;
+  background-color: rgb(168, 220, 255) !important;
+  border: 2px rgb(57, 176, 255) solid !important;
 }
 
 /* 艦載機が抜き取られてる時の跡地のスタイル */
@@ -267,11 +272,15 @@ input[type=radio] {
   color: rgb(91, 173, 255) !important;
 }
 
+.plane_table_content{
+  height: 291px;
+}
+
 /* 機体選択欄 テーブル */
 .div_plane_table {
   overflow-x: hidden;
   overflow-y: overlay;
-  height: 300px;
+  height: 95%;
 }
 
 /* テーブルヘッダ */
@@ -441,7 +450,6 @@ input[type=radio] {
   min-width: 250px;
   width: auto;
   height: auto;
-  padding: 5px;
   background: rgba(255, 255, 255, 0.9);
   -webkit-box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
@@ -464,4 +472,9 @@ input[type=radio] {
 /* 結果表示バー y軸 */
 .y_axis line {
   display: none;
+}
+
+/* 詳細設定欄 */
+#setting_content label{
+  cursor: pointer;
 }
