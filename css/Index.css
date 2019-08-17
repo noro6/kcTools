@@ -82,7 +82,7 @@ input[type=radio] {
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  
+
   padding: 60px 0 0;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -97,8 +97,11 @@ input[type=radio] {
 }
 
 .sidebar .nav-link {
-  font-weight: 500;
-  color: #aaa;
+  color: #ccc;
+}
+
+.sidebar .nav-link:hover {
+  color: #00ccff;
 }
 
 
@@ -108,10 +111,6 @@ input[type=radio] {
 }
 
 .sidebar .nav-link.active {
-  color: #00ccff;
-}
-
-.sidebar .nav-link-active {
   color: #00ccff;
 }
 
@@ -125,6 +124,14 @@ input[type=radio] {
   text-transform: uppercase;
 }
 
+#smartMenuModal .nav-link{
+  color: #ccc;
+}
+#smartMenuModal .nav-link:hover{
+  cursor: pointer;
+  color: #00ccff;
+}
+
 [role="main"] {
   padding-top: 133px;
   /* 固定ナビゲーションバーの余白 */
@@ -135,6 +142,34 @@ input[type=radio] {
       padding-top: 48px;
       /* 固定ナビゲーションバーの余白 */
   }
+}
+
+/* スマホ限定メニュー */
+#menu-small {
+  position: relative;
+  height: 17px;
+  width: 24px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+#menu-small div {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  width: 24px;
+  background-color: #ddd;
+  border-radius: 1.5px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+#menu-small div:nth-of-type(1) {
+  top: 0;
+}
+#menu-small div:nth-of-type(2) {
+  top: 7px;
+}
+#menu-small div:nth-of-type(3) {
+  bottom: 0;
 }
 
 /* 最初のくるくる */
@@ -219,10 +254,33 @@ input[type=radio] {
 }
 
 /* 機体アイコン */
-.lb_plane_canvas {
+.plane_canvas {
   cursor: move;
   width: 35px;
   height: 35px;
+}
+
+
+.ship_name_span{
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: .2rem;
+  border: 2px #999 solid;
+}
+.ship_name_span:hover {
+  transition: .5s;
+  background-color: rgba(220, 255, 250, 0.8);
+}
+
+/* 艦娘機体選択欄 */
+.ship_plane {
+  margin: 5px 0px 5px 0px;
+  background-color: rgb(243, 243, 243);
+  border: 2px #aaa solid;
+  border-radius: .25rem;
+}
+.ship_plane:hover {
+  background-color: rgb(233, 233, 233);
 }
 
 /* 機体名 */
@@ -272,18 +330,18 @@ input[type=radio] {
   color: rgb(91, 173, 255) !important;
 }
 
+
+/* 機体選択欄 テーブル */
 .plane_table_content{
   height: 291px;
 }
-
-/* 機体選択欄 テーブル */
 .div_plane_table {
   overflow-x: hidden;
   overflow-y: overlay;
   height: 95%;
 }
 
-/* テーブルヘッダ */
+/* 機体テーブルヘッダ */
 .plane_table_ td {
   position: relative;
 }
@@ -340,6 +398,22 @@ input[type=radio] {
 
 /* 機体選択中(モーダル内限定) */
 .plane-selected {
+  color: #fff;
+  background-color: #70bfff !important;
+}
+
+/* 艦娘選択欄 テーブル */
+.ship_table_content{
+  height: 300px;
+}
+.div_ship_table {
+  overflow-x: hidden;
+  overflow-y: overlay;
+  height: 95%;
+}
+
+/* 艦娘選択中(モーダル内限定) */
+.ship-selected {
   color: #fff;
   background-color: #70bfff !important;
 }

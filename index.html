@@ -6,17 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- css -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="./css/jquery-ui.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="./css/Index.css">
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery-3.4.1.min.js"></script>
     <!-- jQuery UI -->
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <!-- jQuery.color -->
-    <script src="https://code.jquery.com/color/jquery.color-2.1.2.min.js"></script>
+    <script src="./js/jquery-ui.min.js"></script>
     <!-- d3 -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
@@ -26,11 +23,19 @@
     <title>Index</title>
 </head>
 
-<body data-spy="scroll" data-target="#Navbar" data-offset="380">
+<body>
     <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Top</a>
-        <input class="form-control form-control-dark w-100" type="text" placeholder="検索" aria-label="検索">
-        <ul class="navbar-nav px-3">
+        <div class="d-block d-md-none text-light pl-3 pt-3 py-2">
+            <div id="menu-small">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <a class="d-none d-md-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">Top</a>
+        <input class="d-none d-md-block form-control form-control-dark w-100" type="text" placeholder="検索"
+            aria-label="検索">
+        <ul class="d-none d-md-block navbar-nav px-3">
             <li class="nav-item text-nowrap">
                 <a class="nav-link" href="#">サインアウト</a>
             </li>
@@ -47,29 +52,29 @@
                             <span class="pl-3 text-light">
                                 制空計算機
                             </span>
-                            <ul class="nav flex-column mt-1 mb-2 ml-3">
-                                <li class="nav-item">
+                            <ul class="nav flex-column mt-1 mb-2 ml-3" id="li_index">
+                                <li class="nav-item" id="li_landBase">
                                     <a class="nav-link" href="#landBase">
                                         基地航空隊
                                         <span class="sr-only">(現在値)</span>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="li_friendShip">
                                     <a class="nav-link" href="#friendShip">
                                         艦隊
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="li_enemyShip">
                                     <a class="nav-link" href="#enemyShip">
                                         敵艦隊
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="li_result">
                                     <a class="nav-link" href="#result">
                                         計算結果
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" id="li_setting">
                                     <a class="nav-link" href="#setting">
                                         詳細設定
                                     </a>
@@ -173,12 +178,12 @@
                                                 <div class="lb_ope d-flex my-2 px-0">
                                                     <div class="lb_ope_basic btn-group btn-group-toggle"
                                                         data-toggle="buttons">
-                                                        <label class="btn btn-sm btn-outline-secondary">
+                                                        <label class="btn btn-sm btn-outline-secondary multiAttack">
                                                             <input class="lb_ope_radio" type="radio" name="type"
                                                                 autocomplete="off">
                                                             <span>集中</span>
                                                         </label>
-                                                        <label class="btn btn-sm btn-outline-secondary">
+                                                        <label class="btn btn-sm btn-outline-secondary ">
                                                             <input class="lb_ope_radio" type="radio" name="type"
                                                                 autocomplete="off">
                                                             <span>単発</span>
@@ -201,12 +206,12 @@
                                                 </div>
                                                 <!-- 第1基地航空隊 第1中隊　選択領域 -->
                                                 <div class="lb_tab_main">
-                                                    <div class="lb_plane container-fluid" id="">
+                                                    <div class="lb_plane container-fluid">
                                                         <div class="row">
                                                             <div class="col-12 col-md-5 col-lg-6 container">
                                                                 <div
                                                                     class="row justify-content-start align-self-center">
-                                                                    <div class="lb_plane_canvas mx-1">
+                                                                    <div class="plane_canvas mx-1">
                                                                         <img src="./img/e/undefined.png"
                                                                             class="lb_plane_img img-size-32" alt="">
                                                                     </div>
@@ -225,7 +230,7 @@
                                                                             <span class="input-group-text star">★</span>
                                                                         </div>
                                                                         <select
-                                                                            class="form-control form-control-sm remodel__option remodel_select"
+                                                                            class="custom-select custom-select-sm remodel__option remodel_select"
                                                                             disabled>
                                                                         </select>
                                                                     </div>
@@ -235,7 +240,7 @@
                                                                             <span class="input-group-text ">熟練</span>
                                                                         </div>
                                                                         <select
-                                                                            class="form-control form-control-sm prof prof__select">
+                                                                            class="custom-select custom-select-sm prof prof__select">
                                                                         </select>
                                                                     </div>
                                                                     <div
@@ -244,7 +249,7 @@
                                                                             <span class="input-group-text ">搭載</span>
                                                                         </div>
                                                                         <input type="number"
-                                                                            class="form-control form-control-sm slot "
+                                                                            class="form-control form-control-sm slot"
                                                                             value="18" min="0">
                                                                     </div>
                                                                 </div>
@@ -339,8 +344,8 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">カテゴリ</span>
                                                 </div>
-                                                <select class="form-control form-control-sm planeSelect__select">
-                                                </select>
+                                                <select
+                                                    class="custom-select custom-select-sm planeSelect_select"></select>
                                             </div>
                                             <div class="plane_table_content">
                                                 <div class="pr-3">
@@ -384,165 +389,258 @@
                                 </h5>
                             </div>
                             <div class="row collapse show" id="friendShip_content">
-                                <div style="height: 10px;">
+                                <div class="col-12 col-xl-8">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="ship_item-tab" data-toggle="tab"
+                                                href="#ship_item1" role="tab" aria-controls="ship_item1"
+                                                aria-selected="true">その1</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="ship_item2-tab" data-toggle="tab" href="#ship_item2"
+                                                role="tab" aria-controls="ship_item2" aria-selected="false">その2</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <!-- 艦娘その1 -->
+                                        <div class="tab-pane fade show active ship_tab" id="ship_item1" role="tabpanel"
+                                            aria-labelledby="ship_item1-tab">
+                                            <div class="ship_ope d-flex my-2 px-0">
+                                                <div>
+                                                    <div class="ship_name_span py-1 px-2 text-truncate">
+                                                        艦娘を選択
+                                                    </div>
+                                                </div>
+                                                <div class="ml-auto">
+                                                    <button
+                                                        class="btn btn-sm btn-danger btnResetShip px-2">装備リセット</button>
+                                                </div>
+                                                <div class="ml-2">
+                                                    <button
+                                                        class="btn btn-sm btn-secondary btnRemoveShip px-2">編成から外す</button>
+                                                </div>
+                                            </div>
+                                            <!-- 艦娘装備　選択領域 -->
+                                            <div class="ship_tab_main">
+                                                <div class="ship_plane container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-5 col-lg-6 container">
+                                                            <div class="row justify-content-start align-self-center">
+                                                                <div class="plane_canvas mx-1">
+                                                                    <img src="./img/e/undefined.png"
+                                                                        class="ship_plane_img img-size-32" alt="">
+                                                                </div>
+                                                                <div
+                                                                    class="flex-fill plane_name_span text-truncate mt-1 py-1 px-2 mr-1">
+                                                                    機体を選択
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col container">
+                                                            <div class="row justify-content-start align-self-center">
+                                                                <div class="input-group input-group-sm py-1 pl-1 w-33">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text star">★</span>
+                                                                    </div>
+                                                                    <select
+                                                                        class="custom-select custom-select-sm remodel__option remodel_select"
+                                                                        disabled>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="input-group input-group-sm py-1 pl-1 w-33">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text ">熟練</span>
+                                                                    </div>
+                                                                    <select
+                                                                        class="custom-select custom-select-sm prof prof__select">
+                                                                    </select>
+                                                                </div>
+                                                                <div class="input-group input-group-sm py-1 pl-1 w-33">
+                                                                    <div class="input-group-prepend">
+                                                                        <span class="input-group-text ">搭載</span>
+                                                                    </div>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm slot"
+                                                                        value="0" min="0">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="ship_plane container-fluid"></div>
+                                                <div class="ship_plane container-fluid"></div>
+                                                <div class="ship_plane container-fluid"></div>
+                                            </div>
+                                        </div>
+                                        <!-- 艦娘その2 -->
+                                        <div class="tab-pane fade ship_tab" id="ship_item2" role="tabpanel"
+                                            aria-labelledby="ship_item2-tab">
+                                            <div class="ship_ope d-flex my-2 px-0"></div>
+                                            <div class="ship_tab_main">
+                                                <div class="ship_plane container-fluid"></div>
+                                                <div class="ship_plane container-fluid"></div>
+                                                <div class="ship_plane container-fluid"></div>
+                                                <div class="ship_plane container-fluid"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 敵艦選択欄 -->
-                        <div class="border-bottom border-secondary" id="enemyShip">
-                            <div class="mt-2">
-                                <h5>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                        data-toggle="collapse" data-target="#enemyShip_content" aria-expanded="false"
-                                        aria-controls="enemyShip_content">▲</button>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                                    <span class="content_title">敵艦隊</span>
-                                </h5>
-                            </div>
-                            <div class="row collapse show" id="enemyShip_content">
-                                <div style="height: 10px;">
-                                </div>
+                    <div class="border-bottom border-secondary" id="enemyShip" style="height: 300px;">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#enemyShip_content" aria-expanded="false"
+                                    aria-controls="enemyShip_content">▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                <span class="content_title">敵艦隊</span>
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="enemyShip_content">
+                            <div style="height: 10px;">
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 計算結果 -->
-                        <div class="border-bottom border-secondary pb-2" id="result">
-                            <div class="mt-2">
-                                <h5>
-                                    <button type="button"
-                                        class="btn btn-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                        data-toggle="collapse" data-target="#result_content" aria-expanded="false"
-                                        aria-controls="result_content" disabled>▲</button>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                                    <span class="content_title">計算結果</span>
-                                </h5>
-                            </div>
-                            <div class="row collapse show" id="result_content">
-                                <div class="col container">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 ">
-                                            <div class="border border-secondary bg-white" id="resultChart"></div>
-                                        </div>
-                                        <div class="col d-none d-md-block">
-                                            <table class="table table-sm table-bordered text-center resultDetail">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="2">フェーズ</th>
-                                                        <th>制空値</th>
-                                                        <th colspan="2">確保</th>
-                                                        <th colspan="2">優勢</th>
-                                                        <th colspan="2">均衡</th>
-                                                        <th colspan="2">劣勢</th>
-                                                        <th colspan="2">喪失</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="pt-3_5" rowspan="2">基地1</td>
-                                                        <td>1波目</td>
-                                                        <td class="pt-3_5" rowspan="2">200</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                    <!-- 計算結果 -->
+                    <div class="border-bottom border-secondary pb-2" id="result">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#result_content" aria-expanded="false"
+                                    aria-controls="result_content" disabled>▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                <span class="content_title">計算結果</span>
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="result_content">
+                            <div class="col container">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 ">
+                                        <div class="border border-secondary bg-white" id="resultChart"></div>
+                                    </div>
+                                    <div class="col d-none d-md-block">
+                                        <table class="table table-sm table-bordered text-center resultDetail">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">フェーズ</th>
+                                                    <th>制空値</th>
+                                                    <th colspan="2">確保</th>
+                                                    <th colspan="2">優勢</th>
+                                                    <th colspan="2">均衡</th>
+                                                    <th colspan="2">劣勢</th>
+                                                    <th colspan="2">喪失</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="pt-3_5" rowspan="2">基地1</td>
+                                                    <td>1波目</td>
+                                                    <td class="pt-3_5" rowspan="2">200</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 細かい設定 -->
-                        <div class="border-bottom border-secondary" id="setting">
-                            <div class="mt-2">
-                                <h5>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                        data-toggle="collapse" data-target="#setting_content" aria-expanded="false"
-                                        aria-controls="setting_content">▲</button>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
-                                    <span class="content_title">詳細設定</span>
-                                </h5>
-                            </div>
-                            <div class="row collapse show" id="setting_content">
-                                <div class="col">
-                                    <div>熟練度 <span class="prof__yellow font-weight-bold">>></span> 選択時、内部熟練度を 120
-                                        として計算する機体:</div>
-                                    <div class="d-flex flex-wrap ml-3">
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_cf" checked>
-                                            <label class="custom-control-label" for="prof120_cf">艦戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_ctb">
-                                            <label class="custom-control-label" for="prof120_ctb">艦攻</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_cdb">
-                                            <label class="custom-control-label" for="prof120_cdb">艦爆</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_cr" checked>
-                                            <label class="custom-control-label" for="prof120_cr">艦偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_sr" checked>
-                                            <label class="custom-control-label" for="prof120_sr">水偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_sb">
-                                            <label class="custom-control-label" for="prof120_sb">水爆</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_sf" checked>
-                                            <label class="custom-control-label" for="prof120_sf">水戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_jet">
-                                            <label class="custom-control-label" for="prof120_jet">噴式</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_lba">
-                                            <label class="custom-control-label" for="prof120_lba">陸攻</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_lbi"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_lbi">陸戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_lbf"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_lbf">局戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_lbr"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_lbr">陸偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_lg" checked>
-                                            <label class="custom-control-label" for="prof120_sf">飛行艇</label>
-                                        </div>
+                    <!-- 細かい設定 -->
+                    <div class="border-bottom border-secondary" id="setting">
+                        <div class="mt-2">
+                            <h5>
+                                <button type="button"
+                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
+                                    data-toggle="collapse" data-target="#setting_content" aria-expanded="false"
+                                    aria-controls="setting_content">▲</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
+                                <span class="content_title">詳細設定</span>
+                            </h5>
+                        </div>
+                        <div class="row collapse show" id="setting_content">
+                            <div class="col">
+                                <div>熟練度 <span class="prof__yellow font-weight-bold">>></span> 選択時、内部熟練度を
+                                    120として計算する機体:</div>
+                                <div class="d-flex flex-wrap ml-3">
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_1" checked>
+                                        <label class="custom-control-label" for="prof120_1">艦戦</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_2">
+                                        <label class="custom-control-label" for="prof120_2">艦攻</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_3">
+                                        <label class="custom-control-label" for="prof120_3">艦爆</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_4" checked>
+                                        <label class="custom-control-label" for="prof120_4">艦偵</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_5" checked>
+                                        <label class="custom-control-label" for="prof120_5">水偵</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_6">
+                                        <label class="custom-control-label" for="prof120_6">水爆</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_7" checked>
+                                        <label class="custom-control-label" for="prof120_7">水戦</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_8">
+                                        <label class="custom-control-label" for="prof120_8">噴式</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_101">
+                                        <label class="custom-control-label" for="prof120_101">陸攻</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_102" checked>
+                                        <label class="custom-control-label" for="prof120_102">陸戦</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_103" checked>
+                                        <label class="custom-control-label" for="prof120_103">局戦</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_104" checked>
+                                        <label class="custom-control-label" for="prof120_104">陸偵</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input class="custom-control-input" type="checkbox" id="prof120_9" checked>
+                                        <label class="custom-control-label" for="prof120_9">飛行艇</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <div>簡易モード</div>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
 
@@ -597,10 +695,8 @@
                         <a href="https://twitter.com/">あああああ</a>
                     </div>
                 </footer>
+            </main>
         </div>
-        </main>
-    </div>
-
     </div>
 
     <!-- 機体選択モーダル -->
@@ -617,13 +713,89 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary px-4" id="btnCommitPlane" disabled>変更</button>
-                    <button type="button" class="btn btn-danger" id="btnRemovePlane" disabled>はずす</button>
+                    <button type="button" class="btn btn-primary px-4" id="planeSelectModal_btnCommitPlane"
+                        disabled>変更</button>
+                    <button type="button" class="btn btn-danger" id="planeSelectModal_btnRemovePlane"
+                        disabled>はずす</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- 艦娘選択モーダル -->
+    <div class="modal fade" id="shipSelectModal" tabindex="-1" role="dialog" aria-labelledby="shipSelectModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shipSelectModalTitle">艦娘選択</h5>
+                    <button type="button" class="close" id="modalClose" data-dismiss="modal" aria-label="閉じる">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="my-1 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">艦種</span>
+                        </div>
+                        <select class="custom-select custom-select-sm shipcategory_select"></select>
+                    </div>
+                    <div class="custom-control custom-checkbox my-2">
+                        <input class="custom-control-input" type="checkbox" id="dispFinalOnly" checked>
+                        <label class="custom-control-label" for="dispFinalOnly">最終改造状態のみ表示</label>
+                    </div>
+                    <div class="ship_table_content">
+                        <div class="pr-3 pb-1 border-bottom border-dark">
+                            <table class="ship_table_ w-100">
+                                <thead>
+                                    <tr>
+                                        <td width="50%" id="ship_table_th_name">艦娘名</td>
+                                        <td width="10%" class="text-center" id="ship_table_th_slot1">搭載1</td>
+                                        <td width="10%" class="text-center" id="ship_table_th_slot2">搭載2</td>
+                                        <td width="10%" class="text-center" id="ship_table_th_slot3">搭載3</td>
+                                        <td width="10%" class="text-center" id="ship_table_th_slot4">搭載4</td>
+                                        <td width="10%" class="text-center" id="ship_table_th_slot5">搭載5</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="pr-3 div_ship_table">
+                            <table class="ship_table w-100">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary px-4" id="shipSelectModal_btnCommitPlane"
+                        disabled>編成</button>
+                    <button type="button" class="btn btn-danger" id="shipSelectModal_btnRemovePlane"
+                        disabled>はずす</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- スマホメニュー -->
+    <div class="modal fade" id="smartMenuModal" tabindex="-1" role="dialog" aria-labelledby="smartMenuModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content mx-5 bg-dark2">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light" id="smartMenuModalTitle">メニュー</h5>
+                    <button type="button" class="close" id="modalClose" data-dismiss="modal" aria-label="閉じる">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
