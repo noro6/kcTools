@@ -260,12 +260,11 @@ input[type=radio] {
   height: 35px;
 }
 
-
 .ship_name_span{
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: .2rem;
-  border: 2px #999 solid;
+  border: 1.5px #999 solid;
 }
 .ship_name_span:hover {
   transition: .5s;
@@ -297,6 +296,12 @@ input[type=radio] {
 
 /* 艦載機をドラッグしてきた時のスタイル */
 .lb_plane-hover {
+  background-color: rgb(168, 220, 255) !important;
+  border: 2px rgb(57, 176, 255) solid !important;
+}
+
+/* 艦載機をドラッグしてきた時のスタイル */
+.ship_plane-hover {
   background-color: rgb(168, 220, 255) !important;
   border: 2px rgb(57, 176, 255) solid !important;
 }
@@ -333,7 +338,7 @@ input[type=radio] {
 
 /* 機体選択欄 テーブル */
 .plane_table_content{
-  height: 291px;
+  height: 298px;
 }
 .div_plane_table {
   overflow-x: hidden;
@@ -403,6 +408,11 @@ input[type=radio] {
 }
 
 /* 艦娘選択欄 テーブル */
+.ship:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
 .ship_table_content{
   height: 300px;
 }
@@ -549,6 +559,6 @@ input[type=radio] {
 }
 
 /* 詳細設定欄 */
-#setting_content label{
+#config_content label{
   cursor: pointer;
 }
