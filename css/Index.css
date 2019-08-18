@@ -82,6 +82,7 @@ input[type=radio] {
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
+  width: 150px;
 
   padding: 60px 0 0;
   overflow-x: hidden;
@@ -211,6 +212,7 @@ input[type=radio] {
   border: 5px solid transparent;
   border-bottom-color: #000;
 }
+
 .btn-toggleContent_show {
   position: relative;
   bottom: 3px;
@@ -225,6 +227,23 @@ input[type=radio] {
   top: 3px;
   border: 5px solid transparent;
   border-top-color: #000;
+}
+
+#friendFleet_content .btn-toggleContent_hide {
+  position: relative;
+  bottom: 0px;
+  font-size: 0;
+  padding: 0px;
+  height: 25px;
+  width: 25px;
+}
+#friendFleet_content .btn-toggleContent_show {
+  position: relative;
+  bottom: 0px;
+  font-size: 0;
+  padding: 0px;
+  height: 25px;
+  width: 25px;
 }
 
 /* コンテンツ表示 */
