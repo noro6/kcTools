@@ -134,14 +134,12 @@ input[type=radio] {
 }
 
 [role="main"] {
-  padding-top: 133px;
-  /* 固定ナビゲーションバーの余白 */
+  padding-top: 48px;
 }
 
 @media (min-width: 768px) {
   [role="main"] {
       padding-top: 48px;
-      /* 固定ナビゲーションバーの余白 */
   }
 }
 
@@ -266,8 +264,6 @@ input[type=radio] {
   background-color: rgb(243, 243, 243);
   border: 2px #aaa solid;
   border-radius: .25rem;
-  width: 100%;
-  min-width: 570px;
 }
 
 .lb_plane:hover {
@@ -276,9 +272,18 @@ input[type=radio] {
 
 /* 機体アイコン */
 .plane_canvas {
-  cursor: move;
   width: 35px;
   height: 35px;
+}
+
+.lb_plane .plane_canvas {
+  cursor: move!important;
+}
+.cur_move{
+  cursor: move;
+}
+.cur_no-drop{
+  cursor: no-drop!important;
 }
 
 .ship_name_span{
@@ -308,6 +313,8 @@ input[type=radio] {
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: .2rem;
+  min-width: 180px;
+  max-width: 430px;
 }
 
 .plane_name_span:hover {
@@ -357,8 +364,15 @@ input[type=radio] {
 }
 
 /* 機体情報入力部分　固定幅でいく */
-.planeInputArea{
-  width: 80px;
+/* 機体情報入力部分　固定幅でいく */
+.planeInput_remodel{
+  width: 85px;
+}
+.planeInput_prof{
+  width: 62px;
+}
+.planeInput_slot{
+  width: 62px;
 }
 
 /* 機体選択欄 テーブル */
@@ -430,6 +444,12 @@ input[type=radio] {
 .plane-selected {
   color: #fff;
   background-color: #70bfff !important;
+}
+
+@media(max-width: 420px){
+  .btnResetShip{
+    display: none;
+  }
 }
 
 /* 艦娘選択欄 テーブル */

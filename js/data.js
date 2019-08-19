@@ -20,201 +20,201 @@ const planeType = [
 
 // 艦上戦闘機 : 1
 const cbFighters = [
-  { id: 19, type: 1, name: "九六式艦戦", AA: 2, range: 3, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 20, type: 1, name: "零式艦戦21型", AA: 5, range: 7, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 21, type: 1, name: "零式艦戦52型", AA: 6, range: 6, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 22, type: 1, name: "試製烈風 後期型", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 53, type: 1, name: "烈風一一型", AA: 12, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 55, type: 1, name: "紫電改二", AA: 9, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 56, type: 1, name: "震電改", AA: 15, range: 2, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 96, type: 1, name: "零式艦戦21型(熟練)", AA: 8, range: 7, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 109, type: 1, name: "零式艦戦52型丙(六〇一空)", AA: 9, range: 6, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 110, type: 1, name: "烈風(六〇一空)", AA: 11, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 152, type: 1, name: "零式艦戦52型(熟練)", AA: 9, range: 6, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 153, type: 1, name: "零式艦戦52型丙(付岩井小隊)", AA: 10, range: 6, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 155, type: 1, name: "零式艦戦21型(付岩本小隊)", AA: 9, range: 7, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 156, type: 1, name: "零式艦戦52型甲(付岩本小隊)", AA: 11, range: 6, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 157, type: 1, name: "零式艦戦53型(岩本隊)", AA: 12, range: 6, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 158, type: 1, name: "Bf109T改", AA: 8, range: 2, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 159, type: 1, name: "Fw190T改", AA: 10, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 181, type: 1, name: "零式艦戦32型", AA: 5, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 182, type: 1, name: "零式艦戦32型(熟練)", AA: 8, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 184, type: 1, name: "Re.2001 OR改", AA: 6, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 189, type: 1, name: "Re.2005 改", AA: 11, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 197, type: 1, name: "F4F-3", AA: 4, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 198, type: 1, name: "F4F-4", AA: 5, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 205, type: 1, name: "F6F-3", AA: 8, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 206, type: 1, name: "F6F-5", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 228, type: 1, name: "九六式艦戦改", AA: 4, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 249, type: 1, name: "Fulmar", AA: 3, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 252, type: 1, name: "Seafire Mk.III改", AA: 9, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 254, type: -1, name: "F6F-3N", AA: 8, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 255, type: -1, name: "F6F-5N", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 271, type: 1, name: "紫電改四", AA: 10, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 335, type: 1, name: "烈風改(試製艦載型)", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 336, type: 1, name: "烈風改二", AA: 13, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 338, type: -1, name: "烈風改二戊型", AA: 11, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 339, type: -1, name: "烈風改二戊型(一航戦/熟練)", AA: 12, range: 6, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 19, type: 1, name: "九六式艦戦", AA: 2, range: 3, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 20, type: 1, name: "零式艦戦21型", AA: 5, range: 7, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 21, type: 1, name: "零式艦戦52型", AA: 6, range: 6, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 22, type: 1, name: "試製烈風 後期型", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 53, type: 1, name: "烈風一一型", AA: 12, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 55, type: 1, name: "紫電改二", AA: 9, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 56, type: 1, name: "震電改", AA: 15, range: 2, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 96, type: 1, name: "零式艦戦21型(熟練)", AA: 8, range: 7, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 109, type: 1, name: "零式艦戦52型丙(六〇一空)", AA: 9, range: 6, geigeki: 0, taibaku: 0, remodel: true, abbr: '零式艦戦52型丙(601空)' },
+  { id: 110, type: 1, name: "烈風(六〇一空)", AA: 11, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '烈風(601空)' },
+  { id: 152, type: 1, name: "零式艦戦52型(熟練)", AA: 9, range: 6, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 153, type: 1, name: "零式艦戦52型丙(付岩井小隊)", AA: 10, range: 6, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 155, type: 1, name: "零式艦戦21型(付岩本小隊)", AA: 9, range: 7, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 156, type: 1, name: "零式艦戦52型甲(付岩本小隊)", AA: 11, range: 6, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 157, type: 1, name: "零式艦戦53型(岩本隊)", AA: 12, range: 6, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 158, type: 1, name: "Bf109T改", AA: 8, range: 2, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 159, type: 1, name: "Fw190T改", AA: 10, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 181, type: 1, name: "零式艦戦32型", AA: 5, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 182, type: 1, name: "零式艦戦32型(熟練)", AA: 8, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 184, type: 1, name: "Re.2001 OR改", AA: 6, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 189, type: 1, name: "Re.2005 改", AA: 11, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 197, type: 1, name: "F4F-3", AA: 4, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 198, type: 1, name: "F4F-4", AA: 5, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 205, type: 1, name: "F6F-3", AA: 8, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 206, type: 1, name: "F6F-5", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 228, type: 1, name: "九六式艦戦改", AA: 4, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 249, type: 1, name: "Fulmar", AA: 3, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 252, type: 1, name: "Seafire Mk.III改", AA: 9, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 254, type: -1, name: "F6F-3N", AA: 8, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 255, type: -1, name: "F6F-5N", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 271, type: 1, name: "紫電改四", AA: 10, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 335, type: 1, name: "烈風改(試製艦載型)", AA: 10, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 336, type: 1, name: "烈風改二", AA: 13, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 338, type: -1, name: "烈風改二戊型", AA: 11, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 339, type: -1, name: "烈風改二戊型(一航戦/熟練)", AA: 12, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 艦上攻撃機 : 2
 const cbTorpedoBombers = [
-  { id: 16, type: 2, name: "九七式艦攻", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 17, type: 2, name: "天山", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 18, type: 2, name: "流星", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 52, type: 2, name: "流星改", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 82, type: 2, name: "九七式艦攻(九三一空)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 83, type: 2, name: "天山(九三一空)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 93, type: 2, name: "九七式艦攻(友永隊)", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 94, type: 2, name: "天山一二型(友永隊)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 98, type: 2, name: "九七式艦攻(熟練)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 112, type: 2, name: "天山(六〇一空)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 113, type: 2, name: "流星(六〇一空)", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 143, type: 2, name: "九七式艦攻(村田隊)", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 144, type: 2, name: "天山(村田隊)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 188, type: 2, name: "Re.2001 G改", AA: 4, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 196, type: 2, name: "TBD", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 242, type: 2, name: "Swordfish", AA: 0, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 243, type: 2, name: "Swordfish Mk.II(熟練)", AA: 0, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 244, type: 2, name: "Swordfish Mk.III(熟練)", AA: 0, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 256, type: 2, name: "TBF", AA: 1, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 257, type: -2, name: "TBM-3D", AA: 1, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 302, type: 2, name: "九七式艦攻(九三一空/熟練)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 342, type: 2, name: "流星改(一航戦)", AA: 2, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 343, type: 2, name: "流星改(一航戦/熟練)", AA: 3, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 344, type: -2, name: "九七式艦攻改 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 20999, type: 2, name: "艦攻(対空 0)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 16, type: 2, name: "九七式艦攻", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '97式艦攻' },
+  { id: 17, type: 2, name: "天山", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 18, type: 2, name: "流星", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 52, type: 2, name: "流星改", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 82, type: 2, name: "九七式艦攻(九三一空)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '97式艦攻(931空)' },
+  { id: 83, type: 2, name: "天山(九三一空)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '天山(931空)' },
+  { id: 93, type: 2, name: "九七式艦攻(友永隊)", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 94, type: 2, name: "天山一二型(友永隊)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '天山12型(友永隊)' },
+  { id: 98, type: 2, name: "九七式艦攻(熟練)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '97式艦攻(熟練)' },
+  { id: 112, type: 2, name: "天山(六〇一空)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '天山(601空)' },
+  { id: 113, type: 2, name: "流星(六〇一空)", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '流星(601空)' },
+  { id: 143, type: 2, name: "九七式艦攻(村田隊)", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '97式艦攻(村田隊)' },
+  { id: 144, type: 2, name: "天山(村田隊)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 188, type: 2, name: "Re.2001 G改", AA: 4, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 196, type: 2, name: "TBD", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 242, type: 2, name: "Swordfish", AA: 0, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 243, type: 2, name: "Swordfish Mk.II(熟練)", AA: 0, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 244, type: 2, name: "Swordfish Mk.III(熟練)", AA: 0, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 256, type: 2, name: "TBF", AA: 1, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 257, type: -2, name: "TBM-3D", AA: 1, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 302, type: 2, name: "九七式艦攻(九三一空/熟練)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '97式艦攻(931空/熟練)' },
+  { id: 342, type: 2, name: "流星改(一航戦)", AA: 2, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 343, type: 2, name: "流星改(一航戦/熟練)", AA: 3, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 344, type: -2, name: "九七式艦攻改 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '97艦攻改 3号戊型' },
+  { id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '97艦攻改(熟練) 3号戊型' },
+  { id: 20999, type: 2, name: "艦攻(対空 0)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 艦上爆撃機 : 3
 const cbDiveBombers = [
-  { id: 23, type: 3, name: "九九式艦爆", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 24, type: 3, name: "彗星", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 57, type: 3, name: "彗星一二型甲", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 60, type: 3, name: "零式艦戦62型(爆戦)", AA: 4, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 64, type: 3, name: "Ju87C改", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 97, type: 3, name: "九九式艦爆(熟練)", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 99, type: 3, name: "九九式艦爆(江草隊)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 100, type: 3, name: "彗星(江草隊)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 111, type: 3, name: "彗星(六〇一空)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 148, type: 3, name: "試製南山", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 154, type: 3, name: "零式艦戦62型(爆戦/岩井隊)", AA: 7, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 195, type: 3, name: "SBD", AA: 2, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 219, type: 3, name: "零式艦戦63型(爆戦)", AA: 5, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 233, type: 3, name: "F4U-1D", AA: 7, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 248, type: 3, name: "Skua", AA: 2, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 277, type: 3, name: "FM-2", AA: 6, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 291, type: 3, name: "彗星二二型(六三四空)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 292, type: 3, name: "彗星二二型(六三四空/熟練)", AA: 2, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 305, type: 3, name: "Ju87C改二(KMX搭載機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 306, type: 3, name: "Ju87C改二(KMX搭載機/熟練)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 316, type: 3, name: "Re.2001 CB改", AA: 4, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 319, type: 3, name: "彗星一二型(六三四空/三号爆弾搭載機)", AA: 3, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 320, type: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 23, type: 3, name: "九九式艦爆", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '99式艦爆' },
+  { id: 24, type: 3, name: "彗星", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 57, type: 3, name: "彗星一二型甲", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 60, type: 3, name: "零式艦戦62型(爆戦)", AA: 4, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 64, type: 3, name: "Ju87C改", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 97, type: 3, name: "九九式艦爆(熟練)", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '99式艦爆(熟練)' },
+  { id: 99, type: 3, name: "九九式艦爆(江草隊)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '99式艦爆(江草隊)' },
+  { id: 100, type: 3, name: "彗星(江草隊)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 111, type: 3, name: "彗星(六〇一空)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '彗星(601空)' },
+  { id: 148, type: 3, name: "試製南山", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 154, type: 3, name: "零式艦戦62型(爆戦/岩井隊)", AA: 7, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 195, type: 3, name: "SBD", AA: 2, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 219, type: 3, name: "零式艦戦63型(爆戦)", AA: 5, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 233, type: 3, name: "F4U-1D", AA: 7, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 248, type: 3, name: "Skua", AA: 2, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 277, type: 3, name: "FM-2", AA: 6, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 291, type: 3, name: "彗星二二型(六三四空)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '彗星22型(634空)' },
+  { id: 292, type: 3, name: "彗星二二型(六三四空/熟練)", AA: 2, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '彗星22型(634空/熟練)' },
+  { id: 305, type: 3, name: "Ju87C改二(KMX搭載機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 306, type: 3, name: "Ju87C改二(KMX搭載機/熟練)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 316, type: 3, name: "Re.2001 CB改", AA: 4, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 319, type: 3, name: "彗星一二型(六三四空/三号爆弾搭載機)", AA: 3, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '彗星12型(634空/3号爆)' },
+  { id: 320, type: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", AA: 0, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '彗星12型(31号光電管爆)' }
 ];
 
 // 艦上偵察機 : 4
 const cbReconnaissances = [
-  { id: 54, type: 4, name: "彩雲", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 61, type: 4, name: "二式艦上偵察機", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 151, type: 4, name: "試製景雲(艦偵型)", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 212, type: 4, name: "彩雲(東カロリン空)", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 273, type: 4, name: "彩雲(偵四)", AA: 2, range: 7, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 54, type: 4, name: "彩雲", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 61, type: 4, name: "二式艦上偵察機", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 151, type: 4, name: "試製景雲(艦偵型)", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 212, type: 4, name: "彩雲(東カロリン空)", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 273, type: 4, name: "彩雲(偵四)", AA: 2, range: 7, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 水上偵察機 : 5
 const spReconnaissances = [
-  { id: 25, type: 5, name: "零式水上偵察機", AA: 1, range: 7, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 59, type: 5, name: "零式水上観測機", AA: 2, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 102, type: 5, name: "九八式水上偵察機(夜偵)", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 115, type: 5, name: "Ar196改", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 118, type: 5, name: "紫雲", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 163, type: 5, name: "Ro.43水偵", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 171, type: 5, name: "OS2U", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 238, type: 5, name: "零式水上偵察機11型乙", AA: 1, range: 7, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 239, type: 5, name: "零式水上偵察機11型乙(熟練)", AA: 1, range: 7, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 304, type: 5, name: "S9 Osprey", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 25, type: 5, name: "零式水上偵察機", AA: 1, range: 7, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 59, type: 5, name: "零式水上観測機", AA: 2, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 102, type: 5, name: "九八式水上偵察機(夜偵)", AA: 0, range: 6, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 115, type: 5, name: "Ar196改", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 118, type: 5, name: "紫雲", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 163, type: 5, name: "Ro.43水偵", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 171, type: 5, name: "OS2U", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 238, type: 5, name: "零式水上偵察機11型乙", AA: 1, range: 7, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 239, type: 5, name: "零式水上偵察機11型乙(熟練)", AA: 1, range: 7, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 304, type: 5, name: "S9 Osprey", AA: 1, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 水上爆撃機 : 6
 const spBombers = [
-  { id: 26, type: 6, name: "瑞雲", AA: 2, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 62, type: 6, name: "試製晴嵐", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 79, type: 6, name: "瑞雲(六三四空)", AA: 2, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 80, type: 6, name: "瑞雲12型", AA: 3, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 81, type: 6, name: "瑞雲12型(六三四空)", AA: 3, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 194, type: 6, name: "Laté 298B", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 207, type: 6, name: "瑞雲(六三一空)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 208, type: 6, name: "晴嵐(六三一空)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 237, type: 6, name: "瑞雲(六三四空/熟練)", AA: 4, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 322, type: 6, name: "瑞雲改二(六三四空)", AA: 4, range: 5, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 323, type: 6, name: "瑞雲改二(六三四空/熟練)", AA: 5, range: 5, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 26, type: 6, name: "瑞雲", AA: 2, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 62, type: 6, name: "試製晴嵐", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 79, type: 6, name: "瑞雲(六三四空)", AA: 2, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 80, type: 6, name: "瑞雲12型", AA: 3, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 81, type: 6, name: "瑞雲12型(六三四空)", AA: 3, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 194, type: 6, name: "Laté 298B", AA: 1, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 207, type: 6, name: "瑞雲(六三一空)", AA: 1, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '瑞雲(631空)' },
+  { id: 208, type: 6, name: "晴嵐(六三一空)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false, abbr: '晴嵐(631空)' },
+  { id: 237, type: 6, name: "瑞雲(六三四空/熟練)", AA: 4, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '瑞雲(634空/熟練)' },
+  { id: 322, type: 6, name: "瑞雲改二(六三四空)", AA: 4, range: 5, geigeki: 0, taibaku: 0, remodel: true, abbr: '瑞雲改二(634空)' },
+  { id: 323, type: 6, name: "瑞雲改二(六三四空/熟練)", AA: 5, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '瑞雲改二(634空/熟練)' }
 ];
 
 // 水上戦闘機 : 7
 const spFighters = [
-  { id: 164, type: 7, name: "Ro.44水上戦闘機", AA: 2, range: 3, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 165, type: 7, name: "二式水戦改", AA: 3, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 215, type: 7, name: "Ro.44水上戦闘機bis", AA: 3, range: 3, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 216, type: 7, name: "二式水戦改(熟練)", AA: 5, range: 4, geigeki: 0, taibaku: 0, remodel: true },
-  { id: 217, type: 7, name: "強風改", AA: 5, range: 3, geigeki: 0, taibaku: 0, remodel: true }
+  { id: 164, type: 7, name: "Ro.44水上戦闘機", AA: 2, range: 3, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 165, type: 7, name: "二式水戦改", AA: 3, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 215, type: 7, name: "Ro.44水上戦闘機bis", AA: 3, range: 3, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 216, type: 7, name: "二式水戦改(熟練)", AA: 5, range: 4, geigeki: 0, taibaku: 0, remodel: true, abbr: '' },
+  { id: 217, type: 7, name: "強風改", AA: 5, range: 3, geigeki: 0, taibaku: 0, remodel: true, abbr: '' }
 ];
 
 // 大型飛行艇 : 8
 const lgFlyingBoats = [
-  { id: 138, type: 8, name: "二式大艇", AA: 0, range: 20, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 178, type: 8, name: "PBY-5A Catalina", AA: 0, range: 10, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 138, type: 8, name: "二式大艇", AA: 0, range: 20, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 178, type: 8, name: "PBY-5A Catalina", AA: 0, range: 10, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 噴式爆撃機 : 9
 const jetBombers = [
-  { id: 199, type: 9, name: "噴式景雲改", AA: 6, range: 3, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 200, type: 9, name: "橘花改", AA: 12, range: 2, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 199, type: 9, name: "噴式景雲改", AA: 6, range: 3, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 200, type: 9, name: "橘花改", AA: 12, range: 2, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 陸上攻撃機 : 101
 const lbAttackAircrafts = [
-  { id: 168, type: 101, name: "九六式陸攻", AA: 1, range: 8, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 169, type: 101, name: "一式陸攻", AA: 2, range: 9, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 170, type: 101, name: "一式陸攻(野中隊)", AA: 3, range: 9, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 180, type: 101, name: "一式陸攻 二二型甲", AA: 3, range: 10, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 186, type: 101, name: "一式陸攻 三四型", AA: 4, range: 8, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 187, type: 101, name: "銀河", AA: 3, range: 9, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 224, type: 101, name: "爆装一式戦 隼III型改(55戦隊)", AA: 6, range: 5, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 269, type: -101, name: "試製東海", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 270, type: -101, name: "東海(九〇一空)", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 168, type: 101, name: "九六式陸攻", AA: 1, range: 8, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 169, type: 101, name: "一式陸攻", AA: 2, range: 9, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 170, type: 101, name: "一式陸攻(野中隊)", AA: 3, range: 9, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 180, type: 101, name: "一式陸攻 二二型甲", AA: 3, range: 10, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 186, type: 101, name: "一式陸攻 三四型", AA: 4, range: 8, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 187, type: 101, name: "銀河", AA: 3, range: 9, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 224, type: 101, name: "爆装一式戦 隼III型改(55戦隊)", AA: 6, range: 5, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 269, type: -101, name: "試製東海", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 270, type: -101, name: "東海(九〇一空)", AA: 0, range: 8, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 陸軍戦闘機 : 102
 const lbInterceptors = [
-  { id: 176, type: 102, name: "三式戦 飛燕", AA: 8, range: 3, geigeki: 3, taibaku: 1, remodel: false },
-  { id: 177, type: 102, name: "三式戦 飛燕(飛行第244戦隊)", AA: 9, range: 4, geigeki: 4, taibaku: 3, remodel: true },
-  { id: 185, type: 102, name: "三式戦 飛燕一型丁(キ61-I 丁)", AA: 9, range: 4, geigeki: 3, taibaku: 2, remodel: true },
-  { id: 218, type: 102, name: "四式戦 疾風", AA: 10, range: 5, geigeki: 1, taibaku: 1, remodel: false },
-  { id: 221, type: 102, name: "一式戦 隼II型", AA: 6, range: 6, geigeki: 2, taibaku: 0, remodel: true },
-  { id: 222, type: 102, name: "一式戦 隼III型甲", AA: 7, range: 6, geigeki: 3, taibaku: 1, remodel: true },
-  { id: 223, type: 102, name: "一式戦 隼III型甲(54戦隊)", AA: 8, range: 7, geigeki: 3, taibaku: 1, remodel: false },
-  { id: 225, type: 102, name: "一式戦 隼II型(64戦隊)", AA: 11, range: 7, geigeki: 5, taibaku: 1, remodel: false },
-  { id: 250, type: 102, name: "Spitfire Mk.I", AA: 7, range: 4, geigeki: 1, taibaku: 2, remodel: false },
-  { id: 251, type: 102, name: "Spitfire Mk.V", AA: 9, range: 5, geigeki: 2, taibaku: 3, remodel: false },
-  { id: 253, type: 102, name: "Spitfire Mk.IX(熟練)", AA: 10, range: 4, geigeki: 4, taibaku: 2, remodel: false }
+  { id: 176, type: 102, name: "三式戦 飛燕", AA: 8, range: 3, geigeki: 3, taibaku: 1, remodel: false, abbr: '' },
+  { id: 177, type: 102, name: "三式戦 飛燕(飛行第244戦隊)", AA: 9, range: 4, geigeki: 4, taibaku: 3, remodel: true, abbr: '' },
+  { id: 185, type: 102, name: "三式戦 飛燕一型丁(キ61-I 丁)", AA: 9, range: 4, geigeki: 3, taibaku: 2, remodel: true, abbr: '三式戦 飛燕一型丁' },
+  { id: 218, type: 102, name: "四式戦 疾風", AA: 10, range: 5, geigeki: 1, taibaku: 1, remodel: false, abbr: '' },
+  { id: 221, type: 102, name: "一式戦 隼II型", AA: 6, range: 6, geigeki: 2, taibaku: 0, remodel: true, abbr: '' },
+  { id: 222, type: 102, name: "一式戦 隼III型甲", AA: 7, range: 6, geigeki: 3, taibaku: 1, remodel: true, abbr: '' },
+  { id: 223, type: 102, name: "一式戦 隼III型甲(54戦隊)", AA: 8, range: 7, geigeki: 3, taibaku: 1, remodel: false, abbr: '' },
+  { id: 225, type: 102, name: "一式戦 隼II型(64戦隊)", AA: 11, range: 7, geigeki: 5, taibaku: 1, remodel: false, abbr: '' },
+  { id: 250, type: 102, name: "Spitfire Mk.I", AA: 7, range: 4, geigeki: 1, taibaku: 2, remodel: false, abbr: '' },
+  { id: 251, type: 102, name: "Spitfire Mk.V", AA: 9, range: 5, geigeki: 2, taibaku: 3, remodel: false, abbr: '' },
+  { id: 253, type: 102, name: "Spitfire Mk.IX(熟練)", AA: 10, range: 4, geigeki: 4, taibaku: 2, remodel: false, abbr: '' }
 ];
 
 // 局地戦闘機 : 103
 const lbFighters = [
-  { id: 175, type: 103, name: "雷電", AA: 6, range: 2, geigeki: 2, taibaku: 5, remodel: false },
-  { id: 201, type: 103, name: "紫電一一型", AA: 8, range: 3, geigeki: 1, taibaku: 1, remodel: true },
-  { id: 202, type: 103, name: "紫電二一型 紫電改", AA: 9, range: 4, geigeki: 3, taibaku: 1, remodel: false },
-  { id: 263, type: 103, name: "紫電改(三四三空) 戦闘301", AA: 11, range: 4, geigeki: 4, taibaku: 2, remodel: false },
-  { id: 333, type: 103, name: "烈風改", AA: 10, range: 4, geigeki: 2, taibaku: 6, remodel: false },
-  { id: 334, type: 103, name: "烈風改(三五二空/熟練)", AA: 11, range: 4, geigeki: 3, taibaku: 7, remodel: false }
+  { id: 175, type: 103, name: "雷電", AA: 6, range: 2, geigeki: 2, taibaku: 5, remodel: false, abbr: '' },
+  { id: 201, type: 103, name: "紫電一一型", AA: 8, range: 3, geigeki: 1, taibaku: 1, remodel: true, abbr: '' },
+  { id: 202, type: 103, name: "紫電二一型 紫電改", AA: 9, range: 4, geigeki: 3, taibaku: 1, remodel: false, abbr: '' },
+  { id: 263, type: 103, name: "紫電改(三四三空) 戦闘301", AA: 11, range: 4, geigeki: 4, taibaku: 2, remodel: false, abbr: '' },
+  { id: 333, type: 103, name: "烈風改", AA: 10, range: 4, geigeki: 2, taibaku: 6, remodel: false, abbr: '' },
+  { id: 334, type: 103, name: "烈風改(三五二空/熟練)", AA: 11, range: 4, geigeki: 3, taibaku: 7, remodel: false, abbr: '' }
 ];
 
 // 陸上偵察機 : 104
 const lbReconnaissances = [
-  { id: 311, type: 104, name: "二式陸上偵察機", AA: 3, range: 8, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 312, type: 104, name: "二式陸上偵察機(熟練)", AA: 3, range: 9, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 311, type: 104, name: "二式陸上偵察機", AA: 3, range: 8, geigeki: 0, taibaku: 0, remodel: false, abbr: '' },
+  { id: 312, type: 104, name: "二式陸上偵察機(熟練)", AA: 3, range: 9, geigeki: 0, taibaku: 0, remodel: false, abbr: '' }
 ];
 
 // 機体全部のせ
