@@ -266,6 +266,8 @@ input[type=radio] {
   background-color: rgb(243, 243, 243);
   border: 2px #aaa solid;
   border-radius: .25rem;
+  width: 100%;
+  min-width: 570px;
 }
 
 .lb_plane:hover {
@@ -354,6 +356,10 @@ input[type=radio] {
   color: rgb(91, 173, 255) !important;
 }
 
+/* 機体情報入力部分　固定幅でいく */
+.planeInputArea{
+  width: 80px;
+}
 
 /* 機体選択欄 テーブル */
 .plane_table_content{
