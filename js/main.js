@@ -28,9 +28,17 @@ let enemyFleet = [];
 
 // 基地リスト
 let lbList = [{}];
+// 基地データ
+const lbData = {
+  ap: [0, 0, 0],
+  status: [0, 0, 0]
+}
 
 // 味方艦隊リスト 
 let friendFleetList = [{}];
+
+// 艦隊総制空値
+let mainAp = 0;
 
 // 防空モード
 let isDefenseMode = false;
@@ -38,21 +46,9 @@ let isDefenseMode = false;
 /*==================================
     デバッグ用
 ==================================*/
-// 処理速度計測用
-let startTime = Date.now();
 
 // 敵idリスト
 const enmList = [618, 735, /*735*/];
-
-// 基地とりあえず
-const lbData = {
-  ap: [0, 0, 0],
-  status: [0, 0, 0]
-}
-// 本隊とりあえず
-const mainAp = 139;
-
-let calcCount = 0;
 
 /*==================================
     関数
@@ -346,6 +342,10 @@ function createPlaneTable($table, planes) {
   let insertHtml = '';
 
   for (const plane of planes) {
+
+    // 対空 0 機体弾き 
+    if ($('#dispMoreThan0AA').prop('checked') && plane.AA == 0) continue;
+
     insertHtml += `
     <tr class="border-bottom plane" id="` + plane.id + `" data-type="` + plane.type + `">
         <td width="8%"><img src="./img/e/Type`+ plane.type + `.png" class="img-size-25" alt="` + plane.type + `"></td>
@@ -420,8 +420,8 @@ function initAll(callback) {
   let text = '';
   for (let i = 0; i <= 10; i++) {
     if (i == 0) text += '<option class="remodel__option" value="0" selected></option>';
-    else if (i == 10) text += '<option class="remodel__option" value="10">max</option>';
-    else text += '<option class="remodel__option" value="' + i + '">' + i + '</option>';
+    else if (i == 10) text += '<option class="remodel__option" value="10">★max</option>';
+    else text += '<option class="remodel__option" value="' + i + '">★+' + i + '</option>';
   }
   $('.remodel_select').append(text);
 
@@ -1216,6 +1216,7 @@ function updateFriendFleetInfo() {
   let prevParentShip = 1;
   let slotNo = 0;
   friendFleetList.length = 0;
+  mainAp = 0;
 
   // テーブルいったん非表示
   $('#fleet_info_table tbody tr').addClass('d-none');
@@ -1248,20 +1249,17 @@ function updateFriendFleetInfo() {
     drawChangeValue($target_td, prevAp, ffPlaneObj.ap);
   });
 
-  console.log(friendFleetList)
   // 総制空値表示
   for (const fleet of friendFleetList) {
-    // 制空値配列
+    let sumAp = 0;
     const apList = fleet.map(v => v.ap);
 
-    let sumAp = 0;
     // 1艦隊の総制空値
     for (const ap of apList) sumAp += ap;
 
-    // 総制空値
     let $target_td = $('#fleet_info_table #row_ship' + fleet[0].fleetNo).find('.col6');
-    console.log('#fleet_info_table #row_ship' + fleet[0].fleetNo)
     drawChangeValue($target_td, Number($target_td.text()), sumAp);
+    mainAp += sumAp;
   }
 }
 
@@ -1607,7 +1605,7 @@ $(() => {
     org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
 
     // ソート反映
-    const $target_table_div = $(this).parent().next();
+    const $target_table_div = $(this).parent().nextAll('.plane_table_content');
     const sorted = $target_table_div.find('.sorted');
     if (sorted.attr('class')) {
       const isAsc = sorted.attr('class').indexOf('asc') != -1;
@@ -1649,7 +1647,7 @@ $(() => {
     $(this).addClass('sorted ' + nextOrder);
 
     // 再度カテゴリ検索をかけて反映する
-    $parent.prev().find('.planeSelect_select').change();
+    $parent.prevAll('.planeTypeSelect').find('.planeSelect_select').change();
   });
 
   // ホバーされたものだけdraggeble設定追加
@@ -1820,9 +1818,9 @@ $(() => {
     $target.find('.btn-toggleContent_hide').removeClass('btn-toggleContent_hide').addClass('btn-toggleContent_show')
     $target.find('.ship_tab_main').collapse('show')
 
-    // 次の入力欄展開
+    // 次の入力欄表示
     let cur = Number($target.find('.ship_tab_main').attr('id').replace(/ship_plane_content_/g, ''));
-    if (cur) $('#ship_plane_content_' + ++cur).parent().removeClass('d-none');
+    if (cur) $('#ship_plane_content_' + ++cur).closest('.ship_tab').removeClass('d-none');
 
     $('#shipSelectModal').modal('hide');
   });
@@ -1848,7 +1846,7 @@ $(() => {
 
     // 次の入力欄展開
     let cur = Number($target.find('.ship_tab_main').attr('id').replace(/ship_plane_content_/g, ''));
-    if (cur) $('#ship_plane_content_' + ++cur).parent().removeClass('d-none');
+    if (cur) $('#ship_plane_content_' + ++cur).closest('.ship_tab').removeClass('d-none');
 
     $('#shipSelectModal').modal('hide');
   });
@@ -1864,7 +1862,8 @@ $(() => {
   });
 
   // 設定変更
-  $('#config_content .custom-control-input').click(caluclate);
+  $('#dispMoreThan0AA').click(() => { $('.planeSelect_select').change(); });
+  $('#innerProfSetting .custom-control-input').click(caluclate);
 
 
   // スマホメニュー展開

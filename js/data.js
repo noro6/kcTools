@@ -83,7 +83,8 @@ const cbTorpedoBombers = [
   { id: 342, type: 2, name: "流星改(一航戦)", AA: 2, range: 6, geigeki: 0, taibaku: 0, remodel: false },
   { id: 343, type: 2, name: "流星改(一航戦/熟練)", AA: 3, range: 6, geigeki: 0, taibaku: 0, remodel: false },
   { id: 344, type: -2, name: "九七式艦攻改 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
-  { id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false }
+  { id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false },
+  { id: 20999, type: 2, name: "艦攻(対空 0)", AA: 0, range: 4, geigeki: 0, taibaku: 0, remodel: false }
 ];
 
 // 艦上爆撃機 : 3

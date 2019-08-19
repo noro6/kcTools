@@ -150,7 +150,7 @@
                             </div>
                             <div class="row collapse show" id="lb_content">
                                 <!-- 基地航空隊設定領域 -->
-                                <div class="col-12 col-xl-8 container-fluid">
+                                <div class="col-12 col-xl-7 container-fluid">
                                     <div class="pt-2 pb-3" id="lb_content_main">
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li class="nav-item">
@@ -199,51 +199,40 @@
                                                 </div>
                                                 <!-- 第1基地航空隊 第1中隊　選択領域 -->
                                                 <div class="lb_tab_main">
-                                                    <div class="lb_plane container-fluid">
+                                                    <div class="lb_plane container">
                                                         <div class="row">
-                                                            <div class="col-12 col-md-5 col-lg-6 container">
+                                                            <div class="col container">
                                                                 <div
-                                                                    class="row justify-content-start align-self-center flex-nowrap">
+                                                                    class="row justify-content-start flex-nowrap align-self-center">
                                                                     <div class="plane_canvas mx-1">
                                                                         <img src="./img/e/undefined.png"
                                                                             class="plane_img img-size-32" alt="">
                                                                     </div>
                                                                     <div
-                                                                        class="flex-fill plane_name_span text-truncate mt-1 py-1 px-2 mr-1">
+                                                                        class="text-truncate flex-grow-1 plane_name_span my-1 py-1 px-2 mr-1">
                                                                         機体を選択
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col container">
-                                                                <div
-                                                                    class="row justify-content-start align-self-center">
-                                                                    <div
-                                                                        class="input-group input-group-sm py-1 pl-1 w-33">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text star">★</span>
+                                                                    <div class="ml-auto">
+                                                                        <div class="py-1 pl-1 planeInputArea">
+                                                                            <select
+                                                                                class="custom-select custom-select-sm remodel__option remodel_select"
+                                                                                disabled>
+                                                                            </select>
                                                                         </div>
-                                                                        <select
-                                                                            class="custom-select custom-select-sm remodel__option remodel_select"
-                                                                            disabled>
-                                                                        </select>
                                                                     </div>
-                                                                    <div
-                                                                        class="input-group input-group-sm py-1 pl-1 w-33">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text ">熟練</span>
+                                                                    <div>
+                                                                        <div class="py-1 pl-1 planeInputArea">
+                                                                            <select
+                                                                                class="custom-select custom-select-sm prof prof__select">
+                                                                            </select>
                                                                         </div>
-                                                                        <select
-                                                                            class="custom-select custom-select-sm prof prof__select">
-                                                                        </select>
                                                                     </div>
-                                                                    <div
-                                                                        class="input-group input-group-sm py-1 pl-1 w-33">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text ">搭載</span>
+                                                                    <div>
+                                                                        <div class="py-1 px-1 planeInputArea" >
+                                                                            <input type="number"
+                                                                                class="form-control form-control-sm slot"
+                                                                                value="18" min="0">
                                                                         </div>
-                                                                        <input type="number"
-                                                                            class="form-control form-control-sm slot"
-                                                                            value="18" min="0">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -331,7 +320,7 @@
                                             機体一覧　- 基地航空隊 -
                                         </div>
                                         <div class="card-body" id="planeSelect__content">
-                                            <div class="my-1 input-group input-group-sm">
+                                            <div class="my-1 input-group input-group-sm planeTypeSelect">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">カテゴリ</span>
                                                 </div>
@@ -390,187 +379,201 @@
                                                 href="#friendFleet_item2" role="tab">第2艦隊</a>
                                         </li>
                                     </ul>
-                                    <div class="tab-content">
+                                    <div class="tab-content mt-3">
                                         <!-- 第1艦隊 -->
                                         <div class="tab-pane fade show active friendFleet_tab container-fluid"
                                             id="friendFleet_item1" role="tabpanel">
                                             <div class="row">
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1">
-                                                    <div class="ship_ope d-flex flex-nowrap mt-2 px-0">
-                                                        <div
-                                                            class="ship_name_span align-self-center py-1 px-2 text-truncate">
-                                                            艦娘を選択
+                                                <div class="col-12 col-xl-6 ship_tab px-1">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex flex-nowrap mt-2 px-0">
+                                                            <div
+                                                                class="ship_name_span align-self-center py-1 px-2 text-truncate">
+                                                                艦娘を選択
+                                                            </div>
+                                                            <div class="ml-2 text-truncate align-self-center">
+                                                                <button
+                                                                    class="btn btn-sm btn-secondary btnRemoveShip px-2"
+                                                                    disabled>はずす</button>
+                                                            </div>
+                                                            <div class="ml-auto text-truncate align-self-center">
+                                                                <button
+                                                                    class="btn btn-sm btn-danger btnResetShip px-2">装備解除</button>
+                                                            </div>
+                                                            <div class="ml-2 minToggleBtn pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_1">▲</button>
+                                                            </div>
                                                         </div>
-                                                        <div class="ml-2 text-truncate align-self-center">
-                                                            <button class="btn btn-sm btn-secondary btnRemoveShip px-2"
-                                                                disabled>はずす</button>
-                                                        </div>
-                                                        <div class="ml-auto text-truncate align-self-center">
-                                                            <button
-                                                                class="btn btn-sm btn-danger btnResetShip px-2">装備解除</button>
-                                                        </div>
-                                                        <div class="ml-2 minToggleBtn pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_1">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <!-- 艦娘装備　選択領域 -->
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_1">
-                                                        <div class="ship_plane container-fluid">
-                                                            <div class="row">
-                                                                <div
-                                                                    class="col-12 col-md-5 col-lg-6 col-xl-5 container ship_plane_draggable">
+                                                        <!-- 艦娘装備　選択領域 -->
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_1">
+                                                            <div class="ship_plane container-fluid">
+                                                                <div class="row">
                                                                     <div
-                                                                        class="row justify-content-start flex-nowrap align-self-center">
-                                                                        <div class="plane_canvas mx-1">
-                                                                            <img src="./img/e/undefined.png"
-                                                                                class="plane_img img-size-32" alt="">
-                                                                        </div>
+                                                                        class="col-12 col-md-5 col-lg-6 col-xl-5 container ship_plane_draggable">
                                                                         <div
-                                                                            class="flex-fill plane_name_span text-truncate mt-1 py-1 px-2 mr-1">
-                                                                            機体を選択
+                                                                            class="row justify-content-start flex-nowrap align-self-center">
+                                                                            <div class="plane_canvas mx-1">
+                                                                                <img src="./img/e/undefined.png"
+                                                                                    class="plane_img img-size-32"
+                                                                                    alt="">
+                                                                            </div>
+                                                                            <div
+                                                                                class="flex-fill plane_name_span text-truncate mt-1 py-1 px-2 mr-1">
+                                                                                機体を選択
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col container">
-                                                                    <div
-                                                                        class="row justify-content-start align-self-center">
+                                                                    <div class="col container">
                                                                         <div
-                                                                            class="input-group input-group-sm py-1 pl-1 w-33">
-                                                                            <div class="input-group-prepend">
-                                                                                <span
-                                                                                    class="input-group-text star">★</span>
+                                                                            class="row justify-content-start align-self-center">
+                                                                            <div
+                                                                                class="input-group input-group-sm py-1 pl-1 w-33">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span
+                                                                                        class="input-group-text star">★</span>
+                                                                                </div>
+                                                                                <select
+                                                                                    class="custom-select custom-select-sm remodel__option remodel_select"
+                                                                                    disabled>
+                                                                                </select>
                                                                             </div>
-                                                                            <select
-                                                                                class="custom-select custom-select-sm remodel__option remodel_select"
-                                                                                disabled>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div
-                                                                            class="input-group input-group-sm py-1 pl-1 w-33">
-                                                                            <div class="input-group-prepend">
-                                                                                <span
-                                                                                    class="input-group-text ">熟練</span>
+                                                                            <div
+                                                                                class="input-group input-group-sm py-1 pl-1 w-33">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span
+                                                                                        class="input-group-text ">熟練</span>
+                                                                                </div>
+                                                                                <select
+                                                                                    class="custom-select custom-select-sm prof prof__select">
+                                                                                </select>
                                                                             </div>
-                                                                            <select
-                                                                                class="custom-select custom-select-sm prof prof__select">
-                                                                            </select>
-                                                                        </div>
-                                                                        <div
-                                                                            class="input-group input-group-sm py-1 pl-1 w-33">
-                                                                            <div class="input-group-prepend">
-                                                                                <span
-                                                                                    class="input-group-text ">搭載</span>
+                                                                            <div
+                                                                                class="input-group input-group-sm py-1 pl-1 w-33">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span
+                                                                                        class="input-group-text ">搭載</span>
+                                                                                </div>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm slot"
+                                                                                    value="0" min="0">
                                                                             </div>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm slot"
-                                                                                value="0" min="0">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
                                                         </div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_2">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_2">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_2">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_3">▲</button>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_2">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_3">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_4">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_4">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_5">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_3">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_5">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_3">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_6">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_4">▲</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_4">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
                                                         </div>
                                                     </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_6">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_5">▲</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_5">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_6">▲</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_6">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -579,14 +582,15 @@
                                         <div class="tab-pane fade friendFleet2_tab container-fluid"
                                             id="friendFleet_item2" role="tabpanel">
                                             <div class="row">
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_7">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_7">▲</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- 艦娘装備　選択領域 -->
@@ -598,98 +602,108 @@
                                                         <div class="ship_plane container-fluid d-none"></div>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_8">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_8">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_8">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_8">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_9">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_9">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_9">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_9">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_10">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_10">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_10">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_10">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_11">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_11">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_11">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_11">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="col-12 col-xl-6 ship_tab border-bottom border-secondary pb-2 mb-1 d-none">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
-                                                                data-toggle="collapse"
-                                                                data-target="#ship_plane_content_12">▲</button>
+                                                <div class="col-12 col-xl-6 ship_tab px-1 d-none">
+                                                    <div class="border border-secondary pb-2 my-1 px-3">
+                                                        <div class="ship_ope d-flex mt-2 px-0">
+                                                            <div class="ml-2 pt-1">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_hide"
+                                                                    data-toggle="collapse"
+                                                                    data-target="#ship_plane_content_12">▲</button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse hide" id="ship_plane_content_12">
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid"></div>
-                                                        <div class="ship_plane container-fluid d-none"></div>
+                                                        <div class="ship_tab_main collapse hide"
+                                                            id="ship_plane_content_12">
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid"></div>
+                                                            <div class="ship_plane container-fluid d-none"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -839,72 +853,90 @@
                                         class="btn btn-outline-secondary btn-sm btn-goPageTop">▲</button>
                                 </div>
                             </div>
-                            <div class="row collapse show" id="config_content">
-                                <div class="col">
-                                    <div>熟練度 <span class="prof__yellow font-weight-bold">>></span> 選択時、内部熟練度を
-                                        120として計算する機体:</div>
-                                    <div class="d-flex flex-wrap ml-3">
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_1" checked>
-                                            <label class="custom-control-label" for="prof120_1">艦戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_2">
-                                            <label class="custom-control-label" for="prof120_2">艦攻</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_3">
-                                            <label class="custom-control-label" for="prof120_3">艦爆</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_4" checked>
-                                            <label class="custom-control-label" for="prof120_4">艦偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_5" checked>
-                                            <label class="custom-control-label" for="prof120_5">水偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_6">
-                                            <label class="custom-control-label" for="prof120_6">水爆</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_7" checked>
-                                            <label class="custom-control-label" for="prof120_7">水戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_8">
-                                            <label class="custom-control-label" for="prof120_8">噴式</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_101">
-                                            <label class="custom-control-label" for="prof120_101">陸攻</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_102"
+                            <div class="container-fluid  collapse show" id="config_content">
+                                <div class="row">
+                                    <div class="col">
+                                        <div>● 機体選択欄設定</div>
+                                        <div class="custom-control custom-checkbox ml-3">
+                                            <input class="custom-control-input" type="checkbox" id="dispMoreThan0AA"
                                                 checked>
-                                            <label class="custom-control-label" for="prof120_102">陸戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_103"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_103">局戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_104"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_104">陸偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_9" checked>
-                                            <label class="custom-control-label" for="prof120_9">飛行艇</label>
+                                            <label class="custom-control-label" for="dispMoreThan0AA">対空 0
+                                                の機体をまとめる</label>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div>簡易モード</div>
+                                <div class="row mt-2">
+                                    <div class="col" id="innerProfSetting">
+                                        <div>● 熟練度 <span class="prof__yellow font-weight-bold">>></span> 選択時、内部熟練度を
+                                            120として計算する機体:</div>
+                                        <div class="d-flex flex-wrap ml-3">
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_1"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_1">艦戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_2">
+                                                <label class="custom-control-label" for="prof120_2">艦攻</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_3">
+                                                <label class="custom-control-label" for="prof120_3">艦爆</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_4"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_4">艦偵</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_5"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_5">水偵</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_6">
+                                                <label class="custom-control-label" for="prof120_6">水爆</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_7"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_7">水戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_8">
+                                                <label class="custom-control-label" for="prof120_8">噴式</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_101">
+                                                <label class="custom-control-label" for="prof120_101">陸攻</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_102"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_102">陸戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_103"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_103">局戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_104"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_104">陸偵</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_9"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_9">飛行艇</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div>簡易モード</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
