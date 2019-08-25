@@ -3,7 +3,18 @@ body {
   background: #f0ebe6;
 }
 
-.pt-3_5{
+/* tooltip調整 */
+.tooltip-inner {
+  max-width: 100%;
+}
+
+/* モーダル書き換え */
+.modal-backdrop{
+  min-width: 480px;
+  min-height: 960px;
+}
+
+.pt-3_5 {
   padding-top: 1.25rem !important;
 }
 
@@ -83,7 +94,6 @@ input[type=radio] {
   top: 0;
   height: calc(100vh - 48px);
   width: 150px;
-
   padding: 60px 0 0;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -105,7 +115,6 @@ input[type=radio] {
   color: #00ccff;
 }
 
-
 .sidebar .nav-link .feather {
   margin-right: 4px;
   color: #999;
@@ -115,8 +124,7 @@ input[type=radio] {
   color: #00ccff;
 }
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
+.sidebar .nav-link:hover .feather, .sidebar .nav-link.active .feather {
   color: inherit;
 }
 
@@ -125,16 +133,18 @@ input[type=radio] {
   text-transform: uppercase;
 }
 
-#smartMenuModal .nav-link{
+#smartMenuModal .nav-link {
   color: #ccc;
 }
-#smartMenuModal .nav-link:hover{
+
+#smartMenuModal .nav-link:hover {
   cursor: pointer;
   color: #00ccff;
 }
 
 [role="main"] {
   padding-top: 48px;
+  min-width: 480px;
 }
 
 @media (min-width: 768px) {
@@ -151,6 +161,7 @@ input[type=radio] {
   display: inline-block;
   box-sizing: border-box;
 }
+
 #menu-small div {
   position: absolute;
   left: 0;
@@ -161,22 +172,25 @@ input[type=radio] {
   display: inline-block;
   box-sizing: border-box;
 }
+
 #menu-small div:nth-of-type(1) {
   top: 0;
 }
+
 #menu-small div:nth-of-type(2) {
   top: 7px;
 }
+
 #menu-small div:nth-of-type(3) {
   bottom: 0;
 }
 
 /* 最初のくるくる */
 #loadingSpinner {
-  margin-top: 200px;
+  cursor: progress;
 }
 
-#main{
+#main {
   min-height: 100vh;
 }
 
@@ -189,12 +203,14 @@ input[type=radio] {
   height: 30px;
   width: 30px;
 }
+
 .btn-goPageTop:before {
   position: relative;
   content: "↑";
   bottom: 1px;
   font-size: 18px;
 }
+
 .btn-toggleContent_hide {
   position: relative;
   bottom: 3px;
@@ -203,6 +219,7 @@ input[type=radio] {
   height: 30px;
   width: 30px;
 }
+
 .btn-toggleContent_hide:before {
   content: "";
   position: relative;
@@ -219,6 +236,7 @@ input[type=radio] {
   height: 30px;
   width: 30px;
 }
+
 .btn-toggleContent_show:before {
   content: "";
   position: relative;
@@ -235,6 +253,7 @@ input[type=radio] {
   height: 25px;
   width: 25px;
 }
+
 #friendFleet_content .btn-toggleContent_show {
   position: relative;
   bottom: 0px;
@@ -245,16 +264,16 @@ input[type=radio] {
 }
 
 /* コンテンツ表示 */
-#main .content_title{
+#main .content_title {
   cursor: move;
 }
 
 /* 基地札 */
-.btn-group-toggle label{
+.btn-group-toggle label {
   background-color: white;
 }
 
-.lb_ope_def{ 
+.lb_ope_def {
   background-color: white;
 }
 
@@ -279,22 +298,25 @@ input[type=radio] {
 .lb_plane .plane_canvas {
   cursor: move!important;
 }
-.cur_move{
+
+.cur_move {
   cursor: move;
 }
-.cur_no-drop{
+
+.cur_no-drop {
   cursor: no-drop!important;
 }
 
-.ship_name_span{
+.ship_name_span {
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: .2rem;
-  border: 1.5px #999 solid;
+  border-bottom: 1px #999 solid;
 }
+
 .ship_name_span:hover {
   transition: .5s;
-  background-color: rgba(220, 255, 250, 0.8);
+  background-color: rgb(255, 250, 245);
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
 }
 
 /* 艦娘機体選択欄 */
@@ -304,6 +326,7 @@ input[type=radio] {
   border: 2px #aaa solid;
   border-radius: .25rem;
 }
+
 .ship_plane:hover {
   background-color: rgb(233, 233, 233);
 }
@@ -365,43 +388,54 @@ input[type=radio] {
 
 /* 機体情報入力部分　固定幅でいく */
 /* 機体情報入力部分　固定幅でいく */
-.planeInput_remodel{
+.planeInput_remodel {
   width: 85px;
 }
-.planeInput_prof{
+
+.planeInput_prof {
   width: 62px;
 }
-.planeInput_slot{
+
+.planeInput_slot {
   width: 62px;
 }
 
 /* 機体選択欄 テーブル */
-.plane_table_content{
+#lbPlaneSelect_content .plane_table_content {
   height: 298px;
 }
-.div_plane_table {
-  overflow-x: hidden;
+
+#lbPlaneSelect_content .div_plane_table {
   overflow-y: overlay;
-  height: 95%;
+  max-height: 93%;
+}
+
+.div_plane_table {
+  overflow-y: overlay;
+  max-height: 40vh;
 }
 
 /* 機体テーブルヘッダ */
 .plane_table_ td {
   position: relative;
 }
+
 .plane_table_ td:hover {
   cursor: pointer;
   font-weight: bold;
 }
+
 .plane_table_ td.sorted {
   font-weight: bold;
 }
+
 .plane_table_ td.asc:after {
-    position: relative;
-    content: "▲";
-    bottom: 2px;
-    font-size: 5px;
+  position: relative;
+  content: "▲";
+  bottom: 2px;
+  font-size: 5px;
 }
+
 .plane_table_ td.desc:after {
   position: relative;
   content: "▼";
@@ -446,31 +480,27 @@ input[type=radio] {
   background-color: #70bfff !important;
 }
 
-@media(max-width: 420px){
-  .btnResetShip{
-    display: none;
-  }
-}
-
-/* 艦娘選択欄 テーブル */
+/* 艦娘選択欄 テーブルない */
 .ship:hover {
   background-color: #f5f5f5;
   cursor: pointer;
 }
 
-.ship_table_content{
-  height: 300px;
-}
 .div_ship_table {
-  overflow-x: hidden;
   overflow-y: overlay;
-  height: 95%;
+  max-height: 40vh;
 }
 
 /* 艦娘選択中(モーダル内限定) */
 .ship-selected {
   color: #fff;
   background-color: #70bfff !important;
+}
+
+/* 敵艦選択テーブル */
+.div_enemy_table{
+  overflow-y: overlay;
+  max-height: 40vh;
 }
 
 /* 艦戦の色など */
@@ -604,6 +634,10 @@ input[type=radio] {
 }
 
 /* 詳細設定欄 */
-#config_content label{
+#config_content label {
   cursor: pointer;
+}
+
+#dispMoreThanxAA{
+  width: 60px;
 }
