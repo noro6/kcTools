@@ -607,7 +607,6 @@ function createEnemyTable($table, type) {
 function drawResultBar(data) {
   // グラフ描画域リセット
   $('#resultChart').html('');
-  return
 
   // それぞれのフェーズにおける制空ボーダーの配列を生成
   const border = data.enemy.map(eap => getBorder(eap));
