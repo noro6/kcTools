@@ -10,7 +10,7 @@ body {
 
 /* モーダル書き換え */
 .modal-backdrop{
-  min-width: 480px;
+  min-width: 530px;
   min-height: 960px;
 }
 
@@ -50,7 +50,7 @@ body {
   color: #333 !important;
   border-color: #aaa !important;
   background-color: transparent !important;
-  border-bottom-color: #f0ebe6 !important;
+  border-bottom-color: #fff !important;
 }
 
 /* ラジオボタン非表示 */
@@ -144,7 +144,7 @@ input[type=radio] {
 
 [role="main"] {
   padding-top: 48px;
-  min-width: 480px;
+  min-width: 526px;
 }
 
 @media (min-width: 768px) {
@@ -277,9 +277,17 @@ input[type=radio] {
   background-color: white;
 }
 
+.resource{
+  cursor: help;
+}
+
+.resource_img{
+  width: 20px;
+  height: auto;
+}
+
 /* 基地選択欄 */
 .lb_plane {
-  margin: 5px 0px 5px 0px;
   background-color: rgb(243, 243, 243);
   border: 2px #aaa solid;
   border-radius: .25rem;
@@ -307,6 +315,10 @@ input[type=radio] {
   cursor: no-drop!important;
 }
 
+.dispShipCount{
+  width: 60px;
+}
+
 .ship_name_span {
   cursor: pointer;
   border-bottom: 1px #999 solid;
@@ -321,7 +333,6 @@ input[type=radio] {
 
 /* 艦娘機体選択欄 */
 .ship_plane {
-  margin: 5px 0px 5px 0px;
   background-color: rgb(243, 243, 243);
   border: 2px #aaa solid;
   border-radius: .25rem;
@@ -337,7 +348,6 @@ input[type=radio] {
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: .2rem;
   min-width: 180px;
-  max-width: 430px;
 }
 
 .plane_name_span:hover {
@@ -359,7 +369,7 @@ input[type=radio] {
 
 /* 艦載機が抜き取られてる時の跡地のスタイル */
 .lb_plane-drag {
-  margin: 5px 0px 5px 0px;
+  margin: .25rem 0rem .25rem 0rem;
   border: 2px rgb(255, 153, 0) dashed !important;
   background-color: transparent;
   border-radius: .25rem;
@@ -369,7 +379,7 @@ input[type=radio] {
   color: rgb(0, 170, 170) !important;
 }
 
-.remodel__option {
+.IMP__option {
   color: rgb(0, 170, 170) !important;
 }
 
@@ -387,8 +397,7 @@ input[type=radio] {
 }
 
 /* 機体情報入力部分　固定幅でいく */
-/* 機体情報入力部分　固定幅でいく */
-.planeInput_remodel {
+.planeInput_IMP {
   width: 85px;
 }
 
@@ -402,7 +411,7 @@ input[type=radio] {
 
 /* 機体選択欄 テーブル */
 #lbPlaneSelect_content .plane_table_content {
-  height: 298px;
+  height: 294px;
 }
 
 #lbPlaneSelect_content .div_plane_table {
@@ -480,7 +489,7 @@ input[type=radio] {
   background-color: #70bfff !important;
 }
 
-/* 艦娘選択欄 テーブルない */
+/* 艦娘選択欄 テーブル */
 .ship:hover {
   background-color: #f5f5f5;
   cursor: pointer;
@@ -491,16 +500,105 @@ input[type=radio] {
   max-height: 40vh;
 }
 
+@media (max-width: 540px) {
+  .plane {
+    height: 30px;
+  }
+
+  .ship{
+    height: 30px;
+  }
+
+  .enemy{
+    height: 30px;
+  }
+}
+
 /* 艦娘選択中(モーダル内限定) */
 .ship-selected {
   color: #fff;
   background-color: #70bfff !important;
 }
 
+.sortable_handle{
+  cursor: move;
+}
+
+#battleCount{
+  width: 60px;
+}
+
+.battle_content-placeholder{
+  border: 1px coral solid;
+}
+
+.enemy_content:hover{
+  background-color: #f5f5f5;
+}
+
+.enemy_name_span{
+  cursor: pointer;
+  width: 180px;
+}
+
+.enemy_ap{
+  width: 35px;
+  text-align: right;
+}
+.enemy_ap_form{
+  outline: none;
+  text-align: right;
+  width: 32px;
+  height: 21px;
+  font-size: .875rem;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px #aaa solid;
+}
+
 /* 敵艦選択テーブル */
+#enemySelect_content .enemy_table_content {
+  width: 380px;
+  height: 306px;
+}
+
+#enemySelect_content .div_enemy_table {
+  overflow-y: overlay;
+  max-height: 93%;
+}
+
 .div_enemy_table{
   overflow-y: overlay;
   max-height: 40vh;
+}
+
+.enemy:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+#enemySelect_content .enemy_draggable{
+  cursor: move;
+}
+
+.enemy_helper {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: .2rem;
+  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+.enemyFleet_item-hover{
+  background-color: rgb(242, 250, 255) !important;
+  border: 1px rgb(57, 176, 255) solid !important;
+}
+
+/* 敵艦選択中(モーダル内限定) */
+.enemy-selected {
+  color: #fff;
+  background-color: #70bfff !important;
 }
 
 /* 艦戦の色など */
@@ -576,11 +674,11 @@ input[type=radio] {
 /* 対潜哨戒機の色など */
 .css_lb_asw_aircraft {
   border: 2px rgb(110, 135, 205) solid;
-  background-color: rgb(160, 185, 255);
+  background-color: rgb(180, 205, 255);
 }
 
 .css_lb_asw_aircraft:hover {
-  background-color: rgb(150, 175, 245);
+  background-color: rgb(170, 195, 245);
 }
 
 /* 夜間機の色など */
@@ -640,4 +738,12 @@ input[type=radio] {
 
 #dispMoreThanxAA{
   width: 60px;
+}
+
+.text_existTooltip {
+  text-decoration: underline;
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+  cursor: help;
+  text-decoration-skip-ink: none;
 }
