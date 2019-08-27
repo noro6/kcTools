@@ -716,117 +716,122 @@
                                         title="最上部へ">▲</button>
                                 </div>
                             </div>
-                            <div class="d-flex collapse show flex-nowrap" id="enemyFleet_content">
-                                <div class="">
-                                    <div class="d-flex justify-content-start mb-2">
-                                        <div class="ml-3 mr-1 align-self-center">戦闘回数：</div>
-                                        <select class="custom-select custom-select-sm" id="battleCount">
-                                            <option value="1" selected>1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                        <div class="ml-1 align-self-center">回</div>
-                                    </div>
-                                    <div class="enemy_tab">
-                                        <div class="d-flex justify-content-start flex-wrap battle_container">
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                            <div class="collapse show" id="enemyFleet_content">
+                                <div class="d-flex collapse show container-fluid flex-nowrap" id="enemyFleet_content">
+                                    <div class="">
+                                        <div class="d-flex justify-content-start mb-2">
+                                            <div class="ml-3 mr-1 align-self-center">戦闘回数：</div>
+                                            <select class="custom-select custom-select-sm" id="battleCount">
+                                                <option value="1" selected>1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                            <div class="ml-1 align-self-center">回</div>
+                                        </div>
+                                        <div class="enemy_tab">
+                                            <div class="d-flex justify-content-start flex-wrap battle_container">
                                                 <div
-                                                    class="border-bottom border-secondary pb-2 d-flex justify-content-start">
-                                                    <div class="ml-2 align-self-center sortable_handle">
-                                                        <span class="battleNo">1</span>戦目
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    <div
+                                                        class="border-bottom border-secondary pb-2 d-flex justify-content-start">
+                                                        <div class="ml-2 align-self-center sortable_handle">
+                                                            <span class="battleNo">1</span>戦目
+                                                        </div>
+                                                        <div class="ml-auto align-self-center sortable_handle">
+                                                            制空値: <span class="enemySumAP">1</span>
+                                                        </div>
+                                                        <div class="ml-2 align-self-center">
+                                                            <button
+                                                                class="btn btn-sm btn-danger btnResetBattle px-2">クリア</button>
+                                                        </div>
                                                     </div>
-                                                    <div class="ml-auto align-self-center">
-                                                        <button
-                                                            class="btn btn-sm btn-danger btnResetBattle px-2">クリア</button>
-                                                    </div>
-                                                </div>
-                                                <div class="enemyFleet_item pb-1 px-1">
-                                                    <div class="enemy_content pt-1 border-bottom">
-                                                        <div class="py-1 px-1 d-flex justify-content-start">
-                                                            <div class="enemy_name_span align-self-center">
-                                                                敵艦を選択
-                                                            </div>
-                                                            <div class="ml-auto enemy_ap align-self-center">0</div>
-                                                            <div
-                                                                class="d-none enemy_name_span direct_enemy_name align-self-center">
-                                                                直接入力
-                                                            </div>
-                                                            <div class="d-none direct_enemy_ap ml-auto">
-                                                                <input class="enemy_ap_form align-self-center"
-                                                                    value="0">
+                                                    <div class="enemyFleet_item pb-1 px-1">
+                                                        <div class="enemy_content pt-1 border-bottom">
+                                                            <div class="py-1 px-1 d-flex justify-content-start">
+                                                                <div class="enemy_name_span align-self-center">
+                                                                    敵艦を選択
+                                                                </div>
+                                                                <div class="ml-auto enemy_ap align-self-center">0</div>
+                                                                <div
+                                                                    class="d-none enemy_name_span direct_enemy_name align-self-center">
+                                                                    直接入力
+                                                                </div>
+                                                                <div class="d-none direct_enemy_ap ml-auto">
+                                                                    <input class="enemy_ap_form align-self-center"
+                                                                        value="0">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
-                                            </div>
-                                            <div
-                                                class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
+                                                <div
+                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-none d-lg-block ml-2">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            敵艦一覧
-                                        </div>
-                                        <div class="card-body" id="enemySelect_content">
-                                            <div class="my-1 input-group input-group-sm enemyTypeSelect">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">種別</span>
-                                                </div>
-                                                <select
-                                                    class="custom-select custom-select-sm enemyType_select"></select>
+                                    <div class="d-none d-lg-block ml-2">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                敵艦一覧
                                             </div>
-                                            <div class="enemy_table_content">
-                                                <div class="pr-3 pb-1">
-                                                    <table class="enemy_table_ w-100">
-                                                        <thead>
-                                                            <tr>
-                                                                <td width="60%" class="pl-2">敵艦名</td>
-                                                                <td width="15%" class="text-center">制空値</td>
-                                                                <td width="25%" class="text-center">制空値(基地)</td>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
+                                            <div class="card-body" id="enemySelect_content">
+                                                <div class="my-1 input-group input-group-sm enemyTypeSelect">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">種別</span>
+                                                    </div>
+                                                    <select
+                                                        class="custom-select custom-select-sm enemyType_select"></select>
                                                 </div>
-                                                <div class="pr-3 div_enemy_table">
-                                                    <table class="enemy_table w-100">
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
+                                                <div class="enemy_table_content">
+                                                    <div class="pr-3 pb-1">
+                                                        <table class="enemy_table_ w-100">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td width="60%" class="pl-2">敵艦名</td>
+                                                                    <td width="15%" class="text-center">制空値</td>
+                                                                    <td width="25%" class="text-center">制空値(基地)</td>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                    <div class="pr-3 div_enemy_table">
+                                                        <table class="enemy_table w-100">
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
