@@ -1,6 +1,7 @@
 /*==================================
-    グローバルっぽい変数
+    グローバル
 ==================================*/
+
 // 機体選択画面の返却先
 let $target = undefined;
 
@@ -17,22 +18,18 @@ const reconnaissances = [4, 5, 8, 104];
 let isOut = false;
 
 // 結果表示バー用データ
-const chartData =
-{
-  own: [],
-  enemy: [],
-  rate: [{}]
-};
+let chartData = { own: [], enemy: [], rate: [] };
+
 let prevData = [];
 
 // 基地航空隊入力データ
-const landBaseData = [{}];
+let landBaseData = [];
 
 // 味方艦隊入力データ
-let friendFleetData = [{}];
+let friendFleetData = [];
 
 // 敵艦隊入力データ
-let enemyFleetData = [{}];
+let enemyFleetData = [];
 
 // 艦隊総制空値
 let mainAp = 0;
@@ -42,13 +39,6 @@ let isDefenseMode = false;
 
 // arrayとdiffArray内に1つでも同じ値がある場合true
 const isContain = (array, diffArray) => { for (const value1 of array) for (const value2 of diffArray) if (value1 === value2) return true; return false; }
-
-/*==================================
-    デバッグ用
-==================================*/
-
-// 敵idリスト
-let enmList = [118, 235, /*735*/];
 
 /*==================================
     描画用
@@ -714,12 +704,12 @@ function createEnemyTable($table, type) {
 /**
  * グラフの描画を行う
  * 確保を100%とした、120%上限あたりの各100分率をグラフ化
- * @param {Object} data
  */
-function drawResultBar(data) {
+function drawResultBar() {
   // グラフ描画域リセット
   $('#resultChart').html('');
 
+  const data = Object.create(chartData);
   // それぞれのフェーズにおける制空ボーダーの配列を生成
   const border = data.enemy.map(eap => getBorder(eap));
   const divBase = border.map(value => value[0] == 0 ? 1 : value[0]);
@@ -801,12 +791,11 @@ function drawResultBar(data) {
       let isFirst = true;
 
       if (!isDefenseMode) {
-        const target = chartData.rate[i];
-
+        const target = data.rate[i];
         for (const key of Object.keys(target)) {
-          if (target[key] != '0 %') {
+          if ((target[key] + ' %') != '0 %') {
             addText += isFirst ? '' : ' / '
-            addText += key + '( ' + target[key] + ' )';
+            addText += airStatus.find(v => v.id == key).abbr + '( ' + target[key] + ' % )';
             isFirst = false;
           }
         }
@@ -1008,17 +997,6 @@ function createEnemyObject(id) {
   return enemy
 }
 
-/**
- * 敵IDのリストから敵艦隊を生成する
- * @param {Array.<number>} enmList 敵艦IDリスト
- * @returns {Array.<Object>} 敵艦隊オブジェクト配列
- */
-function getEnemyFleet(enmList) {
-  const selectedEnemy = [];
-  for (const id of enmList) selectedEnemy.push(createEnemyObject(id));
-  return selectedEnemy;
-}
-
 /*==================================
     計算
 ==================================*/
@@ -1058,24 +1036,25 @@ function caluclate() {
   // 基地情報更新 3.305908203125ms
   console.time('updateLandBaseInfo');
   updateLandBaseInfo();
-  console.log(landBaseData);
+  //console.log(landBaseData);
   console.timeEnd('updateLandBaseInfo');
 
   // 艦隊情報更新 5.05590820312ms
   console.time('updateFriendFleetInfo');
   updateFriendFleetInfo()
-  console.log(friendFleetData);
+  //console.log(friendFleetData);
   console.timeEnd('updateFriendFleetInfo');
 
   // 敵艦情報更新 0.612060546875ms
   console.time('updateEnemyFleetInfo');
   updateEnemyFleetInfo()
-  console.log(enemyFleetData);
+  //console.log(enemyFleetData);
   console.timeEnd('updateEnemyFleetInfo');
 
   // メイン計算 rate:61.307861328125ms
   startCaluclate();
 
+  console.log(chartData)
   // 結果表示 3.75830078125ms
   console.time('drawResultBar');
   drawResultBar(chartData);
@@ -1083,8 +1062,13 @@ function caluclate() {
 
   // おおよそ 70.23974609375ms (rate 20000回試行)
   console.timeEnd('caluclate');
-
   console.log('');
+
+  // 後始末
+  landBaseData = null;
+  friendFleetData = null;
+  enemyFleetData = null;
+  chartData = null;
 }
 
 /**
@@ -1096,7 +1080,7 @@ function updateLandBaseInfo() {
   let sumFuel = 0;
   let sumAmmo = 0;
   let sumBauxite = 0;
-  landBaseData.length = 0;
+  landBaseData = [];
 
   $('.lb_tab').each((index, element) => {
     const $lb_tab = $(element);
@@ -1455,7 +1439,7 @@ function getAirPower_fleet(plane) {
  */
 function updateFriendFleetInfo() {
   const tmpFriendFleet = [];
-  friendFleetData.length = 0;
+  friendFleetData = [];
   mainAp = 0;
 
   // テーブルいったん全て非表示
@@ -1515,7 +1499,7 @@ function updateEnemyFleetInfo() {
   // 基地航空隊の攻撃対象となる敵艦隊 (とりあえず今は1戦目で)
   let $mainEnemyFleet = undefined;
   let sumAp = 0;
-  enemyFleetData.length = 0;
+  enemyFleetData = [];
 
   // 1戦目の敵艦隊を取得
   $('.battleNo').each(function () {
@@ -1608,6 +1592,10 @@ function ShootDownforChart(enemyFleet, ap) {
   const elbap = getEnemyFleetLandBaseAirPower(enemyFleet);
 
   chartData.own.push(ap);
+  if (enemyFleet.length == 0) {
+    chartData.enemy.push(0);
+    return;
+  }
   chartData.enemy.push(elbap);
 
   const airCond = getAirStatusIndex(ap, elbap);
@@ -1652,22 +1640,11 @@ function updateEnemyAp(enemy) {
 }
 
 /**
- * 計算前の初期化作業
- * @param {boolean} isAll 全て初期化するかどうか
- */
-function initCaluclate(isAll) {
-  enemyFleet = getEnemyFleet(enmList);
-  if (isAll) {
-    chartData.own = [];
-    chartData.enemy = [];
-  }
-}
-
-/**
  * メイン計算処理
  */
 function startCaluclate() {
-  initCaluclate(true);
+  chartData = { own: [], enemy: [], rate: [] };
+
   let eap = 0;
   const enemyFleet = enemyFleetData.concat();
 
@@ -1708,19 +1685,73 @@ function startCaluclate() {
     chartData.own.push(mainAp);
     chartData.enemy.push(eap);
 
-    // 各状態確率計算
+    //各状態確率計算
+
     console.time('rateCaluclate');
-    chartData.rate = rateCaluclate();
+    chartData.rate = rateCaluclate(20000);
     console.timeEnd('rateCaluclate');
+
+
+
+
+
+
+
+    // 分割したジョブを格納する配列
+    const jobs = [];
+
+    console.log('aa')
+
+    var thread = new Thread(function () {
+      console.log('cc')
+      return [44444];
+    });
+
+    var promise = new Promise(function (resolve) {
+      let dist = [];
+      console.log('bb')
+      thread.once().done(function (d) {
+        dist = d;
+        resolve(dist);
+      });
+    });
+
+    var promise2 = new Promise(function (resolve) {
+      let dist = [];
+      console.log('bb2')
+      thread.once().done(function (d) {
+        dist = d;
+        resolve(dist);
+      });
+    });
+
+    jobs.push(promise);
+    jobs.push(promise2);
+
+    Promise.all(jobs).then(function (data) {
+      console.log('dd')
+      console.log(data);
+    });
+
+    // console.time('rateCaluclate_ex');
+    // chartData.rate = rateCaluclate_ex();
+    // console.timeEnd('rateCaluclate_ex');
   }
 }
 
 /**
- * 各種制空状態確率計算
+ * 
  */
-function rateCaluclate() {
-  const maxCount = 20000;
-  const dist = [{}, {}, {}, {}, {}, {}, {}, {}];
+
+
+/**
+ * 各種制空状態確率計算
+ * @param {number} maxCount 試行回数
+ * @returns
+ */
+function rateCaluclate(maxCount) {
+  const dist = [];
+  for (let i = 0; i < 8; i++) dist.push([0, 0, 0, 0, 0]);
   const cache = enemyFleetData.concat();
   const lbAps = [];
   const lbModes = [];
@@ -1728,11 +1759,7 @@ function rateCaluclate() {
     lbAps.push(landBase.ap);
     lbModes.push(landBase.mode);
   }
-  dist.forEach(object => {
-    airStatus.forEach(value => { object[value.abbr] = 0 });
-  });
 
-  initCaluclate(false);
   for (let count = 0; count < maxCount; count++) {
     // 敵機補給
     for (const enemy of cache) {
@@ -1744,23 +1771,60 @@ function rateCaluclate() {
       let lbAp = lbAps[j];
       if (lbModes[j] > 0) {
         // 第一波
-        dist[j * 2][airStatus[getAirStatusIndex(lbAp, getEnemyFleetLandBaseAirPower(cache))].abbr]++;
+        dist[j * 2][getAirStatusIndex(lbAp, getEnemyFleetLandBaseAirPower(cache))]++;
         ShootDown(cache, lbAp);
       }
 
       if (lbModes[j] == 2) {
         // 第二波
-        dist[j * 2 + 1][airStatus[getAirStatusIndex(lbAp, getEnemyFleetLandBaseAirPower(cache))].abbr]++;
+        dist[j * 2 + 1][getAirStatusIndex(lbAp, getEnemyFleetLandBaseAirPower(cache))]++;
         ShootDown(cache, lbAp);
       }
     }
 
     // 本隊
-    dist[7][airStatus[getAirStatusIndex(mainAp, getEnemyFleetAirPower(cache))].abbr]++;
+    dist[7][getAirStatusIndex(mainAp, getEnemyFleetAirPower(cache))]++;
   }
-  for (const obj of dist) {
-    for (const key of Object.keys(obj)) {
-      obj[key] = Math.floor((obj[key] / maxCount * 10000)) / 100 + ' %';
+
+  for (const wave of dist) {
+    for (let index = 0; index < wave.length; index++) {
+      wave[index] = Math.floor(wave[index] / maxCount * 10000) / 100;
+    }
+  }
+  return dist;
+}
+
+function rateCaluclate_ex() {
+  const maxCount = 20000;
+  const dist = [];
+  for (let i = 0; i < 8; i++) dist.push([0, 0, 0, 0, 0]);
+
+  const core = navigator.hardwareConcurrency;
+  // 同時実行数
+  let MAX_WORKERS = 4;
+  if (Number(core)) MAX_WORKERS = Number(core);
+  console.log(MAX_WORKERS)
+
+  // Workerひとつにつき、いくつの数字を処理するかの数
+  const chunkSize = Math.ceil(maxCount / MAX_WORKERS);
+
+  var thread = new Thread(function (count) { rateCaluclate(count); });
+
+  thread.once(20000).done((d) => {
+    console.log(d);
+  });
+
+  for (let i = 0; i < dist.length; i++) {
+    for (const result of results) {
+      for (let j = 0; j < result[i].length; j++) {
+        dist[i][j] += result[i][j];
+      }
+    }
+  }
+
+  for (const wave of dist) {
+    for (let index = 0; index < wave.length; index++) {
+      wave[index] = Math.floor(wave[index] / maxCount * 10000) / 100;
     }
   }
 
