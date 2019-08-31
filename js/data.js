@@ -564,6 +564,9 @@ const enemyData = [
   { id: 296, type: [11, 3, 1000], name: "戦艦水鬼改-壊 [丙]", slot: [6], aa: [1], orig: 103, isSpR: true },
   { id: 297, type: [11, 3, 1000], name: "戦艦水鬼改-壊 [乙]", slot: [6], aa: [1], orig: 103, isSpR: true },
   { id: 298, type: [11, 3, 1000], name: "戦艦水鬼改-壊 [甲]", slot: [6], aa: [1], orig: 103, isSpR: true },
+  { id: 334, type: [11, 3, 1000, 1908], name: "戦艦仏棲姫 バカンスmode [丙]", slot: [64], aa: [8], orig: 334, isSpR: false },
+  { id: 335, type: [11, 3, 1000, 1908], name: "戦艦仏棲姫 バカンスmode [乙]", slot: [72], aa: [8], orig: 334, isSpR: false },
+  { id: 336, type: [11, 3, 1000, 1908], name: "戦艦仏棲姫 バカンスmode [甲]", slot: [81], aa: [8], orig: 334, isSpR: false },
   { id: 362, type: [5], name: "軽巡ツ級flagship", slot: [3], aa: [1], orig: 91, isSpR: true },
   { id: 363, type: [11, 4, 1000], name: "重巡棲姫 19春", slot: [4], aa: [1], orig: 159, isSpR: true },
   { id: 364, type: [11, 4, 1000], name: "重巡棲姫 19春 強", slot: [4], aa: [1], orig: 159, isSpR: true },
@@ -573,4 +576,7 @@ const enemyData = [
   { id: 368, type: [11, 10, 1000], name: "北方棲妹-壊 [丙]", slot: [80], aa: [5], orig: 365, isSpR: false },
   { id: 369, type: [11, 10, 1000], name: "北方棲妹-壊 [乙]", slot: [100], aa: [5], orig: 365, isSpR: false },
   { id: 370, type: [11, 10, 1000], name: "北方棲妹-壊 [甲]", slot: [120], aa: [5], orig: 365, isSpR: false },
+  { id: 389, type: [11, 10, 1000, 1908], name: "飛行場姫 銀だこ [丙]", slot: [16, 16, 8], aa: [17, 17, 17], orig: 56, isSpR: false },
+  { id: 390, type: [11, 10, 1000, 1908], name: "飛行場姫 銀だこ [乙]", slot: [16, 16, 12, 4], aa: [17, 17, 17, 17], orig: 56, isSpR: false },
+  { id: 391, type: [11, 10, 1000, 1908], name: "飛行場姫 銀だこ [甲]", slot: [24, 24, 16, 8], aa: [17, 17, 17, 17], orig: 56, isSpR: false },
 ];
