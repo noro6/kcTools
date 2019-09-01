@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=526, shrink-to-fit=no, user-scalable=no">
+    <meta name="viewport" content="width=1024, shrink-to-fit=no">
 
     <!-- css -->
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
@@ -25,16 +25,16 @@
 
 <body>
     <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow">
-        <div class="d-block d-md-none text-light pl-3 pt-3 py-2">
+        <div class="d-block d-xl-none text-light pl-3 pt-3 py-2">
             <div id="menu-small">
                 <div></div>
                 <div></div>
                 <div></div>
             </div>
         </div>
-        <a class="d-none d-md-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">Top</a>
-        <input class="d-none d-md-block form-control form-control-dark w-100" type="text" placeholder="検索">
-        <ul class="d-none d-md-block navbar-nav px-3">
+        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">Top</a>
+        <input class="d-none d-xl-block form-control form-control-dark w-100" type="text" placeholder="検索">
+        <ul class="d-none d-xl-block navbar-nav px-3">
             <li class="nav-item text-nowrap">
                 <a class="nav-link" href="#">サインアウト</a>
             </li>
@@ -44,7 +44,7 @@
     <div class="container-fluid px-0">
         <div class="d-flex">
             <!-- 右サイドバー -->
-            <nav class="d-none d-md-block sidebar bg-dark2">
+            <nav class="d-none d-xl-block sidebar bg-dark2">
                 <div class="sidebar-sticky" id="Navbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -136,7 +136,7 @@
                     </div>
                     <div id="main_contents">
                         <!-- 基地航空隊 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2" id="landBase">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="landBase">
                             <div class="mt-2 d-flex">
                                 <h5><span class="content_title">基地航空隊</span></h5>
                                 <div class="ml-auto">
@@ -147,50 +147,21 @@
                                         title="最上部へ">▲</button>
                                 </div>
                             </div>
-                            <div class="row collapse show" id="lb_content">
-                                <div class="col-12 col-lg-7 d-flex flex-column justify-content-start">
+                            <div class="collapse show" id="lb_content">
+                                <div class="d-flex flex-column justify-content-start text-nowrap">
                                     <!-- 基地航空隊設定領域 -->
-                                    <div class="flex-fill pt-2 pb-3" id="lb_content_main">
-                                        <ul class="nav nav-tabs" role="tablist">
-                                            <li class="nav-item">
-                                                <a class="nav-link active" id="lb_item1-tab" data-toggle="tab"
-                                                    href="#lb_item1" role="tab">第1基地航空隊</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="lb_item2-tab" data-toggle="tab" href="#lb_item2"
-                                                    role="tab">第2基地航空隊</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="lb_item3-tab" data-toggle="tab" href="#lb_item3"
-                                                    role="tab">第3基地航空隊</a>
-                                            </li>
-                                        </ul>
-                                        <div class="tab-content">
+                                    <div class="" id="lb_content_main">
+                                        <div class="d-flex justify-content-between">
                                             <!-- 第1基地航空隊 -->
-                                            <div class="tab-pane fade show active lb_tab" id="lb_item1" role="tabpanel">
+                                            <div class="lb_tab px-1 pt-2 pb-1" id="lb_item1">
+                                                <div class="h6 ml-1 baseNo">第1基地航空隊</div>
                                                 <div class="lb_ope d-flex my-2 px-0">
-                                                    <div class="lb_ope_basic btn-group btn-group-toggle"
-                                                        data-toggle="buttons">
-                                                        <label class="btn btn-sm btn-outline-secondary multiAtk">
-                                                            <input class="lb_ope_radio" type="radio" name="type"
-                                                                autocomplete="off">
-                                                            <span>集中</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-outline-secondary singleAtk">
-                                                            <input class="lb_ope_radio" type="radio" name="type"
-                                                                autocomplete="off">
-                                                            <span>単発</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-outline-secondary active wait">
-                                                            <input class="lb_ope_radio" type="radio" name="type"
-                                                                autocomplete="off">
-                                                            <span>待機</span>
-                                                        </label>
-                                                    </div>
-                                                    <div class="ml-1 bg-white">
-                                                        <button class="btn btn-sm btn-outline-success btnDefLB px-2"
-                                                            data-toggle="button" autocomplete="off">防空</button>
-                                                    </div>
+                                                    <select class="custom-select custom-select-sm ohuda_select">
+                                                        <option value="2">集中</option>
+                                                        <option value="1">単発</option>
+                                                        <option value="-1" selected>待機</option>
+                                                        <option value="0">防空</option>
+                                                    </select>
                                                     <div class="ml-1 d-none d-flex justify-content-start flex-nowrap align-self-center resource"
                                                         data-toggle="tooltip" data-html="true" title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>
                                                         ※ 被撃墜時、母港補充時の消費量は含まれていません。">
@@ -217,55 +188,41 @@
                                                 </div>
                                                 <!-- 第1基地航空隊 第1中隊　選択領域 -->
                                                 <div class="lb_tab_main">
-                                                    <div class="lb_plane my-1 d-flex justify-content-start flex-wrap">
-                                                        <div
-                                                            class="col px-0 d-flex justify-content-start align-self-center flex-nowrap">
-                                                            <div class="plane_canvas ml-1">
+                                                    <div class="lb_plane mt-1 d-flex justify-content-start">
+                                                        <div class="col px-0 d-flex justify-content-start flex-nowrap">
+                                                            <div class="ml-1 align-self-center">
                                                                 <img src="./img/e/undefined.png"
-                                                                    class="plane_img img-size-32" alt="">
+                                                                    class="plane_img img-size-30" alt="">
                                                             </div>
-                                                            <div
-                                                                class="plane_name_span w-100 text-truncate my-1 py-1 px-1 mr-1">
-                                                                機体を選択
+                                                            <div class="align-self-center">
+                                                                <div class="plane_name_span text-truncate px-1 mr-1">
+                                                                    機体を選択
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col px-0 ml-md-auto d-flex justify-content-center">
-                                                            <div class="py-1 pl-1 planeInput_IMP flex-fill">
-                                                                <select
-                                                                    class="custom-select custom-select-sm IMP__option IMP_select"
-                                                                    disabled>
-                                                                </select>
+                                                            <select class="IMP_select"></select>
+                                                            <div class="dropdown align-self-center prof_select_parent">
+                                                                <img class="prof_select" data-prof="0"
+                                                                    data-toggle="dropdown" src="./img/util/prof0.png">
+                                                                <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="py-1 pl-1 planeInput_prof flex-fill">
-                                                                <select
-                                                                    class="custom-select custom-select-sm prof prof_select">
-                                                                </select>
-                                                            </div>
-                                                            <div class="py-1 px-1 planeInput_slot flex-fill">
-                                                                <input type="number"
-                                                                    class="form-control form-control-sm slot" value="0"
-                                                                    min="0">
-                                                            </div>
+                                                            <input type="number" class="slot" value="0" min="0">
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="lb_plane my-1 d-flex justify-content-start flex-wrap flex-md-nowrap">
+                                                    <div class="lb_plane mt-1 d-flex justify-content-start flex-nowrap">
                                                     </div>
-                                                    <div
-                                                        class="lb_plane my-1 d-flex justify-content-start flex-wrap flex-md-nowrap">
+                                                    <div class="lb_plane mt-1 d-flex justify-content-start flex-nowrap">
                                                     </div>
-                                                    <div
-                                                        class="lb_plane my-1 d-flex justify-content-start flex-wrap flex-md-nowrap">
+                                                    <div class="lb_plane mt-1 d-flex justify-content-start flex-nowrap">
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- 第2基地航空隊 -->
-                                            <div class="tab-pane fade lb_tab" id="lb_item2" role="tabpanel"></div>
+                                            <div class="lb_tab px-1 pt-2 pb-1" id="lb_item2"></div>
                                             <!-- 第3基地航空隊 -->
-                                            <div class="tab-pane fade lb_tab" id="lb_item3" role="tabpanel"></div>
+                                            <div class="lb_tab px-1 pt-2 pb-1" id="lb_item3"></div>
                                         </div>
                                     </div>
-                                    <div id="lb_info" class="">
+                                    <div id="lb_info" class="mt-2">
                                         <table class="table table-sm bg-white table-bordered text-center"
                                             id="lb_info_table">
                                             <thead class="thead-light">
@@ -295,52 +252,11 @@
                                         </table>
                                     </div>
                                 </div>
-                                <!-- 基地航空隊用 機体選択リスト xl時限定 -->
-                                <div class="col d-none d-lg-block">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            機体一覧　- 基地航空隊 -
-                                        </div>
-                                        <div class="card-body" id="lbPlaneSelect_content">
-                                            <div class="my-1 input-group input-group-sm planeTypeSelect">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">カテゴリ</span>
-                                                </div>
-                                                <select class="custom-select custom-select-sm"
-                                                    id="planeSelect_select"></select>
-                                            </div>
-                                            <div class="plane_table_content">
-                                                <div class="pr-3">
-                                                    <table class="plane_table_ w-100">
-                                                        <thead>
-                                                            <tr>
-                                                                <td width="8%" id="th_default" data-order="asc">
-                                                                </td>
-                                                                <td width="62%" id="th_name" data-order="asc">装備名
-                                                                </td>
-                                                                <td class="text-center" id="th_aa" width="15%"
-                                                                    data-order="asc">対空</td>
-                                                                <td class="text-center" id="th_range" width="15%"
-                                                                    data-order="asc">半径</td>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                                <div class="pr-3 mt-1 div_plane_table">
-                                                    <table class="plane_table w-100">
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
                         <!-- 艦隊選択欄 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2" id="friendFleet">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="friendFleet">
                             <div class="mt-2 d-flex">
                                 <h5><span class="content_title">自艦隊</span></h5>
                                 <div class="ml-auto">
@@ -368,21 +284,18 @@
                                         <!-- 第1艦隊 -->
                                         <div class="tab-pane fade show active friendFleet_tab container-fluid"
                                             id="friendFleet_item1" role="tabpanel">
-                                            <div class="d-flex justify-content-start mb-2">
+                                            <div class="d-flex justify-content-start">
                                                 <div class="mr-1 align-self-center">表示隻数：</div>
                                                 <select class="custom-select custom-select-sm dispShipCount">
-                                                    <option value="1">1</option>
                                                     <option value="2">2</option>
-                                                    <option value="3">3</option>
                                                     <option value="4" selected>4</option>
-                                                    <option value="5">5</option>
                                                     <option value="6">6</option>
                                                 </select>
                                                 <div class="ml-1 align-self-center">隻</div>
                                             </div>
-                                            <div class="row">
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                            <div class="d-flex justify-content-around flex-wrap">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
                                                             <div class="ship_name_span align-self-center px-1 text-truncate"
                                                                 data-toggle="tooltip" data-placement="right"
@@ -413,38 +326,29 @@
                                                             id="ship_plane_content_1">
                                                             <div class="ship_plane_parent">
                                                                 <div
-                                                                    class="ship_plane my-1 d-flex justify-content-start flex-wrap flex-md-nowrap">
+                                                                    class="ship_plane mt-1 d-flex justify-content-start">
                                                                     <div
-                                                                        class="ship_plane_draggable col px-0 d-flex justify-content-start align-self-center flex-nowrap">
-                                                                        <div class="plane_canvas mx-1">
+                                                                        class="col px-0 d-flex justify-content-start flex-nowrap ship_plane_draggable">
+                                                                        <div class="ml-1 align-self-center">
                                                                             <img src="./img/e/undefined.png"
-                                                                                class="plane_img img-size-32" alt="">
+                                                                                class="plane_img img-size-30" alt="">
                                                                         </div>
+                                                                        <div class="align-self-center">
+                                                                            <div
+                                                                                class="plane_name_span text-truncate px-1 mr-1">
+                                                                                機体を選択
+                                                                            </div>
+                                                                        </div>
+                                                                        <select class="ml-auto IMP_select"></select>
                                                                         <div
-                                                                            class="plane_name_span flex-fill my-1 py-1 px-1 mr-1">
-                                                                            機体を選択
+                                                                            class="dropdown align-self-center prof_select_parent">
+                                                                            <img class="prof_select" data-prof="0"
+                                                                                data-toggle="dropdown"
+                                                                                src="./img/util/prof0.png">
+                                                                            <div class="dropdown-menu"></div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="col px-0 ml-md-auto d-flex justify-content-center">
-                                                                        <div class="py-1 pl-1 planeInput_IMP flex-fill">
-                                                                            <select
-                                                                                class="custom-select custom-select-sm IMP__option IMP_select"
-                                                                                disabled>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div
-                                                                            class="py-1 pl-1 planeInput_prof flex-fill">
-                                                                            <select
-                                                                                class="custom-select custom-select-sm prof prof_select">
-                                                                            </select>
-                                                                        </div>
-                                                                        <div
-                                                                            class="py-1 px-1 planeInput_slot flex-fill">
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm slot"
-                                                                                value="0" min="0">
-                                                                        </div>
+                                                                        <input type="number" class="slot" value="0"
+                                                                            min="0">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -455,8 +359,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -470,10 +374,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -483,11 +385,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_3"></div>
+                                                            id="ship_plane_content_3">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -497,13 +400,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_4"></div>
+                                                            id="ship_plane_content_4">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1 d-none">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2 d-none">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -513,11 +415,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_5"></div>
+                                                            id="ship_plane_content_5">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1 d-none">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2 d-none">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -527,7 +430,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_6"></div>
+                                                            id="ship_plane_content_6">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -570,18 +474,15 @@
                                             <div class="d-flex justify-content-start mb-2">
                                                 <div class="mr-1 align-self-center">表示隻数：</div>
                                                 <select class="custom-select custom-select-sm dispShipCount">
-                                                    <option value="1">1</option>
                                                     <option value="2">2</option>
-                                                    <option value="3">3</option>
                                                     <option value="4" selected>4</option>
-                                                    <option value="5">5</option>
                                                     <option value="6">6</option>
                                                 </select>
                                                 <div class="ml-1 align-self-center">隻</div>
                                             </div>
-                                            <div class="row">
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                            <div class="d-flex justify-content-around flex-wrap">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -592,11 +493,12 @@
                                                         </div>
                                                         <!-- 艦娘装備　選択領域 -->
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_7"></div>
+                                                            id="ship_plane_content_7">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -606,13 +508,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_8"></div>
+                                                            id="ship_plane_content_8">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -622,11 +523,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_9"></div>
+                                                            id="ship_plane_content_9">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -636,13 +538,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_10"></div>
+                                                            id="ship_plane_content_10">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1 d-none">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2 d-none">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -652,11 +553,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_11"></div>
+                                                            id="ship_plane_content_11">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab col-12 col-xl-6 pl-0 pr-1 d-none">
-                                                    <div class="border border-secondary pb-2 mt-1 px-1 px-xl-2">
+                                                <div class="ship_tab mt-2 d-none">
+                                                    <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
                                                                 <button type="button"
@@ -666,7 +568,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="ship_tab_main collapse show"
-                                                            id="ship_plane_content_12"></div>
+                                                            id="ship_plane_content_12">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -704,7 +607,7 @@
                         </div>
 
                         <!-- 敵艦選択欄 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2" id="enemyFleet">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="enemyFleet">
                             <div class="mt-2 d-flex">
                                 <h5><span class="content_title">敵艦隊</span></h5>
                                 <div class="ml-auto">
@@ -841,7 +744,7 @@
                         </div>
 
                         <!-- 計算結果 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2" id="result">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="result">
                             <div class="mt-2 d-flex">
                                 <h5><span class="content_title">計算結果</span></h5>
                                 <div class="ml-auto">
@@ -898,7 +801,7 @@
                         </div>
 
                         <!-- 細かい設定 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2" id="config">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="config">
                             <div class="mt-2 d-flex">
                                 <h5><span class="content_title">詳細設定</span></h5>
                                 <div class="ml-auto">
@@ -912,7 +815,7 @@
                             <div class="container-fluid collapse show" id="config_content">
                                 <div class="row">
                                     <div class="col">
-                                        <div>■ 機体選択欄</div>
+                                        <div>■ 機体選択</div>
                                         <div class="custom-control custom-checkbox ml-3 mt-2">
                                             <input class="custom-control-input" type="checkbox" id="dispMoreThan0AA">
                                             <label class="custom-control-label" for="dispMoreThan0AA">対空値が 0
@@ -937,6 +840,17 @@
                                                     </span>
                                                     は表示しない
                                                 </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div>■ 操作設定</div>
+                                        <div class="custom-control custom-checkbox ml-3 mt-2">
+                                            <input class="custom-control-input" type="checkbox" id="copyPlane">
+                                            <label class="custom-control-label" for="copyPlane">
+                                                機体D&D時、交換の代わりに複製を行う
                                             </label>
                                         </div>
                                     </div>
@@ -1088,10 +1002,36 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="my-1 input-group input-group-sm planeTypeSelect">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">カテゴリ</span>
+                        </div>
+                        <select class="custom-select custom-select-sm" id="planeSelect_select"></select>
+                    </div>
+                    <div class="plane_table_content">
+                        <div class="pr-3">
+                            <table class="plane_table_ w-100">
+                                <thead>
+                                    <tr>
+                                        <td width="8%" id="th_default" data-order="asc">
+                                        </td>
+                                        <td width="62%" id="th_name" data-order="asc">装備名
+                                        </td>
+                                        <td class="text-center" id="th_aa" width="15%" data-order="asc">対空</td>
+                                        <td class="text-center" id="th_range" width="15%" data-order="asc">半径</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="pr-3 mt-1 div_plane_table">
+                            <table class="plane_table w-100">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary px-3" id="planeSelectModal_btnCommit"
-                        disabled>変更</button>
                     <button type="button" class="btn btn-sm btn-danger" id="planeSelectModal_btnRemove"
                         disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>

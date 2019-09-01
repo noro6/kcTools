@@ -3,6 +3,14 @@ body {
   background: #f0ebe6;
 }
 
+select{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  text-align: center;
+}
+
 /* tooltip調整 */
 .tooltip-inner {
   max-width: 100%;
@@ -10,7 +18,7 @@ body {
 
 /* モーダル書き換え */
 .modal-backdrop{
-  min-width: 530px;
+  min-width: 1024px;
   min-height: 960px;
 }
 
@@ -268,7 +276,28 @@ input[type=radio] {
   cursor: move;
 }
 
+/* 基地航空隊コンテンツ */
+#landBase{
+  width: 992px;
+}
+
+#friendFleet{
+  width: 992px;
+}
+
+/* 基地1つ */
+.lb_tab{
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
+}
+
 /* 基地札 */
+.ohuda_select{
+  width: 72px;
+}
+
 .btn-group-toggle label {
   background-color: white;
 }
@@ -286,27 +315,6 @@ input[type=radio] {
   height: auto;
 }
 
-/* 基地選択欄 */
-.lb_plane {
-  background-color: rgb(243, 243, 243);
-  border: 2px #aaa solid;
-  border-radius: .25rem;
-}
-
-.lb_plane:hover {
-  background-color: rgb(233, 233, 233);
-}
-
-/* 機体アイコン */
-.plane_canvas {
-  width: 35px;
-  height: 35px;
-}
-
-.lb_plane .plane_canvas {
-  cursor: move!important;
-}
-
 .cur_move {
   cursor: move;
 }
@@ -315,8 +323,28 @@ input[type=radio] {
   cursor: no-drop!important;
 }
 
+/* 基地選択欄 */
+.lb_plane {
+  width: 310px;
+  background-color: rgb(255, 255, 255);
+  border: 2px #aaa solid;
+  border-radius: .25rem;
+}
+
+.lb_plane:hover {
+  background-color: rgb(245, 245, 245);
+}
+
 .dispShipCount{
   width: 60px;
+}
+
+.ship_tab{
+  width: 450px;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
 }
 
 .ship_name_span {
@@ -333,25 +361,30 @@ input[type=radio] {
 
 /* 艦娘機体選択欄 */
 .ship_plane {
-  background-color: rgb(243, 243, 243);
+  width: 100%;
+  background-color: rgb(255, 255, 255);
   border: 2px #aaa solid;
   border-radius: .25rem;
 }
 
 .ship_plane:hover {
-  background-color: rgb(233, 233, 233);
+  background-color: rgb(245, 245, 245);
 }
 
 /* 機体名 */
 .plane_name_span {
+  display: table-cell;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  background-color: transparent;
   border-radius: .2rem;
-  min-width: 180px;
+  vertical-align: middle;
+  height: 28px;
+  width: 280px;
+  transition: .5s;
 }
 
 .plane_name_span:hover {
-  transition: .5s;
   background-color: rgba(220, 255, 250, 0.8);
 }
 
@@ -359,31 +392,55 @@ input[type=radio] {
 .lb_plane-hover {
   background-color: rgb(168, 220, 255) !important;
   border: 2px rgb(57, 176, 255) solid !important;
+  transition: .2s;
 }
 
 /* 艦載機をドラッグしてきた時のスタイル */
 .ship_plane-hover {
   background-color: rgb(168, 220, 255) !important;
   border: 2px rgb(57, 176, 255) solid !important;
+  transition: .2s;
 }
 
-/* 艦載機が抜き取られてる時の跡地のスタイル */
-.lb_plane-drag {
-  margin: .25rem 0rem .25rem 0rem;
-  border: 2px rgb(255, 153, 0) dashed !important;
+.IMP_select{
+  height: 30px;
+  width: 42px;
+  color: rgb(0, 170, 170);
+  cursor: pointer;
+  border: none;
   background-color: transparent;
-  border-radius: .25rem;
+  transition: .4s;
+}
+.IMP_select_disabled{
+  color: #999!important;
+}
+.IMP_option {
+  color: rgb(0, 170, 170);
+}
+.IMP_select:hover{
+  filter: drop-shadow(0px 0px 6px rgb(0, 190, 190));
+}
+.IMP_select_disabled:hover{
+  filter: drop-shadow(0px 0px 0px rgb(255, 255, 255));
 }
 
-.star {
-  color: rgb(0, 170, 170) !important;
-}
-
-.IMP__option {
-  color: rgb(0, 170, 170) !important;
-}
 
 /* 熟練度関連 */
+.prof_select{
+  cursor: pointer;
+  width: 24px;
+  height: 30px;
+  border: none;
+  color: transparent;
+  background-color: transparent;
+  align-self: center;
+  transition: .4s;
+}
+
+.prof_select:hover{
+  filter: drop-shadow(0 0 5px rgb(175, 175, 175));
+}
+
 .prof {
   font-weight: bold;
 }
@@ -394,6 +451,39 @@ input[type=radio] {
 
 .prof__blue {
   color: rgb(91, 173, 255) !important;
+}
+
+.prof_select_parent .dropdown-menu{
+  max-width: 40px;
+  min-width: 40px;
+}
+.prof_select_parent .dropdown-item{
+  padding: 1px 5px;
+  height: 28px;
+  text-align: center;
+}
+.prof_select_parent .dropdown-item:active{
+  background-color: #bbb;
+}
+
+.prof_option{
+  height: 100%;
+  width: auto;
+}
+
+/* 搭載数ボックス */
+.slot{
+  align-self: center;
+  text-align: center;
+  width: 40px;
+  height: 28px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  background-color: transparent;
+}
+.slot:hover{
+  border-bottom: 1px solid #555;
 }
 
 /* 機体情報入力部分　固定幅でいく */
@@ -410,15 +500,6 @@ input[type=radio] {
 }
 
 /* 機体選択欄 テーブル */
-#lbPlaneSelect_content .plane_table_content {
-  height: 294px;
-}
-
-#lbPlaneSelect_content .div_plane_table {
-  overflow-y: overlay;
-  max-height: 93%;
-}
-
 .div_plane_table {
   overflow-y: overlay;
   max-height: 40vh;
@@ -458,6 +539,11 @@ input[type=radio] {
   height: auto;
 }
 
+.img-size-30 {
+  width: 30px;
+  height: auto;
+}
+
 .img-size-32 {
   padding-top: 3px;
   width: 32px;
@@ -467,11 +553,17 @@ input[type=radio] {
 /* 機体選択欄　機体 */
 .plane {
   min-width: 100px;
+  transition: .2s;
 }
 
 .plane:hover {
   background-color: #f5f5f5;
+  background-color: rgb(245, 245, 245) !important;
   cursor: pointer;
+}
+
+.plane:active{
+  background-color: rgb(122, 195, 255) !important;
 }
 
 .plane_helper {
@@ -483,10 +575,9 @@ input[type=radio] {
   box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* 機体選択中(モーダル内限定) */
+/* 選択中機体 */
 .plane-selected {
-  color: #fff;
-  background-color: #70bfff !important;
+  background-color: #f5f5f5 !important;
 }
 
 /* 艦娘選択欄 テーブル */
@@ -674,21 +765,21 @@ input[type=radio] {
 /* 対潜哨戒機の色など */
 .css_lb_asw_aircraft {
   border: 2px rgb(110, 135, 205) solid;
-  background-color: rgb(180, 205, 255);
+  background-color: rgb(240, 245, 255);
 }
 
 .css_lb_asw_aircraft:hover {
-  background-color: rgb(170, 195, 245);
+  background-color: rgb(230, 235, 245);
 }
 
 /* 夜間機の色など */
 .css_cb_night_aircraft {
   border: 2px rgb(130, 130, 180) solid;
-  background-color: rgb(215, 215, 230);
+  background-color: rgb(235, 235, 255);
 }
 
 .css_cb_night_aircraft:hover {
-  background-color: rgb(205, 205, 220);
+  background-color: rgb(225, 225, 245);
 }
 
 /* モーダル閉じる(×)ボタン */
