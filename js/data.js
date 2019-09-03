@@ -223,7 +223,7 @@ const typelink_Ship_Equip = [
   { type: 9, e_type: [5, 6, 7] },
   { type: 10, e_type: [1] },
   { type: 11, e_type: [5, 6, 7] },
-  { type: 12, e_type: [4, 6, 7] },
+  { type: 12, e_type: [5, 6, 7] },
   { type: 13, e_type: [5, 7] },
   { type: 14, e_type: [5] }
 ]
@@ -357,8 +357,8 @@ const shipData = [
   { id: 296, type: 9, name: "Zara due", slot: [6, 3, 3, 3], final: 1, orig: 248 },
   { id: 299, type: 6, name: "神威改", slot: [11, 8, 3], final: 1, orig: 299 },
   { id: 300, type: 11, name: "神威改母", slot: [1, 1, 1], final: 1, orig: 299 },
-  { id: 303, type: 5, name: "鈴谷改二", slot: [3, 11, 3, 7], final: 1, orig: 124 },
-  { id: 304, type: 5, name: "熊野改二", slot: [3, 11, 3, 7], final: 1, orig: 125 },
+  { id: 303, type: 5, name: "鈴谷改二", slot: [3, 3, 7, 11], final: 1, orig: 124 },
+  { id: 304, type: 5, name: "熊野改二", slot: [3, 3, 7, 11], final: 1, orig: 125 },
   { id: 308, type: 3, name: "鈴谷航改二", slot: [15, 12, 12, 8], final: 1, orig: 124 },
   { id: 309, type: 3, name: "熊野航改二", slot: [15, 12, 12, 8], final: 1, orig: 125 },
   { id: 315, type: 1, name: "Ark Royal", slot: [18, 30, 12, 12], final: 0, orig: 315 },

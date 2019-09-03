@@ -39,22 +39,22 @@ select{
 }
 
 /* nav-tabs 書き換え */
-.nav-tabs {
+#main_contents .nav-tabs {
   border-color: #aaa !important;
 }
 
-.nav-tabs a.nav-link {
+#main_contents a.nav-link {
   color: #aaa;
   padding-right: 10px;
   padding-left: 10px;
 }
 
-.nav-tabs a.nav-link:hover {
+#main_contents a.nav-link:hover {
   color: #777 !important;
   border-color: #aaa !important;
 }
 
-.nav-tabs a.nav-link.active {
+#main_contents a.nav-link.active {
   color: #333 !important;
   border-color: #aaa !important;
   background-color: transparent !important;
@@ -278,11 +278,11 @@ input[type=radio] {
 
 /* 基地航空隊コンテンツ */
 #landBase{
-  width: 992px;
+  /* max-width: 992px; */
 }
 
 #friendFleet{
-  width: 992px;
+  /* max-width: 992px; */
 }
 
 /* 基地1つ */
@@ -325,7 +325,7 @@ input[type=radio] {
 
 /* 基地選択欄 */
 .lb_plane {
-  width: 310px;
+  min-width: 310px;
   background-color: rgb(255, 255, 255);
   border: 2px #aaa solid;
   border-radius: .25rem;
@@ -374,18 +374,20 @@ input[type=radio] {
 /* 機体名 */
 .plane_name_span {
   display: table-cell;
-  cursor: pointer;
   font-size: 12px;
-  background-color: transparent;
-  border-radius: .2rem;
   vertical-align: middle;
   height: 28px;
-  width: 280px;
+  width: 100%;
+}
+
+.plane_name {
+  cursor: pointer;
+  border-radius: .2rem;
   transition: .5s;
 }
 
-.plane_name_span:hover {
-  background-color: rgba(220, 255, 250, 0.8);
+.plane_name:hover {
+  background-color: rgba(255, 250, 220, 0.8);
 }
 
 /* 艦載機をドラッグしてきた時のスタイル */
@@ -412,6 +414,7 @@ input[type=radio] {
   transition: .4s;
 }
 .IMP_select_disabled{
+  cursor: default;
   color: #999!important;
 }
 .IMP_option {
@@ -553,7 +556,7 @@ input[type=radio] {
 /* 機体選択欄　機体 */
 .plane {
   min-width: 100px;
-  transition: .2s;
+  transition: .3s;
 }
 
 .plane:hover {
@@ -586,6 +589,10 @@ input[type=radio] {
   cursor: pointer;
 }
 
+.ship:active{
+  background-color: rgb(122, 195, 255) !important;
+}
+
 .div_ship_table {
   overflow-y: overlay;
   max-height: 40vh;
@@ -607,8 +614,7 @@ input[type=radio] {
 
 /* 艦娘選択中(モーダル内限定) */
 .ship-selected {
-  color: #fff;
-  background-color: #70bfff !important;
+  background-color: #f5f5f5 !important;
 }
 
 .sortable_handle{

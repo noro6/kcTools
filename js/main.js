@@ -28,6 +28,8 @@ let isDefenseMode = false;
 // arrayとdiffArray内に1つでも同じ値がある場合true
 const isContain = (array, diffArray) => { for (const value1 of array) for (const value2 of diffArray) if (value1 === value2) return true; return false; }
 
+let timer = false;
+
 /*==================================
     描画用
 ==================================*/
@@ -131,13 +133,21 @@ function initAll(callback) {
   $('.enemy_ap').tooltip('disable')
   $('[data-toggle="popover"]').popover();
 
+  // 基地欄簡易化するかどうか
+  console.log($('#lb_tab_select').css('display'))
+  if ($('#lb_tab_select').css('display') != 'none' && $('#lb_item1').attr('class').indexOf('tab-pane') == -1) {
+    $('.lb_tab').addClass('tab-pane fade');
+    $('.lb_tab:first').addClass('show active');
+    $('#lb_item1').addClass('active');
+  }
+
   callback();
 }
 
 /**
  * カテゴリコードから艦載機配列を返却
  * @param {number} type
- * @returns {Array.<Object>} 艦載機オブジェクト配列
+ * @returns {number} 艦載機オブジェクト配列 0を渡した場合は全て
  */
 function getPlanes(type) {
 
@@ -538,7 +548,6 @@ function drawChangeValue($inline, pre, cur, reverse) {
   }
 }
 
-
 /**
  * 渡された敵艦名にflagshipやelite文字が含まれていれば色を塗ってあげる
  * @param {string} enemyName
@@ -637,7 +646,6 @@ function createShipTable($table, type) {
   $tbody.html(insertHtml);
 
   // 艦隊選択モーダル内のボタン非活性
-  $('#shipSelectModal_btnCommit').prop('disabled', true);
   $('#shipSelectModal_btnRemove').prop('disabled', true);
 }
 
@@ -2160,7 +2168,7 @@ $(() => {
   });
 
   // 機体選択ボタンクリック -> モーダル展開
-  $(document).on('click', '.plane_name_span', function () {
+  $(document).on('click', '.plane_name', function () {
     // 機体選択画面の結果を返却するターゲットのdiv要素を取得
     $target = $(this).closest('.lb_plane');
     if (!$target.attr('class')) $target = $(this).closest('.ship_plane');
@@ -2179,12 +2187,9 @@ $(() => {
     // カテゴリ初期選択処理
     $('#planeSelect_select').change();
 
-    // 選択機体ピックアップ
     if (selectedID) {
-      const $selected = $modalBody.find('#' + selectedID)
-      $selected.addClass('plane-selected');
-      $modalBody.find('tbody').prepend($selected.clone());
-      $selected.remove();
+      // 選択機体あれば
+      $modalBody.find('#' + selectedID).addClass('plane-selected');
       $('#planeSelectModal_btnRemove').prop('disabled', false);
     }
     else {
@@ -2196,7 +2201,7 @@ $(() => {
   });
 
   // 機体選択画面(モーダル)　機体をクリック時
-  $('#planeSelectModal').on('click', '.modal-body .plane', function () {
+  $('#planeSelectModal').on('click', '.plane', function () {
     if ($target.attr('class').indexOf('lb_plane') != -1) {
       // 基地航空隊に機体セット
       setLBPlaneDiv($target, $(this));
@@ -2273,17 +2278,9 @@ $(() => {
   });
 
   // 艦娘選択画面(モーダル)　艦娘をクリック時
-  $('#shipSelectModal').on('click', '.modal-body .ship', function () {
-    $('#shipSelectModal').find('.ship').removeClass('ship-selected');
-    $(this).addClass('ship-selected');
-    // OKボタン活性化
-    $('#shipSelectModal_btnCommit').prop('disabled', false);
-  });
-
-  // 艦娘選択画面(モーダル)　艦娘をダブルクリック時
-  $('#shipSelectModal').on('dblclick', '.modal-body .ship', () => {
+  $('#shipSelectModal').on('click', '.ship', function () {
     // 艦娘セット
-    setShipDiv($target, Number($('.ship-selected').attr('id')));
+    setShipDiv($target, Number($(this).attr('id')));
 
     // 機体選択欄展開
     $target.find('.btn-toggleContent_hide').removeClass('btn-toggleContent_hide').addClass('btn-toggleContent_show')
@@ -2294,25 +2291,6 @@ $(() => {
 
   // 最終改造状態の未表示クリック
   $('#dispFinalOnly').click(() => { createShipTable($('.ship_table'), [Number($('.shipType_select').val())]); })
-
-  // 編成ボタンクリック(艦娘選択モーダル内)
-  $('#shipSelectModal_btnCommit').on('click', function () {
-    if ($(this).prop('disabled')) return false;
-
-    if (!$('.ship-selected').attr('class')) {
-      $('#shipSelectModal_btnCommit').prop('disabled', true);
-      return false;
-    }
-
-    // 艦娘セット
-    setShipDiv($target, Number($('.ship-selected').attr('id')));
-
-    // 機体選択欄展開
-    $target.find('.btn-toggleContent_hide').removeClass('btn-toggleContent_hide').addClass('btn-toggleContent_show')
-    $target.find('.ship_tab_main').collapse('show');
-
-    $('#shipSelectModal').modal('hide');
-  });
 
   // はずすボタンクリック(機体選択モーダル内)
   $('#shipSelectModal_btnRemove').on('click', function () {
@@ -2445,5 +2423,22 @@ $(() => {
     $('body,html').animate({ scrollTop: position }, speed, 'swing');
     setTimeout(() => { $('#smartMenuModal').modal('hide'); }, 220);
     return false;
+  });
+
+  // 画面サイズ変更時
+  $(window).resize(function () {
+    if (timer !== false) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(function () {
+      if ($('#lb_tab_select').css('display') != 'none' && $('#lb_item1').attr('class').indexOf('tab-pane') == -1) {
+        $('.lb_tab').addClass('tab-pane fade');
+        $('.lb_tab:first').tab('show')
+      }
+      else if ($('#lb_tab_select').css('display') == 'none' && $('#lb_item1').attr('class').indexOf('tab-pane') != -1) {
+        $('.lb_tab').removeClass('tab-pane fade').show().fadeIn();
+      }
+    }, 200);
   });
 });
