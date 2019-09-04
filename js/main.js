@@ -80,14 +80,14 @@ function initAll(callback) {
 
   // 熟練度選択欄
   text = `
-  <a class="dropdown-item prof_item"><img class="prof_option" alt=">>" data-prof="7" src="./img/util/prof7.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="///" data-prof="6" src="./img/util/prof6.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="//" data-prof="5" src="./img/util/prof5.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="/" data-prof="4" src="./img/util/prof4.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="|||" data-prof="3" src="./img/util/prof3.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="||" data-prof="2" src="./img/util/prof2.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="|" data-prof="1" src="./img/util/prof1.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option" alt="" data-prof="0" src="./img/util/prof0.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt=">>" data-prof="7" src="https://noro6.github.io/kcTools/img/util/prof7.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="///" data-prof="6" src="https://noro6.github.io/kcTools/img/util/prof6.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="//" data-prof="5" src="https://noro6.github.io/kcTools/img/util/prof5.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="/" data-prof="4" src="https://noro6.github.io/kcTools/img/util/prof4.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="|||" data-prof="3" src="https://noro6.github.io/kcTools/img/util/prof3.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="||" data-prof="2" src="https://noro6.github.io/kcTools/img/util/prof2.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="|" data-prof="1" src="https://noro6.github.io/kcTools/img/util/prof1.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option" alt="" data-prof="0" src="https://noro6.github.io/kcTools/img/util/prof0.png"></a>
   `;
   $('.prof_select').next().append(text);
 
@@ -304,7 +304,7 @@ function clearPlaneDiv($div) {
   $div.find('.plane_name_span').text('機体を選択');
   $div.find('select').val('0').change();
   $div.find('.IMP_select').prop('disabled', true).addClass('IMP_select_disabled');
-  $div.find('.prof_select').attr('src', './img/util/prof0.png').attr('alt', '').data('prof', 0);
+  $div.find('.prof_select').attr('src', 'https://noro6.github.io/kcTools/img/util/prof0.png').attr('alt', '').data('prof', 0);
 }
 
 /**
@@ -369,15 +369,15 @@ function setPlaneDiv($div, $original) {
   else if (id == 312) prof = 2;
   // 特定熟練度を保持していた場合
   if ($original.data('prof')) prof = $original.data('prof');
-  $div.find('.prof_select').attr('src', './img/util/prof' + prof + '.png').data('prof', prof);
+  $div.find('.prof_select').attr('src', 'https://noro6.github.io/kcTools/img/util/prof' + prof + '.png').data('prof', prof);
 
   // 特定の改修値を保持していた場合
   if ($original.data('IMP')) $IMPInput.val($original.data('IMP'));
 
-  // 艦娘非選択で次の入力欄が隠れていたら出す
-  if ($div.closest('.ship_tab').attr('class') && !shipID) {
-    if ($div.parent().next().attr('class')) $div.parent().next().removeClass('d-none');
-  }
+  // // 艦娘非選択で次の入力欄が隠れていたら出す
+  // if ($div.closest('.ship_tab').attr('class') && !shipID) {
+  //   if ($div.parent().next().attr('class')) $div.parent().next().removeClass('d-none');
+  // }
 
   return true;
 }
@@ -1892,7 +1892,7 @@ $(() => {
     handle: '.plane_img:not([alt=""])',
     zIndex: 1000,
     start: function (e, ui) {
-      $(ui.helper).css('width', $('.lb_plane').width());
+      //$(ui.helper).css('width', 210);
     },
     stop: function () {
       const $plane = $(this).closest('.lb_plane');
@@ -2020,7 +2020,7 @@ $(() => {
         if (shipID && planeID && type && !checkInvalidEquipment(shipID, getPlanes(type).find(v => v.id == planeID))) return;
         // 挿入OK
         setPlaneDiv($this, $insertdiv);
-        setPlaneDiv($original, $destination);
+        if (!$('#copyPlane').prop('checked')) setPlaneDiv($original, $destination);
       }
     }
   });
@@ -2183,6 +2183,10 @@ $(() => {
       selectedType = selectedType > 99 ? 0 : selectedType;
       $modalBody.find('#optg_lb').remove();
     }
+    else {
+      // 機体カテゴリ初期化
+      setPlaneType($('#planeSelect_select'), planeType.filter(v => v.id > 0).map(v => v.id));
+    }
 
     // カテゴリ初期選択処理
     $('#planeSelect_select').change();
@@ -2317,6 +2321,7 @@ $(() => {
     const $tmp = $(this).closest('.battle_content');
     $tmp.find('.enemy_content:not(:first)').remove();
     clearEnemyDiv($tmp.find('.enemy_content'));
+    $(this).blur();
     caluclate();
   });
 
@@ -2439,6 +2444,6 @@ $(() => {
       else if ($('#lb_tab_select').css('display') == 'none' && $('#lb_item1').attr('class').indexOf('tab-pane') != -1) {
         $('.lb_tab').removeClass('tab-pane fade').show().fadeIn();
       }
-    }, 200);
+    }, 50);
   });
 });

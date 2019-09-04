@@ -152,8 +152,7 @@
                                 <div class="d-flex flex-column justify-content-start">
                                     <!-- 基地航空隊設定領域 -->
                                     <div class="" id="lb_content_main">
-                                        <ul class="d-lg-none nav justify-content-start nav-tabs mr-2 pt-3"
-                                            id="lb_tab_select">
+                                        <ul class="nav justify-content-start nav-tabs mb-2" id="lb_tab_select">
                                             <li class="nav-item">
                                                 <a class="nav-link active" data-toggle="tab"
                                                     href="#lb_item1">第1基地航空隊</a>
@@ -167,7 +166,8 @@
                                         </ul>
                                         <div class="d-flex w-100 justify-content-around flex-wrap tab-content">
                                             <!-- 第1基地航空隊 -->
-                                            <div class="lb_tab mx-1 my-1 px-1 pb-1 pt-1 flex-grow-1" id="lb_item1">
+                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-2 flex-grow-1"
+                                                id="lb_item1">
                                                 <div class="h6 ml-1 baseNo">第1基地航空隊</div>
                                                 <div class="lb_ope d-flex my-2 px-0">
                                                     <select class="custom-select custom-select-sm ohuda_select">
@@ -217,7 +217,7 @@
                                                             <div class="dropdown align-self-center prof_select_parent">
                                                                 <img class="prof_select" data-prof="0"
                                                                     data-toggle="dropdown"
-                                                                    src="./img/util/prof0.png">
+                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
                                                             <input type="number" class="slot" value="0" min="0">
@@ -232,14 +232,16 @@
                                                 </div>
                                             </div>
                                             <!-- 第2基地航空隊 -->
-                                            <div class="lb_tab mx-1 my-1 px-1 pb-1 pt-1 flex-grow-1" id="lb_item2">
+                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-2 flex-grow-1"
+                                                id="lb_item2">
                                             </div>
                                             <!-- 第3基地航空隊 -->
-                                            <div class="lb_tab mx-1 my-1 px-1 pb-1 pt-1 flex-grow-1" id="lb_item3">
+                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-2 flex-grow-1"
+                                                id="lb_item3">
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="lb_info" class="mt-2">
+                                    <div id="lb_info" class="mt-3">
                                         <table class="table table-sm bg-white table-bordered text-center"
                                             id="lb_info_table">
                                             <thead class="thead-light">
@@ -300,19 +302,22 @@
                                     </ul>
                                     <div class="tab-content my-1">
                                         <!-- 第1艦隊 -->
-                                        <div class="tab-pane fade show active friendFleet_tab container w-100 px-0"
+                                        <div class="tab-pane fade show active friendFleet_tab container-fluid px-0"
                                             id="friendFleet_item1">
                                             <div class="d-flex justify-content-start">
                                                 <div class="ml-2 mr-1 align-self-center">表示隻数：</div>
                                                 <select class="custom-select custom-select-sm dispShipCount">
-                                                    <option value="2">2</option>
-                                                    <option value="4" selected>4</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2" selected>2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
                                                     <option value="6">6</option>
                                                 </select>
                                                 <div class="ml-1 align-self-center">隻</div>
                                             </div>
                                             <div class="d-flex justify-content-start flex-wrap">
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
                                                             <div class="ship_name_span align-self-center px-1 text-truncate"
@@ -323,12 +328,12 @@
                                                             <div class="ml-1 align-self-center">
                                                                 制空値: <span class="ap">0</span>
                                                             </div>
-                                                            <div class="ml-2 text-truncate align-self-center">
+                                                            <div class="ml-2 align-self-center">
                                                                 <button
                                                                     class="btn btn-sm btn-secondary btnRemoveShip px-2"
                                                                     disabled>はずす</button>
                                                             </div>
-                                                            <div class="ml-auto text-truncate align-self-center">
+                                                            <div class="ml-auto align-self-center">
                                                                 <button
                                                                     class="btn btn-sm btn-danger btnResetShip px-2">装備解除</button>
                                                             </div>
@@ -351,7 +356,8 @@
                                                                             <img src="./img/e/undefined.png"
                                                                                 class="plane_img img-size-30" alt="">
                                                                         </div>
-                                                                        <div class="plane_name align-self-center flex-grow-1">
+                                                                        <div
+                                                                            class="plane_name align-self-center flex-grow-1">
                                                                             <div
                                                                                 class="plane_name_span text-truncate px-1 mr-1">
                                                                                 機体を選択
@@ -362,7 +368,7 @@
                                                                             class="dropdown align-self-center prof_select_parent">
                                                                             <img class="prof_select" data-prof="0"
                                                                                 data-toggle="dropdown"
-                                                                                src="./img/util/prof0.png">
+                                                                                src="https://noro6.github.io/kcTools/img/util/prof0.png">
                                                                             <div class="dropdown-menu"></div>
                                                                         </div>
                                                                         <input type="number" class="slot" value="0"
@@ -370,14 +376,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="ship_plane_parent d-none"></div>
-                                                            <div class="ship_plane_parent d-none"></div>
-                                                            <div class="ship_plane_parent d-none"></div>
+                                                            <div class="ship_plane_parent"></div>
+                                                            <div class="ship_plane_parent"></div>
+                                                            <div class="ship_plane_parent"></div>
                                                             <div class="ship_plane_parent d-none"></div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -392,7 +398,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -407,7 +413,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -422,7 +428,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1 d-none">
+
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -437,7 +444,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1 d-none">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -478,8 +485,8 @@
                                                             <td class="col6">0</td>
                                                         </tr>
                                                         <tr class="" id="fleet_info_row2"></tr>
-                                                        <tr class="" id="fleet_info_row3"></tr>
-                                                        <tr class="" id="fleet_info_row4"></tr>
+                                                        <tr class="d-none" id="fleet_info_row3"></tr>
+                                                        <tr class="d-none" id="fleet_info_row4"></tr>
                                                         <tr class="d-none" id="fleet_info_row5"></tr>
                                                         <tr class="d-none" id="fleet_info_row6"></tr>
                                                     </tbody>
@@ -487,19 +494,22 @@
                                             </div>
                                         </div>
                                         <!-- 第2艦隊 -->
-                                        <div class="tab-pane fade friendFleet_tab container px-0"
+                                        <div class="tab-pane fade friendFleet_tab container-fluid px-0"
                                             id="friendFleet_item2">
                                             <div class="d-flex justify-content-start mb-2">
                                                 <div class="mr-1 align-self-center">表示隻数：</div>
                                                 <select class="custom-select custom-select-sm dispShipCount">
-                                                    <option value="2">2</option>
-                                                    <option value="4" selected>4</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2" selected>2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
                                                     <option value="6">6</option>
                                                 </select>
                                                 <div class="ml-1 align-self-center">隻</div>
                                             </div>
-                                            <div class="d-flex justify-content-around flex-wrap">
-                                                <div class="ship_tab mx-1 my-1">
+                                            <div class="d-flex justify-content-start flex-wrap">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -515,7 +525,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -530,7 +540,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -545,7 +555,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -560,7 +570,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1 d-none">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -575,7 +585,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="ship_tab mx-1 my-1 d-none">
+                                                <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
                                                     <div class="pb-2 px-1 px-xl-2">
                                                         <div class="ship_ope d-flex mt-2 px-0">
                                                             <div class="ml-2 pt-1">
@@ -591,7 +601,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row mt-1">
                                                 <table
                                                     class="table table-sm table-bordered text-center fleet_info_table">
                                                     <thead class="thead-light">
@@ -608,8 +618,8 @@
                                                     <tbody class="bg-white">
                                                         <tr class="" id="fleet_info_row7"></tr>
                                                         <tr class="" id="fleet_info_row8"></tr>
-                                                        <tr class="" id="fleet_info_row9"></tr>
-                                                        <tr class="" id="fleet_info_row10"></tr>
+                                                        <tr class="d-none" id="fleet_info_row9"></tr>
+                                                        <tr class="d-none" id="fleet_info_row10"></tr>
                                                         <tr class="d-none" id="fleet_info_row11"></tr>
                                                         <tr class="d-none" id="fleet_info_row12"></tr>
                                                     </tbody>
@@ -660,7 +670,7 @@
                                         <div class="enemy_tab">
                                             <div class="d-flex justify-content-start flex-wrap battle_container">
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                     <div
                                                         class="border-bottom border-secondary pb-2 d-flex justify-content-start">
                                                         <div class="ml-2 align-self-center sortable_handle">
@@ -694,31 +704,31 @@
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                                 <div
-                                                    class="battle_content border border-secondary bg-white px-1 py-1 mr-1 mb-1">
+                                                    class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                 </div>
                                             </div>
                                         </div>

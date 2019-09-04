@@ -285,6 +285,12 @@ input[type=radio] {
   /* max-width: 992px; */
 }
 
+@media (min-width: 1030px){
+  #lb_tab_select {
+      display: none!important;
+  }
+}
+
 /* 基地1つ */
 .lb_tab{
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
@@ -340,7 +346,8 @@ input[type=radio] {
 }
 
 .ship_tab{
-  width: 450px;
+  min-width: 420px;
+  max-width: 500px;
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
@@ -621,11 +628,20 @@ input[type=radio] {
   cursor: move;
 }
 
+.battle_content{
+  border-radius: .2rem;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
 #battleCount{
   width: 60px;
 }
 
 .battle_content-placeholder{
+  border-radius: .2rem;
+  margin: .5rem .25rem;
   border: 1px coral solid;
 }
 
@@ -689,7 +705,9 @@ input[type=radio] {
 
 .enemyFleet_item-hover{
   background-color: rgb(242, 250, 255) !important;
-  border: 1px rgb(57, 176, 255) solid !important;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(57, 176, 255, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(57, 176, 255, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(57, 176, 255, 0.2);
 }
 
 /* 敵艦選択中(モーダル内限定) */
