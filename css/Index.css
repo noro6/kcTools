@@ -202,6 +202,21 @@ input[type=radio] {
   min-height: 100vh;
 }
 
+/* 折り畳みボタン */
+.toggleBtton{
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border:1px transparent solid;
+  transition: .4s
+}
+
+.toggleBtton:hover{
+  background-color: #eee;
+  border:1px #aaa solid;
+}
+
 /* ページトップへ戻るボタン */
 .btn-goPageTop {
   position: relative;

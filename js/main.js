@@ -134,7 +134,6 @@ function initAll(callback) {
   $('[data-toggle="popover"]').popover();
 
   // 基地欄簡易化するかどうか
-  console.log($('#lb_tab_select').css('display'))
   if ($('#lb_tab_select').css('display') != 'none' && $('#lb_item1').attr('class').indexOf('tab-pane') == -1) {
     $('.lb_tab').addClass('tab-pane fade');
     $('.lb_tab:first').addClass('show active');
@@ -1839,16 +1838,64 @@ $(() => {
     $('body,html').animate({ scrollTop: 0 }, 300, 'swing');
   });
 
-  // 折り畳みボタン
-  $('.btn_toggleContent').on('click', function () {
-    $(this).toggleClass('btn-toggleContent_show').toggleClass('btn-toggleContent_hide').blur();
+  // 折り畳み格納時
+  $(document).on('hide.bs.collapse', '.collapse', function () {
+    $(this).prev().find('.oi-chevron-bottom')
+      .removeClass('oi-chevron-bottom')
+      .addClass('oi-chevron-top');
+  });
+
+  // 折り畳み展開時
+  $(document).on('show.bs.collapse', '.collapse', function () {
+    $(this).prev().find('.oi-chevron-top')
+      .removeClass('oi-chevron-top')
+      .addClass('oi-chevron-bottom');
+  });
+
+  $(document).on('shown.bs.collapse', '.tmpChosen .collapse', function () {
+    const $chosen = $('.tmpChosen');
+    if($chosen != null){
+      const position = $chosen.offset().top - 60;
+      $('.tmpChosen').removeClass('tmpChosen');
+      $('body,html').animate({ scrollTop: position }, 0, 'swing');
+    }
   });
 
   // コンテンツ入れ替え設定
-  $('#main_contents').sortable({
-    helper: 'clone',
+  // $('#main_contents').sortable({
+  //   helper: 'clone',
+  //   handle: '.content_title',
+  //   stop: () => {
+  //     const org = [];
+  //     const $parent = $('#li_index');
+  //     $parent.find('li').each((i, e) => { org.push($(e).clone()) });
+  //     $parent.empty();
+  //     $('#main_contents > div').each((i, e) => {
+  //       for (const $target of org) {
+  //         if ($target.attr('id') == 'li_' + $(e).attr('id')) {
+  //           $parent.append($target);
+  //           continue;
+  //         }
+  //       }
+  //     });
+  //   }
+  // });
+
+  Sortable.create($('#main_contents')[0], {
     handle: '.content_title',
-    stop: () => {
+    animation: 150,
+    scroll: true,
+    onStart: function () {
+      $('body,html').animate({ scrollTop: 0 }, 200, 'swing');
+      // 開始時にいったん全部最小化
+      $('.collapse_content').each(function () {
+        if ($(this).attr('class').indexOf('show') != -1) {
+          $(this).addClass('tmpHide').collapse('hide');
+        }
+      });
+      $('.sortable-chosen').addClass('tmpChosen');
+    },
+    onEnd: function () {
       const org = [];
       const $parent = $('#li_index');
       $parent.find('li').each((i, e) => { org.push($(e).clone()) });
@@ -1861,6 +1908,9 @@ $(() => {
           }
         }
       });
+
+      // 一時閉じていたやつは終了時に展開
+      $('.tmpHide').collapse('show');
     }
   });
 
@@ -1892,7 +1942,7 @@ $(() => {
     handle: '.plane_img:not([alt=""])',
     zIndex: 1000,
     start: function (e, ui) {
-      //$(ui.helper).css('width', 210);
+      $(ui.helper).css('width', 310);
     },
     stop: function () {
       const $plane = $(this).closest('.lb_plane');
@@ -1953,12 +2003,12 @@ $(() => {
   $('.ship_plane_draggable').draggable({
     delay: 100,
     helper: 'clone',
-    handle: 'img:not([alt=""])',
+    handle: 'img:first',
     zIndex: 1000,
     start: function (e, ui) {
       $(ui.helper)
         .addClass('ship_plane ' + getPlaneCss(Number($(ui.helper).find('.plane_img').attr('alt'))))
-        .css('width', $('.ship_plane_draggable').width());
+        .css('width', 310);
     },
     stop: function () {
       const $plane = $(this).closest('.ship_plane');
@@ -2039,18 +2089,29 @@ $(() => {
   });
 
   // 敵艦　戦闘順番 入れ替え設定
-  $('.battle_container').sortable({
-    delay: 100,
-    handle: '.sortable_handle',
-    placeholder: 'battle_content-placeholder',
-    tolerance: 'pointer',
-    start: (e, ui) => {
-      $('.battle_content-placeholder').width(ui.item.width() + 9).height(ui.item.height() + 9).addClass('mr-1 mb-1');
-    },
-    stop: () => {
-      // 何戦目か整合性取る
-      $('.battle_content').each(function (i) { $(this).find('.battleNo').text(i + 1); });
+  // $('.battle_container').sortable({
+  //   delay: 100,
+  //   handle: '.sortable_handle',
+  //   placeholder: 'battle_content-placeholder',
+  //   tolerance: 'pointer',
+  //   start: (e, ui) => {
+  //     $('.battle_content-placeholder').width(ui.item.width() + 9).height(ui.item.height() + 9).addClass('mr-1 mb-1');
+  //   },
+  //   stop: () => {
+  //     // 何戦目か整合性取る
+  //     $('.battle_content').each(function (i) { $(this).find('.battleNo').text(i + 1); });
 
+  //     caluclate();
+  //   }
+  // });
+
+
+  Sortable.create($('.battle_container')[0], {
+    handle: '.sortable_handle',
+    animation: 150,
+    onEnd: function () {
+      // 何戦目か整合性取る
+      $('.battle_content').each((i, e) => { $(e).find('.battleNo').text(i + 1); });
       caluclate();
     }
   });
