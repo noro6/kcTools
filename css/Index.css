@@ -202,6 +202,10 @@ input[type=radio] {
   min-height: 100vh;
 }
 
+#main_contents > div{
+  max-width: 1200px;
+}
+
 /* 折り畳みボタン */
 .toggleBtton{
   text-align: center;
@@ -214,7 +218,6 @@ input[type=radio] {
 
 .toggleBtton:hover{
   background-color: #eee;
-  border:1px #aaa solid;
 }
 
 /* ページトップへ戻るボタン */
@@ -312,6 +315,7 @@ input[type=radio] {
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: .25rem;
+  max-width: 600px;
 }
 
 /* 基地札 */
@@ -323,10 +327,6 @@ input[type=radio] {
   background-color: white;
 }
 
-.lb_ope_def {
-  background-color: white;
-}
-
 .resource{
   cursor: help;
 }
@@ -334,6 +334,10 @@ input[type=radio] {
 .resource_img{
   width: 20px;
   height: auto;
+}
+
+.cur_pointer{
+  cursor: pointer;
 }
 
 .cur_move {
@@ -362,7 +366,7 @@ input[type=radio] {
 
 .ship_tab{
   min-width: 420px;
-  max-width: 500px;
+  max-width: 600px;
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
@@ -428,7 +432,6 @@ input[type=radio] {
 
 .IMP_select{
   height: 30px;
-  width: 42px;
   color: rgb(0, 170, 170);
   cursor: pointer;
   border: none;
@@ -463,7 +466,7 @@ input[type=radio] {
 }
 
 .prof_select:hover{
-  filter: drop-shadow(0 0 5px rgb(175, 175, 175));
+  filter: drop-shadow(0 0 5px rgb(190, 190, 190));
 }
 
 .prof {
@@ -510,6 +513,9 @@ input[type=radio] {
 .slot:hover{
   border-bottom: 1px solid #555;
 }
+#friendFleet_content .slot{
+  width: 48px;
+}
 
 /* 機体情報入力部分　固定幅でいく */
 .planeInput_IMP {
@@ -526,7 +532,7 @@ input[type=radio] {
 
 /* 機体選択欄 テーブル */
 .div_plane_table {
-  overflow-y: overlay;
+  overflow-y: auto;
   max-height: 40vh;
 }
 
@@ -535,27 +541,60 @@ input[type=radio] {
   position: relative;
 }
 
-.plane_table_ td:hover {
+.plane_thead{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.plane_thead div:hover {
   cursor: pointer;
   font-weight: bold;
 }
 
-.plane_table_ td.sorted {
+.sorted {
   font-weight: bold;
 }
 
-.plane_table_ td.asc:after {
+.asc:after {
   position: relative;
   content: "▲";
   bottom: 2px;
   font-size: 5px;
 }
 
-.plane_table_ td.desc:after {
+.desc:after {
   position: relative;
   content: "▼";
   bottom: 2px;
   font-size: 5px;
+}
+
+.plane_tbody{
+  height: 58vh;
+}
+
+.plane_td_name{
+  max-width: 300px;
+}
+
+.plane_td_aa{
+  text-align: center;
+  width: 60px;
+}
+
+.plane_td_range{
+  text-align: center;
+  width: 60px;
+}
+
+.plane_tr{
+  cursor: pointer;
+  transition: .4s;
+}
+
+.plane_tr:hover{
+  background-color: #eee;
 }
 
 /* 機体カテゴリ画像 */
@@ -578,7 +617,6 @@ input[type=radio] {
 /* 機体選択欄　機体 */
 .plane {
   min-width: 100px;
-  transition: .3s;
 }
 
 .plane:hover {
@@ -616,15 +654,31 @@ input[type=radio] {
 }
 
 .div_ship_table {
-  overflow-y: overlay;
+  overflow-y: auto;
   max-height: 40vh;
 }
 
-@media (max-width: 540px) {
-  .plane {
-    height: 30px;
-  }
+.ship_tbody{
+  height: 58vh;
+}
 
+.ship_thead{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.ship_tr{
+  cursor: pointer;
+  transition: .4s;
+}
+
+.ship_td_slot{
+  text-align: center;
+  width: 48px;
+}
+
+@media (max-width: 540px) {
   .ship{
     height: 30px;
   }
@@ -666,7 +720,8 @@ input[type=radio] {
 
 .enemy_name_span{
   cursor: pointer;
-  width: 180px;
+  width: 175px;
+  font-size: 13px;
 }
 
 .enemy_ap{
@@ -692,12 +747,12 @@ input[type=radio] {
 }
 
 #enemySelect_content .div_enemy_table {
-  overflow-y: overlay;
+  overflow-y: auto;
   max-height: 93%;
 }
 
 .div_enemy_table{
-  overflow-y: overlay;
+  overflow-y: auto;
   max-height: 40vh;
 }
 
@@ -828,6 +883,10 @@ input[type=radio] {
 
 /* 結果表示バー　描画領域 */
 #resultChart {
+}
+
+#displayBattle{
+  width: 60px;
 }
 
 /* 結果表示バー　ツールチップ */
