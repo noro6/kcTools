@@ -720,56 +720,65 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="mt-3">
-                                    <table class="table table-sm table-bordered text-center fleet_info_table">
-                                        <thead class="thead-light">
-                                            <tr id="fleet_info_row0">
-                                                <th>第1艦隊</th>
-                                                <th>搭載1</th>
-                                                <th>搭載2</th>
-                                                <th>搭載3</th>
-                                                <th>搭載4</th>
-                                                <th>搭載5</th>
-                                                <th>制空値</th>
+                                <div class="mt-2">
+                                    <table class="text-center border-secondary" id="landBaseResultTable">
+                                        <thead class="bg-light" id="landBaseResultTable_thead">
+                                            <tr class="tr_header">
+                                                <td class="td_name"></td>
+                                                <td class="">制空値</td>
+                                                <td class="">敵制空値</td>
+                                                <td class="">喪失</td>
+                                                <td class="">劣勢</td>
+                                                <td class="">均衡</td>
+                                                <td class="">優勢</td>
+                                                <td class="">確保</td>
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white">
-                                            <tr id="fleet_info_row1">
-                                                <td class="col0">未選択</td>
-                                                <td class="col1">0</td>
-                                                <td class="col2">0</td>
-                                                <td class="col3">0</td>
-                                                <td class="col4">0</td>
-                                                <td class="col5">0</td>
-                                                <td class="col6">0</td>
-                                            </tr>
-                                            <tr class="" id="fleet_info_row2"></tr>
-                                            <tr class="d-none" id="fleet_info_row3"></tr>
-                                            <tr class="d-none" id="fleet_info_row4"></tr>
-                                            <tr class="d-none" id="fleet_info_row5"></tr>
-                                            <tr class="d-none" id="fleet_info_row6"></tr>
-                                        </tbody>
-                                    </table>
-                                    <table class="table table-sm table-bordered text-center fleet_info_table">
-                                        <thead class="thead-light">
+                                        <tbody id="landBaseResultTable_tbody">
                                             <tr>
-                                                <th>第2艦隊</th>
-                                                <th>搭載1</th>
-                                                <th>搭載2</th>
-                                                <th>搭載3</th>
-                                                <th>搭載4</th>
-                                                <th>搭載5</th>
-                                                <th>制空値</th>
+                                                <td>第1基地航空隊 第1波</td>
+                                                <td rowspan="2">200</td>
+                                                <td>200</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>第1基地航空隊 第2波</td>
+                                                <td>180</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                                <td>8%</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot id="landBaseResultTable_tfoot">
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="mt-2">
+                                    <table class="text-center border-secondary" id="shootDownTable">
+                                        <thead class="bg-light" id="shootDownTable_thead">
+                                            <tr class="tr_header">
+                                                <td class="td_name">艦娘名</td>
+                                                <td class="td_plane_name text-center">装備名</td>
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white">
-                                            <tr class="" id="fleet_info_row7"></tr>
-                                            <tr class="" id="fleet_info_row8"></tr>
-                                            <tr class="d-none" id="fleet_info_row9"></tr>
-                                            <tr class="d-none" id="fleet_info_row10"></tr>
-                                            <tr class="d-none" id="fleet_info_row11"></tr>
-                                            <tr class="d-none" id="fleet_info_row12"></tr>
-                                        </tbody>
+                                        <tbody id="shootDownTable_tbody"></tbody>
+                                        <tfoot id="shootDownTable_tfoot">
+                                            <tr class="tr_fap">
+                                                <td colspan="2" class="td_rowHeader">自艦隊 制空値</td>
+                                            </tr>
+                                            <tr class="tr_eap">
+                                                <td colspan="2" class="td_rowHeader">敵艦隊 制空値</td>
+                                            </tr>
+                                            <tr class="tr_cond">
+                                                <td colspan="2" class="td_rowHeader">制空状態</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -984,15 +993,7 @@
                     </div>
                     <div class="plane_table_content bg-white">
                         <div class="plane_table container-fluid mx-0 px-0">
-                            <div class="plane_tbody overflow-auto">
-                                <div class="plane_thead d-flex bg-white py-2">
-                                    <div class="plane_td_type" id="th_default" data-order="asc">
-                                        <img class="img-size-25" src="./img/e/undefined.png" alt="種">
-                                    </div>
-                                    <div class="pl-1 plane_td_name" id="th_name" data-order="asc">装備名</div>
-                                    <div class="ml-auto plane_td_aa" id="th_aa" data-order="asc">対空</div>
-                                    <div class="plane_td_range" id="th_range" data-order="asc">半径</div>
-                                </div>
+                            <div class="plane_tbody overflow-auto" id="plane_table_tbody">
                             </div>
                         </div>
                     </div>

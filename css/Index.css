@@ -294,19 +294,18 @@ input[type=radio] {
   cursor: move;
 }
 
-/* 基地航空隊コンテンツ */
-#landBase{
-  /* max-width: 992px; */
-}
-
-#friendFleet{
-  /* max-width: 992px; */
-}
-
 @media (min-width: 1030px){
   #lb_tab_select {
       display: none!important;
   }
+}
+
+/* 影付き角丸基本枠 */
+.general_div{
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
 }
 
 /* 基地1つ */
@@ -918,6 +917,56 @@ input[type=radio] {
 /* 結果表示バー y軸 */
 .y_axis line {
   display: none;
+}
+
+#landBaseResultTable{
+  font-size: 12px;
+  background-color: #fff;
+  border-collapse: collapse;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#landBaseResultTable td{
+  padding: .1rem;
+  border: 1px solid #707070;
+}
+
+#shootDownTable {
+  font-size: 12px;
+  background-color: #fff;
+  border-collapse: collapse;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+#shootDownTable td{
+  padding: .1rem;
+  border: 1px solid #707070;
+}
+
+#shootDownTable .td_name{
+  width: 78px;
+}
+
+#shootDownTable .td_plane_name{
+  width: 180px;
+}
+
+#shootDownTable_tbody .td_plane_name{
+  text-align: left;
+  border-bottom-color: #dee2e6;
+}
+
+#shootDownTable .td_battle{
+  width: 48px;
+}
+
+#shootDownTable_tbody .td_battle{
+  cursor: pointer;
+  border-bottom-color: #dee2e6;
 }
 
 /* 詳細設定欄 */
