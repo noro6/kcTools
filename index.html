@@ -167,41 +167,40 @@
                                         </ul>
                                         <div class="d-flex w-100 justify-content-center flex-wrap tab-content">
                                             <!-- 第1基地航空隊 -->
-                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-2 flex-grow-1"
+                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
                                                 id="lb_item1">
-                                                <div class="d-flex justify-content-start">
+                                                <div class="d-flex justify-content-start mr-1">
                                                     <div class="h6 mb-0 ml-1 baseNo align-self-center">第1基地航空隊</div>
-                                                    <select class="ml-auto custom-select custom-select-sm ohuda_select">
+                                                    <div class="ml-auto btnIcon">
+                                                        <span class="oi oi-box align-middle"></span>
+                                                    </div>
+                                                    <div class="ml-2_5 btnResetLB btnIcon">
+                                                        <span class="oi oi-trash align-middle"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex my-2 px-0 lb_infomation">
+                                                    <select class="custom-select custom-select-sm ohuda_select">
                                                         <option value="2">集中</option>
                                                         <option value="1">単発</option>
                                                         <option value="-1" selected>待機</option>
                                                         <option value="0">防空</option>
                                                     </select>
-                                                    <button class="ml-2 btn btn-sm btn-danger btnResetLB">装備解除</button>
-                                                </div>
-                                                <div class="d-flex my-2 px-0">
-                                                    <div class="ml-1 align-self-center">
-                                                        制空値: <span class="ap pr-2">0</span>
+                                                    <div class="ml-2 align-self-center">
+                                                        制空: <span class="ap">0</span>
                                                         半径: <span class="range">0</span>
                                                     </div>
-                                                    <div class="ml-auto mr-2 d-none d-flex justify-content-start flex-nowrap align-self-center resource"
-                                                        data-toggle="tooltip" data-html="true" title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>
+                                                    <div class="ml-auto mr-2 align-self-center resource"
+                                                        data-toggle="tooltip" data-html="true"
+                                                        data-delay='{"show": 250, "hide": 0}' title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>
                                                         ※ 被撃墜時、母港補充時の消費量は含まれていません。">
-                                                        <div class="ml-1">
-                                                            <img src="./img/util/fuel.png" class="resource_img"
-                                                                alt="fuel">
-                                                        </div>
-                                                        <span class="pt-1 ml-1 fuel">0</span>
-                                                        <div class="ml-2">
-                                                            <img src="./img/util/ammo.png" class="resource_img"
-                                                                alt="ammo">
-                                                        </div>
-                                                        <span class="pt-1 ml-1 ammo">0</span>
-                                                        <div class="ml-2">
-                                                            <img src="./img/util/bauxite.png" class="resource_img"
-                                                                alt="bauxite">
-                                                        </div>
-                                                        <span class="pt-1 ml-1 bauxite">0</span>
+                                                        <img src="./img/util/fuel.png" class="resource_img" alt="fuel">
+                                                        <span class="ml-1 fuel">0</span>
+                                                        <img src="./img/util/ammo.png" class="resource_img ml-1"
+                                                            alt="ammo">
+                                                        <span class="ml-1 ammo">0</span>
+                                                        <img src="./img/util/bauxite.png" class="resource_img ml-1"
+                                                            alt="bauxite">
+                                                        <span class="ml-1 bauxite">0</span>
                                                     </div>
                                                 </div>
                                                 <!-- 第1基地航空隊 第1中隊　選択領域 -->
@@ -213,19 +212,22 @@
                                                                     class="plane_img img-size-30" alt="">
                                                             </div>
                                                             <div class="plane_name align-self-center flex-grow-1">
-                                                                <div class="plane_name_span px-1 mr-1">
+                                                                <span class="plane_name_span align-middle px-1">
                                                                     機体を選択
-                                                                </div>
+                                                                </span>
                                                             </div>
                                                             <select class="IMP_select IMP_select_disabled"
                                                                 disabled></select>
                                                             <div class="dropdown align-self-center prof_select_parent">
-                                                                <img class="prof_select" data-prof="0"
+                                                                <img class="prof_select prof_none" data-prof="0"
                                                                     data-toggle="dropdown"
                                                                     src="https://noro6.github.io/kcTools/img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
                                                             <input type="number" class="slot" value="0" min="0">
+                                                            <div class="close btnRemovePlane opacity0">
+                                                                <span>&times;</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="lb_plane mt-1 d-flex justify-content-start flex-nowrap">
@@ -237,11 +239,11 @@
                                                 </div>
                                             </div>
                                             <!-- 第2基地航空隊 -->
-                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-2 flex-grow-1"
+                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
                                                 id="lb_item2">
                                             </div>
                                             <!-- 第3基地航空隊 -->
-                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-2 flex-grow-1"
+                                            <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
                                                 id="lb_item3">
                                             </div>
                                         </div>
@@ -290,9 +292,9 @@
                                             <div class="ml-1 align-self-center">隻</div>
                                         </div>
                                         <div class="d-flex justify-content-center flex-wrap">
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1">
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1" id="shipNo_1">
                                                 <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
+                                                    <div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
                                                         <div class="ship_name_span align-self-center px-1 text-truncate"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-html="true" title="">
@@ -301,128 +303,51 @@
                                                         <div class="ml-1 align-self-center">
                                                             制空値: <span class="ap">0</span>
                                                         </div>
-                                                        <div class="ml-2 align-self-center">
-                                                            <button class="btn btn-sm btn-secondary btnRemoveShip px-2"
-                                                                disabled>はずす</button>
+                                                        <div class="ml-auto btnIcon">
+                                                            <span class="oi oi-box align-middle"></span>
                                                         </div>
-                                                        <div class="ml-auto align-self-center">
-                                                            <button
-                                                                class="btn btn-sm btn-danger btnResetShip px-2">装備解除</button>
-                                                        </div>
-                                                        <div class="ml-2 minToggleBtn pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_1">▲</button>
+                                                        <div class="ml-2_5 btnResetShip btnIcon">
+                                                            <span class="oi oi-trash align-middle"></span>
                                                         </div>
                                                     </div>
-                                                    <!-- 艦娘装備　選択領域 -->
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_1">
-                                                        <div class="ship_plane_parent">
-                                                            <div class="ship_plane mt-1 d-flex justify-content-start">
-                                                                <div
-                                                                    class="col px-0 d-flex justify-content-start flex-nowrap ship_plane_draggable">
-                                                                    <div class="ml-1 align-self-center">
-                                                                        <img src="./img/e/undefined.png"
-                                                                            class="plane_img img-size-30" alt="">
-                                                                    </div>
-                                                                    <div
-                                                                        class="plane_name align-self-center flex-grow-1">
-                                                                        <div
-                                                                            class="plane_name_span text-truncate px-1 mr-1">
-                                                                            機体を選択
-                                                                        </div>
-                                                                    </div>
-                                                                    <select class="ml-auto IMP_select"></select>
-                                                                    <div
-                                                                        class="dropdown align-self-center prof_select_parent">
-                                                                        <img class="prof_select" data-prof="0"
-                                                                            data-toggle="dropdown"
-                                                                            src="https://noro6.github.io/kcTools/img/util/prof0.png">
-                                                                        <div class="dropdown-menu"></div>
-                                                                    </div>
-                                                                    <input type="number" class="slot" value="0" min="0">
-                                                                </div>
+                                                    <!-- 艦娘装備 -->
+                                                    <div class="ship_plane mt-1 d-flex justify-content-start">
+                                                        <div
+                                                            class="col px-0 d-flex justify-content-start flex-nowrap ship_plane_draggable">
+                                                            <div class="ml-1 align-self-center">
+                                                                <img src="./img/e/undefined.png"
+                                                                    class="plane_img img-size-30" alt="">
+                                                            </div>
+                                                            <div class="plane_name align-self-center flex-grow-1">
+                                                                <span class="plane_name_span align-middle px-1 ">
+                                                                    機体を選択
+                                                                </span>
+                                                            </div>
+                                                            <select class="ml-auto IMP_select"></select>
+                                                            <div class="dropdown align-self-center prof_select_parent">
+                                                                <img class="prof_select prof_none" data-prof="0"
+                                                                    data-toggle="dropdown"
+                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
+                                                                <div class="dropdown-menu"></div>
+                                                            </div>
+                                                            <input type="number" class="slot" value="0" min="0">
+                                                            <div class="close btnRemovePlane opacity0">
+                                                                <span>&times;</span>
                                                             </div>
                                                         </div>
-                                                        <div class="ship_plane_parent"></div>
-                                                        <div class="ship_plane_parent"></div>
-                                                        <div class="ship_plane_parent"></div>
-                                                        <div class="ship_plane_parent d-none"></div>
+                                                    </div>
+                                                    <div class="ship_plane mt-1 d-flex justify-content-start"></div>
+                                                    <div class="ship_plane mt-1 d-flex justify-content-start"></div>
+                                                    <div class="ship_plane mt-1 d-flex justify-content-start"></div>
+                                                    <div class="ship_plane mt-1 d-none justify-content-start">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_2">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_2">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_3">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_3">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_4">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_4">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_5">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_5">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_6">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_6">
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
                                         </div>
                                     </div>
                                     <!-- 第2艦隊 -->
@@ -441,91 +366,12 @@
                                             <div class="ml-1 align-self-center">隻</div>
                                         </div>
                                         <div class="d-flex justify-content-start flex-wrap">
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_7">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <!-- 艦娘装備　選択領域 -->
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_7">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_8">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_8">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_9">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_9">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_10">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_10">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_11">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_11">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none">
-                                                <div class="pb-2 px-1 px-xl-2">
-                                                    <div class="ship_ope d-flex mt-2 px-0">
-                                                        <div class="ml-2 pt-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-secondary btn-sm btn_toggleContent btn-toggleContent_show"
-                                                                title="折りたたむ" data-toggle="collapse"
-                                                                data-target="#ship_plane_content_12">▲</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ship_tab_main collapse show" id="ship_plane_content_12">
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -721,8 +567,8 @@
                                     </table>
                                 </div>
                                 <div class="mt-2">
-                                    <table class="text-center border-secondary" id="landBaseResultTable">
-                                        <thead class="bg-light" id="landBaseResultTable_thead">
+                                    <table class="text-center border-secondary" id="lb_battle_table">
+                                        <thead class="bg-light" id="lb_battle_table_thead">
                                             <tr class="tr_header">
                                                 <td class="td_name"></td>
                                                 <td class="">制空値</td>
@@ -734,7 +580,7 @@
                                                 <td class="">確保</td>
                                             </tr>
                                         </thead>
-                                        <tbody id="landBaseResultTable_tbody">
+                                        <tbody id="lb_battle_table_tbody">
                                             <tr>
                                                 <td>第1基地航空隊 第1波</td>
                                                 <td rowspan="2">200</td>
@@ -755,25 +601,26 @@
                                                 <td>8%</td>
                                             </tr>
                                         </tbody>
-                                        <tfoot id="landBaseResultTable_tfoot">
+                                        <tfoot id="lb_battle_table_tfoot">
                                         </tfoot>
                                     </table>
                                 </div>
                                 <div class="mt-2">
-                                    <table class="text-center border-secondary" id="shootDownTable">
-                                        <thead class="bg-light" id="shootDownTable_thead">
+                                    <table class="text-center" id="shoot_down_table">
+                                        <thead class="bg-ddd" id="shoot_down_table_thead">
                                             <tr class="tr_header">
                                                 <td class="td_name">艦娘名</td>
                                                 <td class="td_plane_name text-center">装備名</td>
                                             </tr>
                                         </thead>
-                                        <tbody id="shootDownTable_tbody"></tbody>
-                                        <tfoot id="shootDownTable_tfoot">
+                                        <tbody id="shoot_down_table_tbody"></tbody>
+                                        <tfoot id="shoot_down_table_tfoot">
                                             <tr class="tr_fap">
-                                                <td colspan="2" class="td_rowHeader">自艦隊 制空値</td>
+                                                <td rowspan="2" class="td_rowHeader">制空値</td>
+                                                <td>自艦隊</td>
                                             </tr>
                                             <tr class="tr_eap">
-                                                <td colspan="2" class="td_rowHeader">敵艦隊 制空値</td>
+                                                <td>敵艦隊</td>
                                             </tr>
                                             <tr class="tr_cond">
                                                 <td colspan="2" class="td_rowHeader">制空状態</td>
@@ -799,11 +646,6 @@
                                 <div class="row">
                                     <div class="col">
                                         <div>■ 機体選択</div>
-                                        <div class="custom-control custom-checkbox ml-3 mt-2">
-                                            <input class="custom-control-input" type="checkbox" id="dispMoreThan0AA">
-                                            <label class="custom-control-label" for="dispMoreThan0AA">対空値が 0
-                                                の艦攻、艦爆をまとめる</label>
-                                        </div>
                                         <div class="custom-control custom-checkbox ml-3">
                                             <input class="custom-control-input" type="checkbox"
                                                 id="dispMoreThanxAASwitch" checked>

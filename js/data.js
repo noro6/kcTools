@@ -8,6 +8,7 @@ const airStatus = [
   { id: 2, name: '航空均衡', abbr: '均衡', rate: 6 },
   { id: 3, name: '航空劣勢', abbr: '劣勢', rate: 4 },
   { id: 4, name: '制空権喪失', abbr: '喪失', rate: 1 },
+  { id: -1, name: '-', abbr: '-', rate: 0 },
 ];
 
 // 機体カテゴリ
@@ -93,10 +94,6 @@ const planeData = [
   { id: 343, type: 2, name: "流星改(一航戦/熟練)", AA: 3, range: 6, IP: 0, AB: 0, IMP: false, LOS: 6, cost: 9, abbr: '' },
   { id: 344, type: -2, name: "九七式艦攻改 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, IP: 0, AB: 0, IMP: false, LOS: 4, cost: 6, abbr: '97艦攻改 試製3号戊型' },
   { id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, IP: 0, AB: 0, IMP: false, LOS: 5, cost: 6, abbr: '97艦攻改(熟練) 試製3号戊型' },
-  { id: 20000, type: 2, name: "艦攻(対空:0 半径:3)", AA: 0, range: 3, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 4, abbr: '' },
-  { id: 20001, type: 2, name: "艦攻(対空:0 半径:4)", AA: 0, range: 4, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 5, abbr: '' },
-  { id: 20002, type: 2, name: "艦攻(対空:0 半径:5)", AA: 0, range: 5, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 6, abbr: '' },
-  { id: 20003, type: 2, name: "艦攻(対空:0 半径:6)", AA: 0, range: 6, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 8, abbr: '' },
   { id: 23, type: 3, name: "九九式艦爆", AA: 0, range: 4, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 4, abbr: '' },
   { id: 24, type: 3, name: "彗星", AA: 0, range: 4, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 5, abbr: '' },
   { id: 57, type: 3, name: "彗星一二型甲", AA: 0, range: 5, IP: 0, AB: 0, IMP: false, LOS: 1, cost: 6, abbr: '' },
@@ -120,8 +117,6 @@ const planeData = [
   { id: 316, type: 3, name: "Re.2001 CB改", AA: 4, range: 3, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 6, abbr: '' },
   { id: 319, type: 3, name: "彗星一二型(六三四空/三号爆弾搭載機)", AA: 3, range: 5, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 5, abbr: '彗星12型(634空/3号爆弾)' },
   { id: 320, type: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", AA: 0, range: 5, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 6, abbr: '彗星12型(31号光電管爆弾)' },
-  { id: 30000, type: 3, name: "艦爆(対空:0 半径:4)", AA: 0, range: 4, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 6, abbr: '' },
-  { id: 30001, type: 3, name: "艦爆(対空:0 半径:5)", AA: 0, range: 5, IP: 0, AB: 0, IMP: false, LOS: 0, cost: 6, abbr: '' },
   { id: 54, type: 4, name: "彩雲", AA: 0, range: 8, IP: 0, AB: 0, IMP: true, LOS: 9, cost: 9, abbr: '' },
   { id: 61, type: 4, name: "二式艦上偵察機", AA: 1, range: 5, IP: 0, AB: 0, IMP: true, LOS: 7, cost: 6, abbr: '' },
   { id: 151, type: 4, name: "試製景雲(艦偵型)", AA: 0, range: 8, IP: 0, AB: 0, IMP: true, LOS: 11, cost: 12, abbr: '' },
