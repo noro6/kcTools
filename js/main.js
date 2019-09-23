@@ -2691,6 +2691,7 @@ $(function () {
     $('#planePresetModal').data('parentid', parentId);
     loadPlanePreset();
     $('#planePresetModal').modal('show');
+    $(this).blur();
   });
 
   // 機体プリセット押下時
