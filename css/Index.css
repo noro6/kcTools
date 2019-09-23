@@ -1,9 +1,9 @@
 body {
-  font-size: .875rem;
+  font-size: 0.875rem;
   background: #f0ebe6;
 }
 
-select{
+select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -17,7 +17,7 @@ select{
 }
 
 /* モーダル書き換え */
-.modal-backdrop{
+.modal-backdrop {
   min-width: 1024px;
   min-height: 960px;
 }
@@ -51,10 +51,10 @@ select{
 }
 
 .ml-2_5 {
-  margin-left: .75rem!important;
+  margin-left: 0.75rem !important;
 }
 
-.cur_pointer{
+.cur_pointer {
   cursor: pointer;
 }
 
@@ -63,10 +63,14 @@ select{
 }
 
 .cur_no-drop {
-  cursor: no-drop!important;
+  cursor: no-drop !important;
 }
 
-.opacity0{
+.cur_help {
+  cursor: help;
+}
+
+.opacity0 {
   opacity: 0 !important;
   cursor: default !important;
 }
@@ -95,7 +99,7 @@ select{
 }
 
 /* ラジオボタン非表示 */
-input[type=radio] {
+input[type="radio"] {
   display: none;
 }
 
@@ -106,28 +110,28 @@ input[type=radio] {
 }
 
 .navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
 }
 
 .navbar .form-control {
-  padding: .75rem 1rem;
+  padding: 0.75rem 1rem;
   border-width: 0;
   border-radius: 0;
 }
 
 .form-control-dark {
   color: #fff;
-  background-color: rgba(255, 255, 255, .1);
-  border-color: rgba(255, 255, 255, .1);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .form-control-dark:focus {
   border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
 .sidebar-sticky {
@@ -143,8 +147,8 @@ input[type=radio] {
 
 @supports ((position: -webkit-sticky) or (position: sticky)) {
   .sidebar-sticky {
-      position: -webkit-sticky;
-      position: sticky;
+    position: -webkit-sticky;
+    position: sticky;
   }
 }
 
@@ -165,12 +169,13 @@ input[type=radio] {
   color: #00ccff;
 }
 
-.sidebar .nav-link:hover .feather, .sidebar .nav-link.active .feather {
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
   color: inherit;
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
 }
 
@@ -190,7 +195,7 @@ input[type=radio] {
 
 @media (min-width: 768px) {
   [role="main"] {
-      padding-top: 48px;
+    padding-top: 48px;
   }
 }
 
@@ -235,91 +240,22 @@ input[type=radio] {
   min-height: 100vh;
 }
 
-#main_contents > div{
+#main_contents > div {
   max-width: 1200px;
 }
 
 /* 折り畳みボタン */
-.toggleBtton{
+.toggleBtton {
   text-align: center;
   width: 30px;
   height: 30px;
   cursor: pointer;
-  border:1px transparent solid;
-  transition: .4s
+  border: 1px transparent solid;
+  transition: 0.4s;
 }
 
-.toggleBtton:hover{
+.toggleBtton:hover {
   background-color: #eee;
-}
-
-/* ページトップへ戻るボタン */
-.btn-goPageTop {
-  position: relative;
-  bottom: 3px;
-  font-size: 0;
-  padding: 0px;
-  height: 30px;
-  width: 30px;
-}
-
-.btn-goPageTop:before {
-  position: relative;
-  content: "↑";
-  bottom: 1px;
-  font-size: 18px;
-}
-
-.btn-toggleContent_hide {
-  position: relative;
-  bottom: 3px;
-  font-size: 0;
-  padding: 0px;
-  height: 30px;
-  width: 30px;
-}
-
-.btn-toggleContent_hide:before {
-  content: "";
-  position: relative;
-  bottom: 3px;
-  border: 5px solid transparent;
-  border-bottom-color: #000;
-}
-
-.btn-toggleContent_show {
-  position: relative;
-  bottom: 3px;
-  font-size: 0;
-  padding: 0px;
-  height: 30px;
-  width: 30px;
-}
-
-.btn-toggleContent_show:before {
-  content: "";
-  position: relative;
-  top: 3px;
-  border: 5px solid transparent;
-  border-top-color: #000;
-}
-
-#friendFleet_content .btn-toggleContent_hide {
-  position: relative;
-  bottom: 0px;
-  font-size: 0;
-  padding: 0px;
-  height: 25px;
-  width: 25px;
-}
-
-#friendFleet_content .btn-toggleContent_show {
-  position: relative;
-  bottom: 0px;
-  font-size: 0;
-  padding: 0px;
-  height: 25px;
-  width: 25px;
 }
 
 /* コンテンツ表示 */
@@ -327,49 +263,59 @@ input[type=radio] {
   cursor: move;
 }
 
-@media (min-width: 1052px){
+@media (min-width: 1052px) {
   #lb_tab_select {
-      display: none!important;
+    display: none !important;
   }
 }
 
 /* 影付き角丸基本枠 */
-.general_div{
+.general_div {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
-
-.btnIcon{
+.btnIcon {
   font-size: 18px;
-  transition: .4s;
-  opacity: .3;
+  transition: 0.4s;
+  opacity: 0.3;
+}
+
+.btnIcon .oi-box {
+  color: rgb(200, 100, 0);
 }
 
 .btnIcon:hover {
   opacity: 1;
   cursor: pointer;
+}
+
+.btnPreset:hover {
+  filter: drop-shadow(0px 0px 4px rgb(255, 185, 120));
+}
+
+.btnReset {
   filter: drop-shadow(0px 0px 4px rgb(185, 185, 185));
 }
 
 /* 基地1つ */
-.lb_tab{
+.lb_tab {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   max-width: 600px;
 }
 
-.lb_infomation{
+.lb_infomation {
   font-size: 12px;
   height: 32px;
 }
 
 /* 基地札 */
-.ohuda_select{
+.ohuda_select {
   font-size: 12px;
   width: 64px;
 }
@@ -378,9 +324,9 @@ input[type=radio] {
   background-color: white;
 }
 
-.resource{
+.resource {
   cursor: help;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .resource:hover {
@@ -389,7 +335,7 @@ input[type=radio] {
   filter: drop-shadow(0px 0px 4px rgb(180, 180, 180));
 }
 
-.resource_img{
+.resource_img {
   width: 20px;
   height: auto;
 }
@@ -399,24 +345,24 @@ input[type=radio] {
   min-width: 310px;
   background-color: rgb(255, 255, 255);
   border: 2px #aaa solid;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .lb_plane:hover {
   background-color: rgb(250, 250, 250);
 }
 
-.dispShipCount{
+.dispShipCount {
   width: 60px;
 }
 
-.ship_tab{
+.ship_tab {
   min-width: 420px;
   max-width: 600px;
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .ship_name_span {
@@ -425,10 +371,14 @@ input[type=radio] {
 }
 
 .ship_name_span:hover {
-  transition: .5s;
+  transition: 0.5s;
   background-color: rgb(255, 250, 245);
-  border-top-left-radius: .25rem;
-  border-top-right-radius: .25rem;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.ship_sumAP{
+  font-size: 12px;
 }
 
 /* 艦娘機体選択欄 */
@@ -436,7 +386,7 @@ input[type=radio] {
   width: 100%;
   background-color: rgb(255, 255, 255);
   border: 2px #aaa solid;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .ship_plane:hover {
@@ -451,8 +401,8 @@ input[type=radio] {
 
 .plane_name {
   cursor: pointer;
-  border-radius: .2rem;
-  transition: .5s;
+  border-radius: 0.2rem;
+  transition: 0.5s;
   height: 28px;
 }
 
@@ -460,11 +410,11 @@ input[type=radio] {
   background-color: rgba(255, 250, 220, 0.8);
 }
 
-.btnRemovePlane{
-  transition: .4s;
-  opacity: .2;
+.btnRemovePlane {
+  transition: 0.4s;
+  opacity: 0.2;
 }
-.btnRemovePlane:hover{
+.btnRemovePlane:hover {
   filter: drop-shadow(0px 0px 4px rgb(150, 150, 150));
 }
 
@@ -472,41 +422,40 @@ input[type=radio] {
 .lb_plane-hover {
   background-color: rgb(168, 220, 255) !important;
   border: 2px rgb(57, 176, 255) solid !important;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 /* 艦載機をドラッグしてきた時のスタイル */
 .ship_plane-hover {
   background-color: rgb(168, 220, 255) !important;
   border: 2px rgb(57, 176, 255) solid !important;
-  transition: .2s;
+  transition: 0.2s;
 }
 
-.IMP_select{
+.IMP_select {
   height: 30px;
   color: rgb(0, 170, 170);
   cursor: pointer;
   border: none;
   background-color: transparent;
-  transition: .4s;
+  transition: 0.4s;
 }
-.IMP_select_disabled{
+.IMP_select_disabled {
   cursor: default;
-  color: #999!important;
+  color: #999 !important;
 }
 .IMP_option {
   color: rgb(0, 170, 170);
 }
-.IMP_select:hover{
+.IMP_select:hover {
   filter: drop-shadow(0px 0px 6px rgb(0, 255, 255));
 }
-.IMP_select_disabled:hover{
+.IMP_select_disabled:hover {
   filter: drop-shadow(0px 0px 0px rgb(255, 255, 255));
 }
 
-
 /* 熟練度関連 */
-.prof_select{
+.prof_select {
   cursor: pointer;
   width: 24px;
   height: 30px;
@@ -514,21 +463,21 @@ input[type=radio] {
   color: transparent;
   background-color: transparent;
   align-self: center;
-  transition: .4s;
+  transition: 0.4s;
 }
 
-.prof_item{
-  transition: .4s;
+.prof_item {
+  transition: 0.4s;
 }
 
-.prof_item:hover{
+.prof_item:hover {
   background-color: #fafafa;
 }
 
-.prof_option{
+.prof_option {
   width: 20px;
   height: auto;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 .prof_none:hover {
@@ -543,21 +492,21 @@ input[type=radio] {
   filter: drop-shadow(0 0 3px rgb(100, 180, 255));
 }
 
-.prof_select_parent .dropdown-menu{
+.prof_select_parent .dropdown-menu {
   max-width: 40px;
   min-width: 40px;
 }
-.prof_select_parent .dropdown-item{
+.prof_select_parent .dropdown-item {
   padding: 1px 5px;
   height: 28px;
   text-align: center;
 }
-.prof_select_parent .dropdown-item:active{
+.prof_select_parent .dropdown-item:active {
   background-color: #bbb;
 }
 
 /* 搭載数ボックス */
-.slot{
+.slot {
   align-self: center;
   text-align: center;
   width: 40px;
@@ -567,10 +516,10 @@ input[type=radio] {
   border-bottom: 1px solid transparent;
   background-color: transparent;
 }
-.slot:hover{
+.slot:hover {
   border-bottom: 1px solid #555;
 }
-#friendFleet_content .slot{
+#friendFleet_content .slot {
   width: 48px;
 }
 
@@ -598,7 +547,7 @@ input[type=radio] {
   position: relative;
 }
 
-.plane_thead{
+.plane_thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -613,45 +562,34 @@ input[type=radio] {
   font-weight: bold;
 }
 
-.asc:after {
-  position: relative;
-  content: "▲";
-  bottom: 2px;
-  font-size: 5px;
-}
-
-.desc:after {
-  position: relative;
-  content: "▼";
-  bottom: 2px;
-  font-size: 5px;
-}
-
-.plane_tbody{
+.plane_tbody {
   height: 58vh;
 }
 
-.plane_td_name{
+.plane_td_name {
   max-width: 300px;
 }
 
-.plane_td_aa{
+.plane_td_aa {
   text-align: center;
   width: 60px;
 }
 
-.plane_td_range{
+.plane_td_range {
   text-align: center;
   width: 60px;
 }
 
-.plane_tr{
+.plane_tr {
   cursor: pointer;
-  transition: .4s;
+  border-radius: .25rem;
+  transition: 0.2s;
 }
-
-.plane_tr:hover{
+.plane_tr:hover {
   background-color: #eee;
+}
+.plane:active {
+  background-color: rgb(122, 195, 255) !important;
 }
 
 /* 機体カテゴリ画像 */
@@ -676,20 +614,10 @@ input[type=radio] {
   min-width: 100px;
 }
 
-.plane:hover {
-  background-color: #f5f5f5;
-  background-color: rgb(250, 250, 250) !important;
-  cursor: pointer;
-}
-
-.plane:active{
-  background-color: rgb(122, 195, 255) !important;
-}
-
 .plane_helper {
   padding: 3px 20px 3px 10px;
   background-color: rgba(255, 255, 255, 0.8) !important;
-  border-radius: .2rem;
+  border-radius: 0.2rem;
   -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
@@ -701,48 +629,37 @@ input[type=radio] {
 }
 
 /* 艦娘選択欄 テーブル */
-.ship:hover {
-  background-color: #f5f5f5;
-  cursor: pointer;
-}
-
-.ship:active{
-  background-color: rgb(122, 195, 255) !important;
-}
-
 .div_ship_table {
   overflow-y: auto;
   max-height: 40vh;
 }
 
-.ship_tbody{
+.ship_tbody {
   height: 58vh;
 }
 
-.ship_thead{
+.ship_thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
 }
 
-.ship_tr{
+.ship_tr {
   cursor: pointer;
-  transition: .4s;
+  transition: 0.2s;
+  border-radius: .25rem;
+}
+.ship_tr:hover {
+  background-color: #eee;
 }
 
-.ship_td_slot{
+.ship_tr:active {
+  background-color: rgb(122, 195, 255) !important;
+}
+
+.ship_td_slot {
   text-align: center;
   width: 48px;
-}
-
-@media (max-width: 540px) {
-  .ship{
-    height: 30px;
-  }
-
-  .enemy{
-    height: 30px;
-  }
 }
 
 /* 艦娘選択中(モーダル内限定) */
@@ -750,47 +667,58 @@ input[type=radio] {
   background-color: #f5f5f5 !important;
 }
 
-.sortable_handle{
+.sortable_handle {
   cursor: move;
 }
 
-.battle_content{
-  border-radius: .2rem;
+.battle_content {
+  border-radius: 0.2rem;
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
-#battleCount{
+#battleCount {
   width: 60px;
 }
 
-.battle_content-placeholder{
-  border-radius: .2rem;
-  margin: .5rem .25rem;
-  border: 1px coral solid;
+.enemy_content {
 }
-
-.enemy_content:hover{
+.enemy_content:hover {
   background-color: #f5f5f5;
 }
 
-.enemy_name_span{
+.enemy_name {
   cursor: pointer;
-  width: 175px;
-  font-size: 13px;
+  display: table;
+  width: 168px;
+  height: 28px;
+  font-size: 12px;
+  border-radius: .25rem;
+  transition: .5s;
+}
+.enemy_name:hover {
+  background-color: rgba(255, 250, 220, 0.8);
+}
+.enemy_name_span {
+  display: table-cell;
+  vertical-align: middle;
 }
 
-.enemy_ap{
+.enemy_sumAP{
+  font-size: 12px;
+}
+
+.enemy_ap {
   width: 35px;
   text-align: right;
 }
-.enemy_ap_form{
+.enemy_ap_form {
   outline: none;
   text-align: right;
   width: 32px;
-  height: 21px;
-  font-size: .875rem;
+  height: 28px;
+  font-size: 0.875rem;
   border-top: none;
   border-right: none;
   border-left: none;
@@ -798,49 +726,114 @@ input[type=radio] {
 }
 
 /* 敵艦選択テーブル */
-#enemySelect_content .enemy_table_content {
-  width: 380px;
-  height: 306px;
+.enemy_thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
 }
 
-#enemySelect_content .div_enemy_table {
-  overflow-y: auto;
-  max-height: 93%;
+.enemy_tbody {
+  height: 58vh;
 }
 
-.div_enemy_table{
-  overflow-y: auto;
-  max-height: 40vh;
-}
-
-.enemy:hover {
-  background-color: #f5f5f5;
+.enemy_tr {
   cursor: pointer;
+  border-radius: .25rem;
+  transition: .2s;
 }
 
-#enemySelect_content .enemy_draggable{
-  cursor: move;
+.enemy_tr:hover {
+  background-color: #eee;
 }
 
-.enemy_helper {
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  border-radius: .2rem;
-  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+.enemy_tr:active {
+  background-color: rgb(122, 195, 255) !important;
 }
 
-.enemyFleet_item-hover{
-  background-color: rgb(242, 250, 255) !important;
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(57, 176, 255, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(57, 176, 255, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(57, 176, 255, 0.2);
+.enemy_td_ap {
+  text-align: center;
+  width: 64px;
+}
+
+.enemy_td_lbAp {
+  text-align: center;
+  width: 84px;
 }
 
 /* 敵艦選択中(モーダル内限定) */
 .enemy-selected {
-  color: #fff;
-  background-color: #70bfff !important;
+  background-color: #f5f5f5 !important;
+}
+
+/* 機体プリセット名一覧 */
+.plane_preset_content{
+  font-size: 12px;
+}
+
+#btnAddPreset {
+  height: 30px;
+  width: 100%;
+  display: table;
+  cursor: pointer;
+  border-radius: .25rem;
+  transition: .2s;
+}
+#btnAddPreset:hover {
+  background-color: #eee;
+}
+#btnAddPreset > div {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.preset_tbody{
+  height: 320px;
+}
+.preset_thead{
+  display: table;
+  position: -webkit-sticky;
+  position: sticky;
+  height: 30px;
+  top: 0;
+}
+.preset_tr {
+  height: 42px;
+  width: 100%;
+  cursor: pointer;
+  transition: .2s;
+  border-radius: .25rem;
+}
+.preset_tr:hover {
+  background-color: #eee;
+}
+.preset_td {
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+.preset_selected {
+  color: #fff !important;
+  background-color: rgb(122, 195, 255) !important;
+}
+
+/* 機体プリセットプレビュー欄 */
+.preset_preview_tr {
+  height: 52px;
+}
+#preset_preview_name {
+  font-size: 12px;
+}
+.preset_preview_td_type {
+  width: 30px;
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+.preset_preview_td_name {
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+.preset_preview_td_info {
+  -ms-flex-item-align: center;
+  align-self: center;
 }
 
 /* 艦戦の色など */
@@ -942,7 +935,7 @@ input[type=radio] {
 #resultChart {
 }
 
-#displayBattle{
+#displayBattle {
   width: 60px;
 }
 
@@ -977,7 +970,7 @@ input[type=radio] {
   display: none;
 }
 
-#lb_battle_table{
+#lb_battle_table {
   font-size: 12px;
   background-color: #fff;
   border-collapse: collapse;
@@ -986,8 +979,8 @@ input[type=radio] {
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
-#lb_battle_table td{
-  padding: .1rem;
+#lb_battle_table td {
+  padding: 0.1rem;
   border: 1px solid #6c757d;
 }
 
@@ -1001,64 +994,64 @@ input[type=radio] {
 }
 
 /* 基本罫線 */
-#shoot_down_table td{
-  padding: .1rem;
+#shoot_down_table td {
+  padding: 0.1rem;
   border: 1px solid #6c757d;
 }
 
 /* ヘッダ一行 */
-#shoot_down_table_thead td{
+#shoot_down_table_thead td {
   background-color: #e9ecef;
   border-top: 2px solid #6c757d;
 }
 
-#shoot_down_table_thead td:first-of-type{
+#shoot_down_table_thead td:first-of-type {
   border-left: 2px solid #6c757d;
 }
 
-#shoot_down_table .battle_end{
+#shoot_down_table .battle_end {
   border-right: 2px solid #6c757d;
 }
 
-#shoot_down_table .td_name{
+#shoot_down_table .td_name {
   border-left: 2px solid #6c757d;
   width: 78px;
 }
 
-#shoot_down_table .td_plane_name{
+#shoot_down_table .td_plane_name {
   width: 180px;
 }
 
-#shoot_down_table_tbody .td_plane_name{
+#shoot_down_table_tbody .td_plane_name {
   text-align: left;
   border-bottom-color: #dee2e6;
 }
 
-#shoot_down_table .td_battle{
+#shoot_down_table .td_battle {
   max-width: 120px;
 }
 
-#shoot_down_table_tbody .td_battle{
+#shoot_down_table_tbody .td_battle {
   cursor: pointer;
   border-bottom-color: #dee2e6;
 }
 
-#shoot_down_table .battle1{
+#shoot_down_table .battle1 {
   border-left: 2px solid #6c757d;
 }
 
 /* フッタ一番上の行 */
-#shoot_down_table_tfoot tr:first-child td{
+#shoot_down_table_tfoot tr:first-child td {
   border-top: 2px solid #6c757d;
 }
 
 /* フッターの行ヘッダ */
-#shoot_down_table_tfoot .td_rowHeader{
+#shoot_down_table_tfoot .td_rowHeader {
   border-left: 2px solid #6c757d;
 }
 
 /* フッター一番下の行 */
-#shoot_down_table_tfoot tr:last-child td{
+#shoot_down_table_tfoot tr:last-child td {
   border-top: 2px solid #6c757d;
   border-bottom: 2px solid #6c757d;
 }
@@ -1068,7 +1061,7 @@ input[type=radio] {
   cursor: pointer;
 }
 
-#dispMoreThanxAA{
+#dispMoreThanxAA {
   width: 60px;
 }
 
