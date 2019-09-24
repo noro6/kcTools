@@ -42,6 +42,9 @@ const imgUrl = "https://noro6.github.io/kcTools";
 // 機体プリセット
 let planePreset = [];
 
+// 制空ボーダーリスト
+const airCondBorder = [];
+
 /*==================================
     描画用
 ==================================*/
@@ -92,14 +95,14 @@ function initAll(callback) {
 
   // 熟練度選択欄
   text = `
-  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt=">>" data-prof="7" src="` + imgUrl + `/img/util/prof7.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt="///" data-prof="6" src="` + imgUrl + `/img/util/prof6.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt="//" data-prof="5" src="` + imgUrl + `/img/util/prof5.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt="/" data-prof="4" src="` + imgUrl + `/img/util/prof4.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_blue" alt="|||" data-prof="3" src="` + imgUrl + `/img/util/prof3.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_blue" alt="||" data-prof="2" src="` + imgUrl + `/img/util/prof2.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_blue" alt="|" data-prof="1" src="` + imgUrl + `/img/util/prof1.png"></a>
-  <a class="dropdown-item prof_item"><img class="prof_option prof_none" alt="" data-prof="0" src="` + imgUrl + `/img/util/prof0.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt=">>" data-prof="7" src="${imgUrl}/img/util/prof7.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt="///" data-prof="6" src="${imgUrl}/img/util/prof6.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt="//" data-prof="5" src="${imgUrl}/img/util/prof5.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_yellow" alt="/" data-prof="4" src="${imgUrl}/img/util/prof4.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_blue" alt="|||" data-prof="3" src="${imgUrl}/img/util/prof3.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_blue" alt="||" data-prof="2" src="${imgUrl}/img/util/prof2.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_blue" alt="|" data-prof="1" src="${imgUrl}/img/util/prof1.png"></a>
+  <a class="dropdown-item prof_item"><img class="prof_option prof_none" alt="" data-prof="0" src="${imgUrl}/img/util/prof0.png"></a>
   `;
   $('.prof_select').next().append(text);
 
@@ -168,6 +171,15 @@ function initAll(callback) {
     $('.lb_tab:first').addClass('show active');
     $('#lb_item1').addClass('active');
   }
+
+  console.time('事前計算');
+  // 事前計算 -各種制空値のボーダー配列生成
+  const max_ap = 1000;
+  for (let i = 0; i <= max_ap; i++) {
+    airCondBorder.push(getBorder(i));
+  }
+  console.log(airCondBorder);
+  console.timeEnd('事前計算');
 
   callback();
 }
@@ -614,16 +626,16 @@ function createPlaneTable($table, planes) {
     const needTooltip = plane.AB > 0 || plane.IP > 0;
 
     insertHtml += `
-    <div class="plane plane_tr d-flex py-2 py-lg-1 pl-1" data-planeid="` + plane.id + `" data-type="` + plane.type + `">
+    <div class="plane plane_tr d-flex py-2 py-lg-1 pl-1" data-planeid="${plane.id}" data-type="${plane.type}">
         <div class="plane_td_td_type align-self-center">
-          <img class="img-size-25" src="./img/e/Type`+ plane.type + `.png" alt="` + plane.type + `">
+          <img class="img-size-25" src="./img/e/Type${plane.type}.png" alt="${plane.type}">
         </div>
         <div class="pl-1 plane_td_name align-self-center">`+ plane.name + `</div>
         <div class="ml-auto plane_td_aa align-self-center
-        ` + (needTooltip ? 'text_existTooltip" data-toggle="tooltip" title="出撃時:' + nmAA + ' , 防空時:' + defAA + '"' : '"') + `>
-          ` + plane.AA + `
+          ${needTooltip ? 'text_existTooltip" data-toggle="tooltip" title="出撃時:' + nmAA + ' , 防空時:' + defAA + '"' : '"'}>
+          ${plane.AA}
         </div>
-        <div class="plane_td_range align-self-center">`+ plane.range + `</div>
+        <div class="plane_td_range align-self-center">${plane.range}</div>
     </div>
     `;
   }
@@ -663,9 +675,9 @@ function createShipTable($table, type) {
     for (let index = 1; index < 5; index++) slotText += '<div class="ship_td_slot">' + (index < ship.slot.length ? ship.slot[index] : '') + '</div>';
 
     insertHtml += `
-    <div class="ship ship_tr d-flex py-2 py-lg-1" data-shipid="` + ship.id + `">
-        <div class="pl-1 ship_td_name">` + ship.name + `</div>`
-      + slotText + `
+    <div class="ship ship_tr d-flex py-2 py-lg-1" data-shipid="${ship.id}">
+        <div class="pl-1 ship_td_name">${ship.name}</div>
+        ${slotText}
     </div>`;
   }
   $tbody.find('.ship').remove();
@@ -705,10 +717,10 @@ function createEnemyTable($table, type) {
     lbAp += ap;
 
     insertHtml += `
-    <div class="enemy enemy_tr d-flex py-2" data-enemyid="`+ enemy.id + `">
-      <div class="ml-1 enemy_td_name">`+ drawEnemyGradeColor(enemy.name) + `</div>
-      <div class="ml-auto enemy_td_ap">`+ ap + `</div>
-      <div class="enemy_td_lbAp">`+ lbAp + `</div>
+    <div class="enemy enemy_tr d-flex py-2" data-enemyid="${enemy.id}">
+      <div class="ml-1 enemy_td_name">${drawEnemyGradeColor(enemy.name)}</div>
+      <div class="ml-auto enemy_td_ap">${ap}</div>
+      <div class="enemy_td_lbAp">${lbAp}</div>
     </div>`;
   }
   $tbody.find('.enemy').remove();
@@ -825,27 +837,27 @@ function drawResultBar() {
         const sub = ap - border[i][index];
         if (index != airStatus.length - 1) {
           addText2 += `
-          <tr`+ (sub > 0 ? ' class="font-weight-bold"' : '') + `>
-              <td class="text-right">` + val.abbr + `:</td>
+          <tr ${sub > 0 ? ' class="font-weight-bold"' : ''}>
+              <td class="text-right">${val.abbr}:</td>
               <td>` + border[i][index] + `</td>
-              <td>(` + (sub > 0 ? '+' + sub : sub == 0 ? '± 0' : '-' + (-sub)) + `)</td>
+              <td>(${sub > 0 ? '+' + sub : sub == 0 ? '± 0' : '-' + (-sub)})</td>
           </tr>`;
         }
       });
 
       let infoText = `
-      <div class="text-center mb-2">`
-        + (isDefenseMode ? `防空(合計値)` : (i < 7 ? `第` + Math.floor(i / 2 + 1) + `基地航空隊　第` + ((i % 2) + 1) + `波` : `本隊`)) +
-        `</div>
+      <div class="text-center mb-2">
+        ${isDefenseMode ? `防空(合計値)` : (i < 7 ? `第` + Math.floor(i / 2 + 1) + `基地航空隊　第` + ((i % 2) + 1) + `波` : `本隊`)}
+      </div>
       <div class="text-center font-weight-bold">` + airStatus[getAirStatusIndex(ap, data.enemy[i])].name + `</div>
       <table class="table table-sm mb-1">
           <tbody>
-              <tr><td colspan="3" class="text-center">`+ addText + `</td></tr>
+              <tr><td colspan="3" class="text-center">${addText}</td></tr>
               <tr class="border-top border-secondary">
-                  <td class="text-right">制空値:</td>
-                  <td>` + ap + `</td><td></td>
+                <td class="text-right">制空値:</td>
+                <td>${ap}</td><td></td>
               </tr>
-              ` + addText2 + `
+                ${addText2}
           </tbody>
       </table>`;
 
@@ -925,10 +937,10 @@ function loadPlanePreset() {
     }
 
     presetText += `
-      <div class="preset_tr d-flex px-1 py-1" data-presetid="` + preset.id + `">
-        <div class="preset_td text-primary">` + (index + 1) + `</div>
-        <div class="preset_td ml-2">` + preset.name + `</div>
-        ` + infoText + `
+      <div class="preset_tr d-flex px-1 py-1" data-presetid="${preset.id}">
+        <div class="preset_td text-primary">${index + 1}</div>
+        <div class="preset_td ml-2">${preset.name}</div>
+          ${infoText}
       </div>
     `;
   }
@@ -1209,6 +1221,7 @@ function saveLocalStrage(key, data) {
  */
 function getAirStatusIndex(x, y) {
   if (x == 0 && y == 0) return 5;
+  if (y < 1000) for (let i = 0; i < airCondBorder[y].length; i++) if (x >= airCondBorder[y][i]) return x != 0 ? i : 4;
   const border = getBorder(y);
   for (let i = 0; i < border.length; i++) if (x >= border[i]) return x != 0 ? i : 4;
 }
@@ -2590,7 +2603,7 @@ $(function () {
       $(this).find('.oi')
         .removeClass('d-none oi-sort-' + order + 'ending')
         .addClass('d-table-cell oi-sort-' + nextOrder + 'ending');
-  }
+    }
 
     // 再度カテゴリ検索をかけて反映する
     $('#planeSelect_select').change();
