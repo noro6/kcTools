@@ -228,7 +228,19 @@
                                                                     src="https://noro6.github.io/kcTools/img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <input type="number" class="slot" value="0" min="0">
+                                                            <div class="dropdown align-self-center slot_select_parent">
+                                                                <span class="slot" data-toggle="dropdown">18</span>
+                                                                <div class="dropdown-menu dropdown-menu-right px-2">
+                                                                    <h6 class="dropdown-header py-1 px-1">搭載数を入力
+                                                                    </h6>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm mb-2 slot_input"
+                                                                        value="18" min="0" max="18">
+                                                                    <input type="range" class="custom-range slot_range"
+                                                                        min="0" max="18" value="18">
+                                                                </div>
+                                                            </div>
+                                                            <!-- <input type="number" class="slot" value="0" min="0"> -->
                                                             <div class="close btnRemovePlane opacity0">
                                                                 <span>&times;</span>
                                                             </div>
@@ -338,7 +350,18 @@
                                                                     src="https://noro6.github.io/kcTools/img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <input type="number" class="slot" value="0" min="0">
+                                                            <div class="dropdown align-self-center slot_select_parent">
+                                                                <span class="slot" data-toggle="dropdown">0</span>
+                                                                <div class="dropdown-menu dropdown-menu-right px-2">
+                                                                    <h6 class="dropdown-header py-1 px-1">搭載数を入力
+                                                                    </h6>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm mb-2 slot_input"
+                                                                        value="0" min="0" max="99">
+                                                                    <input type="range" class="custom-range slot_range"
+                                                                        value="0" min="0" max="99">
+                                                                </div>
+                                                            </div>
                                                             <div class="close btnRemovePlane opacity0">
                                                                 <span>&times;</span>
                                                             </div>
@@ -617,111 +640,82 @@
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
-                                <div class="row">
-                                    <div class="col">
-                                        <div>■ 機体選択</div>
-                                        <div class="custom-control custom-checkbox ml-3">
-                                            <input class="custom-control-input" type="checkbox"
-                                                id="dispMoreThanxAASwitch" checked>
-                                            <label
-                                                class="custom-control-label d-flex justify-content-start align-items-center flex-wrap flex-md-nowrap"
-                                                for="dispMoreThanxAASwitch">
-                                                <div class="mr-1">対空値が</div>
-                                                <select class="custom-select custom-select-sm"
-                                                    id="dispMoreThanxAA"></select>
-                                                <div class="ml-1">
-                                                    <strong>以下</strong>の
-                                                </div>
-                                                <div>
-                                                    <span class="text_existTooltip" id="config_fighter"
-                                                        data-toggle="tooltip" data-html="true"
-                                                        title="「艦上戦闘機」「水上戦闘機」<br>「陸軍戦闘機」「局地戦闘機」">戦闘機系の機体
-                                                    </span>
-                                                    は表示しない
-                                                </div>
-                                            </label>
-                                        </div>
+                                <div class="pt-2 my-1 mx-2">
+                                    <div><span class="oi oi-wrench mr-1"></span>操作設定</div>
+                                    <div class="custom-control custom-checkbox ml-3 mt-2">
+                                        <input class="custom-control-input" type="checkbox" id="copyPlane">
+                                        <label class="custom-control-label" for="copyPlane">
+                                            機体D&D時、交換の代わりに複製を行う
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div>■ 操作設定</div>
-                                        <div class="custom-control custom-checkbox ml-3 mt-2">
-                                            <input class="custom-control-input" type="checkbox" id="copyPlane">
-                                            <label class="custom-control-label" for="copyPlane">
-                                                機体D&D時、交換の代わりに複製を行う
-                                            </label>
+                                <div class="border-top pt-2 my-1 mx-2">
+                                    <div><span class="oi oi-wrench mr-1"></span>シミュレート全般</div>
+                                    <div class="ml-3 mt-2 d-flex">
+                                        <div class="align-self-center">熟練度</div>
+                                        <div class="align-self-center">
+                                            <img class="img-size-20 mx-1" alt=">>"
+                                                src="https://noro6.github.io/kcTools/img/util/prof7.png">
+                                        </div>
+                                        <div class="align-self-center">
+                                            選択時、内部熟練度を 120 として計算する機体：
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col">
-                                        <div>■ シミュレート全般</div>
-                                        <div class="ml-3 mt-2">
-                                            ・熟練度 <strong class="prof__yellow">>></strong> 選択時、内部熟練度を
-                                            120として計算する機体:
+                                    <div class="ml-3 d-flex flex-wrap" id="innerProfSetting">
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_1" checked>
+                                            <label class="custom-control-label" for="prof120_1">艦戦</label>
                                         </div>
-                                        <div class="ml-3 d-flex flex-wrap" id="innerProfSetting">
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_1"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_1">艦戦</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_2">
-                                                <label class="custom-control-label" for="prof120_2">艦攻</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_3">
-                                                <label class="custom-control-label" for="prof120_3">艦爆</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_4"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_4">艦偵</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_5"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_5">水偵</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_6">
-                                                <label class="custom-control-label" for="prof120_6">水爆</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_7"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_7">水戦</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_9">
-                                                <label class="custom-control-label" for="prof120_9">噴式</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_101">
-                                                <label class="custom-control-label" for="prof120_101">陸攻</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_102"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_102">陸戦</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_103"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_103">局戦</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_104"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_104">陸偵</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_8"
-                                                    checked>
-                                                <label class="custom-control-label" for="prof120_8">飛行艇</label>
-                                            </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_2">
+                                            <label class="custom-control-label" for="prof120_2">艦攻</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_3">
+                                            <label class="custom-control-label" for="prof120_3">艦爆</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_4" checked>
+                                            <label class="custom-control-label" for="prof120_4">艦偵</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_5" checked>
+                                            <label class="custom-control-label" for="prof120_5">水偵</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_6">
+                                            <label class="custom-control-label" for="prof120_6">水爆</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_7" checked>
+                                            <label class="custom-control-label" for="prof120_7">水戦</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_9">
+                                            <label class="custom-control-label" for="prof120_9">噴式</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_101">
+                                            <label class="custom-control-label" for="prof120_101">陸攻</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_102"
+                                                checked>
+                                            <label class="custom-control-label" for="prof120_102">陸戦</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_103"
+                                                checked>
+                                            <label class="custom-control-label" for="prof120_103">局戦</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_104"
+                                                checked>
+                                            <label class="custom-control-label" for="prof120_104">陸偵</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-3">
+                                            <input class="custom-control-input" type="checkbox" id="prof120_8" checked>
+                                            <label class="custom-control-label" for="prof120_8">飛行艇</label>
                                         </div>
                                     </div>
                                 </div>

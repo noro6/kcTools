@@ -495,6 +495,7 @@ input[type="radio"] {
 .prof_select_parent .dropdown-menu {
   max-width: 40px;
   min-width: 40px;
+  box-shadow: 0 .1rem 1rem rgba(0,0,0,.3)
 }
 .prof_select_parent .dropdown-item {
   padding: 1px 5px;
@@ -505,22 +506,26 @@ input[type="radio"] {
   background-color: #bbb;
 }
 
-/* 搭載数ボックス */
-.slot {
-  align-self: center;
-  text-align: center;
+/* 搭載数 */
+.slot_select_parent{
+  display: table;
   width: 40px;
   height: 28px;
-  outline: none;
-  border: none;
-  border-bottom: 1px solid transparent;
-  background-color: transparent;
+}
+.slot {
+  cursor: pointer;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  transition: .4s;
 }
 .slot:hover {
-  border-bottom: 1px solid #555;
+  filter: drop-shadow(0 0 3px rgb(150, 150, 150));
 }
-#friendFleet_content .slot {
-  width: 48px;
+.slot_select_parent .dropdown-menu {
+  z-index: 1000;
+  width: 240px;
+  box-shadow: 0 .1rem 1rem rgba(0,0,0,.3)
 }
 
 /* 機体情報入力部分　固定幅でいく */
@@ -593,16 +598,18 @@ input[type="radio"] {
 }
 
 /* 機体カテゴリ画像 */
+.img-size-20 {
+  height: 20px;
+  width: auto;
+}
 .img-size-25 {
   width: 25px;
   height: auto;
 }
-
 .img-size-30 {
   width: 30px;
   height: auto;
 }
-
 .img-size-32 {
   padding-top: 3px;
   width: 32px;
@@ -788,13 +795,6 @@ input[type="radio"] {
 
 .preset_tbody{
   height: 320px;
-}
-.preset_thead{
-  display: table;
-  position: -webkit-sticky;
-  position: sticky;
-  height: 30px;
-  top: 0;
 }
 .preset_tr {
   height: 42px;
@@ -1073,22 +1073,22 @@ input[type="radio"] {
   text-decoration-skip-ink: none;
 }
 
-.airCond0 {
+.airStatus0 {
   background-color: rgb(0, 255, 0);
 }
 
-.airCond1 {
+.airStatus1 {
   background-color: rgb(150, 255, 0);
 }
 
-.airCond2 {
+.airStatus2 {
   background-color: rgb(255, 255, 0);
 }
 
-.airCond3 {
+.airStatus3 {
   background-color: rgb(255, 150, 0);
 }
 
-.airCond4 {
+.airStatus4 {
   background-color: rgb(255, 100, 100);
 }
