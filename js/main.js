@@ -437,7 +437,7 @@ function clearPlaneDiv($div) {
   // 選択状況をリセット
   $div.removeClass(getPlaneCss($div.data('type')));
   $div.removeData();
-  $div.find('.plane_img').attr('src', './img/e/undefined.png').attr('alt', '');
+  $div.find('.plane_img').attr('src', './img/type/undefined.png').attr('alt', '');
   $div.find('.cur_move').removeClass('cur_move');
   $div.find('.plane_name_span').text('機体を選択');
   $div.find('select').val('0').change();
@@ -498,7 +498,7 @@ function setPlaneDiv($div, $original) {
     .data('type', type);
 
   $div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
-  $div.find('.plane_img').attr('src', './img/e/Type' + plane.type + '.png').attr('alt', plane.type);
+  $div.find('.plane_img').attr('src', './img/type/type' + plane.type + '.png').attr('alt', plane.type);
   $div.find('.plane_img').parent().addClass('cur_move');
   $div.find('.btnRemovePlane').removeClass('opacity0');
 
@@ -730,7 +730,7 @@ function createPlaneTable($table, planes) {
     insertHtml += `
     <div class="plane plane_tr d-flex py-2 py-lg-1 pl-1" data-planeid="${plane.id}" data-type="${plane.type}">
         <div class="plane_td_td_type align-self-center">
-          <img class="img-size-25" src="./img/e/type${plane.type}.png" alt="${plane.type}">
+          <img class="img-size-25" src="./img/type/type${plane.type}.png" alt="${plane.type}">
         </div>
         <div class="pl-1 plane_td_name align-self-center">`+ plane.name + `</div>
         <div class="ml-auto plane_td_aa align-self-center
@@ -1124,7 +1124,7 @@ function drawPresetPreview(preset) {
     const needWarning = !checkInvalidPlane(parentId, plane);
     text += `
     <div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="`+ plane.id + `">
-      <div class="preset_preview_td_type"><img class="img-size-25" src="./img/e/Type`+ plane.type + `.png"></div>
+      <div class="preset_preview_td_type"><img class="img-size-25" src="./img/type/type`+ plane.type + `.png"></div>
       <div class="preset_preview_td_name ml-1 py-2">`+ plane.name + `</div>
       ` + (needWarning ? warningIcon : '') + `
     </div>
