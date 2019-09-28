@@ -240,7 +240,6 @@
                                                                         min="0" max="18" value="18">
                                                                 </div>
                                                             </div>
-                                                            <!-- <input type="number" class="slot" value="0" min="0"> -->
                                                             <div class="close btnRemovePlane opacity0">
                                                                 <span>&times;</span>
                                                             </div>
@@ -439,6 +438,20 @@
                                                 <option value="10">10</option>
                                             </select>
                                             <div class="ml-1 align-self-center">回</div>
+                                            <div class="ml-4 mr-1 align-self-center">基地を派遣する戦闘：</div>
+                                            <select class="custom-select custom-select-sm" id="landBaseTarget">
+                                                <option value="1" selected>1</option>
+                                                <option value="2" class="d-none">2</option>
+                                                <option value="3" class="d-none">3</option>
+                                                <option value="4" class="d-none">4</option>
+                                                <option value="5" class="d-none">5</option>
+                                                <option value="6" class="d-none">6</option>
+                                                <option value="7" class="d-none">7</option>
+                                                <option value="8" class="d-none">8</option>
+                                                <option value="9" class="d-none">9</option>
+                                                <option value="10" class="d-none">10</option>
+                                            </select>
+                                            <div class="ml-1 align-self-center">戦目</div>
                                         </div>
                                         <div class="enemy_tab">
                                             <div class="d-flex justify-content-start flex-wrap battle_container">
@@ -448,7 +461,7 @@
                                                         <div class="ml-2 align-self-center sortable_handle">
                                                             <span class="battleNo">1</span>戦目
                                                         </div>
-                                                        <div class="ml-2 align-self-center enemy_sumAP">
+                                                        <div class="pl-2 align-self-center enemy_sumAP sortable_handle">
                                                             敵制空: <span class="enemySumAP">0</span>
                                                         </div>
                                                         <div class="ml-auto btnPreset btnEnemyPreset btnIcon pt-1"
@@ -938,7 +951,7 @@
                             </div>
                         </div>
                         <div class="col preset_preview border-left d-flex flex-column">
-                            <div class="preset_preview mb-2">プリセット名 :</div>
+                            <div class="preset_preview mb-2">プリセット名：</div>
                             <input type="text" class="form-control form-control-sm" id="preset_preview_name"
                                 placeholder="プリセット名を入力">
                             <div class="preset_preview_table mt-2">

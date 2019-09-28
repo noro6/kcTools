@@ -75,6 +75,10 @@ select {
   cursor: default !important;
 }
 
+.font_size_12 {
+  font-size: 12px;
+}
+
 /* nav-tabs 書き換え */
 #main_contents .nav-tabs {
   border-color: #aaa !important;
@@ -409,9 +413,14 @@ input[type="radio"] {
 .plane_name:hover {
   background-color: rgba(255, 250, 220, 0.8);
 }
-
 .btnRemovePlane {
   transition: 0.4s;
+  opacity: 0;
+}
+.lb_plane:hover .btnRemovePlane {
+  opacity: 0.2;
+}
+.ship_plane:hover .btnRemovePlane {
   opacity: 0.2;
 }
 .btnRemovePlane:hover {
@@ -688,9 +697,11 @@ input[type="radio"] {
 #battleCount {
   width: 60px;
 }
-
-.enemy_content {
+#landBaseTarget {
+  width: 60px;
 }
+
+
 .enemy_content:hover {
   background-color: #f5f5f5;
 }
@@ -933,6 +944,10 @@ input[type="radio"] {
 
 /* 結果表示バー　描画領域 */
 #resultChart {
+}
+
+#resultChart rect {
+  cursor: pointer;
 }
 
 #displayBattle {
