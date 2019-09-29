@@ -160,7 +160,13 @@ function initialize(callback) {
   $('.lb_plane').html($('#lb_item1').find('.lb_plane:first').html());
 
   // 基地簡易ビュー複製
-  text = $('.lb_info_table tbody').html();
+  text = $('#lb_info_table tbody').html();
+  for (let i = 0; i < 2; i++) $('#lb_info_table tbody').append(text);
+  $('.lb_info_tr').each((i, e) => {
+    $(e).addClass('lb_info_lb_' + (Math.floor(i / 4) + 1));
+    $(e).find('.lb_info_name').text('第' + (Math.floor(i / 4) + 1) + '基地航空隊');
+  });
+  $('#lb_info_table tbody').prepend('<tr class="lb_info_warning"><td colspan="6" class="px-3">全ての航空隊が待機に設定されています。</td></tr>')
 
   // 艦娘　複製
   $('.ship_tab').html($('.ship_tab:first').html());
@@ -1323,9 +1329,19 @@ function updateLandBaseInfo(landBaseData) {
       // 格納
       tmpLandBaseDatum.planes.push(lbPlaneData);
 
-      // 個別制空値表示
-      const $target_td = $('#lb_info_row' + lbNo).find('.col' + slotNo);
-      const prevAp = Number($target_td.text());
+      // 個別表示
+      const $lb_slot = $('.lb_info_lb_' + lbNo + '.slot' + slotNo);
+      let $target_td = $lb_slot.find('.lb_info_plane');
+      let prevAp = 0;
+      // 装備名
+      $target_td.text(lbPlaneData.name);
+      // 搭載数
+      $target_td = $lb_slot.find('.lb_info_slot');
+      prevAp = Number($target_td.text());
+      drawChangeValue($target_td, prevAp, lbPlaneData.slot);
+      // 制空値
+      $target_td = $lb_slot.find('.lb_info_ap');
+      prevAp = Number($target_td.text());
       drawChangeValue($target_td, prevAp, lbPlaneData.ap);
 
       // 航空隊制空値加算
@@ -1372,24 +1388,30 @@ function updateLandBaseInfo(landBaseData) {
     getUpdateLBAirPower(tmpLandBaseDatum);
 
     // 総制空値
-    let $target_td = $('#lb_info_row' + lbNo).find('.col5');
+    const $target_lb = $('.lb_info_lb_' + lbNo);
+    let $target_td = $target_lb.find('.lb_info_sumAp');
     drawChangeValue($target_td, Number($target_td.text()), tmpLandBaseDatum.ap);
     let $targetSpan = $lb_tab.find('.ap');
     drawChangeValue($targetSpan, Number($targetSpan.text()), tmpLandBaseDatum.ap);
 
     // 半径
-    $target_td = $('#lb_info_row' + lbNo).find('.col6');
+    $target_td = $target_lb.find('.lb_info_range');
     const range = getRange(tmpLandBaseDatum);
     drawChangeValue($target_td, Number($target_td.text()), range);
     $targetSpan = $lb_tab.find('.range');
     drawChangeValue($targetSpan, Number($targetSpan.text()), range);
 
-    // 待機部隊は黒塗り
-    $target_td.parent().css({ 'background-color': tmpLandBaseDatum.mode != -1 ? '#fff' : '#bbb' });
+    // 待機部隊は非表示
+    if (tmpLandBaseDatum.mode != -1) $target_lb.removeClass('d-none');
+    else $target_lb.addClass('d-none');
 
     // 生成した第X航空隊データを格納
     landBaseData.push(tmpLandBaseDatum);
   });
+
+  // 全部待機
+  if (!$('#lb_info_table tbody .lb_info_tr:not(.d-none)').length) $('.lb_info_warning').removeClass('d-none');
+  else $('.lb_info_warning').addClass('d-none');
 }
 
 /**
@@ -1417,7 +1439,7 @@ function createLBPlaneObject($lb_plane) {
   }
 
   const lbPlane = {
-    id: 0, name: '', type: 0, AA: 0, AB: 0, IP: 0, LOS: 0, ap: 0, range: 999, cost: 0,
+    id: 0, name: '', abbr: '', type: 0, AA: 0, AB: 0, IP: 0, LOS: 0, ap: 0, range: 999, cost: 0,
     slot: inputSlot,
     imp: Number($lb_plane.find('.remodel_select').data('remodel')),
     level: Number($lb_plane.find('.prof_select').data('prof'))
@@ -1426,6 +1448,7 @@ function createLBPlaneObject($lb_plane) {
   if (plane) {
     lbPlane.id = plane.id;
     lbPlane.name = plane.name;
+    lbPlane.abbr = plane.abbr;
     lbPlane.type = plane.type;
     lbPlane.AA = plane.AA;
     lbPlane.AB = plane.AB;
@@ -1793,8 +1816,8 @@ function updateFriendFleetInfo(friendFleetData) {
       const ship = shipId ? shipData.find(v => v.id == shipId) : null;
       if (ship) planeCount = ship.slot.length;
       let shipName_td = `
-      <td rowspan="`+ planeCount + `" class="td_name align-middle">
-          <div class="td_name_content text-wrap">`+ (ship ? ship.name : '未指定') + `</div>
+      <td rowspan="${planeCount}" class="td_name align-middle">
+          <div class="td_name_content text-wrap">${ship ? ship.name : '未指定'}</div>
       </td>
       `;
       for (i = 0; i < tmpFriendFleet.length; i++) {
@@ -1810,10 +1833,10 @@ function updateFriendFleetInfo(friendFleetData) {
         }
 
         text += `
-        <tr class="slot` + i + ` shipNo` + shipNo + `" data-rowindex="` + shipNo + `">
-        `+ shipName_td + `
-          <td class="td_plane_name align-middle">`+ plane.name + `</td>
-          `+ battle_td + `
+        <tr class="slot${i} shipNo${shipNo}" data-rowindex="${shipNo}">
+          ${shipName_td}
+          <td class="td_plane_name align-middle">${plane.name}</td>
+          ${battle_td}
           <td class="td_battle battle_end align-middle"></td>
         </tr>
         `;

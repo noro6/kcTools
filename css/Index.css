@@ -1018,7 +1018,6 @@ input[type="radio"] {
   display: none;
 }
 
-
 #lb_info_table {
   font-size: 12px;
   background-color: #fff;
@@ -1028,8 +1027,20 @@ input[type="radio"] {
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
 #lb_info_table td {
-  padding: 0.1rem;
+  padding: .1rem;
   border: 1px solid #6c757d;
+}
+#lb_info_table .lb_info_name {
+  min-width: 88px;
+}
+#lb_info_table .lb_info_plane {
+  text-align: left;
+}
+#lb_info_table .lb_info_ap {
+  padding: .1rem .25rem;
+}
+#lb_info_table .lb_info_sumAp {
+  padding: .1rem .25rem;
 }
 
 #lb_battle_table {
