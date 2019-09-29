@@ -1091,7 +1091,7 @@ input[type="radio"] {
 }
 
 #shoot_down_table .td_plane_name {
-  width: 180px;
+  min-width: 78px;
 }
 
 #shoot_down_table_tbody .td_plane_name {
