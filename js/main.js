@@ -25,8 +25,8 @@ const INITIAL_MAX_LEVEL_PLANE = [1, 4, 5, 7, 8, 102, 103];
 const RECONNAISSANCES = [4, 5, 8, 104];
 
 // 各種リソース置き場
-const RESOURCE_URL = "https://noro6.github.io/kcTools";
-//const RESOURCE_URL = ".";
+//const RESOURCE_URL = "https://noro6.github.io/kcTools";
+const RESOURCE_URL = ".";
 
 /*==================================
     グローバル変数
@@ -134,11 +134,11 @@ function initialize(callback) {
   // 改修値選択欄生成
   let text = '';
   for (let i = 0; i <= 10; i++) {
-    if (i == 0) text += '<option class="IMP_option" value="0" selected>★0</option>';
-    else if (i == 10) text += '<option class="IMP_option" value="10">★max</option>';
-    else text += '<option class="IMP_option" value="' + i + '">★' + i + '</option>';
+    if (i == 0) text += '<div class="remodel_item" data-remodel="0" ><i class="fas fa-star"></i>+0</div>';
+    else if (i == 10) text += '<div class="remodel_item" data-remodel="10"><i class="fas fa-star"></i>max</div>';
+    else text += '<div class="remodel_item" data-remodel="' + i + '"><i class="fas fa-star"></i>+' + i + '</div>';
   }
-  $('.IMP_select').append(text);
+  $('.remodel_select').next().append(text);
 
   // 熟練度選択欄
   text = `
@@ -160,10 +160,7 @@ function initialize(callback) {
   $('.lb_plane').html($('#lb_item1').find('.lb_plane:first').html());
 
   // 基地簡易ビュー複製
-  $('#lb_info_table tbody').find('tr').each((i, e) => {
-    $(e).html($('#lb_info_table tbody tr:first').html()).css('background-color', '#bbb');
-    $(e).find('.col0').text('第' + (i + 1) + '基地航空隊');
-  });
+  text = $('.lb_info_table tbody').html();
 
   // 艦娘　複製
   $('.ship_tab').html($('.ship_tab:first').html());
@@ -184,6 +181,10 @@ function initialize(callback) {
 
   // 結果表示戦闘初期化
   $('#displayBattle').val(1);
+
+  // 熟練度非活性
+  $('.remodel_select').prop('disabled', true);
+
 
   // 撃墜テーブルヘッダフッタ生成
   text = '';
@@ -439,9 +440,10 @@ function clearPlaneDiv($div) {
   $div.removeData();
   $div.find('.plane_img').attr('src', './img/type/undefined.png').attr('alt', '');
   $div.find('.cur_move').removeClass('cur_move');
+  $div.find('.drag_handle').removeClass('drag_handle');
   $div.find('.plane_name_span').text('機体を選択');
   $div.find('select').val('0').change();
-  $div.find('.IMP_select').prop('disabled', true).addClass('IMP_select_disabled');
+  $div.find('.remodel_select').prop('disabled', true).addClass('remodel_disabled');
   $div.find('.prof_select').attr('src', RESOURCE_URL + '/img/util/prof0.png').attr('alt', '').data('prof', 0);
   $div.find('.btnRemovePlane').addClass('opacity0');
 }
@@ -499,13 +501,17 @@ function setPlaneDiv($div, $original) {
 
   $div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
   $div.find('.plane_img').attr('src', './img/type/type' + plane.type + '.png').attr('alt', plane.type);
-  $div.find('.plane_img').parent().addClass('cur_move');
+  $div.find('.plane_img').parent().addClass('cur_move drag_handle');
+  $div.find('.plane_name').addClass('drag_handle');
   $div.find('.btnRemovePlane').removeClass('opacity0');
 
   // 改修の有効無効設定
-  const $IMPInput = $div.find('.IMP_select');
-  $IMPInput.prop('disabled', !plane.IMP).removeClass('IMP_select_disabled');
-  if ($IMPInput.prop('disabled')) $IMPInput.val(0).addClass('IMP_select_disabled');;
+  const $remodelInput = $div.find('.remodel_select');
+  $remodelInput.prop('disabled', !plane.imp).removeClass('remodel_disabled');
+  if ($remodelInput.prop('disabled')) {
+    $remodelInput.addClass('remodel_disabled');
+    $remodelInput.find('.remodel_value').text(0);
+  }
 
   // 熟練度初期値 戦闘機系は最初から熟練Maxで 陸偵熟練は||
   let prof = 0;
@@ -522,7 +528,7 @@ function setPlaneDiv($div, $original) {
   else $div.find('.prof_select').addClass('prof_none');
 
   // 特定の改修値を保持していた場合
-  if ($original.data('IMP')) $IMPInput.val($original.data('IMP'));
+  if ($original.data('imp')) $remodelInput.data('remodel', $original.data('imp'));
 
   return true;
 }
@@ -574,7 +580,7 @@ function setShipDiv($div, id) {
       $('<div>')
         .data('planeid', $this.data('planeid'))
         .data('type', $this.data('type'))
-        .data('IMP', $this.find('.IMP_select').val())
+        .data('imp', $this.find('.remodel_select').data('remodel'))
         .data('prof', $this.find('.prof_select').data('prof'));
     // 既に装備されている装備を装備しなおそうとする -> 不適切なら自動的にはずれる
     if ($div.data('shipid')) setPlaneDiv($this, $plane);
@@ -1040,16 +1046,16 @@ function loadPlanePreset() {
   for (let index = 0; index < planePreset.length; index++) {
     const preset = planePreset[index];
     let infoText = `
-      <div class="preset_td preset_td_info text-danger cur_help ml-auto" data-toggle="tooltip" title="全ての装備が展開できません" data-delay='{"show": 300, "hide": 0}'>
-        <span class="oi oi-warning"></span>
+      <div class="preset_td preset_td_info text-danger cur_help ml-auto" data-toggle="tooltip" data-boundary="window" title="全ての装備が展開できません" data-delay='{"show": 300, "hide": 0}'>
+        <i class="fas fa-exclamation-triangle"></i>
       </div>
     `;
     let i = 0;
     for (const planeId of preset.planes) {
       if (checkInvalidPlane(parentId, planeData.find(v => v.id == planeId))) {
         infoText = `
-        <div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" title="展開できない装備が含まれています" data-delay='{"show": 300, "hide": 0}'>
-          <span class="oi oi-warning"></span>
+        <div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window" title="展開できない装備が含まれています" data-delay='{"show": 300, "hide": 0}'>
+          <i class="fas fa-exclamation-triangle"></i>
         </div>
       `;
         i++;
@@ -1117,7 +1123,7 @@ function drawPresetPreview(preset) {
   const parentId = Number($('#planePresetModal').data('parentid'));
   const warningIcon = `
     <div class="preset_preview_td_info ml-2 text-warning cur_help" data-toggle="tooltip" title="展開先に不適合な装備です">
-      <span class="oi oi-warning"></span>
+      <i class="fas fa-exclamation-triangle"></i>
     </div>
   `;
   for (const plane of planes) {
@@ -1413,7 +1419,7 @@ function createLBPlaneObject($lb_plane) {
   const lbPlane = {
     id: 0, name: '', type: 0, AA: 0, AB: 0, IP: 0, LOS: 0, ap: 0, range: 999, cost: 0,
     slot: inputSlot,
-    IMP: Number($lb_plane.find('.IMP_select').val()),
+    imp: Number($lb_plane.find('.remodel_select').data('remodel')),
     level: Number($lb_plane.find('.prof_select').data('prof'))
   }
 
@@ -1444,7 +1450,7 @@ function getAirPower_lb(lb_plane) {
   const taiku = lb_plane.AA;
   const AB = lb_plane.AB;
   const IP = lb_plane.IP;
-  const IMP = lb_plane.IMP;
+  const imp = lb_plane.imp;
   const level = lb_plane.level;
   const slot = lb_plane.slot;
 
@@ -1453,9 +1459,9 @@ function getAirPower_lb(lb_plane) {
   // 艦戦 夜戦 水戦 陸戦 局戦
   if ([1, -1, 7, 102, 103].indexOf(type) != -1) {
     //防空時
-    if (isDefMode) sumPower = (0.2 * IMP + taiku + IP + 2.0 * AB) * Math.sqrt(slot);
+    if (isDefMode) sumPower = (0.2 * imp + taiku + IP + 2.0 * AB) * Math.sqrt(slot);
     //出撃時
-    else sumPower = (0.2 * IMP + taiku + 1.5 * IP) * Math.sqrt(slot);
+    else sumPower = (0.2 * imp + taiku + 1.5 * IP) * Math.sqrt(slot);
 
     switch (level) {
       case 2:
@@ -1508,7 +1514,7 @@ function getAirPower_lb(lb_plane) {
   }
   // 艦爆
   else if ([3].indexOf(type) != -1) {
-    sumPower = 1.0 * (0.25 * IMP + taiku) * Math.sqrt(slot);
+    sumPower = 1.0 * (0.25 * imp + taiku) * Math.sqrt(slot);
   }
   // そのた
   else sumPower = 1.0 * taiku * Math.sqrt(slot);
@@ -1629,14 +1635,14 @@ function getBonusAA(plane, prevAp) {
   if (plane.id == 0) return 0;
   const type = plane.type;
   const taiku = prevAp;
-  const IMP = plane.IMP;
+  const imp = plane.imp;
 
   let aa = 0.0;
 
   // 艦戦 夜戦 水戦
-  if ([1, -1, 7].indexOf(type) != -1) aa = 0.2 * IMP + taiku;
+  if ([1, -1, 7].indexOf(type) != -1) aa = 0.2 * imp + taiku;
   // 艦爆
-  else if ([3].indexOf(type) != -1) aa = 0.25 * IMP + taiku;
+  else if ([3].indexOf(type) != -1) aa = 0.25 * imp + taiku;
   // そのた
   else aa = taiku;
 
@@ -1875,7 +1881,7 @@ function createFleetPlaneObject($ship_plane, shipNo, index) {
     fleetNo: shipNo,
     slotNo: index,
     id: 0, name: '-', type: 0, AA: 0, ap: 0, bonusAp: 0, canBattle: true,
-    IMP: Number($ship_plane.find('.IMP_select').val()),
+    imp: Number($ship_plane.find('.remodel_select').data('remodel')),
     level: Number($ship_plane.find('.prof_select').data('prof')),
     slot: inputSlot,
     origSlot: inputSlot,
@@ -2382,6 +2388,23 @@ $(function () {
     caluclate()
   });
 
+  /* 改修値ドロップダウン展開時 */
+  $('.remodel_select_parent').on('show.bs.dropdown', function () {
+    $(this).find('.remodel_item_selected').removeClass('remodel_item_selected');
+  });
+  /* 改修値選択時 */
+  $(document).on('click', '.remodel_item', function () {
+    $(this).addClass('remodel_item_selected');
+  });
+  /* 改修値ドロップダウン終了時 */
+  $('.remodel_select_parent').on('hide.bs.dropdown', function () {
+    const remodel = $(this).find('.remodel_item_selected').data('remodel');
+    $(this).removeClass('remodel_item_selected');
+    $(this).find('.remodel_select').data('remodel', remodel);
+    $(this).find('.remodel_value').text(remodel);
+    caluclate();
+  });
+
   /* 搭載数ドロップダウン展開時 */
   $('.slot_select_parent').on('show.bs.dropdown', function () {
     const preSlot = Number($(this).find('.slot').text());
@@ -2416,9 +2439,6 @@ $(function () {
     $(this).closest('.slot_select_parent').find('.slot').text($(this).val());
     $(this).next().val($(this).val());
   });
-
-  /* 改修値クリック */
-  $(document).on('click', '.IMP_select', caluclate);
 
   // 基地航空隊リセットボタン
   $(document).on('click', '.btnResetLB', function () {
@@ -2467,16 +2487,16 @@ $(function () {
 
   // 折り畳み格納時
   $(document).on('hide.bs.collapse', '.collapse', function () {
-    $(this).prev().find('.oi-chevron-bottom')
-      .removeClass('oi-chevron-bottom')
-      .addClass('oi-chevron-top');
+    $(this).prev().find('.fa-chevron-down')
+      .removeClass('fa-chevron-down')
+      .addClass('fa-chevron-up');
   });
 
   // 折り畳み展開時
   $(document).on('show.bs.collapse', '.collapse', function () {
-    $(this).prev().find('.oi-chevron-top')
-      .removeClass('oi-chevron-top')
-      .addClass('oi-chevron-bottom');
+    $(this).prev().find('.fa-chevron-up')
+      .removeClass('fa-chevron-up')
+      .addClass('fa-chevron-down');
   });
 
   // コンテンツ入れ替え設定
@@ -2517,7 +2537,7 @@ $(function () {
   $('.lb_plane').draggable({
     delay: 100,
     helper: 'clone',
-    handle: '.plane_img:not([alt=""])',
+    handle: '.drag_handle',
     zIndex: 1000,
     start: function (e, ui) {
       $(ui.helper).css('width', 320);
@@ -2547,14 +2567,14 @@ $(function () {
         $('<div>')
           .data('planeid', $original.data('planeid'))
           .data('type', $original.data('type'))
-          .data('IMP', $original.find('.IMP_select').val())
+          .data('imp', $original.find('.remodel_select').data('remodel'))
           .data('prof', $original.find('.prof_select').data('prof'))
           .data('slot', $original.find('.slot').text());
       const $destination =
         $('<div>')
           .data('planeid', $this.data('planeid'))
           .data('type', $this.data('type'))
-          .data('IMP', $this.find('.IMP_select').val())
+          .data('imp', $this.find('.remodel_select').data('remodel'))
           .data('prof', $this.find('.prof_select').data('prof'))
           .data('slot', $this.find('.slot').text());
 
@@ -2581,7 +2601,7 @@ $(function () {
   $('.ship_plane_draggable').draggable({
     delay: 100,
     helper: 'clone',
-    handle: '.plane_img:not([alt=""])',
+    handle: '.drag_handle',
     zIndex: 1000,
     start: function (e, ui) {
       $(ui.helper)
@@ -2636,13 +2656,13 @@ $(function () {
           $('<div>')
             .data('planeid', $original.data('planeid'))
             .data('type', $original.data('type'))
-            .data('IMP', $original.find('.IMP_select').val())
+            .data('imp', $original.find('.remodel_select').data('remodel'))
             .data('prof', $original.find('.prof_select').data('prof'));
         const $destination =
           $('<div>')
             .data('planeid', $this.data('planeid'))
             .data('type', $this.data('type'))
-            .data('IMP', $this.find('.IMP_select').val())
+            .data('imp', $this.find('.remodel_select').data('remodel'))
             .data('prof', $this.find('.prof_select').data('prof'));
 
         // 挿入先が装備不可だった場合中止
@@ -2790,15 +2810,17 @@ $(function () {
 
     // 順序反転
     $('.plane_thead div').removeClass('sorted');
-    $('.plane_thead').find('.oi').removeClass('d-table-cell').addClass('d-none');
+    $('.plane_thead').find('.fas:not(.fa-sort)').addClass('d-none');
+    $('.plane_thead').find('.fa-sort').removeClass('d-none');
     $(this).parent().find('div').removeData();
 
     if (sortKey != 'th_default') {
       $(this).data('order', nextOrder);
       $(this).addClass('sorted');
-      $(this).find('.oi')
-        .removeClass('d-none oi-sort-' + order + 'ending')
-        .addClass('d-table-cell oi-sort-' + nextOrder + 'ending');
+      $(this).find('.fas:first')
+        .removeClass('d-none fa-sort-' + (order == 'asc' ? 'up' : 'down'))
+        .addClass('fa-sort-' + (order == 'asc' ? 'down' : 'up'));
+      $(this).find('.fa-sort').addClass('d-none');
     }
 
     // 再度カテゴリ検索をかけて反映する
@@ -3111,6 +3133,10 @@ $(function () {
   $('#planePresetModal').on('hide.bs.modal', () => {
     $target = undefined;
     caluclate();
+  });
+  // 各種モーダル展開終了時
+  $('#planePresetModal').on('show.bs.modal', () => {
+    $('.btnPreset').tooltip('hide')
   });
 
 

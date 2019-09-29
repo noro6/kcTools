@@ -74,6 +74,9 @@ select {
   opacity: 0 !important;
   cursor: default !important;
 }
+.opacity2 {
+  opacity: .2 !important;
+}
 
 .font_size_12 {
   font-size: 12px;
@@ -267,7 +270,7 @@ input[type="radio"] {
   cursor: move;
 }
 
-@media (min-width: 1052px) {
+@media (min-width: 1042px) {
   #lb_tab_select {
     display: none !important;
   }
@@ -287,7 +290,7 @@ input[type="radio"] {
   opacity: 0.3;
 }
 
-.btnIcon .oi-box {
+.btnIcon .fa-toolbox {
   color: rgb(200, 100, 0);
 }
 
@@ -310,7 +313,7 @@ input[type="radio"] {
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
-  max-width: 600px;
+  max-width: 400px;
 }
 
 .lb_infomation {
@@ -398,29 +401,30 @@ input[type="radio"] {
 }
 
 /* 機体名 */
-.plane_name_span {
-  font-size: 12px;
-  width: 100%;
-}
-
 .plane_name {
+  display: table;
   cursor: pointer;
   border-radius: 0.2rem;
   transition: 0.5s;
   height: 28px;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -ms-flex-positive: 1;
+  flex-grow: 1
+}
+.plane_name_span {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 12px;
+  width: 100%;
 }
 
 .plane_name:hover {
   background-color: rgba(255, 250, 220, 0.8);
 }
+
 .btnRemovePlane {
   transition: 0.4s;
-  opacity: 0;
-}
-.lb_plane:hover .btnRemovePlane {
-  opacity: 0.2;
-}
-.ship_plane:hover .btnRemovePlane {
   opacity: 0.2;
 }
 .btnRemovePlane:hover {
@@ -441,26 +445,50 @@ input[type="radio"] {
   transition: 0.2s;
 }
 
-.IMP_select {
-  height: 30px;
+/* 改修関連 */
+.remodel_select_parent {
   color: rgb(0, 170, 170);
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
-  transition: 0.4s;
+  width: 34px;
+  -ms-flex-item-align: center;
+  align-self: center
 }
-.IMP_select_disabled {
+.remodel_select{
+  cursor: pointer;
+  transition: 0.4s;
+  height: 24px;
+}
+.remodel_disabled {
   cursor: default;
   color: #999 !important;
 }
-.IMP_option {
-  color: rgb(0, 170, 170);
-}
-.IMP_select:hover {
+.remodel_select:hover {
   filter: drop-shadow(0px 0px 6px rgb(0, 255, 255));
 }
-.IMP_select_disabled:hover {
+.remodel_disabled:hover {
   filter: drop-shadow(0px 0px 0px rgb(255, 255, 255));
+}
+.fa-star {
+  font-size: 12px;
+}
+.remodel_select_parent .dropdown-menu {
+  color: rgb(0, 170, 170);
+  min-width: 62px;
+  box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);
+  font-size: 14px;
+  padding: 0;
+}
+.remodel_item {
+  cursor: pointer;
+  transition: 0.2s;
+  padding: .15rem .5rem;
+}
+.remodel_item:hover {
+  background-color: #eee;
+}
+.remodel_item:active {
+  color: #fff;
+  background-color: rgb(0, 170, 170);
+  filter: drop-shadow(0px 0px 6px rgb(0, 255, 255));
 }
 
 /* 熟練度関連 */
@@ -502,14 +530,18 @@ input[type="radio"] {
 }
 
 .prof_select_parent .dropdown-menu {
-  max-width: 40px;
-  min-width: 40px;
-  box-shadow: 0 .1rem 1rem rgba(0,0,0,.3)
+  min-width: 48px;
+  box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);
+  padding: 0;
 }
 .prof_select_parent .dropdown-item {
+  cursor: pointer;
   padding: 1px 5px;
   height: 28px;
   text-align: center;
+}
+.prof_select_parent .dropdown-item:hover {
+  background-color: #f0f0f0;
 }
 .prof_select_parent .dropdown-item:active {
   background-color: #bbb;
@@ -518,7 +550,7 @@ input[type="radio"] {
 /* 搭載数 */
 .slot_select_parent{
   display: table;
-  width: 40px;
+  width: 20px;
   height: 28px;
 }
 .slot {
@@ -944,6 +976,7 @@ input[type="radio"] {
 
 /* 結果表示バー　描画領域 */
 #resultChart {
+  border-radius: .25rem;
 }
 
 #resultChart rect {
@@ -985,6 +1018,20 @@ input[type="radio"] {
   display: none;
 }
 
+
+#lb_info_table {
+  font-size: 12px;
+  background-color: #fff;
+  border-collapse: collapse;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+}
+#lb_info_table td {
+  padding: 0.1rem;
+  border: 1px solid #6c757d;
+}
+
 #lb_battle_table {
   font-size: 12px;
   background-color: #fff;
@@ -993,7 +1040,6 @@ input[type="radio"] {
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
-
 #lb_battle_table td {
   padding: 0.1rem;
   border: 1px solid #6c757d;

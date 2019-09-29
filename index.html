@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/Index.css">
-    <link rel="stylesheet" href="./font/css/open-iconic-bootstrap.css">
+    <link rel="stylesheet" href="./css/all.min.css">
 
     <!-- jQuery -->
     <script src="./js/jquery-3.4.1.min.js"></script>
@@ -144,9 +144,9 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">基地航空隊</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center" data-toggle="collapse"
-                                    data-target="#lb_content">
-                                    <span class="oi oi-chevron-bottom align-middle"></span>
+                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                    data-toggle="collapse" data-target="#lb_content">
+                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="lb_content">
@@ -174,12 +174,12 @@
                                                     <div class="ml-auto btnPreset btnPlanePreset btnIcon pt-1"
                                                         data-toggle="tooltip" title="プリセット"
                                                         data-delay='{"show": 300, "hide": 0}'>
-                                                        <span class="oi oi-box"></span>
+                                                        <i class="fas fa-toolbox"></i>
                                                     </div>
                                                     <div class="ml-2_5 btnReset btnResetLB btnIcon pt-1"
                                                         data-toggle="tooltip" title="リセット"
                                                         data-delay='{"show": 300, "hide": 0}'>
-                                                        <span class="oi oi-trash"></span>
+                                                        <i class="fas fa-trash-alt"></i>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex my-2 px-0 lb_infomation">
@@ -211,26 +211,10 @@
                                                 <div class="lb_tab_main">
                                                     <div class="lb_plane mt-1 d-flex justify-content-start">
                                                         <div class="col px-0 d-flex justify-content-start flex-nowrap">
-                                                            <div class="ml-1 align-self-center">
-                                                                <img src="./img/type/undefined.png"
-                                                                    class="plane_img img-size-30" alt="">
-                                                            </div>
-                                                            <div class="plane_name align-self-center flex-grow-1">
-                                                                <span class="plane_name_span align-middle px-1">
-                                                                    機体を選択
-                                                                </span>
-                                                            </div>
-                                                            <select class="IMP_select IMP_select_disabled"
-                                                                disabled></select>
-                                                            <div class="dropdown align-self-center prof_select_parent">
-                                                                <img class="prof_select prof_none" data-prof="0"
-                                                                    data-toggle="dropdown"
-                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
-                                                                <div class="dropdown-menu"></div>
-                                                            </div>
-                                                            <div class="dropdown align-self-center slot_select_parent">
+                                                            <div
+                                                                class="ml-1 dropdown align-self-center slot_select_parent">
                                                                 <span class="slot" data-toggle="dropdown">18</span>
-                                                                <div class="dropdown-menu dropdown-menu-right px-2">
+                                                                <div class="dropdown-menu px-2">
                                                                     <h6 class="dropdown-header py-1 px-1">搭載数を入力
                                                                     </h6>
                                                                     <input type="number"
@@ -240,8 +224,31 @@
                                                                         min="0" max="18" value="18">
                                                                 </div>
                                                             </div>
-                                                            <div class="close btnRemovePlane opacity0">
-                                                                <span>&times;</span>
+                                                            <div class="ml-1 align-self-center">
+                                                                <img src="./img/type/undefined.png"
+                                                                    class="plane_img img-size-30" alt="">
+                                                            </div>
+                                                            <div class="plane_name">
+                                                                <span class="plane_name_span align-middle px-1">
+                                                                    機体を選択
+                                                                </span>
+                                                            </div>
+                                                            <div class="dropdown remodel_select_parent">
+                                                                <div class="remodel_select remodel_disabled"
+                                                                    data-toggle="dropdown" data-remodel="0">
+                                                                    <i class="fas fa-star align-middle"></i><span
+                                                                        class="remodel_value align-middle">0</span>
+                                                                </div>
+                                                                <div class="dropdown-menu"></div>
+                                                            </div>
+                                                            <div class="dropdown align-self-center prof_select_parent">
+                                                                <img class="prof_select prof_none" data-prof="0"
+                                                                    data-toggle="dropdown"
+                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
+                                                                <div class="dropdown-menu"></div>
+                                                            </div>
+                                                            <div class="ml-1 close btnRemovePlane opacity0 d-table">
+                                                                <span class="d-table-cell align-middle">&times;</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -274,9 +281,9 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">自艦隊</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center" data-toggle="collapse"
-                                    data-target="#friendFleet_content">
-                                    <span class="oi oi-chevron-bottom align-middle"></span>
+                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                    data-toggle="collapse" data-target="#friendFleet_content">
+                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="friendFleet_content">
@@ -321,37 +328,22 @@
                                                         <div class="ml-auto btnPreset btnPlanePreset btnIcon pt-1"
                                                             data-toggle="tooltip" title="プリセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
-                                                            <span class="oi oi-box"></span>
+                                                            <i class="fas fa-toolbox"></i>
                                                         </div>
                                                         <div class="ml-2_5 btnReset btnResetShip btnIcon pt-1"
                                                             data-toggle="tooltip" title="リセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
-                                                            <span class="oi oi-trash"></span>
+                                                            <i class="fas fa-trash-alt"></i>
                                                         </div>
                                                     </div>
                                                     <!-- 艦娘装備 -->
                                                     <div class="ship_plane mt-1 d-flex justify-content-start">
                                                         <div
-                                                            class="col px-0 d-flex justify-content-start flex-nowrap ship_plane_draggable">
-                                                            <div class="ml-1 align-self-center">
-                                                                <img src="./img/type/undefined.png"
-                                                                    class="plane_img img-size-30" alt="">
-                                                            </div>
-                                                            <div class="plane_name align-self-center flex-grow-1">
-                                                                <span class="plane_name_span align-middle px-1 ">
-                                                                    機体を選択
-                                                                </span>
-                                                            </div>
-                                                            <select class="ml-auto IMP_select"></select>
-                                                            <div class="dropdown align-self-center prof_select_parent">
-                                                                <img class="prof_select prof_none" data-prof="0"
-                                                                    data-toggle="dropdown"
-                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
-                                                                <div class="dropdown-menu"></div>
-                                                            </div>
-                                                            <div class="dropdown align-self-center slot_select_parent">
+                                                            class="flex-grow-1 d-flex justify-content-start flex-nowrap ship_plane_draggable">
+                                                            <div
+                                                                class="ml-1 dropdown align-self-center slot_select_parent">
                                                                 <span class="slot" data-toggle="dropdown">0</span>
-                                                                <div class="dropdown-menu dropdown-menu-right px-2">
+                                                                <div class="dropdown-menu px-2">
                                                                     <h6 class="dropdown-header py-1 px-1">搭載数を入力
                                                                     </h6>
                                                                     <input type="number"
@@ -361,8 +353,31 @@
                                                                         value="0" min="0" max="99">
                                                                 </div>
                                                             </div>
-                                                            <div class="close btnRemovePlane opacity0">
-                                                                <span>&times;</span>
+                                                            <div class="ml-1 align-self-center">
+                                                                <img src="./img/type/undefined.png"
+                                                                    class="plane_img img-size-30" alt="">
+                                                            </div>
+                                                            <div class="plane_name">
+                                                                <span class="plane_name_span align-middle px-1 ">
+                                                                    機体を選択
+                                                                </span>
+                                                            </div>
+                                                            <div class="dropdown remodel_select_parent">
+                                                                <div class="remodel_select remodel_disabled"
+                                                                    data-toggle="dropdown" data-remodel="0">
+                                                                    <i class="fas fa-star align-middle"></i>
+                                                                    <span class="remodel_value align-middle">0</span>
+                                                                </div>
+                                                                <div class="dropdown-menu"></div>
+                                                            </div>
+                                                            <div class="dropdown align-self-center prof_select_parent">
+                                                                <img class="prof_select prof_none" data-prof="0"
+                                                                    data-toggle="dropdown"
+                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
+                                                                <div class="dropdown-menu"></div>
+                                                            </div>
+                                                            <div class="ml-1 close btnRemovePlane opacity0 d-table">
+                                                                <span class="d-table-cell align-middle">&times;</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -415,9 +430,9 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">敵艦隊</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center" data-toggle="collapse"
-                                    data-target="#enemyFleet_content">
-                                    <span class="oi oi-chevron-bottom align-middle"></span>
+                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                    data-toggle="collapse" data-target="#enemyFleet_content">
+                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="enemyFleet_content">
@@ -467,12 +482,12 @@
                                                         <div class="ml-auto btnPreset btnEnemyPreset btnIcon pt-1"
                                                             data-toggle="tooltip" title="プリセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
-                                                            <span class="oi oi-box"></span>
+                                                            <i class="fas fa-toolbox"></i>
                                                         </div>
                                                         <div class="ml-2_5 btnReset btnResetBattle btnIcon pt-1"
                                                             data-toggle="tooltip" title="リセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
-                                                            <span class="oi oi-trash"></span>
+                                                            <i class="fas fa-trash-alt"></i>
                                                         </div>
                                                     </div>
                                                     <div class="enemyFleet_item pb-1 px-1">
@@ -520,9 +535,9 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center" data-toggle="collapse"
-                                    data-target="#result_content">
-                                    <span class="oi oi-chevron-bottom align-middle"></span>
+                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                    data-toggle="collapse" data-target="#result_content">
+                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="result_content">
@@ -548,46 +563,57 @@
                                     </div>
                                 </div>
                                 <div id="lb_info" class="mt-3">
-                                    <table class="table table-sm bg-white table-bordered text-center"
-                                        id="lb_info_table">
-                                        <thead class="thead-light">
-                                            <tr id="lb_info_row0">
-                                                <th></th>
-                                                <th>中隊1</th>
-                                                <th>中隊2</th>
-                                                <th>中隊3</th>
-                                                <th>中隊4</th>
-                                                <th>合計</th>
-                                                <th>半径</th>
+                                    <div>防空中</div>
+                                    <table class="text-center border-secondary" id="lb_info_table">
+                                        <thead class="bg-ddd">
+                                            <tr id="">
+                                                <td></td>
+                                                <td>装備名</td>
+                                                <td>搭載</td>
+                                                <td>制空値</td>
+                                                <td>総制空値</td>
+                                                <td>行動半径</td>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr id="lb_info_row1">
-                                                <td class="col0">第1基地航空隊</td>
-                                                <td class="col1">0</td>
-                                                <td class="col2">0</td>
-                                                <td class="col3">0</td>
-                                                <td class="col4">0</td>
-                                                <td class="col5">0</td>
-                                                <td class="col6">0</td>
+                                            <tr class="lb_info_tr lb_info_lb_1">
+                                                <td rowspan="4" class="lb_info_name">第1基地航空隊</td>
+                                                <td class="lb_info_plane">装備のおなまえ</td>
+                                                <td class="lb_info_slot">4</td>
+                                                <td class="lb_info_ap">5</td>
+                                                <td class="lb_info_sumAp" rowspan="4">20</td>
+                                                <td class="lb_info_range" rowspan="4">4</td>
                                             </tr>
-                                            <tr id="lb_info_row2"></tr>
-                                            <tr id="lb_info_row3"></tr>
+                                            <tr class="lb_info_tr lb_1">
+                                                <td class="lb_info_plane">装備のおなまえ2</td>
+                                                <td class="lb_info_slot">18</td>
+                                                <td class="lb_info_ap">5</td>
+                                            </tr>
+                                            <tr class="lb_info_tr lb_1">
+                                                <td class="lb_info_plane">-</td>
+                                                <td class="lb_info_slot">18</td>
+                                                <td class="lb_info_ap">5</td>
+                                            </tr>
+                                            <tr class="lb_info_tr lb_1">
+                                                <td class="lb_info_plane">ながあああああああああああああああ</td>
+                                                <td class="lb_info_slot">18</td>
+                                                <td class="lb_info_ap">5</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="mt-2">
                                     <table class="text-center border-secondary" id="lb_battle_table">
-                                        <thead class="bg-light" id="lb_battle_table_thead">
+                                        <thead class="bg-ddd" id="lb_battle_table_thead">
                                             <tr class="tr_header">
                                                 <td class="td_name"></td>
                                                 <td class="">制空値</td>
                                                 <td class="">敵制空値</td>
-                                                <td class="">喪失</td>
-                                                <td class="">劣勢</td>
-                                                <td class="">均衡</td>
-                                                <td class="">優勢</td>
                                                 <td class="">確保</td>
+                                                <td class="">優勢</td>
+                                                <td class="">均衡</td>
+                                                <td class="">劣勢</td>
+                                                <td class="">喪失</td>
                                             </tr>
                                         </thead>
                                         <tbody id="lb_battle_table_tbody">
@@ -647,14 +673,14 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">詳細設定</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center" data-toggle="collapse"
-                                    data-target="#config_content">
-                                    <span class="oi oi-chevron-bottom align-middle"></span>
+                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                    data-toggle="collapse" data-target="#config_content">
+                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
                                 <div class="pt-2 my-1 mx-2">
-                                    <div><span class="oi oi-wrench mr-1"></span>操作設定</div>
+                                    <div><i class="fas fa-wrench"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
                                         <input class="custom-control-input" type="checkbox" id="copyPlane">
                                         <label class="custom-control-label" for="copyPlane">
@@ -663,7 +689,7 @@
                                     </div>
                                 </div>
                                 <div class="border-top pt-2 my-1 mx-2">
-                                    <div><span class="oi oi-wrench mr-1"></span>シミュレート全般</div>
+                                    <div><i class="fas fa-wrench"></i>シミュレート全般</div>
                                     <div class="ml-3 mt-2 d-flex">
                                         <div class="align-self-center">熟練度</div>
                                         <div class="align-self-center">
@@ -821,14 +847,26 @@
                                     <div class="plane_td_type" id="th_default" data-order="asc">
                                         <img class="img-size-25" src="./img/type/undefined.png" alt="種">
                                     </div>
-                                    <div class="pl-1 plane_td_name d-table" id="th_name" data-order="asc">
-                                        装備名<span class="pl-2 oi oi-sort-ascending d-none align-middle"></span>
+                                    <div class="pl-1 plane_td_name" id="th_name" data-order="asc">
+                                        <span>
+                                            装備名
+                                            <i class="pl-1 fas fas-sort-up d-none"></i>
+                                            <i class="pl-1 fas fa-sort opacity2"></i>
+                                        </span>
                                     </div>
-                                    <div class="ml-auto plane_td_aa d-table" id="th_aa" data-order="asc">
-                                        対空<span class="oi oi-sort-ascending d-none align-middle"></span>
+                                    <div class="ml-auto plane_td_aa" id="th_aa" data-order="asc">
+                                        <span>
+                                            対空
+                                            <i class="pl-1 fas fa-sort-up d-none"></i>
+                                            <i class="pl-1 fas fa-sort opacity2"></i>
+                                        </span>
                                     </div>
-                                    <div class="plane_td_range d-table" id="th_range" data-order="asc">
-                                        半径<span class="oi oi-sort-ascending d-none align-middle"></span>
+                                    <div class="plane_td_range" id="th_range" data-order="asc">
+                                        <span>
+                                            半径
+                                            <i class="pl-1 fas fa-sort-up d-none"></i>
+                                            <i class="pl-1 fas fa-sort opacity2"></i>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="plane_tbody"></div>
