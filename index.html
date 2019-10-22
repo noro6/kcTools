@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="ja">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=526, shrink-to-fit=no">
@@ -98,7 +97,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="./tool2.html">
+                                    <a class="nav-link" href="#">
                                         ダメージ計算機
                                     </a>
                                 </li>
@@ -169,9 +168,15 @@
                                             <!-- 第1基地航空隊 -->
                                             <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
                                                 id="lb_item1">
-                                                <div class="d-flex justify-content-start mr-1">
+                                                <div class="d-flex justify-content-start mr-1 mt-1">
                                                     <div class="h6 mb-0 ml-1 baseNo align-self-center">第1基地航空隊</div>
-                                                    <div class="ml-auto btnPreset btnPlanePreset btnIcon pt-1"
+                                                    <select class="ml-auto custom-select custom-select-sm ohuda_select">
+                                                        <option value="2">集中</option>
+                                                        <option value="1">単発</option>
+                                                        <option value="-1" selected>待機</option>
+                                                        <option value="0">防空</option>
+                                                    </select>
+                                                    <div class="ml-2_5 btnPreset btnPlanePreset btnIcon pt-1"
                                                         data-toggle="tooltip" title="プリセット"
                                                         data-delay='{"show": 300, "hide": 0}'>
                                                         <i class="fas fa-toolbox"></i>
@@ -183,28 +188,23 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-flex my-2 px-0 lb_infomation">
-                                                    <select class="custom-select custom-select-sm ohuda_select">
-                                                        <option value="2">集中</option>
-                                                        <option value="1">単発</option>
-                                                        <option value="-1" selected>待機</option>
-                                                        <option value="0">防空</option>
-                                                    </select>
-                                                    <div class="ml-2 align-self-center">
+                                                    <div class="ml-2 align-self-center lb_sammary">
                                                         制空: <span class="ap">0</span>
                                                         半径: <span class="range">0</span>
                                                     </div>
-                                                    <div class="ml-auto mr-2 align-self-center resource"
+                                                    <div class="ml-auto mr-1 align-self-center resource d-flex"
                                                         data-toggle="tooltip" data-html="true"
                                                         data-delay='{"show": 300, "hide": 0}' title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>
                                                         ※ 被撃墜時、母港補充時の消費量は含まれていません。">
-                                                        <img src="./img/util/fuel.png" class="resource_img" alt="fuel">
-                                                        <span class="ml-1 fuel">0</span>
+                                                        <img src="./img/util/fuel.png" class="resource_img ml-auto"
+                                                            alt="fuel">
+                                                        <span class="ml-1 fuel">999</span>
                                                         <img src="./img/util/ammo.png" class="resource_img ml-1"
                                                             alt="ammo">
-                                                        <span class="ml-1 ammo">0</span>
+                                                        <span class="ml-1 ammo">999</span>
                                                         <img src="./img/util/bauxite.png" class="resource_img ml-1"
                                                             alt="bauxite">
-                                                        <span class="ml-1 bauxite">0</span>
+                                                        <span class="ml-1 bauxite">999</span>
                                                     </div>
                                                 </div>
                                                 <!-- 第1基地航空隊 第1中隊　選択領域 -->
@@ -228,27 +228,26 @@
                                                                 <img src="./img/type/undefined.png"
                                                                     class="plane_img img-size-30" alt="">
                                                             </div>
-                                                            <div class="plane_name">
-                                                                <span class="plane_name_span align-middle px-1">
+                                                            <div class="plane_name flex-grow-1 align-self-center">
+                                                                <span class="plane_name_span pl-1">
                                                                     機体を選択
                                                                 </span>
                                                             </div>
-                                                            <div class="dropdown remodel_select_parent">
+                                                            <div
+                                                                class="dropdown remodel_select_parent align-self-center">
                                                                 <div class="remodel_select remodel_disabled"
                                                                     data-toggle="dropdown" data-remodel="0">
-                                                                    <i class="fas fa-star align-middle"></i><span
-                                                                        class="remodel_value align-middle">0</span>
+                                                                    <span>★<span class="remodel_value">0</span></span>
                                                                 </div>
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="dropdown align-self-center prof_select_parent">
+                                                            <div class="dropdown prof_select_parent align-self-center">
                                                                 <img class="prof_select prof_none" data-prof="0"
-                                                                    data-toggle="dropdown"
-                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
+                                                                    data-toggle="dropdown" src="./img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="ml-1 close btnRemovePlane opacity0 d-table">
-                                                                <span class="d-table-cell align-middle">&times;</span>
+                                                            <div class="mx-1 btnRemovePlane opacity0 align-self-center">
+                                                                <i class="fas fa-times"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -357,27 +356,26 @@
                                                                 <img src="./img/type/undefined.png"
                                                                     class="plane_img img-size-30" alt="">
                                                             </div>
-                                                            <div class="plane_name">
-                                                                <span class="plane_name_span align-middle px-1 ">
+                                                            <div class="plane_name align-self-center flex-grow-1">
+                                                                <span class="plane_name_span pl-1">
                                                                     機体を選択
                                                                 </span>
                                                             </div>
-                                                            <div class="dropdown remodel_select_parent">
+                                                            <div
+                                                                class="dropdown remodel_select_parent align-self-center">
                                                                 <div class="remodel_select remodel_disabled"
                                                                     data-toggle="dropdown" data-remodel="0">
-                                                                    <i class="fas fa-star align-middle"></i>
-                                                                    <span class="remodel_value align-middle">0</span>
+                                                                    <span>★<span class="remodel_value">0</span></span>
                                                                 </div>
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="dropdown align-self-center prof_select_parent">
+                                                            <div class="dropdown prof_select_parent align-self-center">
                                                                 <img class="prof_select prof_none" data-prof="0"
-                                                                    data-toggle="dropdown"
-                                                                    src="https://noro6.github.io/kcTools/img/util/prof0.png">
+                                                                    data-toggle="dropdown" src="./img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="ml-1 close btnRemovePlane opacity0 d-table">
-                                                                <span class="d-table-cell align-middle">&times;</span>
+                                                            <div class="mx-1 btnRemovePlane opacity0 align-self-center">
+                                                                <i class="fas fa-times"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -540,29 +538,79 @@
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
+                            <div>
+                                <ul class="nav nav-tabs" id="display_battle_tab">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="battle_tab1" data-toggle="tab" data-disp="1"
+                                            href="#">1戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab2" data-toggle="tab" data-disp="2"
+                                            href="#">2戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab3" data-toggle="tab" data-disp="3"
+                                            href="#">3戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab4" data-toggle="tab" data-disp="4"
+                                            href="#">4戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab5" data-toggle="tab" data-disp="5"
+                                            href="#">5戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab6" data-toggle="tab" data-disp="6"
+                                            href="#">6戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab7" data-toggle="tab" data-disp="7"
+                                            href="#">7戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab8" data-toggle="tab" data-disp="8"
+                                            href="#">8戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab9" data-toggle="tab" data-disp="9"
+                                            href="#">9戦目</a>
+                                    </li>
+                                    <li class="nav-item d-none">
+                                        <a class="nav-link" id="battle_tab10" data-toggle="tab" data-disp="10"
+                                            href="#">10戦目</a>
+                                    </li>
+                                </ul>
+                            </div>
                             <div class="collapse show collapse_content" id="result_content">
-                                <div class="d-flex justify-content-start mb-2">
-                                    <div class="ml-2 mr-1 align-self-center">結果を表示する戦闘：</div>
-                                    <select class="custom-select custom-select-sm" id="displayBattle">
-                                        <option value="1" selected>1</option>
-                                        <option value="2" class="d-none">2</option>
-                                        <option value="3" class="d-none">3</option>
-                                        <option value="4" class="d-none">4</option>
-                                        <option value="5" class="d-none">5</option>
-                                        <option value="6" class="d-none">6</option>
-                                        <option value="7" class="d-none">7</option>
-                                        <option value="8" class="d-none">8</option>
-                                        <option value="9" class="d-none">9</option>
-                                        <option value="10" class="d-none">10</option>
-                                    </select>
-                                    <div class="ml-1 align-self-center">戦目</div>
+                                <div class="mt-2">
+                                        <!-- 結果バー表示域 -->
+                                    <div class="border" id="resultChart"></div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6 ">
-                                        <div class="border" id="resultChart"></div>
-                                    </div>
+                                <div class="mt-2">
+                                    <table class="text-center w-100" id="shoot_down_table">
+                                        <thead class="bg-e9ecef" id="shoot_down_table_thead">
+                                            <tr class="tr_header">
+                                                <td class="td_name">艦娘名</td>
+                                                <td class="td_plane_name text-nowrap text-center">装備名</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="shoot_down_table_tbody"></tbody>
+                                        <tfoot id="shoot_down_table_tfoot">
+                                            <tr class="tr_fap">
+                                                <td rowspan="2" class="td_rowHeader">制空値</td>
+                                                <td class="fap">自艦隊</td>
+                                            </tr>
+                                            <tr class="tr_eap">
+                                                <td>敵艦隊</td>
+                                            </tr>
+                                            <tr class="tr_cond">
+                                                <td colspan="2" class="td_rowHeader">制空状態</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
-                                <div id="lb_info" class="mt-3">
+                                <div id="lb_info" class="mt-2">
                                     <table class="text-center border-secondary" id="lb_info_table">
                                         <thead class="bg-ddd">
                                             <tr id="">
@@ -639,29 +687,6 @@
                                         </tfoot>
                                     </table>
                                 </div>
-                                <div class="mt-2">
-                                    <table class="text-center" id="shoot_down_table">
-                                        <thead class="bg-ddd" id="shoot_down_table_thead">
-                                            <tr class="tr_header">
-                                                <td class="td_name">艦娘名</td>
-                                                <td class="td_plane_name text-center">装備名</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="shoot_down_table_tbody"></tbody>
-                                        <tfoot id="shoot_down_table_tfoot">
-                                            <tr class="tr_fap">
-                                                <td rowspan="2" class="td_rowHeader">制空値</td>
-                                                <td>自艦隊</td>
-                                            </tr>
-                                            <tr class="tr_eap">
-                                                <td>敵艦隊</td>
-                                            </tr>
-                                            <tr class="tr_cond">
-                                                <td colspan="2" class="td_rowHeader">制空状態</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
                             </div>
                         </div>
 
@@ -678,21 +703,20 @@
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
                                 <div class="pt-2 my-1 mx-2">
-                                    <div><i class="fas fa-wrench"></i>操作設定</div>
+                                    <div><i class="fas fa-wrench mr-1"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
                                         <input class="custom-control-input" type="checkbox" id="copyPlane">
                                         <label class="custom-control-label" for="copyPlane">
-                                            機体D&D時、交換の代わりに複製を行う
+                                            機体D&amp;D時、交換の代わりに複製を行う
                                         </label>
                                     </div>
                                 </div>
                                 <div class="border-top pt-2 my-1 mx-2">
-                                    <div><i class="fas fa-wrench"></i>シミュレート全般</div>
+                                    <div><i class="fas fa-wrench mr-1"></i>シミュレート全般</div>
                                     <div class="ml-3 mt-2 d-flex">
                                         <div class="align-self-center">熟練度</div>
                                         <div class="align-self-center">
-                                            <img class="img-size-20 mx-1" alt=">>"
-                                                src="https://noro6.github.io/kcTools/img/util/prof7.png">
+                                            <img class="img-size-20 mx-1" alt=">>" src="./img/util/prof7.png">
                                         </div>
                                         <div class="align-self-center">
                                             選択時、内部熟練度を 120 として計算する機体：
@@ -755,6 +779,14 @@
                                             <label class="custom-control-label" for="prof120_8">飛行艇</label>
                                         </div>
                                     </div>
+                                    <div class="ml-3 mt-2 d-flex">
+                                        <div class="align-self-center">シミュレート回数：</div>
+                                        <input type="number" class="form-control form-control-sm align-self-center"
+                                            id="calucCount" value="1">
+                                    </div>
+                                    <div class="ml-4">
+                                        増やすと精度は上がりますが、処理に時間がかかります。
+                                        処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。</div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col">
@@ -867,7 +899,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="plane_tbody"></div>
+                                <div class="plane_tbody" id="plane_tbody_"></div>
                             </div>
                         </div>
                     </div>
