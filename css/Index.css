@@ -84,6 +84,13 @@ select {
 .opacity2 {
   opacity: .2 !important;
 }
+
+h1 {
+  font-size: 2em;
+}
+.font_size_20 {
+  font-size: 20px;
+}
 .font_size_14 {
   font-size: 14px;
 }
