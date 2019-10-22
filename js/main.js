@@ -771,7 +771,7 @@ function drawEnemyGradeColor(enemyName) {
  */
 function createPlaneTable($table, planes) {
   const $tbody = $table.find('.plane_tbody');
-  const $target = document.querySelector('#plane_tbody_');
+  const target = document.querySelector('#plane_tbody_');
   const fragment = document.createDocumentFragment();
   const imgWidth = 25;
   const imgHeight = 25;
@@ -824,8 +824,8 @@ function createPlaneTable($table, planes) {
     fragment.appendChild($planeDiv);
   }
 
-  $target.innerHTML = '';
-  $target.appendChild(fragment);
+  target.innerHTML = '';
+  target.appendChild(fragment);
 
   console.timeEnd('生成')
   $tbody.find('.text_existTooltip').tooltip();
