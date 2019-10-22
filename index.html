@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=526, shrink-to-fit=no">
@@ -21,10 +22,10 @@
     <script src="./js/main.js"></script>
     <script src="./js/Sortable.js"></script>
     <script src="./js/jquery.ui.touch-punch.js"></script>
-    <title>Index</title>
+    <title>制空シミュレータ(試)</title>
 </head>
 
-<body>
+<body data-spy="scroll" data-target="#Navbar" data-offset="380">
     <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow">
         <div class="d-block d-xl-none text-light pl-3 pt-3 py-2 cur_pointer">
             <div id="menu-small">
@@ -33,11 +34,11 @@
                 <div></div>
             </div>
         </div>
-        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">Top</a>
-        <input class="d-none d-xl-block form-control form-control-dark w-100" type="text" placeholder="検索">
+        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ(試)</a>
+        <!-- <input class="d-none d-xl-block form-control form-control-dark w-100" type="text" placeholder="検索"> -->
         <ul class="d-none d-xl-block navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="#">サインアウト</a>
+                <a class="nav-link" href="#"></a>
             </li>
         </ul>
     </nav>
@@ -50,13 +51,12 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <span class="pl-3 text-light">
-                                制空計算機
+                                Index
                             </span>
                             <ul class="nav flex-column mt-1 mb-2 ml-3" id="li_index">
                                 <li class="nav-item" id="li_landBase">
                                     <a class="nav-link" href="#landBase">
                                         基地航空隊
-                                        <span class="sr-only">(現在値)</span>
                                     </a>
                                 </li>
                                 <li class="nav-item" id="li_friendFleet">
@@ -83,7 +83,7 @@
                         </li>
                         <li class="nav-item mt-5">
                             <span class="pl-3 text-light">
-                                他の機能
+                                いつの日か
                             </span>
                             <ul class="nav flex-column mt-1 mb-2 ml-3">
                                 <li class="nav-item">
@@ -122,8 +122,8 @@
                 <div id="main" style="display: none">
                     <div id="main_header">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
-                            <h3>制空計算機</h3>
-                            <div class="btn-toolbar mb-2 mb-md-0">
+                            <h3>制空シミュレータ(試)</h3>
+                            <!-- <div class="btn-toolbar mb-2 mb-md-0">
                                 <div class="btn-group mr-2">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">編成保存</button>
                                     <button type="button" class="btn btn-sm btn-outline-secondary">リセット</button>
@@ -132,7 +132,7 @@
                                     <span data-feather="calendar"></span>
                                     編成呼び出し
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div id="main_contents">
@@ -176,12 +176,12 @@
                                                         <option value="-1" selected>待機</option>
                                                         <option value="0">防空</option>
                                                     </select>
-                                                    <div class="ml-2_5 btnPreset btnPlanePreset btnIcon pt-1"
+                                                    <div class="ml-2_5 btnPreset btn_plane_preset btn_icon pt-1"
                                                         data-toggle="tooltip" title="プリセット"
                                                         data-delay='{"show": 300, "hide": 0}'>
                                                         <i class="fas fa-toolbox"></i>
                                                     </div>
-                                                    <div class="ml-2_5 btnReset btnResetLB btnIcon pt-1"
+                                                    <div class="ml-2_5 btnReset btn_reset_landBase btn_icon pt-1"
                                                         data-toggle="tooltip" title="リセット"
                                                         data-delay='{"show": 300, "hide": 0}'>
                                                         <i class="fas fa-trash-alt"></i>
@@ -198,13 +198,13 @@
                                                         ※ 被撃墜時、母港補充時の消費量は含まれていません。">
                                                         <img src="./img/util/fuel.png" class="resource_img ml-auto"
                                                             alt="fuel">
-                                                        <span class="ml-1 fuel">999</span>
-                                                        <img src="./img/util/ammo.png" class="resource_img ml-1"
+                                                        <span class="ml-1 fuel">0</span>
+                                                        <img src="./img/util/ammo.png" class="resource_img ml-3"
                                                             alt="ammo">
-                                                        <span class="ml-1 ammo">999</span>
-                                                        <img src="./img/util/bauxite.png" class="resource_img ml-1"
+                                                        <span class="ml-1 ammo">0</span>
+                                                        <img src="./img/util/bauxite.png" class="resource_img ml-3"
                                                             alt="bauxite">
-                                                        <span class="ml-1 bauxite">999</span>
+                                                        <span class="ml-1 bauxite">0</span>
                                                     </div>
                                                 </div>
                                                 <!-- 第1基地航空隊 第1中隊　選択領域 -->
@@ -215,8 +215,9 @@
                                                                 class="ml-1 dropdown align-self-center slot_select_parent">
                                                                 <span class="slot" data-toggle="dropdown">18</span>
                                                                 <div class="dropdown-menu px-2">
-                                                                    <h6 class="dropdown-header py-1 px-1">搭載数を入力
-                                                                    </h6>
+                                                                    <span
+                                                                        class="dropdown-header py-1 px-1 font_size_12">搭載数を入力
+                                                                    </span>
                                                                     <input type="number"
                                                                         class="form-control form-control-sm mb-2 slot_input"
                                                                         value="18" min="0" max="18">
@@ -246,7 +247,8 @@
                                                                     data-toggle="dropdown" src="./img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="mx-1 btnRemovePlane opacity0 align-self-center">
+                                                            <div
+                                                                class="mx-1 btn_remove_plane opacity0 align-self-center">
                                                                 <i class="fas fa-times"></i>
                                                             </div>
                                                         </div>
@@ -302,12 +304,9 @@
                                         id="friendFleet_item1">
                                         <div class="d-flex justify-content-start">
                                             <div class="ml-2 mr-1 align-self-center">表示隻数：</div>
-                                            <select class="custom-select custom-select-sm dispShipCount">
-                                                <!-- <option value="1">1</option> -->
+                                            <select class="custom-select custom-select-sm display_ship_count">
                                                 <option value="2" selected>2</option>
-                                                <!-- <option value="3">3</option> -->
                                                 <option value="4">4</option>
-                                                <!-- <option value="5">5</option> -->
                                                 <option value="6">6</option>
                                             </select>
                                             <div class="ml-1 align-self-center">隻</div>
@@ -324,12 +323,12 @@
                                                         <div class="ml-1 align-self-center ship_sumAP">
                                                             制空: <span class="ap">0</span>
                                                         </div>
-                                                        <div class="ml-auto btnPreset btnPlanePreset btnIcon pt-1"
+                                                        <div class="ml-auto btnPreset btn_plane_preset btn_icon pt-1"
                                                             data-toggle="tooltip" title="プリセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-toolbox"></i>
                                                         </div>
-                                                        <div class="ml-2_5 btnReset btnResetShip btnIcon pt-1"
+                                                        <div class="ml-2_5 btnReset btn_reset_ship btn_icon pt-1"
                                                             data-toggle="tooltip" title="リセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-trash-alt"></i>
@@ -343,8 +342,9 @@
                                                                 class="ml-1 dropdown align-self-center slot_select_parent">
                                                                 <span class="slot" data-toggle="dropdown">0</span>
                                                                 <div class="dropdown-menu px-2">
-                                                                    <h6 class="dropdown-header py-1 px-1">搭載数を入力
-                                                                    </h6>
+                                                                    <span
+                                                                        class="dropdown-header py-1 px-1 font_size_12">搭載数を入力
+                                                                    </span>
                                                                     <input type="number"
                                                                         class="form-control form-control-sm mb-2 slot_input"
                                                                         value="0" min="0" max="99">
@@ -374,7 +374,8 @@
                                                                     data-toggle="dropdown" src="./img/util/prof0.png">
                                                                 <div class="dropdown-menu"></div>
                                                             </div>
-                                                            <div class="mx-1 btnRemovePlane opacity0 align-self-center">
+                                                            <div
+                                                                class="mx-1 btn_remove_plane opacity0 align-self-center">
                                                                 <i class="fas fa-times"></i>
                                                             </div>
                                                         </div>
@@ -398,12 +399,9 @@
                                         id="friendFleet_item2">
                                         <div class="d-flex justify-content-start">
                                             <div class="ml-2 mr-1 align-self-center">表示隻数：</div>
-                                            <select class="custom-select custom-select-sm dispShipCount">
-                                                <!-- <option value="1">1</option> -->
+                                            <select class="custom-select custom-select-sm display_ship_count">
                                                 <option value="2" selected>2</option>
-                                                <!-- <option value="3">3</option> -->
                                                 <option value="4">4</option>
-                                                <!-- <option value="5">5</option> -->
                                                 <option value="6">6</option>
                                             </select>
                                             <div class="ml-1 align-self-center">隻</div>
@@ -438,7 +436,7 @@
                                     <div class="">
                                         <div class="d-flex justify-content-start mb-2">
                                             <div class="ml-2 mr-1 align-self-center">戦闘回数：</div>
-                                            <select class="custom-select custom-select-sm" id="battleCount">
+                                            <select class="custom-select custom-select-sm" id="battle_count">
                                                 <option value="1" selected>1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -452,7 +450,7 @@
                                             </select>
                                             <div class="ml-1 align-self-center">回</div>
                                             <div class="ml-4 mr-1 align-self-center">基地を派遣する戦闘：</div>
-                                            <select class="custom-select custom-select-sm" id="landBaseTarget">
+                                            <select class="custom-select custom-select-sm" id="landBase_target">
                                                 <option value="1" selected>1</option>
                                                 <option value="2" class="d-none">2</option>
                                                 <option value="3" class="d-none">3</option>
@@ -469,20 +467,19 @@
                                         <div class="enemy_tab">
                                             <div class="d-flex justify-content-start flex-wrap battle_container">
                                                 <div class="battle_content bg-white px-1 py-1 mx-1 my-2">
-                                                    <div
-                                                        class="border-bottom border-secondary pb-1 mb-1 d-flex justify-content-start">
+                                                    <div class="border-bottom pb-1 mb-1 d-flex justify-content-start">
                                                         <div class="ml-2 align-self-center sortable_handle">
                                                             <span class="battleNo">1</span>戦目
                                                         </div>
                                                         <div class="pl-2 align-self-center enemy_sumAP sortable_handle">
                                                             敵制空: <span class="enemySumAP">0</span>
                                                         </div>
-                                                        <div class="ml-auto btnPreset btnEnemyPreset btnIcon pt-1"
+                                                        <div class="ml-auto btnPreset btnEnemyPreset btn_icon pt-1"
                                                             data-toggle="tooltip" title="プリセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-toolbox"></i>
                                                         </div>
-                                                        <div class="ml-2_5 btnReset btnResetBattle btnIcon pt-1"
+                                                        <div class="ml-2_5 btnReset btn_reset_battle btn_icon pt-1"
                                                             data-toggle="tooltip" title="リセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-trash-alt"></i>
@@ -538,54 +535,54 @@
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
-                            <div>
-                                <ul class="nav nav-tabs" id="display_battle_tab">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="battle_tab1" data-toggle="tab" data-disp="1"
-                                            href="#">1戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab2" data-toggle="tab" data-disp="2"
-                                            href="#">2戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab3" data-toggle="tab" data-disp="3"
-                                            href="#">3戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab4" data-toggle="tab" data-disp="4"
-                                            href="#">4戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab5" data-toggle="tab" data-disp="5"
-                                            href="#">5戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab6" data-toggle="tab" data-disp="6"
-                                            href="#">6戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab7" data-toggle="tab" data-disp="7"
-                                            href="#">7戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab8" data-toggle="tab" data-disp="8"
-                                            href="#">8戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab9" data-toggle="tab" data-disp="9"
-                                            href="#">9戦目</a>
-                                    </li>
-                                    <li class="nav-item d-none">
-                                        <a class="nav-link" id="battle_tab10" data-toggle="tab" data-disp="10"
-                                            href="#">10戦目</a>
-                                    </li>
-                                </ul>
-                            </div>
                             <div class="collapse show collapse_content" id="result_content">
+                                <div>
+                                    <ul class="nav nav-tabs" id="display_battle_tab">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="battle_tab1" data-toggle="tab" data-disp="1"
+                                                href="#">1戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab2" data-toggle="tab" data-disp="2"
+                                                href="#">2戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab3" data-toggle="tab" data-disp="3"
+                                                href="#">3戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab4" data-toggle="tab" data-disp="4"
+                                                href="#">4戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab5" data-toggle="tab" data-disp="5"
+                                                href="#">5戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab6" data-toggle="tab" data-disp="6"
+                                                href="#">6戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab7" data-toggle="tab" data-disp="7"
+                                                href="#">7戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab8" data-toggle="tab" data-disp="8"
+                                                href="#">8戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab9" data-toggle="tab" data-disp="9"
+                                                href="#">9戦目</a>
+                                        </li>
+                                        <li class="nav-item d-none">
+                                            <a class="nav-link" id="battle_tab10" data-toggle="tab" data-disp="10"
+                                                href="#">10戦目</a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="mt-2">
-                                        <!-- 結果バー表示域 -->
-                                    <div class="border" id="resultChart"></div>
+                                    <!-- 結果バー表示域 -->
+                                    <div class="border" id="result_chart"></div>
                                 </div>
                                 <div class="mt-2">
                                     <table class="text-center w-100" id="shoot_down_table">
@@ -702,7 +699,7 @@
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
-                                <div class="pt-2 my-1 mx-2">
+                                <div class="pt-2 mx-2">
                                     <div><i class="fas fa-wrench mr-1"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
                                         <input class="custom-control-input" type="checkbox" id="copyPlane">
@@ -711,7 +708,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="border-top pt-2 my-1 mx-2">
+                                <div class="my-3 mx-2">
                                     <div><i class="fas fa-wrench mr-1"></i>シミュレート全般</div>
                                     <div class="ml-3 mt-2 d-flex">
                                         <div class="align-self-center">熟練度</div>
@@ -788,11 +785,6 @@
                                         増やすと精度は上がりますが、処理に時間がかかります。
                                         処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。</div>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col">
-                                        <div>簡易モード</div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -800,7 +792,7 @@
 
                 <!-- フッター -->
                 <footer class="mt-4 page-footer font-small indigo" style="display: none">
-                    <div class="container text-center text-md-left">
+                    <!-- <div class="container text-center text-md-left">
                         <div class="row">
                             <div class="col-md-3 mx-auto">
                                 <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
@@ -843,10 +835,11 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Copyright -->
-                    <div class="footer-copyright text-center py-3">© 2019 Copyright:
-                        <a href="https://twitter.com/">あああああ</a>
+                    <!-- <div class="footer-copyright text-center py-3">© 2019 Copyright: -->
+                    <div class="footer-copyright ml-2 py-3">要望・バグ報告は
+                        <a href="https://twitter.com/noro_006">こちら</a>
                     </div>
                 </footer>
             </main>
@@ -854,21 +847,32 @@
     </div>
 
     <!-- 機体選択モーダル -->
-    <div class="modal fade" id="planeSelectModal" tabindex="-1">
+    <div class="modal fade" id="modal_plane_select" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">機体選択</h5>
-                    <button type="button" class="close" id="modalClose" data-dismiss="modal">
+                    <p class="close" data-dismiss="modal">
                         <span>&times;</span>
-                    </button>
+                    </p>
                 </div>
                 <div class="modal-body">
-                    <div class="my-1 input-group input-group-sm planeTypeSelect">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">カテゴリ</span>
+                    <div class="d-flex">
+                        <div class="my-1 input-group input-group-sm planeTypeSelect">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">カテゴリ</span>
+                            </div>
+                            <select class="custom-select custom-select-sm" id="planeSelect_select"></select>
                         </div>
-                        <select class="custom-select custom-select-sm" id="planeSelect_select"></select>
+                        <div class="ml-3 align-self-center">表示：</div>
+                        <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
+                            <i class="fas fa-list"></i>
+                            <span class="">一列</span>
+                        </div>
+                        <div class="ml-3 align-self-center toggle_display_type" data-mode="multi">
+                            <i class="fas fa-grip-horizontal"></i>
+                            <span class="">複数列</span>
+                        </div>
                     </div>
                     <div class="plane_table_content bg-white">
                         <div class="plane_table container-fluid mx-0 px-0">
@@ -899,13 +903,13 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="plane_tbody" id="plane_tbody_"></div>
+                                <div id="plane_tbody"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="planeSelectModal_btnRemove"
+                    <button type="button" class="btn btn-sm btn-danger" id="modal_plane_select_btn_remove"
                         disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
@@ -914,14 +918,14 @@
     </div>
 
     <!-- 艦娘選択モーダル -->
-    <div class="modal fade" id="shipSelectModal" tabindex="-1">
+    <div class="modal fade" id="modal_ship_select" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">艦娘選択</h5>
-                    <button type="button" class="close" id="modalClose" data-dismiss="modal">
+                    <p class="close" data-dismiss="modal">
                         <span>&times;</span>
-                    </button>
+                    </p>
                 </div>
                 <div class="modal-body">
                     <div class="my-1 input-group input-group-sm">
@@ -950,7 +954,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="shipSelectModal_btnRemove"
+                    <button type="button" class="btn btn-sm btn-danger" id="modal_ship_select_btn_remove"
                         disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
@@ -959,17 +963,17 @@
     </div>
 
     <!-- 敵艦選択モーダル -->
-    <div class="modal fade" id="enemySelectModal" tabindex="-1">
+    <div class="modal fade" id="modal_enemy_select" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">敵艦選択</h5>
-                    <button type="button" class="close" id="modalClose" data-dismiss="modal">
+                    <p class="close" data-dismiss="modal">
                         <span>&times;</span>
-                    </button>
+                    </p>
                 </div>
                 <div class="modal-body">
-                    <div class="my-1 input-group input-group-sm enemyTypeSelect">
+                    <div class="my-1 input-group input-group-sm">
                         <div class="input-group-prepend">
                             <span class="input-group-text">種別</span>
                         </div>
@@ -988,7 +992,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="enemySelectModal_btnRemove"
+                    <button type="button" class="btn btn-sm btn-danger" id="modal_enemy_select_btn_remove"
                         disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
@@ -997,21 +1001,21 @@
     </div>
 
     <!-- 艦載機プリセットモーダル -->
-    <div class="modal fade" id="planePresetModal" tabindex="-1">
+    <div class="modal fade" id="modal_plane_preset" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">機体プリセット</h5>
-                    <button type="button" class="close" id="modalClose" data-dismiss="modal">
+                    <p class="close" data-dismiss="modal">
                         <span>&times;</span>
-                    </button>
+                    </p>
                 </div>
                 <div class="modal-body">
                     <div class="plane_preset_content row bg-white">
                         <div class="col preset_list">
                             <div class="preset_table bg-white">
                                 <div class="preset_thead border-bottom pb-2 mb-2 w-100">
-                                    <div class="preset_tr py-1 text-center" id="btnAddPreset" data-presetid="-1">
+                                    <div class="preset_tr py-1 text-center" id="btn_create_preset" data-presetid="-1">
                                         <div><span class="oi oi-plus pr-1"></span>現在の装備をプリセットに登録</div>
                                     </div>
                                 </div>
@@ -1027,15 +1031,15 @@
                             </div>
                             <div class="mt-auto d-flex">
                                 <button type="button" class="ml-auto btn btn-sm btn-success"
-                                    id="btnCommitPreset">保存</button>
+                                    id="btn_commit_preset">保存</button>
                                 <button type="button" class="ml-2 btn btn-sm btn-danger"
-                                    id="btnDeletePreset">削除</button>
+                                    id="btn_delete_preset">削除</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary" id="btnExpandPreset">プリセット展開</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="btn_expand_preset">プリセット展開</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
@@ -1048,9 +1052,9 @@
             <div class="modal-content mt-5 bg-dark2">
                 <div class="modal-header">
                     <h5 class="modal-title text-light" id="smartMenuModalTitle">メニュー</h5>
-                    <button type="button" class="close" id="modalClose" data-dismiss="modal">
+                    <p class="close" data-dismiss="modal">
                         <span>&times;</span>
-                    </button>
+                    </p>
                 </div>
                 <div class="modal-body">
                 </div>

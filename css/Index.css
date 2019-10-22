@@ -17,6 +17,9 @@ select {
 }
 
 /* モーダル書き換え */
+#modal_plane_select .modal-content {
+  min-height: 80vh;
+}
 .modal-backdrop {
   min-width: 1024px;
   min-height: 960px;
@@ -81,7 +84,9 @@ select {
 .opacity2 {
   opacity: .2 !important;
 }
-
+.font_size_14 {
+  font-size: 14px;
+}
 .font_size_12 {
   font-size: 12px;
 }
@@ -93,6 +98,9 @@ select {
 }
 .font_size_8 {
   font-size: 8px;
+}
+.font_color_fff {
+  color: #fff;
 }
 .font_color_aaa {
   color: #aaa;
@@ -321,17 +329,17 @@ input[type="radio"] {
   border-radius: 0.25rem;
 }
 
-.btnIcon {
+.btn_icon {
   font-size: 18px;
   transition: 0.4s;
   opacity: 0.3;
 }
 
-.btnIcon .fa-toolbox {
+.btn_icon .fa-toolbox {
   color: rgb(200, 100, 0);
 }
 
-.btnIcon:hover {
+.btn_icon:hover {
   opacity: 1;
   cursor: pointer;
 }
@@ -371,6 +379,7 @@ input[type="radio"] {
 /* 制空半径簡易 */
 .lb_sammary {
   width: 102px;
+  font-size: 13px;
 }
 
 /* 必要資材欄 */
@@ -381,8 +390,7 @@ input[type="radio"] {
 }
 .resource:hover {
   opacity: 1;
-  cursor: pointer;
-  filter: drop-shadow(0px 0px 4px rgb(180, 180, 180));
+  cursor: help;
 }
 .resource_img {
   width: 20px;
@@ -401,7 +409,7 @@ input[type="radio"] {
   background-color: rgb(250, 250, 250);
 }
 
-.dispShipCount {
+.display_ship_count {
   width: 60px;
 }
 
@@ -453,18 +461,18 @@ input[type="radio"] {
 }
 
 /* 機体外すボタン */
-.btnRemovePlane {
+.btn_remove_plane {
   cursor: pointer;
   transition: 0.4s;
   opacity: 0.2;
   font-size: 16px;
 }
-.btnRemovePlane:hover {
+.btn_remove_plane:hover {
   color: #000;
   opacity: .6;
   filter: drop-shadow(0px 0px 4px rgb(120, 120, 120));
 }
-.btnRemovePlane > i {
+.btn_remove_plane > i {
   font-size: 16px;
 }
 
@@ -614,13 +622,23 @@ input[type="radio"] {
   width: 62px;
 }
 
-/* 機体選択欄 テーブル */
-.div_plane_table {
-  overflow-y: auto;
-  max-height: 40vh;
+/* 機体テーブル */
+.planeTypeSelect {
+  width: 240px;
 }
 
-/* 機体テーブルヘッダ */
+.toggle_display_type {
+  color: #ccc;
+  cursor: pointer;
+  transition: .4s;
+}
+.toggle_display_type:hover {
+  color: #999;
+}
+.toggle_display_type.selected {
+  color: #000;
+}
+
 .plane_table_ td {
   position: relative;
 }
@@ -640,8 +658,8 @@ input[type="radio"] {
   font-weight: bold;
 }
 
-.plane_tbody {
-  height: 58vh;
+#plane_tbody {
+  max-height: 58vh;
 }
 
 .plane_td_name {
@@ -661,13 +679,17 @@ input[type="radio"] {
 .plane_tr {
   cursor: pointer;
   border-radius: .25rem;
-  transition: 0.2s;
+  transition: 0.15s;
 }
 .plane_tr:hover {
   background-color: #eee;
 }
 .plane:active {
   background-color: rgb(122, 195, 255) !important;
+}
+.plane_tr_multi {
+  width: 238px;
+  height: 42px;
 }
 
 /* 機体カテゴリ画像 */
@@ -689,11 +711,13 @@ input[type="radio"] {
   height: auto;
 }
 
-/* 機体選択欄　機体 */
-.plane {
-  min-width: 100px;
+/* サイズ25*25ボックス */
+.size-25 {
+  width: 25px;
+  height: 25px;
 }
 
+/* 機体選択欄　機体 */
 .plane_helper {
   padding: 3px 20px 3px 10px;
   background-color: rgba(255, 255, 255, 0.8) !important;
@@ -758,10 +782,10 @@ input[type="radio"] {
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
-#battleCount {
+#battle_count {
   width: 60px;
 }
-#landBaseTarget {
+#landBase_target {
   width: 60px;
 }
 
@@ -777,10 +801,6 @@ input[type="radio"] {
   height: 28px;
   font-size: 12px;
   border-radius: .25rem;
-  transition: .5s;
-}
-.enemy_name:hover {
-  background-color: rgba(255, 250, 220, 0.8);
 }
 .enemy_name_span {
   display: table-cell;
@@ -852,7 +872,7 @@ input[type="radio"] {
   font-size: 12px;
 }
 
-#btnAddPreset {
+#btn_create_preset {
   height: 30px;
   width: 100%;
   display: table;
@@ -860,10 +880,10 @@ input[type="radio"] {
   border-radius: .25rem;
   transition: .2s;
 }
-#btnAddPreset:hover {
+#btn_create_preset:hover {
   background-color: #eee;
 }
-#btnAddPreset > div {
+#btn_create_preset > div {
   display: table-cell;
   vertical-align: middle;
 }
@@ -1001,22 +1021,13 @@ input[type="radio"] {
   background-color: rgb(230, 230, 250);
 }
 
-/* モーダル閉じる(×)ボタン */
-#modalClose {
-  outline: none;
-}
-
 /* 結果表示バー　描画領域 */
-#resultChart {
+#result_chart {
   border-radius: .25rem;
 }
 
-#resultChart rect {
+#result_chart rect {
   cursor: pointer;
-}
-
-#displayBattle {
-  width: 60px;
 }
 
 /* 結果表示バー　ツールチップ */
@@ -1105,6 +1116,8 @@ input[type="radio"] {
 #shoot_down_table_thead td {
   color: #666;
   font-size: 11px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
 }
 
 #shoot_down_table .td_name {
