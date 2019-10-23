@@ -20,9 +20,31 @@ select {
 #modal_plane_select .modal-content {
   min-height: 80vh;
 }
+#modal_ship_select .modal-content {
+  min-height: 84vh;
+}
+#modal_enemy_select .modal-content {
+  min-height: 80vh;
+}
 .modal-backdrop {
   min-width: 1024px;
   min-height: 960px;
+}
+
+@media (min-width: 577px) {
+  .modal-xl {
+    max-width: 522px;
+  }
+}
+@media (min-width: 992px) {
+  .modal-xl {
+    max-width: 800px;
+  }
+}
+@media (min-width: 1200px) {
+  .modal-xl {
+    max-width: 980px;
+  }
 }
 
 .pt-3_5 {
@@ -646,10 +668,6 @@ input[type="radio"] {
   color: #000;
 }
 
-.plane_table_ td {
-  position: relative;
-}
-
 .plane_thead {
   position: -webkit-sticky;
   position: sticky;
@@ -739,6 +757,10 @@ input[type="radio"] {
   background-color: #f5f5f5 !important;
 }
 
+.shipSelect_select {
+  width: 240px;
+}
+
 /* 艦娘選択欄 テーブル */
 .div_ship_table {
   overflow-y: auto;
@@ -746,7 +768,7 @@ input[type="radio"] {
 }
 
 .ship_tbody {
-  height: 58vh;
+  max-height: 58vh;
 }
 
 .ship_thead {
@@ -768,6 +790,10 @@ input[type="radio"] {
   background-color: rgb(122, 195, 255) !important;
 }
 
+.ship_td_index {
+  text-align: left;
+  width: 24px;
+}
 .ship_td_slot {
   text-align: center;
   width: 48px;
@@ -842,7 +868,7 @@ input[type="radio"] {
 }
 
 .enemy_tbody {
-  height: 58vh;
+  max-height: 58vh;
 }
 
 .enemy_tr {
@@ -1068,29 +1094,64 @@ input[type="radio"] {
   display: none;
 }
 
-#lb_info_table {
+.info_table {
   font-size: 12px;
   background-color: #fff;
   border-collapse: collapse;
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
-#lb_info_table td {
+.info_table thead td{
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+}
+.info_table tbody td {
   padding: .1rem;
-  border: 1px solid #6c757d;
+  border-top:1px #e9ecef solid;
 }
-#lb_info_table .lb_info_name {
-  min-width: 88px;
+#lb_info_table tbody .slot4 td{
+  border-bottom: 1px #b8b8b8 solid;
 }
-#lb_info_table .lb_info_plane {
+.info_table .info_warning {
+  border-bottom: 1px #b8b8b8 solid;
+}
+.info_table .info_name {
+  width: 88px;
+  border-bottom: 1px #b8b8b8 solid;
+}
+.info_table .info_plane {
   text-align: left;
 }
-#lb_info_table .lb_info_ap {
+.info_table .info_slot {
+  width: 72px;
   padding: .1rem .25rem;
+  border-left:1px #e9ecef solid;
 }
-#lb_info_table .lb_info_sumAp {
+.info_table .info_ap {
+  width: 36px;
   padding: .1rem .25rem;
+  border-left:1px #e9ecef solid;
+}
+.info_table .info_sumAp {
+  width: 36px;
+  padding: .1rem .25rem;
+  border-left:1px #e9ecef solid;
+  border-bottom: 1px #b8b8b8 solid;
+}
+#lb_info_table .info_range {
+  width: 72px;
+  border-left:1px #e9ecef solid;
+  border-bottom: 1px #b8b8b8 solid;
+}
+
+#ship_info_table tbody .last_slot {
+  border-bottom: 1px #b8b8b8 solid;
+}
+#ship_info_table tbody .info_fleetAp {
+  width: 72px;
+  border-left:1px #e9ecef solid;
+  border-bottom:1px #b8b8b8 solid;
 }
 
 #lb_battle_table {

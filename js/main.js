@@ -1,4 +1,3 @@
-
 /*==================================
     定数
 ==================================*/
@@ -17,9 +16,6 @@ const SHOOT_DOWN_TABLE_AVE = [];
 
 // 敵st1撃墜テーブル
 const SHOOT_DOWN_TABLE_ENEMY = [];
-
-// 上記平均テーブル
-const SHOOT_DOWN_TABLE_ENEMY_AVE = [];
 
 // 制空ボーダーリスト
 const AIR_STATUS_BORDER_TABLE = [];
@@ -137,8 +133,8 @@ function initialize(callback) {
   });
 
   // 艦種初期化
-  $('.shipType_select').empty();
-  $('.shipType_select').append('<option value="0">全て</option>');
+  $('#shipType_select').empty();
+  $('#shipType_select').append('<option value="0">全て</option>');
   setShipType(shipType.filter(v => v.id < 15).map(v => v.id));
 
   // 敵艦種初期化
@@ -187,9 +183,9 @@ function initialize(callback) {
   for (let i = 0; i < 2; i++) $('#lb_info_table tbody').append(text);
   $('.lb_info_tr').each((i, e) => {
     $(e).addClass('lb_info_lb_' + (Math.floor(i / 4) + 1));
-    $(e).find('.lb_info_name').text('第' + (Math.floor(i / 4) + 1) + '基地航空隊');
+    $(e).find('.info_name').text('第' + (Math.floor(i / 4) + 1) + '基地航空隊');
   });
-  $('#lb_info_table tbody').prepend('<tr class="lb_info_warning"><td colspan="6" class="px-3">全ての航空隊が待機に設定されています。</td></tr>')
+  $('#lb_info_table tbody').prepend('<tr class="info_warning"><td colspan="6" class="px-3">全ての航空隊が待機に設定されています。</td></tr>');
 
   // 艦娘　複製
   $('.ship_tab').html($('.ship_tab:first').html());
@@ -199,7 +195,6 @@ function initialize(callback) {
   $('.ship_tab').each((i, e) => { $(e).attr('id', 'shipNo_' + (i + 1)); });
   // 表示隻数初期化
   $('#display_ship_count').val(2);
-
 
   // 敵艦複製
   $('.battle_content').html($('.battle_content:first').html());
@@ -245,7 +240,11 @@ function initialize(callback) {
 
   // 表示形式をlocalStrageから読み込み　なければ single
   const displayMode = loadLocalStrage('modalDisplayMode');
-  if (displayMode) $('.toggle_display_type[data-mode="' + displayMode + '"]').addClass('selected');
+  if (displayMode) {
+    Object.keys(displayMode).forEach((key) => {
+      $(`#${key} .toggle_display_type[data-mode="${displayMode[key]}"]`).addClass('selected');
+    });
+  }
   else $('.toggle_display_type[data-mode="single"]').addClass('selected');
 
   // 基地欄簡易化するかどうか
@@ -323,17 +322,6 @@ function initialize(callback) {
       tmpA.push(tmpB);
     }
     SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
-  }
-  // 敵機撃墜テーブル 中央値
-  for (let slot = 0; slot <= enemyMaxSlot; slot++) {
-    const tmpA = [];
-    const airLen = airStatus.length;
-    for (let i = 0; i < airLen; i++) {
-      const max_rate = airStatus[i].rate;
-      tmpA.push(slot * (0.65 * max_rate / 2 + 0.35 * max_rate / 2) / 10)
-    }
-
-    SHOOT_DOWN_TABLE_ENEMY_AVE.push(tmpA);
   }
 
   console.timeEnd('事前計算');
@@ -474,7 +462,7 @@ function setPlaneType($select, array) {
 function setShipType(array) {
   let html = '';
   for (const v of shipType) if (array.indexOf(v.id) != -1) html += '<option value="' + v.id + '">' + v.name + '</option>';
-  $('.shipType_select').append(html);
+  $('#shipType_select').append(html);
 }
 
 /**
@@ -784,7 +772,7 @@ function createPlaneTable(planes) {
   const fragment = document.createDocumentFragment();
   const imgWidth = 25;
   const imgHeight = 25;
-  const displayMode = $('.toggle_display_type.selected').data('mode');
+  const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
 
   if (displayMode == "multi") {
     $modal.addClass('modal-xl');
@@ -807,7 +795,7 @@ function createPlaneTable(planes) {
 
     // ラップ
     const $planeDiv = document.createElement('div');
-    $planeDiv.className = 'plane plane_tr d-flex py-2 py-lg-1' + (displayMode == "multi" ? ' plane_tr_multi' : '');
+    $planeDiv.className = `plane plane_tr d-flex py-2 py-lg-1${(displayMode == "multi" ? ' plane_tr_multi' : '')}`;
     $planeDiv.dataset.planeid = plane.id;
     $planeDiv.dataset.type = plane.type;
 
@@ -876,16 +864,30 @@ function createPlaneTable(planes) {
  * @param {Array.<number>} type
  */
 function createShipTable($table, type) {
+  const $modal = $('#modal_ship_select').find('.modal-dialog');
   const $tbody = $table.find('.ship_tbody');
   const c_ship = shipData.concat();
   let dispData = [];
   let insertHtml = '';
+  let prevType = 0;
+  const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
 
   // 艦種ソート後、改造元idソート
   for (const typeObj of shipType) {
     const tmp = c_ship.filter(v => v.type == typeObj.id);
-    tmp.sort((a, b) => a.orig > b.orig ? 1 : -1);
+    tmp.sort((a, b) => a.orig > b.orig ? 1 : a.orig == b.orig ? (a.id > b.id ? 1 : -1) : -1);
     dispData = dispData.concat(tmp);
+  }
+
+  if (displayMode == "multi") {
+    $modal.addClass('modal-xl');
+    $tbody.addClass('d-flex flex-wrap');
+    $('.ship_thead').addClass('d-none').removeClass('d-flex');
+  }
+  else {
+    $modal.removeClass('modal-xl');
+    $tbody.removeClass('d-flex flex-wrap');
+    $('.ship_thead').addClass('d-flex').removeClass('d-none');
   }
 
   for (const ship of dispData) {
@@ -896,17 +898,59 @@ function createShipTable($table, type) {
     let slotText = '<div class="ml-auto ship_td_slot">' + (0 < ship.slot.length ? ship.slot[0] : '') + '</div>';
     for (let index = 1; index < 5; index++) slotText += '<div class="ship_td_slot">' + (index < ship.slot.length ? ship.slot[index] : '') + '</div>';
 
+    // 複数表示時カテゴリ分け
+    if (displayMode == "multi" && prevType != ship.type) {
+      insertHtml += `
+        <div class="w-100 font_size_12 font_color_777 mt-3">
+          ${shipType.find(v => v.id == ship.type).name}
+        </div>`;
+    }
+
+    let shipID = ship.id;
+    shipID = (shipID != Math.ceil(shipID) ? Math.floor(shipID) + "'" : shipID);
     insertHtml += `
-    <div class="ship ship_tr d-flex py-2 py-lg-1" data-shipid="${ship.id}">
-        <div class="pl-1 ship_td_name">${ship.name}</div>
-        ${slotText}
+    <div class="ship ship_tr d-flex py-2 py-lg-1${(displayMode == "multi" ? ' plane_tr_multi' : '')}" data-shipid="${ship.id}">
+        <div class="ship_td_index text-primary font_size_11 align-self-center">${shipID}</div>
+        <div class="pl-1 ship_td_name align-self-center">${ship.name}</div>
+        ${displayMode == "single" ? slotText : ''}
     </div>`;
+
+    prevType = ship.type;
   }
-  $tbody.find('.ship').remove();
+  $tbody.children('div:not(:first)').remove();
   $tbody.append(insertHtml);
 
   // 艦隊選択モーダル内のボタン非活性
   $('#modal_ship_select_btn_remove').prop('disabled', true);
+}
+
+/**
+ * 敵艦入力欄を生成
+ * @param {number} count 生成する個数
+ */
+function createEnemyInput(count) {
+  battleCount = count;
+  $('.battle_content').each((i, e) => {
+    if (i < battleCount) $(e).removeClass('d-none');
+    else $(e).addClass('d-none');
+  });
+
+  // 基地派遣セレクト調整
+  $('#landBase_target').find('option').each((i, e) => {
+    if (i < battleCount) $(e).prop('disabled', false).removeClass('d-none');
+    else $(e).prop('disabled', true).addClass('d-none');
+  });
+  // 最終戦闘に基地派遣(自動)
+  $('#landBase_target').val(battleCount);
+
+  // 結果表示セレクト調整
+  $('#display_battle_tab').find('.nav-link').each((i, e) => {
+    $(e).removeClass('active');
+    if (i < battleCount) $(e).parent().removeClass('d-none');
+    else $(e).parent().addClass('d-none');
+  });
+  $('#battle_tab' + battleCount).addClass('active');
+  displayBattle = battleCount;
 }
 
 /**
@@ -1276,7 +1320,6 @@ function drawPresetPreview(preset) {
   $('.preset_preview_td_info').tooltip();
 }
 
-
 /**
  * 機体プリセット更新
  */
@@ -1299,7 +1342,6 @@ function updatePlanePreset() {
   // ローカルストレージ保存
   saveLocalStrage('planePreset', planePreset);
 }
-
 
 /**
  * 機体プリセット削除
@@ -1386,6 +1428,9 @@ function caluclate() {
 
   console.time('caluclate');
 
+  // 計算前初期化等
+  caluclateInit();
+
   // 基地情報更新
   console.time('updateLandBaseInfo');
   updateLandBaseInfo(landBaseData);
@@ -1429,6 +1474,33 @@ function caluclate() {
   enemyFleetData = null;
 }
 
+function caluclateInit() {
+
+  // テーブルいったん全てリセット
+  $('#ship_info_table tbody').html('');
+  $('#shoot_down_table tbody').html('');
+  $('#shoot_down_table').find('td').removeClass('airStatus0 airStatus1 airStatus2 airStatus3 airStatus4');
+
+  // 防空時
+  if (isDefMode) {
+    // 艦娘情報非表示
+    $('#ship_info').addClass('d-none');
+    $('#shoot_down_table_content').addClass('d-none');
+    $('#friendFleet').addClass('d-none');
+
+    // 戦闘回数固定
+    $('#battle_count_content').addClass('d-none').removeClass('d-flex');
+    $('#battle_count').val(1);
+    createEnemyInput(1);
+  }
+  else {
+    $('#ship_info').removeClass('d-none');
+    $('#shoot_down_table_content').removeClass('d-none');
+    $('#friendFleet').removeClass('d-none');
+    $('#battle_count_content').removeClass('d-none').addClass('d-flex');
+  }
+}
+
 /**
  * 基地航空隊入力情報更新
  * 値の表示と制空値、半径計算も行う
@@ -1456,18 +1528,22 @@ function updateLandBaseInfo(landBaseData) {
 
       // 個別表示
       const $lb_slot = $('.lb_info_lb_' + lbNo + '.slot' + slotNo);
-      let $target_td = $lb_slot.find('.lb_info_plane');
+      let $target_td = $lb_slot.find('.info_plane');
       let prevAp = 0;
       // 装備名
-      $target_td.text(lbPlaneData.name);
+      const planeName = lbPlaneData.abbr ? lbPlaneData.abbr : lbPlaneData.name;
+      $target_td.text(planeName ? planeName : '-');
       // 搭載数
-      $target_td = $lb_slot.find('.lb_info_slot');
+      $target_td = $lb_slot.find('.info_slot');
       prevAp = Number($target_td.text());
       drawChangeValue($target_td, prevAp, lbPlaneData.slot);
+      if (!planeName) $target_td.text('');
+
       // 制空値
-      $target_td = $lb_slot.find('.lb_info_ap');
+      $target_td = $lb_slot.find('.info_ap');
       prevAp = Number($target_td.text());
       drawChangeValue($target_td, prevAp, lbPlaneData.ap);
+      if (!planeName) $target_td.text('');
 
       // 航空隊制空値加算
       tmpLandBaseDatum.ap += lbPlaneData.ap;
@@ -1514,13 +1590,13 @@ function updateLandBaseInfo(landBaseData) {
 
     // 総制空値
     const $target_lb = $('.lb_info_lb_' + lbNo);
-    let $target_td = $target_lb.find('.lb_info_sumAp');
+    let $target_td = $target_lb.find('.info_sumAp');
     drawChangeValue($target_td, Number($target_td.text()), tmpLandBaseDatum.ap);
     let $targetSpan = $lb_tab.find('.ap');
     drawChangeValue($targetSpan, Number($targetSpan.text()), tmpLandBaseDatum.ap);
 
     // 半径
-    $target_td = $target_lb.find('.lb_info_range');
+    $target_td = $target_lb.find('.info_range');
     const range = getRange(tmpLandBaseDatum);
     drawChangeValue($target_td, Number($target_td.text()), range);
     $targetSpan = $lb_tab.find('.range');
@@ -1535,8 +1611,8 @@ function updateLandBaseInfo(landBaseData) {
   });
 
   // 全部待機
-  if (!$('#lb_info_table tbody .lb_info_tr:not(.d-none)').length) $('.lb_info_warning').removeClass('d-none');
-  else $('.lb_info_warning').addClass('d-none');
+  if (!$('#lb_info_table tbody .lb_info_tr:not(.d-none)').length) $('#lb_info_table .info_warning').removeClass('d-none');
+  else $('#lb_info_table .info_warning').addClass('d-none');
 }
 
 /**
@@ -1895,10 +1971,6 @@ function getBonusAp(plane) {
 function updateFriendFleetInfo(friendFleetData) {
   const tmpFriendFleet = [];
 
-  // テーブルいったん全てリセット
-  $('#shoot_down_table tbody').html('');
-  $('#shoot_down_table').find('td').removeClass('airStatus0 airStatus1 airStatus2 airStatus3 airStatus4');
-
   $('.ship_tab').each((index, element) => {
     const $this = $(element);
     const shipNo = index + 1;
@@ -1934,17 +2006,23 @@ function updateFriendFleetInfo(friendFleetData) {
     drawChangeValue(txtAP, prevAp, sumAp);
 
     if (planeCount > 0) {
-      // 撃墜テーブル生成
+      // 撃墜テーブル及び情報テーブル生成
       let i = 0;
       let text = '';
+      let info_table_text = '';
       let shipId = Number($this.data('shipid')) ? Number($this.data('shipid')) : 0;
       const ship = shipId ? shipData.find(v => v.id == shipId) : null;
+      // 艦娘が設定されているならその装備枠の数だけ表示 それ以外は入力された装備の数だけ
       if (ship) planeCount = ship.slot.length;
+
       let shipName_td = `
       <td rowspan="${planeCount}" class="td_name align-middle">
           <div class="td_name_content text-wrap">${ship ? ship.name : '未指定'}</div>
       </td>
       `;
+
+      let info_name_td = `<td class="info_name" rowspan="${planeCount}">${ship ? ship.name : '未指定'}</td>`;
+      let info_sumAp_td = `<td class="info_sumAp" rowspan="${planeCount}">${sumAp}</td>`;
 
       const len = tmpFriendFleet.length;
       for (i = 0; i < len; i++) {
@@ -1954,11 +2032,12 @@ function updateFriendFleetInfo(friendFleetData) {
         // 艦娘の場合 スロット以上は作らない
         if (ship && i == ship.slot.length) break;
 
+        // 撃墜テーブル 10戦闘分
         let battle_td = '';
         for (let index = 1; index <= 10; index++) {
-          battle_td += '<td class="td_battle battle' + index + ' align-middle"></td>';
+          battle_td += `<td class="td_battle battle${index} align-middle"></td>`;
         }
-
+        // 撃墜テーブル内容
         text += `
         <tr class="slot${i} shipNo${shipNo}" data-rowindex="${shipNo}">
           ${shipName_td}
@@ -1967,14 +2046,29 @@ function updateFriendFleetInfo(friendFleetData) {
           <td class="td_battle battle_end align-middle"></td>
         </tr>
         `;
-
         shipName_td = '';
+
+        // 情報テーブル内容
+        info_table_text += `
+          <tr class="ship_info_tr slot${i + 1}">
+            ${info_name_td}
+            <td class="info_plane">${plane.name}</td>
+            <td class="info_slot">${plane.slot}</td>
+            <td class="info_ap">${plane.ap}</td>
+            ${info_sumAp_td}
+            </tr>
+        `;
+        info_name_td = '';
+        info_sumAp_td = '';
       }
       $('#shoot_down_table_tbody').append(text);
+      $('#ship_info_table tbody').append(info_table_text);
+      // 最下部のtdに下線
+      $('#ship_info_table tbody tr:last()').find('td').addClass('last_slot');
     }
     else if ($('#shoot_down_table_tbody tr').length == 0) {
       let battle_td = '';
-      for (let index = 1; index <= 10; index++) battle_td += '<td class="td_battle battle' + index + ' align-middle"></td>';
+      for (let index = 1; index <= 10; index++) battle_td += `<td class="td_battle battle${index} align-middle"></td>`;
       let text = `
         <tr class="slot0 shipNo0">
           <td class="td_name align-middle">
@@ -1988,9 +2082,19 @@ function updateFriendFleetInfo(friendFleetData) {
       $('#shoot_down_table_tbody').append(text);
     }
 
+
+
     // 代入
     if (exist) friendFleetData.push(tmpFriendFleet.concat());
   });
+
+  const rowsCount = $('#ship_info_table tbody tr').length;
+  if (rowsCount) {
+    // 艦娘情報テーブル　艦隊総制空値列追加
+    let fleetApText = `<td class="info_fleetAp" rowspan="${rowsCount}"></td>`;
+    $('.ship_info_tr:first()').append(fleetApText);
+  }
+  else $('#ship_info_table tbody').append('<tr class="info_warning"><td colspan="6" class="px-3">装備、搭載数が設定されていません。</td></tr>');
 }
 
 
@@ -2940,7 +3044,7 @@ $(function () {
     // ソート反映
     const $target_table_div = $('.plane_table_content');
     const sorted = $target_table_div.find('.sorted');
-    const displayMode = $('.toggle_display_type.selected').data('mode');
+    const displayMode = $('#modal_plane_select').find('.toggle_display_type.selected').data('mode');
     if (displayMode == 'single' && sorted.data('order')) {
       const isAsc = sorted.data('order').indexOf('asc') != -1;
       switch (sorted.attr('id')) {
@@ -2966,10 +3070,22 @@ $(function () {
 
   /* 表示形式変更 */
   $(document).on('click', '.toggle_display_type', function () {
-    $('.toggle_display_type').removeClass('selected');
+    const $parentModal = $(this).closest('.modal');
+    $parentModal.find('.toggle_display_type').removeClass('selected');
     $(this).addClass('selected');
-    saveLocalStrage('modalDisplayMode', $(this).data('mode'));
-    $('#planeSelect_select').change();
+
+    let saveDate = loadLocalStrage('modalDisplayMode');
+    if (!saveDate) {
+      saveDate = {
+        'modal_plane_select': 'single',
+        'modal_ship_select': 'single',
+        'modal_enemy_select': 'single'
+      };
+    }
+
+    saveDate[$parentModal.attr('id')] = $(this).data('mode');
+    saveLocalStrage('modalDisplayMode', saveDate);
+    $parentModal.find('select').change();
   });
 
   // 機体テーブル ヘッダクリック列でソート
@@ -3152,20 +3268,20 @@ $(function () {
   $(document).on('click', '.ship_name_span', function () {
     $target = $(this).closest('.ship_tab');
     const selectedID = $target.data('shipid');
-    const $modalBody = $('#modal_ship_select').find('.modal-body');
 
-    // 選択艦娘ピックアップ
+    // 選択艦娘がいるなら
     if (selectedID) {
-      $modalBody.find('#' + selectedID).addClass('ship-selected');
       $('#modal_ship_select_btn_remove').prop('disabled', false);
     }
     else $('#modal_ship_select_btn_remove').prop('disabled', true);
+
+    $('#shipType_select').change();
 
     $('#modal_ship_select').modal('show');
   });
 
   // 艦種変更時 応じた艦娘を table に展開
-  $('#modal_ship_select').on('change', '.shipType_select', function () {
+  $('#modal_ship_select').on('change', '#shipType_select', function () {
     createShipTable($('.ship_table'), [Number($(this).val())]);
   });
 
@@ -3178,7 +3294,7 @@ $(function () {
   });
 
   // 最終改造状態の未表示クリック
-  $('#dispFinalOnly').click(() => { createShipTable($('.ship_table'), [Number($('.shipType_select').val())]); })
+  $('#dispFinalOnly').click(() => { createShipTable($('.ship_table'), [Number($('#shipType_select').val())]); })
 
   // はずすボタンクリック(機体選択モーダル内)
   $('#modal_ship_select_btn_remove').on('click', function () {
@@ -3192,29 +3308,8 @@ $(function () {
 
   // 戦闘回数変更
   $('#battle_count').change(function () {
-    battleCount = Number($(this).val());
-    $('.battle_content').each(function (i) {
-      if (i < battleCount) $(this).removeClass('d-none');
-      else $(this).addClass('d-none');
-    });
-
-    // 基地派遣セレクト調整
-    $('#landBase_target').find('option').each((i, e) => {
-      if (i < battleCount) $(e).prop('disabled', false).removeClass('d-none');
-      else $(e).prop('disabled', true).addClass('d-none');
-    });
-    // 最終戦闘に基地派遣(自動)
-    $('#landBase_target').val(battleCount);
-
-    // 結果表示セレクト調整
-    $('#display_battle_tab').find('.nav-link').each((i, e) => {
-      $(e).removeClass('active');
-      if (i < battleCount) $(e).parent().removeClass('d-none');
-      else $(e).parent().addClass('d-none');
-    });
-    $('#battle_tab' + battleCount).addClass('active');
-    displayBattle = battleCount;
-
+    // 敵入力欄生成
+    createEnemyInput(Number($(this).val()));
     caluclate();
   });
 

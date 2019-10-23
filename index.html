@@ -110,7 +110,6 @@
 
             <!-- メインコンテンツ -->
             <main role="main" class="flex-grow-1 px-2">
-                <h1 class="mt-3 ml-1">制空シミュレータ(試)</h1>
                 <div class="w-100 text-center mt-5 py-5" id="loadingSpinner">
                     <div class="spinner-border m-auto py-auto">
                         <span class="sr-only">Loading...</span>
@@ -119,6 +118,7 @@
                 <div id="main" style="display: none">
                     <div id="main_header">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+                            <h1 class="mt-3 ml-1">制空シミュレータ(試)</h1>
                             <!-- <div class="btn-toolbar mb-2 mb-md-0">
                                 <div class="btn-group mr-2">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">編成保存</button>
@@ -429,8 +429,8 @@
                             </div>
                             <div class="collapse show collapse_content" id="enemyFleet_content">
                                 <div class="d-flex collapse show flex-nowrap" id="enemyFleet_content">
-                                    <div class="">
-                                        <div class="d-flex justify-content-start mb-2">
+                                    <div>
+                                        <div class="d-flex justify-content-start mb-2" id="battle_count_content">
                                             <div class="ml-2 mr-1 align-self-center">戦闘回数：</div>
                                             <select class="custom-select custom-select-sm" id="battle_count">
                                                 <option value="1" selected>1</option>
@@ -580,7 +580,8 @@
                                     <!-- 結果バー表示域 -->
                                     <div class="border" id="result_chart"></div>
                                 </div>
-                                <div class="mt-2">
+                                <div class="mt-2" id="shoot_down_table_content">
+                                    <div class="bg-777 font_size_12">各戦闘結果</div>
                                     <table class="text-center w-100" id="shoot_down_table">
                                         <thead class="bg-e9ecef" id="shoot_down_table_thead">
                                             <tr class="tr_header">
@@ -603,43 +604,61 @@
                                         </tfoot>
                                     </table>
                                 </div>
-                                <div id="lb_info" class="mt-2">
-                                    <table class="text-center border-secondary" id="lb_info_table">
-                                        <thead class="bg-ddd">
-                                            <tr id="">
-                                                <td class="lb_info_name"></td>
-                                                <td>装備名</td>
-                                                <td class="lb_info_slot">搭載</td>
-                                                <td colspan="2">制空値</td>
-                                                <td class="lb_info_range">半径</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="lb_info_tr slot1">
-                                                <td rowspan="4" class="lb_info_name">第1基地航空隊</td>
-                                                <td class="lb_info_plane">-</td>
-                                                <td class="lb_info_slot"></td>
-                                                <td class="lb_info_ap"></td>
-                                                <td class="lb_info_sumAp" rowspan="4"></td>
-                                                <td class="lb_info_range" rowspan="4"></td>
-                                            </tr>
-                                            <tr class="lb_info_tr slot2">
-                                                <td class="lb_info_plane">-</td>
-                                                <td class="lb_info_slot"></td>
-                                                <td class="lb_info_ap"></td>
-                                            </tr>
-                                            <tr class="lb_info_tr slot3">
-                                                <td class="lb_info_plane">-</td>
-                                                <td class="lb_info_slot"></td>
-                                                <td class="lb_info_ap"></td>
-                                            </tr>
-                                            <tr class="lb_info_tr slot4">
-                                                <td class="lb_info_plane">-</td>
-                                                <td class="lb_info_slot"></td>
-                                                <td class="lb_info_ap"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="row">
+                                    <div class="mt-3 col-12 col-lg-6 order-1 order-lg-2" id="lb_info">
+                                        <div class="bg-777 font_size_12">基地航空隊</div>
+                                        <table class="text-center w-100 info_table" id="lb_info_table">
+                                            <thead>
+                                                <tr>
+                                                    <td class="info_name">航空隊</td>
+                                                    <td>装備名</td>
+                                                    <td class="lb_info_slot">搭載</td>
+                                                    <td colspan="2">制空値</td>
+                                                    <td class="lb_info_range">半径</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="lb_info_tr slot1">
+                                                    <td class="info_name" rowspan="4">第1基地航空隊</td>
+                                                    <td class="info_plane">-</td>
+                                                    <td class="info_slot"></td>
+                                                    <td class="info_ap"></td>
+                                                    <td class="info_sumAp" rowspan="4"></td>
+                                                    <td class="info_range" rowspan="4"></td>
+                                                </tr>
+                                                <tr class="lb_info_tr slot2">
+                                                    <td class="info_plane">-</td>
+                                                    <td class="info_slot"></td>
+                                                    <td class="info_ap"></td>
+                                                </tr>
+                                                <tr class="lb_info_tr slot3">
+                                                    <td class="info_plane">-</td>
+                                                    <td class="info_slot"></td>
+                                                    <td class="info_ap"></td>
+                                                </tr>
+                                                <tr class="lb_info_tr slot4">
+                                                    <td class="info_plane">-</td>
+                                                    <td class="info_slot"></td>
+                                                    <td class="info_ap"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-3 col-12 col-lg-6 order-2 order-lg-1" id="ship_info">
+                                        <div class="bg-777 font_size_12">艦娘</div>
+                                        <table class="text-center w-100 info_table" id="ship_info_table">
+                                            <thead>
+                                                <tr id="">
+                                                    <td class="ship_info_name">艦娘名</td>
+                                                    <td>装備名</td>
+                                                    <td class="ship_info_slot">搭載</td>
+                                                    <td colspan="2">制空値</td>
+                                                    <td>総制空値</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div class="mt-2 d-none">
                                     <table class="text-center border-secondary" id="lb_battle_table">
@@ -800,7 +819,7 @@
                     <div class="ml-2 font_color_aaa">・共有URL生成</div>
                     <div class="ml-2 font_color_aaa">・etc...</div>
                     <div class="ml-2 py-3">要望・バグ報告は
-                        <a href="https://twitter.com/noro_006">こちら</a>
+                        <a href="https://twitter.com/noro_006" target="_blank">こちら</a>
                     </div>
                 </footer>
             </main>
@@ -836,36 +855,34 @@
                         </div>
                     </div>
                     <div class="plane_table_content bg-white">
-                        <div class="plane_table container-fluid mx-0 px-0">
-                            <div class="overflow-auto" id="plane_table_tbody">
-                                <div class="plane_thead d-flex bg-white py-2">
-                                    <div class="plane_td_type" id="th_default" data-order="asc">
-                                        <img class="img-size-25" src="./img/type/undefined.png" alt="種">
-                                    </div>
-                                    <div class="pl-1 plane_td_name" id="th_name" data-order="asc">
-                                        <span>
-                                            装備名
-                                            <i class="pl-1 fas fas-sort-up d-none"></i>
-                                            <i class="pl-1 fas fa-sort opacity2"></i>
-                                        </span>
-                                    </div>
-                                    <div class="ml-auto plane_td_aa" id="th_aa" data-order="asc">
-                                        <span>
-                                            対空
-                                            <i class="pl-1 fas fa-sort-up d-none"></i>
-                                            <i class="pl-1 fas fa-sort opacity2"></i>
-                                        </span>
-                                    </div>
-                                    <div class="plane_td_range" id="th_range" data-order="asc">
-                                        <span>
-                                            半径
-                                            <i class="pl-1 fas fa-sort-up d-none"></i>
-                                            <i class="pl-1 fas fa-sort opacity2"></i>
-                                        </span>
-                                    </div>
+                        <div class="overflow-auto" id="plane_table_tbody">
+                            <div class="plane_thead d-flex bg-white py-2">
+                                <div class="plane_td_type" id="th_default" data-order="asc">
+                                    <img class="img-size-25" src="./img/type/undefined.png" alt="種">
                                 </div>
-                                <div id="plane_tbody"></div>
+                                <div class="pl-1 plane_td_name" id="th_name" data-order="asc">
+                                    <span>
+                                        <span class=" font_size_12">装備名</span>
+                                        <i class="pl-1 fas fas-sort-up d-none"></i>
+                                        <i class="pl-1 fas fa-sort opacity2"></i>
+                                    </span>
+                                </div>
+                                <div class="ml-auto plane_td_aa" id="th_aa" data-order="asc">
+                                    <span>
+                                        <span class=" font_size_12">対空</span>
+                                        <i class="pl-1 fas fa-sort-up d-none"></i>
+                                        <i class="pl-1 fas fa-sort opacity2"></i>
+                                    </span>
+                                </div>
+                                <div class="plane_td_range" id="th_range" data-order="asc">
+                                    <span>
+                                        <span class=" font_size_12">半径</span>
+                                        <i class="pl-1 fas fa-sort-up d-none"></i>
+                                        <i class="pl-1 fas fa-sort opacity2"></i>
+                                    </span>
+                                </div>
                             </div>
+                            <div id="plane_tbody"></div>
                         </div>
                     </div>
                 </div>
@@ -889,11 +906,22 @@
                     </p>
                 </div>
                 <div class="modal-body">
-                    <div class="my-1 input-group input-group-sm">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">艦種</span>
+                    <div class="d-flex">
+                        <div class="my-1 input-group input-group-sm shipSelect_select">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">艦種</span>
+                            </div>
+                            <select class="custom-select custom-select-sm" id="shipType_select"></select>
                         </div>
-                        <select class="custom-select custom-select-sm shipType_select"></select>
+                        <div class="ml-3 align-self-center">表示：</div>
+                        <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
+                            <i class="fas fa-list"></i>
+                            <span class="">一列</span>
+                        </div>
+                        <div class="ml-3 align-self-center toggle_display_type" data-mode="multi">
+                            <i class="fas fa-grip-horizontal"></i>
+                            <span class="">複数列</span>
+                        </div>
                     </div>
                     <div class="custom-control custom-checkbox my-2">
                         <input class="custom-control-input cur_pointer" type="checkbox" id="dispFinalOnly" checked>
@@ -903,12 +931,13 @@
                         <div class="ship_table container-fluid mx-0 px-0">
                             <div class="ship_tbody overflow-auto bg-white">
                                 <div class="ship_thead d-flex bg-white py-2">
-                                    <div class="ml-1 ship_td_name">艦娘名</div>
-                                    <div class="ml-auto ship_td_slot">搭載1</div>
-                                    <div class="ship_td_slot">搭載2</div>
-                                    <div class="ship_td_slot">搭載3</div>
-                                    <div class="ship_td_slot">搭載4</div>
-                                    <div class="ship_td_slot">搭載5</div>
+                                    <div class="ship_td_index font_size_12 font_color_777 text-center">ID</div>
+                                    <div class="ml-1 ship_td_name font_size_12 font_color_777">艦娘名</div>
+                                    <div class="ml-auto ship_td_slot font_size_12 font_color_777">搭載1</div>
+                                    <div class="ship_td_slot font_size_12 font_color_777">搭載2</div>
+                                    <div class="ship_td_slot font_size_12 font_color_777">搭載3</div>
+                                    <div class="ship_td_slot font_size_12 font_color_777">搭載4</div>
+                                    <div class="ship_td_slot font_size_12 font_color_777">搭載5</div>
                                 </div>
                             </div>
                         </div>
