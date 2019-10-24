@@ -3,7 +3,7 @@
 ==================================*/
 
 // バージョン
-const VERSION = "0.0.0";
+const VERSION = "0.0.1";
 
 // 入力され得る搭載数の最大値
 const MAX_SLOT = 99;
@@ -116,6 +116,17 @@ function initialize(callback) {
   $.widget.bridge('uibutton', $.ui.button);
   $.widget.bridge('uitooltip', $.ui.tooltip);
 
+  // バージョンチェック
+  const localVersion = loadLocalStrage('version');
+  if (!localVersion || localVersion != VERSION) {
+    // バージョン変更に伴う競合要素の解決
+    localStorage.removeItem('modalDisplayMode');
+
+    // 変更通知
+    $('#versionInfomationModal').find('#version').text(VERSION);
+    $('#versionInfomationModal').modal('show');
+  }
+
   // 画像のプリロード
   // 機体カテゴリ
   for (const type of planeType) {
@@ -138,8 +149,8 @@ function initialize(callback) {
   setShipType(shipType.filter(v => v.id < 15).map(v => v.id));
 
   // 敵艦種初期化
-  $('.enemyType_select').empty();
-  $('.enemyType_select').append('<option value="0">全て</option>');
+  $('#enemyType_select').empty();
+  $('#enemyType_select').append('<option value="0">全て</option>');
   setEnemyType(enemyType.filter(v => v.id > 0).map(v => v.id));
 
   let planes = [];
@@ -209,7 +220,6 @@ function initialize(callback) {
 
   // 熟練度非活性
   $('.remodel_select').prop('disabled', true);
-
 
   // 撃墜テーブルヘッダフッタ生成
   text = '';
@@ -472,7 +482,7 @@ function setShipType(array) {
 function setEnemyType(array) {
   let html = '';
   for (const v of enemyType) if (array.indexOf(v.id) != -1) html += '<option value="' + v.id + '">' + v.name + '</option>';
-  $('.enemyType_select').append(html);
+  $('#enemyType_select').append(html);
 }
 
 /**
@@ -795,7 +805,7 @@ function createPlaneTable(planes) {
 
     // ラップ
     const $planeDiv = document.createElement('div');
-    $planeDiv.className = `plane plane_tr d-flex py-2 py-lg-1${(displayMode == "multi" ? ' plane_tr_multi' : '')}`;
+    $planeDiv.className = `plane plane_tr d-flex py-2 py-lg-1${(displayMode == "multi" ? ' tr_multiMode' : '')}`;
     $planeDiv.dataset.planeid = plane.id;
     $planeDiv.dataset.type = plane.type;
 
@@ -905,12 +915,10 @@ function createShipTable($table, type) {
           ${shipType.find(v => v.id == ship.type).name}
         </div>`;
     }
-
-    let shipID = ship.id;
-    shipID = (shipID != Math.ceil(shipID) ? Math.floor(shipID) + "'" : shipID);
+    
     insertHtml += `
-    <div class="ship ship_tr d-flex py-2 py-lg-1${(displayMode == "multi" ? ' plane_tr_multi' : '')}" data-shipid="${ship.id}">
-        <div class="ship_td_index text-primary font_size_11 align-self-center">${shipID}</div>
+    <div class="ship ship_tr d-flex py-2 py-lg-1${(displayMode == "multi" ? ' tr_multiMode' : '')}" data-shipid="${ship.id}">
+        <div class="td_index text-primary font_size_11 align-self-center">${Math.floor(ship.id)}</div>
         <div class="pl-1 ship_td_name align-self-center">${ship.name}</div>
         ${displayMode == "single" ? slotText : ''}
     </div>`;
@@ -959,10 +967,13 @@ function createEnemyInput(count) {
  * @param {Array.<number>} type type[0] == 0 は全て選択時
  */
 function createEnemyTable($table, type) {
+  const $modal = $('#modal_enemy_select').find('.modal-dialog');
   const $tbody = $table.find('.enemy_tbody');
   const c_enemy = enemyData.concat();
   let dispData = [];
   let insertHtml = '';
+  let prevType = 0;
+  const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
 
   // 第1艦種(type[0]行目)順で取得後、無印idソート
   for (const typeObj of enemyType) {
@@ -970,6 +981,18 @@ function createEnemyTable($table, type) {
     dispData = dispData.concat(tmp.sort((a, b) => a.orig > b.orig ? 1 : a.orig < b.orig ? -1 : a.id - b.id));
   }
 
+  if (displayMode == "multi") {
+    $modal.addClass('modal-xl');
+    $tbody.addClass('d-flex flex-wrap');
+    $('.enemy_thead').addClass('d-none').removeClass('d-flex');
+  }
+  else {
+    $modal.removeClass('modal-xl');
+    $tbody.removeClass('d-flex flex-wrap');
+    $('.enemy_thead').addClass('d-flex').removeClass('d-none');
+  }
+
+  let index = 1;
   for (const enemy of dispData) {
     // 艦種で絞る
     if (type[0] != 0 && !isContain(type, enemy.type)) continue;
@@ -983,14 +1006,28 @@ function createEnemyTable($table, type) {
     };
     lbAp += ap;
 
+    // 複数表示時カテゴリ分け
+    if (displayMode == "multi" && enemy.id == -1) {
+      insertHtml += '<div class="w-100 font_size_12 font_color_777 mt-3">直接入力</div>';
+    }
+    else if (displayMode == "multi" && prevType != enemy.type[0]) {
+      insertHtml += `
+      <div class="w-100 font_size_12 font_color_777 mt-3">
+        ${enemyType.find(v => v.id == enemy.type[0]).name}
+      </div>`;
+    }
+
     insertHtml += `
-    <div class="enemy enemy_tr d-flex py-2" data-enemyid="${enemy.id}">
-      <div class="ml-1 enemy_td_name">${drawEnemyGradeColor(enemy.name)}</div>
-      <div class="ml-auto enemy_td_ap">${ap}</div>
-      <div class="enemy_td_lbAp">${lbAp}</div>
+    <div class="enemy enemy_tr d-flex py-2${(displayMode == "multi" ? ' tr_multiMode' : '')}" data-enemyid="${enemy.id}">
+      <div class="td_index text-primary font_size_11 align-self-center">${index++}</div>
+      <div class="ml-1 enemy_td_name align-self-center">${drawEnemyGradeColor(enemy.name)}</div>
+      ${displayMode == "single" ? `<div class="ml-auto enemy_td_ap">${ap}</div>` : ''}
+      ${displayMode == "single" ? `<div class="enemy_td_lbAp">${lbAp}</div>` : ''}
     </div>`;
+
+    prevType = enemy.type[0];
   }
-  $tbody.find('.enemy').remove();
+  $tbody.children('div:not(:first)').remove();
   $tbody.append(insertHtml);
 
   // 艦隊選択モーダル内のボタン非活性
@@ -3329,23 +3366,17 @@ $(function () {
   $(document).on('click', '.enemy_name', function () {
     $target = $(this).closest('.enemy_content');
     const selectedID = $target.data('enemyid');
-    const $modalBody = $('#modal_enemy_select').find('.modal-body');
 
-    // 選択艦娘ピックアップ
-    if (selectedID) {
-      const $selected = $modalBody.find('#' + selectedID)
-      $selected.addClass('enemy-selected');
-      $('#modal_enemy_select_btn_remove').prop('disabled', false);
-    }
-    else {
-      $('#modal_enemy_select_btn_remove').prop('disabled', true);
-    }
+    $('#enemyType_select').change();
+
+    if (selectedID) $('#modal_enemy_select_btn_remove').prop('disabled', false);
+    else $('#modal_enemy_select_btn_remove').prop('disabled', true);
 
     $('#modal_enemy_select').modal('show');
   });
 
   // 敵艦種変更時 応じた敵艦を table に展開
-  $(document).on('change', '.enemyType_select', function () {
+  $(document).on('change', '#enemyType_select', function () {
     createEnemyTable($('.enemy_table'), [Number($(this).val())]);
   });
 
@@ -3455,6 +3486,11 @@ $(function () {
     $('body,html').animate({ scrollTop: position }, speed, 'swing');
     setTimeout(() => { $('#smartMenuModal').modal('hide'); }, 220);
     return false;
+  });
+
+  // 変更通知閉じる
+  $('#versionInfomationModal').on('hide.bs.modal', () => {
+    if ($('#alreadyRead').prop('checked')) saveLocalStrage('version', VERSION);
   });
 
   // 画面サイズ変更時

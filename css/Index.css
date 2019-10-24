@@ -712,7 +712,7 @@ input[type="radio"] {
 .plane:active {
   background-color: rgb(122, 195, 255) !important;
 }
-.plane_tr_multi {
+.tr_multiMode {
   width: 232px;
   height: 42px;
 }
@@ -790,8 +790,8 @@ input[type="radio"] {
   background-color: rgb(122, 195, 255) !important;
 }
 
-.ship_td_index {
-  text-align: left;
+.td_index {
+  text-align: right;
   width: 24px;
 }
 .ship_td_slot {
@@ -858,6 +858,10 @@ input[type="radio"] {
   border-right: none;
   border-left: none;
   border-bottom: 1px #aaa solid;
+}
+
+.enemySelect_select {
+  width: 240px;
 }
 
 /* 敵艦選択テーブル */

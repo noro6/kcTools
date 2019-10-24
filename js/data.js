@@ -188,8 +188,8 @@ const planeData = [
 
 // 艦種リスト
 const shipType = [
-  { id: 1, name: '正規空母 / 装甲空母' },
-  // { id: 2, name: '装甲空母' },
+  { id: 1, name: '正規空母' },
+  { id: 2, name: '装甲空母' },
   { id: 3, name: '軽空母' },
   { id: 4, name: '航空戦艦' },
   { id: 5, name: '航空巡洋艦' },
@@ -314,9 +314,9 @@ const shipData = [
   { id: 130, type: 5, name: "熊野改", slot: [5, 6, 5, 6], final: 0, orig: 125 },
   { id: 136, type: 7, name: "大和改", slot: [7, 7, 7, 7], final: 1, orig: 131 },
   { id: 148, type: 7, name: "武蔵改", slot: [7, 7, 7, 7], final: 0, orig: 143 },
-  { id: 153, type: 1, name: "大鳳", slot: [18, 18, 18, 7], final: 0, orig: 153 },
+  { id: 153, type: 2, name: "大鳳", slot: [18, 18, 18, 7], final: 0, orig: 153 },
   { id: 155, type: 12, name: "伊401", slot: [3], final: 0, orig: 155 },
-  { id: 156, type: 1, name: "大鳳改", slot: [30, 24, 24, 8], final: 1, orig: 153 },
+  { id: 156, type: 2, name: "大鳳改", slot: [30, 24, 24, 8], final: 1, orig: 153 },
   { id: 157, type: 3, name: "龍驤改二", slot: [18, 28, 6, 3], final: 1, orig: 30 },
   { id: 166, type: 10, name: "あきつ丸改", slot: [8, 8, 8], final: 1, orig: 161 },
   { id: 184, type: 13, name: "大鯨", slot: [2, 3, 3], final: 1, orig: 184 },
@@ -347,8 +347,8 @@ const shipData = [
   { id: 260, type: 11, name: "速吸", slot: [6, 1], final: 0, orig: 260 },
   { id: 261, type: 1, name: "翔鶴改二", slot: [27, 27, 27, 12], final: 1, orig: 106 },
   { id: 262, type: 1, name: "瑞鶴改二", slot: [28, 26, 26, 13], final: 1, orig: 107 },
-  { id: 266, type: 1, name: "翔鶴改二甲", slot: [34, 21, 12, 9], final: 1, orig: 106 },
-  { id: 267, type: 1, name: "瑞鶴改二甲", slot: [34, 24, 12, 6], final: 1, orig: 107 },
+  { id: 266, type: 2, name: "翔鶴改二甲", slot: [34, 21, 12, 9], final: 1, orig: 106 },
+  { id: 267, type: 2, name: "瑞鶴改二甲", slot: [34, 24, 12, 6], final: 1, orig: 107 },
   { id: 288, type: 14, name: "由良改二", slot: [1, 2, 1], final: 1, orig: 45 },
   { id: 291, type: 6, name: "Commandant Teste", slot: [12, 7, 7], final: 0, orig: 291 },
   { id: 293, type: 12, name: "伊400", slot: [3], final: 0, orig: 293 },
@@ -372,7 +372,7 @@ const shipData = [
   { id: 346, type: 7, name: "武蔵改二", slot: [5, 5, 5, 8, 5], final: 1, orig: 143 },
   { id: 347, type: 14, name: "多摩改二", slot: [1, 1, 1], final: 1, orig: 40 },
   { id: 349, type: 1, name: "Intrepid", slot: [37, 36, 19, 4], final: 0, orig: 349 },
-  { id: 350, type: 1, name: "Saratoga Mk.II Mod.2", slot: [37, 24, 19, 13], final: 1, orig: 233 },
+  { id: 350, type: 2, name: "Saratoga Mk.II Mod.2", slot: [37, 24, 19, 13], final: 1, orig: 233 },
   { id: 353, type: 4, name: "伊勢改二", slot: [2, 2, 22, 22, 9], final: 1, orig: 3 },
   { id: 354, type: 4, name: "日向改二", slot: [2, 4, 22, 11, 1], final: 1, orig: 4 },
   { id: 355, type: 3, name: "瑞鳳改二", slot: [21, 18, 12, 6], final: 1, orig: 112 },
@@ -443,7 +443,7 @@ const enemyType = [
 
 // 敵艦
 const enemyData = [
-  { id: -1, type: [1, 2, 3, 4, 5, 6, 7, 10, 11, 1000, 1908], name: "直接入力", slot: [], aa: [], orig: -1, isSpR: false },
+  { id: -1, type: [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 1000, 1908], name: "直接入力", slot: [], aa: [], orig: -1, isSpR: false },
   { id: 9, type: [4], name: "重巡リ級", slot: [3], aa: [1], orig: 9, isSpR: true },
   { id: 10, type: [2], name: "軽母ヌ級", slot: [18], aa: [2], orig: 10, isSpR: false },
   { id: 12, type: [1], name: "空母ヲ級", slot: [27], aa: [2], orig: 12, isSpR: false },
@@ -585,4 +585,10 @@ const enemyData = [
   { id: 389, type: [11, 10, 1000, 1908], name: "飛行場姫 銀だこ [丙]", slot: [16, 16, 8], aa: [17, 17, 17], orig: 56, isSpR: false },
   { id: 390, type: [11, 10, 1000, 1908], name: "飛行場姫 銀だこ [乙]", slot: [16, 16, 12, 4], aa: [17, 17, 17, 17], orig: 56, isSpR: false },
   { id: 391, type: [11, 10, 1000, 1908], name: "飛行場姫 銀だこ [甲]", slot: [24, 24, 16, 8], aa: [17, 17, 17, 17], orig: 56, isSpR: false },
+];
+
+/** 変更履歴 */
+const changeLog = [
+  { id: '0.0.0', changes: ["履歴表示を行うことにした！！！！"] },
+  { id: '0.0.1', changes: ["艦娘選択欄の複数行表示対応を行いました。", "防空時のレイアウトの調整を行いました。"] },
 ];
