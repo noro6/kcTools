@@ -2,12 +2,17 @@
 <html lang="ja">
 
 <head>
-    <title>制空シミュレータ.n</title>
+    <title>制空シミュレータ(仮称)</title>
     <meta name="description" content="「艦これ」の出撃時の制空に関するシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや防空に対応しています。">
     <meta name="viewport" content="width=526, shrink-to-fit=no">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@noro_006">
+    <meta property="og:url" content="https://noro6.github.io/kcTools/" />
+    <meta property="og:title" content="制空シミュレータ(仮称)" />
+    <meta property="og:description" content="「艦これ」の出撃時の制空に関するシミュレーションを行うサイトです。" />
+
     <meta charset="utf-8">
 
-    <!-- css -->
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/Index.css">
@@ -31,7 +36,7 @@
                 <div></div>
             </div>
         </div>
-        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ.n</a>
+        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ(仮称)</a>
         <!-- <input class="d-none d-xl-block form-control form-control-dark w-100" type="text" placeholder="検索"> -->
         <ul class="d-none d-xl-block navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -119,7 +124,7 @@
                 <div id="main" style="display: none">
                     <div id="main_header">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
-                            <h1 class="mt-3 ml-1">制空シミュレータ.n</h1>
+                            <h1 class="mt-3 ml-1">制空シミュレータ(仮称)</h1>
                             <!-- <div class="btn-toolbar mb-2 mb-md-0">
                                 <div class="btn-group mr-2">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">編成保存</button>
@@ -134,7 +139,7 @@
                     </div>
                     <div id="main_contents">
                         <!-- 基地航空隊 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1"
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1 rounded"
                             id="landBase">
                             <div class="pb-2 my-2 d-flex border-bottom">
                                 <div class="h5 mb-0 align-self-center">
@@ -273,7 +278,7 @@
                         </div>
 
                         <!-- 艦隊選択欄 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1"
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1 rounded"
                             id="friendFleet">
                             <div class="pb-2 my-2 d-flex border-bottom">
                                 <div class="h5 mb-0 align-self-center">
@@ -417,7 +422,7 @@
                         </div>
 
                         <!-- 敵艦選択欄 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1"
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1 rounded"
                             id="enemyFleet">
                             <div class="pb-2 my-2 d-flex border-bottom">
                                 <div class="h5 mb-0 align-self-center">
@@ -522,7 +527,8 @@
                         </div>
 
                         <!-- 計算結果 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="result">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1 rounded"
+                            id="result">
                             <div class="pb-2 my-2 d-flex border-bottom">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
@@ -706,7 +712,8 @@
                         </div>
 
                         <!-- 細かい設定 -->
-                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1" id="config">
+                        <div class="border border-secondary bg-white shadow px-2 mt-3 pb-2 mx-auto mx-xl-1 rounded"
+                            id="config">
                             <div class="pb-2 my-2 d-flex border-bottom">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">詳細設定</span>
@@ -1134,7 +1141,7 @@
             <div class="modal-content mt-5">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        制空シミュレータ.n v.<span id="version">0.0.0</span></h5>
+                        制空シミュレータ(仮称) v.<span id="version">0.0.0</span></h5>
                     <p class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </p>

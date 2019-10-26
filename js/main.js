@@ -1285,7 +1285,7 @@ function loadPlanePreset() {
     }
 
     presetText += `
-      <div class="preset_tr d-flex px-1 py-2 w-100 cur_pointer" data-presetid="${preset.id}">
+      <div class="preset_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset.id}">
         <div class="preset_td text-primary">${index + 1}.</div>
         <div class="preset_td ml-2">${preset.name}</div>
           ${infoText}
