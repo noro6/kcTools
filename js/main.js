@@ -113,7 +113,7 @@ function shuffleArray(array) {
  */
 function initialize(callback) {
 
-  console.time('initialize');
+  // console.time('initialize');
   // 競合回避
   $.widget.bridge('uibutton', $.ui.button);
   $.widget.bridge('uitooltip', $.ui.tooltip);
@@ -270,9 +270,9 @@ function initialize(callback) {
     $('.lb_tab:first').addClass('show active');
     $('#lb_item1').addClass('active');
   }
-  console.timeEnd('initialize');
+  // console.timeEnd('initialize');
 
-  console.time('事前計算');
+  // console.time('事前計算');
 
   // 事前計算 -各種制空値のボーダー配列生成
   const max_ap = 2000;
@@ -341,7 +341,7 @@ function initialize(callback) {
     SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
   }
 
-  console.timeEnd('事前計算');
+  // console.timeEnd('事前計算');
   callback();
 }
 
@@ -1534,47 +1534,47 @@ function caluclate() {
   let enemyFleetData = [];
   chartData = { own: [], enemy: [], rate: [] };
 
-  console.time('caluclate');
+  // console.time('caluclate');
 
   // 計算前初期化等
   caluclateInit();
 
   // 基地情報更新
-  console.time('updateLandBaseInfo');
+  // console.time('updateLandBaseInfo');
   updateLandBaseInfo(landBaseData);
   //console.log(landBaseData);
-  console.timeEnd('updateLandBaseInfo');
+  // console.timeEnd('updateLandBaseInfo');
 
   // 艦隊情報更新
-  console.time('updateFriendFleetInfo');
+  // console.time('updateFriendFleetInfo');
   updateFriendFleetInfo(friendFleetData);
   //console.log(friendFleetData);
-  console.timeEnd('updateFriendFleetInfo');
+  // console.timeEnd('updateFriendFleetInfo');
 
   // 敵艦情報更新
-  console.time('updateEnemyFleetInfo');
+  // console.time('updateEnemyFleetInfo');
   updateEnemyFleetInfo(enemyFleetData);
   //console.log(enemyFleetData);
-  console.timeEnd('updateEnemyFleetInfo');
+  // console.timeEnd('updateEnemyFleetInfo');
 
   // メイン計算
-  console.time('mainCaluclate');
+  // console.time('mainCaluclate');
   mainCaluclate(landBaseData, friendFleetData, enemyFleetData);
-  console.timeEnd('mainCaluclate');
+  // console.timeEnd('mainCaluclate');
 
   //各状態確率計算
-  console.time('rateCaluclate');
+  // console.time('rateCaluclate');
   chartData.rate = rateCaluclate(landBaseData, friendFleetData, enemyFleetData);
-  console.timeEnd('rateCaluclate');
+  // console.timeEnd('rateCaluclate');
 
   //console.log(chartData);
 
   // 結果表示
-  console.time('drawResultBar');
+  // console.time('drawResultBar');
   drawResultBar();
-  console.timeEnd('drawResultBar');
-  console.timeEnd('caluclate');
-  console.log('');
+  // console.timeEnd('drawResultBar');
+  // console.timeEnd('caluclate');
+  // console.log('');
 
   // 後始末
   landBaseData = null;
