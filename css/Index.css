@@ -204,6 +204,11 @@ input[type="radio"] {
   border-radius: 0;
 }
 
+.disabled_nav {
+  cursor: default !important;
+  color: #777 !important;
+}
+
 .form-control-dark {
   color: #fff;
   background-color: rgba(255, 255, 255, 0.1);
