@@ -2,23 +2,24 @@
 <html lang="ja">
 
 <head>
-    <title>制空シミュレータ(試)</title>
-    <meta name="description" content="艦これの制空に関するシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りに対応。">
+    <title>制空シミュレータ.n</title>
+    <meta name="description" content="「艦これ」の出撃時の制空に関するシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや防空に対応しています。">
     <meta name="viewport" content="width=526, shrink-to-fit=no">
     <meta charset="utf-8">
 
     <!-- css -->
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/Index.css">
     <link rel="stylesheet" href="./css/all.min.css">
     <script src="./js/jquery-3.4.1.min.js"></script>
     <script src="./js/jquery-ui.min.js"></script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="./js/jquery.ui.touch-punch.js"></script>
+    <script src="./js/d3.v5.min.js"></script>
+    <script src="./js/sortable.js"></script>
     <script src="./js/data.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/Sortable.js"></script>
-    <script src="./js/jquery.ui.touch-punch.js"></script>
+    <script src="./js/bootstrap.bundle.js"></script>
 </head>
 
 <body data-spy="scroll" data-target="#Navbar" data-offset="380">
@@ -30,7 +31,7 @@
                 <div></div>
             </div>
         </div>
-        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ(試)</a>
+        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ.n</a>
         <!-- <input class="d-none d-xl-block form-control form-control-dark w-100" type="text" placeholder="検索"> -->
         <ul class="d-none d-xl-block navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -118,7 +119,7 @@
                 <div id="main" style="display: none">
                     <div id="main_header">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
-                            <h1 class="mt-3 ml-1">制空シミュレータ(試)</h1>
+                            <h1 class="mt-3 ml-1">制空シミュレータ.n</h1>
                             <!-- <div class="btn-toolbar mb-2 mb-md-0">
                                 <div class="btn-group mr-2">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">編成保存</button>
@@ -470,8 +471,8 @@
                                                         <div class="pl-2 align-self-center enemy_sumAP sortable_handle">
                                                             敵制空: <span class="enemySumAP">0</span>
                                                         </div>
-                                                        <div class="ml-auto btnPreset btnEnemyPreset btn_icon pt-1"
-                                                            data-toggle="tooltip" title="プリセット"
+                                                        <div class="ml-auto btnPreset btn_enemy_preset btn_icon pt-1"
+                                                            data-toggle="tooltip" title="海域から敵艦隊を選択"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-toolbox"></i>
                                                         </div>
@@ -612,9 +613,11 @@
                                                 <tr>
                                                     <td class="info_name">航空隊</td>
                                                     <td>装備名</td>
-                                                    <td class="lb_info_slot">搭載</td>
+                                                    <td class="info_slot">搭載</td>
                                                     <td colspan="2">制空値</td>
-                                                    <td class="lb_info_range">半径</td>
+                                                    <td class="info_range">半径</td>
+                                                    <td class="info_defAp d-none">総制空値</td>
+                                                    <td class="info_defAp d-none">対重爆</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -714,8 +717,8 @@
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
-                                <div class="pt-2 mx-2">
-                                    <div><i class="fas fa-wrench mr-1"></i>操作設定</div>
+                                <div class="py-2 mx-2">
+                                    <div><i class="fas fa-wrench mr-2"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
                                         <input class="custom-control-input" type="checkbox" id="copyPlane">
                                         <label class="custom-control-label" for="copyPlane">
@@ -723,8 +726,8 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="my-3 mx-2">
-                                    <div><i class="fas fa-wrench mr-1"></i>シミュレート全般</div>
+                                <div class="my-2 mx-2">
+                                    <div><i class="fas fa-calculator mr-2"></i>シミュレート全般</div>
                                     <div class="ml-3 mt-2 d-flex">
                                         <div class="align-self-center">熟練度</div>
                                         <div class="align-self-center">
@@ -799,6 +802,20 @@
                                     <div class="ml-4">
                                         増やすと精度は上がりますが、処理に時間がかかります。
                                         処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。</div>
+                                </div>
+                                <div class="py-2 mx-2">
+                                    <div><i class="fas fa-desktop mr-2"></i>表示設定</div>
+                                    <div class="custom-control custom-checkbox ml-3 mt-2">
+                                        <input class="custom-control-input" type="checkbox" id="copyPlane">
+                                        <label class="custom-control-label" for="copyPlane">
+                                            機体D&amp;D時、交換の代わりに複製を行う
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mt-5 mx-2 border-top"></div>
+                                <div class="my-2 mx-2 ">
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        id="btn_reset_localStrage">設定削除</button>
                                 </div>
                             </div>
                         </div>
@@ -1002,6 +1019,58 @@
         </div>
     </div>
 
+    <!-- 海域選択モーダル -->
+    <div class="modal fade" id="modal_enemy_pattern" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">敵艦隊一括入力</h5>
+                    <p class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid px-0">
+                        <div class="row">
+                            <div class="col-4 pr-1">
+                                <select class="custom-select custom-select-sm" id="world_select">
+                                    <option value="1" selected>鎮守府海域</option>
+                                    <option value="2">南西諸島海域</option>
+                                    <option value="3">北方海域</option>
+                                    <option value="7">南西海域</option>
+                                    <option value="4">西方海域</option>
+                                    <option value="5">南方海域</option>
+                                    <option value="6">中部海域</option>
+                                    <option value="99">イベント海域</option>
+                                </select>
+                            </div>
+                            <div class="col pl-0">
+                                <select class="custom-select custom-select-sm" id="map_select"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-top mt-2" id="enemy_pattern_content">
+                        <!-- <img src="img/map/3_2.png" class="map_img"> -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="overflow-auto" id="node_tbody"></div>
+                            </div>
+                            <div class="col border-left d-flex flex-column">
+                                <div id="enemy_pattern_table">
+                                    <div id="enemy_pattern_tbody"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" id="btn_expand_enemies">敵艦隊展開</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 艦載機プリセットモーダル -->
     <div class="modal fade" id="modal_plane_preset" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -1017,7 +1086,7 @@
                         <div class="col preset_list">
                             <div class="preset_table bg-white">
                                 <div class="preset_thead border-bottom pb-2 mb-2 w-100">
-                                    <div class="preset_tr py-1 text-center" id="btn_create_preset" data-presetid="-1">
+                                    <div class="preset_tr py-1 text-center btn_create_preset" data-presetid="-1">
                                         <div>現在の装備をプリセットに登録</div>
                                     </div>
                                 </div>
@@ -1064,12 +1133,12 @@
     </div>
 
     <!-- VERSION更新通知 -->
-    <div class="modal fade" id="versionInfomationModal" tabindex="-1">
+    <div class="modal fade" id="modal_version_inform" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content mt-5">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        制空シミュレータ(試) v.<span id="version">0.0.0</span></h5>
+                        制空シミュレータ.n v.<span id="version">0.0.0</span></h5>
                     <p class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </p>
@@ -1095,8 +1164,30 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- 確認アラートモーダル -->
+    <div class="modal fade" id="modal_confirm" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mt-5">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        確認
+                    </h5>
+                    <p class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </p>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <div class="ml-auto">
+                        <button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">OK</button>
+                    </div>
+                    <div class="ml-2">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

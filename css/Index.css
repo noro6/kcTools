@@ -908,8 +908,7 @@ input[type="radio"] {
 .plane_preset_content{
   font-size: 12px;
 }
-
-#btn_create_preset {
+.btn_create_preset {
   height: 30px;
   width: 100%;
   display: table;
@@ -917,10 +916,10 @@ input[type="radio"] {
   border-radius: .25rem;
   transition: .2s;
 }
-#btn_create_preset:hover {
+.btn_create_preset:hover {
   background-color: #eee;
 }
-#btn_create_preset > div {
+.btn_create_preset > div {
   display: table-cell;
   vertical-align: middle;
 }
@@ -929,7 +928,6 @@ input[type="radio"] {
   height: 320px;
 }
 .preset_tr {
-  height: 42px;
   width: 100%;
   cursor: pointer;
   transition: .2s;
@@ -966,6 +964,35 @@ input[type="radio"] {
 .preset_preview_td_info {
   -ms-flex-item-align: center;
   align-self: center;
+}
+
+/* 海域選択欄 */
+.map_img {
+  width: 466px;
+  height: auto;
+}
+#node_tbody{
+  height: 320px;
+}
+.node_tr {
+  width: 100%;
+  cursor: pointer;
+  transition: .2s;
+  border-radius: .25rem;
+}
+.node_tr:hover {
+  background-color: #eee;
+}
+.node_index {
+  text-align: right;
+  width: 18px;
+}
+.node_selected {
+  color: #fff !important;
+  background-color: rgb(122, 195, 255) !important;
+}
+.enemy_pattern_tr {
+  height: 52px;
 }
 
 /* 艦戦の色など */
@@ -1143,16 +1170,20 @@ input[type="radio"] {
   border-left:1px #e9ecef solid;
   border-bottom: 1px #b8b8b8 solid;
 }
-#lb_info_table .info_range {
+.info_table .info_range {
   width: 72px;
   border-left:1px #e9ecef solid;
   border-bottom: 1px #b8b8b8 solid;
 }
-
-#ship_info_table tbody .last_slot {
+.info_table .info_defAp {
+  width: 72px;
+  border-left:1px #e9ecef solid;
   border-bottom: 1px #b8b8b8 solid;
 }
-#ship_info_table tbody .info_fleetAp {
+.info_table tbody .last_slot {
+  border-bottom: 1px #b8b8b8 solid;
+}
+.info_table tbody .info_fleetAp {
   width: 72px;
   border-left:1px #e9ecef solid;
   border-bottom:1px #b8b8b8 solid;
@@ -1265,6 +1296,10 @@ input[type="radio"] {
 
 #calucCount {
   width: 96px;
+}
+
+.btn_ok {
+  width: 72px;
 }
 
 .text_existTooltip {
