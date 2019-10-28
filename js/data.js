@@ -2,7 +2,7 @@
     ますたでーた
 ==================================*/
 // 制空状態
-const airStatus = [
+const AIR_STATUS = [
   { id: 0, name: '制空権確保', abbr: '確保', rate: 10 },
   { id: 1, name: '航空優勢', abbr: '優勢', rate: 8 },
   { id: 2, name: '航空均衡', abbr: '均衡', rate: 6 },
@@ -12,7 +12,7 @@ const airStatus = [
 ];
 
 // 機体カテゴリ
-const planeType = [
+const PLANE_TYPE = [
   { id: 1, name: '艦上戦闘機' },
   { id: -1, name: '夜間戦闘機' },
   { id: 2, name: '艦上攻撃機' },
@@ -32,7 +32,7 @@ const planeType = [
 ]
 
 // 機体
-const planeData = [
+const PLANE_DATA = [
   { id: 19, type: 1, name: "九六式艦戦", AA: 3, range: 3, IP: 0, AB: 0, imp: true, LOS: 0, cost: 3, abbr: '' },
   { id: 20, type: 1, name: "零式艦戦21型", AA: 5, range: 7, IP: 0, AB: 0, imp: true, LOS: 0, cost: 4, abbr: '' },
   { id: 21, type: 1, name: "零式艦戦52型", AA: 6, range: 6, IP: 0, AB: 0, imp: true, LOS: 0, cost: 5, abbr: '' },
@@ -187,7 +187,7 @@ const planeData = [
 ];
 
 // 艦種リスト
-const shipType = [
+const SHIP_TYPE = [
   { id: 1, name: '正規空母' },
   { id: 2, name: '装甲空母' },
   { id: 3, name: '軽空母' },
@@ -211,7 +211,7 @@ const shipType = [
 ]
 
 // 艦種毎装備可能カテゴリ(最低限)
-const typelink_Ship_Equip = [
+const LINK_SHIP_EQUIPMENT = [
   { type: 1, e_type: [1, 2, 3, 4] },
   { type: 2, e_type: [1, 2, 3, 4] },
   { type: 3, e_type: [1, 2, 3, 4] },
@@ -229,7 +229,7 @@ const typelink_Ship_Equip = [
 ]
 
 // 特定の艦娘が特別に装備できるやつ
-const specialLink_ship_equipment = [
+const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 速吸改に 艦攻
   { shipId: 10260, equipmentTypes: [2], equipmentIds: [] },
   // 秋津洲(改)に 大型飛行艇
@@ -281,7 +281,7 @@ const specialLink_ship_equipment = [
 ]
 
 // 艦娘
-const shipData = [
+const SHIP_DATA = [
   { id: 6, type: 1, name: "赤城", slot: [18, 18, 27, 10], final: 0, orig: 6 },
   { id: 7, type: 1, name: "加賀", slot: [18, 18, 45, 12], final: 0, orig: 7 },
   { id: 8, type: 1, name: "蒼龍", slot: [12, 27, 18, 7], final: 0, orig: 8 },
@@ -427,7 +427,7 @@ const shipData = [
 ]
 
 // 艦種
-const enemyType = [
+const ENEMY_TYPE = [
   { id: 1, name: '正規空母' },
   { id: 2, name: '軽空母' },
   { id: 3, name: '戦艦' },
@@ -442,7 +442,7 @@ const enemyType = [
 ]
 
 // 敵艦
-const enemyData = [
+const ENEMY_DATA = [
   { id: -1, type: [1, 2, 3, 4, 5, 6, 7, 10, 11, 1000, 1908], name: "直接入力", slot: [], aa: [], orig: -1, isSpR: false },
   { id: 9, type: [4], name: "重巡リ級", slot: [3], aa: [1], orig: 9, isSpR: true },
   { id: 10, type: [2], name: "軽母ヌ級", slot: [18], aa: [2], orig: 10, isSpR: false },
@@ -590,7 +590,7 @@ const enemyData = [
 ];
 
 // 海域
-const mapData = [
+const MAP_DATA = [
   // { world: 1, map: 1, name: '鎮守府正面海域' },
   // { world: 1, map: 2, name: '南西諸島沖' },
   // { world: 1, map: 3, name: '製油所地帯沿岸' },
@@ -630,96 +630,96 @@ const mapData = [
 ];
 
 // 戦闘マス
-const enemyPattern = [
-  { world: 1, map: 4, name: 'H', enemies: [10, 10] },
-  { world: 1, map: 4, name: 'I', enemies: [10, 10] },
-  { world: 1, map: 4, name: 'J', enemies: [10, 10] },
-  { world: 1, map: 4, name: 'ボス', enemies: [12, 12] },
-  { world: 1, map: 5, name: 'I', enemies: [28] },
-  { world: 1, map: 6, name: 'B', enemies: [23] },
-  { world: 1, map: 6, name: 'D', enemies: [79, 23, 23] },
-  { world: 1, map: 6, name: 'F', enemies: [28, 25] },
-  { world: 1, map: 6, name: 'J', enemies: [65, 10, 10] },
-  { world: 1, map: 6, name: 'L', enemies: [79, 79, 23] },
-  { world: 2, map: 1, name: 'A', enemies: [23] },
-  { world: 2, map: 1, name: 'D', enemies: [23, 23] },
-  { world: 2, map: 1, name: 'F', enemies: [25, 25] },
-  { world: 2, map: 1, name: 'ボス', enemies: [25, 25] },
-  { world: 2, map: 2, name: 'ボス', enemies: [25] },
-  { world: 2, map: 3, name: 'ボス', enemies: [25, 25] },
-  { world: 2, map: 4, name: 'F', enemies: [23, 23] },
-  { world: 2, map: 4, name: 'L', enemies: [28, 28] },
-  { world: 2, map: 4, name: 'M', enemies: [28, 28] },
-  { world: 2, map: 5, name: 'C', enemies: [60] },
-  { world: 2, map: 5, name: 'L', enemies: [28, 23, 23] },
-  { world: 2, map: 5, name: 'ボス', enemies: [28] },
-  { world: 3, map: 1, name: 'D', enemies: [60] },
-  { world: 3, map: 1, name: 'ボス', enemies: [28] },
-  { world: 3, map: 2, name: 'A', enemies: [23] },
-  { world: 3, map: 2, name: 'K', enemies: [28, 28] },
-  { world: 3, map: 3, name: 'E', enemies: [23, 23, 23] },
-  { world: 3, map: 3, name: 'G', enemies: [28, 23] },
-  { world: 3, map: 3, name: 'ボス', enemies: [23] },
-  { world: 3, map: 4, name: 'C', enemies: [23] },
-  { world: 3, map: 4, name: 'G', enemies: [28] },
-  { world: 3, map: 4, name: 'M', enemies: [60, 60] },
-  { world: 3, map: 4, name: 'N', enemies: [60, 60] },
-  { world: 3, map: 4, name: 'ボス', enemies: [28, 28] },
-  { world: 3, map: 5, name: 'D（司令Lv90以上）', enemies: [65, 79, 28] },
-  { world: 3, map: 5, name: 'D（司令Lv89以下）', enemies: [65, 79] },
-  { world: 3, map: 5, name: 'E（最終）', enemies: [60] },
-  { world: 3, map: 5, name: 'G（最終）', enemies: [60] },
-  { world: 3, map: 5, name: 'H（司令Lv85以上、前哨）', enemies: [87, 49, 50, 51, 50, 51] },
-  { world: 3, map: 5, name: 'H（司令Lv85以上、最終）', enemies: [88, 49, 50, 51, 50, 51] },
-  { world: 3, map: 5, name: 'H（司令Lv84以下、前哨）', enemies: [89, 49, 50, 51, 50, 51] },
-  { world: 3, map: 5, name: 'H（司令Lv84以下、最終）', enemies: [90, 49, 50, 51, 50, 51] },
-  { world: 4, map: 1, name: 'ボス', enemies: [23] },
-  { world: 4, map: 2, name: 'C', enemies: [60] },
-  { world: 4, map: 2, name: 'D', enemies: [28, 28] },
-  { world: 4, map: 2, name: 'E', enemies: [60] },
-  { world: 4, map: 2, name: 'ボス', enemies: [28] },
-  { world: 4, map: 3, name: 'F', enemies: [28, 23] },
-  { world: 4, map: 3, name: 'H', enemies: [23] },
-  { world: 4, map: 3, name: 'I', enemies: [23] },
-  { world: 4, map: 3, name: 'ボス', enemies: [73, 60] },
-  { world: 4, map: 4, name: 'F', enemies: [28, 23] },
-  { world: 4, map: 4, name: 'G', enemies: [23] },
-  { world: 4, map: 4, name: 'H', enemies: [28] },
-  { world: 4, map: 4, name: 'ボス', enemies: [45] },
-  { world: 4, map: 5, name: 'K', enemies: [79, 79] },
-  { world: 4, map: 5, name: 'S', enemies: [60] },
-  { world: 4, map: 5, name: 'ボス（前哨）', enemies: [73, 50, 51] },
-  { world: 4, map: 5, name: 'ボス（最終）', enemies: [113, 50, 51] },
-  { world: 5, map: 1, name: 'D', enemies: [79, 79, 60] },
-  { world: 5, map: 1, name: 'F', enemies: [23] },
-  { world: 5, map: 1, name: 'G', enemies: [23] },
-  { world: 5, map: 1, name: 'ボス', enemies: [79, 79] },
-  { world: 5, map: 2, name: 'C', enemies: [79, 79] },
-  { world: 5, map: 2, name: 'E', enemies: [79] },
-  { world: 5, map: 2, name: 'F', enemies: [79] },
-  { world: 5, map: 2, name: 'I', enemies: [119, 65] },
-  { world: 5, map: 2, name: 'L', enemies: [79, 79] },
-  { world: 5, map: 2, name: 'ボス', enemies: [119] },
-  { world: 5, map: 3, name: 'M', enemies: [79, 79, 79] },
-  { world: 5, map: 3, name: 'ボス', enemies: [48, 60, 60] },
-  { world: 5, map: 4, name: 'G', enemies: [115, 115] },
-  { world: 5, map: 4, name: 'ボス', enemies: [264] },
-  { world: 5, map: 5, name: 'H', enemies: [65, 65] },
-  { world: 5, map: 5, name: 'J', enemies: [65, 65] },
-  { world: 5, map: 5, name: 'K', enemies: [65, 65, 60] },
-  { world: 5, map: 5, name: 'P', enemies: [62] },
-  { world: 5, map: 5, name: 'ボス（クリア前）', enemies: [48, 62, 62] },
-  { world: 5, map: 5, name: 'ボス（クリア後）', enemies: [65, 28, 62] },
-  { world: 6, map: 1, name: 'C', enemies: [60] },
-  { world: 6, map: 1, name: 'I', enemies: [85, 79] },
-  { world: 6, map: 1, name: 'ボス', enemies: [79] },
-  { world: 6, map: 2, name: 'B', enemies: [23, 23] },
-  { world: 6, map: 2, name: 'C', enemies: [60, 60] },
-  { world: 6, map: 2, name: 'F', enemies: [79, 79] },
-  { world: 6, map: 2, name: 'H', enemies: [60] },
-  { world: 6, map: 2, name: 'I', enemies: [60] },
-  { world: 6, map: 2, name: 'J', enemies: [65] },
-  { world: 6, map: 2, name: 'ボス', enemies: [79] },
+const ENEMY_PATTERN = [
+  { world: 1, map: 4, name: 'H', enemies: [10, 10], range: 0 },
+  { world: 1, map: 4, name: 'I', enemies: [10, 10], range: 0 },
+  { world: 1, map: 4, name: 'J', enemies: [10, 10], range: 0 },
+  { world: 1, map: 4, name: 'ボス', enemies: [12, 12], range: 0 },
+  { world: 1, map: 5, name: 'I', enemies: [28], range: 0 },
+  { world: 1, map: 6, name: 'B', enemies: [23], range: 0 },
+  { world: 1, map: 6, name: 'D', enemies: [79, 23, 23], range: 0 },
+  { world: 1, map: 6, name: 'F', enemies: [28, 25], range: 0 },
+  { world: 1, map: 6, name: 'J', enemies: [65, 10, 10], range: 0 },
+  { world: 1, map: 6, name: 'L', enemies: [79, 79, 23], range: 0 },
+  { world: 2, map: 1, name: 'A', enemies: [23], range: 0 },
+  { world: 2, map: 1, name: 'D', enemies: [23, 23], range: 0 },
+  { world: 2, map: 1, name: 'F', enemies: [25, 25], range: 0 },
+  { world: 2, map: 1, name: 'ボス', enemies: [25, 25], range: 0 },
+  { world: 2, map: 2, name: 'ボス', enemies: [25], range: 0 },
+  { world: 2, map: 3, name: 'ボス', enemies: [25, 25], range: 0 },
+  { world: 2, map: 4, name: 'F', enemies: [23, 23], range: 0 },
+  { world: 2, map: 4, name: 'L', enemies: [28, 28], range: 0 },
+  { world: 2, map: 4, name: 'M', enemies: [28, 28], range: 0 },
+  { world: 2, map: 5, name: 'C', enemies: [60], range: 0 },
+  { world: 2, map: 5, name: 'L', enemies: [28, 23, 23], range: 0 },
+  { world: 2, map: 5, name: 'ボス', enemies: [28], range: 0 },
+  { world: 3, map: 1, name: 'D', enemies: [60], range: 0 },
+  { world: 3, map: 1, name: 'ボス', enemies: [28], range: 0 },
+  { world: 3, map: 2, name: 'A', enemies: [23], range: 0 },
+  { world: 3, map: 2, name: 'K', enemies: [28, 28], range: 0 },
+  { world: 3, map: 3, name: 'E', enemies: [23, 23, 23], range: 0 },
+  { world: 3, map: 3, name: 'G', enemies: [28, 23], range: 0 },
+  { world: 3, map: 3, name: 'ボス', enemies: [23], range: 0 },
+  { world: 3, map: 4, name: 'C', enemies: [23], range: 0 },
+  { world: 3, map: 4, name: 'G', enemies: [28], range: 0 },
+  { world: 3, map: 4, name: 'M', enemies: [60, 60], range: 0 },
+  { world: 3, map: 4, name: 'N', enemies: [60, 60], range: 0 },
+  { world: 3, map: 4, name: 'ボス', enemies: [28, 28], range: 0 },
+  { world: 3, map: 5, name: 'D（司令Lv90以上）', enemies: [65, 79, 28], range: 0 },
+  { world: 3, map: 5, name: 'D（司令Lv89以下）', enemies: [65, 79], range: 0 },
+  { world: 3, map: 5, name: 'E（最終）', enemies: [60], range: 0 },
+  { world: 3, map: 5, name: 'G（最終）', enemies: [60], range: 0 },
+  { world: 3, map: 5, name: 'H（司令Lv85以上、前哨）', enemies: [87, 49, 50, 51, 50, 51], range: 0 },
+  { world: 3, map: 5, name: 'H（司令Lv85以上、最終）', enemies: [88, 49, 50, 51, 50, 51], range: 0 },
+  { world: 3, map: 5, name: 'H（司令Lv84以下、前哨）', enemies: [89, 49, 50, 51, 50, 51], range: 0 },
+  { world: 3, map: 5, name: 'H（司令Lv84以下、最終）', enemies: [90, 49, 50, 51, 50, 51], range: 0 },
+  { world: 4, map: 1, name: 'ボス', enemies: [23], range: 0 },
+  { world: 4, map: 2, name: 'C', enemies: [60], range: 0 },
+  { world: 4, map: 2, name: 'D', enemies: [28, 28], range: 0 },
+  { world: 4, map: 2, name: 'E', enemies: [60], range: 0 },
+  { world: 4, map: 2, name: 'ボス', enemies: [28], range: 0 },
+  { world: 4, map: 3, name: 'F', enemies: [28, 23], range: 0 },
+  { world: 4, map: 3, name: 'H', enemies: [23], range: 0 },
+  { world: 4, map: 3, name: 'I', enemies: [23], range: 0 },
+  { world: 4, map: 3, name: 'ボス', enemies: [73, 60], range: 0 },
+  { world: 4, map: 4, name: 'F', enemies: [28, 23], range: 0 },
+  { world: 4, map: 4, name: 'G', enemies: [23], range: 0 },
+  { world: 4, map: 4, name: 'H', enemies: [28], range: 0 },
+  { world: 4, map: 4, name: 'ボス', enemies: [45], range: 0 },
+  { world: 4, map: 5, name: 'K', enemies: [79, 79], range: 0 },
+  { world: 4, map: 5, name: 'S', enemies: [60], range: 0 },
+  { world: 4, map: 5, name: 'ボス（前哨）', enemies: [73, 50, 51], range: 0 },
+  { world: 4, map: 5, name: 'ボス（最終）', enemies: [113, 50, 51], range: 0 },
+  { world: 5, map: 1, name: 'D', enemies: [79, 79, 60], range: 0 },
+  { world: 5, map: 1, name: 'F', enemies: [23], range: 0 },
+  { world: 5, map: 1, name: 'G', enemies: [23], range: 0 },
+  { world: 5, map: 1, name: 'ボス', enemies: [79, 79], range: 0 },
+  { world: 5, map: 2, name: 'C', enemies: [79, 79], range: 0 },
+  { world: 5, map: 2, name: 'E', enemies: [79], range: 0 },
+  { world: 5, map: 2, name: 'F', enemies: [79], range: 0 },
+  { world: 5, map: 2, name: 'I', enemies: [119, 65], range: 0 },
+  { world: 5, map: 2, name: 'L', enemies: [79, 79], range: 0 },
+  { world: 5, map: 2, name: 'ボス', enemies: [119], range: 0 },
+  { world: 5, map: 3, name: 'M', enemies: [79, 79, 79], range: 0 },
+  { world: 5, map: 3, name: 'ボス', enemies: [48, 60, 60], range: 0 },
+  { world: 5, map: 4, name: 'G', enemies: [115, 115], range: 0 },
+  { world: 5, map: 4, name: 'ボス', enemies: [264], range: 0 },
+  { world: 5, map: 5, name: 'H', enemies: [65, 65], range: 0 },
+  { world: 5, map: 5, name: 'J', enemies: [65, 65], range: 0 },
+  { world: 5, map: 5, name: 'K', enemies: [65, 65, 60], range: 0 },
+  { world: 5, map: 5, name: 'P', enemies: [62], range: 0 },
+  { world: 5, map: 5, name: 'ボス（クリア前）', enemies: [48, 62, 62], range: 0 },
+  { world: 5, map: 5, name: 'ボス（クリア後）', enemies: [65, 28, 62], range: 0 },
+  { world: 6, map: 1, name: 'C', enemies: [60], range: 0 },
+  { world: 6, map: 1, name: 'I', enemies: [85, 79], range: 0 },
+  { world: 6, map: 1, name: 'ボス', enemies: [79], range: 0 },
+  { world: 6, map: 2, name: 'B', enemies: [23, 23], range: 0 },
+  { world: 6, map: 2, name: 'C', enemies: [60, 60], range: 0 },
+  { world: 6, map: 2, name: 'F', enemies: [79, 79], range: 0 },
+  { world: 6, map: 2, name: 'H', enemies: [60], range: 0 },
+  { world: 6, map: 2, name: 'I', enemies: [60], range: 0 },
+  { world: 6, map: 2, name: 'J', enemies: [65], range: 0 },
+  { world: 6, map: 2, name: 'ボス', enemies: [79], range: 0 },
   { world: 6, map: 4, name: 'C', enemies: [29, 29, 55, 23], range: 3 },
   { world: 6, map: 4, name: 'D', enemies: [169], range: 2 },
   { world: 6, map: 4, name: 'E', enemies: [27], range: 2 },
@@ -744,14 +744,68 @@ const enemyPattern = [
   { world: 6, map: 5, name: 'I', enemies: [60, 60, 92], range: 3 },
   { world: 6, map: 5, name: 'I（最終）', enemies: [60, 60, 55, 92], range: 3 },
   { world: 6, map: 5, name: 'ボス', enemies: [86, 115, 115, 92, 55, 27, 27], range: 5 },
-  { world: 7, map: 1, name: 'B', enemies: [60] },
-  { world: 7, map: 1, name: 'C', enemies: [79] },
-  { world: 7, map: 2, name: 'H', enemies: [118, 279, 23] },
-  { world: 7, map: 2, name: 'ボス', enemies: [118, 279] },
+  { world: 7, map: 1, name: 'B', enemies: [60], range: 0 },
+  { world: 7, map: 1, name: 'C', enemies: [79], range: 0 },
+  { world: 7, map: 2, name: 'H', enemies: [118, 279, 23], range: 0 },
+  { world: 7, map: 2, name: 'ボス', enemies: [118, 279], range: 0 },
 ];
 
 /** 変更履歴 */
-const changeLog = [
-  { id: '0.0.0', changes: ["履歴表示を行うことにした！！！！"] },
-  { id: '0.0.1', changes: ["艦娘選択欄の複数行表示対応を行いました。", "防空時のレイアウトの調整を行いました。"] },
+const CHANGE_LOG = [
+  { id: '0.0.1', changes: ["設置"] },
+  { id: '1.0.0', changes: ["艦娘制空計算機能を実装しました。"] },
+  {
+    id: '1.0.1', changes: [
+      "5スロット艦に対応しました。",
+      "艦娘単位の制空値を表示するようにしました。",
+      "艦娘を12隻まで設定できるようになりました。",
+    ]
+  },
+  {
+    id: '1.1.0', changes: [
+      "基地航空隊を新設しました。集中、単発、待機から選択可能です。",
+      "基地航空隊による敵機撃墜を考慮できるようになりました。",
+    ]
+  },
+  {
+    id: '1.1.1', changes: [
+      "敵艦の制空値直接入力に対応しました。"
+    ]
+  },
+  {
+    id: '1.1.2', changes: [
+      "機体のドラッグ&ドロップによる入れ替えが可能になりました。<br>　入れ替えたい機体の機体アイコン、または機体名付近をドラッグしてください。"
+    ]
+  },
+  {
+    id: '1.1.3', changes: [
+      "艦娘間の装備入れ替えについて、適合しない装備を考慮するようになりました。",
+      "機体をドロップした際に、その機体を複製できるようになりました。<br>　Ctrlキー、または詳細設定欄から、入れ替えと複製を切り替え可能です。"
+    ]
+  },
+  { id: '1.1.4', changes: ["出撃、配備時の資源消費を確認できるようになりました。"] },
+  {
+    id: '1.2.0', changes: [
+      "防空に対応しました。",
+      "いずれかの航空隊を「防空」に設定すると、<br>他の航空隊で「集中」「単発」に設定するまで防空モードとなります。"]
+  },
+  {
+    id: '1.2.1', changes: [
+      "防空時の資源消費に対応しました。(全部0)",
+      "機体プリセット機能を追加しました。",
+    ]
+  },
+  {
+    id: '1.3.0', changes: [
+      "道中における、自艦隊の被撃墜に対応しました。",
+      "防空時において、対重爆時の制空値計算に対応しました。"
+    ]
+  },
+  {
+    id: '1.3.1', changes: [
+      "機体、艦娘、および敵艦の選択画面の複数列表示が可能になりました。",
+      "海域一覧からの敵艦隊入力に対応しました。",
+      "ドラッグ&ドロップで、戦闘順を入れ替えられるようになりました。<br>　入れ替える場合は、各戦闘回数付近をドラッグしてください。",
+    ]
+  },
 ];
