@@ -989,7 +989,7 @@ input[type="radio"] {
   height: auto;
 }
 #node_tbody{
-  height: 320px;
+  height: 380px;
 }
 .node_tr {
   width: 100%;
@@ -1009,7 +1009,7 @@ input[type="radio"] {
   background-color: rgb(122, 195, 255) !important;
 }
 .enemy_pattern_tr {
-  height: 52px;
+  height: 46px;
 }
 
 /* 艦戦の色など */
@@ -1345,4 +1345,87 @@ input[type="radio"] {
 
 .airStatus4 {
   background: linear-gradient(.25turn, transparent, rgba(255, 100, 100, .1), transparent);
+}
+
+.progress_label {
+  text-align: right;
+  font-size: 12px;
+  width: 80px;
+}
+.progress {
+  background-color: whitesmoke;
+  height: 8px;
+}
+.result_bar {
+  color: #000;
+  font-size: 11px;
+  text-align: right;
+  cursor: pointer;
+}
+.bar_status0 {
+  background-color:rgba(60, 170, 30, 0.4);
+  border:1px solid rgba(60, 170, 30, 0.8);
+}
+.bar_status0:hover {
+  background-color:rgba(60, 170, 30, 0.8);
+}
+.bar_status1 {
+  background-color:rgba(140, 205, 150, 0.4);
+  border:1px solid rgba(140, 205, 150, 0.8);
+}
+.bar_status1:hover {
+  background-color:rgba(140, 205, 150, 0.8);
+}
+.bar_status2 {
+  background-color:rgba(255, 255, 20, 0.4);
+  border:1px solid rgba(255, 255, 20, 0.8);
+}
+.bar_status2:hover {
+  background-color:rgba(255, 255, 20, 0.8);
+}
+.bar_status3 {
+  background-color:rgba(255, 150, 50, 0.4);
+  border:1px solid rgba(255, 150, 50, 0.8);
+}
+.bar_status3:hover {
+  background-color:rgba(255, 150, 50, 0.8);
+}
+.bar_status4 {
+  background-color: rgba(255, 80, 80, 0.4);
+  border:1px solid rgba(255, 80, 80, 0.8);
+}
+.bar_status4:hover {
+  background-color: rgba(255, 80, 80, 0.8);
+}
+
+/* 制空状態ゲージ 凡例 */
+.bar_ex_label {
+  text-align: center;
+  border-bottom: 1px solid #000;
+  margin-bottom: 2px;
+  font-size: 11px;
+  color: #555;
+}
+.bar_divide {
+  height: 8px;
+  border-left:1px solid #000;
+  margin-bottom: 2px;
+}
+.result_bar_ex {
+  height: 4px;
+}
+.bar_ex_status0 {
+  background-color:rgba(60, 170, 30, 0.8);
+}
+.bar_ex_status1 {
+  background-color:rgba(140, 205, 150, 0.8);
+}
+.bar_ex_status2 {
+  background-color:rgba(255, 255, 20, 0.8);
+}
+.bar_ex_status3 {
+  background-color:rgba(255, 150, 50, 0.8);
+}
+.bar_ex_status4 {
+  background-color: rgba(255, 80, 80, 0.8);
 }

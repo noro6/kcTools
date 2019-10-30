@@ -447,12 +447,16 @@
                                             </select>
                                             <div class="ml-1 align-self-center">戦目</div>
                                         </div>
+                                        <div class="alert alert-warning lb_range_warning py-2 mb-1 d-none">
+                                            第<span class="ng_range">1</span>基地航空隊の半径が不足しています。
+                                            <span class="font_size_12">計算は通常通り行います。</span>
+                                        </div>
                                         <div class="enemy_tab">
-                                            <div class="d-flex flex-wrap battle_container">
+                                            <div class="d-flex flex-wrap" id="battle_container">
                                                 <div class="battle_content bg-white px-1 py-1 mx-1 my-2">
                                                     <div class="d-flex">
-                                                        <div class="ml-2 align-self-center sortable_handle">
-                                                            <span class="battleNo">1</span>戦目
+                                                        <div class="pl-2 flex-grow-1 align-self-center sortable_handle">
+                                                            <span class="battle_no">1</span>戦目
                                                         </div>
                                                         <div class="ml-auto align-self-center btn_preset btn_enemy_preset btn_icon"
                                                             data-toggle="tooltip" title="海域から敵艦隊を選択"
@@ -465,14 +469,13 @@
                                                             <i class="fas fa-trash-alt"></i>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="border-bottom sortable_handle d-flex font_size_12 pb-2 px-2">
-                                                        <div>
-                                                            敵制空：<span class="enemy_sum_ap">0</span>
-                                                            (<span class="enemy_sum_lbap">0</span>)
-                                                        </div>
-                                                        <div class="ml-auto">
+                                                    <div class="border-bottom sortable_handle d-flex pb-2 px-2">
+                                                        <div class="ml-auto font_size_12">
                                                             半径：<span class="enemy_range">0</span>
+                                                        </div>
+                                                        <div class="ml-3 font_size_12">
+                                                            総制空値：<span class="enemy_sum_ap">0</span>
+                                                            (<span class="enemy_sum_lbap">0</span>)
                                                         </div>
                                                     </div>
                                                     <div class="enemyFleet_item py-1 px-1">
@@ -572,8 +575,48 @@
                                     </ul>
                                 </div>
                                 <div class="mt-2">
-                                    <!-- 結果バー表示域 -->
-                                    <div class="border" id="result_chart"></div>
+                                    <div class="border d-none" id="result_chart"></div>
+                                </div>
+                                <div class="mt-2 py-2 border rounded">
+                                    <div class="d-flex mx-2">
+                                        <div class="progress_label"></div>
+                                        <div class="d-flex flex-grow-1 font_size_12">
+                                            <div class="bar_ex_label" style="width:10%;">喪失</div>
+                                            <div class="bar_divide align-self-end"></div>
+                                            <div class="bar_ex_label" style="width:10%;">劣勢</div>
+                                            <div class="bar_divide align-self-end"></div>
+                                            <div class="bar_ex_label" style="width:25%;">均衡</div>
+                                            <div class="bar_divide align-self-end"></div>
+                                            <div class="bar_ex_label" style="width:45%;">優勢</div>
+                                            <div class="bar_divide align-self-end"></div>
+                                            <div class="bar_ex_label" style="width:10%;">確保</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mx-2">
+                                        <div class="progress_label"></div>
+                                        <div class="progress result_bar_ex flex-grow-1 align-self-center">
+                                            <div class="progress-bar bar_ex_status4" style="width:10%;"></div>
+                                            <div class="progress-bar bar_ex_status3" style="width:10%;"></div>
+                                            <div class="progress-bar bar_ex_status2" style="width:25%;"></div>
+                                            <div class="progress-bar bar_ex_status1" style="width:45%;"></div>
+                                            <div class="progress-bar bar_ex_status0" style="width:10%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2" id="result_bar">
+                                        <div class="d-flex mx-2 mt-2 progress_area">
+                                            <div class="progress_label pr-2"></div>
+                                            <div class="progress flex-grow-1 align-self-center">
+                                                <div class="progress-bar result_bar" style="width:0%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mx-2 mt-2 progress_area"></div>
+                                        <div class="d-flex mx-2 mt-3 progress_area"></div>
+                                        <div class="d-flex mx-2 mt-2 progress_area"></div>
+                                        <div class="d-flex mx-2 mt-3 progress_area"></div>
+                                        <div class="d-flex mx-2 mt-2 mb-4 progress_area"></div>
+                                        <div class="d-flex mx-2 mt-2 progress_area"></div>
+                                        <div class="d-flex mx-2 mt-2 progress_area"></div>
+                                    </div>
                                 </div>
                                 <div class="mt-2" id="shoot_down_table_content">
                                     <div class="bg-777 font_size_12">各戦闘結果</div>
@@ -1039,14 +1082,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="border-top mt-2" id="enemy_pattern_content">
+                    <div class="border-top mt-2 pt-3" id="enemy_pattern_content">
                         <!-- <img src="img/map/3_2.png" class="map_img"> -->
                         <div class="row">
                             <div class="col">
+                                <div class="mb-2">戦闘マス一覧</div>
                                 <div class="overflow-auto" id="node_tbody"></div>
                             </div>
                             <div class="col border-left d-flex flex-column">
                                 <div id="enemy_pattern_table">
+                                    <div>敵編成</div>
                                     <div id="enemy_pattern_tbody"></div>
                                 </div>
                             </div>
@@ -1173,7 +1218,7 @@
         </div>
     </div>
 
-    <!-- 確認アラートモーダル -->
+    <!-- 更新履歴モーダル -->
     <div class="modal fade" id="modal_site_history" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content mt-5">
