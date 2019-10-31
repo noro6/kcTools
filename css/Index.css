@@ -847,7 +847,7 @@ input[type="radio"] {
 .enemy_name {
   cursor: pointer;
   display: table;
-  width: 168px;
+  width: 160px;
   height: 28px;
   font-size: 12px;
   border-radius: .25rem;
@@ -856,13 +856,12 @@ input[type="radio"] {
   display: table-cell;
   vertical-align: middle;
 }
-
 .enemy_sumAP{
   font-size: 12px;
 }
-
 .enemy_ap {
-  width: 35px;
+  width: 24px;
+  font-size: 12px;
   text-align: right;
 }
 .enemy_ap_form {
@@ -870,7 +869,7 @@ input[type="radio"] {
   text-align: right;
   width: 32px;
   height: 28px;
-  font-size: 0.875rem;
+  font-size: 12px;
   border-top: none;
   border-right: none;
   border-left: none;
@@ -1102,15 +1101,6 @@ input[type="radio"] {
   background-color: rgb(230, 230, 250);
 }
 
-/* 結果表示バー　描画領域 */
-#result_chart {
-  border-radius: .25rem;
-}
-
-#result_chart rect {
-  cursor: pointer;
-}
-
 /* 結果表示バー　ツールチップ */
 .tooltip_resultBar {
   color: #222;
@@ -1206,17 +1196,27 @@ input[type="radio"] {
   border-bottom:1px #b8b8b8 solid;
 }
 
-#lb_battle_table {
+#rate_table {
   font-size: 12px;
   background-color: #fff;
   border-collapse: collapse;
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
-#lb_battle_table td {
-  padding: 0.1rem;
-  border: 1px solid #6c757d;
+#rate_table thead td {
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+}
+#rate_table tbody td {
+  padding: .1rem;
+  border-top:1px #e9ecef solid;
+}
+.rate_td_name {
+  width: 20%;
+}
+.rate_td_normal {
+  width: 10%;
 }
 
 #shoot_down_table {
@@ -1377,11 +1377,11 @@ input[type="radio"] {
   background-color:rgba(140, 205, 150, 0.8);
 }
 .bar_status2 {
-  background-color:rgba(255, 255, 20, 0.4);
-  border:1px solid rgba(255, 255, 20, 0.8);
+  background-color:rgba(255, 255, 80, 0.4);
+  border:1px solid rgba(255, 255,  0, 0.8);
 }
 .bar_status2:hover {
-  background-color:rgba(255, 255, 20, 0.8);
+  background-color:rgba(255, 255, 80, 0.8);
 }
 .bar_status3 {
   background-color:rgba(255, 150, 50, 0.4);

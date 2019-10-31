@@ -235,11 +235,24 @@ function initialize(callback) {
   $('.progress_area').each((i, e) => {
     $(e).find('.result_bar').attr('id', 'result_bar' + (i + 1))
     if (i < 6) $(e).find('.progress_label').text('基地' + (Math.floor(i / 2) + 1) + ' ' + ((i % 2) + 1) + '派目');
-    if (i == 6) $(e).find('.progress_label').text('防空');
-    if (i == 7) $(e).find('.progress_label').text('本隊');
+    if (i == 6) $(e).find('.progress_label').text('本隊');
+    if (i == 7) $(e).find('.progress_label').text('防空');
   });
 
-  // 撃墜テーブルヘッダフッタ生成
+  // 制空状態割合テーブル複製
+  text = $('#rate_table').find('thead').html();
+  for (let index = 0; index < 8; index++) $('#rate_table tbody').append(text);
+  $('#rate_table tbody').find('tr').each((i, e) => {
+    const lb_num = Math.floor(i / 2) + 1;
+    const wave = i % 2 + 1;
+    $(e).attr('id', 'rate_row_' + (i + 1));
+    if (i < 6) $(e).find('.rate_td_name').text('第' + lb_num + '基地航空隊 第' + wave + '派');
+    else if (i === 6) $(e).find('.rate_td_name').text('本隊');
+    else if (i === 7) $(e).find('.rate_td_name').text('防空');
+  });
+
+
+  // 撃墜テーブルヘッダフッタ10戦分生成
   text = '';
   let text1 = '';
   let text2 = '';
@@ -1076,207 +1089,26 @@ function createEnemyTable($table, type) {
 }
 
 /**
- * グラフの描画を行う
- * 確保を100%とした、120%上限あたりの各100分率をグラフ化
+ * 結果表示を行う
  */
-function drawResultBar() {
-  // // グラフ描画域リセット
-  // $('#result_chart').html('');
-
-  // const data = Object.create(chartData);
-  // // それぞれのフェーズにおける制空ボーダーの配列を生成
-  // const border = data.enemy.map(eap => getAirStatusBorder(eap));
-  // const divBase = border.map(value => value[0] === 0 ? 1 : value[0]);
-  // const mainData = data.own.map((ap, i) => ap / divBase[i] * 100);
-  // const svgPadding = { left: 70, right: 20, bottom: 30, top: 20 };
-  // const svgMargin = { left: 0, right: 0, bottom: 0, top: 0 };
-  // const barWidth = 12;
-  // const svgWidth = $('#result_chart').width() - svgMargin.left - svgMargin.right;
-  // const svgHeight = 1.8 * barWidth * (mainData.length) + svgPadding.top + svgPadding.bottom;
-  // const maxRange = 110;
-  // const borderColor = getBarColor(1.0);
-  // const backColor = getBarColor(0.4);
-
-  // // 軸ラベル
-  // let phaseList = [];
-  // if (isDefMode) {
-  //   phaseList = ['防空'];
-  // }
-  // else {
-  //   for (let i = 0; i < data.own.length - 2; i++) {
-  //     // 基地データあり
-  //     phaseList.push('基地' + (Math.floor(i / 2) + 1) + ' ' + (i % 2 + 1) + '波');
-  //   }
-
-  //   if (data.own.length > 1) phaseList.push('');
-  //   phaseList.push('本隊');
-  // }
-
-  // // 軸調整
-  // const xScale = d3.scaleLinear()
-  //   .domain([0, maxRange])
-  //   .range([svgPadding.left, svgWidth - svgPadding.right]);
-  // const yScale = d3.scaleBand()
-  //   .rangeRound([svgPadding.top, svgHeight - svgPadding.bottom])
-  //   .domain(phaseList);
-
-  // // 直前データとの整合性チェック
-  // if (prevData.length != mainData.length) {
-  //   prevData.length = 0;
-  //   for (const i of mainData) prevData.push(0);
-  // }
-
-  // // グラフエリア生成
-  // const svg = d3.select('#result_chart').append('svg')
-  //   .attr('width', svgWidth)
-  //   .attr('height', svgHeight);
-
-  // // x軸
-  // svg.append('g')
-  //   .attr('class', 'axis x_axis')
-  //   .style('color', '#333')
-  //   .style('font-size', '.75em')
-  //   .attr(
-  //     'transform',
-  //     'translate(0,' + (svgHeight - svgPadding.top) + ')'
-  //   )
-  //   .call(
-  //     d3.axisBottom(xScale)
-  //       .tickValues([100, 50, 100 / 4.5, 100 / 9])
-  //       .tickFormat((d, i) => AIR_STATUS[i].abbr)
-  //       .tickSize(-svgHeight + svgPadding.top + svgPadding.bottom - 15)
-  //   );
-
-  // // y軸
-  // svg.append('g')
-  //   .attr('class', 'axis y_axis')
-  //   .style('color', '#333')
-  //   .style('font-size', '.8em')
-  //   .attr("transform", "translate(" + svgPadding.left + ",-6)") // ちょっと上に移動 -6
-  //   .call(d3.axisLeft(yScale));
-
-  // // ツールチップ生成
-  // $('.tooltip_resultBar').remove();
-  // const tooltip = d3.select("body").append("div").attr("class", "tooltip_resultBar");
-
-  // // 各種バー描画
-  // svg.selectAll('svg')
-  //   .data(mainData)
-  //   .enter()
-  //   .append('rect')
-  //   .attr('x', xScale(0))
-  //   .attr('y', (d, i) => yScale(phaseList[i]))
-  //   .attr('width', (d, i) => xScale(prevData[i] > maxRange ? maxRange : prevData[i]) - xScale(0))
-  //   .attr('height', barWidth)
-  //   .style('fill', (d, i) => backColor[getAirStatusIndex(data.own[i], data.enemy[i])])
-  //   .style('stroke', (d, i) => borderColor[getAirStatusIndex(data.own[i], data.enemy[i])])
-  //   .on('mouseover', function (d, i) {
-  //     d3.select(this)
-  //       .attr('style', 'fill:' + getBarColor(0.8)[getAirStatusIndex(data.own[i], data.enemy[i])])
-  //       .style('stroke', borderColor[getAirStatusIndex(data.own[i], data.enemy[i])]);
-
-  //     // 割合表示
-  //     let addText = '';
-
-  //     if (!isDefMode) {
-  //       let target = [];
-  //       const len = data.rate[i].length;
-  //       for (let j = 0; j < len; j++) {
-  //         if (data.rate[i][j] === 0) continue;
-  //         const obj = { status: j, rate: data.rate[i][j] };
-  //         target.push(obj);
-  //       }
-  //       target.sort((a, b) => b.rate - a.rate);
-  //       let dividText = '';
-  //       for (const obj of target) {
-  //         addText += `
-  //         ${dividText}
-  //         <div class="mx-1">
-  //           ${AIR_STATUS.find(v => v.id === obj.status).abbr + '(' + obj.rate + '%)'}
-  //         </div>`;
-  //         dividText = '<div>/</div>';
-  //       }
-  //     }
-
-  //     // ボーダー表示
-  //     let borderText = '';
-  //     const ap = data.own[i];
-  //     const eap = data.enemy[i];
-  //     for (let index = 0; index < AIR_STATUS.length - 2; index++) {
-  //       const val = AIR_STATUS[index];
-  //       const sub = ap - border[i][index];
-  //       borderText += `
-  //       <tr class="text-center tooltip_result_table_thead ${border[i][index] != 0 && sub >= 0 ? 'font_color_000' : 'font_color_aaa'}">
-  //           <td class="border-bottom">${val.abbr}</td>
-  //           <td class="border-bottom">${border[i][index]}</td>
-  //           <td class="border-bottom">(${sub > 0 ? '+' + sub : sub === 0 ? '± 0' : '-' + (-sub)})</td>
-  //       </tr>`;
-  //     }
-
-  //     let infoText = `
-  //     <div class="px-1 py-1 font_size_12">
-  //       <div class="text-center mb-2">
-  //         ${isDefMode ? `防空(合計値)` : (i < 7 ? `第` + Math.floor(i / 2 + 1) + `基地航空隊　第` + ((i % 2) + 1) + `波` : `本隊`)}
-  //       </div>
-  //       <div class="text-center font-weight-bold">${AIR_STATUS[getAirStatusIndex(ap, eap)].name}</div>
-  //       <div class="d-flex justify-content-center w-100">
-  //         ${addText}
-  //       </div>
-  //       <div class="my-1 d-flex justify-content-center w-100">
-  //         <div class="text-center mx-2">自制空値： ${ap}</div>
-  //         <div class="text-center mx-2">敵制空値： ${eap}</div>
-  //       </div>
-  //       <table class="my-2 tooltip_result_table w-100">
-  //         <tr class="tooltip_result_table_thead text-center bg-e9ecef font_color_777 font_size_11">
-  //           <td>状態</td>
-  //           <td>必要制空値</td>
-  //           <td>差</td>
-  //         </tr>
-  //         ${borderText}
-  //       </table>
-  //       ${i > 0 ? '<div class="font_size_11">※基地航空隊による敵機損耗具合により、</div><div class="font_size_11">　実際の必要制空値は前後します。</div>' : ''}
-  //     </div>`;
-
-  //     tooltip
-  //       .style("visibility", "visible")
-  //       .html(infoText)
-  //       .style("top", (d3.event.pageY - 230) + "px")
-  //       .style("left", (d3.event.pageX + ((d3.event.pageX + 300) > window.innerWidth ? -270 : 15)) + "px");
-  //   })
-  //   .on('mousemove', () => {
-  //     tooltip
-  //       .style("top", (d3.event.pageY - 180) + "px")
-  //       .style("left", (d3.event.pageX + ((d3.event.pageX + 300) > window.innerWidth ? -270 : 15)) + "px");
-  //   })
-  //   .on('mouseout', function (d, i) {
-  //     d3.select(this)
-  //       .attr('style', 'fill:' + backColor[getAirStatusIndex(data.own[i], data.enemy[i])])
-  //       .style('stroke', borderColor[getAirStatusIndex(data.own[i], data.enemy[i])]);
-  //     tooltip.style("visibility", "hidden");
-  //   })
-  //   .transition()
-  //   .ease(d3.easePolyOut)
-  //   .duration(800)
-  //   .attr('width', d => (d > maxRange ? xScale(maxRange) : xScale(d)) - xScale(0));
-
-  // prevData = mainData.concat();
-}
-
-/**
- * グラフの描画を行う
- */
-function drawResultBar_ex() {
-  // いったん全グラフ非表示
+function drawResult() {
+  // 初期化
+  $('#rate_table tbody').find('.rate_tr').addClass('d-none');
   $('.progress_area').addClass('d-none').removeClass('d-flex');
-
   const data = Object.create(chartData);
-  for (let index = 0; index < data.own.length; index++) {
-    const ap = data.own[index];
-    const eap = data.enemy[index];
-    const border = getAirStatusBorder(eap)
+  const len = data.own.length;
+  for (let i = 0; i < len; i++) {
+    const ap = data.own[i];
+    const eap = data.enemy[i];
+    const rates = data.rate[i];
+    const border = getAirStatusBorder(eap);
     let status = getAirStatusIndex(ap, eap);
+    // 描画対象先の行インデックス 防空8、本隊だけ7、他は連番(0は一応ヘッダのため1から)
+    let targetRowIndex = isDefMode ? 8 : len === 1 ? 7 : i + 1;
+    const $target_bar = $('#result_bar' + targetRowIndex);
+    const $target_tr = $('#rate_row_' + targetRowIndex);
     let width = 0;
-    let targetBarIndex = 0;
+    let visible = false;
 
     // 制空状態毎に基準widthに対する比率を出す
     if (status == 4) width = ap / border[3] * 100 * 0.1;
@@ -1284,102 +1116,28 @@ function drawResultBar_ex() {
     else if (status == 2) width = ap / border[1] * 100 * 0.45;
     else if (status <= 1) width = ap / border[0] * 100 * 0.9;
 
-    // 防空(7)
-    if (isDefMode) targetBarIndex = 7;
-    // データが1列のみなら本隊(8)
-    else if (data.own.length == 1) targetBarIndex = 8;
-    // 基本は そのまま上から
-    else {
-      targetBarIndex = index + 1;
-      // この場合7は非表示
-      if(targetBarIndex == 7) continue;
-    }
-
-    const $targetBar = $('#result_bar' + targetBarIndex);
-    $targetBar.closest('.progress_area').removeClass('d-none').addClass('d-flex');
-    $targetBar
+    // 結果表示バーの描画
+    $target_bar
       .removeClass('bar_status0 bar_status1 bar_status2 bar_status3 bar_status4')
       .addClass('bar_status' + status)
-      .css({
-        'width': (width > 100 ? 100 : width) + '%',
-      });
+      .css({ 'width': (width > 100 ? 100 : width) + '%', });
 
-    // // 割合表示
-    // let addText = '';
-    // if (!isDefMode) {
-    //   let target = [];
-    //   const len = data.rate[index].length;
-    //   for (let j = 0; j < len; j++) {
-    //     if (data.rate[index][j] === 0) continue;
-    //     const obj = { status: j === 5 ? -1 : j, rate: data.rate[index][j] };
-    //     target.push(obj);
-    //   }
-    //   target.sort((a, b) => b.rate - a.rate);
-    //   let dividText = '';
-    //   for (const obj of target) {
-    //     addText += `
-    //       ${dividText}
-    //       <div class="mx-1">
-    //         ${AIR_STATUS.find(v => v.id === obj.status).abbr + '(' + obj.rate + '%)'}
-    //       </div>`;
-    //     dividText = '<div>/</div>';
-    //   }
-    // }
+    // 各制空状態比率の描画
+    $target_tr.find('.rate_td_ap').text(ap);
+    for (let j = 0; j < rates.length; j++) {
+      if (rates[j] > 0) {
+        $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
+        visible = true;
+      }
+      else $target_tr.find('.rate_td_status' + j).text('-');
+    }
 
-    // // ボーダー表示
-    // let borderText = '';
-    // for (let i = 0; i < AIR_STATUS.length - 2; i++) {
-    //   const val = AIR_STATUS[i];
-    //   const sub = ap - border[i];
-    //   borderText += `
-    //     <tr class="text-center tooltip_result_table_thead ${border[i] != 0 && sub >= 0 ? 'font_color_000' : 'font_color_aaa'}">
-    //         <td class="border-bottom">${val.abbr}</td>
-    //         <td class="border-bottom">${border[i]}</td>
-    //         <td class="border-bottom">(${sub > 0 ? '+' + sub : sub === 0 ? '± 0' : '-' + (-sub)})</td>
-    //     </tr>`;
-    // }
-
-    // let infoText = `
-    // <div class="tooltip_resultBar">
-    //   <div class="px-1 py-1 font_size_12">
-    //     <div class="text-center mb-2">
-    //       ${isDefMode ? `防空(合計値)` : (index < 7 ? `第` + Math.floor(index / 2 + 1) + `基地航空隊　第` + ((index % 2) + 1) + `波` : `本隊`)}
-    //     </div>
-    //     <div class="text-center font-weight-bold">${AIR_STATUS[status].name}</div>
-    //     <div class="d-flex justify-content-center w-100">
-    //       ${addText}
-    //     </div>
-    //     <div class="my-1 d-flex justify-content-center w-100">
-    //       <div class="text-center mx-2">自制空値： ${ap}</div>
-    //       <div class="text-center mx-2">敵制空値： ${eap}</div>
-    //     </div>
-    //     <table class="my-2 tooltip_result_table w-100">
-    //       <tr class="tooltip_result_table_thead text-center bg-e9ecef font_color_777 font_size_11">
-    //         <td>状態</td>
-    //         <td>必要制空値</td>
-    //         <td>差</td>
-    //       </tr>
-    //       ${borderText}
-    //     </table>
-    //     ${index > 0 ? '<div class="font_size_11">※基地航空隊による敵機損耗具合により、</div><div class="font_size_11">　実際の必要制空値は前後します。</div>' : ''}
-    //   </div>
-    // <div>`;
+    // データなしの行はバー、比率ともに非表示
+    if (visible || (isDefMode && targetRowIndex === 8)) {
+      $target_tr.removeClass('d-none');
+      $target_bar.closest('.progress_area').addClass('d-flex').removeClass('d-none');
+    }
   }
-}
-
-/**
- * グラフ描画用のカラーコードを返却する
- * @param {number} opacity
- * @returns {Array.<string>} 色コードのリスト index:0 から順に、確保,優勢,均衡,劣勢,喪失 の色
- */
-function getBarColor(opacity) {
-  return [
-    'rgba(60, 170, 30,' + opacity + ')',
-    'rgba(140, 205, 150,' + opacity + ')',
-    'rgba(230, 230, 20,' + opacity + ')',
-    'rgba(255, 150, 50,' + opacity + ')',
-    'rgba(247, 80, 80,' + opacity + ')'
-  ];
 }
 
 /**
@@ -1406,7 +1164,8 @@ function loadPlanePreset() {
   for (let index = 0; index < len; index++) {
     const preset = planePreset[index];
     let infoText = `
-      <div class="preset_td preset_td_info text-danger cur_help ml-auto" data-toggle="tooltip" data-boundary="window" title="全ての装備が展開できません" data-delay='{"show": 300, "hide": 0}'>
+      <div class="preset_td preset_td_info text-danger cur_help ml-auto" data-toggle="tooltip" data-boundary="window" 
+        title="全ての装備が展開できません" data-delay='{"show": 300, "hide": 0}'>
         <i class="fas fa-exclamation-triangle"></i>
       </div>
     `;
@@ -1414,7 +1173,8 @@ function loadPlanePreset() {
     for (const planeId of preset.planes) {
       if (checkInvalidPlane(parentId, PLANE_DATA.find(v => v.id === planeId))) {
         infoText = `
-        <div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window" title="展開できない装備が含まれています" data-delay='{"show": 300, "hide": 0}'>
+        <div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window" 
+          title="展開できない装備が含まれています" data-delay='{"show": 300, "hide": 0}'>
           <i class="fas fa-exclamation-triangle"></i>
         </div>
       `;
@@ -1709,21 +1469,16 @@ function caluclate() {
   // console.timeEnd('mainCaluclate');
 
   //各状態確率計算
-  // console.time('rateCaluclate');
+  console.time('rateCaluclate');
   chartData.rate = rateCaluclate(landBaseData, friendFleetData, enemyFleetData);
-  // console.timeEnd('rateCaluclate');
+  console.timeEnd('rateCaluclate');
 
   //console.log(chartData);
 
   // 結果表示
-  console.time('drawResultBar');
-  drawResultBar();
-  console.timeEnd('drawResultBar');
-
-  // 結果表示 脱d3
-  console.time('drawResultBar_ex');
-  drawResultBar_ex();
-  console.timeEnd('drawResultBar_ex');
+  // console.time('drawResult');
+  drawResult();
+  // console.timeEnd('drawResult');
   // console.timeEnd('caluclate');
   // console.log('');
 
@@ -2802,14 +2557,12 @@ function caluclateLandBasePhase(landBaseData, enemyFleet, needChart) {
       const elbap = getEnemyFleetLBAP(enemyFleet);
       if (needChart) {
         chartData.own.push(lbAp);
-        chartData.enemy.push(elbap);
       }
       shootDownHalf(getAirStatusIndex(lbAp, elbap), enemyFleet);
     }
     else if (needChart) {
-      // 空データ挿入
+      // 待機なので空データ挿入
       chartData.own.push(0);
-      chartData.enemy.push(0);
     }
 
     if (landBaseData[index].mode === 2) {
@@ -2817,19 +2570,13 @@ function caluclateLandBasePhase(landBaseData, enemyFleet, needChart) {
       const elbap = getEnemyFleetLBAP(enemyFleet);
       if (needChart) {
         chartData.own.push(lbAp);
-        chartData.enemy.push(elbap);
       }
       shootDownHalf(getAirStatusIndex(lbAp, elbap), enemyFleet);
     }
     else if (needChart) {
-      // 空データ挿入
+      // 単発なので空データ挿入
       chartData.own.push(0);
-      chartData.enemy.push(0);
     }
-  }
-  if (needChart) {
-    chartData.own.push(0);
-    chartData.enemy.push(0);
   }
 }
 
@@ -2848,7 +2595,8 @@ function rateCaluclate(landBaseData, friendFleetData, enemyFleetData) {
   let mainBattle = (displayBattle - 1);
   let lbAttackBattle = (Number($('#landBase_target').val()) - 1);
   const shipCache = friendFleetData.concat();
-  let dist = [];
+  let enemyApDist = [0, 0, 0, 0, 0, 0, 0];
+  let returnDist = [];
   const lbDist = [];
   const mainDist = [0, 0, 0, 0, 0, 0];
   const lbAps = [];
@@ -2887,22 +2635,30 @@ function rateCaluclate(landBaseData, friendFleetData, enemyFleetData) {
 
           if (lbModes[j] > 0) {
             // 第一波
-            const airStatusIndex = getAirStatusIndex(lbAp, getEnemyFleetLBAP(enemyFleet))
-            if (lbAttackBattle === mainBattle) lbDist[j * 2][airStatusIndex]++;
+            let wave1 = j * 2;
+            const eap = getEnemyFleetLBAP(enemyFleet);
+            enemyApDist[wave1] += eap;
+            const airStatusIndex = getAirStatusIndex(lbAp, eap)
+            if (lbAttackBattle === mainBattle) lbDist[wave1][airStatusIndex]++;
             shootDownEnemy(airStatusIndex, enemyFleet);
           }
 
           if (lbModes[j] === 2) {
             // 第二波
-            const airStatusIndex = getAirStatusIndex(lbAp, getEnemyFleetLBAP(enemyFleet));
-            if (lbAttackBattle === mainBattle) lbDist[j * 2 + 1][airStatusIndex]++;
+            let wave2 = j * 2 + 1;
+            const eap = getEnemyFleetLBAP(enemyFleet);
+            enemyApDist[wave2] += eap;
+            const airStatusIndex = getAirStatusIndex(lbAp, eap);
+            if (lbAttackBattle === mainBattle) lbDist[wave2][airStatusIndex]++;
             shootDownEnemy(airStatusIndex, enemyFleet);
           }
         }
       }
 
       if (battle === mainBattle) {
-        mainDist[getAirStatusIndex(getFriendFleetAP(shipCache), getEnemyFleetAP(enemyFleet))]++;
+        const eap = getEnemyFleetAP(enemyFleet);
+        enemyApDist[6] += eap;
+        mainDist[getAirStatusIndex(getFriendFleetAP(shipCache), eap)]++;
       }
       else {
         // st1撃墜
@@ -2913,19 +2669,19 @@ function rateCaluclate(landBaseData, friendFleetData, enemyFleetData) {
 
   // 基地を派遣した戦闘だった場合、基地の結果を放り込む
   if (lbAttackBattle === mainBattle) {
-    dist = lbDist.concat();
-    dist.push([]);
+    returnDist = lbDist.concat();
   }
-  dist.push(mainDist);
+  returnDist.push(mainDist);
 
-  for (const wave of dist) {
+  for (const wave of returnDist) {
     const len = wave.length;
     for (let index = 0; index < len; index++) {
       wave[index] = Math.floor(wave[index] / maxCount * 10000) / 100;
     }
   }
-
-  return dist;
+  
+  chartData.enemy = enemyApDist.map(v => Math.floor(v / maxCount));
+  return returnDist;
 }
 
 /*==================================
@@ -3035,7 +2791,7 @@ $(function () {
     caluclate();
   });
 
-  /* 敵制空直接入力フォーカス時 */
+  // 敵制空直接入力フォーカス時
   $(document).on('focus', '.enemy_ap_form', function () {
     // 全選択してあげる
     $(this).select();
@@ -3693,7 +3449,9 @@ $(function () {
     const enemies = pattern.enemies;
 
     // 元の敵編成解除
-    $target.find('.btn_reset_battle').click();
+    $target.find('.enemy_content:not(:first)').remove();
+    clearEnemyDiv($target.find('.enemy_content'));
+
     // 敵展開
     for (const id of enemies) setEnemyDiv($target.find('.enemy_content:last()'), id);
     // 半径
@@ -3723,36 +3481,15 @@ $(function () {
     caluclate();
   });
 
-  // 機体選択モーダル終了時
-  $('#modal_plane_select').on('hide.bs.modal', () => {
+  // モーダル終了時
+  $('.modal').on('hide.bs.modal', () => {
     $target = undefined;
     caluclate();
   });
-  // 艦娘選択モーダル終了時
-  $('#modal_ship_select').on('hide.bs.modal', () => {
-    $target = undefined;
-    caluclate();
-  });
-  // 敵艦選択モーダル終了時
-  $('#modal_enemy_select').on('hide.bs.modal', () => {
-    $target = undefined;
-    caluclate();
-  });
-  // 機体プリセットモーダル終了時
-  $('#modal_plane_preset').on('hide.bs.modal', () => {
-    $target = undefined;
-    caluclate();
-  });
-  // 機体プリセットモーダル終了時
-  $('#modal_enemy_pattern').on('hide.bs.modal', () => {
-    $target = undefined;
-    caluclate();
-  });
-  // 各種モーダル展開終了時
-  $('#modal_plane_preset').on('show.bs.modal', () => {
+  // モーダル展開時
+  $('.modal').on('show.bs.modal', () => {
     $('.btn_preset').tooltip('hide')
   });
-
 
   // 設定変更
   $('#innerProfSetting .custom-control-input').click(function () {
@@ -3763,12 +3500,14 @@ $(function () {
     caluclate();
   });
 
-  // シミュ回数変更時
+  // シミュ回数にフォーカスで全選択
+  $(document).on('focus', '#calucCount', function () { $(this).select(); });
+  // シミュ回数変更時 1000回はさすがにやろうよ
   $(document).on('input', '#calucCount', function () {
-    // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
+    // 入力検証 -> 数値 かつ 1000 以上 max 以下　違ってたら修正
     const value = $(this).val();
     const max = MAX_SIMULATE_COUNT;
-    const min = 0;
+    const min = 1000;
     const regex = new RegExp(/^[0-9]+$/);
 
     if (!regex.test(value)) $(this).val(min);
@@ -3840,8 +3579,6 @@ $(function () {
       else if ($('#lb_tab_select').css('display') === 'none' && $('#lb_item1').attr('class').indexOf('tab-pane') != -1) {
         $('.lb_tab').removeClass('tab-pane fade').show().fadeIn();
       }
-      // グラフ再描画
-      drawResultBar();
     }, 50);
   });
 
