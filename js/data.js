@@ -247,9 +247,9 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 翔鶴型改二甲に 噴式機
   { shipId: 266, equipmentTypes: [9], equipmentIds: [151] },
   { shipId: 267, equipmentTypes: [9], equipmentIds: [151] },
-  // 伊勢型改二に 艦戦 艦爆
-  { shipId: 353, equipmentTypes: [1, 3], equipmentIds: [] },
-  { shipId: 354, equipmentTypes: [1, 3], equipmentIds: [] },
+  // 伊勢型改二に 艦戦 艦爆 艦偵
+  { shipId: 353, equipmentTypes: [1, 3, 4], equipmentIds: [] },
+  { shipId: 354, equipmentTypes: [1, 3, 4], equipmentIds: [] },
   // 長門型改以降に 水戦
   { shipId: 10001, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 10002, equipmentTypes: [7], equipmentIds: [] },

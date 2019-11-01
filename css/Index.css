@@ -212,17 +212,6 @@ input[type="radio"] {
   color: #777 !important;
 }
 
-.form-control-dark {
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.form-control-dark:focus {
-  border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
-}
-
 .sidebar-sticky {
   position: relative;
   top: 0;
@@ -434,16 +423,15 @@ input[type="radio"] {
   height: auto;
 }
 
-/* 基地選択欄 */
+/* 基地機体選択欄 */
 .lb_plane {
   min-width: 290px;
-  background-color: rgb(255, 255, 255);
   border: 2px #aaa solid;
   border-radius: 0.25rem;
 }
 
 .lb_plane:hover {
-  background-color: rgb(250, 250, 250);
+  background-color: rgba(250, 250, 250 .2);
 }
 
 .display_ship_count {
@@ -478,7 +466,6 @@ input[type="radio"] {
 /* 艦娘機体選択欄 */
 .ship_plane {
   width: 100%;
-  background-color: rgb(255, 255, 255);
   border: 2px #aaa solid;
   border-radius: 0.25rem;
 }
@@ -758,11 +745,6 @@ input[type="radio"] {
   -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* 選択中機体 */
-.plane-selected {
-  background-color: #f5f5f5 !important;
 }
 
 .shipSelect_select {
@@ -1134,7 +1116,6 @@ input[type="radio"] {
 
 .info_table {
   font-size: 12px;
-  background-color: #fff;
   border-collapse: collapse;
 }
 .info_table thead td{
@@ -1196,34 +1177,10 @@ input[type="radio"] {
   border-bottom:1px #b8b8b8 solid;
 }
 
-#rate_table {
-  font-size: 12px;
-  background-color: #fff;
-  border-collapse: collapse;
-}
-#rate_table thead td {
-  color: #666;
-  background-color: #e9ecef;
-  font-size: 11px;
-  border-top: 1px #b8b8b8 solid;
-  border-bottom: 1px #b8b8b8 solid;
-}
-#rate_table tbody td {
-  padding: .1rem;
-  border-top:1px #e9ecef solid;
-}
-.rate_td_name {
-  width: 20%;
-}
-.rate_td_normal {
-  width: 10%;
-}
-
 #shoot_down_table {
   width: 100%;
   table-layout: fixed;
   font-size: 12px;
-  background-color: #fff;
   border-collapse: collapse;
 }
 
@@ -1330,23 +1287,22 @@ input[type="radio"] {
 .airStatus0 {
   background: linear-gradient(.25turn, transparent, rgba(0, 255, 0, .1), transparent);
 }
-
 .airStatus1 {
   background: linear-gradient(.25turn, transparent, rgba(150, 255, 0, .1), transparent);
 }
-
 .airStatus2 {
   background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent);
 }
-
 .airStatus3 {
   background: linear-gradient(.25turn, transparent, rgba(255, 150, 0, .1), transparent);
 }
-
 .airStatus4 {
   background: linear-gradient(.25turn, transparent, rgba(255, 100, 100, .1), transparent);
 }
 
+.progress_area {
+  cursor: pointer;
+}
 .progress_label {
   text-align: right;
   font-size: 12px;
@@ -1360,42 +1316,26 @@ input[type="radio"] {
   color: #000;
   font-size: 11px;
   text-align: right;
-  cursor: pointer;
 }
 .bar_status0 {
   background-color:rgba(60, 170, 30, 0.4);
   border:1px solid rgba(60, 170, 30, 0.8);
 }
-.bar_status0:hover {
-  background-color:rgba(60, 170, 30, 0.8);
-}
 .bar_status1 {
   background-color:rgba(140, 205, 150, 0.4);
   border:1px solid rgba(140, 205, 150, 0.8);
-}
-.bar_status1:hover {
-  background-color:rgba(140, 205, 150, 0.8);
 }
 .bar_status2 {
   background-color:rgba(255, 255, 80, 0.4);
   border:1px solid rgba(255, 255,  0, 0.8);
 }
-.bar_status2:hover {
-  background-color:rgba(255, 255, 80, 0.8);
-}
 .bar_status3 {
   background-color:rgba(255, 150, 50, 0.4);
   border:1px solid rgba(255, 150, 50, 0.8);
 }
-.bar_status3:hover {
-  background-color:rgba(255, 150, 50, 0.8);
-}
 .bar_status4 {
   background-color: rgba(255, 80, 80, 0.4);
   border:1px solid rgba(255, 80, 80, 0.8);
-}
-.bar_status4:hover {
-  background-color: rgba(255, 80, 80, 0.8);
 }
 
 /* 制空状態ゲージ 凡例 */
@@ -1428,4 +1368,48 @@ input[type="radio"] {
 }
 .bar_ex_status4 {
   background-color: rgba(255, 80, 80, 0.8);
+}
+
+/* 制空状態割合テーブル */
+#rate_table {
+  font-size: 12px;
+  border-collapse: collapse;
+}
+#rate_table thead td {
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+}
+#rate_table tbody td {
+  padding: .1rem;
+  border-top:1px #e9ecef solid;
+}
+.rate_td_name {
+  width: 20%;
+}
+.rate_td_normal {
+  width: 10%;
+}
+.rate_tr_border_top > td {
+  border-top: 1px #b8b8b8 solid !important;
+}
+.rate_tr_border_bottom > td {
+  border-top: 1px #b8b8b8 solid !important;
+}
+.bg_status0 {
+  background-color:rgba(60, 170, 30, 0.4);
+}
+.bg_status1 {
+  background-color:rgba(140, 205, 150, 0.4);
+}
+.bg_status2 {
+  background-color:rgba(255, 255, 20, 0.4);
+}
+.bg_status3 {
+  background-color:rgba(255, 150, 50, 0.4);
+}
+.bg_status4 {
+  background-color: rgba(255, 80, 80, 0.4);
 }
