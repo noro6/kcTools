@@ -16,6 +16,24 @@ select {
   max-width: 100%;
 }
 
+#loading_back {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1010;
+  width: 100vw;
+  height: 100vh;
+  background-color: #252729;
+
+  padding-top: 50vh;
+  font-size: 28px;
+  color: #aaa;
+}
+.spinner-grow {
+  width: 5rem;
+  height: 5rem;
+}
+
 /* モーダル書き換え */
 #modal_plane_select .modal-content {
   min-height: 80vh;
@@ -257,11 +275,11 @@ input[type="radio"] {
   text-transform: uppercase;
 }
 
-#smartMenuModal .nav-link {
+#modal_smart_menu .nav-link {
   color: #ccc;
 }
 
-#smartMenuModal .nav-link:hover {
+#modal_smart_menu .nav-link:hover {
   cursor: pointer;
   color: #00ccff;
 }
@@ -309,11 +327,6 @@ input[type="radio"] {
   bottom: 0;
 }
 
-/* 最初のくるくる */
-#loadingSpinner {
-  cursor: progress;
-}
-
 #main {
   min-height: 100vh;
 }
@@ -322,22 +335,23 @@ input[type="radio"] {
   max-width: 1200px;
 }
 
-/* 折り畳みボタン */
-.toggleBtton {
+/* まるいボタン */
+.round_button {
   text-align: center;
+  border-radius: 50%;
   width: 30px;
   height: 30px;
   cursor: pointer;
-  border: 1px transparent solid;
+  border: 1px #eaeaea solid;
   transition: 0.4s;
 }
 
-.toggleBtton:hover {
+.round_button:hover {
   background-color: #eee;
 }
 
-/* コンテンツ表示 */
-#main .content_title {
+/* トレード開始ボタン */
+.trade_enabled {
   cursor: move;
 }
 
@@ -347,13 +361,26 @@ input[type="radio"] {
   }
 }
 
-/* 影付き角丸基本枠 */
-.general_div {
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  border-radius: 0.25rem;
+/* 計算開始ボタン */
+#btn_caluclate {
+  text-align: center;
+  font-size: 18px;
+  transition: .4s;
 }
+.caluclate_end {
+  cursor: default;
+  color: #777;
+}
+.caluclate_ready {
+  cursor: pointer;
+  color: #ddd;
+  filter: drop-shadow(0px 0px 6px rgb(128, 128, 128));
+}
+.caluclate_ready:hover {
+  color: #fff;
+  filter: drop-shadow(0px 0px 6px rgb(255, 255, 255));
+}
+
 
 .btn_icon {
   font-size: 18px;
@@ -1385,6 +1412,9 @@ input[type="radio"] {
 #rate_table tbody td {
   padding: .1rem;
   border-top:1px #e9ecef solid;
+}
+.rate_tr {
+  transition: .2s;
 }
 .rate_td_name {
   width: 20%;

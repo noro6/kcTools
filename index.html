@@ -26,7 +26,7 @@
     <script src="./js/bootstrap.bundle.js"></script>
 </head>
 
-<body data-spy="scroll" data-target="#Navbar" data-offset="380">
+<body>
     <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow">
         <div class="d-block d-xl-none text-light pl-3 pt-3 py-2 cur_pointer">
             <div id="menu-small">
@@ -36,11 +36,7 @@
             </div>
         </div>
         <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ2</a>
-        <ul class="d-none d-xl-block navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="#"></a>
-            </li>
-        </ul>
+        <div class="col caluclate_end caluclate_ready caluclate_start d-none" id="btn_caluclate">シミュレート開始</div>
     </nav>
 
     <div class="container-fluid px-0">
@@ -63,6 +59,9 @@
                                 </li>
                                 <li class="nav-item" id="li_result">
                                     <a class="nav-link" href="#result">計算結果</a>
+                                </li>
+                                <li class="nav-item" id="li_input_data">
+                                    <a class="nav-link" href="#input_data">入力情報</a>
                                 </li>
                                 <li class="nav-item" id="li_config">
                                     <a class="nav-link" href="#config">詳細設定</a>
@@ -96,20 +95,27 @@
                         </div>
                     </div>
                     <div id="main_contents">
-                        <!-- 基地航空隊 -->
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="landBase">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">基地航空隊</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
-                                    data-toggle="collapse" data-target="#lb_content">
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                                    data-toggle="collapse" data-target="#landBase_content">
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
-                            <div class="collapse show collapse_content" id="lb_content">
+                            <div class="collapse show collapse_content" id="landBase_content">
                                 <div class="border-top"></div>
-                                <div class="my-2" id="lb_content_main">
+                                <div class="my-2" id="landBase_content_main">
                                     <ul class="nav nav-tabs mb-2" id="lb_tab_select">
                                         <li class="nav-item">
                                             <a class="nav-link active" data-toggle="tab" href="#lb_item1">第1基地航空隊</a>
@@ -227,13 +233,20 @@
                             </div>
                         </div>
 
-                        <!-- 艦隊選択欄 -->
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="friendFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">自艦隊</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
                                     data-toggle="collapse" data-target="#friendFleet_content">
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
@@ -373,13 +386,20 @@
                             </div>
                         </div>
 
-                        <!-- 敵艦選択欄 -->
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="enemyFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">敵艦隊</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
                                     data-toggle="collapse" data-target="#enemyFleet_content">
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
@@ -475,13 +495,20 @@
                             </div>
                         </div>
 
-                        <!-- 計算結果 -->
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="result">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
                                     data-toggle="collapse" data-target="#result_content">
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
@@ -606,13 +633,20 @@
                             </div>
                         </div>
 
-                        <!-- 入力情報 -->
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="input_data">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">入力情報</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
                                     data-toggle="collapse" data-target="#input_data_content">
                                     <i class="fas fa-chevron-up d-table-cell align-middle"></i>
                                 </div>
@@ -681,29 +715,42 @@
                             </div>
                         </div>
 
-                        <!-- 細かい設定 -->
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="config">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">詳細設定</span>
                                 </div>
-                                <div class="ml-auto rounded-circle toggleBtton align-self-center d-table"
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
                                     data-toggle="collapse" data-target="#config_content">
                                     <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                                 </div>
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
                                 <div class="border-top"></div>
-                                <div class="my-2 mx-2">
+                                <div class="my-3 mx-2">
                                     <div><i class="fas fa-wrench mr-2"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
-                                        <input class="custom-control-input" type="checkbox" id="copyPlane">
-                                        <label class="custom-control-label" for="copyPlane">
+                                        <input class="custom-control-input" type="checkbox" id="copy_plane">
+                                        <label class="custom-control-label" for="copy_plane">
                                             機体D&amp;D時、交換の代わりに複製を行う
                                         </label>
                                     </div>
+                                    <div class="custom-control custom-checkbox ml-3 mt-2">
+                                        <input class="custom-control-input" type="checkbox" id="auto_caluclate" checked>
+                                        <label class="custom-control-label" for="auto_caluclate">
+                                            自動で再計算を行う
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="my-2 mx-2">
+                                <div class="my-3 mx-2">
                                     <div><i class="fas fa-calculator mr-2"></i>シミュレート設定</div>
                                     <div class="ml-3 mt-2 d-flex">
                                         <div class="align-self-center">熟練度</div>
@@ -780,13 +827,10 @@
                                         増やすと精度は上がりますが、処理に時間がかかります。
                                         処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。</div>
                                 </div>
-                                <div class="py-2 mx-2">
+                                <div class="my-3 mx-2">
                                     <div><i class="fas fa-desktop mr-2"></i>表示設定</div>
-                                    <div class="custom-control custom-checkbox ml-3 mt-2">
-                                        <input class="custom-control-input" type="checkbox" id="dummy">
-                                        <label class="custom-control-label" for="dummy">
-                                            近日実装予定
-                                        </label>
+                                    <div class="ml-3 mt-2">
+                                        近日機能追加予定
                                     </div>
                                 </div>
                                 <div class="mt-5 mx-2 border-top"></div>
@@ -798,6 +842,9 @@
                         </div>
                     </div>
                     <div class="border-secondary border-top my-4 pt-3" id="main_footer">
+                        <div class="ml-2">
+                            <a href="#" data-toggle="modal" data-target="#modal_manual">FAQ</a>
+                        </div>
                         <div class="ml-2">
                             <a href="#" data-toggle="modal" data-target="#modal_site_history">更新履歴</a>
                         </div>
@@ -871,8 +918,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="modal_plane_select_btn_remove"
-                        disabled>はずす</button>
+                    <button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
@@ -928,8 +974,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="modal_ship_select_btn_remove"
-                        disabled>はずす</button>
+                    <button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
@@ -978,8 +1023,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="modal_enemy_select_btn_remove"
-                        disabled>はずす</button>
+                    <button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
@@ -1070,16 +1114,15 @@
                                 <div class="preset_preview_tbody"></div>
                             </div>
                             <div class="mt-auto d-flex">
-                                <button type="button" class="ml-auto btn btn-sm btn-success"
-                                    id="btn_commit_preset">保存</button>
-                                <button type="button" class="ml-2 btn btn-sm btn-danger"
-                                    id="btn_delete_preset">削除</button>
+                                <button type="button"
+                                    class="ml-auto btn btn-sm btn-success btn_commit_preset">保存</button>
+                                <button type="button" class="ml-2 btn btn-sm btn-danger btn_delete_preset">削除</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary" id="btn_expand_preset">プリセット展開</button>
+                    <button type="button" class="btn btn-sm btn-primary btn_expand_preset">プリセット展開</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
@@ -1087,11 +1130,11 @@
     </div>
 
     <!-- スマホメニュー -->
-    <div class="modal fade" id="smartMenuModal" tabindex="-1">
+    <div class="modal fade" id="modal_smart_menu" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content mt-5 bg-dark2">
                 <div class="modal-header">
-                    <h5 class="modal-title text-light" id="smartMenuModalTitle">メニュー</h5>
+                    <h5 class="modal-title text-light" id="modal_smart_menu_title">メニュー</h5>
                     <p class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </p>
@@ -1152,6 +1195,61 @@
         </div>
     </div>
 
+    <!-- FAQ モーダル -->
+    <div class="modal fade" id="modal_manual" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content mt-5">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        FAQ
+                    </h5>
+                    <p class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <div class="my-2">Q. なにこれ？</span>
+                        <div class="ml-3 font_size_12">
+                            サイト閲覧、並びにこのような場所を発掘していただき、ありがとうございます。
+                        </div>
+                        <div class="ml-3 font_size_12">
+                            「艦隊これくしょん -艦これ-」における、出撃時の制空に関するおおよその結果を把握するためのサイトです。
+                        </div>
+                        <div class="ml-3 font_size_12">
+                            開発中の機能や不具合も多く、完成にはまだまだ時間がかかるため、おもちゃ程度のものとして使ってみてください。
+                        </div>
+                    </div>
+                    <div class="my-2">Q. 使い方がわからない</span>
+                        <div class="ml-3 font_size_12">
+                            作成予定です。
+                        </div>
+                    </div>
+                    <div class="my-2">Q. なにができるの</span>
+                        <div class="ml-3 font_size_12">
+                            ・作成予定です。
+                        </div>
+                        <div class="ml-3 font_size_12">
+                            ・作成予定です。
+                        </div>
+                    </div>
+                    <div class="my-2">Q. なにができないの</span>
+                        <div class="ml-3 font_size_12">
+                            ・作成予定です。
+                        </div>
+                        <div class="ml-3 font_size_12">
+                            ・作成予定です。
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="ml-2">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 更新履歴モーダル -->
     <div class="modal fade" id="modal_site_history" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable">
@@ -1174,6 +1272,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="text-center" id="loading_back">
+        <div class="spinner-grow align-middle"></div>
+        <span class="align-middle">建造中...</span>
     </div>
 </body>
 
