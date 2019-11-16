@@ -2,13 +2,13 @@
 <html lang="ja">
 
 <head>
-    <title>制空シミュレータ2</title>
-    <meta name="description" content="「艦これ」の出撃時の制空に関するシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや防空に対応しています。">
-    <meta name="viewport" content="width=526, shrink-to-fit=no">
+    <title>制空権シミュレータ</title>
+    <meta name="description" content="「艦これ」の出撃時の制空に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや防空時の制空計算に対応しています。">
+    <meta name="viewport" content="width=device-width">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@noro_006">
     <meta property="og:url" content="https://noro6.github.io/kcTools/" />
-    <meta property="og:title" content="制空シミュレータ2" />
+    <meta property="og:title" content="制空権シミュレータ" />
     <meta property="og:description" content="「艦これ」の出撃時の制空に関するシミュレーションを行うサイトです。" />
 
     <meta charset="utf-8">
@@ -35,7 +35,7 @@
                 <div></div>
             </div>
         </div>
-        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空シミュレータ2</a>
+        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空権シミュレータ</a>
         <div class="col caluclate_end caluclate_ready caluclate_start d-none" id="btn_caluclate">シミュレート開始</div>
     </nav>
 
@@ -91,7 +91,7 @@
                 <div id="main">
                     <div id="main_header">
                         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
-                            <h1 class="mt-3 ml-1">制空シミュレータ2</h1>
+                            <h1 class="mt-3 ml-1">制空権シミュレータ</h1>
                         </div>
                     </div>
                     <div id="main_contents">
@@ -128,8 +128,7 @@
                                         </li>
                                     </ul>
                                     <div class="d-flex w-100 justify-content-center flex-wrap tab-content">
-                                        <!-- 第1基地航空隊 -->
-                                        <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
+                                        <div class="lb_tab general_box mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
                                             id="lb_item1">
                                             <div class="d-flex mr-1 mt-1">
                                                 <div class="h6 mb-0 ml-1 baseNo align-self-center">第1基地航空隊</div>
@@ -169,12 +168,11 @@
                                                     <span class="ml-1 bauxite">0</span>
                                                 </div>
                                             </div>
-                                            <!-- 第1基地航空隊 第1中隊　選択領域 -->
                                             <div class="lb_tab_main">
                                                 <div class="lb_plane mt-1 d-flex">
                                                     <div class="col px-0 d-flex flex-nowrap">
                                                         <div class="ml-1 dropdown align-self-center slot_select_parent">
-                                                            <span class="slot" data-toggle="dropdown">18</span>
+                                                            <span class="slot" data-toggle="dropdown">0</span>
                                                             <div class="dropdown-menu px-2">
                                                                 <span
                                                                     class="dropdown-header py-1 px-1 font_size_12">搭載数を入力
@@ -195,14 +193,14 @@
                                                                 機体を選択
                                                             </span>
                                                         </div>
-                                                        <div class="dropdown remodel_select_parent align-self-center">
+                                                        <div class="dropdown align-self-center remodel_select_parent">
                                                             <div class="remodel_select remodel_disabled"
                                                                 data-toggle="dropdown" data-remodel="0">
                                                                 <span>★<span class="remodel_value">0</span></span>
                                                             </div>
                                                             <div class="dropdown-menu"></div>
                                                         </div>
-                                                        <div class="dropdown prof_select_parent align-self-center">
+                                                        <div class="dropdown align-self-center prof_select_parent">
                                                             <img class="prof_select prof_none" data-prof="0"
                                                                 data-toggle="dropdown" src="./img/util/prof0.png">
                                                             <div class="dropdown-menu"></div>
@@ -212,20 +210,14 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="lb_plane mt-1 d-flex flex-nowrap">
-                                                </div>
-                                                <div class="lb_plane mt-1 d-flex flex-nowrap">
-                                                </div>
-                                                <div class="lb_plane mt-1 d-flex flex-nowrap">
-                                                </div>
+                                                <div class="lb_plane mt-1 d-flex flex-nowrap"></div>
+                                                <div class="lb_plane mt-1 d-flex flex-nowrap"></div>
+                                                <div class="lb_plane mt-1 d-flex flex-nowrap"></div>
                                             </div>
                                         </div>
-                                        <!-- 第2基地航空隊 -->
-                                        <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
-                                            id="lb_item2">
-                                        </div>
-                                        <!-- 第3基地航空隊 -->
-                                        <div class="lb_tab mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
+                                        <div class="lb_tab general_box mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
+                                            id="lb_item2"></div>
+                                        <div class="lb_tab general_box mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1"
                                             id="lb_item3">
                                         </div>
                                     </div>
@@ -279,7 +271,7 @@
                                             <div class="ml-1 align-self-center">隻</div>
                                         </div>
                                         <div class="d-flex justify-content-center flex-wrap">
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1" id="shipNo_1">
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_1">
                                                 <div class="pb-2 px-1 px-xl-2">
                                                     <div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
                                                         <div class="ship_name_span align-self-center px-1 text-truncate"
@@ -312,9 +304,14 @@
                                                                     <span
                                                                         class="dropdown-header py-1 px-1 font_size_12">搭載数を入力
                                                                     </span>
-                                                                    <input type="number"
-                                                                        class="form-control form-control-sm mb-2 slot_input"
-                                                                        value="0" min="0" max="99">
+                                                                    <div class="d-flex mb-2">
+                                                                        <input type="number"
+                                                                            class="form-control form-control-sm slot_input align-self-center mr-2"
+                                                                            value="0" min="0" max="99">
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-info ml-auto align-self-center slot_ini"
+                                                                            data-ini="0">初期値</button>
+                                                                    </div>
                                                                     <input type="range" class="custom-range slot_range"
                                                                         value="0" min="0" max="99">
                                                                 </div>
@@ -354,11 +351,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
                                         </div>
                                     </div>
                                     <!-- 第2艦隊 -->
@@ -374,12 +371,12 @@
                                             <div class="ml-1 align-self-center">隻</div>
                                         </div>
                                         <div class="d-flex flex-wrap">
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
-                                            <div class="ship_tab mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
+                                            <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -442,17 +439,17 @@
                                 </div>
                                 <div class="enemy_tab">
                                     <div class="d-flex flex-wrap" id="battle_container">
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2">
+                                        <div class="battle_content general_box bg-white px-1 py-1 mx-1 my-2">
                                             <div class="d-flex">
                                                 <div class="pl-2 flex-grow-1 align-self-center sortable_handle">
                                                     <span class="battle_no">1</span>戦目
                                                 </div>
-                                                <div class="ml-auto align-self-center btn_preset btn_enemy_preset btn_icon"
-                                                    data-toggle="tooltip" title="海域から敵艦隊を選択"
-                                                    data-delay='{"show": 300, "hide": 0}'>
-                                                    <i class="fas fa-toolbox"></i>
+                                                <div class="ml-auto btn_preset btn_enemy_preset" data-toggle="tooltip"
+                                                    title="海域から敵艦隊を選択" data-delay='{"show": 300, "hide": 0}'>
+                                                    <img class="img-size-20 btn_enemy" src="img/util/boss.png"
+                                                        alt="海域選択">
                                                 </div>
-                                                <div class="ml-2_5 align-self-center btn_reset btn_reset_battle btn_icon"
+                                                <div class="ml-2 mr-2 align-self-center btn_reset btn_reset_battle btn_icon"
                                                     data-toggle="tooltip" title="リセット"
                                                     data-delay='{"show": 300, "hide": 0}'>
                                                     <i class="fas fa-trash-alt"></i>
@@ -468,28 +465,28 @@
                                                 </div>
                                             </div>
                                             <div class="enemyFleet_item py-1 px-1">
-                                                <div class="enemy_content py-1 pr-1 d-flex">
+                                                <div class="enemy_content py-1 pr-1 d-flex enemy_draggable">
                                                     <div class="enemy_index align-self-center text-primary">1
                                                     </div>
                                                     <div class="enemy_name">
                                                         <span class="enemy_name_span px-1">敵艦を選択</span>
                                                     </div>
-                                                    <div class="ml-auto enemy_ap align-self-center">0</div>
-                                                    <div class="d-none direct_enemy_ap ml-auto">
-                                                        <input class="enemy_ap_form align-self-center" value="0">
+                                                    <div
+                                                        class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                                        <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                                        <div class="dropdown-menu px-2">
+                                                            <span class="dropdown-header py-1 px-1 font_size_12">制空値を入力
+                                                            </span>
+                                                            <div class="d-flex mb-2">
+                                                                <input type="number"
+                                                                    class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                                    value="0" min="0" max="9999">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
-                                        <div class="battle_content bg-white px-1 py-1 mx-1 my-2"></div>
                                     </div>
                                 </div>
                             </div>
@@ -539,38 +536,7 @@
                                     </table>
                                 </div>
                                 <div class="mt-2">
-                                    <ul class="nav nav-tabs" id="display_battle_tab">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" data-disp="1" href="#">1戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="2" href="#">2戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="3" href="#">3戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="4" href="#">4戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="5" href="#">5戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="6" href="#">6戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="7" href="#">7戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="8" href="#">8戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="9" href="#">9戦目</a>
-                                        </li>
-                                        <li class="nav-item d-none">
-                                            <a class="nav-link" data-toggle="tab" data-disp="10" href="#">10戦目</a>
-                                        </li>
-                                    </ul>
+                                    <ul class="nav nav-tabs" id="display_battle_tab"></ul>
                                 </div>
                                 <div class="mt-1 py-2 px-2 border rounded">
                                     <div class="d-flex">
@@ -714,7 +680,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="config">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
@@ -735,12 +700,12 @@
                             </div>
                             <div class="collapse show collapse_content" id="config_content">
                                 <div class="border-top"></div>
-                                <div class="my-3 mx-2">
+                                <div class="my-3 mx-2 px-2 py-2 general_box">
                                     <div><i class="fas fa-wrench mr-2"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
-                                        <input class="custom-control-input" type="checkbox" id="copy_plane">
-                                        <label class="custom-control-label" for="copy_plane">
-                                            機体D&amp;D時、交換の代わりに複製を行う
+                                        <input class="custom-control-input" type="checkbox" id="drag_drop_copy">
+                                        <label class="custom-control-label" for="drag_drop_copy">
+                                            D&amp;Dで機体や敵艦を移動時、複製を行う
                                         </label>
                                     </div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
@@ -750,7 +715,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="my-3 mx-2">
+                                <div class="my-3 mx-2 px-2 py-2 general_box">
                                     <div><i class="fas fa-calculator mr-2"></i>シミュレート設定</div>
                                     <div class="ml-3 mt-2 d-flex">
                                         <div class="align-self-center">熟練度</div>
@@ -818,16 +783,38 @@
                                             <label class="custom-control-label" for="prof120_8">飛行艇</label>
                                         </div>
                                     </div>
-                                    <div class="ml-3 mt-2 d-flex">
+                                    <div class="ml-3 mt-3 d-flex">
                                         <div class="align-self-center">シミュレート回数：</div>
                                         <input type="number" class="form-control form-control-sm align-self-center"
                                             id="calucCount" value="1">
                                     </div>
                                     <div class="ml-4">
                                         増やすと精度は上がりますが、処理に時間がかかります。
-                                        処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。</div>
+                                        処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。
+                                    </div>
+                                    <div class="ml-3 mt-3 d-none">
+                                        <div class="align-self-center">対空砲火調整(仮)</div>
+                                    </div>
+                                    <div class="ml-4 d-none">
+                                        <select class="custom-select custom-select-sm" id="manual_shoot_down_battle">
+                                            <option value="1" selected>1</option>
+                                            <option value="2" class="d-none">2</option>
+                                            <option value="3" class="d-none">3</option>
+                                            <option value="4" class="d-none">4</option>
+                                            <option value="5" class="d-none">5</option>
+                                            <option value="6" class="d-none">6</option>
+                                            <option value="7" class="d-none">7</option>
+                                            <option value="8" class="d-none">8</option>
+                                            <option value="9" class="d-none">9</option>
+                                            <option value="10" class="d-none">10</option>
+                                        </select>
+                                        <div class="ml-1 align-self-center">戦目開始時、全ての攻撃機の搭載数を</div>
+                                        <input type="number" class="form-control form-control-sm align-self-center"
+                                            id="manual_shoot_down_value" value="1">
+                                        <div class="ml-1 align-self-center">にする</div>
+                                    </div>
                                 </div>
-                                <div class="my-3 mx-2">
+                                <div class="my-3 mx-2 px-2 py-2 general_box">
                                     <div><i class="fas fa-desktop mr-2"></i>表示設定</div>
                                     <div class="ml-3 mt-2">
                                         近日機能追加予定
@@ -841,15 +828,192 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mt-5" id="site_information">
+                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="site_abstract">
+                            <div class="my-2 d-flex">
+                                <div class="h6 mb-0 align-self-center">
+                                    <span class="content_title align-middle">サイトについて</span>
+                                </div>
+                                <div class="ml-auto rounded-circle round_button btn_cllapse align-self-center d-table"
+                                    data-toggle="collapse" data-target="#site_abstract_content">
+                                    <i class="fas fa-chevron-up d-table-cell align-middle"></i>
+                                </div>
+                            </div>
+                            <div class="collapse show collapse_content" id="site_abstract_content">
+                                <div class="border-top"></div>
+                                <div class="px-3" id="site_abstract_body">
+                                    <div class="my-3">
+                                        <p class="h6">概要</p>
+                                        <div class="pl-3">
+                                            ブラウザゲーム『艦隊これくしょん -艦これ-』の出撃時の制空に関する計算およびシミュレーションを行うサイトです。
+                                        </div>
+                                        <div class="pl-3">
+                                            道中戦闘時や、基地航空隊による制空削りをある程度考慮したシミュレーションが可能です。
+                                            また、基地空襲に対する防空時の制空計算も可能です。
+                                        </div>
+                                    </div>
+                                    <div class="my-4">
+                                        <p class="h6">使い方</p>
+                                        <div class="pl-3">
+                                            機体情報、敵艦情報を入力すると計算結果に結果が表示されます。基地航空隊の派遣先は
+                                            <a href="#enemyFleet">敵艦情報</a> から選択可能です。
+                                        </div>
+                                        <div class="pl-3 mt-3">
+                                            道中戦闘を考慮する場合は、<a href="#enemyFleet">敵艦情報</a>の戦闘回数を操作してください。
+                                        </div>
+                                        <div class="pl-3">
+                                            このとき、夜戦マス、対潜戦闘マスは戦闘回数に含めないようにしてください。
+                                            また、航空戦力を持つ敵艦のいない水雷戦隊等との戦闘は、基本的に敵艦は空のままとします。
+                                        </div>
+                                        <div class="pl-3">
+                                            例1）6-5上ルート(ACDGM)のボスマスの計算…
+                                            戦闘回数を5回に設定、1戦目を空に、2戦目をCマス、3戦目をDマス4戦目をGマス、5戦目をボスとする。
+                                        </div>
+                                        <div class="pl-3">
+                                            例2）6-5下ルート(BFIJM)のボスマスの計算…
+                                            戦闘回数を3回に設定、1戦目をFマス、2戦目をIマス、3戦目をボスとする。(B:対潜マス、J:夜戦マスは省略する)
+                                        </div>
+                                        <div class="pl-3">
+                                            ※ 例1の場合、Aマスに基地を派遣する場合に限り、敵艦の偵察機を考慮に入れる必要があるためフラヘを設定する必要が出てきます。
+                                        </div>
+                                        <div class="pl-3">
+                                            これらを含め、海域マップ情報は各戦闘の<img class="mx-1 img-size-20" src="img/util/boss.png"
+                                                alt="海域選択">
+                                            をクリックすると選択できるようになっています。なお、基地航空隊を派遣できない海域は偵察機を持つ敵艦がいるマスも省略しています。
+                                        </div>
+                                        <div class="pl-3 mt-3">
+                                            防空の計算がしたい場合は、基地航空隊の所謂"お札"を防空に設定してください。
+                                        </div>
+                                        <div class="pl-3">
+                                            いずれか1部隊でも防空に設定されていると、シミュレーターは防空仕様となり、
+                                            <u>味方艦隊情報、道中戦闘情報が編集できなくなります。</u>
+                                        </div>
+                                        <div class="pl-3">
+                                            これを解除する場合は全ての部隊を待機にするか、いずれか1部隊を集中または単発を設定してください。
+                                        </div>
+                                        <div class="pl-3">
+                                            また、高高度爆撃時の計算は、防空モード時に「飛行場姫 銀だこ」を敵艦に1隻以上含めてください。
+                                        </div>
+                                        <div class="pl-3">
+                                            なお、<a href="#input_data">入力情報</a>には敵艦に関係なく、防空時であれば常に高高度爆撃時の制空値が表示されます。
+                                        </div>
+                                        <div class="pl-3 mt-4">
+                                            機体情報の入力は次のコントロールから行います。
+                                        </div>
+                                        <div class="sample_plane ml-3 mt-1 d-flex css_fighter">
+                                            <div class="col px-0 d-flex flex-nowrap">
+                                                <div class="ml-1 align-self-center" data-toggle="tooltip"
+                                                    title="クリックすると搭載数を変更できます。">
+                                                    <span class="slot">18</span>
+                                                </div>
+                                                <div class="ml-1 align-self-center drag_handle cur_move">
+                                                    <img src="./img/type/type1.png" class="plane_img img-size-30"
+                                                        alt="">
+                                                </div>
+                                                <div class="flex-grow-1 align-self-center drag_handle cur_pointer">
+                                                    <span class="font_size_12 pl-1">
+                                                        零式艦戦52型(熟練)
+                                                    </span>
+                                                </div>
+                                                <div class="align-self-center remodel_select_parent"
+                                                    data-toggle="tooltip" data-html="true"
+                                                    title="クリックすると改修値を変更できます。<br>改修可能な装備のみが対象です。">
+                                                    <span class="cur_pointer">★6</span>
+                                                </div>
+                                                <div class="align-self-center" data-toggle="tooltip"
+                                                    title="クリックすると熟練度を変更できます。">
+                                                    <img class="prof_select prof_yellow" src="./img/util/prof7.png">
+                                                </div>
+                                                <div class="mx-1 align-self-center btn_remove_plane"
+                                                    data-toggle="tooltip" title="クリックすると装備されている機体を解除します。">
+                                                    <i class="fas fa-times"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="pl-3">
+                                            左から「搭載数」「機体カテゴリ」「機体名」「改修値」「熟練度」「装備解除」となっています。
+                                        </div>
+                                        <div class="pl-3">
+                                            「機体カテゴリ」「機体名」部分はドラッグ&amp;ドロップのトリガーとなっており、別の機体との交換や複製が可能です。
+                                        </div>
+                                        <div class="mt-3 pl-3">
+                                            ドラッグ&amp;ドロップについて、基本的にドラッグ要素がドロップ可能である場合、受け入れ先の背景色が変わります。
+                                        </div>
+                                        <div class="pl-3">
+                                            また、機体や敵艦などを、それぞれの枠外に持って行くと表示が薄くなります。
+                                            この時にドロップすると、機体であれば解除、敵艦であればその戦闘から除外します。
+                                        </div>
+                                        <div class="pl-3">
+                                            <a href="#config">詳細設定</a>で、「D&amp;Dで機体や敵艦を移動時、複製を行う」にチェックを入れている場合、
+                                            ドロップした際にドラッグしていた要素はそのままに、ドロップ先に複製を行います。
+                                        </div>
+                                        <div class="pl-3">
+                                            この機能は上記設定でチェックを入れていない場合でも、ドロップ時にキーボードのCtrlキーを押下していると
+                                            一時的に有効になります。
+                                        </div>
+                                        <div class="pl-3">
+                                            同じ機体や、同じ敵艦を大量に入力したい場合などに利用してみてください。
+                                        </div>
+                                    </div>
+                                    <div class="my-4">
+                                        <p class="h6">注意事項</p>
+                                        <div class="pl-3">
+                                            敵艦の制空値を直接入力とした場合、基地航空隊による制空削りは行われません。
+                                        </div>
+                                        <div class="pl-3">
+                                            また、道中の味方艦隊の被撃墜は制空状態による損耗のみを考慮しています(st1)。
+                                            攻撃機や爆撃機などは、敵の対空砲火により実際にはさらに損耗が発生します。
+                                        </div>
+                                        <div class="pl-3">
+                                            シミュレート回数は増やすほど精度は上がりますが、処理に時間がかかるようになります。
+                                            動作が重い場合は、精度は下がりますが適度にシミュレート回数を調節してください。
+                                        </div>
+                                        <div class="pl-3">
+                                            上記を含めた様々な要因により、シミュレート結果と実際の制空権結果が一致しない可能性があります。
+                                            計算結果はあくまで目安としてお考え下さい。
+                                        </div>
+                                    </div>
+                                    <div class="my-4">
+                                        <p class="h6">改修構想</p>
+                                        <div class="pl-3">
+                                            艦隊全体保存機能
+                                        </div>
+                                        <div class="pl-3">
+                                            使い方などの追記・改訂
+                                        </div>
+                                        <div class="pl-3">
+                                            共有URL生成
+                                        </div>
+                                        <div class="pl-3">
+                                            他サイト様の艦隊情報の取り込み
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="site_history">
+                            <div class="my-2 d-flex">
+                                <div class="h6 mb-0 align-self-center">
+                                    <span class="content_title align-middle">更新履歴</span>
+                                </div>
+                                <div class="ml-auto rounded-circle round_button btn_cllapse align-self-center d-table"
+                                    data-toggle="collapse" data-target="#site_history_content">
+                                    <i class="fas fa-chevron-up d-table-cell align-middle"></i>
+                                </div>
+                            </div>
+                            <div class="collapse show collapse_content" id="site_history_content">
+                                <div class="border-top"></div>
+                                <div class="d-flex flex-column-reverse px-3" id="site_history_body"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="border-secondary border-top my-4 pt-3" id="main_footer">
-                        <div class="ml-2">
-                            <a href="#" data-toggle="modal" data-target="#modal_manual">FAQ</a>
+                        <div class="ml-2 mt-2 font_size_12">
+                            要望・バグ報告などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>
                         </div>
-                        <div class="ml-2">
-                            <a href="#" data-toggle="modal" data-target="#modal_site_history">更新履歴</a>
-                        </div>
-                        <div class="ml-2">
-                            <a href="https://twitter.com/noro_006" target="_blank">要望・バグ報告</a>
+                        <div class="ml-2 mt-2 font_size_11">
+                            著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。
+                            権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。
                         </div>
                     </div>
                 </div>
@@ -1032,7 +1196,7 @@
 
     <!-- 海域選択モーダル -->
     <div class="modal fade" id="modal_enemy_pattern" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">敵艦隊一括入力</h5>
@@ -1041,23 +1205,23 @@
                     </p>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid px-0">
-                        <div class="row">
-                            <div class="col-4 pr-1">
-                                <select class="custom-select custom-select-sm" id="world_select">
-                                    <option value="1" selected>鎮守府海域</option>
-                                    <option value="2">南西諸島海域</option>
-                                    <option value="3">北方海域</option>
-                                    <option value="7">南西海域</option>
-                                    <option value="4">西方海域</option>
-                                    <option value="5">南方海域</option>
-                                    <option value="6">中部海域</option>
-                                    <option value="99">イベント海域</option>
-                                </select>
+                    <div class="d-flex">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">海域</span>
                             </div>
-                            <div class="col pl-0">
-                                <select class="custom-select custom-select-sm" id="map_select"></select>
+                            <select class="custom-select custom-select-sm" id="map_select"></select>
+                        </div>
+                        <div class="ml-1 input-group input-group-sm" id="select_difficulty_div">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">難易度</span>
                             </div>
+                            <select class="custom-select custom-select-sm" id="select_difficulty">
+                                <option value="3">甲</option>
+                                <option value="2">乙</option>
+                                <option value="1">丙</option>
+                                <option value="0">丁</option>
+                            </select>
                         </div>
                     </div>
                     <div class="border-top mt-2 pt-3" id="enemy_pattern_content">
@@ -1150,7 +1314,7 @@
             <div class="modal-content mt-5">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        制空シミュレータ2 v<span id="version">0.0.0</span></h5>
+                        制空権シミュレータ v<span id="version">0.0.0</span></h5>
                     <p class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </p>
@@ -1195,88 +1359,9 @@
         </div>
     </div>
 
-    <!-- FAQ モーダル -->
-    <div class="modal fade" id="modal_manual" tabindex="-1">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content mt-5">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        FAQ
-                    </h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <div class="my-2">Q. なにこれ？</span>
-                        <div class="ml-3 font_size_12">
-                            サイト閲覧、並びにこのような場所を発掘していただき、ありがとうございます。
-                        </div>
-                        <div class="ml-3 font_size_12">
-                            「艦隊これくしょん -艦これ-」における、出撃時の制空に関するおおよその結果を把握するためのサイトです。
-                        </div>
-                        <div class="ml-3 font_size_12">
-                            開発中の機能や不具合も多く、完成にはまだまだ時間がかかるため、おもちゃ程度のものとして使ってみてください。
-                        </div>
-                    </div>
-                    <div class="my-2">Q. 使い方がわからない</span>
-                        <div class="ml-3 font_size_12">
-                            作成予定です。
-                        </div>
-                    </div>
-                    <div class="my-2">Q. なにができるの</span>
-                        <div class="ml-3 font_size_12">
-                            ・作成予定です。
-                        </div>
-                        <div class="ml-3 font_size_12">
-                            ・作成予定です。
-                        </div>
-                    </div>
-                    <div class="my-2">Q. なにができないの</span>
-                        <div class="ml-3 font_size_12">
-                            ・作成予定です。
-                        </div>
-                        <div class="ml-3 font_size_12">
-                            ・作成予定です。
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="ml-2">
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 更新履歴モーダル -->
-    <div class="modal fade" id="modal_site_history" tabindex="-1">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content mt-5">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        更新履歴
-                    </h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex flex-column-reverse" id="site_history_body"></div>
-                </div>
-                <div class="modal-footer">
-                    <div class="ml-2">
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="text-center" id="loading_back">
         <div class="spinner-grow align-middle"></div>
-        <span class="align-middle">建造中...</span>
+        <span class="align-middle">建造中!</span>
     </div>
 </body>
 

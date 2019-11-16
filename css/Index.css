@@ -17,14 +17,14 @@ select {
 }
 
 #loading_back {
+  min-width: 526px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1010;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: #252729;
-
   padding-top: 50vh;
   font-size: 28px;
   color: #aaa;
@@ -335,6 +335,10 @@ input[type="radio"] {
   max-width: 1200px;
 }
 
+#site_information > div {
+  max-width: 1200px;
+}
+
 /* まるいボタン */
 .round_button {
   text-align: center;
@@ -405,12 +409,25 @@ input[type="radio"] {
   filter: drop-shadow(0px 0px 4px rgb(185, 185, 185));
 }
 
-/* 基地1つ */
-.lb_tab {
+.btn_enemy {
+  transition: 0.4s;
+  opacity: 0.3;
+}
+.btn_enemy:hover {
+  opacity: 1;
+  cursor: pointer;
+  filter: drop-shadow(0px 0px 2px rgb(255, 196, 0));
+}
+
+.general_box {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
+}
+
+/* 基地1つ */
+.lb_tab {
   max-width: 500px;
 }
 
@@ -468,10 +485,6 @@ input[type="radio"] {
 .ship_tab {
   min-width: 420px;
   max-width: 600px;
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  border-radius: 0.25rem;
 }
 
 .ship_name_span {
@@ -660,6 +673,10 @@ input[type="radio"] {
   box-shadow: 0 .1rem 1rem rgba(0,0,0,.3)
 }
 
+.slot_ini {
+  width: 96px;
+}
+
 /* 機体情報入力部分　固定幅でいく */
 .planeInput_IMP {
   width: 85px;
@@ -825,11 +842,10 @@ input[type="radio"] {
   cursor: move;
 }
 
-.battle_content {
-  border-radius: 0.2rem;
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+/* ドラッグ要素のホバー時 */
+.hover_enemy_content {
+  background-color: rgb(168, 220, 255) !important;
+  transition: 0.2s;
 }
 
 #battle_count {
@@ -841,7 +857,6 @@ input[type="radio"] {
 
 .enemy_content {
   border-radius: .25rem;
-  transition: .2s;
 }
 .enemy_content:hover {
   background-color: #f5f5f5;
@@ -851,7 +866,6 @@ input[type="radio"] {
   text-align: right;
   width: 18px;
   font-size: 12px;
-  cursor: move;
 }
 .enemy_name {
   cursor: pointer;
@@ -868,21 +882,17 @@ input[type="radio"] {
 .enemy_sumAP{
   font-size: 12px;
 }
-.enemy_ap {
+.enemy_ap_select_parent {
   width: 24px;
   font-size: 12px;
   text-align: right;
 }
-.enemy_ap_form {
-  outline: none;
-  text-align: right;
-  width: 32px;
-  height: 28px;
-  font-size: 12px;
-  border-top: none;
-  border-right: none;
-  border-left: none;
-  border-bottom: 1px #aaa solid;
+.enemy_ap {
+  cursor: pointer;
+  transition: .4s;
+}
+.enemy_ap:hover {
+  filter: drop-shadow(0 0 3px rgb(150, 150, 150));
 }
 
 .enemySelect_select {
@@ -992,6 +1002,9 @@ input[type="radio"] {
 }
 
 /* 海域選択欄 */
+#select_difficulty_div {
+  width: 160px;
+}
 .map_img {
   width: 466px;
   height: auto;
@@ -1265,27 +1278,6 @@ input[type="radio"] {
   border-bottom:1px #b8b8b8 solid;
 }
 
-.shadow_left {
-  -webkit-box-shadow: -4px 0px 2px -2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: -4px 0px 2px -2px rgba(0, 0, 0, 0.2);
-  box-shadow: -4px 0px 2px -2px rgba(0, 0, 0, 0.2);
-}
-.shadow_right {
-  -webkit-box-shadow: 4px 0px 2px -2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 4px 0px 2px -2px rgba(0, 0, 0, 0.2);
-  box-shadow: 4px 0px 2px -2px rgba(0, 0, 0, 0.2);
-}
-.shadow_bottom {
-  -webkit-box-shadow: 0px -4px 2px -2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px -4px 2px -2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px -4px 2px -2px rgba(0, 0, 0, 0.2);
-}
-.shadow_bottom {
-  -webkit-box-shadow: 0px 4px 2px -2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 4px 2px -2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 4px 2px -2px rgba(0, 0, 0, 0.2);
-}
-
 /* 詳細設定欄 */
 #config_content label {
   cursor: pointer;
@@ -1294,9 +1286,25 @@ input[type="radio"] {
 #dispMoreThanxAA {
   width: 60px;
 }
-
 #calucCount {
   width: 96px;
+}
+#manual_shoot_down_battle {
+  width: 60px;
+}
+#manual_shoot_down_value {
+  width: 96px;
+}
+
+.sample_plane {
+  max-width: 320px;
+  border: 2px rgb(100, 200, 120) solid;
+  background-color: rgb(230, 255, 240);
+  border-radius: 0.25rem;
+}
+
+.sample_plane:hover {
+  background-color: rgb(225, 250, 235);
 }
 
 .btn_ok {
