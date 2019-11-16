@@ -1276,9 +1276,10 @@ function loadPlanePreset() {
     .val('左のプリセット一覧をクリック')
     .prop('disabled', true);
   $('.preset_preview_tbody').html('');
-  $('#btn_commit_preset').prop('disabled', true);
-  $('#btn_delete_preset').prop('disabled', true);
-  $('#btn_expand_preset').prop('disabled', true);
+  const $modalParent = $('#modal_plane_preset');
+  $modalParent.find('.btn_commit_preset').prop('disabled', true);
+  $modalParent.find('.btn_delete_preset').prop('disabled', true);
+  $modalParent.find('.btn_expand_preset').prop('disabled', true);
   $('.preset_td_info').tooltip();
 }
 
@@ -1290,9 +1291,9 @@ function drawPlanePresetPreview(preset) {
   let text = '';
   // 展開する機体のリスト
   let planes = [];
-
-  $('#btn_expand_preset').prop('disabled', preset === undefined);
-  $('#btn_delete_preset').prop('disabled', preset === undefined);
+  const $modalParent = $('#modal_plane_preset');
+  $modalParent.find('.btn_expand_preset').prop('disabled', preset === undefined);
+  $modalParent.find('.btn_delete_preset').prop('disabled', preset === undefined);
 
   if (preset) {
     $('#preset_preview_name').val(preset.name);
@@ -1335,7 +1336,7 @@ function drawPlanePresetPreview(preset) {
     `;
   }
 
-  $('#btn_commit_preset').prop('disabled', true);
+  $modalParent.find('.btn_commit_preset').prop('disabled', true);
   $('#preset_preview_name').prop('disabled', planes.length === 0);
   $('.preset_preview_tbody').html(text);
   $('.preset_preview_td_info').tooltip();
@@ -3421,8 +3422,9 @@ function preset_tr_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function preset_preview_name_Changed($this) {
-  if ($('#btn_commit_preset').prop('disabled')) $('#btn_commit_preset').prop('disabled', false);
-  if ($this.val().length === 0) $('#btn_commit_preset').prop('disabled', true);
+  const $btn = $('#modal_plane_preset').find('.btn_commit_preset');
+  if ($btn.prop('disabled')) $btn.prop('disabled', false);
+  if ($this.val().length === 0) $btn.prop('disabled', true);
 }
 
 /**
