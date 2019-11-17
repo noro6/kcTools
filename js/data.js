@@ -13,23 +13,23 @@ const AIR_STATUS = [
 
 // 機体カテゴリ
 const PLANE_TYPE = [
-  { id: 1, name: '艦上戦闘機' },
-  { id: -1, name: '夜間戦闘機' },
-  { id: 2, name: '艦上攻撃機' },
-  { id: -2, name: '夜間攻撃機' },
-  { id: 3, name: '艦上爆撃機' },
-  { id: 4, name: '艦上偵察機' },
-  { id: 5, name: '水上偵察機' },
-  { id: 6, name: '水上爆撃機' },
-  { id: 7, name: '水上戦闘機' },
-  { id: 8, name: '大型飛行艇' },
-  { id: 9, name: '噴式爆撃機' },
-  { id: 101, name: '陸上攻撃機' },
-  { id: -101, name: '対潜哨戒機' },
-  { id: 102, name: '陸軍戦闘機' },
-  { id: 103, name: '局地戦闘機' },
-  { id: 104, name: '陸上偵察機' }
-]
+  { id: 1, name: '艦上戦闘機', css: 'css_fighter' },
+  { id: -1, name: '夜間戦闘機', css: 'css_cb_night_aircraft' },
+  { id: 2, name: '艦上攻撃機', css: 'css_torpedo_bomber' },
+  { id: -2, name: '夜間攻撃機', css: 'css_cb_night_aircraft' },
+  { id: 3, name: '艦上爆撃機', css: 'css_dive_bomber' },
+  { id: 4, name: '艦上偵察機', css: 'css_cb_reconnaissance' },
+  { id: 5, name: '水上偵察機', css: 'css_sp' },
+  { id: 6, name: '水上爆撃機', css: 'css_sp' },
+  { id: 7, name: '水上戦闘機', css: 'css_sp' },
+  { id: 8, name: '大型飛行艇', css: 'css_sp' },
+  { id: 9, name: '噴式爆撃機', css: 'css_cb_reconnaissance' },
+  { id: 101, name: '陸上攻撃機', css: 'css_lb_attack_aircraft' },
+  { id: -101, name: '対潜哨戒機', css: 'css_lb_asw_aircraft' },
+  { id: 102, name: '陸軍戦闘機', css: 'css_lb_fighter' },
+  { id: 103, name: '局地戦闘機', css: 'css_lb_attack_aircraft' },
+  { id: 104, name: '陸上偵察機', css: 'css_cb_reconnaissance' }
+];
 
 // 機体
 const PLANE_DATA = [
@@ -208,7 +208,7 @@ const SHIP_TYPE = [
   { id: 18, name: '潜水艦' },
   { id: 19, name: '海防艦' },
   { id: 20, name: '工作艦' },
-]
+];
 
 // 艦種毎装備可能カテゴリ(最低限)
 const LINK_SHIP_EQUIPMENT = [
@@ -226,7 +226,7 @@ const LINK_SHIP_EQUIPMENT = [
   { type: 12, e_type: [5, 6, 7] },
   { type: 13, e_type: [5, 7] },
   { type: 14, e_type: [5] }
-]
+];
 
 // 特定の艦娘が特別に装備できるやつ
 const SPECIAL_LINK_SHIP_EQUIPMENT = [
@@ -278,7 +278,7 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // Gotlandに 水爆
   { shipId: 374, equipmentTypes: [6], equipmentIds: [] },
   { shipId: 379, equipmentTypes: [6], equipmentIds: [] },
-]
+];
 
 // 艦娘
 const SHIP_DATA = [
@@ -424,7 +424,7 @@ const SHIP_DATA = [
   { id: 344.1, type: 3, name: "Gambier Bay改", slot: [16, 12, 6], final: 1, orig: 344 },
   { id: 349.1, type: 1, name: "Intrepid改", slot: [40, 36, 21, 15], final: 1, orig: 349 },
   { id: 381.1, type: 6, name: "日進改", slot: [8, 8, 12], final: 0, orig: 381 }
-]
+];
 
 // 艦種
 const ENEMY_TYPE = [
@@ -441,7 +441,7 @@ const ENEMY_TYPE = [
   // { id: 1905, name: '2019春イベ' },
   // { id: 1908, name: '2019夏イベ' },
   { id: 1911, name: '2019秋イベ' }
-]
+];
 
 // 敵艦
 const ENEMY_DATA = [
@@ -603,7 +603,7 @@ const WORLD_DATA = [
   { world: 1911, name: '進撃！第二次作戦「南方作戦」（2019秋イベ）' },
   { world: 1908, name: '欧州方面反撃作戦 発動！「シングル作戦」（2019夏イベ）' },
   { world: 1905, name: '発動！友軍救援「第二次ハワイ作戦」（2019春イベ）' },
-]
+];
 
 // マップ
 const MAP_DATA = [

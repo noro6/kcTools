@@ -203,7 +203,32 @@
                                                         <div class="dropdown align-self-center prof_select_parent">
                                                             <img class="prof_select prof_none" data-prof="0"
                                                                 data-toggle="dropdown" src="./img/util/prof0.png">
-                                                            <div class="dropdown-menu"></div>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_yellow" alt=">>"
+                                                                        data-prof="7" src="./img/util/prof7.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_yellow" alt="///"
+                                                                        data-prof="6" src="./img/util/prof6.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_yellow" alt="//"
+                                                                        data-prof="5" src="./img/util/prof5.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_yellow" alt="/"
+                                                                        data-prof="4" src="./img/util/prof4.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_blue" alt="|||"
+                                                                        data-prof="3" src="./img/util/prof3.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_blue" alt="||"
+                                                                        data-prof="2" src="./img/util/prof2.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_blue" alt="|"
+                                                                        data-prof="1" src="./img/util/prof1.png"></a>
+                                                                <a class="dropdown-item prof_item">
+                                                                    <img class="prof_option prof_none" alt=""
+                                                                        data-prof="0" src="./img/util/prof0.png"></a>
+                                                            </div>
                                                         </div>
                                                         <div class="mx-1 btn_remove_plane opacity0 align-self-center">
                                                             <i class="fas fa-times"></i>
@@ -633,6 +658,11 @@
                                                         <td class="info_defAp d-none">総制空値</td>
                                                         <td class="info_defAp d-none">対重爆</td>
                                                     </tr>
+                                                    <tr class="info_warning">
+                                                        <td colspan="6" class="px-3 bg-transparent">
+                                                            全ての航空隊が待機に設定されています。
+                                                        </td>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr class="lb_info_tr slot1">
@@ -671,6 +701,11 @@
                                                         <td class="ship_info_slot">搭載</td>
                                                         <td colspan="2">制空値</td>
                                                         <td>総制空値</td>
+                                                    </tr>
+                                                    <tr class="info_warning">
+                                                        <td colspan="6" class="px-3 bg-transparent">
+                                                            装備、搭載数が設定されていません。
+                                                        </td>
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
@@ -871,13 +906,16 @@
                                         </div>
                                         <div class="pl-3">
                                             例2）6-5下ルート(BFIJM)のボスマスの計算…
-                                            戦闘回数を3回に設定、1戦目をFマス、2戦目をIマス、3戦目をボスとする。(B:対潜マス、J:夜戦マスは省略する)
+                                            戦闘回数を3回に設定、1戦目を空に、2戦目をIマス、3戦目をボスとする。(B:対潜マス、J:夜戦マスは省略する)
                                         </div>
                                         <div class="pl-3">
-                                            ※ 例1の場合、Aマスに基地を派遣する場合に限り、敵艦の偵察機を考慮に入れる必要があるためフラヘを設定する必要が出てきます。
+                                            ※ 例1の場合、Aマスに基地を派遣する場合に限り、敵艦の偵察機を考慮する必要があるためフラヘを設定してください。
                                         </div>
                                         <div class="pl-3">
-                                            これらを含め、海域マップ情報は各戦闘の<img class="mx-1 img-size-20" src="img/util/boss.png"
+                                            ※ 同様に例2の場合、Fマスに基地を派遣する場合に限り、敵艦の偵察機を考慮する必要があるためフラリなどを設定してください。
+                                        </div>
+                                        <div class="pl-3">
+                                            これらを含め、海域マップの敵艦情報は各戦闘の<img class="mx-1 img-size-20" src="img/util/boss.png"
                                                 alt="海域選択">
                                             をクリックすると選択できるようになっています。なお、基地航空隊を派遣できない海域は偵察機を持つ敵艦がいるマスも省略しています。
                                         </div>
@@ -885,11 +923,11 @@
                                             防空の計算がしたい場合は、基地航空隊の所謂"お札"を防空に設定してください。
                                         </div>
                                         <div class="pl-3">
-                                            いずれか1部隊でも防空に設定されていると、シミュレーターは防空仕様となり、
+                                            いずれか1部隊でも防空に設定されていると、シミュレータは防空仕様となり、
                                             <u>味方艦隊情報、道中戦闘情報が編集できなくなります。</u>
                                         </div>
                                         <div class="pl-3">
-                                            これを解除する場合は全ての部隊を待機にするか、いずれか1部隊を集中または単発を設定してください。
+                                            これを解除する場合は全ての部隊を待機にするか、いずれか1部隊を集中または単発に設定してください。
                                         </div>
                                         <div class="pl-3">
                                             また、高高度爆撃時の計算は、防空モード時に「飛行場姫 銀だこ」を敵艦に1隻以上含めてください。
@@ -986,6 +1024,9 @@
                                         </div>
                                         <div class="pl-3">
                                             他サイト様の艦隊情報の取り込み
+                                        </div>
+                                        <div class="pl-3">
+                                            その他
                                         </div>
                                     </div>
                                 </div>
@@ -1105,7 +1146,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">艦種</span>
                             </div>
-                            <select class="custom-select custom-select-sm" id="shipType_select"></select>
+                            <select class="custom-select custom-select-sm" id="shipType_select">
+                                <option value="0">全て</option>
+                            </select>
                         </div>
                         <div class="ml-3 align-self-center">表示：</div>
                         <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
@@ -1161,7 +1204,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">艦種</span>
                             </div>
-                            <select class="custom-select custom-select-sm" id="enemyType_select"></select>
+                            <select class="custom-select custom-select-sm" id="enemyType_select">
+                                <option value="0">全て</option>
+                            </select>
                         </div>
                         <div class="ml-3 align-self-center">表示：</div>
                         <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
