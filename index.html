@@ -36,7 +36,12 @@
             </div>
         </div>
         <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空権シミュレータ</a>
-        <div class="col caluclate_end caluclate_ready caluclate_start d-none" id="btn_caluclate">シミュレート開始</div>
+        <div class="w-100 caluclate_end caluclate_ready caluclate_start d-none" id="btn_caluclate">シミュレート開始</div>
+        <!-- <div class="d-none d-md-block px-3 cur_pointer" id="btn_preset_all">
+            <div class="py-1 text-nowrap">
+                編成保存・読み込み
+            </div>
+        </div> -->
     </nav>
 
     <div class="container-fluid px-0">
@@ -95,16 +100,20 @@
                         </div>
                     </div>
                     <div id="main_contents">
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="landBase">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="landBase">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">基地航空隊</span>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_ex_setting"
+                                    data-toggle="tooltip" title="一括設定">
+                                    <i class="fas fa-tools d-table-cell align-middle"></i>
                                 </div>
                                 <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                                     data-toggle="tooltip" title="入れ替え終了">
                                     <i class="fas fa-check d-table-cell align-middle"></i>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                <div class="ml-2 round_button align-self-center d-table btn_content_trade"
                                     data-toggle="tooltip" title="順序入れ替え">
                                     <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                                 </div>
@@ -250,16 +259,20 @@
                             </div>
                         </div>
 
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="friendFleet">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="friendFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">自艦隊</span>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_ex_setting"
+                                    data-toggle="tooltip" title="一括設定">
+                                    <i class="fas fa-tools d-table-cell align-middle"></i>
                                 </div>
                                 <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                                     data-toggle="tooltip" title="入れ替え終了">
                                     <i class="fas fa-check d-table-cell align-middle"></i>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                <div class="ml-2 round_button align-self-center d-table btn_content_trade"
                                     data-toggle="tooltip" title="順序入れ替え">
                                     <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                                 </div>
@@ -408,7 +421,7 @@
                             </div>
                         </div>
 
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="enemyFleet">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="enemyFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">敵艦隊</span>
@@ -517,7 +530,7 @@
                             </div>
                         </div>
 
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="result">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="result">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
@@ -624,7 +637,7 @@
                             </div>
                         </div>
 
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="input_data">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="input_data">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">入力情報</span>
@@ -715,7 +728,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="config">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="config">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">詳細設定</span>
@@ -1068,9 +1081,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">機体選択</h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex">
@@ -1136,9 +1147,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">艦娘選択</h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex flex-wrap">
@@ -1194,9 +1203,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">敵艦選択</h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex flex-wrap">
@@ -1245,9 +1252,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">敵艦隊一括入力</h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex">
@@ -1299,9 +1304,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">機体プリセット</h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
                     <div class="plane_preset_content row bg-white">
@@ -1317,7 +1320,7 @@
                         </div>
                         <div class="col preset_preview border-left d-flex flex-column">
                             <div class="preset_preview mb-2">プリセット名：</div>
-                            <input type="text" class="form-control form-control-sm" id="preset_preview_name"
+                            <input type="text" class="form-control form-control-sm preset_preview_name"
                                 placeholder="プリセット名を入力">
                             <div class="preset_preview_table mt-2">
                                 <div class="preset_preview_tbody"></div>
@@ -1344,9 +1347,7 @@
             <div class="modal-content mt-5 bg-dark2">
                 <div class="modal-header">
                     <h5 class="modal-title text-light" id="modal_smart_menu_title">メニュー</h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body"></div>
             </div>
@@ -1360,7 +1361,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         制空権シミュレータ v<span id="version">0.0.0</span></h5>
-                    <p class="close" data-dismiss="modal">
+                    <p class="close cur_pointer" data-dismiss="modal">
                         <span>&times;</span>
                     </p>
                 </div>
@@ -1379,17 +1380,106 @@
         </div>
     </div>
 
+    <!-- 編成プリセットモーダル -->
+    <div class="modal fade" id="modal_main_preset" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">機体プリセット</h5>
+                    <p class="close cur_pointer cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+                </div>
+                <div class="modal-body">
+                    <div class="main_preset_content row bg-white">
+                        <div class="col preset_list">
+                            <div class="preset_table bg-white">
+                                <div class="preset_thead border-bottom pb-2 mb-2 w-100">
+                                    <div class="preset_tr py-1 text-center btn_create_preset" data-presetid="-1">
+                                        <div>現在の編成をプリセットに登録</div>
+                                    </div>
+                                </div>
+                                <div class="preset_tbody overflow-auto"></div>
+                            </div>
+                        </div>
+                        <div class="col preset_preview border-left d-flex flex-column">
+                            <div class="preset_preview mb-2">プリセット名：</div>
+                            <input type="text" class="form-control form-control-sm preset_preview_name"
+                                placeholder="プリセット名を入力">
+                            <div class="preset_preview_table mt-2">
+                                <div class="preset_preview_tbody"></div>
+                            </div>
+                            <div class="mt-auto d-flex">
+                                <button type="button"
+                                    class="ml-auto btn btn-sm btn-success btn_commit_preset">保存</button>
+                                <button type="button" class="ml-2 btn btn-sm btn-danger btn_delete_preset">削除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary btn_expand_preset">編成展開</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 一括設定モーダル -->
+    <div class="modal fade" id="modal_collectively_setting" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mt-5">
+                <div class="modal-header">
+                    <h5 class="modal-title">一括設定</h5>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex mt-2">
+                        <div class="align-self-center">全解除：</div>
+                        <button type="button" class="btn btn-sm btn-outline-dark mx-2 btn_remove_plane_all">
+                            艦載機
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-dark mx-2 btn_remove_ship_all">
+                            艦娘
+                        </button>
+                    </div>
+                    <div class="d-flex mt-2">
+                        <div class="align-self-center">搭載数：</div>
+                        <button type="button" class="btn btn-sm btn-outline-info mx-2 btn_slot_max">
+                            全て最大にする
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-success mx-2 btn_slot_default">
+                            全て初期値にする
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger mx-2 btn_slot_min">
+                            全て 0 にする
+                        </button>
+                    </div>
+                    <div class="d-flex mt-2">
+                        <div class="align-self-center">熟練度：</div>
+                        <button type="button" class="btn btn-sm btn-outline-info mx-2 btn_prof_max">
+                            全て最大にする
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger mx-2 btn_prof_min">
+                            全て 0 にする
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="ml-auto">
+                        <button type="button" class="btn btn-sm btn-primary btn_cancel"
+                            data-dismiss="modal">閉じる</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 確認アラートモーダル -->
     <div class="modal fade" id="modal_confirm" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content mt-5">
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        確認
-                    </h5>
-                    <p class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </p>
+                    <h5 class="modal-title">確認</h5>
+                    <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
@@ -1406,7 +1496,7 @@
 
     <div class="text-center" id="loading_back">
         <div class="spinner-grow align-middle"></div>
-        <span class="align-middle">建造中!</span>
+        <span class="align-middle">建造中・・・</span>
     </div>
 </body>
 

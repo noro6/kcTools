@@ -327,6 +327,15 @@ input[type="radio"] {
   bottom: 0;
 }
 
+#btn_preset_all {
+  color: #999;
+  transition: .2s;
+}
+#btn_preset_all:hover {
+  color: #ddd;
+  filter: drop-shadow(0px 0px 8px #aaa);
+}
+
 #main {
   min-height: 100vh;
 }
@@ -424,6 +433,13 @@ input[type="radio"] {
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
+}
+
+.contents {
+  background-color: #fff;
+  border-radius: .25rem;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
 }
 
 /* 基地1つ */
@@ -980,11 +996,11 @@ input[type="radio"] {
   background-color: rgb(122, 195, 255) !important;
 }
 
-/* 機体プリセットプレビュー欄 */
+/* プリセットプレビュー欄 */
 .preset_preview_tr {
   height: 52px;
 }
-#preset_preview_name {
+.preset_preview_name {
   font-size: 12px;
 }
 .preset_preview_td_type {
