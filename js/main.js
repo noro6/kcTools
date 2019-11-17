@@ -228,7 +228,7 @@ function initialize(callback) {
   // id付けなおす
   $('.ship_tab').each((i, e) => { $(e).attr('id', 'shipNo_' + (i + 1)); });
   // 表示隻数初期化
-  $('#display_ship_count').val(2);
+  $('.display_ship_count').val(2);
 
   // 敵艦隊欄複製
   text = $('#battle_container').html();
@@ -344,6 +344,7 @@ function initialize(callback) {
   text = text.replace(/n:/g, '<span class="mr-1 badge badge-pill badge-success">新規</span>');
   text = text.replace(/b:/g, '<span class="mr-1 badge badge-pill badge-info">修正</span>');
   $('#site_history_body').html(text);
+  $('#site_history_body').append(`<div class="mt-2 font_size_12">最終更新：${LAST_UPDATE_DATE}</div>`);
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
@@ -1364,10 +1365,12 @@ function createNodeSelect() {
   const len = patterns.length;
   let text = '';
   for (let index = 0; index < len; index++) {
+    let difficulty = DIFFICULTY.find(v => v.id === patterns[index].difficulty);
     text += `
     <div class="node_tr d-flex px-1 py-2 w-100 cur_pointer" data-node="${patterns[index].name}">
       <div class="align-self-center node_index text-primary">${index + 1}.</div>
       <div class="align-self-center ml-2">${patterns[index].name}</div>
+      <div class="align-self-center ml-auto font_size_12">${difficulty ? '[' + difficulty.name + ']' : ''}</div>
     </div>
   `;
   }
@@ -1674,8 +1677,10 @@ function updateLandBaseInfo(landBaseData) {
       let sumAp_ex = 0;
       let rocketCount = 0;
 
+      // 対高高度爆撃機の数を取得
       for (const v of landBaseData) {
         sumAp += v.ap;
+        if (v.mode === -1) continue;
         for (const plane of v.planes) if ([350, 351, 352].indexOf(plane.id) > -1) rocketCount++;
       }
       // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
@@ -2531,7 +2536,7 @@ function mainCaluclate(landBaseData, friendFleetData, enemyFleetData) {
     let isChanged = false;
     for (const enemyFleet of enemyFleetData) {
       for (const enemy of enemyFleet) {
-        if ([389, 390, 391].indexOf(enemy.id) > -1) {
+        if ([389, 390, 391, 392, 393, 394].indexOf(enemy.id) > -1) {
           sumAP = castInt($('.info_defApEx').text());
           isChanged = true;
           break;
@@ -2752,7 +2757,7 @@ function caluclateLandBase(landBaseAps, landBaseModes, enemyFleet, enemyApDist, 
     }
   }
 
-  enemyApDist[6] += getEnemyFleetLBAP(enemyFleet);
+  enemyApDist[6] += getEnemyFleetAP(enemyFleet);
 }
 
 /*==================================
