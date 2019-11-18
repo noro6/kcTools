@@ -8,7 +8,7 @@ const AIR_STATUS = [
   { id: 2, name: '航空均衡', abbr: '均衡', rate: 6 },
   { id: 3, name: '航空劣勢', abbr: '劣勢', rate: 4 },
   { id: 4, name: '制空権喪失', abbr: '喪失', rate: 1 },
-  { id: -1, name: '-', abbr: '-', rate: 0 },
+  { id: -1, name: '航空戦なし', abbr: '-', rate: 0 },
 ];
 
 // 機体カテゴリ
@@ -944,6 +944,15 @@ const ENEMY_PATTERN = [
   { area: 19083, name: 'T ', enemies: [91], range: 8, difficulty: 0 },
   { area: 19083, name: 'Uボス 前哨 ', enemies: [309, 41, 91], range: 7, difficulty: 0 },
   { area: 19083, name: 'Uボス 最終 ', enemies: [23, 41, 91], range: 7, difficulty: 0 },
+];
+
+// デフォ機体プリセット
+const DEFAULT_PLANE_PRESET = [
+  { id: 0, name: '陸戦1 陸攻3', planes: [225, 186, 186, 186] },
+  { id: 1, name: '陸攻4', planes: [169, 169, 169, 169] },
+  { id: 2, name: '防空', planes: [54, 175, 175, 175] },
+  { id: 3, name: 'FBA', planes: [94, 100, 157, 54] },
+  { id: 4, name: '上位艦戦キャリア', planes: [56, 336, 157, 339] },
 ];
 
 /** 変更履歴 */

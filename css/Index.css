@@ -1017,6 +1017,13 @@ input[type="radio"] {
   align-self: center;
 }
 
+#preset_remarks {
+  height: calc( 1.4em * 10 );
+  max-height: calc( 1.4em * 10 );
+  min-height: calc( 1.55em * 4 );
+  line-height: 1.3;
+}
+
 /* 海域選択欄 */
 #select_difficulty_div {
   width: 160px;
