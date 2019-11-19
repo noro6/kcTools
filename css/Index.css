@@ -1000,7 +1000,7 @@ input[type="radio"] {
 .preset_preview_tr {
   height: 52px;
 }
-.preset_preview_name {
+.preset_name {
   font-size: 12px;
 }
 .preset_preview_td_type {

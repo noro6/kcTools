@@ -24,6 +24,13 @@
     <script src="./js/data.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/bootstrap.bundle.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-152888142-2');
+    </script>
 </head>
 
 <body>
@@ -37,11 +44,9 @@
         </div>
         <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空権シミュレータ</a>
         <div class="w-100 caluclate_end caluclate_ready caluclate_start d-none" id="btn_caluclate">シミュレート開始</div>
-        <!-- <div class="d-none d-md-block px-3 cur_pointer" id="btn_preset_all">
-            <div class="py-1 text-nowrap">
-                編成保存・展開
-            </div>
-        </div> -->
+        <div class="d-none d-md-block px-3 cur_pointer" id="btn_preset_all">
+            <div class="py-1 text-nowrap">編成保存・展開</div>
+        </div>
     </nav>
 
     <div class="container-fluid px-0">
@@ -749,8 +754,8 @@
                             <div class="collapse collapse_content" id="config_content">
                                 <div class="border-top"></div>
                                 <div class="my-3 mx-2 px-2 py-2 general_box">
-                                    <div><i class="fas fa-wrench mr-2"></i>操作設定</div>
-                                    <div class="custom-control custom-checkbox ml-3 mt-2">
+                                    <div class="h6"><i class="fas fa-mouse mr-2"></i>操作設定</div>
+                                    <div class="custom-control custom-checkbox ml-3">
                                         <input class="custom-control-input" type="checkbox" id="drag_drop_copy">
                                         <label class="custom-control-label" for="drag_drop_copy">
                                             D&amp;Dで機体や敵艦を移動時、複製を行う
@@ -764,81 +769,99 @@
                                     </div>
                                 </div>
                                 <div class="my-3 mx-2 px-2 py-2 general_box">
-                                    <div><i class="fas fa-calculator mr-2"></i>シミュレート設定</div>
-                                    <div class="ml-3 mt-2 d-flex">
-                                        <div class="align-self-center">熟練度</div>
-                                        <div class="align-self-center">
-                                            <img class="img-size-20 mx-1" alt=">>" src="./img/util/prof7.png">
+                                    <div class="h6"><i class="fas fa-calculator mr-2"></i>シミュレート設定</div>
+                                    <div class="ml-3">
+                                        <div class="d-flex">
+                                            <div class="align-self-center">シミュレート回数：</div>
+                                            <input type="number" class="form-control form-control-sm align-self-center"
+                                                id="calucCount" value="1">
                                         </div>
-                                        <div class="align-self-center">
-                                            選択時、内部熟練度を 120 として計算する機体：
+                                        <div class="ml-1 font_size_12">
+                                            増やすと精度は上がりますが、処理に時間がかかります。
+                                            処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。
                                         </div>
                                     </div>
-                                    <div class="ml-3 d-flex flex-wrap" id="innerProfSetting">
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_1" checked>
-                                            <label class="custom-control-label" for="prof120_1">艦戦</label>
+                                    <div class="ml-3 mt-3">
+                                        <div class="d-flex">
+                                            <div class="align-self-center">熟練度</div>
+                                            <div class="align-self-center">
+                                                <img class="img-size-20 mx-1" alt=">>" src="./img/util/prof7.png">
+                                            </div>
+                                            <div class="align-self-center">
+                                                選択時、内部熟練度を 120 として計算する機体：
+                                            </div>
                                         </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_2">
-                                            <label class="custom-control-label" for="prof120_2">艦攻</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_3">
-                                            <label class="custom-control-label" for="prof120_3">艦爆</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_4" checked>
-                                            <label class="custom-control-label" for="prof120_4">艦偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_5" checked>
-                                            <label class="custom-control-label" for="prof120_5">水偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_6">
-                                            <label class="custom-control-label" for="prof120_6">水爆</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_7" checked>
-                                            <label class="custom-control-label" for="prof120_7">水戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_9">
-                                            <label class="custom-control-label" for="prof120_9">噴式</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_101">
-                                            <label class="custom-control-label" for="prof120_101">陸攻</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_102"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_102">陸戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_103"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_103">局戦</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_104"
-                                                checked>
-                                            <label class="custom-control-label" for="prof120_104">陸偵</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox mr-3">
-                                            <input class="custom-control-input" type="checkbox" id="prof120_8" checked>
-                                            <label class="custom-control-label" for="prof120_8">飛行艇</label>
+                                        <div class="d-flex flex-wrap" id="innerProfSetting">
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_1"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_1">艦戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_2">
+                                                <label class="custom-control-label" for="prof120_2">艦攻</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_3">
+                                                <label class="custom-control-label" for="prof120_3">艦爆</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_4"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_4">艦偵</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_5"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_5">水偵</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_6">
+                                                <label class="custom-control-label" for="prof120_6">水爆</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_7"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_7">水戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_9">
+                                                <label class="custom-control-label" for="prof120_9">噴式</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_101">
+                                                <label class="custom-control-label" for="prof120_101">陸攻</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_102"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_102">陸戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_103"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_103">局戦</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_104"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_104">陸偵</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mr-3">
+                                                <input class="custom-control-input" type="checkbox" id="prof120_8"
+                                                    checked>
+                                                <label class="custom-control-label" for="prof120_8">飛行艇</label>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="ml-3 mt-3 d-flex">
-                                        <div class="align-self-center">シミュレート回数：</div>
-                                        <input type="number" class="form-control form-control-sm align-self-center"
-                                            id="calucCount" value="1">
-                                    </div>
-                                    <div class="ml-4">
-                                        増やすと精度は上がりますが、処理に時間がかかります。
-                                        処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。
+                                        <div class="custom-control custom-checkbox" data-toggle="tooltip"
+                                            data-html="true" title="最後に計算が行われた編成を保持し、<br>次回サイトに訪れた際に自動で復帰します。">
+                                            <input class="custom-control-input" type="checkbox" id="auto_save">
+                                            <label class="custom-control-label" for="auto_save">
+                                                編成の自動保存を有効にする
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="ml-3 mt-3 d-none">
                                         <div class="align-self-center">対空砲火調整(仮)</div>
@@ -863,7 +886,7 @@
                                     </div>
                                 </div>
                                 <div class="my-3 mx-2 px-2 py-2 general_box">
-                                    <div><i class="fas fa-desktop mr-2"></i>表示設定</div>
+                                    <div class="h6"><i class="fas fa-desktop mr-2"></i>表示設定</div>
                                     <div class="ml-3 mt-2">
                                         近日機能追加予定
                                     </div>
@@ -933,11 +956,11 @@
                                             をクリックすると選択できるようになっています。なお、基地航空隊を派遣できない海域は偵察機を持つ敵艦がいるマスも省略しています。
                                         </div>
                                         <div class="pl-3 mt-3">
-                                            防空の計算がしたい場合は、基地航空隊の所謂"お札"を防空に設定してください。
+                                            防空の計算がしたい場合は、基地航空隊の所謂"お札"を「防空」に設定してください。
                                         </div>
                                         <div class="pl-3">
                                             いずれか1部隊でも防空に設定されていると、シミュレータは防空仕様となり、
-                                            <u>味方艦隊情報、道中戦闘情報が編集できなくなります。</u>
+                                            <u>味方艦隊情報、道中戦闘回数が編集できなくなります。</u>
                                         </div>
                                         <div class="pl-3">
                                             これを解除する場合は全ての部隊を待機にするか、いずれか1部隊を集中または単発に設定してください。
@@ -946,7 +969,7 @@
                                             また、高高度爆撃時の計算は、防空モード時に「飛行場姫 偵察」または「飛行場姫 重爆」を敵艦に1隻以上含めてください。
                                         </div>
                                         <div class="pl-3">
-                                            なお、<a href="#input_data">入力情報</a>には敵艦に関係なく、防空時であれば常に高高度爆撃時の制空値が表示されます。
+                                            なお、<a href="#input_data">入力情報</a>には敵艦に関係なく、防空時であれば常に対高高度爆撃時の制空値が表示されます。
                                         </div>
                                         <div class="pl-3 mt-4">
                                             機体情報の入力は次のコントロールから行います。
@@ -983,6 +1006,7 @@
                                         </div>
                                         <div class="pl-3">
                                             左から「搭載数」「機体カテゴリ」「機体名」「改修値」「熟練度」「装備解除」となっています。
+                                            いずれもクリックで変更可能です。
                                         </div>
                                         <div class="pl-3">
                                             「機体カテゴリ」「機体名」部分はドラッグ&amp;ドロップのトリガーとなっており、別の機体との交換や複製が可能です。
@@ -999,8 +1023,8 @@
                                             ドロップした際にドラッグしていた要素はそのままに、ドロップ先に複製を行います。
                                         </div>
                                         <div class="pl-3">
-                                            この機能は上記設定でチェックを入れていない場合でも、ドロップ時にキーボードのCtrlキーを押下していると
-                                            一時的に有効になります。
+                                            この機能は上記設定にチェックを入れていない場合でも、ドロップ時にキーボードのCtrlキーを
+                                            押下していると一時的に有効になります。(Ctrlキーによる複製はスマホ未対応)
                                         </div>
                                         <div class="pl-3">
                                             同じ機体や、同じ敵艦を大量に入力したい場合などに利用してみてください。
@@ -1027,9 +1051,6 @@
                                     <div class="my-4">
                                         <p class="h6">改修構想</p>
                                         <div class="pl-3">
-                                            艦隊全体保存機能
-                                        </div>
-                                        <div class="pl-3">
                                             使い方などの追記・改訂
                                         </div>
                                         <div class="pl-3">
@@ -1040,6 +1061,10 @@
                                         </div>
                                         <div class="pl-3">
                                             その他
+                                        </div>
+                                        <div class="pl-3">
+                                            <span class="mr-1 badge badge-pill badge-success">済</span>
+                                            <s>艦隊保存・プリセット機能</s>
                                         </div>
                                     </div>
                                 </div>
@@ -1320,8 +1345,12 @@
                         </div>
                         <div class="col preset_preview border-left d-flex flex-column">
                             <div class="preset_preview mb-2">プリセット名：</div>
-                            <input type="text" class="form-control form-control-sm preset_preview_name"
-                                placeholder="プリセット名を入力">
+                            <input type="text" class="form-control form-control-sm preset_name" placeholder="プリセット名を入力">
+                            <div class="invalid-feedback">1～40文字以内で入力してください。</div>
+                            <div class="alert alert-danger px-1 py-1 mt-2 d-none">
+                                <div>機体が装備されていません。</div>
+                                <div>お手数ですが、一度この画面を閉じ、記録したい装備構成にしてから再度この画面を開いてください。</div>
+                            </div>
                             <div class="preset_preview_table mt-2">
                                 <div class="preset_preview_tbody"></div>
                             </div>
@@ -1335,7 +1364,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary btn_expand_preset">プリセット展開</button>
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-sm btn-secondary btn_cancel"
+                        data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
         </div>
@@ -1400,33 +1430,34 @@
                                 <div class="preset_tbody overflow-auto"></div>
                             </div>
                         </div>
-                        <div class="col preset_preview border-left d-flex flex-column">
-                            <div class="form-group mt-3">
-                                <label for="exampleFormControlTextarea1">プリセット名：</label>
-                                <input type="text" class="form-control form-control-sm preset_preview_name">
-                                <div class="invalid-feedback">
-                                    1～40文字以内で入力してください。
-                                </div>
+                        <div class="col preset_data border-left d-flex flex-column">
+                            <div class="form-group mt-2">
+                                <label class="mb-1">プリセット名：</label>
+                                <input type="text" class="form-control form-control-sm preset_name">
+                                <div class="invalid-feedback">1～40文字以内で入力してください。</div>
                             </div>
-                            <div class="form-group mt-3">
-                                <label for="exampleFormControlTextarea1">編成メモ：
-                                </label>
+                            <div class="form-group mt-2">
+                                <label class="mb-1">編成メモ：</label>
                                 <textarea class="form-control font_size_12 px-2" id="preset_remarks"></textarea>
-                                <div class="invalid-feedback">
-                                    400文字以内で入力してください。
-                                </div>
+                                <div class="invalid-feedback">400文字以内で入力してください。</div>
                             </div>
-                            <div class="mt-auto d-flex">
-                                <button type="button"
-                                    class="ml-auto btn btn-sm btn-success btn_commit_preset" disabled>保存</button>
+                            <div class="alert alert-success text-center font_size_12 px-1 py-1 fade hide">
+                                <span class="task">編集</span>が完了しました。
+                            </div>
+                            <div class="mt-auto d-flex flex-row-reverse">
                                 <button type="button" class="ml-2 btn btn-sm btn-danger btn_delete_preset">削除</button>
+                                <button type="button" class="ml-2 btn btn-sm btn-success btn_commit_preset">保存</button>
+                                <button type="button" class="btn btn-sm btn-info btn_commit_preset_header d-none"
+                                    data-toggle="tooltip" data-html="true"
+                                    title="プリセット名と編成メモのみ変更します。<br>登録されている装備や艦隊編成、敵艦編成は変更しません。">名称変更</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary btn_expand_preset">編成展開</button>
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-sm btn-secondary btn_cancel"
+                        data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
         </div>
@@ -1442,15 +1473,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex mt-2">
-                        <div class="align-self-center">全解除：</div>
-                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_remove_plane_all">
-                            艦載機
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_remove_ship_all">
-                            艦娘
-                        </button>
-                    </div>
-                    <div class="d-flex mt-2">
                         <div class="align-self-center">搭載数：</div>
                         <button type="button" class="btn btn-sm btn-outline-info mx-1 btn_slot_max">
                             全て最大にする
@@ -1458,16 +1480,16 @@
                         <button type="button" class="btn btn-sm btn-outline-success mx-1 btn_slot_default">
                             全て初期値にする
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger mx-1 btn_slot_min">
+                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_slot_min">
                             全て 0 にする
                         </button>
                     </div>
                     <div class="d-flex mt-2">
                         <div class="align-self-center">改修値：</div>
                         <button type="button" class="btn btn-sm btn-outline-info mx-1 btn_remodel_max">
-                            全て ★MAX にする
+                            全て最大にする
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger mx-1 btn_remodel_min">
+                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_remodel_min">
                             全て 0 にする
                         </button>
                     </div>
@@ -1480,14 +1502,23 @@
                             data-toggle="tooltip" data-html="true" title="以下の機体が対象です。<br>艦上戦闘機 / 水上戦闘機 / 陸軍戦闘機 / 局地戦闘機">
                             戦闘機のみ最大にする
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger mx-1 btn_prof_min">
+                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_prof_min">
                             全て 0 にする
+                        </button>
+                    </div>
+                    <div class="d-flex mt-4">
+                        <div class="align-self-center">全解除：</div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mx-1 btn_remove_plane_all">
+                            艦載機を全て解除する
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger mx-1 btn_remove_ship_all">
+                            艦娘を全て解除する
                         </button>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="ml-auto">
-                        <button type="button" class="btn btn-sm btn-primary btn_cancel"
+                        <button type="button" class="btn btn-sm btn-secondary btn_cancel"
                             data-dismiss="modal">閉じる</button>
                     </div>
                 </div>
