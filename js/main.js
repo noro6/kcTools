@@ -201,7 +201,6 @@ function checkInvalidPlane(shipID, plane) {
 function initialize(callback) {
   let text = '';
 
-  // console.time('initialize');
   // 競合回避
   $.widget.bridge('uibutton', $.ui.button);
   $.widget.bridge('uitooltip', $.ui.tooltip);
@@ -481,7 +480,6 @@ function initialize(callback) {
     SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
   }
 
-  // console.timeEnd('事前計算');
   callback();
 }
 
@@ -1352,7 +1350,7 @@ function createNodeSelect() {
   for (let index = 0; index < len; index++) {
     let difficulty = DIFFICULTY.find(v => v.id === patterns[index].difficulty);
     text += `
-    <div class="node_tr d-flex px-1 py-2 w-100 cur_pointer" data-node="${patterns[index].name}">
+    <div class="node_tr d-flex pl-1 pr-2 py-2 w-100 cur_pointer" data-node="${patterns[index].name}">
       <div class="align-self-center node_index text-primary">${index + 1}.</div>
       <div class="align-self-center ml-2">${patterns[index].name}</div>
       <div class="align-self-center ml-auto font_size_12">${difficulty ? '[' + difficulty.name + ']' : ''}</div>
