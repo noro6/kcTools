@@ -3,19 +3,240 @@ body {
   background: #f0ebe6;
 }
 
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  outline: none;
+h1 { font-size: 2em; }
+input[type="radio"] { display: none; }
+#main { min-height: 100vh; }
+#main_contents > div { max-width: 1200px; }
+#site_information > div { max-width: 1200px; }
+#modal_plane_select .modal-content { min-height: 80vh; }
+#modal_ship_select .modal-content { min-height: 84vh; }
+#modal_enemy_select .modal-content { min-height: 80vh; }
+#modal_main_preset .modal-content { min-height: 584px; }
+[role="main"] {
+  padding-top: 48px;
+  min-width: 526px;
+}
+@media (min-width: 768px) {
+  [role="main"] {
+    padding-top: 48px;
+  }
+}
+@media (min-width: 577px) { .modal-xl { max-width: 522px; } }
+@media (min-width: 992px) { .modal-xl { max-width: 800px; } }
+@media (min-width: 1200px) { .modal-xl { max-width: 980px; } }
+.tooltip-inner { max-width: 100%; }
+.modal-backdrop {
+  min-width: 1024px;
+  min-height: 960px;
+}
+@media (min-width: 1000px) { #lb_tab_select { display: none !important; } }
+.fa-toolbox { color: #c86400; }
+
+
+
+/* -----------------------------------
+  ユーティリティ
+----------------------------------- */
+.ml-2_5 { margin-left: 0.75rem !important; }
+.pt-3_5 { padding-top: 1.25rem !important; }
+.bg-dark1 { background: #3b3d3f !important; }
+.bg-dark2 { background: #282828 !important; }
+.bg-ddd { background-color: #ddd; }
+.bg-ccc { background-color: #ccc; }
+.bg-aaa { background-color: #aaa; }
+.bg-e9ecef { background-color: #e9ecef; }
+.sortable_handle { cursor: move; }
+.cur_pointer { cursor: pointer; }
+.cur_move { cursor: move; }
+.cur_help { cursor: help; }
+.opacity0 {
+  opacity: 0 !important;
+  cursor: default !important;
+}
+.opacity2 { opacity: .2 !important; }
+.font_size_20 { font-size: 20px; }
+.font_size_14 { font-size: 14px; }
+.font_size_12 { font-size: 12px; }
+.font_size_11 { font-size: 11px; }
+.font_size_10 { font-size: 10px; }
+.font_size_8 { font-size: 8px; }
+.font_color_fff { color: #fff; }
+.font_color_ccc { color: #ccc; }
+.font_color_aaa { color: #aaa; }
+.font_color_777 { color: #777; }
+.font_color_000 { color: #000; }
+.img-size-20 {
+  height: 20px;
+  width: auto;
+}
+.img-size-25 {
+  width: 25px;
+  height: auto;
+}
+.img-size-30 {
+  width: 30px;
+  height: auto;
+}
+.img-size-32 {
+  padding-top: 3px;
+  width: 32px;
+  height: auto;
+}
+.size-25 {
+  width: 25px;
+  height: 25px;
+}
+
+
+
+/* -----------------------------------
+  カスタムコントロール
+----------------------------------- */
+.nav-tabs { border-color: #aaa !important; }
+.round_button {
   text-align: center;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border: 1px #eaeaea solid;
+  transition: 0.4s;
+}
+.round_button:hover { background-color: #eee; }
+.btn_ok { width: 72px; }
+.btn_icon {
+  font-size: 18px;
+  transition: 0.4s;
+  opacity: 0.3;
+}
+.btn_icon:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.btn_preset:hover { filter: drop-shadow(0px 0px 4px #ffb978); }
+.btn_reset { filter: drop-shadow(0px 0px 4px #b9b9b9); }
+.btn_enemy {
+  transition: 0.4s;
+  opacity: 0.3;
+}
+.btn_enemy:hover {
+  opacity: 1;
+  cursor: pointer;
+  filter: drop-shadow(0px 0px 2px #ffc400);
+}
+.trade_enabled { cursor: move; }
+.general_box {
+  -webkit-box-shadow: 0px 1px 2px 1px #00000033;
+  -moz-box-shadow: 0px 1px 2px 1px #00000033;
+  box-shadow: 0px 1px 2px 1px #00000033;
+  border-radius: 0.25rem;
+}
+.contents {
+  background-color: #fff;
+  border-radius: .25rem;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 .5rem 1rem #00000026;
 }
 
-/* tooltip調整 */
-.tooltip-inner {
-  max-width: 100%;
+
+
+/* -----------------------------------
+  header
+----------------------------------- */
+#menu-small {
+  position: relative;
+  height: 17px;
+  width: 24px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+#menu-small div {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  width: 24px;
+  background-color: #ddd;
+  border-radius: 1.5px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+#menu-small div:nth-of-type(1) { top: 0; }
+#menu-small div:nth-of-type(2) { top: 7px; }
+#menu-small div:nth-of-type(3) { bottom: 0; }
+#btn_caluclate {
+  text-align: center;
+  font-size: 18px;
+  transition: .4s;
+}
+.caluclate_end {
+  cursor: default;
+  color: #555;
+}
+.caluclate_ready {
+  cursor: pointer;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 6px #808080);
+}
+.caluclate_ready:hover {
+  color: #fff;
+  filter: drop-shadow(0px 0px 6px #fff);
+}
+#btn_preset_all {
+  color: #999;
+  transition: .2s;
+}
+#btn_preset_all:hover {
+  color: #ddd;
+  filter: drop-shadow(0px 0px 8px #aaa);
 }
 
+
+
+/* -----------------------------------
+  sideBar
+----------------------------------- */
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  width: 150px;
+  padding: 60px 0 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+.sidebar .nav-link { color: #ccc; }
+.sidebar .nav-link:hover { color: #00ccff; }
+.sidebar .nav-link.active { color: #00ccff; }
+.sidebar .nav-link .feather { margin-right: 4px; color: #999; }
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather { color: inherit; }
+.sidebar-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.disabled_nav {
+  cursor: default !important;
+  color: #777 !important;
+}
+.navbar-brand {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
+}
+
+
+
+/* -----------------------------------
+  Loading
+----------------------------------- */
 #loading_back {
   min-width: 526px;
   position: fixed;
@@ -34,146 +255,23 @@ select {
   height: 5rem;
 }
 
-/* モーダル書き換え */
-#modal_plane_select .modal-content {
-  min-height: 80vh;
-}
-#modal_ship_select .modal-content {
-  min-height: 84vh;
-}
-#modal_enemy_select .modal-content {
-  min-height: 80vh;
-}
-.modal-backdrop {
-  min-width: 1024px;
-  min-height: 960px;
-}
 
-@media (min-width: 577px) {
-  .modal-xl {
-    max-width: 522px;
-  }
-}
-@media (min-width: 992px) {
-  .modal-xl {
-    max-width: 800px;
-  }
-}
-@media (min-width: 1200px) {
-  .modal-xl {
-    max-width: 980px;
-  }
-}
 
-.pt-3_5 {
-  padding-top: 1.25rem !important;
-}
-
-.bg-dark1 {
-  background: #3b3d3f !important;
-}
-
-.bg-dark2 {
-  background: #282828 !important;
-}
-
-.bg-ddd {
-  background-color: #ddd;
-}
-
-.bg-ccc {
-  background-color: #ccc;
-}
-
-.bg-aaa {
-  background-color: #aaa;
-}
-
-.bg-e9ecef {
-  background-color: #e9ecef;
-}
-
-.w-33 {
-  width: 33% !important;
-}
-
-.ml-2_5 {
-  margin-left: 0.75rem !important;
-}
-
-.cur_pointer {
-  cursor: pointer;
-}
-
-.cur_move {
-  cursor: move;
-}
-
-.cur_no-drop {
-  cursor: no-drop !important;
-}
-
-.cur_help {
-  cursor: help;
-}
-
-.opacity0 {
-  opacity: 0 !important;
-  cursor: default !important;
-}
-.opacity2 {
-  opacity: .2 !important;
-}
-
-h1 {
-  font-size: 2em;
-}
-.font_size_20 {
-  font-size: 20px;
-}
-.font_size_14 {
-  font-size: 14px;
-}
-.font_size_12 {
-  font-size: 12px;
-}
-.font_size_11 {
-  font-size: 11px;
-}
-.font_size_10 {
-  font-size: 10px;
-}
-.font_size_8 {
-  font-size: 8px;
-}
-.font_color_fff {
-  color: #fff;
-}
-.font_color_ccc {
-  color: #ccc;
-}
-.font_color_aaa {
-  color: #aaa;
-}
-.font_color_777 {
-  color: #777;
-}
-.font_color_000 {
-  color: #000;
-}
-
-/* nav-tabs 書き換え */
-#main_contents .nav-tabs {
-  border-color: #aaa !important;
-}
-
+/* -----------------------------------
+  主画面 nav-link
+----------------------------------- */
 #main_contents a.nav-link {
   color: #bbb;
   padding-right: 10px;
   padding-left: 10px;
   transition: .2s;
 }
-
+.modal a.nav-link {
+  color: #bbb;
+  padding-right: 10px;
+  padding-left: 10px;
+  transition: .2s;
+}
 @media (max-width: 768) {
   #result a.nav-link {
     font-size: 12px;
@@ -181,293 +279,52 @@ h1 {
     padding-left: 8px;
   }
 }
-@media (min-width: 767) {
-  
-}
-
 #main_contents a.nav-link:hover {
   color: #999 !important;
-  border-top-color: #aaa !important;
-  border-right-color: #aaa !important;
-  border-left-color: #aaa !important;
-  border-bottom-color: transparent !important;
+  border-color: #aaa  #aaa transparent #aaa !important;
 }
-
+.modal a.nav-link:hover {
+  color: #999 !important;
+  border-color: #aaa  #aaa transparent #aaa !important;
+}
 #main_contents a.nav-link.active {
   color: #111 !important;
-  border-color: #aaa !important;
+  border-color: #aaa  #aaa #fff #aaa !important;
   background-color: #fff !important;
-  border-bottom-color: #fff !important;
 }
-
-/* ラジオボタン非表示 */
-input[type="radio"] {
-  display: none;
+.modal a.nav-link.active {
+  color: #111 !important;
+  border-color: #aaa  #aaa #fff #aaa !important;
+  background-color: #fff !important;
 }
-
-.feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
-
-.navbar-brand {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  font-size: 1rem;
-  background-color: rgba(0, 0, 0, 0.25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
-}
-
-.navbar .form-control {
-  padding: 0.75rem 1rem;
-  border-width: 0;
-  border-radius: 0;
-}
-
-.disabled_nav {
-  cursor: default !important;
-  color: #777 !important;
-}
-
-.sidebar-sticky {
-  position: relative;
-  top: 0;
-  height: calc(100vh - 48px);
-  width: 150px;
-  padding: 60px 0 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  /* ビューポートがコンテンツより短い場合、スクロール可能なコンテンツ */
-}
-
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-  .sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-}
-
-.sidebar .nav-link {
-  color: #ccc;
-}
-
-.sidebar .nav-link:hover {
-  color: #00ccff;
-}
-
-.sidebar .nav-link .feather {
-  margin-right: 4px;
-  color: #999;
-}
-
-.sidebar .nav-link.active {
-  color: #00ccff;
-}
-
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
-}
-
-.sidebar-heading {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-}
-
 #modal_smart_menu .nav-link {
   color: #ccc;
 }
-
 #modal_smart_menu .nav-link:hover {
   cursor: pointer;
   color: #00ccff;
 }
 
-[role="main"] {
-  padding-top: 48px;
-  min-width: 526px;
-}
-
-@media (min-width: 768px) {
-  [role="main"] {
-    padding-top: 48px;
-  }
-}
-
-/* スマホ限定メニュー */
-#menu-small {
-  position: relative;
-  height: 17px;
-  width: 24px;
-  display: inline-block;
-  box-sizing: border-box;
-}
-
-#menu-small div {
-  position: absolute;
-  left: 0;
-  height: 3px;
-  width: 24px;
-  background-color: #ddd;
-  border-radius: 1.5px;
-  display: inline-block;
-  box-sizing: border-box;
-}
-
-#menu-small div:nth-of-type(1) {
-  top: 0;
-}
-
-#menu-small div:nth-of-type(2) {
-  top: 7px;
-}
-
-#menu-small div:nth-of-type(3) {
-  bottom: 0;
-}
-
-#btn_preset_all {
-  color: #999;
-  transition: .2s;
-}
-#btn_preset_all:hover {
-  color: #ddd;
-  filter: drop-shadow(0px 0px 8px #aaa);
-}
-
-#main {
-  min-height: 100vh;
-}
-
-#main_contents > div {
-  max-width: 1200px;
-}
-
-#site_information > div {
-  max-width: 1200px;
-}
-
-/* まるいボタン */
-.round_button {
-  text-align: center;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  border: 1px #eaeaea solid;
-  transition: 0.4s;
-}
-
-.round_button:hover {
-  background-color: #eee;
-}
-
-/* トレード開始ボタン */
-.trade_enabled {
-  cursor: move;
-}
-
-@media (min-width: 1000px) {
-  #lb_tab_select {
-    display: none !important;
-  }
-}
-
-/* 計算開始ボタン */
-#btn_caluclate {
-  text-align: center;
-  font-size: 18px;
-  transition: .4s;
-}
-.caluclate_end {
-  cursor: default;
-  color: #777;
-}
-.caluclate_ready {
-  cursor: pointer;
-  color: #ddd;
-  filter: drop-shadow(0px 0px 6px rgb(128, 128, 128));
-}
-.caluclate_ready:hover {
-  color: #fff;
-  filter: drop-shadow(0px 0px 6px rgb(255, 255, 255));
-}
 
 
-.btn_icon {
-  font-size: 18px;
-  transition: 0.4s;
-  opacity: 0.3;
-}
-
-.btn_icon .fa-toolbox {
-  color: rgb(200, 100, 0);
-}
-
-.btn_icon:hover {
-  opacity: 1;
-  cursor: pointer;
-}
-
-.btn_preset:hover {
-  filter: drop-shadow(0px 0px 4px rgb(255, 185, 120));
-}
-
-.btn_reset {
-  filter: drop-shadow(0px 0px 4px rgb(185, 185, 185));
-}
-
-.btn_enemy {
-  transition: 0.4s;
-  opacity: 0.3;
-}
-.btn_enemy:hover {
-  opacity: 1;
-  cursor: pointer;
-  filter: drop-shadow(0px 0px 2px rgb(255, 196, 0));
-}
-
-.general_box {
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  border-radius: 0.25rem;
-}
-
-.contents {
-  background-color: #fff;
-  border-radius: .25rem;
-  border: 1px solid #dee2e6;
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
-}
-
-/* 基地1つ */
-.lb_tab {
-  max-width: 500px;
-}
-
+/* -----------------------------------
+  基地航空隊関連 #landBase
+----------------------------------- */
+.lb_tab { max-width: 500px; }
 .lb_infomation {
   font-size: 12px;
   height: 32px;
 }
-
 /* 基地札 */
 .ohuda_select {
   font-size: 12px;
   width: 72px;
 }
-
-.btn-group-toggle label {
-  background-color: white;
-}
-
 /* 制空半径簡易 */
 .lb_sammary {
   width: 102px;
   font-size: 13px;
 }
-
 /* 必要資材欄 */
 .resource {
   cursor: help;
@@ -482,65 +339,52 @@ input[type="radio"] {
   width: 20px;
   height: auto;
 }
-
 /* 基地機体選択欄 */
 .lb_plane {
   min-width: 290px;
   border: 2px #aaa solid;
   border-radius: 0.25rem;
 }
+.lb_plane:hover { background-color: rgba(250, 250, 250 0.2); }
 
-.lb_plane:hover {
-  background-color: rgba(250, 250, 250 .2);
-}
 
-.display_ship_count {
-  width: 60px;
-}
 
+/* -----------------------------------
+  艦隊関連 #friendFleet
+----------------------------------- */
+.display_ship_count { width: 60px; }
 .ship_tab {
   min-width: 420px;
   max-width: 600px;
 }
-
 .ship_name_span {
   cursor: pointer;
   border-bottom: 1px #999 solid;
 }
-
 .ship_name_span:hover {
   transition: 0.5s;
-  background-color: rgb(255, 250, 245);
+  background-color: #fffaf5;
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
 }
-
-.ship_sumAP{
-  font-size: 12px;
-}
-
 /* 艦娘機体選択欄 */
 .ship_plane {
   width: 100%;
   border: 2px #aaa solid;
   border-radius: 0.25rem;
 }
+.ship_plane:hover { background-color: #fafafa; }
 
-.ship_plane:hover {
-  background-color: rgb(250, 250, 250);
-}
 
-/* 機体名 */
+
+/* -----------------------------------
+  機体コントロール関連
+----------------------------------- */
 .plane_name {
   cursor: pointer;
   border-radius: 0.2rem;
   transition: 0.5s;
 }
-.plane_name_span {
-  font-size: 12px;
-}
-
-/* 機体外すボタン */
 .btn_remove_plane {
   cursor: pointer;
   transition: 0.4s;
@@ -550,29 +394,12 @@ input[type="radio"] {
 .btn_remove_plane:hover {
   color: #000;
   opacity: .6;
-  filter: drop-shadow(0px 0px 4px rgb(120, 120, 120));
+  filter: drop-shadow(0px 0px 4px #787878);
 }
-.btn_remove_plane > i {
-  font-size: 16px;
-}
-
-/* 艦載機をドラッグしてきた時のスタイル */
-.lb_plane-hover {
-  background-color: rgb(168, 220, 255) !important;
-  border: 2px rgb(57, 176, 255) solid !important;
-  transition: 0.2s;
-}
-
-/* 艦載機をドラッグしてきた時のスタイル */
-.ship_plane-hover {
-  background-color: rgb(168, 220, 255) !important;
-  border: 2px rgb(57, 176, 255) solid !important;
-  transition: 0.2s;
-}
-
+.btn_remove_plane > i { font-size: 16px; }
 /* 改修関連 */
 .remodel_select_parent {
-  color: rgb(0, 170, 170);
+  color: #00aaaa;
   width: 34px;
 }
 .remodel_select{
@@ -583,15 +410,8 @@ input[type="radio"] {
   cursor: default;
   color: #999 !important;
 }
-.remodel_select:hover {
-  filter: drop-shadow(0px 0px 6px rgb(0, 255, 255));
-}
-.remodel_disabled:hover {
-  filter: drop-shadow(0px 0px 0px rgb(255, 255, 255));
-}
-.fa-star {
-  font-size: 12px;
-}
+.remodel_select:hover { filter: drop-shadow(0px 0px 6px #0ff); }
+.remodel_disabled:hover { filter: drop-shadow(0px 0px 0px #fff); }
 .remodel_select_parent .dropdown-menu {
   color: rgb(0, 170, 170);
   min-width: 62px;
@@ -604,15 +424,12 @@ input[type="radio"] {
   transition: 0.2s;
   padding: .15rem .5rem;
 }
-.remodel_item:hover {
-  background-color: #eee;
-}
+.remodel_item:hover { background-color: #eee; }
 .remodel_item:active {
   color: #fff;
   background-color: rgb(0, 170, 170);
-  filter: drop-shadow(0px 0px 6px rgb(0, 255, 255));
+  filter: drop-shadow(0px 0px 6px #0ff);
 }
-
 /* 熟練度関連 */
 .prof_select {
   cursor: pointer;
@@ -622,34 +439,14 @@ input[type="radio"] {
   background-color: transparent;
   transition: 0.4s;
 }
-
-.prof_item {
-  transition: 0.4s;
-}
-
-.prof_item:hover {
-  background-color: #fafafa;
-}
-
+.prof_item { transition: 0.4s; }
+.prof_item:hover { background-color: #fafafa; }
 .prof_option {
   width: 20px;
   height: auto;
   transition: 0.4s;
 }
-
-.prof_none:hover {
-  filter: drop-shadow(0 0 3px rgb(190, 190, 190));
-}
-
-.prof_yellow:hover {
-  filter: drop-shadow(0 0 3px rgb(255, 220, 0));
-}
-
-.prof_blue:hover {
-  filter: drop-shadow(0 0 3px rgb(100, 180, 255));
-}
-
-.prof_select_parent .dropdown-menu {
+.prof_select_parent .dropdown-menu { 
   min-width: 48px;
   box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);
   padding: 0;
@@ -660,13 +457,8 @@ input[type="radio"] {
   height: 28px;
   text-align: center;
 }
-.prof_select_parent .dropdown-item:hover {
-  background-color: #f0f0f0;
-}
-.prof_select_parent .dropdown-item:active {
-  background-color: #bbb;
-}
-
+.prof_select_parent .dropdown-item:hover { background-color: #f0f0f0; }
+.prof_select_parent .dropdown-item:active { background-color: #bbb; }
 /* 搭載数 */
 .slot_select_parent{
   display: table;
@@ -680,204 +472,29 @@ input[type="radio"] {
   text-align: center;
   transition: .4s;
 }
-.slot:hover {
-  filter: drop-shadow(0 0 3px rgb(150, 150, 150));
-}
+.slot:hover { filter: drop-shadow(0 0 3px #969696); }
 .slot_select_parent .dropdown-menu {
   z-index: 1000;
   width: 240px;
-  box-shadow: 0 .1rem 1rem rgba(0,0,0,.3)
+  box-shadow: 0 .1rem 1rem #0000004d
 }
-
-.slot_ini {
-  width: 96px;
-}
-
-/* 機体情報入力部分　固定幅でいく */
-.planeInput_IMP {
-  width: 85px;
-}
-
-.planeInput_prof {
-  width: 62px;
-}
-
-.planeInput_slot {
-  width: 62px;
-}
-
-/* 機体テーブル */
-.planeTypeSelect {
-  width: 240px;
-}
-
-.toggle_display_type {
-  color: #ccc;
-  cursor: pointer;
-  transition: .4s;
-}
-.toggle_display_type:hover {
-  color: #999;
-}
-.toggle_display_type.selected {
-  color: #000;
-}
-
-.plane_thead {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-}
-
-.plane_thead div:hover {
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.sorted {
-  font-weight: bold;
-}
-
-#plane_tbody {
-  max-height: 58vh;
-}
-
-.plane_td_name {
-  max-width: 300px;
-}
-
-.plane_td_aa {
-  text-align: center;
-  width: 60px;
-}
-
-.plane_td_range {
-  text-align: center;
-  width: 60px;
-}
-
-.plane_tr {
-  cursor: pointer;
-  border-radius: .25rem;
-  transition: 0.15s;
-}
-.plane_tr:hover {
-  background-color: #eee;
-}
-.plane:active {
-  background-color: rgb(122, 195, 255) !important;
-}
-.tr_multiMode {
-  width: 232px;
-  height: 42px;
-}
-
-/* 機体カテゴリ画像 */
-.img-size-20 {
-  height: 20px;
-  width: auto;
-}
-.img-size-25 {
-  width: 25px;
-  height: auto;
-}
-.img-size-30 {
-  width: 30px;
-  height: auto;
-}
-.img-size-32 {
-  padding-top: 3px;
-  width: 32px;
-  height: auto;
-}
-
-/* サイズ25*25ボックス */
-.size-25 {
-  width: 25px;
-  height: 25px;
-}
-
-/* 機体選択欄　機体 */
-.plane_helper {
-  padding: 3px 20px 3px 10px;
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  border-radius: 0.2rem;
-  -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
-}
-
-.shipSelect_select {
-  width: 240px;
-}
-
-/* 艦娘選択欄 テーブル */
-.div_ship_table {
-  overflow-y: auto;
-  max-height: 40vh;
-}
-
-.ship_tbody {
-  max-height: 58vh;
-}
-
-.ship_thead {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-}
-
-.ship_tr {
-  cursor: pointer;
-  transition: 0.2s;
-  border-radius: .25rem;
-}
-.ship_tr:hover {
-  background-color: #eee;
-}
-
-.ship_tr:active {
-  background-color: rgb(122, 195, 255) !important;
-}
-
-.td_index {
-  text-align: right;
-  width: 24px;
-}
-.ship_td_slot {
-  text-align: center;
-  width: 48px;
-}
-
-/* 艦娘選択中(モーダル内限定) */
-.ship-selected {
-  background-color: #f5f5f5 !important;
-}
-
-.sortable_handle {
-  cursor: move;
-}
-
-/* ドラッグ要素のホバー時 */
-.hover_enemy_content {
-  background-color: rgb(168, 220, 255) !important;
+/* 艦載機をドラッグした時のスタイル */
+.plane_draggable_hover {
+  background-color: #a8dcff !important;
+  border: 2px #39b0ff solid !important;
   transition: 0.2s;
 }
+.slot_ini { width: 96px; }
 
-#battle_count {
-  width: 60px;
-}
-#landBase_target {
-  width: 60px;
-}
 
-.enemy_content {
-  border-radius: .25rem;
-}
-.enemy_content:hover {
-  background-color: #f5f5f5;
-}
 
+/* ------------------------------
+  敵艦隊関連 #enemyFleet
+-------------------------------- */
+#battle_count { width: 60px; }
+#landBase_target { width: 60px; }
+.enemy_content { border-radius: .25rem; }
+.enemy_content:hover { background-color: #f5f5f5; }
 .enemy_index {
   text-align: right;
   width: 18px;
@@ -895,9 +512,6 @@ input[type="radio"] {
   display: table-cell;
   vertical-align: middle;
 }
-.enemy_sumAP{
-  font-size: 12px;
-}
 .enemy_ap_select_parent {
   width: 24px;
   font-size: 12px;
@@ -907,58 +521,118 @@ input[type="radio"] {
   cursor: pointer;
   transition: .4s;
 }
-.enemy_ap:hover {
-  filter: drop-shadow(0 0 3px rgb(150, 150, 150));
+.enemy_ap:hover { filter: drop-shadow(0 0 3px #969696); }
+/* ドラッグ要素のホバー時 */
+.hover_enemy_content {
+  background-color: #a8dcff !important;
+  transition: 0.2s;
 }
 
-.enemySelect_select {
-  width: 240px;
+
+
+/* -----------------------------------
+  艦載機選択モーダル #modal_plane_select
+----------------------------------- */
+.plane_type_select_parent { width: 240px; }
+.toggle_display_type {
+  color: #ccc;
+  cursor: pointer;
+  transition: .4s;
+}
+.toggle_display_type:hover { color: #999; }
+.toggle_display_type.selected { color: #000; }
+.plane_thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+.plane_thead div:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+.sorted { font-weight: bold; }
+#plane_tbody { max-height: 58vh; }
+.plane_tr {
+  cursor: pointer;
+  transition: .2s;
+  border-radius: .25rem;
+}
+.plane_tr:hover { background-color: #eee; }
+.plane_tr:active { background-color: #7ac3ff !important; }
+.plane_td_basic { 
+  text-align: center;
+  width: 60px;
+}
+.plane_td_name { max-width: 300px; }
+.tr_multi {
+  width: 232px;
+  height: 42px;
 }
 
-/* 敵艦選択テーブル */
+
+/* --------------------------------
+  艦娘選択モーダル #modal_ship_select
+-------------------------------- */
+.ship_type_select_parent { width: 240px; }
+.div_ship_table {
+  overflow-y: auto;
+  max-height: 40vh;
+}
+.ship_tbody { max-height: 58vh; }
+.ship_thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+.ship_tr {
+  cursor: pointer;
+  transition: 0.2s;
+  border-radius: .25rem;
+}
+.ship_tr:hover { background-color: #eee; }
+.ship_tr:active { background-color: #7ac3ff !important; }
+.td_index {
+  text-align: right;
+  width: 24px;
+}
+.ship_td_slot {
+  text-align: center;
+  width: 48px;
+}
+
+
+
+/* ----------------------------------
+  敵艦選択モーダル #modal_enemy_select
+------------------------------------ */
+.enemy_type_select_parent { width: 240px; }
 .enemy_thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
 }
-
-.enemy_tbody {
-  max-height: 58vh;
-}
-
+.enemy_tbody { max-height: 58vh; }
 .enemy_tr {
   cursor: pointer;
   border-radius: .25rem;
   transition: .2s;
 }
-
-.enemy_tr:hover {
-  background-color: #eee;
-}
-
-.enemy_tr:active {
-  background-color: rgb(122, 195, 255) !important;
-}
-
+.enemy_tr:hover { background-color: #eee; }
+.enemy_tr:active { background-color: #7ac3ff !important; }
 .enemy_td_ap {
   text-align: center;
   width: 64px;
 }
-
 .enemy_td_lbAp {
   text-align: center;
   width: 84px;
 }
 
-/* 敵艦選択中(モーダル内限定) */
-.enemy-selected {
-  background-color: #f5f5f5 !important;
-}
 
-/* 機体プリセット名一覧 */
-.plane_preset_content{
-  font-size: 12px;
-}
+
+/* ------------------------------
+  プリセットモーダル 共通
+-------------------------------- */
 .btn_create_preset {
   height: 30px;
   width: 100%;
@@ -967,42 +641,35 @@ input[type="radio"] {
   border-radius: .25rem;
   transition: .2s;
 }
-.btn_create_preset:hover {
-  background-color: #eee;
-}
+.btn_create_preset:hover { background-color: #eee; }
 .btn_create_preset > div {
   display: table-cell;
   vertical-align: middle;
 }
-
-.preset_tbody{
-  height: 320px;
-}
+.preset_tbody{ height: 320px; }
 .preset_tr {
   width: 100%;
   cursor: pointer;
   transition: .2s;
   border-radius: .25rem;
 }
-.preset_tr:hover {
-  background-color: #eee;
-}
+.preset_tr:hover { background-color: #eee; }
 .preset_td {
   -ms-flex-item-align: center;
   align-self: center;
 }
 .preset_selected {
   color: #fff !important;
-  background-color: rgb(122, 195, 255) !important;
+  background-color: #7ac3ff !important;
 }
+.preset_name { font-size: 12px; }
 
-/* プリセットプレビュー欄 */
-.preset_preview_tr {
-  height: 52px;
-}
-.preset_name {
-  font-size: 12px;
-}
+
+
+/* ---------------------------------------
+  機体プリセットモーダル #modal_plane_preset
+----------------------------------------- */
+.preset_preview_tr { height: 52px; }
 .preset_preview_td_type {
   width: 30px;
   -ms-flex-item-align: center;
@@ -1017,166 +684,60 @@ input[type="radio"] {
   align-self: center;
 }
 
+
+
+/* ---------------------------------------
+  編成プリセットモーダル #modal_main_preset
+----------------------------------------- */
 #preset_remarks {
   height: calc( 1.4em * 10 );
   max-height: calc( 1.4em * 10 );
   min-height: calc( 1.55em * 4 );
   line-height: 1.3;
 }
-
-/* 海域選択欄 */
-#select_difficulty_div {
-  width: 160px;
+#deck_data {
+  height: calc( 1.4em * 6 );
+  max-height: calc( 1.4em * 6 );
+  min-height: calc( 1.55em * 4 );
+  line-height: 1.3;
 }
+#deck_data.is-valid {
+  overflow: hidden;
+}
+
+
+
+/* -----------------------------------
+  海域選択モーダル #modal_enemy_pattern
+------------------------------------- */
+#select_difficulty_div { width: 160px; }
 .map_img {
   width: 466px;
   height: auto;
 }
-#node_tbody{
-  height: 380px;
-}
+#node_tbody{ height: 380px; }
 .node_tr {
   width: 100%;
   cursor: pointer;
   transition: .2s;
   border-radius: .25rem;
 }
-.node_tr:hover {
-  background-color: #eee;
-}
+.node_tr:hover { background-color: #eee; }
 .node_index {
   text-align: right;
   width: 18px;
 }
 .node_selected {
   color: #fff !important;
-  background-color: rgb(122, 195, 255) !important;
+  background-color: #7ac3ff !important;
 }
-.enemy_pattern_tr {
-  height: 46px;
-}
+.enemy_pattern_tr { height: 46px; }
 
-/* 艦戦の色など */
-.css_fighter {
-  border: 2px rgb(100, 200, 120) solid;
-  background-color: rgb(230, 255, 240);
-}
 
-.css_fighter:hover {
-  background-color: rgb(225, 250, 235);
-}
 
-/* 艦攻の色など */
-.css_torpedo_bomber {
-  border: 2px rgb(100, 190, 255) solid;
-  background-color: rgb(235, 250, 255);
-}
-
-.css_torpedo_bomber:hover {
-  background-color: rgb(230, 245, 250);
-}
-
-/* 艦爆の色など */
-.css_dive_bomber {
-  border: 2px rgb(247, 110, 110) solid;
-  background-color: rgb(255, 235, 235);
-}
-
-.css_dive_bomber:hover {
-  background-color: rgb(250, 230, 230);
-}
-
-/* 艦偵の色など */
-.css_cb_reconnaissance {
-  border: 2px rgb(255, 200, 10) solid;
-  background-color: rgb(255, 255, 230);
-}
-
-.css_cb_reconnaissance:hover {
-  background-color: rgb(250, 250, 225);
-}
-
-/* 水上機の色など */
-.css_sp {
-  border: 2px rgb(140, 205, 150) solid;
-  background-color: rgb(240, 250, 240);
-}
-
-.css_sp:hover {
-  background-color: rgb(235, 245, 235);
-}
-
-/* 陸攻の色など */
-.css_lb_attack_aircraft {
-  border: 2px rgb(60, 170, 30) solid;
-  background-color: rgb(230, 250, 225);
-}
-
-.css_lb_attack_aircraft:hover {
-  background-color: rgb(225, 245, 220);
-}
-
-/* 陸軍戦闘機の色など */
-.css_lb_fighter {
-  border: 2px rgb(150, 230, 165) solid;
-  background-color: rgb(235, 255, 240);
-}
-
-.css_lb_fighter:hover {
-  background-color: rgb(230, 250, 235);
-}
-
-/* 対潜哨戒機の色など */
-.css_lb_asw_aircraft {
-  border: 2px rgb(110, 135, 205) solid;
-  background-color: rgb(240, 245, 255);
-}
-
-.css_lb_asw_aircraft:hover {
-  background-color: rgb(235, 240, 250);
-}
-
-/* 夜間機の色など */
-.css_cb_night_aircraft {
-  border: 2px rgb(130, 130, 180) solid;
-  background-color: rgb(235, 235, 255);
-}
-
-.css_cb_night_aircraft:hover {
-  background-color: rgb(230, 230, 250);
-}
-
-/* 結果表示バー　ツールチップ */
-.tooltip_resultBar {
-  color: #222;
-  position: absolute;
-  min-width: 250px;
-  width: auto;
-  height: auto;
-  background: rgba(255, 255, 255, 0.95);
-  -webkit-box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
-  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.4);
-  visibility: hidden;
-}
-
-/* 結果表示バー x軸 */
-.x_axis .domain {
-  display: none;
-  stroke-dasharray: 5;
-  stroke-dashoffset: 5;
-}
-
-/* 結果表示バー y軸  */
-.y_axis path {
-  display: none;
-}
-
-/* 結果表示バー y軸 */
-.y_axis line {
-  display: none;
-}
-
+/* ------------------------------
+  入力情報欄 #input_data
+-------------------------------- */
 .info_table {
   font-size: 12px;
   border-collapse: collapse;
@@ -1192,19 +753,12 @@ input[type="radio"] {
   padding: .1rem;
   border-top:1px #e9ecef solid;
 }
-#lb_info_table tbody .slot4 td{
-  border-bottom: 1px #b8b8b8 solid;
-}
-.info_table .info_warning {
-  border-bottom: 1px #b8b8b8 solid;
-}
+.info_table .info_warning { border-bottom: 1px #b8b8b8 solid; }
 .info_table .info_name {
   width: 88px;
   border-bottom: 1px #b8b8b8 solid;
 }
-.info_table .info_plane {
-  text-align: left;
-}
+.info_table .info_plane { text-align: left; }
 .info_table .info_slot {
   width: 72px;
   padding: .1rem .25rem;
@@ -1231,136 +785,46 @@ input[type="radio"] {
   border-left:1px #e9ecef solid;
   border-bottom: 1px #b8b8b8 solid;
 }
-.info_table tbody .last_slot {
-  border-bottom: 1px #b8b8b8 solid;
-}
+.info_table tbody .last_slot { border-bottom: 1px #b8b8b8 solid; }
 .info_table tbody .info_fleetAp {
   width: 72px;
   border-left:1px #e9ecef solid;
   border-bottom:1px #b8b8b8 solid;
 }
+#lb_info_table tbody .slot4 td{ border-bottom: 1px #b8b8b8 solid; }
 
+
+
+/* ------------------------------
+  結果表示 #result
+-------------------------------- */
 #shoot_down_table {
   width: 100%;
   table-layout: fixed;
   font-size: 12px;
   border-collapse: collapse;
 }
-
-/* 基本罫線 */
-#shoot_down_table td {
-  padding: 0.1rem;
-}
-
-/* ヘッダ一行 */
+#shoot_down_table td { padding: 0.1rem; }
 #shoot_down_table_thead td {
   color: #666;
   font-size: 11px;
   border-top: 1px #b8b8b8 solid;
   border-bottom: 1px #b8b8b8 solid;
 }
-
-#shoot_down_table .td_name {
-  width: 78px;
-}
-
-#shoot_down_table .td_plane_name {
-  width: 168px;
-}
-
-#shoot_down_table_tbody td{
-  border-top:1px #e9ecef solid;
-}
-
-#shoot_down_table_tbody .td_plane_name {
-  text-align: left;
-}
-
-#shoot_down_table .td_battle {
-  max-width: 120px;
-}
-
-#shoot_down_table_tbody .td_battle {
-  cursor: pointer;
-}
-
-#shoot_down_table .battle1 {
-  border-left: 1px #b8b8b8 solid;
-}
-
-#shoot_down_table .tr_fap td{
-  border-top:1px #b8b8b8 solid;
-}
-
-#shoot_down_table .tr_eap td{
-  border-top:1px #e9ecef solid;
-}
-
+#shoot_down_table .td_name { width: 78px; }
+#shoot_down_table .td_plane_name { width: 168px; }
+#shoot_down_table_tbody td{ border-top:1px #e9ecef solid; }
+#shoot_down_table_tbody .td_plane_name { text-align: left; }
+#shoot_down_table .td_battle { max-width: 120px; }
+#shoot_down_table_tbody .td_battle { cursor: pointer; }
+#shoot_down_table .battle1 { border-left: 1px #b8b8b8 solid; }
+#shoot_down_table .tr_fap td{ border-top:1px #b8b8b8 solid; }
+#shoot_down_table .tr_eap td{ border-top:1px #e9ecef solid; }
 #shoot_down_table .tr_cond td{
   border-top:1px #b8b8b8 solid;
   border-bottom:1px #b8b8b8 solid;
 }
-
-/* 詳細設定欄 */
-#config_content label {
-  cursor: pointer;
-}
-
-#dispMoreThanxAA {
-  width: 60px;
-}
-#calucCount {
-  width: 96px;
-}
-#manual_shoot_down_battle {
-  width: 60px;
-}
-#manual_shoot_down_value {
-  width: 96px;
-}
-
-.sample_plane {
-  max-width: 320px;
-  border: 2px rgb(100, 200, 120) solid;
-  background-color: rgb(230, 255, 240);
-  border-radius: 0.25rem;
-}
-
-.sample_plane:hover {
-  background-color: rgb(225, 250, 235);
-}
-
-.btn_ok {
-  width: 72px;
-}
-
-.text_existTooltip {
-  text-decoration: underline;
-  -webkit-text-decoration: underline dotted;
-  text-decoration: underline dotted;
-  cursor: help;
-  text-decoration-skip-ink: none;
-}
-
-.airStatus0 {
-  background: linear-gradient(.25turn, transparent, rgba(0, 255, 0, .1), transparent);
-}
-.airStatus1 {
-  background: linear-gradient(.25turn, transparent, rgba(150, 255, 0, .1), transparent);
-}
-.airStatus2 {
-  background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent);
-}
-.airStatus3 {
-  background: linear-gradient(.25turn, transparent, rgba(255, 150, 0, .1), transparent);
-}
-.airStatus4 {
-  background: linear-gradient(.25turn, transparent, rgba(255, 100, 100, .1), transparent);
-}
-
-.progress_area {
-  cursor: pointer;
-}
+.progress_area { cursor: pointer; }
 .progress_label {
   text-align: right;
   font-size: 12px;
@@ -1375,27 +839,6 @@ input[type="radio"] {
   font-size: 11px;
   text-align: right;
 }
-.bar_status0 {
-  background-color:rgba(60, 170, 30, 0.4);
-  border:1px solid rgba(60, 170, 30, 0.8);
-}
-.bar_status1 {
-  background-color:rgba(140, 205, 150, 0.4);
-  border:1px solid rgba(140, 205, 150, 0.8);
-}
-.bar_status2 {
-  background-color:rgba(255, 255, 80, 0.4);
-  border:1px solid rgba(255, 255,  0, 0.8);
-}
-.bar_status3 {
-  background-color:rgba(255, 150, 50, 0.4);
-  border:1px solid rgba(255, 150, 50, 0.8);
-}
-.bar_status4 {
-  background-color: rgba(255, 80, 80, 0.4);
-  border:1px solid rgba(255, 80, 80, 0.8);
-}
-
 /* 制空状態ゲージ 凡例 */
 .bar_ex_label {
   text-align: center;
@@ -1409,25 +852,7 @@ input[type="radio"] {
   border-left:1px solid #000;
   margin-bottom: 2px;
 }
-.result_bar_ex {
-  height: 4px;
-}
-.bar_ex_status0 {
-  background-color:rgba(60, 170, 30, 0.8);
-}
-.bar_ex_status1 {
-  background-color:rgba(140, 205, 150, 0.8);
-}
-.bar_ex_status2 {
-  background-color:rgba(255, 255, 20, 0.8);
-}
-.bar_ex_status3 {
-  background-color:rgba(255, 150, 50, 0.8);
-}
-.bar_ex_status4 {
-  background-color: rgba(255, 80, 80, 0.8);
-}
-
+.result_bar_ex { height: 4px; }
 /* 制空状態割合テーブル */
 #rate_table {
   font-size: 12px;
@@ -1444,33 +869,85 @@ input[type="radio"] {
   padding: .1rem;
   border-top:1px #e9ecef solid;
 }
-.rate_tr {
-  transition: .2s;
+.rate_tr { transition: .2s; }
+.rate_td_name { width: 20%; }
+.rate_td_normal { width: 10%; }
+.rate_tr_border_top > td { border-top: 1px #b8b8b8 solid !important; }
+.rate_tr_border_bottom > td { border-top: 1px #b8b8b8 solid !important; }
+
+
+
+/* ------------------------------
+  詳細設定 #config
+-------------------------------- */
+#config_content label { cursor: pointer; }
+#caluclate_count { width: 96px; }
+#manual_shoot_down_battle { width: 60px; }
+#manual_shoot_down_value { width: 96px; }
+
+
+
+/* ------------------------------
+  サイトについて #site_information
+-------------------------------- */
+.sample_plane {
+  max-width: 320px;
+  border: 2px #64c878 solid;
+  background-color: #e6fff0;
+  border-radius: 0.25rem;
 }
-.rate_td_name {
-  width: 20%;
+.sample_plane:hover { background-color: #e1faeb; }
+.text_existTooltip {
+  text-decoration: underline;
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+  cursor: help;
+  text-decoration-skip-ink: none;
 }
-.rate_td_normal {
-  width: 10%;
-}
-.rate_tr_border_top > td {
-  border-top: 1px #b8b8b8 solid !important;
-}
-.rate_tr_border_bottom > td {
-  border-top: 1px #b8b8b8 solid !important;
-}
-.bg_status0 {
-  background-color:rgba(60, 170, 30, 0.4);
-}
-.bg_status1 {
-  background-color:rgba(140, 205, 150, 0.4);
-}
-.bg_status2 {
-  background-color:rgba(255, 255, 20, 0.4);
-}
-.bg_status3 {
-  background-color:rgba(255, 150, 50, 0.4);
-}
-.bg_status4 {
-  background-color: rgba(255, 80, 80, 0.4);
-}
+
+
+
+/* ------------------------------
+  カラー
+-------------------------------- */
+.prof_none:hover { filter: drop-shadow(0 0 3px #bebebe); }
+.prof_yellow:hover { filter: drop-shadow(0 0 3px #fd0); }
+.prof_blue:hover { filter: drop-shadow(0 0 3px #64b4ff); }
+.css_fighter { border: 2px rgb(100, 200, 120) solid; background-color: rgb(230, 255, 240); }
+.css_fighter:hover { background-color: rgb(225, 250, 235); }
+.css_torpedo_bomber { border: 2px rgb(100, 190, 255) solid; background-color: rgb(235, 250, 255); }
+.css_torpedo_bomber:hover { background-color: rgb(230, 245, 250); }
+.css_dive_bomber { border: 2px rgb(247, 110, 110) solid; background-color: rgb(255, 235, 235); }
+.css_dive_bomber:hover { background-color: rgb(250, 230, 230); }
+.css_cb_reconnaissance { border: 2px rgb(255, 200, 10) solid; background-color: rgb(255, 255, 230); }
+.css_cb_reconnaissance:hover { background-color: rgb(250, 250, 225); }
+.css_sp { border: 2px rgb(140, 205, 150) solid; background-color: rgb(240, 250, 240); }
+.css_sp:hover { background-color: rgb(235, 245, 235); }
+.css_lb_attack_aircraft { border: 2px rgb(60, 170, 30) solid; background-color: rgb(230, 250, 225); }
+.css_lb_attack_aircraft:hover { background-color: rgb(225, 245, 220); }
+.css_lb_fighter { border: 2px rgb(150, 230, 165) solid; background-color: rgb(235, 255, 240); }
+.css_lb_fighter:hover { background-color: rgb(230, 250, 235); }
+.css_lb_asw_aircraft { border: 2px rgb(110, 135, 205) solid; background-color: rgb(240, 245, 255); }
+.css_lb_asw_aircraft:hover { background-color: rgb(235, 240, 250); }
+.css_cb_night_aircraft { border: 2px rgb(130, 130, 180) solid; background-color: rgb(235, 235, 255); }
+.css_cb_night_aircraft:hover { background-color: rgb(230, 230, 250); }
+.airStatus0 { background: linear-gradient(.25turn, transparent, rgba(0, 255, 0, .1), transparent); }
+.airStatus1 { background: linear-gradient(.25turn, transparent, rgba(150, 255, 0, .1), transparent); }
+.airStatus2 { background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent); }
+.airStatus3 { background: linear-gradient(.25turn, transparent, rgba(255, 150, 0, .1), transparent); }
+.airStatus4 { background: linear-gradient(.25turn, transparent, rgba(255, 100, 100, .1), transparent); }
+.bar_status0 { background-color:rgba(60, 170, 30, 0.4); border:1px solid rgba(60, 170, 30, 0.8); }
+.bar_status1 { background-color:rgba(140, 205, 150, 0.4); border:1px solid rgba(140, 205, 150, 0.8); }
+.bar_status2 { background-color:rgba(255, 255, 80, 0.4); border:1px solid rgba(255, 255,  0, 0.8); }
+.bar_status3 { background-color:rgba(255, 150, 50, 0.4); border:1px solid rgba(255, 150, 50, 0.8); }
+.bar_status4 { background-color: rgba(255, 80, 80, 0.4); border:1px solid rgba(255, 80, 80, 0.8); }
+.bg_status0 { background-color:rgba(60, 170, 30, 0.4); }
+.bg_status1 { background-color:rgba(140, 205, 150, 0.4); }
+.bg_status2 { background-color:rgba(255, 255, 20, 0.4); }
+.bg_status3 { background-color:rgba(255, 150, 50, 0.4); }
+.bg_status4 { background-color: rgba(255, 80, 80, 0.4); }
+.bar_ex_status0 { background-color:rgba(60, 170, 30, 0.8); }
+.bar_ex_status1 { background-color:rgba(140, 205, 150, 0.8); }
+.bar_ex_status2 { background-color:rgba(255, 255, 20, 0.8); }
+.bar_ex_status3 { background-color:rgba(255, 150, 50, 0.8); }
+.bar_ex_status4 { background-color: rgba(255, 80, 80, 0.8); }
