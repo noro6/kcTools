@@ -5,6 +5,7 @@ body {
 
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
+input[type="text"] { font-size: 12px; }
 #main { min-height: 100vh; }
 #main_contents > div { max-width: 1200px; }
 #site_information > div { max-width: 1200px; }
@@ -12,6 +13,7 @@ input[type="radio"] { display: none; }
 #modal_ship_select .modal-content { min-height: 84vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
 #modal_main_preset .modal-content { min-height: 584px; }
+#modal_main_preset .btn { max-height: 31px; }
 [role="main"] {
   padding-top: 48px;
   min-width: 526px;
@@ -694,15 +696,6 @@ input[type="radio"] { display: none; }
   max-height: calc( 1.4em * 10 );
   min-height: calc( 1.55em * 4 );
   line-height: 1.3;
-}
-#deck_data {
-  height: calc( 1.4em * 6 );
-  max-height: calc( 1.4em * 6 );
-  min-height: calc( 1.55em * 4 );
-  line-height: 1.3;
-}
-#deck_data.is-valid {
-  overflow: hidden;
 }
 
 

@@ -62,9 +62,6 @@ let displayBattle = 1;
 // 画面サイズ変更用タイマー
 let timer = false;
 
-// 編成プリセット
-let presets = null;
-
 // 機体プリセット
 let planePreset = null;
 
@@ -77,8 +74,19 @@ let chartData = null;
 // controlキー状態
 let isCtrlPress = false;
 
+// 編成プリセット
+let presets = null;
+
+/*
+  プリセットメモ
+  全体: [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
+  基地: [0:機体群, 1:札群]
+  艦隊: [0: id, 1: plane配列, 2: 配属位置]
+  機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
+  敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値)]
+*/
 /*==================================
-    汎用メソッド
+    汎用
 ==================================*/
 /**
  * arrayとdiffArray内に1つでも同じ値がある場合true
@@ -125,7 +133,7 @@ function castInt(input, alt = 0) {
 /**
  * 数値へキャスト(小数)
  * 失敗時は第二引数の値　未指定時は0
- * @param {String} input 入力文字
+ * @param {string} input 入力文字
  * @param {number} alt　変換失敗時代替値
  * @returns {number} 変換数値(小数)
  */
@@ -133,6 +141,68 @@ function castFloat(input, alt = 0) {
   const val = parseFloat(input);
   if (!isNaN(val)) return val;
   return alt;
+}
+
+/**
+ * Base64 エンコード (url-safe)
+ * @param {string} input
+ * @returns {string}
+ */
+function utf8_to_b64(input) {
+  try {
+    let output = LZString.compressToEncodedURIComponent(input);
+    if (output.indexOf('+') > -1) output = output.replace(/\+/g, '-');
+    if (output.indexOf('/') > -1) output = output.replace(/\//g, '_');
+    return output;
+  } catch (error) {
+    return "";
+  }
+}
+
+/**
+ * Base64 デコード (url-safe)
+ * @param {string} input
+ * @returns {string}
+ */
+function b64_to_utf8(input) {
+  try {
+    if (input.indexOf('-') > -1) input = input.replace(/-/g, '+');
+    if (input.indexOf('_') > -1) input = input.replace(/_/g, '/');
+    return LZString.decompressFromEncodedURIComponent(input);
+  } catch (error) {
+    return "";
+  }
+}
+
+/**
+ * 指定したinputのvalueをクリップボードにコピー
+ * @param {JqueryDomObject} $this inputタグ id 持ち限定
+ * @returns {boolean} 成功したらtrue
+ */
+function copyInputTextToClipboard($this) {
+  try {
+    if (!$this.attr('id')) return false;
+    const taegrt = document.getElementById($this.attr('id'));
+    taegrt.select();
+    return document.execCommand('copy');
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * urlパラメータ読み込み
+ * @returns パラメータ配列
+ */
+function getUrlParams() {
+  const value = location.search;
+  if (value === "") return {};
+  const retVal = {};
+  value.slice(1).split('&').forEach((str) => {
+    const set = str.split('=');
+    retVal[set[0]] = set[1];
+  });
+  return retVal;
 }
 
 /*==================================
@@ -380,13 +450,20 @@ function initialize(callback) {
   }
   else $('.toggle_display_type[data-mode="single"]').addClass('selected');
 
-  // 自動保存データをlocalStrageから読み込んだり 
+  // 自動保存
   const isAutoSave = loadLocalStrage('autoSave');
   if (isAutoSave === null) $('#auto_save').prop('checked', true);
-  if (isAutoSave) {
+  if (isAutoSave) $('#auto_save').prop('checked', isAutoSave);
+
+  // URLパラメータチェック
+  const params = getUrlParams();
+  if (params.hasOwnProperty("d")) {
+    expandMainPreset(decordPreset(params.d));
+  }
+  else if (isAutoSave) {
+    // パラメータがないなら自動保存データをlocalStrageから読み込み
     const autoSaveData = loadLocalStrage('autoSaveData');
-    expandMainPreset(autoSaveData);
-    $('#auto_save').prop('checked', isAutoSave);
+    expandMainPreset(decordPreset(autoSaveData));
   }
 
   // 基地欄タブ化するかどうか
@@ -757,7 +834,7 @@ function clearShipDivAll(displayCount = 2) {
  * 第1引数で渡された .enemy_content に第2引数で渡されたidの敵艦データを挿入する
  * @param {JqueryDomObject} $div 敵艦タブ (enemy_content)
  * @param {number} id 敵艦id
- * @param {number} ap 特定の制空値を持つ場合に指定。0を指定するとマスタデータまま　デフォルト0
+ * @param {number} ap 直接入力時指定(id === -1時)
  */
 function setEnemyDiv($div, id, ap = 0) {
   if (!$div) return;
@@ -770,15 +847,11 @@ function setEnemyDiv($div, id, ap = 0) {
   $div.data('enemyid', enemy.id);
   $div.find('.enemy_name_span').html(drawEnemyGradeColor(enemy.name));
 
-  if (ap > 0) {
-    $div.find('.enemy_ap').text(ap);
-  }
-  else if (enemy.ap > 0) {
-    $div.find('.enemy_ap').text(enemy.ap);
-  }
-  else if (enemy.lbAp > 0) {
-    $div.find('.enemy_ap').text('(' + enemy.lbAp + ')');
-  }
+  let displayAp = 0;
+  if (id === -1 && ap > 0) displayAp = ap;
+  else if (enemy.ap > 0) displayAp = enemy.ap;
+  else if (enemy.lbAp > 0) displayAp = '(' + enemy.lbAp + ')';
+  $div.find('.enemy_ap').text(displayAp);
 
   // ドラッグ可能要素設定
   $div.find('.enemy_index').addClass('drag_handle cur_move');
@@ -792,11 +865,8 @@ function setEnemyDiv($div, id, ap = 0) {
     clearEnemyDiv($clone);
     $div.parent().append($clone);
   }
-
   // インデックス振り直し
-  $parent.find('.enemy_content').each((i, e) => {
-    $(e).find('.enemy_index').text(i + 1);
-  });
+  $parent.find('.enemy_content').each((i, e) => { $(e).find('.enemy_index').text(i + 1); });
 
   // ドラッグ設定
   $div.draggable({
@@ -1315,12 +1385,9 @@ function deletePlanePreset() {
  */
 function createMapSelect() {
   let text = '';
-  let preWorld = 0;
-
   for (const w of WORLD_DATA) {
     const world = w.world;
     const maps = MAP_DATA.filter(m => Math.floor(m.id / 10) === world);
-
     text += `<optgroup label="${w.name}">`;
     for (const m of maps) {
       const map = m.id % 10;
@@ -1336,9 +1403,7 @@ function createMapSelect() {
 function createNodeSelect() {
   const area = castInt($('#map_select').val());
   let difficulty = -1;
-  if (area < 1000) {
-    $('#select_difficulty_div').addClass('d-none');
-  }
+  if (area < 1000) $('#select_difficulty_div').addClass('d-none');
   else {
     $('#select_difficulty_div').removeClass('d-none');
     difficulty = castInt($('#select_difficulty').val());
@@ -1398,7 +1463,6 @@ function loadMainPreset() {
   let text = '';
   const len = presets.length;
   for (let index = 0; index < len; index++) {
-    // preset [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
     const preset = presets[index];
     text += `
       <div class="preset_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
@@ -1408,23 +1472,24 @@ function loadMainPreset() {
     `;
   }
 
-  $modal.find('.preset_tr').removeClass('preset_selected');
-  $modal.find('.preset_tbody').html(text);
-  $modal.find('.preset_name').val('').prop('disabled', true);
   $modal.find('.is-invalid').removeClass('is-invalid');
   $modal.find('.is-valid').removeClass('is-valid');
+  $modal.find('.preset_tbody').html(text);
+  $modal.find('.preset_name').val('').prop('disabled', true);
   $modal.find('.btn:not(.btn_cancel)').prop('disabled', true);
   $modal.find('.btn_commit_preset_header').addClass('d-none');
   $modal.find('.btn_commit_preset_header').tooltip('hide');
+  $modal.find('.btn_output_url').prop('disabled', false);
+  $modal.find('.btn_output_deck').prop('disabled', false);
   $modal.find('#preset_remarks').prop('disabled', true).val('');
-  $modal.find('#deck_data').val('');
   $modal.find('.preset_data').data('presetid', 0);
+  $('#main_preset_load_tab').find('input').val('');
 }
 
 /**
  * 編成プリセット詳細欄に引数のプリセットデータを展開
  * 第一引数にデータがなかった場合は新規作成とする
- * @param {Array} preset プリセット配列 [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
+ * @param {Array} preset プリセット
  */
 function drawMainPreset(preset) {
   const $modal = $('#modal_main_preset');
@@ -1438,7 +1503,7 @@ function drawMainPreset(preset) {
     $modal.find('.btn_commit_preset').prop('disabled', false);
     $modal.find('.btn_commit_preset_header').removeClass('d-none');
     $modal.find('.btn_commit_preset_header').prop('disabled', false);
-    $modal.find('#preset_remarks').val(preset[5]);
+    $modal.find('#preset_remarks').val(preset[3]);
   }
   else {
     // プリセットが見つからなかったので新規登録
@@ -1503,7 +1568,7 @@ function updateMainPresetName() {
 
 /**
  * 指定したidのプリセットデータを展開する
- * @param {Object} preset 展開対象プリセット [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
+ * @param {Object} preset 展開対象プリセット(デコード済)
  * @param {boolean} isResetLandBase データ未指定の際、基地航空隊をリセットする
  * @param {boolean} isResetFriendFleet データ未指定の際、艦隊をリセットする
  * @param {boolean} isResetEnemyFleet データ未指定の際、敵艦隊をリセットする
@@ -1512,23 +1577,24 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
   if (!preset) return;
   try {
     // 基地航空隊展開
-    $('.ohuda_select').each((i, e) => {
-      const landBase = preset[2];
-      if (landBase && landBase.length !== 0) $(e).val(castInt(landBase[1][i], -1));
-      else $(e).val(-1);
-
-      ohuda_Changed($(e), true);
-    });
     $('.lb_plane').each((i, e) => {
-      const landBase = preset[2];
+      const landBase = preset[0];
       if (!landBase || landBase.length === 0) return;
-      // raw ※[0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
       const raw = landBase[0].find(v => v[4] === i);
       if (raw && raw.length !== 0) {
         const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
         setLBPlaneDiv($(e), plane);
       }
       else if (isResetLandBase) setLBPlaneDiv($(e));
+    });
+    $('.ohuda_select').each((i, e) => {
+      const landBase = preset[0];
+      // disabled 解除
+      $(e).find('option').prop('disabled', false);
+      if (landBase && landBase.length !== 0) $(e).val(castInt(landBase[1][i], -1));
+      else $(e).val(-1);
+
+      ohuda_Changed($(e), true);
     });
 
     // 艦娘クリア
@@ -1537,20 +1603,18 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
     let shipCountFleet2 = 0;
     // 艦娘展開
     $('.ship_tab').each((i, e) => {
-      // ※[0:id, 1:plane配列, 2:配属位置]
-      const ship = preset[3].find(v => v[2] === i);
+      const ship = preset[1].find(v => v[2] === i);
       if (!ship) return;
       setShipDiv($(e), ship[0]);
       $(e).find('.ship_plane').each((j, e) => {
-        // raw ※[0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
         const raw = ship[1].find(v => v[4] === j);
         if (raw) {
           const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
           setPlaneDiv($(e), plane, true);
         }
       });
-      if (i < 6) shipCountFleet1 = i;
-      else shipCountFleet2 = i - 6;
+      if (i <= 6) shipCountFleet1 = (i + 1);
+      else shipCountFleet2 = (i + 1) - 6;
     });
     shipCountFleet1 = Math.min(Math.max(shipCountFleet1, 2), 6);
     $('#friendFleet_item1').find('.display_ship_count').val(shipCountFleet1 % 2 === 1 ? shipCountFleet1 + 1 : shipCountFleet1);
@@ -1561,18 +1625,19 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 
 
     // 敵艦展開
-    const battle = Math.min(Math.max(preset[4].length, 1), 10);
+    const battle = Math.min(Math.max(preset[2].length, 1), 10);
     // クリア
-    if (preset[4].length !== 0 || isResetEnemyFleet) {
+    if (preset[2].length !== 0 || isResetEnemyFleet) {
       clearEnemyDivAll(battle);
       $('#battle_count').val(battle);
     }
     $('.battle_content').each((i, e) => {
-      const enemyFleet = preset[4].find(v => v[0] === i);
+      const enemyFleet = preset[2].find(v => v[0] === i);
       if (enemyFleet) {
-        for (const raw of enemyFleet[1]) {
-          // raw ※[0:id, 1:制空値]
-          setEnemyDiv($(e).find('.enemy_content:last()'), raw[0], raw[1]);
+        for (const id of enemyFleet[1]) {
+          if (id > 0) setEnemyDiv($(e).find('.enemy_content:last()'), id);
+          // 負値の場合は直接入力の制空値
+          else if (id < 0) setEnemyDiv($(e).find('.enemy_content:last()'), -1, -(id));
         }
       }
     });
@@ -1605,16 +1670,14 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 }
 
 /**
- * 現在の入力状況からプリセットデータを生成、返却する
- * @returns {Object} プリセットデータ [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
+ * 基地航空隊プリセットを生成し返却
+ * @returns {Array} 基地プリセット
  */
-function createPreset() {
-  // 基地プリセット生成 [0:機体群, 1:札群]
+function createLandBasePreset() {
   const landBasePreset = [[], []];
   $('.ohuda_select').each((i, e) => { landBasePreset[1].push(castInt($(e).val())); });
   $('.lb_plane').each((i, e) => {
     const $e = $(e);
-    // plane　サイズ節約のため配列とする ※[0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
     const plane = [
       castInt($e.data('planeid')),
       castInt($e.find('.prof_select').data('prof')),
@@ -1626,7 +1689,14 @@ function createPreset() {
     if (plane[0] !== 0) landBasePreset[0].push(plane);
   });
 
-  // 艦娘プリセット生成
+  return landBasePreset;
+}
+
+/**
+ * 艦隊プリセットを生成し返却
+ * @returns {Array} 艦隊プリセット
+ */
+function createFriendFleetPreset() {
   const friendFleetPreset = [];
   let shipIndex = 0;
   $('.ship_tab').each((i, e) => {
@@ -1635,11 +1705,9 @@ function createPreset() {
     // 非表示なら飛ばす
     if ($(e).attr('class').indexOf('d-none') > -1) return;
 
-    // ship　サイズ節約のため配列とする ※[0:id, 1:plane配列, 2:配属位置]
     const ship = [castFloat($(e).data('shipid')), [], shipIndex];
     $(e).find('.ship_plane').each((j, ce) => {
       const $ce = $(ce);
-      // plane　サイズ節約のため配列とする ※[0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
       const plane = [
         castInt($ce.data('planeid')),
         castInt($ce.find('.prof_select').data('prof')),
@@ -1659,42 +1727,109 @@ function createPreset() {
     }
   });
 
-  // 敵艦プリセット生成
+  return friendFleetPreset;
+}
+
+/**
+ * 敵艦隊プリセットを生成し返却
+ * @returns {Array} 敵艦隊プリセット 
+ */
+function createEnemyFleetPreset() {
   const enemyFleetPreset = [];
   $('.battle_content').each((i, e) => {
     // 非表示なら飛ばす
     if ($(e).attr('class').indexOf('d-none') > -1) return;
-
-    // enemyFleet サイズ節約のため配列とする ※[0:戦闘位置, 1:enemy配列]
     const enemyFleet = [i, []];
     $(e).find('.enemy_content').each((j, ce) => {
-      // enemyFleet サイズ節約のため配列とする ※[0:id, 1:制空値]
-      const enemy = [castInt($(ce).data('enemyid')), castInt($(ce).find('.enemy_ap').text())];
-      // 敵艦じゃなければ飛ばす
-      if (enemy[0] !== 0) enemyFleet[1].push(enemy);
+      const enemyId = castInt($(ce).data('enemyid'));
+      const ap = castInt($(ce).find('.enemy_ap').text());
+      // id:0 の場合飛ばす
+      if (enemyId === 0) return;
+      if (enemyId > 0) enemyFleet[1].push(enemyId);
+      // ※直接入力なら制空値を負値にして格納
+      else if (ap > 0) enemyFleet[1].push(-ap);
     });
 
     // 空じゃなければ追加
     if (enemyFleet[1].length !== 0) enemyFleetPreset.push(enemyFleet);
   });
+  return enemyFleetPreset;
+}
 
+/**
+ * 現在の入力状況からプリセットデータを生成、返却する
+ * @param {boolean} isFull trueの場合名前　メモ情報を付加し、プリセットはエンコード済みで返す
+ * @returns {Object} プリセット
+ */
+function createPreset() {
+  // プリセット名
   let presetName = $('#modal_main_preset').find('.preset_name').val().trim();
-  // 空はないが念のため空が来た場合
-  if (presetName.length === 0) {
-    const today = new Date();
-    presetName = `preset-${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
-  }
-
+  if (presetName.length === 0) presetName = ``;
   const preset = [
     castInt($('#modal_main_preset').find('.preset_data').data('presetid')),
     presetName,
-    landBasePreset,
-    friendFleetPreset,
-    enemyFleetPreset,
+    encordPreset(),
     $('#preset_remarks').val().trim()
   ];
 
   return preset;
+}
+
+
+/**
+ * 現在の入力状況からbase64エンコード済みプリセットデータを生成、返却する
+ * @returns {string} エンコード済プリセットデータ
+ */
+function encordPreset() {
+  try {
+    // 現在のプリセットを取得し、オブジェクトを文字列化
+    const preset = [
+      createLandBasePreset(),
+      createFriendFleetPreset(),
+      createEnemyFleetPreset()
+    ];
+    const dataString = JSON.stringify(preset);
+    const b64 = utf8_to_b64(dataString);
+    const utf8 = b64_to_utf8(b64);
+    // 複号までテスト
+    JSON.parse(utf8);
+
+    return b64;
+  }
+  catch{
+    // 失敗時は空のプリセットデータ
+    const emp = [[], [], []];
+    return utf8_to_b64(JSON.stringify(emp));
+  }
+}
+
+/**
+ * 渡したinput値からプリセットデータを生成
+ * @param {string} input
+ * @returns {array} 基地 艦隊 敵艦プリセット 失敗時空プリセット[[],[],[]]
+ */
+function decordPreset(input) {
+  try {
+    const str = b64_to_utf8(input);
+    const preset = JSON.parse(str);
+    return preset;
+  } catch{
+    return [[], [], []];
+  }
+}
+
+/**
+ * 指定したidのプリセットデータを削除する
+ * @param {number} id 削除対象プリセットid
+ */
+function deleteMainPreset(id) {
+  presets = presets.filter(v => v[0] !== id);
+  presets.sort((a, b) => a[0] - b[0]);
+  saveLocalStrage('presets', presets);
+  const $modal = $('#modal_main_preset');
+  $modal.find('.alert').removeClass('hide').addClass('show');
+  $modal.find('.task').text('削除');
+  loadMainPreset();
 }
 
 /**
@@ -1767,18 +1902,43 @@ function readDeckBuilder(deck) {
   }
 }
 
+
 /**
- * 指定したidのプリセットデータを削除する
- * @param {number} id 削除対象プリセットid
+ * 指定プリセットをデッキビルダーフォーマットに変換
+ * デッキフォーマット {version: 4, f1: {s1: {id: '100', lv: 40, luck: -1, items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
+ * @param {Object} preset 変換対象のプリセット 未指定の場合は現在の編成状態
+ * @param {string} デッキビルダー形式データ
  */
-function deleteMainPreset(id) {
-  presets = presets.filter(v => v[0] !== id);
-  presets.sort((a, b) => a[0] - b[0]);
-  saveLocalStrage('presets', presets);
-  const $modal = $('#modal_main_preset');
-  $modal.find('.alert').removeClass('hide').addClass('show');
-  $modal.find('.task').text('削除');
-  loadMainPreset();
+function convertToDeckBuikder(preset = null) {
+  try {
+    let fleet = null;
+    // データ指定あり
+    if (preset && preset.length >= 3) fleet = preset[3];
+    // 見つからなければ現在のデータ
+    else fleet = createFriendFleetPreset();
+
+    const obj = { version: 4, f1: {}, f2: {} };
+    for (let index = 0; index < fleet.length; index++) {
+      const ship = fleet[index];
+      const shipData = SHIP_DATA.find(v => v.id === ship[0]);
+      if (!shipData) continue;
+
+      // 装備機体群オブジェクト生成
+      const planes = { i1: null, i2: null, i3: null, i4: null, i5: null };
+      for (const plane of ship[1]) {
+        const i = { id: plane[0], rf: plane[2], mas: plane[1] };
+        planes["i" + castInt(plane[4] + 1)] = i;
+      }
+
+      const s = { id: `${shipData.deckid}`, lv: 99, luck: -1, items: planes };
+      const shipIndex = ship[2];
+      if (shipIndex < 6) obj.f1["s" + ((shipIndex + 1) % 6)] = s;
+      else obj.f2["s" + ((shipIndex + 1) % 6)] = s;
+    }
+    return JSON.stringify(obj);
+  } catch (error) {
+    return "";
+  }
 }
 
 /**
@@ -1874,8 +2034,13 @@ function loadLocalStrage(key) {
  */
 function saveLocalStrage(key, data) {
   if (!window.localStorage || key.length === 0) return false;
-  window.localStorage.setItem(key, JSON.stringify(data));
-  return true;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(data));
+    return true;
+  } catch (error) {
+    window.localStorage.removeItem(key);
+    return false;
+  }
 }
 /**
  * local Strage 特定データ消去
@@ -1998,7 +2163,7 @@ function caluclateInit(objectData) {
 
   // 自動保存する場合
   if ($('#auto_save').prop('checked')) {
-    saveLocalStrage('autoSaveData', createPreset());
+    saveLocalStrage('autoSaveData', encordPreset());
     saveLocalStrage('autoSave', true);
   }
 
@@ -3316,10 +3481,11 @@ function sidebar_Clicked($this) {
  */
 function btn_content_trade_Clicked($this) {
   $('body,html').animate({ scrollTop: 0 }, 200, 'swing');
-  $('.btn_content_trade').addClass('d-none').removeClass('d-table');
   $('.btn_commit_trade').addClass('d-table').removeClass('d-none');
-  $('.btn_cllapse').addClass('d-none').removeClass('d-table');
+  $('.btn_reset_content').addClass('d-none').removeClass('d-table');
+  $('.btn_content_trade').addClass('d-none').removeClass('d-table');
   $('.btn_ex_setting').addClass('d-none').removeClass('d-table');
+  $('.btn_cllapse').addClass('d-none').removeClass('d-table');
   // 開始時にいったん全部最小化、handle追加
   $('#main_contents').find('.collapse_content').each(function () {
     $(this).parent().addClass('trade_enabled');
@@ -3360,9 +3526,10 @@ function commit_content_order() {
   // handle解除
   $('.trade_enabled').removeClass('trade_enabled');
   $('.btn_content_trade').removeClass('d-none').addClass('d-table');
+  $('.btn_reset_content').removeClass('d-none').addClass('d-table');
   $('.btn_commit_trade').removeClass('d-table').addClass('d-none');
-  $('.btn_cllapse').removeClass('d-none').addClass('d-table');
   $('.btn_ex_setting').removeClass('d-none').addClass('d-table');
+  $('.btn_cllapse').removeClass('d-none').addClass('d-table');
 }
 
 /**
@@ -3390,6 +3557,28 @@ function btn_ex_setting_Clicked($this) {
   }
 
   $modal.modal('show');
+}
+
+/**
+ * コンテンツ一括解除クリック
+ * @param {JqueryDomObject} $this 
+ */
+function btn_reset_content_Clicked($this) {
+  const parentId = $this.closest('.contents').attr('id');
+  switch (parentId) {
+    case 'landBase':
+      $('.lb_plane').each((i, e) => setLBPlaneDiv($(e)));
+      break;
+    case 'friendFleet':
+      clearShipDivAll();
+      break;
+    case 'enemyFleet':
+      clearEnemyDivAll();
+      break;
+    default:
+      break;
+  }
+  caluclate();
 }
 
 /**
@@ -3544,7 +3733,7 @@ function btn_prof_min_Clicked($this) {
  * @param {boolean} cancelCaluclate 計算を起こさない場合true 規定値false
  */
 function ohuda_Changed($this, cancelCaluclate = false) {
-  const ohudaValue = castInt($this.val());
+  const ohudaValue = castInt($this.val(), -1);
   if (ohudaValue === 0) {
     // 防空モード開始
     isDefMode = true;
@@ -4505,19 +4694,36 @@ function preset_remarks_Changed($this) {
  * 編成取り込みデータテキスト変更時
  * @param {JqueryDomObject} $this
  */
-function deck_data_Changed($this) {
+function input_deck_Changed($this) {
   // 入力検証　0文字はアウト
   const input = $this.val();
   const $btn = $this.closest('.modal-body').find('.btn_load_deck');
   if (input.length === 0) {
     $this.addClass('is-invalid').removeClass('is-valid');
-    $this.next().text('データが入力されていません。');
+    $this.nextAll('.invalid-feedback').text('データが入力されていません。');
     $btn.prop('disabled', true);
   }
   else {
     $this.removeClass('is-invalid');
     $btn.prop('disabled', false);
   }
+}
+
+/**
+ * 共有データ文字列欄クリック時
+ * @param {JqueryDomObject} $this
+ */
+function output_data_Clicked($this) {
+  if (!$this.hasClass('is-valid')) return;
+  if (copyInputTextToClipboard($this)) $this.nextAll('.valid-feedback').text('クリップボードにコピーしました。');
+}
+
+/**
+ * 共有データテキスト変更時
+ * @param {JqueryDomObject} $this
+ */
+function output_data_Changed($this) {
+  $this.removeClass('is-valid');
 }
 
 /**
@@ -4549,20 +4755,49 @@ function btn_delete_main_preset_Clicked() {
 }
 
 /**
- * 編成データ読み込みクリック
+ * デッキビルダーデータ読み込みクリック
  */
 function btn_load_deck_Clicked() {
-  const inputData = $('#deck_data').val().trim();
+  const inputData = $('#input_deck').val().trim();
   const preset = readDeckBuilder(inputData);
 
   if (preset) {
-    expandMainPreset([0, "", [], preset, [], ""], false, true, false);
-    $('#deck_data').removeClass('is-invalid').addClass('is-valid');
+    expandMainPreset([[], preset, []], false, true, false);
+    $('#input_deck').removeClass('is-invalid').addClass('is-valid');
   }
   else {
-    $('#deck_data').addClass('is-invalid').removeClass('is-valid');
-    $('#deck_data').next().text('編成の読み込みに失敗しました。入力されたデータの形式が正しくない可能性があります。')
+    $('#input_deck').addClass('is-invalid').removeClass('is-valid');
+    $('#input_deck').nextAll('.invalid-feedback').text('編成の読み込みに失敗しました。入力されたデータの形式が正しくない可能性があります。')
   }
+}
+
+/**
+ * 共有URL生成ボタンクリック
+ */
+function btn_output_url_Clicked() {
+  try {
+    const $output = $('#output_url');
+    $output.val(location.protocol + location.hostname + location.pathname + "?d=" + encordPreset());
+    $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
+    $output.removeClass('is-invalid').addClass('is-valid');
+  } catch (error) {
+    $('#output_url').addClass('is-invalid').removeClass('is-valid')
+    return;
+  }
+}
+
+/**
+ * デッキビルダー形式生成ボタンクリック
+ */
+function btn_output_deck_Clicked() {
+  const dataString = convertToDeckBuikder();
+  const $output = $('#output_deck');
+  $('#output_deck').val(dataString);
+  if (dataString) {
+    $output.nextAll('.valid-feedback').text('生成しました。上記文字列をクリックするとクリップボードにコピーされます。');
+    $output.removeClass('is-invalid').addClass('is-valid');
+  }
+  else $output.addClass('is-invalid').removeClass('is-valid');
 }
 
 /**
@@ -4571,7 +4806,7 @@ function btn_load_deck_Clicked() {
 function btn_expand_main_preset_Clicked() {
   // 展開するプリセット
   const preset = presets.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_data').data('presetid')));
-  expandMainPreset(preset);
+  expandMainPreset(decordPreset(preset[2]));
   $('#modal_main_preset').modal('hide');
 }
 
@@ -4632,6 +4867,7 @@ $(function () {
   $(document).on('click', '.btn_plane_preset', function () { btn_plane_preset_Clicked($(this)); });
   $(document).on('click', '.sidebar-sticky a[href^="#"]', function () { sidebar_Clicked($(this)); });
   $(document).on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
+  $(document).on('click', '.btn_reset_content', function () { btn_reset_content_Clicked($(this)); });
   $(document).on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
   $(document).on('click', '.btn_commit_trade', commit_content_order);
   $(document).on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
@@ -4695,8 +4931,16 @@ $(function () {
   $('#modal_main_preset').on('click', '.btn_delete_preset', btn_delete_main_preset_Clicked);
   $('#modal_main_preset').on('click', '.btn_load_deck', btn_load_deck_Clicked);
   $('#modal_main_preset').on('input', '#preset_remarks', function () { preset_remarks_Changed($(this)); });
-  $('#modal_main_preset').on('input', '#deck_data', function () { deck_data_Changed($(this)); });
-  $('#modal_main_preset').on('focus', '#deck_data', function () { $(this).select(); });
+  $('#modal_main_preset').on('input', '#input_deck', function () { input_deck_Changed($(this)); });
+  $('#modal_main_preset').on('focus', '#input_deck', function () { $(this).select(); });
+  $('#modal_main_preset').on('click', '.btn_output_url', btn_output_url_Clicked);
+  $('#modal_main_preset').on('click', '.btn_output_deck', btn_output_deck_Clicked);
+  $('#modal_main_preset').on('focus', '#output_url', function () { $(this).select(); });
+  $('#modal_main_preset').on('focus', '#output_deck', function () { $(this).select(); });
+  $('#modal_main_preset').on('input', '#output_url', function () { output_data_Changed($(this)); });
+  $('#modal_main_preset').on('input', '#output_deck', function () { output_data_Changed($(this)); });
+  $('#modal_main_preset').on('click', '#output_url', function () { output_data_Clicked($(this)); });
+  $('#modal_main_preset').on('click', '#output_deck', function () { output_data_Clicked($(this)); });
   $('#modal_main_preset').on('click', '.btn_expand_preset', btn_expand_main_preset_Clicked);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#modal_smart_menu').on('click', 'a[href^="#"]', function () { smart_menu_modal_link_Clicked($(this)); });
@@ -4811,7 +5055,11 @@ $(function () {
     accept: ".enemy_draggable",
     hoverClass: 'hover_enemy_content',
     tolerance: "pointer",
-    drop: function (event, ui) { setEnemyDiv($(this).find('.enemy_content:last'), ui.draggable.data('enemyid')); }
+    drop: function (e, ui) {
+      const id = castInt(ui.draggable.data('enemyid'));
+      const ap = castInt(ui.draggable.find('.enemy_ap').text());
+      setEnemyDiv($(this).find('.enemy_content:last'), id, ap);
+    }
   });
 
   $('#enemyFleet_content').droppable({

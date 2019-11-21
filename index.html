@@ -3,7 +3,7 @@
 
 <head>
     <title>制空権シミュレータ</title>
-    <meta name="description" content="「艦これ」の出撃時の制空に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや防空時の制空計算に対応しています。">
+    <meta name="description" content="「艦これ」の出撃時の制空に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや、防空時の制空計算に対応しています。">
     <meta name="viewport" content="width=device-width">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@noro_006">
@@ -18,6 +18,7 @@
     <script src="./js/jquery-3.4.1.min.js"></script>
     <script src="./js/jquery-ui.min.js"></script>
     <script src="./js/jquery.ui.touch-punch.js"></script>
+    <script src="./js/lz-string.js"></script>
     <script src="./js/sortable.js"></script>
     <script src="./js/data.js"></script>
     <script src="./js/main.js"></script>
@@ -46,7 +47,6 @@
             <div class="py-1 text-nowrap">編成保存・展開</div>
         </div>
     </nav>
-
     <div class="container-fluid px-0">
         <div class="d-flex">
             <nav class="d-none d-xl-block sidebar bg-dark2">
@@ -92,8 +92,6 @@
                     </ul>
                 </div>
             </nav>
-
-            <!-- メインコンテンツ -->
             <main role="main" class="flex-grow-1 px-2">
                 <div id="main">
                     <div id="main_header">
@@ -107,7 +105,11 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">基地航空隊</span>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_ex_setting"
+                                <div class="ml-auto round_button align-self-center d-table btn_reset_content"
+                                    data-toggle="tooltip" title="基地航空隊リセット">
+                                    <i class="fas fa-trash d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 round_button align-self-center d-table btn_ex_setting"
                                     data-toggle="tooltip" title="一括設定">
                                     <i class="fas fa-tools d-table-cell align-middle"></i>
                                 </div>
@@ -260,13 +262,16 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="friendFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">自艦隊</span>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_ex_setting"
+                                <div class="ml-auto round_button align-self-center d-table btn_reset_content"
+                                    data-toggle="tooltip" title="艦隊全リセット">
+                                    <i class="fas fa-trash d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 round_button align-self-center d-table btn_ex_setting"
                                     data-toggle="tooltip" title="一括設定">
                                     <i class="fas fa-tools d-table-cell align-middle"></i>
                                 </div>
@@ -297,7 +302,6 @@
                                     </ul>
                                 </div>
                                 <div class="tab-content my-1">
-                                    <!-- 第1艦隊 -->
                                     <div class="tab-pane fade show active friendFleet_tab container-fluid px-0"
                                         id="friendFleet_item1">
                                         <div class="d-flex">
@@ -332,7 +336,6 @@
                                                             <i class="fas fa-trash-alt"></i>
                                                         </div>
                                                     </div>
-                                                    <!-- 艦娘装備 -->
                                                     <div class="ship_plane mt-1 d-flex">
                                                         <div
                                                             class="flex-grow-1 d-flex flex-nowrap ship_plane_draggable">
@@ -397,7 +400,6 @@
                                             <div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none"></div>
                                         </div>
                                     </div>
-                                    <!-- 第2艦隊 -->
                                     <div class="tab-pane fade friendFleet_tab container-fluid px-0"
                                         id="friendFleet_item2">
                                         <div class="d-flex">
@@ -427,11 +429,15 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">敵艦隊</span>
                                 </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_reset_content"
+                                    data-toggle="tooltip" title="敵艦隊全リセット">
+                                    <i class="fas fa-trash d-table-cell align-middle"></i>
+                                </div>
                                 <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                                     data-toggle="tooltip" title="入れ替え終了">
                                     <i class="fas fa-check d-table-cell align-middle"></i>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                <div class="ml-2 round_button align-self-center d-table btn_content_trade"
                                     data-toggle="tooltip" title="順序入れ替え">
                                     <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                                 </div>
@@ -752,13 +758,13 @@
                                 <div class="my-3 mx-2 px-2 py-2 general_box">
                                     <div class="h6"><i class="fas fa-mouse mr-2"></i>操作設定</div>
                                     <div class="custom-control custom-checkbox ml-3">
-                                        <input class="custom-control-input" type="checkbox" id="drag_drop_copy">
+                                        <input type="checkbox" class="custom-control-input" id="drag_drop_copy">
                                         <label class="custom-control-label" for="drag_drop_copy">
                                             D&amp;Dで機体や敵艦を移動時、複製を行う
                                         </label>
                                     </div>
                                     <div class="custom-control custom-checkbox ml-3 mt-2">
-                                        <input class="custom-control-input" type="checkbox" id="auto_caluclate" checked>
+                                        <input type="checkbox" class="custom-control-input" id="auto_caluclate" checked>
                                         <label class="custom-control-label" for="auto_caluclate">
                                             自動で再計算を行う
                                         </label>
@@ -789,62 +795,62 @@
                                         </div>
                                         <div class="d-flex flex-wrap" id="innerProfSetting">
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_1"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_1"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_1">艦戦</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_2">
+                                                <input type="checkbox" class="custom-control-input" id="prof120_2">
                                                 <label class="custom-control-label" for="prof120_2">艦攻</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_3">
+                                                <input type="checkbox" class="custom-control-input" id="prof120_3">
                                                 <label class="custom-control-label" for="prof120_3">艦爆</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_4"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_4"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_4">艦偵</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_5"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_5"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_5">水偵</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_6">
+                                                <input type="checkbox" class="custom-control-input" id="prof120_6">
                                                 <label class="custom-control-label" for="prof120_6">水爆</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_7"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_7"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_7">水戦</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_9">
+                                                <input type="checkbox" class="custom-control-input" id="prof120_9">
                                                 <label class="custom-control-label" for="prof120_9">噴式</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_101">
+                                                <input type="checkbox" class="custom-control-input" id="prof120_101">
                                                 <label class="custom-control-label" for="prof120_101">陸攻</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_102"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_102"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_102">陸戦</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_103"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_103"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_103">局戦</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_104"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_104"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_104">陸偵</label>
                                             </div>
                                             <div class="custom-control custom-checkbox mr-3">
-                                                <input class="custom-control-input" type="checkbox" id="prof120_8"
+                                                <input type="checkbox" class="custom-control-input" id="prof120_8"
                                                     checked>
                                                 <label class="custom-control-label" for="prof120_8">飛行艇</label>
                                             </div>
@@ -853,7 +859,7 @@
                                     <div class="ml-3 mt-3 d-flex">
                                         <div class="custom-control custom-checkbox" data-toggle="tooltip"
                                             data-html="true" title="最後に計算が行われた編成を保持し、<br>次回サイトに訪れた際に自動で復帰します。">
-                                            <input class="custom-control-input" type="checkbox" id="auto_save">
+                                            <input type="checkbox" class="custom-control-input" id="auto_save">
                                             <label class="custom-control-label" for="auto_save">
                                                 編成の自動保存を有効にする
                                             </label>
@@ -1043,6 +1049,20 @@
                                             上記を含めた様々な要因により、シミュレート結果と実際の制空権結果が一致しない可能性があります。
                                             計算結果はあくまで目安としてお考え下さい。
                                         </div>
+                                        <div class="pl-3">
+                                            レガシーブラウザでは一部または全ての機能が正常に動作しない可能性があります。
+                                        </div>
+                                    </div>
+                                    <div class="my-4">
+                                        <p class="h6">バグ・不具合</p>
+                                        <div class="pl-3">
+                                            奮闘していますが、きっと出ます。
+                                        </div>
+                                        <div class="pl-3">
+                                            もし遭遇してしまったら、
+                                            <a href="https://odaibako.net/u/noro_006"
+                                                target="_blank">こちら</a>などからご報告よろしくお願いします。
+                                        </div>
                                     </div>
                                     <div class="my-4">
                                         <p class="h6">改修構想</p>
@@ -1050,17 +1070,60 @@
                                             使い方などの追記・改訂
                                         </div>
                                         <div class="pl-3">
-                                            共有URL生成
+                                            内部熟練度に関して1刻み数値での対応
                                         </div>
                                         <div class="pl-3">
-                                            他サイト様の艦隊情報の取り込み
+                                            海域選択時のマップ表示とか
                                         </div>
                                         <div class="pl-3">
-                                            その他
+                                            Edgeで艦隊入力欄がズレる修正
+                                        </div>
+                                        <div class="pl-3">
+                                            その他、適宜
                                         </div>
                                         <div class="pl-3">
                                             <span class="mr-1 badge badge-pill badge-success">済</span>
                                             <s>艦隊保存・プリセット機能</s>
+                                        </div>
+                                        <div class="pl-3">
+                                            <span class="mr-1 badge badge-pill badge-success">済</span>
+                                            <s>共有URL生成</s>
+                                        </div>
+                                        <div class="pl-3">
+                                            <span class="mr-1 badge badge-pill badge-success">済</span>
+                                            <s>他サイト艦隊情報の取り込み・出力</s>
+                                        </div>
+                                    </div>
+                                    <div class="my-5">
+                                        <p class="h6">参考・リンク</p>
+                                        <div class="pl-3">
+                                            <a href="https://wikiwiki.jp/kancolle/">艦隊これくしょん -艦これ- 攻略 Wiki*</a>
+                                        </div>
+                                        <div class="pl-3">
+                                            <a href="https://kancolle.fandom.com/wiki/KanColle_Wiki" target="_blank">
+                                                KanColle Wiki | FANDOM powered by Wikia
+                                            </a>
+                                        </div>
+                                        <div class="pl-3">
+                                            <a href="https://kancolle.fandom.com/ja/wiki/%E8%89%A6%E3%81%93%E3%82%8C%E6%A4%9C%E8%A8%BCWiki"
+                                                target="_blank">
+                                                艦これ検証Wiki | FANDOM powered by Wikia
+                                            </a>
+                                        </div>
+                                        <div class="pl-3">
+                                            <a href="http://kancolle-calc.net/deckbuilder.html" target="_blank">
+                                                艦隊シミュレーター＆デッキビルダー
+                                            </a>
+                                        </div>
+                                        <div class="pl-3">
+                                            <a href="http://kancollecalc.jp/air_supremacy.html" target="_blank">
+                                                制空権計算機 - 艦これ計算機
+                                            </a>
+                                        </div>
+                                        <div class="pl-3">
+                                            <a href="http://81.81.la/u/kancolle/seiku.htm" target="_blank">
+                                                制空争いシミュレータカッコカリ
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -1187,7 +1250,7 @@
                             <span class="">複数列</span>
                         </div>
                         <div class="custom-control custom-checkbox my-2">
-                            <input class="custom-control-input cur_pointer" type="checkbox" id="dispFinalOnly" checked>
+                            <input type="checkbox" class="custom-control-input cur_pointer" id="dispFinalOnly" checked>
                             <label class="custom-control-label cur_pointer" for="dispFinalOnly">最終改造状態のみ</label>
                         </div>
                     </div>
@@ -1373,7 +1436,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="main_preset_load" data-toggle="tab"
-                                    href="#main_preset_load_tab">編成取り込み</a>
+                                    href="#main_preset_load_tab">編成取り込み・共有</a>
                             </li>
                         </ul>
                     </div>
@@ -1419,27 +1482,64 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="main_preset_load_tab">
-                            <div class="d-flex flex-column">
-                                <div class="px-1 font_size_12">
-                                    <div>
-                                        <a href="http://kancolle-calc.net/deckbuilder.html"
-                                            target="_blank">艦隊シミュレーター＆デッキビルダー</a>
-                                        のフォーマットから編成を構築できます。
+                            <div>
+                                <div class="h6">外部編成データ取り込み</div>
+                                <div class="px-2">
+                                    <div class="font_size_12">
+                                        <div>
+                                            <a href="http://kancolle-calc.net/deckbuilder.html"
+                                                target="_blank">艦隊シミュレーター＆デッキビルダー</a>フォーマットから編成を取り込みます。
+                                        </div>
+                                        <div class="mt-1">※ 艦載機以外の装備、艦載機自体を搭載できない艦娘は展開しません。</div>
+                                        <div>※ 対象は第1艦隊、第2艦隊の艦娘です。基地航空隊や敵艦は変更されません。</div>
                                     </div>
-                                    <div class="mt-1">※ 艦載機以外の装備は展開しません。</div>
-                                    <div>※ 艦載機を搭載できない艦娘は展開しません。</div>
-                                    <div>※ 展開対象は第1艦隊、第2艦隊です。</div>
-                                    <div>※ 基地航空隊や敵艦は変更されません。</div>
+                                    <div class="mt-2 d-flex">
+                                        <div class="form-group mr-1 flex-grow-1">
+                                            <input type="text" class="form-control" id="input_deck"
+                                                placeholder="デッキを入力"></input>
+                                            <div class="invalid-feedback">読み込みに失敗しました。</div>
+                                            <div class="valid-feedback">読み込みに成功しました！</div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <button type="button"
+                                                class="ml-auto btn btn-sm btn-success btn_load_deck text-nowrap">読み込み</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group mt-1">
-                                    <textarea class="form-control font_size_12 px-2" id="deck_data"
-                                        placeholder="デッキを入力"></textarea>
-                                    <div class="invalid-feedback">読み込みに失敗しました。</div>
-                                    <div class="valid-feedback">編成の読み込みに成功しました！既に編成が展開されていますので、画面を閉じてOKです。</div>
-                                </div>
-                                <div class="mt-auto d-flex flex-row-reverse">
-                                    <button type="button"
-                                        class="ml-2 btn btn-sm btn-success btn_load_deck">読み込み</button>
+                            </div>
+                            <div class="border-top pt-3">
+                                <div class="h6">共有データ生成</div>
+                                <div class="px-2 font_size_12">
+                                    <div>現在の入力情報を共有するURLの生成や、<a href="http://kancolle-calc.net/deckbuilder.html"
+                                            target="_blank">艦隊シミュレーター＆デッキビルダー</a>フォーマットの文字列を生成します。</div>
+                                    <div class="mt-2">
+                                        <div>共有URL :</div>
+                                        <div class="d-flex">
+                                            <div class="mr-1">
+                                                <button type="button"
+                                                    class="ml-auto btn btn-sm btn-info btn_output_url">生成</button>
+                                            </div>
+                                            <div class="form-group ml-auto flex-grow-1">
+                                                <input type="text" class="form-control" id="output_url">
+                                                <div class="invalid-feedback">共有URLの生成に失敗しました。</div>
+                                                <div class="valid-feedback">生成しました。上記URLをクリックするとクリップボードにコピーされます。</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-1">
+                                        <div>デッキビルダー形式 :</div>
+                                        <div class="d-flex">
+                                            <div class="mr-1">
+                                                <button type="button"
+                                                    class="ml-auto btn btn-sm btn-info btn_output_deck">生成</button>
+                                            </div>
+                                            <div class="form-group ml-auto flex-grow-1">
+                                                <input type="text" class="form-control" id="output_deck">
+                                                <div class="invalid-feedback">出力に失敗しました。</div>
+                                                <div class="valid-feedback">生成しました。上記文字列をクリックするとクリップボードにコピーされます。</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1539,7 +1639,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="custom-control custom-checkbox align-self-center">
-                        <input class="custom-control-input cur_pointer" type="checkbox" id="alreadyRead" checked>
+                        <input type="checkbox" class="custom-control-input cur_pointer" id="alreadyRead" checked>
                         <label class="custom-control-label cur_pointer" for="alreadyRead">次回以降表示しない</label>
                     </div>
                     <div class="ml-auto align-self-center">
