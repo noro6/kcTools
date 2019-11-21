@@ -12,7 +12,7 @@ var LZString = (function() {
 	// private property
 	var f = String.fromCharCode;
 	var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-	var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
+	var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_$";
 	var baseReverseDic = {};
 	
 	function getBaseValue(alphabet, character) {

@@ -151,8 +151,6 @@ function castFloat(input, alt = 0) {
 function utf8_to_b64(input) {
   try {
     let output = LZString.compressToEncodedURIComponent(input);
-    if (output.indexOf('+') > -1) output = output.replace(/\+/g, '-');
-    if (output.indexOf('/') > -1) output = output.replace(/\//g, '_');
     return output;
   } catch (error) {
     return "";
@@ -166,8 +164,6 @@ function utf8_to_b64(input) {
  */
 function b64_to_utf8(input) {
   try {
-    if (input.indexOf('-') > -1) input = input.replace(/-/g, '+');
-    if (input.indexOf('_') > -1) input = input.replace(/_/g, '/');
     return LZString.decompressFromEncodedURIComponent(input);
   } catch (error) {
     return "";
