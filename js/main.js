@@ -1812,12 +1812,12 @@ function encordPreset() {
     const dataString = JSON.stringify(preset);
     const b64 = utf8_to_b64(dataString);
     const utf8 = b64_to_utf8(b64);
-    // 複号までテスト
+    // 複号までチェック
     JSON.parse(utf8);
 
     return b64;
   }
-  catch{
+  catch (error) {
     // 失敗時は空のプリセットデータ
     const emp = [[], [], []];
     return utf8_to_b64(JSON.stringify(emp));
@@ -1834,7 +1834,8 @@ function decordPreset(input) {
     const str = b64_to_utf8(input);
     const preset = JSON.parse(str);
     return preset;
-  } catch{
+  }
+  catch (error) {
     return [[], [], []];
   }
 }
