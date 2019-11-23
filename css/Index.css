@@ -2,7 +2,6 @@ body {
   font-size: 0.875rem;
   background: #f0ebe6;
 }
-
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }

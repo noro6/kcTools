@@ -4,29 +4,14 @@
 // 入力され得る搭載数の最大値
 const MAX_SLOT = 99;
 
-// 自軍st1撃墜テーブル
-const SHOOT_DOWN_TABLE = [];
-
-// 上記平均テーブル
-const SHOOT_DOWN_TABLE_AVE = [];
-
-// 敵st1撃墜テーブル
-const SHOOT_DOWN_TABLE_ENEMY = [];
-
-// 制空状態テーブル
-const AIR_STATUS_TABLE = [];
-
 // 艦戦軽
 const FIGHTERS = [1, 7, 102, 103];
 
 // 熟練を最初からMaxにする機体カテゴリ
 const INITIAL_MAX_LEVEL_PLANE = [1, 4, 5, 7, 8, 102, 103];
 
-// 搭載数が基地で最大4の機体カテゴリもとい偵察機
+// 搭載数が基地で最大4の機体カテゴリ というか偵察機
 const RECONNAISSANCES = [4, 5, 8, 104];
-
-// シミュレーション最大回数
-const MAX_SIMULATE_COUNT = 100000;
 
 // 各種リソース置き場
 const RESOURCE_URL = ".";
@@ -37,6 +22,15 @@ const IMAGES = {};
 /*==================================
     グローバル変数
 ==================================*/
+
+// 自軍st1撃墜テーブル
+let SHOOT_DOWN_TABLE;
+
+// 敵st1撃墜テーブル
+let SHOOT_DOWN_TABLE_ENEMY;
+
+// 制空状態テーブル
+let AIR_STATUS_TABLE;
 
 // 各種モーダルの値返却先
 let $target = null;
@@ -76,6 +70,9 @@ let isCtrlPress = false;
 
 // 編成プリセット
 let presets = null;
+
+// メモリ解放用タイマー
+let releaseTimer = null;
 
 /*
   プリセットメモ
@@ -194,16 +191,102 @@ function getUrlParams() {
   const value = location.search;
   if (value === "") return {};
   const retVal = {};
-  value.slice(1).split('&').forEach((str) => {
+  for (const str of value.slice(1).split('&')) {
     const set = str.split('=');
     retVal[set[0]] = set[1];
-  });
+  }
   return retVal;
 }
 
 /*==================================
     値/オブジェクト 作成・操作・取得等
 ==================================*/
+
+/**
+ * 事前計算テーブルがメモリになければ生成
+ */
+function setPreCaluclateTable() {
+
+  // 制空ボーダーテーブル
+  if (!AIR_STATUS_TABLE) {
+    AIR_STATUS_TABLE = [];
+    const max_ap = 2000;
+    for (let i = 0; i <= max_ap; i++) {
+      const tmp = [];
+      for (let j = 0; j <= max_ap; j++) {
+        if (i === 0 && j === 0) tmp[j] = 5;
+        else if (i >= 3 * j) tmp[j] = 0;
+        else if (2 * i >= 3 * j) tmp[j] = 1;
+        else if (3 * i > 2 * j) tmp[j] = 2;
+        else if (3 * i > j) tmp[j] = 3;
+        else {
+          tmp[j] = 4;
+          break;
+        }
+      }
+      AIR_STATUS_TABLE.push(tmp);
+    }
+  }
+
+  // 自軍撃墜テーブル
+  if (!SHOOT_DOWN_TABLE) {
+    SHOOT_DOWN_TABLE = [];
+    const downRate = [[7, 15], [20, 45], [30, 75], [45, 105], [65, 150]];
+    const downRateLen = downRate.length;
+    for (let slot = 0; slot <= MAX_SLOT; slot++) {
+      const tmpA = [];
+      for (let i = 0; i < downRateLen; i++) {
+        const tmpB = [];
+        for (let j = downRate[i][0]; j <= downRate[i][1]; j++) tmpB.push(Math.floor(slot * j / 256));
+
+        shuffleArray(tmpB);
+        tmpA.push(tmpB);
+      }
+      SHOOT_DOWN_TABLE.push(tmpA);
+    }
+  }
+
+  // 敵撃墜テーブル
+  if (!SHOOT_DOWN_TABLE_ENEMY) {
+    SHOOT_DOWN_TABLE_ENEMY = [];
+    let enemyMaxSlot = 0;
+    const enemyLen = ENEMY_DATA.length;
+    for (let i = 0; i < enemyLen; i++) {
+      const slotLen = ENEMY_DATA[i].slot.length;
+      for (let j = 0; j < slotLen; j++) {
+        if (enemyMaxSlot < ENEMY_DATA[i].slot[j]) enemyMaxSlot = ENEMY_DATA[i].slot[j];
+      }
+    }
+    for (let slot = 0; slot <= enemyMaxSlot; slot++) {
+      const tmpA = [];
+      const airLen = AIR_STATUS.length;
+      for (let i = 0; i < airLen; i++) {
+        const tmpB = [];
+        const rand_max = AIR_STATUS[i].rate;
+        for (let x = rand_max; x >= 0; x--) {
+          for (let y = 0; y <= rand_max; y++) {
+            const value = Math.floor(slot * (0.65 * x + 0.35 * y) / 10);
+            tmpB.push(value);
+          }
+        }
+
+        shuffleArray(tmpB);
+        tmpA.push(tmpB);
+      }
+      SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
+    }
+  }
+
+  // メモリ解放タイマー設定
+  window.clearTimeout(releaseTimer);
+  // 3分おきに重いメモリ解放
+  releaseTimer = setTimeout(function () {
+    AIR_STATUS_TABLE = null;
+    SHOOT_DOWN_TABLE = null;
+    SHOOT_DOWN_TABLE_ENEMY = null;
+  }, 180000);
+}
+
 /**
  * 艦載機カテゴリで艦載機をフィルタし返却
  * @param {number} type カテゴリ　0の場合、全艦載機
@@ -486,73 +569,6 @@ function initialize(callback) {
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
 
-  // 事前計算 -各種制空値のボーダー配列生成
-  const max_ap = 2000;
-  for (let i = 0; i <= max_ap; i++) {
-    const tmp = [];
-    for (let j = 0; j < max_ap; j++) {
-      if (i === 0 && j === 0) tmp[j] = 5;
-      else if (i >= 3 * j) tmp[j] = 0;
-      else if (2 * i >= 3 * j) tmp[j] = 1;
-      else if (3 * i > 2 * j) tmp[j] = 2;
-      else if (3 * i > j) tmp[j] = 3;
-      else tmp[j] = 4;
-    }
-    AIR_STATUS_TABLE.push(tmp);
-  }
-
-  // 自軍撃墜テーブル
-  const downRate = [[7, 15], [20, 45], [30, 75], [45, 105], [65, 150]];
-  const downRateLen = downRate.length;
-  for (let slot = 0; slot <= MAX_SLOT; slot++) {
-    const tmpA = [];
-    for (let i = 0; i < downRateLen; i++) {
-      const tmpB = [];
-      for (let j = downRate[i][0]; j <= downRate[i][1]; j++) tmpB.push(Math.floor(slot * j / 256));
-
-      shuffleArray(tmpB);
-      tmpA.push(tmpB);
-    }
-    SHOOT_DOWN_TABLE.push(tmpA);
-  }
-
-  // 自軍撃墜テーブル 平均値
-  for (let i = 0; i <= MAX_SLOT; i++) {
-    SHOOT_DOWN_TABLE_AVE.push(SHOOT_DOWN_TABLE[i].map(v => {
-      let sum = 0;
-      for (const value of v) sum += value;
-      return sum / v.length;
-    }));
-  }
-
-  // 敵撃墜テーブル
-  let enemyMaxSlot = 0;
-  const enemyLen = ENEMY_DATA.length;
-  for (let i = 0; i < enemyLen; i++) {
-    const slotLen = ENEMY_DATA[i].slot.length;
-    for (let j = 0; j < slotLen; j++) {
-      if (enemyMaxSlot < ENEMY_DATA[i].slot[j]) enemyMaxSlot = ENEMY_DATA[i].slot[j];
-    }
-  }
-  for (let slot = 0; slot <= enemyMaxSlot; slot++) {
-    const tmpA = [];
-    const airLen = AIR_STATUS.length;
-    for (let i = 0; i < airLen; i++) {
-      const tmpB = [];
-      const rand_max = AIR_STATUS[i].rate;
-      for (let x = rand_max; x >= 0; x--) {
-        for (let y = 0; y <= rand_max; y++) {
-          const value = Math.floor(slot * (0.65 * x + 0.35 * y) / 10);
-          tmpB.push(value);
-        }
-      }
-
-      shuffleArray(tmpB);
-      tmpA.push(tmpB);
-    }
-    SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
-  }
-
   callback();
 }
 
@@ -627,8 +643,9 @@ function setEnemyType(array) {
  */
 function clearPlaneDiv($div) {
   // 選択状況をリセット
-  $div.removeClass(getPlaneCss($div.data('type')));
-  $div.removeData();
+  $div.removeClass(getPlaneCss($div[0].dataset.type));
+  $div[0].dataset.planeid = '';
+  $div[0].dataset.type = '';
   $div.find('.plane_img').attr('src', './img/type/undefined.png').attr('alt', '');
   $div.find('.cur_move').removeClass('cur_move');
   $div.find('.drag_handle').removeClass('drag_handle');
@@ -707,7 +724,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 
   if ($div.closest('.ship_tab').hasClass('ship_tab')) {
     // 搭載先が艦娘の場合、機体が装備できるのかどうかチェック
-    let shipId = castInt($div.closest('.ship_tab').data('shipid'));
+    let shipId = castInt($div.closest('.ship_tab')[0].dataset.shipid);
     if (!checkInvalidPlane(shipId, plane)) {
       clearPlaneDiv($div);
       return false;
@@ -715,10 +732,10 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
   }
 
   $div
-    .removeClass(getPlaneCss($div.data('type')))
-    .addClass(getPlaneCss(plane.type))
-    .data('planeid', plane.id)
-    .data('type', plane.type);
+    .removeClass(getPlaneCss($div[0].dataset.type))
+    .addClass(getPlaneCss(plane.type));
+  $div[0].dataset.planeid = plane.id;
+  $div[0].dataset.type = plane.type;
   $div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
   $div.find('.plane_img').attr('src', './img/type/type' + plane.type + '.png').attr('alt', plane.type);
   $div.find('.plane_img').parent().addClass('cur_move drag_handle');
@@ -745,10 +762,11 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
   else if (plane.id === 312) prof = 2;
   // 特定熟練度を保持していた場合
   if (inputPlane.prof >= 0) prof = inputPlane.prof;
-  $div.find('.prof_select')
+  const $prof_select = $div.find('.prof_select');
+  $prof_select
     .attr('src', RESOURCE_URL + '/img/util/prof' + prof + '.png')
-    .data('prof', prof)
     .removeClass('prof_yellow prof_blue prof_none');
+  $prof_select[0].dataset.prof = prof;
   if (prof > 3) $div.find('.prof_select').addClass('prof_yellow');
   else if (prof > 0) $div.find('.prof_select').addClass('prof_blue');
   else $div.find('.prof_select').addClass('prof_none');
@@ -770,19 +788,18 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 function setShipDiv($div, id) {
   const ship = SHIP_DATA.find(v => v.id === id);
   if (!ship) return;
-  $div.data('shipid', ship.id);
+  $div[0].dataset.shipid = ship.id;
   $div.find('.ship_name_span').text(ship.name);
-
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
 
     const plane = {
-      id: castInt($this.data('planeid')),
+      id: castInt($this[0].dataset.planeid),
       remodel: castInt($this.find('.remodel_value').text()),
-      prof: castInt($this.find('.prof_select').data('prof')),
+      prof: castInt($this.find('.prof_select')[0].dataset.prof),
     };
     // 既に装備されている装備を装備しなおそうとする -> 不適切なら自動的にはずれる
-    if ($div.data('shipid')) setPlaneDiv($this, plane);
+    if ($div[0].dataset.shipid) setPlaneDiv($this, plane);
 
     $this.find('.slot').text(0);
     $this.find('.slot_ini').data('ini', 0);
@@ -801,7 +818,7 @@ function setShipDiv($div, id) {
  */
 function clearShipDiv($div) {
   // 選択状況をリセット
-  $div.removeData();
+  $div[0].dataset.shipid = '';
   $div.find('.ship_name_span').text('艦娘を選択');
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
@@ -840,8 +857,11 @@ function setEnemyDiv($div, id, ap = 0) {
   // 空の敵艦が帰ってきたら中止
   if (enemy.id === 0) return;
 
-  $div.data('enemyid', enemy.id);
+  $div[0].dataset.enemyid = enemy.id;
   $div.find('.enemy_name_span').html(drawEnemyGradeColor(enemy.name));
+
+  // マス情報は消しておく
+  $div.closest('.battle_content')[0].dataset.mapinfo = '';
 
   let displayAp = 0;
   if (id === -1 && ap > 0) displayAp = ap;
@@ -901,7 +921,7 @@ function clearEnemyDiv($div) {
   // クリア対象の下にまだenemy_content要素があるなら削除
   if ($div.next().attr('class')) {
     // 一番下の行まで埋まってた場合は、最下部に新規行を挿入
-    if ($parent.find('.enemy_content').length === 10 && $parent.find('.enemy_content:last').data('enemyid')) {
+    if ($parent.find('.enemy_content').length === 10 && $parent.find('.enemy_content:last')[0].dataset.enemyid) {
       // 複製して追加
       const $clone = $div.clone();
       // 複製したやつは初期化
@@ -912,7 +932,7 @@ function clearEnemyDiv($div) {
   }
   else {
     // 選択状況をリセット
-    $div.removeData();
+    $div[0].dataset.enemyid = '';
     $div.find('.enemy_name_span').text('敵艦を選択');
     $div.find('.enemy_ap').text(0);
   }
@@ -932,18 +952,20 @@ function clearEnemyDivAll(count = 1) {
     $(e).find('.enemy_content:not(:first)').remove();
     clearEnemyDiv($(e).find('.enemy_content'));
   });
+  $('#battle_count').val(count);
   createEnemyInput(count);
 }
 
 /**
  * 値が増加した場合緑に、減少した場合赤に、色を変えつつ値を変更する
- * @param {JqueryDomObject} $inline
+ * @param {HTMLElement} node
  * @param {number} pre 変更前の値
  * @param {number} cur 変更後の値
  * @param {boolean} reverse 赤緑判定を反転する場合 true を指定
  */
-function drawChangeValue($inline, pre, cur, reverse) {
-  if (pre !== cur) {
+function drawChangeValue(node, pre, cur, reverse) {
+  if (castInt(pre) !== castInt(cur)) {
+    $inline = $(node);
     $inline.text(cur).stop();
     if (reverse) $inline.css('color', cur < pre ? '#0c5' : cur > pre ? '#f00' : '#000');
     else $inline.css('color', cur > pre ? '#0c5' : cur < pre ? '#f00' : '#000');
@@ -1310,7 +1332,7 @@ function drawPlanePresetPreview(preset) {
 
     $target.find('.' + ($target.attr('class').indexOf('lb_tab') === -1 ? 'ship_plane' : 'lb_plane')).each((i, e) => {
       if ($(e).attr('class').indexOf('d-none') > -1) return;
-      const plane = PLANE_DATA.find(v => v.id === $(e).data('planeid'));
+      const plane = PLANE_DATA.find(v => v.id === castInt($(e)[0].dataset.planeid));
       if (plane) planes.push(plane);
     });
 
@@ -1348,13 +1370,13 @@ function drawPlanePresetPreview(preset) {
 function updatePlanePreset() {
   const presetId = castInt($('.preset_selected').data('presetid'));
   const planeIds = [];
-  $('.preset_preview_tr').each((i, e) => planeIds.push(castInt($(e).data('planeid'))));
+  $('.preset_preview_tr').each((i, e) => planeIds.push(castInt($(e)[0].dataset.planeid)));
 
   let max_id = 0;
   for (const preset of planePreset) if (max_id < preset.id) max_id = preset.id;
   const newPreset = {
     id: (presetId === -1 ? max_id + 1 : presetId),
-    name: $modal.find('.preset_name').val().replace(/^\s+|\s+$/g, ''),
+    name: $('#modal_plane_preset').find('.preset_name').val().replace(/^\s+|\s+$/g, ''),
     planes: planeIds
   };
 
@@ -1619,7 +1641,6 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
     $('#friendFleet_item2').find('.display_ship_count').val(shipCountFleet2 % 2 === 1 ? shipCountFleet2 + 1 : shipCountFleet2);
     display_ship_count_Changed($('#friendFleet_item2').find('.display_ship_count'), true);
 
-
     // 敵艦展開
     const battle = Math.min(Math.max(preset[2].length, 1), 10);
     // クリア
@@ -1675,8 +1696,8 @@ function createLandBasePreset() {
   $('.lb_plane').each((i, e) => {
     const $e = $(e);
     const plane = [
-      castInt($e.data('planeid')),
-      castInt($e.find('.prof_select').data('prof')),
+      castInt($e[0].dataset.planeid),
+      castInt($e.find('.prof_select')[0].dataset.prof),
       castInt($e.find('.remodel_value').text()),
       castInt($e.find('.slot').text()),
       i
@@ -1701,12 +1722,12 @@ function createFriendFleetPreset() {
     // 非表示なら飛ばす
     if ($(e).attr('class').indexOf('d-none') > -1) return;
 
-    const ship = [castFloat($(e).data('shipid')), [], shipIndex];
+    const ship = [castInt($(e)[0].dataset.shipid), [], shipIndex];
     $(e).find('.ship_plane').each((j, ce) => {
       const $ce = $(ce);
       const plane = [
-        castInt($ce.data('planeid')),
-        castInt($ce.find('.prof_select').data('prof')),
+        castInt($ce[0].dataset.planeid),
+        castInt($ce.find('.prof_select')[0].dataset.prof),
         castInt($ce.find('.remodel_value').text()),
         castInt($ce.find('.slot').text()),
         j
@@ -1737,7 +1758,7 @@ function createEnemyFleetPreset() {
     if ($(e).attr('class').indexOf('d-none') > -1) return;
     const enemyFleet = [i, []];
     $(e).find('.enemy_content').each((j, ce) => {
-      const enemyId = castInt($(ce).data('enemyid'));
+      const enemyId = castInt($(ce)[0].dataset.enemyid);
       const ap = castInt($(ce).find('.enemy_ap').text());
       // id:0 の場合飛ばす
       if (enemyId === 0) return;
@@ -1928,8 +1949,8 @@ function convertToDeckBuikder(preset = null) {
 
       const s = { id: `${shipData.deckid}`, lv: 99, luck: -1, items: planes };
       const shipIndex = ship[2];
-      if (shipIndex < 6) obj.f1["s" + ((shipIndex + 1) % 6)] = s;
-      else obj.f2["s" + ((shipIndex + 1) % 6)] = s;
+      if (shipIndex < 6) obj.f1["s" + ((shipIndex % 6) + 1)] = s;
+      else obj.f2["s" + ((shipIndex % 6) + 1)] = s;
     }
     return JSON.stringify(obj);
   } catch (error) {
@@ -2008,7 +2029,6 @@ function drawResult() {
 /*==================================
     Web Strage
 ==================================*/
-
 /**
  * local Strage からデータ取得(Json.parse済)
  * @param {string} key key
@@ -2058,8 +2078,12 @@ function deleteLocalStrage(key) {
  * @returns {number} 制空状態 index (0:確保 1:優勢...)
  */
 function getAirStatusIndex(x, y) {
-  // 制空双方2000以下なら事前計算テーブルから制空状態取得
-  if (x < 2000 && y < 2000) return AIR_STATUS_TABLE[x][y];
+  // 味方艦隊2000以下なら事前計算テーブルから制空状態取得
+  if (x <= 2000) {
+    const max = AIR_STATUS_TABLE[x].length - 1;
+    if (y < max) return AIR_STATUS_TABLE[x][y];
+    return AIR_STATUS_TABLE[x][max];
+  }
   else {
     const border = getAirStatusBorder(y);
     const len = border.length;
@@ -2118,67 +2142,88 @@ function caluclate() {
 }
 
 /**
- * 計算前初期化処理
+ * 計算前初期化 anti-JQuery
  * @param {Object} objectData 計算用各種データ
  * @returns {boolean} シミュレーションを開始するならtrue
  */
 function caluclateInit(objectData) {
   // テーブルいったん全てリセット
-  $('#ship_info_table tbody').html('');
-  $('#shoot_down_table tbody').html('');
-  $('#shoot_down_table tfoot').find('.td_battle').html('');
-  $('#shoot_down_table').find('td').removeClass('airStatus0 airStatus1 airStatus2 airStatus3 airStatus4');
+  document.getElementById('ship_info_table').getElementsByTagName('tbody')[0].innerHTML = "";
+  document.getElementById('shoot_down_table').getElementsByTagName('tbody')[0].innerHTML = "";
+  for (const node of document.getElementById('shoot_down_table').getElementsByTagName('tfoot')[0].getElementsByClassName('td_battle')) {
+    node.innerHTML = "";
+  }
+  for (const d of document.getElementById('shoot_down_table').getElementsByTagName('td')) {
+    d.classList.remove('airStatus0', 'airStatus1', 'airStatus2', 'airStatus3', 'airStatus4');
+  }
 
   // 防空時
   if (isDefMode) {
     // 艦娘情報非表示
-    $('#ship_info').addClass('d-none');
-    $('#shoot_down_table_content').addClass('d-none');
-    $('#friendFleet').addClass('d-none');
+    document.getElementById('ship_info').classList.add('d-none');
+    document.getElementById('shoot_down_table_content').classList.add('d-none');
+    document.getElementById('friendFleet').classList.add('d-none');
 
     // 戦闘回数固定
-    $('#battle_count_content').addClass('d-none').removeClass('d-flex');
-    $('#battle_count').val(1);
+    const node = document.getElementById('battle_count_content');
+    node.classList.add('d-none');
+    node.classList.remove('d-flex');
+    document.getElementById('battle_count').value = "1";
     createEnemyInput(1);
   }
   else {
-    $('#ship_info').removeClass('d-none');
-    $('#shoot_down_table_content').removeClass('d-none');
-    $('#friendFleet').removeClass('d-none');
-    $('#battle_count_content').removeClass('d-none').addClass('d-flex');
+    document.getElementById('ship_info').classList.remove('d-none');
+    document.getElementById('shoot_down_table_content').classList.remove('d-none');
+    document.getElementById('friendFleet').classList.remove('d-none');
+    const node = document.getElementById('battle_count_content');
+    node.classList.add('d-flex');
+    node.classList.remove('d-none');
   }
 
   // 基地情報更新
+  //console.time('updateLandBaseInfo');
   updateLandBaseInfo(objectData.landBaseData);
+  //console.timeEnd('updateLandBaseInfo');
 
   // 艦隊情報更新
+  //  console.time('updateFriendFleetInfo');
   updateFriendFleetInfo(objectData.friendFleetData);
+  // console.timeEnd('updateFriendFleetInfo');
 
   // 敵艦情報更新
+  //console.time('updateEnemyFleetInfo');
   updateEnemyFleetInfo(objectData.enemyFleetData);
+  //console.timeEnd('updateEnemyFleetInfo');
 
   // 自動保存する場合
-  if ($('#auto_save').prop('checked')) {
+  if (document.getElementById('auto_save')['checked']) {
     saveLocalStrage('autoSaveData', encordPreset());
     saveLocalStrage('autoSave', true);
   }
 
   // 自動計算しない場合
-  if (!$('#auto_caluclate').prop('checked')) {
+  if (!document.getElementById('auto_caluclate')['checked']) {
     // 準備状態でない場合、準備状態に移行し終了
-    if (!$('#btn_caluclate').hasClass('caluclate_ready')) {
-      $('#btn_caluclate').addClass('caluclate_ready').removeClass('caluclate_end');
+    const node = document.getElementById('btn_caluclate');
+    if (node.classList.contains('caluclate_ready')) {
+      node.classList.add('caluclate_ready');
+      node.classList.remove('caluclate_end');
       return false;
     }
     // 準備状態だった場合、シミュレート開始ボタンが押されていなければ終了
-    else if (!$('#btn_caluclate').hasClass('caluclate_start')) return false;
+    else if (!node.classList.contains('caluclate_start')) return false;
 
     // 待機状態に戻す
-    $('#btn_caluclate').removeClass('caluclate_ready caluclate_start').addClass('caluclate_end');
+    node.classList.remove('caluclate_ready caluclate_start');
+    node.classList.add('caluclate_end');
   }
 
   // チャートデータ初期化
   chartData = { own: [], enemy: [], rate: [] };
+
+  // 事前計算テーブルチェック
+  setPreCaluclateTable();
+
   return true;
 }
 
@@ -2193,39 +2238,44 @@ function updateLandBaseInfo(landBaseData) {
   let sumAmmo = 0;
   let sumBauxite = 0;
   let ng_range_text = '';
+  const targetBattle = castInt(document.getElementById('landBase_target').value);
 
-  $('.lb_tab').each((index, element) => {
-    const $lb_tab = $(element);
-    tmpLbPlanes.length = 0;
+  const nodes_lb_tab = document.getElementsByClassName('lb_tab');
+  for (let index = 0; index < nodes_lb_tab.length; index++) {
+    const node_lb_tab = nodes_lb_tab[index];
     const lbNo = index + 1;
     let tmpLandBaseDatum = { baseNo: lbNo, planes: [], ap: 0, mode: -1 };
+    tmpLbPlanes.length = 0;
 
     // 基地航空隊 各種制空値表示
-    $lb_tab.find('.lb_plane').each((i, e) => {
+    const node_lb_planes = node_lb_tab.getElementsByClassName('lb_plane');
+    for (let i = 0; i < node_lb_planes.length; i++) {
+      const node_lb_plane = node_lb_planes[i];
       const slotNo = i + 1;
+      if (i >= 4) break;
       // 基地航空機オブジェクト生成
-      const lbPlaneData = createLBPlaneObject($(e), i);
+      const lbPlaneData = createLBPlaneObject(node_lb_plane, i);
       // 格納
       tmpLandBaseDatum.planes.push(lbPlaneData);
 
       // 個別表示
-      const $lb_slot = $('.lb_info_lb_' + lbNo + '.slot' + slotNo);
-      let $target_td = $lb_slot.find('.info_plane');
+      const node = document.getElementsByClassName('lb_info_lb_' + lbNo + ' slot' + slotNo)[0];
+      let node_td = node.getElementsByClassName('info_plane')[0];
       let prevAp = 0;
       // 装備名
       const planeName = lbPlaneData.abbr ? lbPlaneData.abbr : lbPlaneData.name;
-      $target_td.text(planeName ? planeName : '-');
+      node_td.textContent = (planeName ? planeName : '-');
       // 搭載数
-      $target_td = $lb_slot.find('.info_slot');
-      prevAp = castInt($target_td.text());
-      drawChangeValue($target_td, prevAp, lbPlaneData.slot);
-      if (!planeName) $target_td.text('');
+      node_td = node.getElementsByClassName('info_slot')[0];
+      prevAp = castInt(node_td.textContent);
+      drawChangeValue(node_td, prevAp, lbPlaneData.slot);
+      if (!planeName) node_td.textContent = '';
 
       // 制空値
-      $target_td = $lb_slot.find('.info_ap');
-      prevAp = castInt($target_td.text());
-      drawChangeValue($target_td, prevAp, lbPlaneData.ap);
-      if (!planeName) $target_td.text('');
+      node_td = node.getElementsByClassName('info_ap')[0];
+      prevAp = castInt(node_td.textContent);
+      drawChangeValue(node_td, prevAp, lbPlaneData.ap);
+      if (!planeName) node_td.textContent = '';
 
       // 航空隊制空値加算
       tmpLandBaseDatum.ap += lbPlaneData.ap;
@@ -2234,35 +2284,38 @@ function updateLandBaseInfo(landBaseData) {
       sumFuel += lbPlaneData.id === 0 ? 0 : Math.ceil(lbPlaneData.slot * (lbPlaneData.type === 101 ? 1.5 : 1.0));
       sumAmmo += lbPlaneData.id === 0 ? 0 : lbPlaneData.type === 101 ? Math.floor(lbPlaneData.slot * 0.7) : Math.ceil(lbPlaneData.slot * 0.6);
       sumBauxite += lbPlaneData.cost * (RECONNAISSANCES.indexOf(lbPlaneData.type) === -1 ? 18 : 4);
-    });
+    }
 
     // 機体がないなら待機以外選択できないようにしとく
     let isEmpty = true;
     for (const plane of tmpLandBaseDatum.planes) if (plane.id > 0) isEmpty = false;
     if (isEmpty) {
       tmpLandBaseDatum.mode = -1;
-      $lb_tab.find('.ohuda_select').val(-1);
-      $lb_tab.find('.ohuda_select option').each((i, e) => {
-        if (castInt($(e).val(), -1) !== -1) $(e).prop('disabled', true);
-      });
+      node_lb_tab.getElementsByClassName('ohuda_select')[0].value = '-1';
+      for (const node_option of node_lb_tab.getElementsByClassName('ohuda_select')[0].getElementsByTagName('option')) {
+        if (castInt(node_option.value, -1) !== -1) node_option['disabled'] = true;
+      }
     }
-    else $lb_tab.find('.ohuda_select option').prop('disabled', false);
-
+    else {
+      for (const node_option of node_lb_tab.getElementsByClassName('ohuda_select')[0].getElementsByTagName('option')) {
+        node_option['disabled'] = false;
+      }
+    }
     // 出撃 or 防空
-    tmpLandBaseDatum.mode = castInt($lb_tab.find('.ohuda_select').val());
+    tmpLandBaseDatum.mode = castInt(node_lb_tab.getElementsByClassName('ohuda_select')[0].value);
 
     // 出撃、配備コスト
-    const $resourceArea = $lb_tab.find('.resource');
-    const $bauxite = $resourceArea.find('.bauxite');
-    let $fuel = $resourceArea.find('.fuel');
-    let $ammo = $resourceArea.find('.ammo');
+    const node_resource = node_lb_tab.getElementsByClassName('resource')[0];
+    const node_bauxite = node_resource.getElementsByClassName('bauxite')[0];
+    let node_fuel = node_resource.getElementsByClassName('fuel')[0];
+    let node_ammo = node_resource.getElementsByClassName('ammo')[0];
     if (tmpLandBaseDatum.mode < 1) {
       sumFuel = 0;
       sumAmmo = 0;
     }
-    drawChangeValue($fuel, castInt($fuel.text()), sumFuel, true);
-    drawChangeValue($ammo, castInt($ammo.text()), sumAmmo, true);
-    drawChangeValue($bauxite, castInt($bauxite.text()), sumBauxite, true);
+    drawChangeValue(node_fuel, castInt(node_fuel.textContent), sumFuel, true);
+    drawChangeValue(node_ammo, castInt(node_ammo.textContent), sumAmmo, true);
+    drawChangeValue(node_bauxite, castInt(node_bauxite.textContent), sumBauxite, true);
     sumFuel = 0;
     sumAmmo = 0;
     sumBauxite = 0;
@@ -2271,41 +2324,49 @@ function updateLandBaseInfo(landBaseData) {
     getUpdateLBAirPower(tmpLandBaseDatum);
 
     // 総制空値
-    const $target_lb = $('.lb_info_lb_' + lbNo);
-    let $target_td = $target_lb.find('.info_sumAp');
-    drawChangeValue($target_td, castInt($target_td.text()), tmpLandBaseDatum.ap);
-    let $targetSpan = $lb_tab.find('.ap');
-    drawChangeValue($targetSpan, castInt($targetSpan.text()), tmpLandBaseDatum.ap);
+    const node_trs = document.getElementsByClassName('lb_info_lb_' + lbNo);
+    let node_target_td = node_trs[0].getElementsByClassName('info_sumAp')[0];
+    drawChangeValue(node_target_td, castInt(node_target_td.textContent), tmpLandBaseDatum.ap);
+    let node_span = node_lb_tab.getElementsByClassName('ap')[0];
+    drawChangeValue(node_span, castInt(node_span.textContent), tmpLandBaseDatum.ap);
 
     // 半径
     const range = getRange(tmpLandBaseDatum);
-    $target_td = $target_lb.find('.info_range');
-    drawChangeValue($target_td, castInt($target_td.text()), range);
-    $targetSpan = $lb_tab.find('.range');
-    drawChangeValue($targetSpan, castInt($targetSpan.text()), range);
+    node_target_td = node_trs[0].getElementsByClassName('info_range')[0];
+    drawChangeValue(node_target_td, castInt(node_target_td.textContent), range);
+    node_span = node_lb_tab.getElementsByClassName('range')[0];
+    drawChangeValue(node_span, castInt(node_span.textContent), range);
 
     // 半径が足りていないなら文言追加
     if (tmpLandBaseDatum.mode > 0) {
-      $('#battle_container').find('.enemy_range').each((i, e) => {
-        if (i === castInt($('#landBase_target').val()) - 1 && range < castInt($(e).text())) {
-          ng_range_text += (ng_range_text.length ? ',' : '') + (index + 1);
-        }
-      });
+      const node = document.getElementById('battle_container').getElementsByClassName('enemy_range');
+      if (node.length >= targetBattle - 1 && castInt(node[(targetBattle - 1)].textContent) > range) {
+        ng_range_text += (ng_range_text.length ? ',' : '') + (index + 1);
+      }
     }
 
-    // 待機部隊は非表示
-    if (tmpLandBaseDatum.mode !== -1) $target_lb.removeClass('d-none');
-    else $target_lb.addClass('d-none');
+    for (const node_tr of node_trs) {
+      // 待機部隊は非表示
+      if (tmpLandBaseDatum.mode !== -1) {
+        node_tr.classList.remove('d-none');
+      }
+      else node_tr.classList.add('d-none');
+    }
+
 
     // 生成した第X航空隊データを格納
     landBaseData.push(tmpLandBaseDatum);
-  });
+  }
 
   // 全部待機かどうか
-  const visiblePlaneCount = $('#lb_info_table tbody .lb_info_tr:not(.d-none)').length;
-  $('#lb_info').removeClass('col-lg-8 col-xl-7').addClass('col-lg-6');
+  let visiblePlaneCount = 0;
+  const node_tr = document.getElementById('lb_info_table').getElementsByTagName('tbody')[0].getElementsByClassName('lb_info_tr');
+  for (const node of node_tr) if (!node.classList.contains('d-none')) visiblePlaneCount++;
+  document.getElementById('lb_info').classList.remove('col-lg-8', 'col-xl-7');
+  document.getElementById('lb_info').classList.add('col-lg-6');
   if (visiblePlaneCount > 0) {
     $('#lb_info_table tbody').find('.info_defAp').remove();
+    for (const h of document.getElementById('lb_info_table').getElementsByTagName('tbody')[0].getElementsByClassName('info_defAp')) h.remove();
     if (isDefMode) {
       // 総制空値合計
       let sumAp = 0;
@@ -2322,62 +2383,74 @@ function updateLandBaseInfo(landBaseData) {
       sumAp_ex = (rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.3) * sumAp;
 
       // 防空時は半径の後ろの最終防空時制空値を表示　半径は非表示
-      $('#lb_info').addClass('col-lg-8 col-xl-7').removeClass('col-lg-6');
-      $('#lb_info_table').find('.info_range').addClass('d-none');
-      $('#lb_info_table').find('.info_defAp').removeClass('d-none');
-      $('#lb_info_table tbody').find('.lb_info_tr:first').append(`
-        <td class="info_defAp" rowspan="${visiblePlaneCount}">${sumAp}</td>
-        <td class="info_defAp info_defApEx" rowspan="${visiblePlaneCount}">${Math.floor(sumAp_ex)}</td>
-      `);
+      document.getElementById('lb_info').classList.add('col-lg-8', 'col-xl-7');
+      document.getElementById('lb_info').classList.remove('col-lg-6');
+      const node_table = document.getElementById('lb_info_table');
+      for (const node of node_table.getElementsByClassName('info_range')) node.classList.add('d-none');
+      for (const node of node_table.getElementsByClassName('info_defAp')) node.classList.remove('d-none');
+
+      const node_tr = node_table.getElementsByClassName('lb_info_tr')[0];
+      let node_td = document.createElement('td');
+      node_td.className = 'info_defAp';
+      node_td.rowSpan = visiblePlaneCount;
+      node_td.textContent = sumAp;
+      node_tr.appendChild(node_td);
+
+      node_td = document.createElement('td');
+      node_td.className = 'info_defAp info_defApEx';
+      node_td.rowSpan = visiblePlaneCount;
+      node_td.textContent = Math.floor(sumAp_ex);
+      node_tr.appendChild(node_td);
     }
     else {
-      $('#lb_info_table').find('.info_range').removeClass('d-none');
-      $('#lb_info_table thead').find('.info_defAp').addClass('d-none');
+      const node_table = document.getElementById('lb_info_table');
+      for (const node of node_table.getElementsByClassName('info_range')) node.classList.remove('d-none');
+      for (const node of node_table.getElementsByClassName('info_defAp')) node.classList.add('d-none');
     }
 
     // 半径足りませんよ表示
-    $('.ng_range').text(ng_range_text);
-    if (ng_range_text.length) $('.lb_range_warning').removeClass('d-none');
-    else $('.lb_range_warning').addClass('d-none');
-
-    $('#lb_info_table').find('.info_warning').addClass('d-none');
+    document.getElementById('ng_range').textContent = ng_range_text;
+    document.getElementById('lb_info_table').getElementsByClassName('info_warning')[0].classList.add('d-none');
+    if (ng_range_text.length) document.getElementById('lb_range_warning').classList.remove('d-none');
+    else document.getElementById('lb_range_warning').classList.add('d-none');
   }
   else {
-    $('.lb_range_warning').addClass('d-none');
-    $('#lb_info_table').find('.info_warning').removeClass('d-none');
+    document.getElementById('lb_info_table').getElementsByClassName('info_warning')[0].classList.remove('d-none');
+    document.getElementById('lb_range_warning').classList.add('d-none');
   }
 }
 
 /**
  * 基地航空隊 中隊オブジェクト生成
  * {id, name, abbr, type, AA, AB, IP, LOS, ap, range, cost, slot, remodel, level}
- * @param {JqueryDomObject} $lb_plane 生成元 lb_plane
+ * @param {HTMLElement} node 生成元 lb_plane
  * @returns 機体オブジェクト {id, name, abbr, type, AA, AB, IP, LOS, ap, range, cost, slot, remodel, level}
  */
-function createLBPlaneObject($lb_plane) {
-  const id = castInt($lb_plane.data('planeid'));
-  const type = castInt($lb_plane.data('type'));
+function createLBPlaneObject(node) {
+  const id = castInt(node.dataset.planeid);
+  const type = castInt(node.dataset.type);
   // undefined来る可能性あり
   const plane = getPlanes(type).find(v => v.id === id);
 
   // スロット数不正チェック
-  const slotVal = $lb_plane.find('.slot').text();
+  const node_slot = node.getElementsByClassName('slot')[0];
+  const slotVal = node_slot.textContent;
   let inputSlot = castInt(slotVal);
   if (slotVal.length === 0) inputSlot = 0;
   else if (inputSlot > 18) {
     inputSlot = 18;
-    $lb_plane.find('.slot').text(inputSlot);
+    node_slot.textContent = inputSlot;
   }
   else if (inputSlot < 0) {
     inputSlot = 0;
-    $lb_plane.find('.slot').text(0);
+    node_slot.textContent = "0";
   }
 
   const lbPlane = {
     id: 0, name: '', abbr: '', type: 0, AA: 0, AB: 0, IP: 0, LOS: 0, ap: 0, range: 999, cost: 0,
     slot: inputSlot,
-    remodel: castInt($lb_plane.find('.remodel_value').text()),
-    level: castInt($lb_plane.find('.prof_select').data('prof'))
+    remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
+    level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof)
   };
 
   if (plane) {
@@ -2702,172 +2775,225 @@ function getBonusAp(plane) {
  * @param {Array.<Object>} friendFleetData
  */
 function updateFriendFleetInfo(friendFleetData) {
-  const tmpFriendFleet = [];
+  const shipPlanes = [];
   let fleetAp = 0;
 
-  $('.ship_tab').each((index, element) => {
-    const $this = $(element);
+  const node_ship_tabs = document.getElementsByClassName('ship_tab');
+  for (let index = 0; index < node_ship_tabs.length; index++) {
+    const node_ship_tab = node_ship_tabs[index];
     const shipNo = index + 1;
 
     // 非表示なら飛ばす
-    if ($this.attr('class').indexOf('d-none') > -1) return;
-
-    tmpFriendFleet.length = 0;
+    if (node_ship_tab.classList.contains('d-none')) continue;
+    shipPlanes.length = 0;
 
     let slotNo = 0;
-    $this.find('.ship_plane').each((i, e) => {
-      const $ship_plane = $(e);
+    for (const node_ship_plane of node_ship_tab.getElementsByClassName('ship_plane')) {
       // draggable部分は飛ばす
-      if ($ship_plane.attr('class').indexOf('ui-draggable') > 0) return;
-
+      if (node_ship_plane.classList.contains('ui-draggable')) continue;
       // 機体オブジェクト生成
-      const planeObj = createFleetPlaneObject($(e), shipNo, slotNo++);
-      tmpFriendFleet.push(planeObj);
-    });
+      const planeObj = createFleetPlaneObject(node_ship_plane, shipNo, slotNo++);
+      shipPlanes.push(planeObj);
+    }
 
-    // 艦娘横の制空値表示など
-    const txtAP = $this.find('.ap');
-    const prevAp = castInt(txtAP.text());
+    // 艦娘横の制空値など反映
+    const node_ap = node_ship_tab.getElementsByClassName('ap')[0];
+    const prevAp = castInt(node_ap.textContent);
     let sumAp = 0;
     let exist = false;
     let planeCount = 0;
     // 総制空値と艦載機の有無チェック
-    for (const v of tmpFriendFleet) {
+    for (const v of shipPlanes) {
       sumAp += v.ap;
       if (!exist && v.id > 0) exist = true;
       if (v.id > 0 && v.slot > 0) planeCount++;
     }
-    drawChangeValue(txtAP, prevAp, sumAp);
+    drawChangeValue(node_ap, prevAp, sumAp);
     fleetAp += sumAp;
 
     if (planeCount > 0) {
-      // 撃墜テーブル及び情報テーブル生成
+      // 撃墜テーブル & 入力情報テーブル生成
       let i = 0;
-      let text = '';
-      let info_table_text = '';
-      let shipId = castInt($this.data('shipid'));
+      let shipId = castInt(node_ship_tab.dataset.shipid);
       const ship = shipId ? SHIP_DATA.find(v => v.id === shipId) : null;
+
       // 艦娘が設定されているならその装備枠の数だけ表示 それ以外は入力された装備の数だけ
       if (ship) planeCount = ship.slot.length;
 
-      let shipName_td = `
-      <td rowspan="${planeCount}" class="td_name align-middle">
-          <div class="td_name_content text-wrap">${ship ? ship.name : '未指定'}</div>
-      </td>
-      `;
+      const shoot_fragment = document.createDocumentFragment();
+      const info_fragment = document.createDocumentFragment();
 
-      let info_name_td = `<td class="info_name" rowspan="${planeCount}">${ship ? ship.name : '未指定'}</td>`;
-      let info_sumAp_td = `<td class="info_sumAp" rowspan="${planeCount}">${sumAp}</td>`;
-
-      const len = tmpFriendFleet.length;
-      for (i = 0; i < len; i++) {
-        const plane = tmpFriendFleet[i];
+      let isFirst = true;
+      for (i = 0; i < shipPlanes.length; i++) {
+        const plane = shipPlanes[i];
         // 艦娘未指定の場合 搭載数 0 または艦載機未装備 のスロットは表示しない
         if (!ship && (plane.id === 0 || plane.slot === 0)) continue;
         // 艦娘の場合 スロット以上は作らない
         if (ship && i === ship.slot.length) break;
 
-        // 撃墜テーブル 10戦闘分
-        let battle_td = '';
-        for (let index = 1; index <= 10; index++) {
-          battle_td += `<td class="td_battle battle${index} align-middle"></td>`;
+        // 撃墜テーブル構築
+        const node_battle_tr = document.createElement('tr');
+        node_battle_tr.className = `slot${i} shipNo${shipNo}`;
+        if (isFirst) {
+          const node_ship_name_td = document.createElement('td');
+          node_ship_name_td.rowSpan = planeCount;
+          node_ship_name_td.className = 'td_name align-middle';
+          node_ship_name_td.textContent = ship ? ship.name : '未指定';
+          node_battle_tr.appendChild(node_ship_name_td);
         }
-        // 撃墜テーブル内容
-        text += `
-        <tr class="slot${i} shipNo${shipNo}" data-rowindex="${shipNo}">
-          ${shipName_td}
-          <td class="td_plane_name text-nowrap align-middle">${plane.name}</td>
-          ${battle_td}
-          <td class="td_battle battle_end align-middle"></td>
-        </tr>
-        `;
-        shipName_td = '';
+        const node_plane_name_td = document.createElement('td');
+        node_plane_name_td.className = 'td_plane_name text-nowrap align-middle';
+        node_plane_name_td.textContent = plane.name;
+        node_battle_tr.appendChild(node_plane_name_td);
 
-        // 情報テーブル内容
-        info_table_text += `
-          <tr class="ship_info_tr slot${i + 1}">
-            ${info_name_td}
-            <td class="info_plane">${plane.name}</td>
-            <td class="info_slot">${plane.slot}</td>
-            <td class="info_ap">${plane.ap}</td>
-            ${info_sumAp_td}
-            </tr>
-        `;
-        info_name_td = '';
-        info_sumAp_td = '';
+        // 撃墜テーブル 10戦闘分
+        for (let j = 1; j <= 10; j++) {
+          const node_battle_td = document.createElement('td');
+          node_battle_td.className = `td_battle battle${j} align-middle`;
+          node_battle_tr.appendChild(node_battle_td);
+        }
+
+        const node_battle_end_td = document.createElement('td');
+        node_battle_end_td.className = 'td_battle battle_end align-middle';
+        node_battle_tr.appendChild(node_battle_end_td);
+
+        shoot_fragment.appendChild(node_battle_tr);
+
+        // 入力情報テーブル構築
+        const node_info_tr = document.createElement('tr');
+        node_info_tr.className = `ship_info_tr slot${i + 1}`;
+
+        if (isFirst) {
+          const node_info_name_td = document.createElement('td');
+          node_info_name_td.rowSpan = planeCount;
+          node_info_name_td.className = 'info_name';
+          node_info_name_td.textContent = ship ? ship.name : '未指定';
+          node_info_tr.appendChild(node_info_name_td);
+        }
+
+        const node_info_plane_name_td = document.createElement('td');
+        node_info_plane_name_td.className = 'info_plane';
+        node_info_plane_name_td.textContent = plane.name;
+        node_info_tr.appendChild(node_info_plane_name_td);
+
+        const node_info_info_slot_td = document.createElement('td');
+        node_info_info_slot_td.className = 'info_slot';
+        node_info_info_slot_td.textContent = plane.slot;
+        node_info_tr.appendChild(node_info_info_slot_td);
+
+        const node_info_info_ap_td = document.createElement('td');
+        node_info_info_ap_td.className = 'info_ap';
+        node_info_info_ap_td.textContent = plane.ap;
+        node_info_tr.appendChild(node_info_info_ap_td);
+
+        if (isFirst) {
+          const node_info_sumAp_td = document.createElement('td');
+          node_info_sumAp_td.rowSpan = planeCount;
+          node_info_sumAp_td.className = 'info_sumAp';
+          node_info_sumAp_td.textContent = sumAp;
+          node_info_tr.appendChild(node_info_sumAp_td);
+        }
+
+        info_fragment.appendChild(node_info_tr);
+        isFirst = false;
       }
-      $('#shoot_down_table_tbody').append(text);
-      $('#ship_info_table tbody').append(info_table_text);
-      // 最下部のtdに下線
-      $('#ship_info_table tbody tr:last()').find('td').addClass('last_slot');
+
+      document.getElementById('shoot_down_table_tbody').appendChild(shoot_fragment);
+
+      const node_info_tbody = document.getElementById('ship_info_table').getElementsByTagName('tbody')[0];
+      node_info_tbody.appendChild(info_fragment);
+      const node_info_trs = node_info_tbody.getElementsByTagName('tr');
+      if (node_info_trs.length > 0) {
+        for (const node_tr of node_info_trs[node_info_trs.length - 1].getElementsByTagName('td')) {
+          // 最下部のtdに下線
+          node_tr.classList.add('last_slot');
+        }
+      }
     }
-    else if ($('#shoot_down_table_tbody tr').length === 0) {
-      let battle_td = '';
-      for (let index = 1; index <= 10; index++) battle_td += `<td class="td_battle battle${index} align-middle"></td>`;
-      let text = `
-        <tr class="slot0 shipNo0">
-          <td class="td_name align-middle">
-            <div class="td_name_content">未選択</div>
-          </td>
-          <td class="td_plane_name text-nowrap align-middle text-center">-</td>
-            ${battle_td}
-          <td class="td_battle battle_end align-middle"></td>
-        </tr>
-      `;
-      $('#shoot_down_table_tbody').append(text);
+    else if (document.getElementById('shoot_down_table_tbody').getElementsByTagName('tr').length === 0) {
+      const node_battle_tr = document.createElement('tr');
+      node_battle_tr.className = 'slot0 shipNo0';
+
+      const node_ship_name_td = document.createElement('td');
+      node_ship_name_td.className = 'td_name align-middle';
+      node_ship_name_td.textContent = '未選択';
+      node_battle_tr.appendChild(node_ship_name_td);
+
+      const node_plane_name_td = document.createElement('td');
+      node_plane_name_td.className = 'td_plane_name text-nowrap align-middle text-center';
+      node_plane_name_td.textContent = '-';
+      node_battle_tr.appendChild(node_plane_name_td);
+
+      for (let j = 1; j <= 10; j++) {
+        const node_battle_td = document.createElement('td');
+        node_battle_td.className = `td_battle battle${j} align-middle`;
+        node_battle_tr.appendChild(node_battle_td);
+      }
+
+      const node_battle_end_td = document.createElement('td');
+      node_battle_end_td.className = 'td_battle battle_end align-middle';
+      node_battle_end_td.textContent = fleetAp;
+      node_battle_tr.appendChild(node_battle_end_td);
+
+      document.getElementById('shoot_down_table_tbody').appendChild(node_battle_tr);
     }
 
     // 代入
-    if (exist) friendFleetData.push(tmpFriendFleet.concat());
-  });
+    if (exist) friendFleetData.push(shipPlanes.concat());
+  }
 
-  const rowsCount = $('#ship_info_table tbody tr').length;
+  const ship_info_tbody = document.getElementById('ship_info_table').getElementsByTagName('tbody')[0];
+  const rowsCount = ship_info_tbody.getElementsByTagName('tr').length;
   if (rowsCount) {
     // 艦娘情報テーブル　艦隊総制空値列追加
-    let fleetApText = `<td class="info_fleetAp" rowspan="${rowsCount}">${fleetAp}</td>`;
-    $('.ship_info_tr:first()').append(fleetApText);
+    const node_info_fleetAp = document.createElement('td');
+    node_info_fleetAp.className = 'info_fleetAp';
+    node_info_fleetAp.rowSpan = rowsCount;
+    node_info_fleetAp.textContent = fleetAp;
+
+    ship_info_tbody.getElementsByClassName('ship_info_tr')[0].appendChild(node_info_fleetAp);
 
     $('#ship_info_table').find('.info_warning').addClass('d-none');
+    document.getElementById('ship_info_table').getElementsByClassName('info_warning')[0].classList.add('d-none');
   }
-  else $('#ship_info_table').find('.info_warning').removeClass('d-none');
+  else document.getElementById('ship_info_table').getElementsByClassName('info_warning')[0].classList.remove('d-none');
 }
 
 
 /**
  * 艦娘 装備オブジェクト生成
- * @param {JqueryDomObject} $ship_plane 生成元 ship_plane
+ * @param {HTMLElement} $ship_plane 生成元 ship_plane
  * @param {number} shipNo 何隻目の艦か
  * @param {number} index 何番目のスロか
  * @returns 生成物
  */
-function createFleetPlaneObject($ship_plane, shipNo, index) {
-  const id = castInt($ship_plane.data('planeid'));
-  const type = castInt($ship_plane.data('type'));
+function createFleetPlaneObject(node, shipNo, index) {
+  const id = castInt(node.dataset.planeid);
+  const type = castInt(node.dataset.type);
   // undefined来る可能性あり
   const plane = getPlanes(type).find(v => v.id === id);
 
   // スロット数不正チェック
-  const raw = $ship_plane.find('.slot').text();
+  const raw = node.getElementsByClassName('slot')[0].textContent;
   let inputSlot = castInt(raw);
-
   if (raw.length === 0) inputSlot = 0;
   else if (inputSlot > MAX_SLOT) {
     inputSlot = MAX_SLOT;
     // スロット数表示修正
-    $ship_plane.find('.slot').text(inputSlot);
+    node.getElementsByClassName('slot')[0].textContent = inputSlot;
   }
   else if (inputSlot < 0) {
     inputSlot = 0;
     // スロット数表示修正
-    $ship_plane.find('.slot').text(inputSlot);
+    node.getElementsByClassName('slot')[0].textContent = inputSlot;
   }
 
   const shipPlane = {
     fleetNo: shipNo,
     slotNo: index,
     id: 0, name: '-', type: 0, AA: 0, ap: 0, bonusAp: 0, canBattle: false,
-    remodel: castInt($ship_plane.find('.remodel_value').text()),
-    level: castInt($ship_plane.find('.prof_select').data('prof')),
+    remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
+    level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
     slot: inputSlot,
     origSlot: inputSlot,
     origAp: 0,
@@ -2912,49 +3038,45 @@ function updateEnemyFleetInfo(enemyFleetData) {
   let sumAp = 0;
   let sumLBAp = 0;
 
-  $('.battle_content').each(function () {
-
+  for (const node_battle_content of document.getElementsByClassName('battle_content')) {
     // 非表示なら飛ばす
-    if ($(this).attr('class').indexOf('d-none') > -1) return;
+    if (node_battle_content.classList.contains('d-none')) continue;
 
     tmpEnemyFleet = [];
     sumAp = 0;
     sumLBAp = 0;
 
     // 敵情報取得
-    $(this).find('.enemy_content').each(function () {
-      let enemyId = $(this).data('enemyid');
-      if (isNaN(enemyId)) enemyId = 0;
+    for (const node_enemy_content of node_battle_content.getElementsByClassName('enemy_content')) {
+      let enemyId = castInt(node_enemy_content.dataset.enemyid);
       const tmpEnemy = createEnemyObject(enemyId);
 
       // 直接入力の制空値を代入
       if (enemyId === -1) {
-        let inputAp = castInt($(this).find('.enemy_ap').text());
-
+        const node_enemy_ap = node_enemy_content.getElementsByClassName('enemy_ap')[0];
+        let inputAp = castInt(node_enemy_ap.textContent);
         tmpEnemy.ap = inputAp;
         tmpEnemy.lbAp = inputAp;
         tmpEnemy.origAp = inputAp;
         tmpEnemy.origLbAp = inputAp;
-
-        $(this).find('.enemy_ap').text(inputAp);
       }
 
       tmpEnemyFleet.push(tmpEnemy);
       sumAp += tmpEnemy.ap;
       sumLBAp += tmpEnemy.lbAp;
-    });
+    }
 
     // 制空値表示
-    let $enmAp = $(this).find('.enemy_sum_ap');
-    drawChangeValue($enmAp, $enmAp.text(), sumAp, true);
-    $enmAp = $(this).find('.enemy_sum_lbap');
-    drawChangeValue($enmAp, $enmAp.text(), sumLBAp, true);
-    $enmAp = $(this).find('.enemy_range');
-    if (!castInt($enmAp.text())) $enmAp.addClass('font_color_ccc');
-    else $enmAp.removeClass('font_color_ccc');
+    let node = node_battle_content.getElementsByClassName('enemy_sum_ap')[0];
+    drawChangeValue(node, node.textContent, sumAp, true);
+    node = node_battle_content.getElementsByClassName('enemy_sum_lbap')[0];
+    drawChangeValue(node, node.textContent, sumLBAp, true);
+    node = node_battle_content.getElementsByClassName('enemy_range')[0];
+    if (!castInt(node.textContent)) node.parentNode.classList.add('d-none');
+    else node.parentNode.classList.remove('d-none');
 
     enemyFleetData.push(tmpEnemyFleet);
-  });
+  }
 }
 
 /**
@@ -3018,9 +3140,10 @@ function getEnemyFleetAP(enemyFleet) {
  */
 function shootDownHalf(airStatus, enemyFleet) {
   for (const enemy of enemyFleet) {
-    enemy.slots.forEach((slot, i) => {
+    for (let i = 0; i < enemy.slots.length; i++) {
+      const slot = enemy.slots[i];
       enemy.slots[i] = slot - Math.floor(getShootDownSlotHalf(airStatus, slot));
-    });
+    }
     updateEnemyAp(enemy);
   }
 }
@@ -3155,7 +3278,10 @@ function getShootDownSlotFF(index, slot) {
  * @returns {number} 撃墜後搭載数(小数があり得る)
  */
 function getShootDownSlotHalfFF(index, slot) {
-  return SHOOT_DOWN_TABLE_AVE[Math.ceil(slot)][index];
+  const downTable = SHOOT_DOWN_TABLE[Math.ceil(slot)][index];
+  let sum = 0;
+  for (const v of downTable) sum += v;
+  return sum / downTable.length;
 }
 
 /**
@@ -3691,14 +3817,14 @@ function btn_fighter_prof_max_Clicked($this) {
   const $targetContent = $('#' + $this.data('target'));
   if ($targetContent.attr('id') === 'landBase') {
     $targetContent.find('.lb_plane').each((i, e) => {
-      if (FIGHTERS.indexOf(Math.abs(castInt($(e).data('type')))) > -1) {
+      if (FIGHTERS.indexOf(Math.abs(castInt($(e)[0].dataset.type))) > -1) {
         proficiency_Changed($(e).find('.prof_option[data-prof="7"]').parent(), true);
       }
     });
   }
   else if ($targetContent.attr('id') === 'friendFleet') {
     $targetContent.find('.ship_plane').each((i, e) => {
-      if (FIGHTERS.indexOf(Math.abs(castInt($(e).data('type')))) > -1) {
+      if (FIGHTERS.indexOf(Math.abs(castInt($(e)[0].dataset.type))) > -1) {
         proficiency_Changed($(e).find('.prof_option[data-prof="7"]').parent(), true);
       }
     });
@@ -3757,7 +3883,7 @@ function ohuda_Changed($this, cancelCaluclate = false) {
  * @param {JqueryDomObject} $this
  */
 function remodelSelect_Changed($this) {
-  const remodel = $this.find('.remodel_item_selected').data('remodel');
+  const remodel = Math.min(castInt($this.find('.remodel_item_selected').data('remodel')), 10);
   $this.removeClass('remodel_item_selected');
   $this.find('.remodel_value').text(remodel);
   caluclate();
@@ -3771,12 +3897,12 @@ function remodelSelect_Changed($this) {
 function proficiency_Changed($this, cancelCaluclate = false) {
   const $orig = $this.find('.prof_option');
   const $targetSelect = $this.parent().prev();
-  const prof = $orig.data('prof');
+  const prof = $orig[0].dataset.prof;
   $targetSelect
     .attr('src', $orig.attr('src'))
     .attr('alt', $orig.attr('alt'))
-    .data('prof', prof)
     .removeClass('prof_yellow prof_blue prof_none');
+  $targetSelect[0].dataset.prof = prof;
   if (prof > 3) $targetSelect.addClass('prof_yellow');
   else if (prof > 0) $targetSelect.addClass('prof_blue');
   else $targetSelect.addClass('prof_none');
@@ -3881,15 +4007,15 @@ function lb_plane_Drop($this, ui) {
   const $original = ui.draggable;
   const insertPlane =
   {
-    id: castInt($original.data('planeid')),
+    id: castInt($original[0].dataset.planeid),
     remodel: castInt($original.find('.remodel_value').text()),
-    prof: castInt($original.find('.prof_select').data('prof')),
+    prof: castInt($original.find('.prof_select')[0].dataset.prof),
     slot: castInt($original.find('.slot').text())
   };
   const prevPlane = {
-    id: castInt($this.data('planeid')),
+    id: castInt($this[0].dataset.planeid),
     remodel: castInt($this.find('.remodel_value').text()),
-    prof: castInt($this.find('.prof_select').data('prof')),
+    prof: castInt($this.find('.prof_select')[0].dataset.prof),
     slot: castInt($this.find('.slot').text())
   };
 
@@ -3947,9 +4073,9 @@ function ship_plane_DragEnd($this) {
  */
 function ship_plane_DragOver($this, ui) {
   const $original = ui.draggable.closest('.ship_plane');
-  const shipID = castInt($this.closest('.ship_tab').data('shipid'));
-  const planeID = castInt($original.data('planeid'));
-  const type = castInt($original.data('type'));
+  const shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
+  const planeID = castInt($original[0].dataset.planeid);
+  const type = castInt($original[0].dataset.type);
   // 挿入先が装備不可だった場合暗くする
   if (!checkInvalidPlane(shipID, getPlanes(type).find(v => v.id === planeID))) {
     ui.helper.stop().animate({ 'opacity': '0.2' }, 100);
@@ -3969,21 +4095,21 @@ function ship_plane_DragOver($this, ui) {
  */
 function ship_plane_Drop($this, ui) {
   // 機体入れ替え
-  if (ui.draggable.closest('.ship_plane').data('planeid')) {
+  if (ui.draggable.closest('.ship_plane')[0].dataset.planeid) {
     const $original = ui.draggable.closest('.ship_plane');
     const insertPlane = {
-      id: castInt($original.data('planeid')),
+      id: castInt($original[0].dataset.planeid),
       remodel: castInt($original.find('.remodel_value').text()),
-      prof: castInt($original.find('.prof_select').data('prof'))
+      prof: castInt($original.find('.prof_select')[0].dataset.prof)
     };
     const prevPlane = {
-      id: castInt($this.data('planeid')),
+      id: castInt($this[0].dataset.planeid),
       remodel: castInt($this.find('.remodel_value').text()),
-      prof: castInt($this.find('.prof_select').data('prof'))
+      prof: castInt($this.find('.prof_select')[0].dataset.prof)
     };
 
     // 挿入先が装備不可だった場合中止
-    let shipID = castInt($this.closest('.ship_tab').data('shipid'));
+    let shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
     if (!checkInvalidPlane(shipID, PLANE_DATA.find(v => v.id === insertPlane.id))) return;
 
     // 挿入
@@ -4006,7 +4132,7 @@ function enemy_ap_Clicked($this) {
   $this.find('.enemy_ap_input').val(val);
 
   // 敵艦選択時は変更不可
-  const enemyId = castInt($this.closest('.enemy_content').data('enemyid'));
+  const enemyId = castInt($this.closest('.enemy_content')[0].dataset.enemyid);
   $this.find('.dropdown-header').text(enemyId > -1 ? '敵艦に「直接入力」を指定した場合編集できます。' : '制空値を入力');
   $this.find('.enemy_ap_input').prop('disabled', enemyId !== -1);
 }
@@ -4054,8 +4180,8 @@ function plane_type_select_Changed($this) {
   $this.find('option').each(function () { dispType.push(castInt($(this).val())); });
 
   // 特定の艦娘が選ばれている場合の調整
-  if ($target && $target.attr('class').indexOf('ship_plane') !== -1 && $target.closest('.ship_tab').data('shipid')) {
-    const ship = SHIP_DATA.find(v => v.id === $target.closest('.ship_tab').data('shipid'));
+  if ($target && $target.attr('class').indexOf('ship_plane') !== -1 && $target.closest('.ship_tab')[0].dataset.shipid) {
+    const ship = SHIP_DATA.find(v => v.id === castInt($target.closest('.ship_tab')[0].dataset.shipid));
     const basicCanEquip = LINK_SHIP_EQUIPMENT.find(v => v.type === ship.type);
     const special = SPECIAL_LINK_SHIP_EQUIPMENT.find(v => v.shipId === ship.id);
     dispType = basicCanEquip.e_type.concat();
@@ -4192,8 +4318,8 @@ function plane_name_Clicked($this) {
   $target = $this.closest('.lb_plane');
   if (!$target.attr('class')) $target = $this.closest('.ship_plane');
 
-  const selectedID = castInt($target.data('planeid'));
-  let selectedType = Math.abs(castInt($target.data('type')));
+  const selectedID = castInt($target[0].dataset.planeid);
+  let selectedType = Math.abs(castInt($target[0].dataset.type));
   const $modalBody = $('#modal_plane_select').find('.modal-body');
 
   let prevTypeId = $('#plane_type_select').val();
@@ -4219,7 +4345,7 @@ function plane_name_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function modal_plane_Selected($this) {
-  const plane = { id: castInt($this.data('planeid')) };
+  const plane = { id: castInt($this[0].dataset.planeid) };
   if ($target.attr('class').indexOf('lb_plane') !== -1) {
     // 基地航空隊に機体セット
     setLBPlaneDiv($target, plane);
@@ -4252,7 +4378,7 @@ function btn_plane_preset_Clicked($this) {
   if (!$target.attr('class')) {
     // 艦娘が展開先である場合
     $target = $this.closest('.ship_tab');
-    parentId = castInt($target.data('shipid'));
+    parentId = castInt($target[0].dataset.shipid);
   }
   $('#modal_plane_preset').data('parentid', parentId);
   loadPlanePreset();
@@ -4377,7 +4503,7 @@ function btn_remove_ship_plane_Clicked($this) {
  */
 function ship_name_span_Clicked($this) {
   $target = $this.closest('.ship_tab');
-  const selectedID = castInt($target.data('shipid'));
+  const selectedID = castInt($target[0].dataset.shipid);
 
   // 選択艦娘がいるなら
   if (selectedID) {
@@ -4393,7 +4519,7 @@ function ship_name_span_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function modal_ship_Selected($this) {
-  setShipDiv($target, castFloat($this.data('shipid')));
+  setShipDiv($target, castFloat($this[0].dataset.shipid));
   $('#modal_ship_select').modal('hide');
 }
 
@@ -4435,7 +4561,7 @@ function btn_reset_battle_Clicked($this) {
  */
 function enemy_name_Clicked($this) {
   $target = $this.closest('.enemy_content');
-  const selectedID = castInt($target.data('enemyid'));
+  const selectedID = castInt($target[0].dataset.enemyid);
   $('#enemy_type_select').change();
   if (selectedID !== 0) $('#modal_enemy_select').find('.btn_remove').prop('disabled', false);
   else $('#modal_enemy_select').find('.btn_remove').prop('disabled', true);
@@ -4448,7 +4574,7 @@ function enemy_name_Clicked($this) {
  */
 function modal_enemy_Selected($this) {
   // 敵艦セット
-  setEnemyDiv($target, castInt($this.data('enemyid')));
+  setEnemyDiv($target, castInt($this[0].dataset.enemyid));
   $('#modal_enemy_select').modal('hide');
 }
 
@@ -4532,10 +4658,8 @@ function progress_area_MouseEnter($this) {
   const $bar = $this.find('.result_bar');
   const status = castInt($bar.data('airstatus'));
   const rowIndex = castInt($bar.attr('id').replace('result_bar_', ''));
-  if (status !== NaN) {
-    $bar.addClass('bar_ex_status' + status);
-    $('#rate_row_' + rowIndex).addClass('bg_status' + status);
-  }
+  $bar.addClass('bar_ex_status' + status);
+  $('#rate_row_' + rowIndex).addClass('bg_status' + status);
 }
 
 /**
@@ -4546,10 +4670,8 @@ function progress_area_MouseLeave($this) {
   const $bar = $this.find('.result_bar');
   const status = castInt($bar.data('airstatus'));
   const rowIndex = castInt($bar.attr('id').replace('result_bar_', ''));
-  if (status !== NaN) {
-    $bar.removeClass('bar_ex_status' + status);
-    $('#rate_row_' + rowIndex).removeClass('bg_status' + status);
-  }
+  $bar.removeClass('bar_ex_status' + status);
+  $('#rate_row_' + rowIndex).removeClass('bg_status' + status);
 }
 
 /**
@@ -4583,7 +4705,7 @@ function innerProfSetting_Clicked($this) {
 function caluclate_count_Changed($this) {
   // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
   const value = $this.val();
-  const max = MAX_SIMULATE_COUNT;
+  const max = 100000;
   const min = 0;
   const regex = new RegExp(/^[0-9]+$/);
 
@@ -4763,7 +4885,7 @@ function btn_load_deck_Clicked() {
   }
   else {
     $('#input_deck').addClass('is-invalid').removeClass('is-valid');
-    $('#input_deck').nextAll('.invalid-feedback').text('編成の読み込みに失敗しました。入力されたデータの形式が正しくない可能性があります。')
+    $('#input_deck').nextAll('.invalid-feedback').text('編成の読み込みに失敗しました。入力されたデータの形式が正しくない可能性があります。');
   }
 }
 
@@ -4777,7 +4899,7 @@ function btn_output_url_Clicked() {
     $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
     $output.removeClass('is-invalid').addClass('is-valid');
   } catch (error) {
-    $('#output_url').addClass('is-invalid').removeClass('is-valid')
+    $('#output_url').addClass('is-invalid').removeClass('is-valid');
     return;
   }
 }
@@ -5052,7 +5174,7 @@ $(function () {
     hoverClass: 'hover_enemy_content',
     tolerance: "pointer",
     drop: function (e, ui) {
-      const id = castInt(ui.draggable.data('enemyid'));
+      const id = castInt(ui.draggable[0].dataset.enemyid);
       const ap = castInt(ui.draggable.find('.enemy_ap').text());
       setEnemyDiv($(this).find('.enemy_content:last'), id, ap);
     }

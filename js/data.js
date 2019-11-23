@@ -419,7 +419,7 @@ const SHIP_DATA = [
   { id: 1461, type: 3, name: "神鷹改", slot: [9, 18, 6, 3], final: 0, orig: 324, deckid: 381 },
   { id: 1473, type: 1, name: "Ark Royal改", slot: [24, 30, 12, 12], final: 1, orig: 315, deckid: 393 },
   { id: 1476, type: 3, name: "Gambier Bay改", slot: [16, 12, 6], final: 1, orig: 344, deckid: 396 },
-  { id: 1477, type: 1, name: "Intrepid改", slot: [40, 36, 21, 15], final: 0, orig: 349, deckid: 397 },
+  { id: 1477, type: 1, name: "Intrepid改", slot: [40, 36, 21, 15], final: 1, orig: 349, deckid: 397 },
   { id: 1490, type: 6, name: "日進改", slot: [8, 8, 12], final: 0, orig: 381, deckid: 690 },
   { id: 1499, type: 12, name: "伊58改", slot: [1, 1], final: 1, orig: 127, deckid: 399 },
   { id: 1500, type: 12, name: "伊8改", slot: [1, 1], final: 1, orig: 128, deckid: 400 },
@@ -948,7 +948,7 @@ const ENEMY_PATTERN = [
   { area: 19083, name: 'Uボス 最終 ', enemies: [23, 41, 91], range: 7, difficulty: 0 },
 ];
 
-// デフォ機体プリセット
+/** デフォ機体プリセット */
 const DEFAULT_PLANE_PRESET = [
   { id: 0, name: '陸戦1 陸攻3', planes: [225, 186, 186, 186] },
   { id: 1, name: '陸攻4', planes: [169, 169, 169, 169] },
@@ -958,7 +958,7 @@ const DEFAULT_PLANE_PRESET = [
 ];
 
 /** 変更履歴 */
-const CHANGE_LOG = [
+let CHANGE_LOG = [
   { id: '0.0.1', changes: ["n:設置"] },
   { id: '1.0.0', changes: ["n:艦娘制空計算機能を実装しました。"] },
   {
@@ -1028,4 +1028,4 @@ const CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/11/22";
+const LAST_UPDATE_DATE = "2019/11/23";

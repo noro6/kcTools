@@ -478,8 +478,8 @@
                                     </select>
                                     <div class="ml-1 align-self-center">戦目</div>
                                 </div>
-                                <div class="alert alert-warning lb_range_warning py-2 mb-1 d-none">
-                                    第<span class="ng_range">1</span>基地航空隊の半径が不足しています。
+                                <div class="alert alert-warning py-2 mb-1 d-none" id="lb_range_warning">
+                                    第<span id="ng_range">1</span>基地航空隊の半径が不足しています。
                                     <span class="font_size_12">計算は通常通り行います。</span>
                                 </div>
                                 <div class="enemy_tab">
@@ -500,13 +500,13 @@
                                                     <i class="fas fa-trash-alt"></i>
                                                 </div>
                                             </div>
-                                            <div class="border-bottom sortable_handle d-flex pb-2 px-2">
-                                                <div class="ml-auto font_size_12">
-                                                    半径：<span class="enemy_range">0</span>
-                                                </div>
-                                                <div class="ml-3 font_size_12">
+                                            <div class="border-bottom sortable_handle d-flex pb-2 flex-row-reverse">
+                                                <div class="mr-2 font_size_12">
                                                     総制空値：<span class="enemy_sum_ap">0</span>
                                                     (<span class="enemy_sum_lbap">0</span>)
+                                                </div>
+                                                <div class="mr-3 font_size_12">
+                                                    半径：<span class="enemy_range">0</span>
                                                 </div>
                                             </div>
                                             <div class="enemyFleet_item py-1 px-1">
@@ -558,6 +558,7 @@
                             <div class="collapse show collapse_content" id="result_content">
                                 <div class="border-top"></div>
                                 <div class="my-2" id="shoot_down_table_content">
+                                    <div class="mt-2 mb-1 pl-1 font_size_12">各戦闘開始時の搭載数の推移</div>
                                     <table class="text-center w-100" id="shoot_down_table">
                                         <thead class="bg-e9ecef" id="shoot_down_table_thead">
                                             <tr class="tr_header">
@@ -625,6 +626,9 @@
                                     </div>
                                 </div>
                                 <div class="my-2">
+                                    <div class="mt-2 mb-1 pl-1 font_size_12">
+                                        各制空状態の取り得る確率
+                                    </div>
                                     <table class="text-center w-100" id="rate_table">
                                         <thead>
                                             <tr class="rate_tr" id="rate_row_0">
@@ -666,7 +670,7 @@
                                 <div class="border-top container-fluid px-0 py-0">
                                     <div class="row">
                                         <div class="col-12 col-lg-6 my-2 order-1 order-lg-2" id="lb_info">
-                                            <div class="font_size_12">基地航空隊</div>
+                                            <div class="mt-2 mb-1 pl-1 font_size_12">基地航空隊</div>
                                             <table class="text-center w-100 info_table" id="lb_info_table">
                                                 <thead>
                                                     <tr>
@@ -712,7 +716,7 @@
                                             </table>
                                         </div>
                                         <div class="col-12 col-lg-6 my-2 order-2 order-lg-1" id="ship_info">
-                                            <div class="font_size_12">艦娘</div>
+                                            <div class="mt-2 mb-1 pl-1 font_size_12">艦娘</div>
                                             <table class="text-center w-100 info_table" id="ship_info_table">
                                                 <thead>
                                                     <tr>
@@ -933,9 +937,14 @@
                                         </div>
                                         <div class="pl-3 mt-3">
                                             道中戦闘を考慮する場合は、<a href="#enemyFleet">敵艦情報</a>の戦闘回数を操作してください。
+                                            設定した戦闘それぞれについて、制空状態の割合などの結果を表示できます。
                                         </div>
                                         <div class="pl-3">
-                                            このとき、夜戦マス、対潜戦闘マスは戦闘回数に含めないようにしてください。
+                                            <a href="#result">結果表示</a>欄の「〇戦目」と書かれているタブをクリックすると、
+                                            その戦闘結果が下部のグラフや表で表示されます。
+                                        </div>
+                                        <div class="pl-3">
+                                            道中戦闘の入力について、<u>夜戦マス、対潜戦闘マスは戦闘回数に含めない</u>ようにしてください。
                                             また、航空戦力を持つ敵艦のいない水雷戦隊等との戦闘は、基本的に敵艦は空のままとします。
                                         </div>
                                         <div class="pl-3">
@@ -1043,7 +1052,7 @@
                                         </div>
                                         <div class="pl-3">
                                             処理の最適化に努めてはおりますが、シミュレート回数を増やすほど精度は上がりますが計算に時間がかかるようになります。
-                                            動作が重い場合は、精度は下がりますが適度にシミュレート回数を調節してください。<a href="#config">詳細設定</a>から変更が可能です。
+                                            動作が重い場合は、精度は下がりますが適度に回数を調節してください。<a href="#config">詳細設定</a>から変更が可能です。
                                         </div>
                                         <div class="pl-3">
                                             上記を含めた様々な要因により、シミュレート結果と実際の制空権結果が一致しない可能性があります。
@@ -1067,6 +1076,9 @@
                                     <div class="my-4">
                                         <p class="h6">改修構想</p>
                                         <div class="pl-3">
+                                            結果表示に各種制空状態までの必要制空値も表示可能にする
+                                        </div>
+                                        <div class="pl-3">
                                             使い方などの追記・改訂
                                         </div>
                                         <div class="pl-3">
@@ -1076,7 +1088,7 @@
                                             海域選択時のマップ表示とか
                                         </div>
                                         <div class="pl-3">
-                                            Edgeで艦隊入力欄がズレる修正
+                                            Edgeで艦隊入力欄がズレる件
                                         </div>
                                         <div class="pl-3">
                                             その他、適宜
