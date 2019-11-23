@@ -127,16 +127,16 @@ input[type="text"] { font-size: 12px; }
 }
 .trade_enabled { cursor: move; }
 .general_box {
-  -webkit-box-shadow: 0px 1px 2px 1px #00000033;
-  -moz-box-shadow: 0px 1px 2px 1px #00000033;
-  box-shadow: 0px 1px 2px 1px #00000033;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
 }
 .contents {
   background-color: #fff;
   border-radius: .25rem;
   border: 1px solid #dee2e6;
-  box-shadow: 0 .5rem 1rem #00000026;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.149);
 }
 
 
@@ -477,7 +477,7 @@ input[type="text"] { font-size: 12px; }
 .slot_select_parent .dropdown-menu {
   z-index: 1000;
   width: 240px;
-  box-shadow: 0 .1rem 1rem #0000004d
+  box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.3)
 }
 /* 艦載機をドラッグした時のスタイル */
 .plane_draggable_hover {
