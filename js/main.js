@@ -1642,7 +1642,11 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
     display_ship_count_Changed($('#friendFleet_item2').find('.display_ship_count'), true);
 
     // 敵艦展開
-    const battle = Math.min(Math.max(preset[2].length, 1), 10);
+    let battle = 1
+    for (let index = 0; index < preset[2].length; index++) {
+      if (battle < preset[2][index][0] + 1) battle = preset[2][index][0] + 1;
+    }
+    battle = Math.min(battle, 10);
     // クリア
     if (preset[2].length !== 0 || isResetEnemyFleet) {
       clearEnemyDivAll(battle);
