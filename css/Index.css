@@ -357,6 +357,7 @@ input[type="text"] { font-size: 12px; }
 .ship_tab {
   min-width: 420px;
   max-width: 600px;
+  flex: 1;
 }
 .ship_name_span {
   cursor: pointer;
