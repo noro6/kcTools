@@ -1596,6 +1596,7 @@ function updateMainPreset() {
  * プリセット名 メモのみ変更
  */
 function updateMainPresetName() {
+  $('#modal_main_preset').find('.btn_commit_preset_header').tooltip('hide');
   const preset = presets.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_data').data('presetid')));
   if (preset) {
     let presetName = $('#modal_main_preset').find('.preset_name').val().trim();
