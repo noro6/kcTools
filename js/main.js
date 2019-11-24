@@ -2173,9 +2173,6 @@ function caluclate() {
 
   // 結果表示
   drawResult();
-
-  // 後始末
-  chartData = null;
 }
 
 /**
