@@ -354,7 +354,7 @@ const SHIP_DATA = [
   { id: 293, type: 12, name: "伊400", slot: [3], final: 0, orig: 293, deckid: 493 },
   { id: 294, type: 12, name: "伊13", slot: [2, 0], final: 0, orig: 294, deckid: 494 },
   { id: 295, type: 12, name: "伊14", slot: [2, 0], final: 0, orig: 295, deckid: 495 },
-  { id: 296, type: 9, name: "Zara due", slot: [6, 3, 3, 3], final: 0, orig: 248, deckid: 496 },
+  { id: 296, type: 9, name: "Zara due", slot: [6, 3, 3, 3], final: 1, orig: 248, deckid: 496 },
   { id: 299, type: 6, name: "神威改", slot: [11, 8, 3], final: 1, orig: 299, deckid: 499 },
   { id: 300, type: 11, name: "神威改母", slot: [1, 1, 1], final: 1, orig: 299, deckid: 500 },
   { id: 303, type: 5, name: "鈴谷改二", slot: [3, 3, 7, 11], final: 1, orig: 124, deckid: 503 },
