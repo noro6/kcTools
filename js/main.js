@@ -2006,7 +2006,7 @@ function drawResult() {
     const eap = data.enemy[i];
     const rates = data.rate[i];
     const border = getAirStatusBorder(eap);
-    let status = data.rate[i].indexOf(Math.max.apply({}, data.rate[i]));
+    let status = isDefMode ? getAirStatusIndex(ap, eap) : data.rate[i].indexOf(Math.max.apply({}, data.rate[i]));
     let width = 0;
     let visible = false;
     // 描画対象先の行インデックス 防空8、本隊だけ7、他は連番(0は一応ヘッダのため1から)
@@ -2045,7 +2045,7 @@ function drawResult() {
     $target_tr.find('.rate_td_ap').text(ap);
     $target_tr.find('.rate_td_eap').text(eap);
     for (let j = 0; j < rates.length; j++) {
-      if (rates[j] > 0) {
+      if (!isDefMode && rates[j] > 0) {
         $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
         visible = true;
       }
