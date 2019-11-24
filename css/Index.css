@@ -34,7 +34,6 @@ input[type="text"] { font-size: 12px; }
 .fa-toolbox { color: #c86400; }
 
 
-
 /* -----------------------------------
   ユーティリティ
 ----------------------------------- */
@@ -89,7 +88,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* -----------------------------------
   カスタムコントロール
 ----------------------------------- */
@@ -138,7 +136,6 @@ input[type="text"] { font-size: 12px; }
   border: 1px solid #dee2e6;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.149);
 }
-
 
 
 /* -----------------------------------
@@ -192,7 +189,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* -----------------------------------
   sideBar
 ----------------------------------- */
@@ -234,7 +230,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* -----------------------------------
   Loading
 ----------------------------------- */
@@ -255,7 +250,6 @@ input[type="text"] { font-size: 12px; }
   width: 5rem;
   height: 5rem;
 }
-
 
 
 /* -----------------------------------
@@ -307,7 +301,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* -----------------------------------
   基地航空隊関連 #landBase
 ----------------------------------- */
@@ -349,7 +342,6 @@ input[type="text"] { font-size: 12px; }
 .lb_plane:hover { background-color: rgba(250, 250, 250 0.2); }
 
 
-
 /* -----------------------------------
   艦隊関連 #friendFleet
 ----------------------------------- */
@@ -375,8 +367,7 @@ input[type="text"] { font-size: 12px; }
   border: 2px #aaa solid;
   border-radius: 0.25rem;
 }
-.ship_plane:hover { background-color: #fafafa; }
-
+.ship_plane:hover { background-color: #f6f6f6; }
 
 
 /* -----------------------------------
@@ -442,7 +433,7 @@ input[type="text"] { font-size: 12px; }
   transition: 0.4s;
 }
 .prof_item { transition: 0.4s; }
-.prof_item:hover { background-color: #fafafa; }
+.prof_item:hover { background-color: #f6f6f6; }
 .prof_option {
   width: 20px;
   height: auto;
@@ -489,7 +480,6 @@ input[type="text"] { font-size: 12px; }
 .slot_ini { width: 96px; }
 
 
-
 /* ------------------------------
   敵艦隊関連 #enemyFleet
 -------------------------------- */
@@ -529,7 +519,6 @@ input[type="text"] { font-size: 12px; }
   background-color: #a8dcff !important;
   transition: 0.2s;
 }
-
 
 
 /* -----------------------------------
@@ -603,7 +592,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* ----------------------------------
   敵艦選択モーダル #modal_enemy_select
 ------------------------------------ */
@@ -629,7 +617,6 @@ input[type="text"] { font-size: 12px; }
   text-align: center;
   width: 84px;
 }
-
 
 
 /* ------------------------------
@@ -667,7 +654,6 @@ input[type="text"] { font-size: 12px; }
 .preset_name { font-size: 12px; }
 
 
-
 /* ---------------------------------------
   機体プリセットモーダル #modal_plane_preset
 ----------------------------------------- */
@@ -687,7 +673,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* ---------------------------------------
   編成プリセットモーダル #modal_main_preset
 ----------------------------------------- */
@@ -697,7 +682,6 @@ input[type="text"] { font-size: 12px; }
   min-height: calc( 1.55em * 4 );
   line-height: 1.3;
 }
-
 
 
 /* -----------------------------------
@@ -725,7 +709,6 @@ input[type="text"] { font-size: 12px; }
   background-color: #7ac3ff !important;
 }
 .enemy_pattern_tr { height: 46px; }
-
 
 
 /* ------------------------------
@@ -785,7 +768,6 @@ input[type="text"] { font-size: 12px; }
   border-bottom:1px #b8b8b8 solid;
 }
 #lb_info_table tbody .slot4 td{ border-bottom: 1px #b8b8b8 solid; }
-
 
 
 /* ------------------------------
@@ -869,7 +851,6 @@ input[type="text"] { font-size: 12px; }
 .rate_tr_border_bottom > td { border-top: 1px #b8b8b8 solid !important; }
 
 
-
 /* ------------------------------
   詳細設定 #config
 -------------------------------- */
@@ -877,7 +858,6 @@ input[type="text"] { font-size: 12px; }
 #caluclate_count { width: 96px; }
 #manual_shoot_down_battle { width: 60px; }
 #manual_shoot_down_value { width: 96px; }
-
 
 
 /* ------------------------------
@@ -898,6 +878,17 @@ input[type="text"] { font-size: 12px; }
   text-decoration-skip-ink: none;
 }
 
+
+/* ------------------------------
+  更新履歴 #site_history
+-------------------------------- */
+.history_item {
+  cursor: pointer;
+  transition: .2s;
+  border-top: 1px solid #dee2e6;
+}
+.history_item:hover { background-color: #f6f6f6; }
+.ver_log .history_item:last-of-type { border-bottom: 1px solid #dee2e6; }
 
 
 /* ------------------------------

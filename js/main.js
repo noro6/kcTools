@@ -358,12 +358,18 @@ function initialize(callback) {
   const localVersion = loadLocalStrage('version');
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
   if (!localVersion || localVersion !== serverVersion.id) {
-    for (const v of serverVersion.changes) text += `<div class="mt-3">${v}</div>`;
+    for (const v of serverVersion.changes) {
+      // 変更通知
+      text += `
+      <div class="mt-3">
+        <div>
+          <span class="mr-1 badge badge-pill badge-${v.type === 0 ? 'success' : 'info'}">${v.type === 0 ? '新規' : '修正'}</span>
+          <span>${v.title}</span>
+        </div>
+        <div class="font_size_12 pl-3">${v.content}</div>
+      </div>`;
+    }
 
-    // 変更通知
-    // 新規機能とバグ修正のバッジ設置
-    text = text.replace(/n:/g, '<span class="mr-1 badge badge-pill badge-success">新規</span>');
-    text = text.replace(/b:/g, '<span class="mr-1 badge badge-pill badge-info">修正</span>');
     $('#modal_version_inform').find('#version').text(serverVersion.id);
     $('#modal_version_inform').find('.modal-body').html(text);
     $('#modal_version_inform').modal('show');
@@ -554,10 +560,30 @@ function initialize(callback) {
 
   // 更新履歴
   text = '';
+  let verIndex = 0;
   for (const ver of CHANGE_LOG) {
-    text += `<div class="my-2"><u>v${ver.id}</u>`;
-    if (serverVersion.id === ver.id) text += `<span class="ml-2 badge badge-pill badge-danger">New</span>`;
-    for (const value of ver.changes) text += `<div class="ml-3">${value}</div>`;
+    let index = 0;
+    text += `
+    <div class="my-3 ver_log border-bottom">
+      <div class="py-2">
+        v${ver.id}
+        ${serverVersion.id === ver.id ? '<span class="ml-2 badge badge-pill badge-danger">New</span>' : ''}
+      </div>
+    `;
+    for (const v of ver.changes) {
+      const logId = 'log_' + verIndex++ + '_' + index++;
+      text += `
+      <div class="py-2 px-2 d-flex history_item" data-toggle="collapse" data-target="#${logId}">
+        <div class="d-flex flex-nowrap align-self-center">
+          <div><span class="mr-2 badge badge-pill badge-${v.type === 0 ? 'success' : 'info'}">${v.type === 0 ? '新規' : '修正'}</span></div>
+          <div class="align-self-center text-nowrap">${v.title}</div>
+        </div>
+      </div>
+      <div class="collapse border-top" id="${logId}">
+        <div class="pl-4 py-2 font_size_12">${v.content}</div>
+      </div>
+      `;
+    }
     text += `</div>`;
   }
   // 新規機能とバグ修正のバッジ設置
