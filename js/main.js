@@ -1321,7 +1321,7 @@ function loadPlanePreset() {
       </div>
     `;
   }
-  
+
   // アラート非表示
   $modal.find('.alert').addClass('d-none');
   $modal.find('.preset_tr').removeClass('preset_selected');
@@ -2045,9 +2045,12 @@ function drawResult() {
     $target_tr.find('.rate_td_ap').text(ap);
     $target_tr.find('.rate_td_eap').text(eap);
     for (let j = 0; j < rates.length; j++) {
-      if (!isDefMode && rates[j] > 0) {
-        $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
-        visible = true;
+      if (rates[j] > 0) {
+        if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100%');
+        else {
+          $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
+          visible = true;
+        }
       }
       else $target_tr.find('.rate_td_status' + j).text('-');
     }
@@ -2387,7 +2390,6 @@ function updateLandBaseInfo(landBaseData) {
       else node_tr.classList.add('d-none');
     }
 
-
     // 生成した第X航空隊データを格納
     landBaseData.push(tmpLandBaseDatum);
   }
@@ -2409,8 +2411,8 @@ function updateLandBaseInfo(landBaseData) {
 
       // 対高高度爆撃機の数を取得
       for (const v of landBaseData) {
-        sumAp += v.ap;
         if (v.mode === -1) continue;
+        sumAp += v.ap;
         for (const plane of v.planes) if ([350, 351, 352].indexOf(plane.id) > -1) rocketCount++;
       }
       // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
