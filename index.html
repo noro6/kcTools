@@ -1076,16 +1076,19 @@
                                     <div class="my-4">
                                         <p class="h6">改修構想</p>
                                         <div class="pl-3">
-                                            結果表示に各種制空状態までの必要制空値も表示可能にする
+                                            結果表示に各種制空状態までの必要制空値の表示
                                         </div>
                                         <div class="pl-3">
-                                            使い方などの追記・改訂
+                                            制空値の振れ幅(試行全体での最大最小など)表示
                                         </div>
                                         <div class="pl-3">
                                             内部熟練度に関して1刻み数値での対応
                                         </div>
                                         <div class="pl-3">
-                                            海域選択時のマップ表示とか
+                                            海域選択画面にマップ表示するとか
+                                        </div>
+                                        <div class="pl-3">
+                                            使い方などの追記・改訂
                                         </div>
                                         <div class="pl-3">
                                             Edgeで艦隊入力欄がズレる件
@@ -1159,7 +1162,7 @@
                     </div>
                     <div class="border-secondary border-top my-4 pt-3" id="main_footer">
                         <div class="ml-2 mt-2 font_size_12">
-                            要望・バグ報告などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>
+                            質問・要望・バグ報告は<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>
                         </div>
                         <div class="ml-2 mt-2 font_size_11">
                             著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。
@@ -1185,12 +1188,12 @@
                             <select class="custom-select custom-select-sm" id="plane_type_select"></select>
                         </div>
                         <div class="d-flex">
-                            <div class="ml-3 align-self-center">表示：</div>
-                            <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
+                            <div class="ml-2 align-self-center">表示 :</div>
+                            <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="single">
                                 <i class="fas fa-list"></i>
                                 <span class="">一列</span>
                             </div>
-                            <div class="ml-3 align-self-center toggle_display_type" data-mode="multi">
+                            <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="multi">
                                 <i class="fas fa-grip-horizontal"></i>
                                 <span class="">複数列</span>
                             </div>
@@ -1252,16 +1255,16 @@
                                 <option value="0">全て</option>
                             </select>
                         </div>
-                        <div class="ml-3 align-self-center">表示：</div>
-                        <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
+                        <div class="ml-2 align-self-center">表示 :</div>
+                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="single">
                             <i class="fas fa-list"></i>
                             <span class="">一列</span>
                         </div>
-                        <div class="ml-3 mr-4 align-self-center toggle_display_type" data-mode="multi">
+                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="multi">
                             <i class="fas fa-grip-horizontal"></i>
                             <span class="">複数列</span>
                         </div>
-                        <div class="custom-control custom-checkbox my-2">
+                        <div class="ml-2 custom-control custom-checkbox align-self-center">
                             <input type="checkbox" class="custom-control-input cur_pointer" id="dispFinalOnly" checked>
                             <label class="custom-control-label cur_pointer" for="dispFinalOnly">最終改造状態のみ</label>
                         </div>
@@ -1306,12 +1309,12 @@
                                 <option value="0">全て</option>
                             </select>
                         </div>
-                        <div class="ml-3 align-self-center">表示：</div>
-                        <div class="ml-2 align-self-center toggle_display_type" data-mode="single">
+                        <div class="ml-2 align-self-center">表示 :</div>
+                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="single">
                             <i class="fas fa-list"></i>
                             <span class="">一列</span>
                         </div>
-                        <div class="ml-3 mr-4 align-self-center toggle_display_type" data-mode="multi">
+                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="multi">
                             <i class="fas fa-grip-horizontal"></i>
                             <span class="">複数列</span>
                         </div>
@@ -1460,7 +1463,7 @@
                                         <div class="preset_thead border-bottom pb-2 mb-2 w-100">
                                             <div class="preset_tr py-2 text-center btn_create_preset border"
                                                 data-presetid="-1">
-                                                <div>編成新規登録</div>
+                                                <div>現在の編成で新規登録</div>
                                             </div>
                                         </div>
                                         <div class="preset_tbody overflow-auto"></div>
@@ -1469,12 +1472,14 @@
                                 <div class="col pr-0 preset_data border-left d-flex flex-column">
                                     <div class="form-group mt-2">
                                         <label class="mb-1">編成名：</label>
-                                        <input type="text" class="form-control form-control-sm preset_name">
+                                        <input type="text" class="form-control form-control-sm preset_name"
+                                            placeholder="編成プリセット名を入力">
                                         <div class="invalid-feedback">1～40文字以内で入力してください。</div>
                                     </div>
                                     <div class="form-group mt-2">
                                         <label class="mb-1">編成メモ：</label>
-                                        <textarea class="form-control font_size_12 px-2" id="preset_remarks"></textarea>
+                                        <textarea class="form-control font_size_12 px-2" id="preset_remarks"
+                                            placeholder="メモを入力(0～400文字、任意)"></textarea>
                                         <div class="invalid-feedback">400文字以内で入力してください。</div>
                                     </div>
                                     <div class="alert alert-success text-center font_size_12 px-1 py-1 fade hide">
@@ -1532,7 +1537,7 @@
                                                     class="ml-auto btn btn-sm btn-info btn_output_url">生成</button>
                                             </div>
                                             <div class="form-group ml-auto flex-grow-1">
-                                                <input type="text" class="form-control" id="output_url">
+                                                <input type="text" class="form-control" id="output_url" readonly>
                                                 <div class="invalid-feedback">共有URLの生成に失敗しました。</div>
                                                 <div class="valid-feedback">生成しました。上記URLをクリックするとクリップボードにコピーされます。</div>
                                             </div>
@@ -1546,7 +1551,7 @@
                                                     class="ml-auto btn btn-sm btn-info btn_output_deck">生成</button>
                                             </div>
                                             <div class="form-group ml-auto flex-grow-1">
-                                                <input type="text" class="form-control" id="output_deck">
+                                                <input type="text" class="form-control" id="output_deck" readonly>
                                                 <div class="invalid-feedback">出力に失敗しました。</div>
                                                 <div class="valid-feedback">生成しました。上記文字列をクリックするとクリップボードにコピーされます。</div>
                                             </div>

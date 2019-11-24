@@ -1516,6 +1516,7 @@ function loadMainPreset() {
     `;
   }
 
+  $modal.find('.preset_selected').removeClass('preset_selected');
   $modal.find('.is-invalid').removeClass('is-invalid');
   $modal.find('.is-valid').removeClass('is-valid');
   $modal.find('.preset_tbody').html(text);
@@ -1602,7 +1603,7 @@ function updateMainPresetName() {
       presetName = `preset-${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
     }
     preset[1] = presetName;
-    preset[5] = $('#preset_remarks').val().trim();
+    preset[3] = $('#preset_remarks').val().trim();
   }
   saveLocalStrage('presets', presets);
 
@@ -2003,7 +2004,7 @@ function drawResult() {
     const eap = data.enemy[i];
     const rates = data.rate[i];
     const border = getAirStatusBorder(eap);
-    let status = getAirStatusIndex(ap, eap);
+    let status = data.rate[i].indexOf(Math.max.apply({}, data.rate[i]));
     let width = 0;
     let visible = false;
     // 描画対象先の行インデックス 防空8、本隊だけ7、他は連番(0は一応ヘッダのため1から)

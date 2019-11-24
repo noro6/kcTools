@@ -950,11 +950,10 @@ const ENEMY_PATTERN = [
 
 /** デフォ機体プリセット */
 const DEFAULT_PLANE_PRESET = [
-  { id: 0, name: '陸戦1 陸攻3', planes: [225, 186, 186, 186] },
-  { id: 1, name: '陸攻4', planes: [169, 169, 169, 169] },
-  { id: 2, name: '防空', planes: [54, 175, 175, 175] },
-  { id: 3, name: 'FBA', planes: [94, 100, 157, 54] },
-  { id: 4, name: '上位艦戦キャリア', planes: [56, 336, 157, 339] },
+  { id: 1, name: 'FBA汎用 (サンプル)', planes: [94, 100, 157, 54] },
+  { id: 2, name: '上位艦戦セット (サンプル)', planes: [56, 336, 157, 339] },
+  { id: 3, name: '陸戦1 陸攻3 (サンプル)', planes: [225, 186, 186, 186] },
+  { id: 4, name: '防空セット (サンプル)', planes: [54, 175, 175, 175] },
 ];
 
 /** 変更履歴 */
@@ -1085,4 +1084,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/11/23";
+const LAST_UPDATE_DATE = "2019/11/24";

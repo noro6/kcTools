@@ -526,12 +526,20 @@ input[type="text"] { font-size: 12px; }
 ----------------------------------- */
 .plane_type_select_parent { width: 240px; }
 .toggle_display_type {
+  background-color: #fff;
+  border-radius: .25rem;
   color: #ccc;
   cursor: pointer;
   transition: .4s;
 }
-.toggle_display_type:hover { color: #999; }
-.toggle_display_type.selected { color: #000; }
+.toggle_display_type:hover { 
+  background-color: #f6f6f6;
+  color: #999; 
+}
+.toggle_display_type.selected { 
+  background-color: #eee;
+  color: #000; 
+}
 .plane_thead {
   position: -webkit-sticky;
   position: sticky;
