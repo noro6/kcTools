@@ -1321,7 +1321,9 @@ function loadPlanePreset() {
       </div>
     `;
   }
-
+  
+  // アラート非表示
+  $modal.find('.alert').addClass('d-none');
   $modal.find('.preset_tr').removeClass('preset_selected');
   $modal.find('.preset_tbody').html(presetText);
   $modal.find('.preset_name')
@@ -4435,7 +4437,7 @@ function plane_preset_tr_Clicked($this) {
  */
 function preset_name_Changed($this) {
   // 入力検証　全半40文字くらいで
-  const input = $this.val();
+  const input = $this.val().trim();
   const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
   const $btn2 = $this.closest('.modal-body').find('.btn_commit_preset_header');
   if (input.length > 40) {
@@ -4824,7 +4826,7 @@ function main_preset_tr_Clicked($this) {
  */
 function preset_remarks_Changed($this) {
   // 入力検証　全半40文字くらいで
-  const input = $this.val();
+  const input = $this.val().trim();
   const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
   const $btn2 = $this.closest('.modal-body').find('.btn_commit_preset_header');
   if (input.length > 400) {
@@ -4846,7 +4848,7 @@ function preset_remarks_Changed($this) {
  */
 function input_deck_Changed($this) {
   // 入力検証　0文字はアウト
-  const input = $this.val();
+  const input = $this.val().trim();
   const $btn = $this.closest('.modal-body').find('.btn_load_deck');
   if (input.length === 0) {
     $this.addClass('is-invalid').removeClass('is-valid');
@@ -5032,6 +5034,7 @@ $(function () {
   $(document).on('click', '.btn_fighter_prof_max', function () { btn_fighter_prof_max_Clicked($(this)); });
   $(document).on('click', '.btn_prof_min', function () { btn_prof_min_Clicked($(this)); });
   $(document).on('input', '.preset_name', function () { preset_name_Changed($(this)); });
+  $(document).on('blur', '.preset_name', function () { preset_name_Changed($(this)); });
   $('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });
   $('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
   $('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
