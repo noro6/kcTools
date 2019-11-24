@@ -2045,14 +2045,12 @@ function drawResult() {
     $target_tr.find('.rate_td_ap').text(ap);
     $target_tr.find('.rate_td_eap').text(eap);
     for (let j = 0; j < rates.length; j++) {
-      if (rates[j] > 0) {
-        if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100%');
-        else {
-          $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
-          visible = true;
-        }
+      $target_tr.find('.rate_td_status' + j).text('-');
+      if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100%');
+      else if (rates[j] > 0) {
+        $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
+        visible = true;
       }
-      else $target_tr.find('.rate_td_status' + j).text('-');
     }
 
     // データなしの行はバー、比率ともに非表示
