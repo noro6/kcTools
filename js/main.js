@@ -2427,18 +2427,23 @@ function updateLandBaseInfo(landBaseData) {
       for (const node of node_table.getElementsByClassName('info_range')) node.classList.add('d-none');
       for (const node of node_table.getElementsByClassName('info_defAp')) node.classList.remove('d-none');
 
-      const node_tr = node_table.getElementsByClassName('lb_info_tr')[0];
-      let node_td = document.createElement('td');
-      node_td.className = 'info_defAp';
-      node_td.rowSpan = visiblePlaneCount;
-      node_td.textContent = sumAp;
-      node_tr.appendChild(node_td);
+      for (const node_tr of node_table.getElementsByClassName('lb_info_tr')) {
+        if(!node_tr.classList.contains('d-none')) {
+          let node_td = document.createElement('td');
+          node_td.className = 'info_defAp';
+          node_td.rowSpan = visiblePlaneCount;
+          node_td.textContent = sumAp;
+          node_tr.appendChild(node_td);
+    
+          node_td = document.createElement('td');
+          node_td.className = 'info_defAp info_defApEx';
+          node_td.rowSpan = visiblePlaneCount;
+          node_td.textContent = Math.floor(sumAp_ex);
+          node_tr.appendChild(node_td);
 
-      node_td = document.createElement('td');
-      node_td.className = 'info_defAp info_defApEx';
-      node_td.rowSpan = visiblePlaneCount;
-      node_td.textContent = Math.floor(sumAp_ex);
-      node_tr.appendChild(node_td);
+          break;
+        }
+      }
     }
     else {
       const node_table = document.getElementById('lb_info_table');
