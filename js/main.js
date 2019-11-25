@@ -776,7 +776,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
   }
   else {
     // 改修値セット 基本は0
-    $remodelInput.find('.remodel_value').text(inputPlane.remodel);
+    $remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel,10));
   }
 
   // 熟練度初期値 戦闘機系は最初から熟練Maxで 陸偵熟練は||
