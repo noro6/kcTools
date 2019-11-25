@@ -707,19 +707,17 @@ function setLBPlaneDiv($div, lbPlane = { id: 0, slot: 0 }) {
   const result = setPlaneDiv($div, lbPlane);
   if (!lbPlane.hasOwnProperty('slot')) lbPlane.slot = 0;
 
-  // 搭載数初期値 偵察機系は4
-  $div.find('.slot_input').attr('max', 18);
-  $div.find('.slot_range').attr('max', 18);
-  if (lbPlane.slot === 0) {
-    if (!result) lbPlane.slot = 0;
-    else if (RECONNAISSANCES.indexOf(plane.type) !== -1) {
-      lbPlane.slot = 4;
-      $div.find('.slot_input').attr('max', 4);
-      $div.find('.slot_range').attr('max', 4);
-    }
-    else lbPlane.slot = 18;
-  }
-  $div.find('.slot').text(lbPlane.slot);
+  // 搭載数最大値　基本は18
+  let maxSlot = 18;
+  if (result && plane && RECONNAISSANCES.indexOf(plane.type) !== -1) maxSlot = 4;
+  $div.find('.slot_input').attr('max', maxSlot);
+  $div.find('.slot_range').attr('max', maxSlot);
+
+  let initSlot = lbPlane.slot;
+  if (initSlot === 0) initSlot = maxSlot;
+  if (!result) initSlot = 0;
+
+  $div.find('.slot').text(initSlot);
 }
 
 /**
@@ -3996,7 +3994,9 @@ function slot_ini_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function slot_select_parent_Close($this) {
-  $this.find('.slot').text($this.find('.slot_input').val());
+  let inputSlot = castInt($this.find('.slot_input').val());
+  let maxSlot = castInt($this.find('.slot_input').attr('max'));
+  $this.find('.slot').text(inputSlot > maxSlot ? maxSlot : inputSlot);
   caluclate();
 }
 
