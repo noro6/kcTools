@@ -114,14 +114,16 @@ input[type="text"] { font-size: 12px; }
 }
 .btn_preset:hover { filter: drop-shadow(0px 0px 4px #ffb978); }
 .btn_reset { filter: drop-shadow(0px 0px 4px #b9b9b9); }
-.btn_enemy {
+.btn_enemy_preset {
+  padding: .25rem .5rem;
+  border-radius: .25rem;
+  color: #666;
   transition: 0.4s;
-  opacity: 0.3;
-}
-.btn_enemy:hover {
-  opacity: 1;
   cursor: pointer;
-  filter: drop-shadow(0px 0px 2px #ffc400);
+}
+.btn_enemy_preset:hover {
+  color: #fff;
+  background-color: #888;
 }
 .trade_enabled { cursor: move; }
 .general_box {

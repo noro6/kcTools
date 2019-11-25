@@ -363,7 +363,8 @@ function initialize(callback) {
       text += `
       <div class="mt-3">
         <div>
-          <span class="mr-1 badge badge-pill badge-${v.type === 0 ? 'success' : 'info'}">${v.type === 0 ? '新規' : '修正'}</span>
+          <span class="mr-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
+            ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
           <span>${v.title}</span>
         </div>
         <div class="font_size_12 pl-3">${v.content}</div>
@@ -575,7 +576,10 @@ function initialize(callback) {
       text += `
       <div class="py-2 px-2 d-flex history_item" data-toggle="collapse" data-target="#${logId}">
         <div class="d-flex flex-nowrap align-self-center">
-          <div><span class="mr-2 badge badge-pill badge-${v.type === 0 ? 'success' : 'info'}">${v.type === 0 ? '新規' : '修正'}</span></div>
+          <div>
+            <span class="mr-2 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
+              ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
+          </div>
           <div class="align-self-center text-nowrap">${v.title}</div>
         </div>
       </div>
@@ -586,9 +590,6 @@ function initialize(callback) {
     }
     text += `</div>`;
   }
-  // 新規機能とバグ修正のバッジ設置
-  text = text.replace(/n:/g, '<span class="mr-1 badge badge-pill badge-success">新規</span>');
-  text = text.replace(/b:/g, '<span class="mr-1 badge badge-pill badge-info">修正</span>');
   $('#site_history_body').html(text);
   $('#site_history_body').append(`<div class="mt-2 font_size_12">最終更新：${LAST_UPDATE_DATE}</div>`);
 
@@ -753,6 +754,13 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
       clearPlaneDiv($div);
       return false;
     }
+
+    // 日進の大型飛行艇処理
+    if (plane.type === 8 && (shipId === 1490 || shipId === 386)) {
+      if (inputPlane.hasOwnProperty('slot')) inputPlane.slot = 1;
+      else inputPlane["slot"] = 1;
+      canEditSlot = true;
+    }
   }
 
   $div
@@ -776,7 +784,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
   }
   else {
     // 改修値セット 基本は0
-    $remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel,10));
+    $remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel, 10));
   }
 
   // 熟練度初期値 戦闘機系は最初から熟練Maxで 陸偵熟練は||
@@ -800,6 +808,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
     if (!inputPlane.hasOwnProperty('slot')) inputPlane.slot = 0;
     $div.find('.slot').text(inputPlane.slot);
   }
+
   // 搭載成功
   return true;
 }
@@ -2806,6 +2815,7 @@ function getBonusAp(plane) {
 function updateFriendFleetInfo(friendFleetData) {
   const shipPlanes = [];
   let fleetAp = 0;
+  let fleetAps = [0, 0];
 
   const node_ship_tabs = document.getElementsByClassName('ship_tab');
   for (let index = 0; index < node_ship_tabs.length; index++) {
@@ -2838,6 +2848,7 @@ function updateFriendFleetInfo(friendFleetData) {
       if (v.id > 0 && v.slot > 0) planeCount++;
     }
     drawChangeValue(node_ap, prevAp, sumAp);
+    fleetAps[shipNo <= 6 ? 0 : 1] += sumAp;
     fleetAp += sumAp;
 
     if (planeCount > 0) {
@@ -2969,6 +2980,10 @@ function updateFriendFleetInfo(friendFleetData) {
 
     // 代入
     if (exist) friendFleetData.push(shipPlanes.concat());
+  }
+
+  for (let index = 0; index < fleetAps.length; index++) {
+    document.getElementsByClassName('fleet_ap')[index].textContent = fleetAps[index];
   }
 
   const ship_info_tbody = document.getElementById('ship_info_table').getElementsByTagName('tbody')[0];
@@ -3888,8 +3903,8 @@ function ohuda_Changed($this, cancelCaluclate = false) {
   if (ohudaValue === 0) {
     // 防空モード開始
     isDefMode = true;
-    // 出撃中の部隊は防空に
-    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) > 0) $(e).val(0); });
+    // 出撃中の部隊は防空に -> 待機に
+    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) > 0) $(e).val(-1); });
   }
   else if (ohudaValue === -1) {
     let isDef = false;
@@ -3900,8 +3915,8 @@ function ohuda_Changed($this, cancelCaluclate = false) {
   else {
     // 防空モード終了
     isDefMode = false;
-    // 防空中の部隊は集中に
-    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) === 0) $(e).val(2); });
+    // 防空中の部隊は集中に -> 待機に
+    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) === 0) $(e).val(-1); });
   }
 
   if (!cancelCaluclate) caluclate();
@@ -4039,13 +4054,13 @@ function lb_plane_Drop($this, ui) {
   const insertPlane =
   {
     id: castInt($original[0].dataset.planeid),
-    remodel: castInt($original.find('.remodel_value').text()),
+    remodel: castInt($original.find('.remodel_value')[0].textContent),
     prof: castInt($original.find('.prof_select')[0].dataset.prof),
     slot: castInt($original.find('.slot').text())
   };
   const prevPlane = {
     id: castInt($this[0].dataset.planeid),
-    remodel: castInt($this.find('.remodel_value').text()),
+    remodel: castInt($this.find('.remodel_value')[0].textContent),
     prof: castInt($this.find('.prof_select')[0].dataset.prof),
     slot: castInt($this.find('.slot').text())
   };
@@ -4130,12 +4145,12 @@ function ship_plane_Drop($this, ui) {
     const $original = ui.draggable.closest('.ship_plane');
     const insertPlane = {
       id: castInt($original[0].dataset.planeid),
-      remodel: castInt($original.find('.remodel_value').text()),
+      remodel: castInt($original.find('.remodel_value')[0].textContent),
       prof: castInt($original.find('.prof_select')[0].dataset.prof)
     };
     const prevPlane = {
       id: castInt($this[0].dataset.planeid),
-      remodel: castInt($this.find('.remodel_value').text()),
+      remodel: castInt($this.find('.remodel_value')[0].textContent),
       prof: castInt($this.find('.prof_select')[0].dataset.prof)
     };
 

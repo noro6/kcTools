@@ -238,7 +238,7 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 神威改母に 大型飛行艇
   { shipId: 300, equipmentTypes: [8], equipmentIds: [] },
   // 日進改以降に 大型飛行艇
-  { shipId: 10381, equipmentTypes: [8], equipmentIds: [] },
+  { shipId: 1490, equipmentTypes: [8], equipmentIds: [] },
   { shipId: 386, equipmentTypes: [8], equipmentIds: [] },
   // 装甲空母に 試製景雲
   { shipId: 153, equipmentTypes: [], equipmentIds: [151] },
@@ -251,8 +251,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   { shipId: 353, equipmentTypes: [1, 3, 4], equipmentIds: [] },
   { shipId: 354, equipmentTypes: [1, 3, 4], equipmentIds: [] },
   // 長門型改以降に 水戦
-  { shipId: 10001, equipmentTypes: [7], equipmentIds: [] },
-  { shipId: 10002, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 1375, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
   // 大和型改以降に 水戦
   { shipId: 136, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 148, equipmentTypes: [7], equipmentIds: [] },
@@ -261,8 +261,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   { shipId: 246, equipmentTypes: [6, 7], equipmentIds: [] },
   { shipId: 247, equipmentTypes: [6, 7], equipmentIds: [] },
   // イタリア重巡改以降に 水爆 水戦
-  { shipId: 10248, equipmentTypes: [6, 7], equipmentIds: [] },
-  { shipId: 10249, equipmentTypes: [6, 7], equipmentIds: [] },
+  { shipId: 1438, equipmentTypes: [6, 7], equipmentIds: [] },
+  { shipId: 1441, equipmentTypes: [6, 7], equipmentIds: [] },
   { shipId: 296, equipmentTypes: [6, 7], equipmentIds: [] },
   // 金剛改二丙に 水爆
   { shipId: 391, equipmentTypes: [6], equipmentIds: [] },
@@ -271,10 +271,10 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 多摩改二に 水爆 水戦
   { shipId: 347, equipmentTypes: [6, 7], equipmentIds: [] },
   // 阿賀野型改に 水爆
-  { shipId: 10137, equipmentTypes: [6], equipmentIds: [] },
-  { shipId: 10138, equipmentTypes: [6], equipmentIds: [] },
-  { shipId: 10139, equipmentTypes: [6], equipmentIds: [] },
-  { shipId: 10140, equipmentTypes: [6], equipmentIds: [] },
+  { shipId: 1401, equipmentTypes: [6], equipmentIds: [] },
+  { shipId: 1402, equipmentTypes: [6], equipmentIds: [] },
+  { shipId: 1403, equipmentTypes: [6], equipmentIds: [] },
+  { shipId: 1410, equipmentTypes: [6], equipmentIds: [] },
   // Gotlandに 水爆
   { shipId: 374, equipmentTypes: [6], equipmentIds: [] },
   { shipId: 379, equipmentTypes: [6], equipmentIds: [] },
@@ -405,6 +405,7 @@ const SHIP_DATA = [
   { id: 1401, type: 14, name: "阿賀野改", slot: [2, 2, 2], final: 1, orig: 137, deckid: 305 },
   { id: 1402, type: 14, name: "能代改", slot: [2, 2, 2], final: 1, orig: 138, deckid: 306 },
   { id: 1403, type: 14, name: "矢矧改", slot: [2, 2, 2], final: 1, orig: 139, deckid: 307 },
+  { id: 1410, type: 14, name: "酒匂改", slot: [2, 2, 2], final: 1, orig: 139, deckid: 314 },
   { id: 1428, type: 6, name: "瑞穂改", slot: [12, 12, 8], final: 1, orig: 251, deckid: 348 },
   { id: 1432, type: 11, name: "速吸改", slot: [6, 3, 1], final: 1, orig: 260, deckid: 352 },
   { id: 1433, type: 1, name: "Graf Zeppelin改", slot: [30, 13, 10, 3], final: 1, orig: 232, deckid: 353 },
@@ -1082,6 +1083,30 @@ let CHANGE_LOG = [
       },
     ],
   },
+  {
+    id: '1.3.4', changes: [
+      {
+        type: 0, title: "艦隊毎の制空値表示を行うようにしました。",
+        content: "各艦隊選択欄の下部、表示隻数の右側に表示されています。"
+      },
+      {
+        type: 1, title: "海域選択が分かり辛かったので表示方法を変更しました。",
+        content: "アイコンからボタン式になっています。機能に変更はありません。レイアウトは暫定です。"
+      },
+      {
+        type: 1, title: "防空から集中等にした際、他の部隊は待機にするようにしました。",
+        content: "防空や集中、単発を同時に選択できないのは仕様です。現状、両計算を同時に行うことはできません。"
+      },
+      {
+        type: 2, title: "日進に大型飛行艇を搭載した際の初期搭載数を修正しました。",
+        content: "1機です。知りませんでした。m(_ _)m　なお、その他の機体と同様、手動で搭載数を変更する場合は1機以上を設定しても問題ありません。"
+      },
+      {
+        type: 2, title: "ドラッグ&ドロップ時の挙動の不具合を修正しました。",
+        content: "艦隊欄でのドラッグ&ドロップ時に改修値がおかしくなる現象、偵察機系の最大搭載数がおかしい現象を修正しました。"
+      },
+    ],
+  },
 ];
 
-const LAST_UPDATE_DATE = "2019/11/24";
+const LAST_UPDATE_DATE = "2019/11/26";
