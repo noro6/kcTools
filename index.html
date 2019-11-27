@@ -454,8 +454,8 @@
                             </div>
                             <div class="collapse show collapse_content" id="enemyFleet_content">
                                 <div class="border-top"></div>
-                                <div class="d-flex my-2" id="battle_count_content">
-                                    <div class="ml-2 mr-1 align-self-center">戦闘回数：</div>
+                                <div class="d-flex my-2 flex-wrap" id="battle_count_content">
+                                    <div class="ml-2 mr-1 my-1 align-self-center">戦闘回数：</div>
                                     <select class="custom-select custom-select-sm" id="battle_count">
                                         <option value="1" selected>1</option>
                                         <option value="2">2</option>
@@ -468,8 +468,8 @@
                                         <option value="9">9</option>
                                         <option value="10">10</option>
                                     </select>
-                                    <div class="ml-1 align-self-center">回</div>
-                                    <div class="ml-4 mr-1 align-self-center">基地を派遣する戦闘：</div>
+                                    <div class="ml-1 my-1 align-self-center">回</div>
+                                    <div class="ml-3 mr-1 my-1 align-self-center">基地を派遣する戦闘：</div>
                                     <select class="custom-select custom-select-sm" id="landBase_target">
                                         <option value="1" selected>1</option>
                                         <option value="2" class="d-none">2</option>
@@ -482,7 +482,11 @@
                                         <option value="9" class="d-none">9</option>
                                         <option value="10" class="d-none">10</option>
                                     </select>
-                                    <div class="ml-1 align-self-center">戦目</div>
+                                    <div class="ml-1 mr-2 my-1 align-self-center">戦目</div>
+                                    <div class="ml-2 my-1 align-self-center">進行航路：</div>
+                                    <input type="text"
+                                        class="mr-4 my-1 form-control form-control-sm align-self-center flex-grow-1"
+                                        id="route" readonly>
                                 </div>
                                 <div class="alert alert-warning py-2 mb-1 d-none" id="lb_range_warning">
                                     第<span id="ng_range">1</span>基地航空隊の半径が不足しています。

@@ -80,7 +80,7 @@ let releaseTimer = null;
   基地: [0:機体群, 1:札群]
   艦隊: [0: id, 1: plane配列, 2: 配属位置]
   機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
-  敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値)]
+  敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マスid]
 */
 /*==================================
     汎用
@@ -893,9 +893,6 @@ function setEnemyDiv($div, id, ap = 0) {
   $div[0].dataset.enemyid = enemy.id;
   $div.find('.enemy_name_span').html(drawEnemyGradeColor(enemy.name));
 
-  // マス情報は消しておく
-  $div.closest('.battle_content')[0].dataset.mapinfo = '';
-
   let displayAp = 0;
   if (id === -1 && ap > 0) displayAp = ap;
   else if (enemy.ap > 0) displayAp = enemy.ap;
@@ -982,6 +979,7 @@ function clearEnemyDiv($div) {
  */
 function clearEnemyDivAll(count = 1) {
   $('.battle_content').each((i, e) => {
+    $(e)[0].dataset.celldata = '';
     $(e).find('.enemy_content:not(:first)').remove();
     clearEnemyDiv($(e).find('.enemy_content'));
   });
@@ -1440,11 +1438,11 @@ function createMapSelect() {
   let text = '';
   for (const w of WORLD_DATA) {
     const world = w.world;
-    const maps = MAP_DATA.filter(m => Math.floor(m.id / 10) === world);
+    const maps = MAP_DATA.filter(m => Math.floor(m.area / 10) === world);
     text += `<optgroup label="${w.name}">`;
     for (const m of maps) {
-      const map = m.id % 10;
-      text += `<option value="${m.id}">${world > 1000 ? 'E' : world}-${map} : ${m.name}</option>`;
+      const map = m.area % 10;
+      text += `<option value="${m.area}">${world > 1000 ? 'E' : world}-${map} : ${m.name}</option>`;
     }
   }
   $('#map_select').html(text);
@@ -1691,6 +1689,9 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
     $('.battle_content').each((i, e) => {
       const enemyFleet = preset[2].find(v => v[0] === i);
       if (enemyFleet) {
+        if (enemyFleet.length === 3) $(e)[0].dataset.celldata = enemyFleet[2];
+        else $(e)[0].dataset.celldata = '';
+        
         for (const id of enemyFleet[1]) {
           if (id > 0) setEnemyDiv($(e).find('.enemy_content:last()'), id);
           // 負値の場合は直接入力の制空値
@@ -1796,7 +1797,7 @@ function createEnemyFleetPreset() {
   $('.battle_content').each((i, e) => {
     // 非表示なら飛ばす
     if ($(e).attr('class').indexOf('d-none') > -1) return;
-    const enemyFleet = [i, []];
+    const enemyFleet = [i, [], $(e)[0].dataset.celldata];
     $(e).find('.enemy_content').each((j, ce) => {
       const enemyId = castInt($(ce)[0].dataset.enemyid);
       const ap = castInt($(ce).find('.enemy_ap').text());
@@ -2428,13 +2429,13 @@ function updateLandBaseInfo(landBaseData) {
       for (const node of node_table.getElementsByClassName('info_defAp')) node.classList.remove('d-none');
 
       for (const node_tr of node_table.getElementsByClassName('lb_info_tr')) {
-        if(!node_tr.classList.contains('d-none')) {
+        if (!node_tr.classList.contains('d-none')) {
           let node_td = document.createElement('td');
           node_td.className = 'info_defAp';
           node_td.rowSpan = visiblePlaneCount;
           node_td.textContent = sumAp;
           node_tr.appendChild(node_td);
-    
+
           node_td = document.createElement('td');
           node_td.className = 'info_defAp info_defApEx';
           node_td.rowSpan = visiblePlaneCount;
@@ -3086,6 +3087,9 @@ function updateEnemyFleetInfo(enemyFleetData) {
   let tmpEnemyFleet = [];
   let sumAp = 0;
   let sumLBAp = 0;
+  let map = "999-1";
+  let cells = "";
+  let isMixed = false;
 
   for (const node_battle_content of document.getElementsByClassName('battle_content')) {
     // 非表示なら飛ばす
@@ -3124,8 +3128,21 @@ function updateEnemyFleetInfo(enemyFleetData) {
     if (!castInt(node.textContent)) node.parentNode.classList.add('d-none');
     else node.parentNode.classList.remove('d-none');
 
+    // 航路情報を取得　なければ手動
+    const mapInfo = !node_battle_content.dataset.celldata ? map.replace('-', '') + "_手動" : node_battle_content.dataset.celldata;
+    let world = mapInfo.split('_')[0].slice(0, -1);
+    world = world > 1000 ? "E-" : world + "-";
+    const area = world + mapInfo.split('_')[0].slice(-1)
+    const cellText = mapInfo.split('_')[1];
+    if (map === "999-1") map = area;
+    else if (!isMixed && map !== area) isMixed = true;
+    cells += (!cells ? cellText : " → " + cellText);
+
     enemyFleetData.push(tmpEnemyFleet);
   }
+
+  if (map.indexOf('999-') > -1) document.getElementById('route').value = "海域未指定";
+  else document.getElementById('route').value = !isMixed ? map + "：" + cells : "別海域のセルが混在しています。";
 }
 
 /**
@@ -4596,11 +4613,12 @@ function battle_count_Changed($this) {
 }
 
 /**
- * 戦闘回数変更時
+ * 戦闘全体リセット時
  * @param {JqueryDomObject} $this
  */
 function btn_reset_battle_Clicked($this) {
   const $tmp = $this.closest('.battle_content');
+  $tmp[0].dataset.celldata = '';
   $tmp.find('.enemy_content:not(:first)').remove();
   clearEnemyDiv($tmp.find('.enemy_content'));
   $this.blur();
@@ -4678,6 +4696,9 @@ function btn_expand_enemies() {
   for (const id of enemies) setEnemyDiv($target.find('.enemy_content:last()'), id);
   // 半径
   $target.find('.enemy_range').text(pattern.range);
+
+  // 進行航路情報を付与
+  $target[0].dataset.celldata = pattern.area + "_" + pattern.name;
 
   $('#modal_enemy_pattern').modal('hide');
 }
