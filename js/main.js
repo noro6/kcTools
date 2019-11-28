@@ -576,11 +576,11 @@ function initialize(callback) {
       text += `
       <div class="py-2 px-2 d-flex history_item" data-toggle="collapse" data-target="#${logId}">
         <div class="d-flex flex-nowrap align-self-center">
-          <div>
+          <div class="align-self-center">
             <span class="mr-2 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
               ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
           </div>
-          <div class="align-self-center text-nowrap">${v.title}</div>
+          <div class="align-self-center">${v.title}</div>
         </div>
       </div>
       <div class="collapse border-top" id="${logId}">
