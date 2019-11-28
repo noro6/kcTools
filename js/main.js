@@ -4147,7 +4147,7 @@ function ship_plane_DragOver($this, ui) {
   // 挿入先が装備不可だった場合暗くする
   if (!checkInvalidPlane(shipID, getPlanes(type).find(v => v.id === planeID))) {
     ui.helper.stop().animate({ 'opacity': '0.2' }, 100);
-    $this.removeClass('ship_plane-hover');
+    $this.removeClass('plane_draggable_hover');
     isOut = true;
   }
   else {
