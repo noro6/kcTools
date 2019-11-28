@@ -4968,7 +4968,7 @@ function btn_load_deck_Clicked() {
 function btn_output_url_Clicked() {
   try {
     const $output = $('#output_url');
-    $output.val(location.protocol + location.hostname + location.pathname + "?d=" + encordPreset());
+    $output.val(location.protocol + "//" +  location.hostname + location.pathname + "?d=" + encordPreset());
     $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
     $output.removeClass('is-invalid').addClass('is-valid');
   } catch (error) {
