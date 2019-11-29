@@ -1952,9 +1952,12 @@ function readDeckBuilder(deck) {
 
     // 第1、第2艦隊のみに絞る
     const fleet1 = fleets.find(v => v[0] === 0)[1];
-    const fleet2 = fleets.find(v => v[0] === 1)[1];
-    const marge = fleet1.concat(fleet2);
-    return marge;
+    if(fleets.length >= 2){
+      const fleet2 = fleets.find(v => v[0] === 1)[1];
+      const marge = fleet1.concat(fleet2);
+      return marge;
+    }
+    else return fleet1;
 
   } catch (error) {
     return null;
