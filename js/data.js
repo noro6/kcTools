@@ -608,7 +608,10 @@ const ENEMY_DATA = [
   { id: 392, type: [11, 10, 1000, 1908], name: "飛行場姫 重爆 弱", slot: [18, 12, 6], aa: [9, 9, 9], orig: 56, isSpR: false },
   { id: 393, type: [11, 10, 1000, 1908], name: "飛行場姫 重爆 中", slot: [18, 12, 12, 6], aa: [17, 9, 9, 9], orig: 56, isSpR: false },
   { id: 394, type: [11, 10, 1000, 1908], name: "飛行場姫 重爆 強", slot: [36, 18, 12, 6], aa: [17, 17, 17, 17], orig: 56, isSpR: false },
-  { id: 400, type: [4], name: "重巡ネ級改？", slot: [4], aa: [1], orig: 94, isSpR: true },
+  { id: 395, type: [4], name: "重巡ネ級改？", slot: [4], aa: [1], orig: 94, isSpR: true },
+  { id: 398, type: [11, 4, 1911], name: "バタビア沖棲姫 [丙]", slot: [1], aa: [1], orig: 398, isSpR: true },
+  { id: 399, type: [11, 4, 1911], name: "バタビア沖棲姫 [乙]", slot: [1], aa: [1], orig: 398, isSpR: true },
+  { id: 400, type: [11, 4, 1911], name: "バタビア沖棲姫 [甲]", slot: [1], aa: [1], orig: 398, isSpR: true },
 ];
 
 // 難易度
@@ -976,15 +979,16 @@ const ENEMY_PATTERN = [
   { area: 19113, name: 'I', enemies: [280, 27, 27, 92], range: 4, difficulty: 3 },
   { area: 19113, name: 'G', enemies: [27, 27, 92], range: 3, difficulty: 3 },
   { area: 19113, name: 'J', enemies: [55, 27, 27, 92], range: 4, difficulty: 3 },
-  { area: 19113, name: 'Mボス 前哨', enemies: [400, 92], range: 5, difficulty: 3 },
-  { area: 19113, name: 'Mボス 最終', enemies: [400, 92], range: 5, difficulty: 3 },
+  { area: 19113, name: 'Mボス 前哨', enemies: [395, 92], range: 5, difficulty: 3 },
+  { area: 19113, name: 'Mボス 最終', enemies: [395, 92], range: 5, difficulty: 3 },
   { area: 19113, name: 'Oボス 前哨', enemies: [104, 27, 276], range: 6, difficulty: 3 },
   { area: 19113, name: 'Oボス 最終', enemies: [295, 27, 266, 92], range: 6, difficulty: 3 },
 
   { area: 19114, name: '空襲1', enemies: [394, 394, 150, 150], range: 0, difficulty: 3 },
   { area: 19114, name: '空襲2', enemies: [394, 150, 150], range: 0, difficulty: 3 },
   { area: 19114, name: 'M', enemies: [27, 92], range: 0, difficulty: 3 },
-  { area: 19114, name: 'Pボス', enemies: [400, 92], range: 0, difficulty: 3 },
+  { area: 19114, name: 'Pボス', enemies: [395, 92], range: 0, difficulty: 3 },
+  { area: 19114, name: 'R', enemies: [279, 262, 92], range: 0, difficulty: 3 },
 ];
 
 /** デフォ機体プリセット */
