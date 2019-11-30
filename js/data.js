@@ -958,7 +958,7 @@ const ENEMY_PATTERN = [
   { area: 19111, name: 'J', enemies: [55], range: 0, difficulty: 3 },
   { area: 19111, name: 'Kボス', enemies: [], range: 0, difficulty: 3 },
 
-  { area: 19112, name: 'A', enemies: [73], range: 7, difficulty: 3 },
+  { area: 19112, name: 'A', enemies: [73, 152], range: 7, difficulty: 3 },
   // { area: 19112, name: 'B', enemies: [73], range: 5, difficulty: 3 },
   // { area: 19112, name: 'C', enemies: [73], range: 4, difficulty: 3 },
   // { area: 19112, name: 'D', enemies: [73], range: 6, difficulty: 3 },
