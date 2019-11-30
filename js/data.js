@@ -953,17 +953,19 @@ const ENEMY_PATTERN = [
   { area: 19111, name: 'J', enemies: [55], range: 0, difficulty: 3 },
   { area: 19111, name: 'Kボス', enemies: [], range: 0, difficulty: 3 },
 
-  { area: 19112, name: 'J', enemies: [], range: 0, difficulty: 3 },
+  { area: 19112, name: 'J', enemies: [152, 152], range: 0, difficulty: 3 },
+  { area: 19112, name: 'L', enemies: [151, 150, 150], range: 0, difficulty: 3 },
   { area: 19112, name: 'P', enemies: [92, 95], range: 0, difficulty: 3 },
   { area: 19112, name: 'Q', enemies: [95, 92], range: 0, difficulty: 3 },
-  { area: 19112, name: 'Iボス', enemies: [161, 55, 55, 92], range: 0, difficulty: 3 },
+  { area: 19112, name: 'Iボス 前哨', enemies: [161, 55, 55, 92], range: 0, difficulty: 3 },
+  { area: 19112, name: 'Iボス 最終', enemies: [164, 55, 55, 92], range: 0, difficulty: 3 },
 
 
 
 
 
   { area: 19113, name: 'I', enemies: [280, 27, 27, 92], range: 0, difficulty: 3 },
-  { area: 19113, name: 'G', enemies: [27, 27], range: 0, difficulty: 3 },
+  { area: 19113, name: 'G', enemies: [27, 27, 91], range: 0, difficulty: 3 },
   { area: 19113, name: 'J', enemies: [55, 27, 27, 92], range: 0, difficulty: 3 },
   { area: 19113, name: 'ボス', enemies: [55, 55, 92], range: 0, difficulty: 3 },
 ];
