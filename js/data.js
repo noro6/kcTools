@@ -620,6 +620,7 @@ const DIFFICULTY = [
 
 // 海域
 const WORLD_DATA = [
+  { world: 1911, name: '進撃！第二次作戦「南方作戦」（2019秋イベ）' },
   { world: 1, name: '鎮守府海域' },
   { world: 2, name: '南西諸島海域' },
   { world: 3, name: '北方海域' },
@@ -627,7 +628,6 @@ const WORLD_DATA = [
   { world: 4, name: '西方海域' },
   { world: 5, name: '南方海域' },
   { world: 6, name: '中部海域' },
-  { world: 1911, name: '進撃！第二次作戦「南方作戦」（2019秋イベ）' },
   { world: 1908, name: '欧州方面反撃作戦 発動！「シングル作戦」（2019夏イベ）' },
 ];
 
@@ -669,9 +669,9 @@ const MAP_DATA = [
   { area: 19081, name: '北大西洋ブレスト沖' },
   { area: 19082, name: 'ジブラルタル海峡沖/地中海' },
   { area: 19083, name: '地中海/マルタ島沖/アンツィオ沖' },
-  { area: 19111, name: 'イベント海域1(仮設置)' },
-  { area: 19112, name: 'イベント海域2(仮設置)' },
-  { area: 19113, name: 'イベント海域3(仮設置)' },
+  { area: 19111, name: 'マカッサル沖/バリ島沖' },
+  { area: 19112, name: 'ジャワ沖/ダーウィン沖' },
+  { area: 19113, name: 'ジャワ海/スラバヤ沖' },
   { area: 19114, name: 'イベント海域4(仮設置)' },
   { area: 19115, name: 'イベント海域5(仮設置)' },
   { area: 19116, name: 'イベント海域6(仮設置)' }
@@ -948,6 +948,24 @@ const ENEMY_PATTERN = [
   { area: 19083, name: 'T ', enemies: [91], range: 8, difficulty: 0 },
   { area: 19083, name: 'Uボス 前哨 ', enemies: [309, 41, 91], range: 7, difficulty: 0 },
   { area: 19083, name: 'Uボス 最終 ', enemies: [23, 41, 91], range: 7, difficulty: 0 },
+  { area: 19111, name: 'D', enemies: [92, 95, 95], range: 7, difficulty: 3 },
+  { area: 19111, name: 'Hボス', enemies: [155], range: 0, difficulty: 3 },
+  { area: 19111, name: 'J', enemies: [55], range: 0, difficulty: 3 },
+  { area: 19111, name: 'Kボス', enemies: [], range: 0, difficulty: 3 },
+
+  { area: 19112, name: 'J', enemies: [], range: 0, difficulty: 3 },
+  { area: 19112, name: 'P', enemies: [92, 95], range: 0, difficulty: 3 },
+  { area: 19112, name: 'Q', enemies: [95, 92], range: 0, difficulty: 3 },
+  { area: 19112, name: 'Iボス', enemies: [161, 55, 55, 92], range: 0, difficulty: 3 },
+
+
+
+
+
+  { area: 19113, name: 'I', enemies: [280, 27, 27, 92], range: 0, difficulty: 3 },
+  { area: 19113, name: 'G', enemies: [27, 27], range: 0, difficulty: 3 },
+  { area: 19113, name: 'J', enemies: [55, 27, 27, 92], range: 0, difficulty: 3 },
+  { area: 19113, name: 'ボス', enemies: [55, 55, 92], range: 0, difficulty: 3 },
 ];
 
 /** デフォ機体プリセット */
