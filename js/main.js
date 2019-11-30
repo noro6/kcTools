@@ -549,19 +549,20 @@ function initialize(callback) {
     existParam = true;
   }
   else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
-    if (!existParam && params.hasOwnProperty("predeck")) {
+    if (params.hasOwnProperty("predeck")) {
       const deck = readDeckBuilder(params.predeck);
       if (deck) expandMainPreset([[], deck, []], false, true, false);
+      existParam = true;
     }
-    if (!existParam && params.hasOwnProperty("lb")) {
-      try{
+    if (params.hasOwnProperty("lb")) {
+      try {
         const lbData = JSON.parse(decodeURIComponent(params.lb));
         if (lbData.length >= 2) expandMainPreset([lbData, [], []], true, false, false);
+        existParam = true;
       }
-      catch(error){
+      catch (error) {
       }
     }
-    existParam = true;
   }
 
   if (!existParam && isAutoSave) {
