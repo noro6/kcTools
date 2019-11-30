@@ -948,7 +948,7 @@ const ENEMY_PATTERN = [
   { area: 19083, name: 'T ', enemies: [91], range: 8, difficulty: 0 },
   { area: 19083, name: 'Uボス 前哨 ', enemies: [309, 41, 91], range: 7, difficulty: 0 },
   { area: 19083, name: 'Uボス 最終 ', enemies: [23, 41, 91], range: 7, difficulty: 0 },
-  { area: 19111, name: 'D', enemies: [92, 95, 95], range: 7, difficulty: 3 },
+  { area: 19111, name: 'D', enemies: [92, 95, 95], range: 0, difficulty: 3 },
   { area: 19111, name: 'Hボス', enemies: [155], range: 0, difficulty: 3 },
   { area: 19111, name: 'J', enemies: [55], range: 0, difficulty: 3 },
   { area: 19111, name: 'Kボス', enemies: [], range: 0, difficulty: 3 },
@@ -960,14 +960,12 @@ const ENEMY_PATTERN = [
   { area: 19112, name: 'Iボス 前哨', enemies: [161, 55, 55, 92], range: 0, difficulty: 3 },
   { area: 19112, name: 'Iボス 最終', enemies: [164, 55, 55, 92], range: 0, difficulty: 3 },
 
-
-
-
-
   { area: 19113, name: 'I', enemies: [280, 27, 27, 92], range: 0, difficulty: 3 },
-  { area: 19113, name: 'G', enemies: [27, 27, 91], range: 0, difficulty: 3 },
+  { area: 19113, name: 'G', enemies: [27, 27, 92], range: 0, difficulty: 3 },
   { area: 19113, name: 'J', enemies: [55, 27, 27, 92], range: 0, difficulty: 3 },
-  { area: 19113, name: 'ボス', enemies: [55, 55, 92], range: 0, difficulty: 3 },
+  { area: 19113, name: '第1ボス 前哨', enemies: [55, 55, 92], range: 0, difficulty: 3 },
+  { area: 19113, name: '第1ボス 最終', enemies: [92], range: 0, difficulty: 3 },
+  { area: 19113, name: '第2ボス 前哨', enemies: [104, 27, 276], range: 0, difficulty: 3 },
 ];
 
 /** デフォ機体プリセット */
