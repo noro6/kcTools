@@ -1740,6 +1740,7 @@ function createLandBasePreset() {
   $('.ohuda_select').each((i, e) => { landBasePreset[1].push(castInt($(e).val())); });
   $('.lb_plane').each((i, e) => {
     const $e = $(e);
+    if($e.hasClass('ui-draggable-dragging')) return;
     const plane = [
       castInt($e[0].dataset.planeid),
       castInt($e.find('.prof_select')[0].dataset.prof),
