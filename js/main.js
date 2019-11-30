@@ -1905,7 +1905,7 @@ function deleteMainPreset(id) {
 function readDeckBuilder(deck) {
   if (!deck) return null;
   try {
-    if(deck.indexOf('%22')) deck = deck.replace(/%22/g, '"')
+    deck = decodeURIComponent(deck);
     const obj = JSON.parse(deck);
 
     // 艦隊の抽出
