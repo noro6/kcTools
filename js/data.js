@@ -991,6 +991,7 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'M', enemies: [27, 92], range: 5, difficulty: 3 },
   { area: 19114, name: 'Pボス', enemies: [395, 92], range: 5, difficulty: 3 },
   { area: 19114, name: 'R', enemies: [279, 262, 92], range: 6, difficulty: 3 },
+  { area: 19114, name: 'R 最終', enemies: [400, 279, 279, 92], range: 6, difficulty: 3 },
   { area: 19114, name: 'Sボス 前哨', enemies: [400, 395, 27, 27, 92], range: 6, difficulty: 3 },
   { area: 19114, name: 'Sボス 最終', enemies: [403, 395, 279, 92], range: 6, difficulty: 3 },
 ];
