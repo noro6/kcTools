@@ -978,7 +978,9 @@ const ENEMY_PATTERN = [
   { area: 19113, name: 'Mボス 前哨', enemies: [92], range: 5, difficulty: 3 },
   { area: 19113, name: 'Mボス 最終', enemies: [92], range: 5, difficulty: 3 },
   { area: 19113, name: 'Oボス 前哨', enemies: [104, 27, 276], range: 6, difficulty: 3 },
-  { area: 19113, name: 'Oボス 最終', enemies: [293, 27, 266, 92], range: 6, difficulty: 3 },
+  { area: 19113, name: 'Oボス 最終', enemies: [295, 27, 266, 92], range: 6, difficulty: 3 },
+
+  { area: 19114, name: '', enemies: [], range: 0, difficulty: 3 },
 ];
 
 /** デフォ機体プリセット */
@@ -1163,7 +1165,7 @@ let CHANGE_LOG = [
     id: '1.3.5', changes: [
       {
         type: 0, title: "2019秋イベント 対応開始しています。",
-        content: "確認できた敵編成から順次追加していきます。更新されない場合はブラウザのキャッシュを削除してみてください(Ctrlキー押下しながらF5を押下など)"
+        content: "確認できた敵編成から順次追加していきます。今後、強編成等が確認された場合は編成が変わる可能性があります。更新を確実に反映させる場合はブラウザのキャッシュを削除してみてください(Ctrlキー押下しながらF5を押下など)"
       },
     ],
   },
