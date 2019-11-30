@@ -543,14 +543,28 @@ function initialize(callback) {
 
   // URLパラメータチェック
   const params = getUrlParams();
+  let existParam = false;
   if (params.hasOwnProperty("d")) {
     expandMainPreset(decordPreset(params.d));
+    existParam = true;
   }
-  else if(params.hasOwnProperty("predeck")){
-    const deck = readDeckBuilder(params.predeck);
-    if(deck) expandMainPreset([[], deck, []], false, true, false);
+  else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
+    if (!existParam && params.hasOwnProperty("predeck")) {
+      const deck = readDeckBuilder(params.predeck);
+      if (deck) expandMainPreset([[], deck, []], false, true, false);
+    }
+    if (!existParam && params.hasOwnProperty("lb")) {
+      try{
+        const lbData = JSON.parse(decodeURIComponent(params.lb));
+        if (lbData.length >= 2) expandMainPreset([lbData, [], []], true, false, false);
+      }
+      catch(error){
+      }
+    }
+    existParam = true;
   }
-  else if (isAutoSave) {
+
+  if (!existParam && isAutoSave) {
     // パラメータがないなら自動保存データをlocalStrageから読み込み
     const autoSaveData = loadLocalStrage('autoSaveData');
     expandMainPreset(decordPreset(autoSaveData));
@@ -1653,31 +1667,33 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
       ohuda_Changed($(e), true);
     });
 
-    // 艦娘クリア
-    clearShipDivAll(6);
-    let shipCountFleet1 = 0;
-    let shipCountFleet2 = 0;
-    // 艦娘展開
-    $('.ship_tab').each((i, e) => {
-      const ship = preset[1].find(v => v[2] === i);
-      if (!ship) return;
-      setShipDiv($(e), ship[0]);
-      $(e).find('.ship_plane').each((j, e) => {
-        const raw = ship[1].find(v => v[4] === j);
-        if (raw) {
-          const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
-          setPlaneDiv($(e), plane, true);
-        }
+    if (isResetFriendFleet) {
+      // 艦娘クリア
+      clearShipDivAll(6);
+      let shipCountFleet1 = 0;
+      let shipCountFleet2 = 0;
+      // 艦娘展開
+      $('.ship_tab').each((i, e) => {
+        const ship = preset[1].find(v => v[2] === i);
+        if (!ship) return;
+        setShipDiv($(e), ship[0]);
+        $(e).find('.ship_plane').each((j, e) => {
+          const raw = ship[1].find(v => v[4] === j);
+          if (raw) {
+            const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
+            setPlaneDiv($(e), plane, true);
+          }
+        });
+        if (i <= 6) shipCountFleet1 = (i + 1);
+        else shipCountFleet2 = (i + 1) - 6;
       });
-      if (i <= 6) shipCountFleet1 = (i + 1);
-      else shipCountFleet2 = (i + 1) - 6;
-    });
-    shipCountFleet1 = Math.min(Math.max(shipCountFleet1, 2), 6);
-    $('#friendFleet_item1').find('.display_ship_count').val(shipCountFleet1 % 2 === 1 ? shipCountFleet1 + 1 : shipCountFleet1);
-    display_ship_count_Changed($('#friendFleet_item1').find('.display_ship_count'), true);
-    shipCountFleet2 = Math.min(Math.max(shipCountFleet2, 2), 6);
-    $('#friendFleet_item2').find('.display_ship_count').val(shipCountFleet2 % 2 === 1 ? shipCountFleet2 + 1 : shipCountFleet2);
-    display_ship_count_Changed($('#friendFleet_item2').find('.display_ship_count'), true);
+      shipCountFleet1 = Math.min(Math.max(shipCountFleet1, 2), 6);
+      $('#friendFleet_item1').find('.display_ship_count').val(shipCountFleet1 % 2 === 1 ? shipCountFleet1 + 1 : shipCountFleet1);
+      display_ship_count_Changed($('#friendFleet_item1').find('.display_ship_count'), true);
+      shipCountFleet2 = Math.min(Math.max(shipCountFleet2, 2), 6);
+      $('#friendFleet_item2').find('.display_ship_count').val(shipCountFleet2 % 2 === 1 ? shipCountFleet2 + 1 : shipCountFleet2);
+      display_ship_count_Changed($('#friendFleet_item2').find('.display_ship_count'), true);
+    }
 
     // 敵艦展開
     let battle = 1
@@ -1695,7 +1711,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
       if (enemyFleet) {
         if (enemyFleet.length === 3) $(e)[0].dataset.celldata = enemyFleet[2];
         else $(e)[0].dataset.celldata = '';
-        
+
         for (const id of enemyFleet[1]) {
           if (id > 0) setEnemyDiv($(e).find('.enemy_content:last()'), id);
           // 負値の場合は直接入力の制空値
@@ -1740,7 +1756,7 @@ function createLandBasePreset() {
   $('.ohuda_select').each((i, e) => { landBasePreset[1].push(castInt($(e).val())); });
   $('.lb_plane').each((i, e) => {
     const $e = $(e);
-    if($e.hasClass('ui-draggable-dragging')) return;
+    if ($e.hasClass('ui-draggable-dragging')) return;
     const plane = [
       castInt($e[0].dataset.planeid),
       castInt($e.find('.prof_select')[0].dataset.prof),
@@ -1958,7 +1974,7 @@ function readDeckBuilder(deck) {
 
     // 第1、第2艦隊のみに絞る
     const fleet1 = fleets.find(v => v[0] === 0)[1];
-    if(fleets.length >= 2){
+    if (fleets.length >= 2) {
       const fleet2 = fleets.find(v => v[0] === 1)[1];
       const marge = fleet1.concat(fleet2);
       return marge;
@@ -4977,7 +4993,7 @@ function btn_load_deck_Clicked() {
 function btn_output_url_Clicked() {
   try {
     const $output = $('#output_url');
-    $output.val(location.protocol + "//" +  location.hostname + location.pathname + "?d=" + encordPreset());
+    $output.val(location.protocol + "//" + location.hostname + location.pathname + "?d=" + encordPreset());
     $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
     $output.removeClass('is-invalid').addClass('is-valid');
   } catch (error) {
