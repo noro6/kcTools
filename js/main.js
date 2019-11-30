@@ -546,6 +546,10 @@ function initialize(callback) {
   if (params.hasOwnProperty("d")) {
     expandMainPreset(decordPreset(params.d));
   }
+  else if(params.hasOwnProperty("predeck")){
+    const deck = readDeckBuilder(params.predeck);
+    if(deck) expandMainPreset([[], deck, []], false, true, false);
+  }
   else if (isAutoSave) {
     // パラメータがないなら自動保存データをlocalStrageから読み込み
     const autoSaveData = loadLocalStrage('autoSaveData');
@@ -1901,6 +1905,7 @@ function deleteMainPreset(id) {
 function readDeckBuilder(deck) {
   if (!deck) return null;
   try {
+    if(deck.indexOf('%22')) deck = deck.replace(/%22/g, '"')
     const obj = JSON.parse(deck);
 
     // 艦隊の抽出
