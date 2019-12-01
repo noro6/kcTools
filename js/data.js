@@ -977,8 +977,8 @@ const ENEMY_PATTERN = [
   { area: 19112, name: 'O', enemies: [95, 92], range: 5, difficulty: 3 },
   { area: 19112, name: 'P', enemies: [92, 95], range: 4, difficulty: 3 },
   { area: 19112, name: 'Q', enemies: [95, 92], range: 5, difficulty: 3 },
-  { area: 19112, name: 'Iボス 前哨', enemies: [161, 55, 55, 92], range: 6, difficulty: 3 },
-  { area: 19112, name: 'Iボス 最終', enemies: [164, 55, 55, 92], range: 6, difficulty: 3 },
+  { area: 19112, name: 'Rボス 前哨', enemies: [161, 55, 55, 92], range: 6, difficulty: 3 },
+  { area: 19112, name: 'Rボス 最終', enemies: [164, 55, 55, 92], range: 6, difficulty: 3 },
 
   // { area: 19113, name: 'A', enemies: [280, 27, 27, 92], range: 1, difficulty: 3 },
   // { area: 19113, name: 'B', enemies: [280, 27, 27, 92], range: 1, difficulty: 3 },
