@@ -447,6 +447,9 @@ function initialize(callback) {
   $('.battle_content').each((i, e) => {
     $(e).find('.battle_no').text(i + 1);
     if (i > 0) $(e).addClass('d-none');
+
+    $(e).find('.custom-control-input').attr('id', 'grand_' + i);
+    $(e).find('.custom-control-label').attr('for', 'grand_' + i);
   });
 
   // 戦闘回数初期化
@@ -1710,7 +1713,8 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
     $('.battle_content').each((i, e) => {
       const enemyFleet = preset[2].find(v => v[0] === i);
       if (enemyFleet) {
-        if (enemyFleet.length === 3) $(e)[0].dataset.celldata = enemyFleet[2];
+        if (enemyFleet.length >= 3) $(e)[0].dataset.celldata = enemyFleet[2];
+        if (enemyFleet.length >= 4 && enemyFleet[3] === 2) $(e).find('.chk_enemy_grand').prop('checked', true);
         else $(e)[0].dataset.celldata = '';
 
         for (const id of enemyFleet[1]) {
@@ -1819,7 +1823,7 @@ function createEnemyFleetPreset() {
   $('.battle_content').each((i, e) => {
     // 非表示なら飛ばす
     if ($(e).attr('class').indexOf('d-none') > -1) return;
-    const enemyFleet = [i, [], $(e)[0].dataset.celldata];
+    const enemyFleet = [i, [], $(e)[0].dataset.celldata, $(e).find('.chk_enemy_grand').prop('checked') ? 2 : 1];
     $(e).find('.enemy_content').each((j, ce) => {
       const enemyId = castInt($(ce)[0].dataset.enemyid);
       const ap = castInt($(ce).find('.enemy_ap').text());
@@ -2192,7 +2196,7 @@ function getAirStatusBorder(enemyAp) {
  */
 function caluclate() {
   // 各種オブジェクト生成
-  const objectData = { landBaseData: [], friendFleetData: [], enemyFleetData: [] };
+  const objectData = { landBaseData: [], friendFleetData: [], enemyFleetData: [], cellData: [] };
 
   // 計算前初期化
   caluclateInit(objectData);
@@ -2258,7 +2262,7 @@ function caluclateInit(objectData) {
 
   // 敵艦情報更新
   //console.time('updateEnemyFleetInfo');
-  updateEnemyFleetInfo(objectData.enemyFleetData);
+  updateEnemyFleetInfo(objectData.enemyFleetData, objectData.cellData);
   //console.timeEnd('updateEnemyFleetInfo');
 
   // 自動保存する場合
@@ -3092,14 +3096,16 @@ function createFleetPlaneObject(node, shipNo, index) {
 /**
  * 指定した艦隊の総制空値を返す
  * @param {Array.<Object>} friendFleetData
+ * @param {number} cellType 戦闘マスタイプ(1: 通常 2: 敵連合)
  * @returns 総制空値
  */
-function getFriendFleetAP(friendFleetData) {
+function getFriendFleetAP(friendFleetData, cellType) {
   let sumAP = 0;
   const max_i = friendFleetData.length;
   for (let i = 0; i < max_i; i++) {
     const ships = friendFleetData[i];
     const max_j = ships.length;
+    if (ships[0].fleetNo > 6 && cellType === 1) continue;
     for (let j = 0; j < max_j; j++) sumAP += ships[j].ap;
   }
   return sumAP;
@@ -3108,8 +3114,9 @@ function getFriendFleetAP(friendFleetData) {
 /**
  * 敵艦隊入力情報更新
  * @param {Array.<Object>} enemyFleetData
+ * @param {Array.<Object>} cellData
  */
-function updateEnemyFleetInfo(enemyFleetData) {
+function updateEnemyFleetInfo(enemyFleetData, cellData) {
   let tmpEnemyFleet = [];
   let sumAp = 0;
   let sumLBAp = 0;
@@ -3153,6 +3160,10 @@ function updateEnemyFleetInfo(enemyFleetData) {
     node = node_battle_content.getElementsByClassName('enemy_range')[0];
     if (!castInt(node.textContent)) node.parentNode.classList.add('d-none');
     else node.parentNode.classList.remove('d-none');
+
+    // マス情報格納
+    // 敵連合マス
+    cellData.push(node_battle_content.getElementsByClassName('chk_enemy_grand')[0].checked ? 2 : 1);
 
     // 航路情報を取得　なければ手動
     const mapInfo = !node_battle_content.dataset.celldata ? map.replace('-', '') + "_手動" : node_battle_content.dataset.celldata;
@@ -3302,9 +3313,10 @@ function updateEnemyAp(enemy) {
  * @param {Array.<Object>} friendFleetData 味方艦隊
  * @param {number} eap 敵制空値
  * @param {number} index 何戦目か
+ * @param {number} cellType 戦闘マスタイプ(1: 通常 2: 敵連合)
  */
-function shootDownHalfFriend(friendFleetData, eap, index) {
-  const ap = getFriendFleetAP(friendFleetData);
+function shootDownHalfFriend(friendFleetData, eap, index, cellType) {
+  const ap = getFriendFleetAP(friendFleetData, cellType);
   let airStatusIndex = getAirStatusIndex(ap, eap);
   for (const ship of friendFleetData) {
     for (const plane of ship) {
@@ -3312,7 +3324,8 @@ function shootDownHalfFriend(friendFleetData, eap, index) {
       $('#shoot_down_table_tbody')
         .find('.shipNo' + plane.fleetNo + '.slot' + plane.slotNo + ' .battle' + (index + 1))
         .text(plane.id > 0 ? Math.ceil(plane.slot) : '');
-      if (plane.slot === 0 || !plane.canBattle) continue;
+      // 0スロ || 非戦闘機体 || (敵通常マス && 第2艦隊)　は飛ばす
+      if (plane.slot === 0 || !plane.canBattle || (plane.fleetNo > 6 && cellType === 1)) continue;
       // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
       if (airStatusIndex === 5) airStatusIndex = 0;
       let slot = plane.slot;
@@ -3333,15 +3346,16 @@ function shootDownHalfFriend(friendFleetData, eap, index) {
  * 道中被撃墜
  * @param {number} airStatusIndex 制空状態
  * @param {Array.<Object>} friendFleetData 味方艦隊
+ * @param {number} cellType 戦闘マスタイプ(1: 通常 2: 敵連合)
  */
-function shootDownFriend(airStatusIndex, friendFleetData) {
+function shootDownFriend(airStatusIndex, friendFleetData, cellType) {
   const len = friendFleetData.length;
   for (let i = 0; i < len; i++) {
     const ship = friendFleetData[i];
     const shipLen = ship.length;
     for (let j = 0; j < shipLen; j++) {
       const plane = ship[j];
-      if (plane.slot === 0 || !plane.canBattle) continue;
+      if (plane.slot === 0 || !plane.canBattle || (plane.fleetNo > 6 && cellType === 1)) continue;
       // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
       if (airStatusIndex === 5) airStatusIndex = 0;
       let slot = plane.slot;
@@ -3384,6 +3398,7 @@ function mainCaluclate(objectData) {
   let landBaseData = objectData.landBaseData;
   let friendFleetData = objectData.friendFleetData;
   let enemyFleetData = objectData.enemyFleetData;
+  let cellData = objectData.cellData;
   // 計算する戦闘 (配列のindexとして使うので表示値 - 1)
   let mainBattle = (displayBattle - 1);
   let lbAttackBattle = (castInt($('#landBase_target').val()) - 1);
@@ -3421,6 +3436,7 @@ function mainCaluclate(objectData) {
     // 全ての戦闘回す
     for (let battle = 0; battle < battleCount; battle++) {
       const enemyFleet = enemyFleetData[battle];
+      const cellType = cellData[battle];
       // 基地航空隊を派遣した戦闘
       if (battle === lbAttackBattle) {
         // 基地航空隊による制空削りを行う
@@ -3429,14 +3445,14 @@ function mainCaluclate(objectData) {
 
       // 計算結果に詳細表示する戦闘
       if (battle === mainBattle) {
-        fap = getFriendFleetAP(friendFleetData);
+        fap = getFriendFleetAP(friendFleetData, cellType);
         eap = getEnemyFleetAP(enemyFleet);
         chartData.own.push(fap);
         chartData.enemy.push(eap);
       }
 
       // st1撃墜
-      shootDownHalfFriend(friendFleetData, getEnemyFleetAP(enemyFleet), battle);
+      shootDownHalfFriend(friendFleetData, getEnemyFleetAP(enemyFleet), battle, cellType);
     }
 
     // 出撃リザルト
@@ -3499,6 +3515,7 @@ function rateCaluclate(objectData) {
   let landBaseData = objectData.landBaseData;
   let friendFleetData = objectData.friendFleetData;
   let enemyFleetData = objectData.enemyFleetData;
+  let cellData = objectData.cellData;
   let maxCount = castInt($('#caluclate_count').val());
   $('#caluclate_count').val(maxCount === 0 ? ++maxCount : maxCount);
 
@@ -3545,14 +3562,14 @@ function rateCaluclate(objectData) {
     // 結果表示戦闘まで道中含めてブン回す
     for (let battle = 0; battle <= mainBattle; battle++) {
       const enemies = enemyFleet[battle];
-
+      const cellType = cellData[battle];
       if (battle === mainBattle) {
         const eap = getEnemyFleetAP(enemies);
-        fleetASDist[getAirStatusIndex(getFriendFleetAP(fleet), eap)]++;
+        fleetASDist[getAirStatusIndex(getFriendFleetAP(fleet, cellType), eap)]++;
       }
       else {
         // st1撃墜
-        shootDownFriend(getAirStatusIndex(getFriendFleetAP(fleet), getEnemyFleetAP(enemies)), fleet);
+        shootDownFriend(getAirStatusIndex(getFriendFleetAP(fleet, cellType), getEnemyFleetAP(enemies)), fleet, cellData[battle]);
       }
     }
   }
@@ -4726,6 +4743,10 @@ function btn_expand_enemies() {
   // 進行航路情報を付与
   $target[0].dataset.celldata = pattern.area + "_" + pattern.name;
 
+  // 敵連合情報があれば。
+  if (pattern.hasOwnProperty('isGrand') && pattern.isGrand) $target.find('.chk_enemy_grand').prop('checked', true);
+  else $target.find('.chk_enemy_grand').prop('checked', false);
+
   $('#modal_enemy_pattern').modal('hide');
 }
 
@@ -5107,6 +5128,7 @@ $(function () {
   $('#friendFleet_content').on('click', '.btn_reset_ship', function () { btn_reset_ship_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.btn_remove_plane', function () { btn_remove_ship_plane_Clicked($(this)); });
+  $('#enemyFleet_content').on('click', '.custom-checkbox', caluclate);
   $('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });
   $('#enemyFleet_content').on('input', '.enemy_ap_input', function () { enemy_ap_input_Changed($(this)); });
   $('#enemyFleet_content').on('input', '.enemy_ap_range', function () { enemy_ap_range_Changed($(this)); });

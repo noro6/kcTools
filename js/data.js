@@ -251,7 +251,9 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   { shipId: 353, equipmentTypes: [1, 3, 4], equipmentIds: [] },
   { shipId: 354, equipmentTypes: [1, 3, 4], equipmentIds: [] },
   // 長門型改以降に 水戦
-  { shipId: 1375, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 341, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 373, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
   // 大和型改以降に 水戦
   { shipId: 136, equipmentTypes: [7], equipmentIds: [] },
@@ -988,8 +990,8 @@ const ENEMY_PATTERN = [
   { area: 19113, name: 'J', enemies: [27, 27, 92], range: 4, difficulty: 3 },
   { area: 19113, name: 'Mボス 前哨', enemies: [395, 92], range: 5, difficulty: 3 },
   { area: 19113, name: 'Mボス 最終', enemies: [395, 92], range: 5, difficulty: 3 },
-  { area: 19113, name: 'Oボス 前哨', enemies: [104, 27, 276], range: 6, difficulty: 3 },
-  { area: 19113, name: 'Oボス 最終', enemies: [295, 27, 266, 92], range: 6, difficulty: 3 },
+  { area: 19113, name: 'Oボス 前哨', enemies: [104, 27, 276], range: 6, difficulty: 3, isGrand: true },
+  { area: 19113, name: 'Oボス 最終', enemies: [295, 27, 266, 92], range: 6, difficulty: 3, isGrand: true },
 
   { area: 19114, name: '空襲1', enemies: [394, 394, 150, 150], range: 1, difficulty: 3 },
   { area: 19114, name: '空襲2', enemies: [394, 150, 150], range: 1, difficulty: 3 },
@@ -999,8 +1001,8 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Pボス', enemies: [395, 43, 55, 92], range: 5, difficulty: 3 },
   { area: 19114, name: 'R', enemies: [400, 279, 262, 92], range: 6, difficulty: 3 },
   { area: 19114, name: 'R 最終', enemies: [400, 279, 279, 92], range: 6, difficulty: 3 },
-  { area: 19114, name: 'Sボス 前哨', enemies: [400, 395, 27, 27, 92], range: 6, difficulty: 3 },
-  { area: 19114, name: 'Sボス 最終', enemies: [403, 395, 279, 92], range: 6, difficulty: 3 },
+  { area: 19114, name: 'Sボス 前哨', enemies: [400, 395, 27, 27, 92], range: 6, difficulty: 3, isGrand: true },
+  { area: 19114, name: 'Sボス 最終', enemies: [403, 395, 279, 92], range: 6, difficulty: 3, isGrand: true },
 ];
 
 /** デフォ機体プリセット */
@@ -1182,13 +1184,21 @@ let CHANGE_LOG = [
     ],
   },
   {
-    id: '1.3.5', changes: [
+    id: '1.3.5.1', changes: [
       {
         type: 0, title: "2019秋イベント 対応開始しています。",
         content: "確認できた敵編成から順次追加していきます。今後、強編成等が確認された場合は編成が変わる可能性があります。更新を確実に反映させる場合はブラウザのキャッシュを削除してみてください(Ctrlキー押下しながらF5を押下など)"
+      },
+      {
+        type: 1, title: "第2艦隊の制空権争い参加の挙動を変更しました。",
+        content: "対敵連合艦隊時にのみ、第2艦隊の制空値も考慮します。敵艦が連合艦隊を組んでいるマスは、各マスの「敵連合」にチェックを入れてください。"
+      },
+      {
+        type: 2, title: "細かい修正を行いました。",
+        content: "長門型改に水上戦闘機が搭載できない現象の修正、三式戦 飛燕 の改修値を変更できない現象を修正しました。"
       },
     ],
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/11/26";
+const LAST_UPDATE_DATE = "2019/12/04";
