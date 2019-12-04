@@ -1506,7 +1506,13 @@ function createNodeSelect() {
 function createEnemyPattern() {
   const area = castInt($('#map_select').val());
   const node = $('.node_selected').data('node');
-  const enemies = ENEMY_PATTERN.find(v => v.area === area && v.name === node).enemies;
+  let difficulty = -1;
+  if (area < 1000) $('#select_difficulty_div').addClass('d-none');
+  else {
+    $('#select_difficulty_div').removeClass('d-none');
+    difficulty = castInt($('#select_difficulty').val());
+  }
+  const enemies = ENEMY_PATTERN.find(v => v.area === area && v.name === node && difficulty === v.difficulty).enemies;
   const len = enemies.length;
   let text = '';
   for (let index = 0; index < len; index++) {
