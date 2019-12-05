@@ -2455,7 +2455,7 @@ function updateLandBaseInfo(landBaseData) {
         for (const plane of v.planes) if ([350, 351, 352].indexOf(plane.id) > -1) rocketCount++;
       }
       // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
-      sumAp_ex = (rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.3) * sumAp;
+      sumAp_ex = (rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2) * sumAp;
 
       // 防空時は半径の後ろの最終防空時制空値を表示　半径は非表示
       document.getElementById('lb_info').classList.add('col-lg-8', 'col-xl-7');
