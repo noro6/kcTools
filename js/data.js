@@ -92,7 +92,7 @@ const PLANE_DATA = [
   { id: 342, type: 2, name: "流星改(一航戦)", AA: 2, range: 6, IP: 0, AB: 0, imp: false, LOS: 4, cost: 9, abbr: '' },
   { id: 343, type: 2, name: "流星改(一航戦/熟練)", AA: 3, range: 6, IP: 0, AB: 0, imp: false, LOS: 6, cost: 9, abbr: '' },
   { id: 257, type: -2, name: "TBM-3D", AA: 1, range: 6, IP: 0, AB: 0, imp: false, LOS: 4, cost: 11, abbr: '' },
-  { id: 344, type: -2, name: "九七式艦攻改 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, IP: 0, AB: 0, imp: false, LOS: 4, cost: 6, abbr: '97艦攻改 試製3号戊型' },
+  { id: 344, type: -2, name: "九七式艦攻改 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, IP: 0, AB: 0, imp: true, LOS: 4, cost: 6, abbr: '97艦攻改 試製3号戊型' },
   { id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", AA: 0, range: 4, IP: 0, AB: 0, imp: false, LOS: 5, cost: 6, abbr: '97艦攻改(熟練) 試製3号戊型' },
   { id: 23, type: 3, name: "九九式艦爆", AA: 0, range: 4, IP: 0, AB: 0, imp: false, LOS: 0, cost: 4, abbr: '' },
   { id: 24, type: 3, name: "彗星", AA: 0, range: 4, IP: 0, AB: 0, imp: false, LOS: 0, cost: 5, abbr: '' },
