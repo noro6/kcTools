@@ -1075,8 +1075,8 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Pボス', enemies: [397, 43, 55, 92], range: 5, difficulty: 3 },
   { area: 19114, name: 'R', enemies: [400, 279, 262, 92], range: 6, difficulty: 3 },
   { area: 19114, name: 'R 最終', enemies: [403, 279, 279, 92], range: 6, difficulty: 3 },
-  { area: 19114, name: 'Sボス 前哨', enemies: [400, 397, 27, 27, 92], range: 6, difficulty: 3, isGrand: true },
-  { area: 19114, name: 'Sボス 最終', enemies: [403, 397, 279, 92], range: 6, difficulty: 3, isGrand: true },
+  { area: 19114, name: 'Sボス 前哨', enemies: [400, 397, 27, 27, 92], range: 7, difficulty: 3, isGrand: true },
+  { area: 19114, name: 'Sボス 最終', enemies: [403, 397, 279, 92], range: 7, difficulty: 3, isGrand: true },
   // 乙
   { area: 19114, name: '空襲 強', enemies: [393, 150, 150], range: 1, difficulty: 2 },
   { area: 19114, name: '空襲 中', enemies: [392, 150, 150], range: 1, difficulty: 2 },
@@ -1089,8 +1089,8 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Pボス', enemies: [396, 55, 92], range: 5, difficulty: 2 },
   { area: 19114, name: 'R', enemies: [399, 262, 262, 92], range: 6, difficulty: 2 },
   { area: 19114, name: 'R 最終', enemies: [402, 263, 262, 91], range: 6, difficulty: 2 },
-  { area: 19114, name: 'Sボス 前哨', enemies: [399, 27, 27, 19, 91], range: 6, difficulty: 2, isGrand: true },
-  { area: 19114, name: 'Sボス 最終', enemies: [402, 395, 262, 91], range: 6, difficulty: 2, isGrand: true },
+  { area: 19114, name: 'Sボス 前哨', enemies: [399, 27, 27, 19, 91], range: 7, difficulty: 2, isGrand: true },
+  { area: 19114, name: 'Sボス 最終', enemies: [402, 395, 262, 91], range: 7, difficulty: 2, isGrand: true },
   // 丙
   { area: 19114, name: '空襲 強', enemies: [150, 150, 150], range: 1, difficulty: 1 },
   { area: 19114, name: '空襲 中', enemies: [150, 150], range: 1, difficulty: 1 },
@@ -1103,8 +1103,8 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Pボス', enemies: [395, 41, 41, 91], range: 5, difficulty: 1 },
   { area: 19114, name: 'R', enemies: [398, 23], range: 6, difficulty: 1 },
   { area: 19114, name: 'R 最終', enemies: [401, 262, 23, 19], range: 6, difficulty: 1 },
-  { area: 19114, name: 'Sボス 前哨', enemies: [398, 22, 19, 91], range: 6, difficulty: 1, isGrand: true },
-  { area: 19114, name: 'Sボス 最終', enemies: [401, 23, 91, 19], range: 6, difficulty: 1, isGrand: true },
+  { area: 19114, name: 'Sボス 前哨', enemies: [398, 22, 19, 91], range: 7, difficulty: 1, isGrand: true },
+  { area: 19114, name: 'Sボス 最終', enemies: [401, 23, 91, 19], range: 7, difficulty: 1, isGrand: true },
   // 丁
   { area: 19114, name: '空襲 強', enemies: [150, 150], range: 1, difficulty: 0 },
   { area: 19114, name: '空襲 弱', enemies: [150], range: 1, difficulty: 0 },
@@ -1116,8 +1116,8 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Pボス', enemies: [395], range: 5, difficulty: 0 },
   { area: 19114, name: 'R', enemies: [398, 23], range: 6, difficulty: 0 },
   { area: 19114, name: 'R 最終', enemies: [401, 23, 23], range: 6, difficulty: 0 },
-  { area: 19114, name: 'Sボス 前哨', enemies: [398], range: 6, difficulty: 0, isGrand: true },
-  { area: 19114, name: 'Sボス 最終', enemies: [401, 22], range: 6, difficulty: 0, isGrand: true },
+  { area: 19114, name: 'Sボス 前哨', enemies: [398], range: 7, difficulty: 0, isGrand: true },
+  { area: 19114, name: 'Sボス 最終', enemies: [401, 22], range: 7, difficulty: 0, isGrand: true },
 ];
 
 /** デフォ機体プリセット */
