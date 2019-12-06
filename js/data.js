@@ -231,7 +231,7 @@ const LINK_SHIP_EQUIPMENT = [
 // 特定の艦娘が特別に装備できるやつ
 const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 速吸改に 艦攻
-  { shipId: 10260, equipmentTypes: [2], equipmentIds: [] },
+  { shipId: 1432, equipmentTypes: [2], equipmentIds: [] },
   // 秋津洲(改)に 大型飛行艇
   { shipId: 245, equipmentTypes: [8], equipmentIds: [] },
   { shipId: 250, equipmentTypes: [8], equipmentIds: [] },
@@ -1316,4 +1316,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/04";
+const LAST_UPDATE_DATE = "2019/12/06";
