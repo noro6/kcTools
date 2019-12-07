@@ -1156,13 +1156,16 @@ const ENEMY_PATTERN = [
   { area: 19116, name: '空襲 弱', enemies: [183, 394, 150, 362, 362], range: 1, difficulty: 3 },
   { area: 19116, name: 'D', enemies: [362, 362], range: 3, difficulty: 3 },
   { area: 19116, name: 'E', enemies: [], range: 3, difficulty: 3 },
-  { area: 19116, name: 'G', enemies: [], range: 3, difficulty: 3 },
-  { area: 19116, name: 'H', enemies: [], range: 3, difficulty: 3 },
-  { area: 19116, name: 'J', enemies: [], range: 4, difficulty: 3 },
-  { area: 19116, name: 'L', enemies: [], range: 5, difficulty: 3 },
-  { area: 19116, name: 'M', enemies: [183, 152, 152, 152, 362], range: 5, difficulty: 3 },
+  { area: 19116, name: 'H', enemies: [183, 151, 150, 150, 362], range: 3, difficulty: 3 },
+  { area: 19116, name: 'J', enemies: [406, 118, 280, 280, 43, 362], range: 4, difficulty: 3 },
+  { area: 19116, name: 'L', enemies: [118, 43, 92, 265], range: 5, difficulty: 3 },
+  { area: 19116, name: 'M', enemies: [183, 152, 151, 150, 362], range: 5, difficulty: 3 },
   { area: 19116, name: 'N', enemies: [43, 43, 362, 362], range: 6, difficulty: 3 },
-  { area: 19116, name: 'Pボス', enemies: [295, 27, 27, 95, 95, 92, 92], range: 6, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Pボス', enemies: [295, 27, 27, 95, 95, 92, 92, 92], range: 6, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Pボス 輸送後', enemies: [298, 27, 27, 95, 92, 92], range: 6, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Q', enemies: [280, 266, 43, 362], range: 0, difficulty: 3 },
+  { area: 19116, name: 'S', enemies: [397, 397, 362, 92], range: 0, difficulty: 3 },
+  { area: 19116, name: 'V', enemies: [406, 118, 280, 280, 43, 362, 362], range: 0, difficulty: 3, isGrand: true },
 
 ];
 
