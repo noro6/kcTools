@@ -694,8 +694,8 @@ const MAP_DATA = [
   { area: 19112, name: 'ジャワ沖/ダーウィン沖' },
   { area: 19113, name: 'ジャワ海/スラバヤ沖' },
   { area: 19114, name: 'バタビア沖' },
-  { area: 19115, name: 'イベント海域5(仮設置)' },
-  { area: 19116, name: 'イベント海域6(仮設置)' }
+  { area: 19115, name: 'ダバオ沖/太平洋南西部' },
+  { area: 19116, name: 'ソロモン諸島沖' }
 ];
 
 // 戦闘マス
@@ -1124,6 +1124,13 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'R 最終', enemies: [401, 23, 23], range: 6, difficulty: 0 },
   { area: 19114, name: 'Sボス 前哨', enemies: [398], range: 7, difficulty: 0, isGrand: true },
   { area: 19114, name: 'Sボス 最終', enemies: [401, 22], range: 7, difficulty: 0, isGrand: true },
+
+  // 甲
+  { area: 19115, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3 },
+
+  // 甲
+  { area: 19116, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3, isGrand: true },
+
 ];
 
 /** デフォ機体プリセット */
