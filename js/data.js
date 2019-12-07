@@ -1126,7 +1126,12 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Sボス 最終', enemies: [401, 22], range: 7, difficulty: 0, isGrand: true },
 
   // 甲
-  { area: 19115, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲', enemies: [-1, 280, 280], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲 強', enemies: [-1, 280, 280, 277], range: 1, difficulty: 3 },
+  { area: 19115, name: 'B', enemies: [279, 264, 92], range: 0, difficulty: 3 },
+  { area: 19115, name: 'E', enemies: [362, 92], range: 0, difficulty: 3 },
+  { area: 19115, name: 'G', enemies: [279, 92], range: 0, difficulty: 3 },
+  { area: 19115, name: 'Jボス 前哨', enemies: [362], range: 0, difficulty: 3 },
 
   // 甲
   { area: 19116, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3, isGrand: true },
