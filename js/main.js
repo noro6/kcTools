@@ -554,7 +554,7 @@ function initialize(callback) {
   else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
     if (params.hasOwnProperty("predeck")) {
       const deck = readDeckBuilder(params.predeck);
-      if (deck) expandMainPreset([[], deck, []], false, true, false);
+      if (deck) expandMainPreset(deck, deck[0][0].length > 0, true, false);
       existParam = true;
     }
     if (params.hasOwnProperty("lb")) {
@@ -1925,61 +1925,90 @@ function deleteMainPreset(id) {
 
 /**
  * デッキビルダーフォーマットデータからプリセットを生成
- * デッキフォーマット{version: 4, f1: {s1: {id: '100', lv: 40, luck: -1, items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
  * f(leet)*は艦隊、s(hip)*は船、i(item)*は装備でixは拡張スロット、rfは改修、masは熟練度
- * @param {string} deck
+ * @param {string} deck [基地プリセット, 艦隊プリセット, []]
  * @returns {object} プリセットデータとして返却 失敗時null
  */
 function readDeckBuilder(deck) {
   if (!deck) return null;
   try {
-    deck = decodeURIComponent(deck);
+    deck = decodeURIComponent(deck).trim('"');
     const obj = JSON.parse(deck);
 
-    // 艦隊の抽出
     const fleets = [];
-    Object.keys(obj).forEach((f) => {
-      const f_ = obj[f];
-      if (f === "version" || !f_) return;
-      // 艦隊番号
-      const fleetNo = castInt(f.replace('f', '')) - 1;
+    const landBase = [[], [-1, -1, -1]];
+    Object.keys(obj).forEach((key) => {
+      const value = obj[key];
+      if (key === "version" || !value) return;
 
-      // 艦娘の抽出
-      const fleet = [fleetNo, []];
-      Object.keys(f_).forEach((s) => {
-        const s_ = f_[s];
-        if (!s_ || !s_.hasOwnProperty('items')) return;
+      // 基地データ抽出
+      if (key.indexOf("a") === 0 && value.hasOwnProperty("items")) {
+        // 航空隊番号
+        const lbIndex = castInt(key.replace('a', '')) - 1;
+        // 札設定
+        landBase[1][lbIndex] = value.hasOwnProperty("mode") ? (value.mode === 1 ? 2 : value.mode === 2 ? 0 : -1) : -1;
 
-        // マスタデータと照合
-        const shipData = SHIP_DATA.find(v => v.deckid === castInt(s_.id));
-        if (!shipData) return;
-
-        // 装備の抽出
-        const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
-        Object.keys(s_.items).forEach((i) => {
-          const i_ = s_.items[i];
+        Object.keys(value.items).forEach((i) => {
+          const i_ = value.items[i];
           if (!i_ || !i_.hasOwnProperty("id")) return;
 
-          // マスタデータと照合
-          if (!PLANE_DATA.find(v => v.id === castInt(i_.id))) return;
-
           // スロット番号
-          const planeIndex = castInt(i.replace('i', '')) - 1;
+          const planeIndex = castInt(i.replace('i', '')) - 1 + lbIndex * 4;
 
           // 装備プロパティの抽出
-          const plane = [0, 0, 0, shipData.slot[planeIndex], planeIndex];
+          const plane = [0, 0, 0, 18, planeIndex];
           Object.keys(i_).forEach((key) => {
             if (key === "id") plane[0] = castInt(i_[key]);
             else if (key === "mas") plane[1] = castInt(i_[key]);
             else if (key === "rf") plane[2] = castInt(i_[key]);
           });
 
-          ship[1].push(plane);
+          landBase[0].push(plane);
         });
+      }
 
-        fleet[1].push(ship);
-      });
-      fleets.push(fleet);
+      // 艦隊データ抽出
+      if (key.indexOf("f") === 0) {
+        // 艦隊番号
+        const fleetNo = castInt(key.replace('f', '')) - 1;
+
+        // 艦娘の抽出
+        const fleet = [fleetNo, []];
+        Object.keys(value).forEach((s) => {
+          const s_ = value[s];
+          if (!s_ || !s_.hasOwnProperty('items')) return;
+
+          // マスタデータと照合
+          const shipData = SHIP_DATA.find(v => v.deckid === castInt(s_.id));
+          if (!shipData) return;
+
+          // 装備の抽出
+          const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
+          Object.keys(s_.items).forEach((i) => {
+            const i_ = s_.items[i];
+            if (!i_ || !i_.hasOwnProperty("id")) return;
+
+            // マスタデータと照合
+            if (!PLANE_DATA.find(v => v.id === castInt(i_.id))) return;
+
+            // スロット番号
+            const planeIndex = castInt(i.replace('i', '')) - 1;
+
+            // 装備プロパティの抽出
+            const plane = [0, 0, 0, shipData.slot[planeIndex], planeIndex];
+            Object.keys(i_).forEach((i_key) => {
+              if (i_key === "id") plane[0] = castInt(i_[i_key]);
+              else if (i_key === "mas") plane[1] = castInt(i_[i_key]);
+              else if (i_key === "rf") plane[2] = castInt(i_[i_key]);
+            });
+
+            ship[1].push(plane);
+          });
+
+          fleet[1].push(ship);
+        });
+        fleets.push(fleet);
+      }
     });
 
 
@@ -1988,9 +2017,9 @@ function readDeckBuilder(deck) {
     if (fleets.length >= 2) {
       const fleet2 = fleets.find(v => v[0] === 1)[1];
       const marge = fleet1.concat(fleet2);
-      return marge;
+      return [landBase, marge, []];
     }
-    else return fleet1;
+    else return [landBase, fleet1, []];
 
   } catch (error) {
     return null;
@@ -2000,19 +2029,34 @@ function readDeckBuilder(deck) {
 
 /**
  * 指定プリセットをデッキビルダーフォーマットに変換
- * デッキフォーマット {version: 4, f1: {s1: {id: '100', lv: 40, luck: -1, items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
- * @param {Object} preset 変換対象のプリセット 未指定の場合は現在の編成状態
+ * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
+ * デッキフォーマット {version: 4.2, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
  * @param {string} デッキビルダー形式データ
  */
-function convertToDeckBuikder(preset = null) {
+function convertToDeckBuikder() {
   try {
-    let fleet = null;
-    // データ指定あり
-    if (preset && preset.length >= 3) fleet = preset[3];
-    // 見つからなければ現在のデータ
-    else fleet = createFriendFleetPreset();
+    const fleet = createFriendFleetPreset();
+    const landBase = createLandBasePreset();
+    const obj = {
+      version: 4,
+      f1: {},
+      f2: {},
+      a1: { mode: 0, items: {} },
+      a2: { mode: 0, items: {} },
+      a3: { mode: 0, items: {} }
+    };
 
-    const obj = { version: 4, f1: {}, f2: {} };
+    // 基地データ
+    for (const plane of landBase[0]) {
+      obj["a" + (Math.floor(plane[4] / 4) + 1)].items["i" + (Math.floor(plane[4] % 4) + 1)] = { id: plane[0], rf: plane[2], mas: plane[1] };
+    }
+    for (let index = 0; index < landBase[1].length; index++) {
+      const mode = landBase[1][index];
+      obj["a" + (index + 1)].mode = mode > 0 ? 1 : mode === 0 ? 2 : 0;
+    }
+
+
+    // 艦隊データ
     for (let index = 0; index < fleet.length; index++) {
       const ship = fleet[index];
       const shipData = SHIP_DATA.find(v => v.id === ship[0]);
@@ -2030,6 +2074,7 @@ function convertToDeckBuikder(preset = null) {
       if (shipIndex < 6) obj.f1["s" + ((shipIndex % 6) + 1)] = s;
       else obj.f2["s" + ((shipIndex % 6) + 1)] = s;
     }
+
     return JSON.stringify(obj);
   } catch (error) {
     return "";
@@ -3805,6 +3850,7 @@ function btn_reset_content_Clicked($this) {
   switch (parentId) {
     case 'landBase':
       $('.lb_plane').each((i, e) => setLBPlaneDiv($(e)));
+      isDefMode = false;
       break;
     case 'friendFleet':
       clearShipDivAll();
@@ -5006,7 +5052,7 @@ function btn_load_deck_Clicked() {
   const preset = readDeckBuilder(inputData);
 
   if (preset) {
-    expandMainPreset([[], preset, []], false, true, false);
+    expandMainPreset(preset, preset[0][0].length > 0, true, false);
     $('#input_deck').removeClass('is-invalid').addClass('is-valid');
   }
   else {

@@ -1299,6 +1299,14 @@ let CHANGE_LOG = [
     ],
   },
   {
+    id: '1.3.5', changes: [
+      {
+        type: 0, title: "2019秋イベント 対応開始",
+        content: "確認できた敵編成から順次追加していきます。今後、強編成等が確認された場合は編成が変わる可能性があります。"
+      },
+    ],
+  },
+  {
     id: '1.3.5.1', changes: [
       {
         type: 0, title: "2019秋イベント 対応開始しています。",
@@ -1316,4 +1324,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/06";
+const LAST_UPDATE_DATE = "2019/12/07";
