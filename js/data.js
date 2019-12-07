@@ -629,6 +629,9 @@ const ENEMY_DATA = [
   { id: 401, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [丙]", slot: [6], aa: [2], orig: 398, isSpR: true },
   { id: 402, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [乙]", slot: [6], aa: [2], orig: 398, isSpR: true },
   { id: 403, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [甲]", slot: [6], aa: [2], orig: 398, isSpR: true },
+  { id: 404, type: [11, 1, 1911], name: "空母棲姫改 制空不明 [丙]", slot: [60, 52, 56, 30], aa: [11, 5, 6], orig: 86, isSpR: false },
+  { id: 405, type: [11, 1, 1911], name: "空母棲姫改 制空不明 [乙]", slot: [60, 52, 56, 30], aa: [11, 5, 6], orig: 86, isSpR: false },
+  { id: 406, type: [11, 1, 1911], name: "空母棲姫改 制空不明 [甲]", slot: [60, 52, 56, 30], aa: [11, 5, 6], orig: 86, isSpR: false },
 ];
 
 // 難易度
@@ -1126,18 +1129,19 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Sボス 最終', enemies: [401, 22], range: 7, difficulty: 0, isGrand: true },
 
   // 甲
-  { area: 19115, name: '空襲', enemies: [-1, 280, 280, 92], range: 1, difficulty: 3 },
-  { area: 19115, name: '空襲 強', enemies: [-1, 280, 280, 277, 92], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲', enemies: [406, 280, 280, 92], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲 強', enemies: [406, 280, 280, 277, 92], range: 1, difficulty: 3 },
   { area: 19115, name: 'B', enemies: [279, 264, 92], range: 1, difficulty: 3 },
-  { area: 19115, name: 'D', enemies: [], range: 2, difficulty: 3 },
+  { area: 19115, name: 'D', enemies: [406, 279, 279, 262], range: 2, difficulty: 3 },
   { area: 19115, name: 'E', enemies: [362, 92], range: 2, difficulty: 3 },
-  { area: 19115, name: 'F', enemies: [], range: 3, difficulty: 3 },
-  { area: 19115, name: 'I', enemies: [], range: 4, difficulty: 3 },
+  { area: 19115, name: 'F', enemies: [406, 279, 279, 262], range: 3, difficulty: 3 },
+  { area: 19115, name: 'I', enemies: [266, 43, 362, 265], range: 4, difficulty: 3 },
   { area: 19115, name: 'G', enemies: [279, 92], range: 3, difficulty: 3 },
   { area: 19115, name: 'Jボス', enemies: [362], range: 0, difficulty: 3 },
-  { area: 19115, name: 'K', enemies: [-1], range: 0, difficulty: 3 },
-  { area: 19115, name: 'L', enemies: [-1], range: 0, difficulty: 3 },
-  { area: 19115, name: 'Oボス 前哨', enemies: [-1, 280, 280, 43, 94, 94, 362], range: 0, difficulty: 3 },
+  // { area: 19115, name: 'K', enemies: [406], range: 0, difficulty: 3 },
+  { area: 19115, name: 'L', enemies: [406, 280, 280, 278], range: 0, difficulty: 3 },
+  { area: 19115, name: 'N', enemies: [266, 43, 265], range: 0, difficulty: 3 },
+  { area: 19115, name: 'Oボス 前哨', enemies: [406, 280, 280, 43, 94, 94, 362], range: 0, difficulty: 3 },
 
   // 甲
   { area: 19116, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3, isGrand: true },
