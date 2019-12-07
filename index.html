@@ -577,7 +577,15 @@
                             <div class="collapse show collapse_content" id="result_content">
                                 <div class="border-top"></div>
                                 <div class="my-2" id="shoot_down_table_content">
-                                    <div class="mt-2 mb-1 pl-1 font_size_12">各戦闘開始時の搭載数の推移</div>
+                                    <div class="d-flex mt-2 mb-1">
+                                        <div class="pl-1 font_size_12 align-self-center">各戦闘開始時の搭載数の推移</div>
+                                        <div class="ml-auto custom-control custom-checkbox font_size_12 align-self-center">
+                                            <input type="checkbox"
+                                                class="custom-control-input cur_pointer" id="empty_slot_invisible">
+                                            <label class="custom-control-label pt-0_5 cur_pointer"
+                                                for="empty_slot_invisible">未搭載スロットを非表示にする</label>
+                                        </div>
+                                    </div>
                                     <table class="text-center w-100" id="shoot_down_table">
                                         <thead class="bg-e9ecef" id="shoot_down_table_thead">
                                             <tr class="tr_header">
