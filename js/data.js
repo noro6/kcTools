@@ -1141,7 +1141,7 @@ const ENEMY_PATTERN = [
   { area: 19115, name: 'K', enemies: [406, 280, 280, 278], range: 4, difficulty: 3 },
   { area: 19115, name: 'L', enemies: [406, 280, 280, 278], range: 5, difficulty: 3 },
   { area: 19115, name: 'N', enemies: [266, 43, 265], range: 5, difficulty: 3 },
-  { area: 19115, name: 'Oボス 前哨', enemies: [406, 280, 280, 43, 95, 95, 362], range: 5, difficulty: 3 },
+  { area: 19115, name: 'Oボス 前哨', enemies: [406, 280, 280, 43, 95, 95, 362], range: 5, difficulty: 3, isGrand: true },
 
   // 甲
   { area: 19116, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3, isGrand: true },
