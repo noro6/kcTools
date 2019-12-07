@@ -1129,8 +1129,9 @@ const ENEMY_PATTERN = [
   { area: 19114, name: 'Sボス 最終', enemies: [401, 22], range: 7, difficulty: 0, isGrand: true },
 
   // 甲
-  { area: 19115, name: '空襲', enemies: [406, 280, 280, 92], range: 1, difficulty: 3 },
-  { area: 19115, name: '空襲 強', enemies: [406, 280, 280, 277, 92], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲 強', enemies: [406, 280, 280, 280, 92], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲 中', enemies: [406, 280, 280, 277, 92], range: 1, difficulty: 3 },
+  { area: 19115, name: '空襲 弱', enemies: [406, 280, 280, 92], range: 1, difficulty: 3 },
   { area: 19115, name: 'B', enemies: [279, 264, 92], range: 1, difficulty: 3 },
   { area: 19115, name: 'D', enemies: [406, 279, 279, 262], range: 2, difficulty: 3 },
   { area: 19115, name: 'E', enemies: [362, 92], range: 2, difficulty: 3 },
@@ -1143,6 +1144,7 @@ const ENEMY_PATTERN = [
   { area: 19115, name: 'L', enemies: [406, 280, 280, 278], range: 5, difficulty: 3 },
   { area: 19115, name: 'N', enemies: [266, 43, 265], range: 5, difficulty: 3 },
   { area: 19115, name: 'Oボス 前哨', enemies: [406, 280, 280, 43, 95, 95, 362], range: 5, difficulty: 3, isGrand: true },
+  { area: 19115, name: 'Oボス 最終', enemies: [406, 406, 280, 280, 43, 43, 362], range: 5, difficulty: 3, isGrand: true },
 
   // 甲
   { area: 19116, name: 'A', enemies: [], range: 1, difficulty: 3 },
