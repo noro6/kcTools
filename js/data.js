@@ -1139,12 +1139,28 @@ const ENEMY_PATTERN = [
   { area: 19115, name: 'G', enemies: [279, 92], range: 3, difficulty: 3 },
   { area: 19115, name: 'Jボス', enemies: [362], range: 2, difficulty: 3 },
   { area: 19115, name: 'K', enemies: [406, 280, 280, 278], range: 4, difficulty: 3 },
+  { area: 19115, name: 'K 強', enemies: [406, 280, 280, 280], range: 4, difficulty: 3 },
   { area: 19115, name: 'L', enemies: [406, 280, 280, 278], range: 5, difficulty: 3 },
   { area: 19115, name: 'N', enemies: [266, 43, 265], range: 5, difficulty: 3 },
   { area: 19115, name: 'Oボス 前哨', enemies: [406, 280, 280, 43, 95, 95, 362], range: 5, difficulty: 3, isGrand: true },
 
   // 甲
-  { area: 19116, name: 'ボス(仮置き)', enemies: [-1], range: 1, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'A', enemies: [], range: 1, difficulty: 3 },
+  { area: 19116, name: 'B', enemies: [], range: 2, difficulty: 3 },
+  { area: 19116, name: 'C', enemies: [], range: 2, difficulty: 3 },
+  { area: 19116, name: 'D', enemies: [], range: 3, difficulty: 3 },
+  { area: 19116, name: 'E', enemies: [], range: 3, difficulty: 3 },
+  { area: 19116, name: 'F', enemies: [], range: 3, difficulty: 3 },
+  { area: 19116, name: 'G', enemies: [], range: 3, difficulty: 3 },
+  { area: 19116, name: 'H', enemies: [], range: 3, difficulty: 3 },
+  { area: 19116, name: 'I', enemies: [], range: 4, difficulty: 3 },
+  { area: 19116, name: 'J', enemies: [], range: 4, difficulty: 3 },
+  { area: 19116, name: 'K', enemies: [], range: 5, difficulty: 3 },
+  { area: 19116, name: 'L', enemies: [], range: 5, difficulty: 3 },
+  { area: 19116, name: 'M', enemies: [], range: 5, difficulty: 3 },
+  { area: 19116, name: 'N', enemies: [], range: 6, difficulty: 3 },
+  { area: 19116, name: 'O', enemies: [], range: 6, difficulty: 3 },
+  { area: 19116, name: 'Pボス', enemies: [], range: 6, difficulty: 3, isGrand: true },
 
 ];
 
@@ -1364,4 +1380,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/07";
+const LAST_UPDATE_DATE = "2019/12/08";
