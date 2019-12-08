@@ -1244,10 +1244,16 @@ function createEnemyTable($table, type) {
   let prevType = 0;
   const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
 
-  // 第1艦種(type[0]行目)順で取得後、無印idソート
+  // 第1艦種(type[0]行目)順で取得後、無印idソート（イロハ級のみ）
   for (const typeObj of ENEMY_TYPE) {
-    const tmp = c_enemy.filter(x => x.type[0] === typeObj.id);
+    const tmp = c_enemy.filter(x => x.type[0] === typeObj.id && x.type[0] < 10);
     dispData = dispData.concat(tmp.sort((a, b) => a.orig > b.orig ? 1 : a.orig < b.orig ? -1 : a.id - b.id));
+  }
+
+  // IDソート(姫系)
+  for (const typeObj of ENEMY_TYPE) {
+    const tmp = c_enemy.filter(x => x.type[0] === typeObj.id && x.type[0] > 10);
+    dispData = dispData.concat(tmp.sort((a, b) => a.id > b.id ? 1 : -1));
   }
 
   if (displayMode === "multi") {
@@ -1289,7 +1295,7 @@ function createEnemyTable($table, type) {
 
     insertHtml += `
     <div class="enemy enemy_tr d-flex py-2${(displayMode === "multi" ? ' tr_multi' : '')}" data-enemyid="${enemy.id}">
-      <div class="td_index text-primary font_size_11 align-self-center">${index++}</div>
+      <div class="td_index text-primary font_size_11 align-self-center">${enemy.id + 1500}</div>
       <div class="ml-1 enemy_td_name align-self-center">${drawEnemyGradeColor(enemy.name)}</div>
       ${displayMode === "single" ? '<div class="ml-auto enemy_td_ap">' + ap + '</div>' : ''}
       ${displayMode === "single" ? '<div class="enemy_td_lbAp">' + lbAp + '</div>' : ''}
@@ -2955,7 +2961,7 @@ function updateFriendFleetInfo(friendFleetData) {
 
       // 表示スロット設定
       const invisibleEmptySlot = document.getElementById('empty_slot_invisible').checked;
-      if(ship && !invisibleEmptySlot) planeCount = ship.slot.length;
+      if (ship && !invisibleEmptySlot) planeCount = ship.slot.length;
 
       for (i = 0; i < shipPlanes.length; i++) {
         const plane = shipPlanes[i];
@@ -4788,7 +4794,11 @@ function node_tr_Clicked($this) {
 function btn_expand_enemies() {
   const area = castInt($('#map_select').val());
   const node = $('.node_selected').data('node');
-  const pattern = ENEMY_PATTERN.find(v => v.area === area && v.name === node);
+  let difficulty = -1;
+  if (area >= 1000) {
+    difficulty = castInt($('#select_difficulty').val());
+  }
+  const pattern = ENEMY_PATTERN.find(v => v.area === area && v.name === node && difficulty === v.difficulty);
   const enemies = pattern.enemies;
 
   // 元の敵編成解除
