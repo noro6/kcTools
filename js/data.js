@@ -1163,11 +1163,11 @@ const ENEMY_PATTERN = [
   { area: 19116, name: 'N', enemies: [43, 43, 362, 362], range: 6, difficulty: 3 },
   { area: 19116, name: 'Pボス', enemies: [295, 27, 27, 95, 95, 92, 92, 92], range: 6, difficulty: 3, isGrand: true },
   { area: 19116, name: 'Pボス 輸送後', enemies: [298, 27, 27, 95, 92, 92], range: 6, difficulty: 3, isGrand: true },
-  { area: 19116, name: 'Q', enemies: [280, 266, 43, 362], range: 0, difficulty: 3 },
-  { area: 19116, name: 'S', enemies: [397, 397, 362, 92], range: 0, difficulty: 3 },
-  { area: 19116, name: 'V', enemies: [406, 118, 280, 280, 43, 362, 362], range: 0, difficulty: 3, isGrand: true },
-  { area: 19116, name: 'Wボス 前哨', enemies: [295, 295, 397, 397, 362], range: 0, difficulty: 3, isGrand: true },
-
+  { area: 19116, name: 'Q', enemies: [280, 266, 43, 362], range: 5, difficulty: 3 },
+  { area: 19116, name: 'S', enemies: [397, 397, 362, 92], range: 6, difficulty: 3 },
+  { area: 19116, name: 'V', enemies: [406, 118, 280, 280, 43, 362, 362], range: 6, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Wボス 前哨', enemies: [295, 295, 397, 397, 362], range: 7, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Wボス 最終', enemies: [298, 298, 397, 397, 362, 362], range: 7, difficulty: 3, isGrand: true }
 ];
 
 /** デフォ機体プリセット */
