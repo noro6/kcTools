@@ -1152,6 +1152,7 @@ const ENEMY_PATTERN = [
   { area: 19115, name: 'Oボス 最終', enemies: [406, 406, 280, 280, 43, 43, 362], range: 5, difficulty: 3, isGrand: true },
 
   // 甲
+  { area: 19116, name: '空襲 ラスト', enemies: [183, 394, 151, 150, 362], range: 1, difficulty: 3 },
   { area: 19116, name: '空襲 強', enemies: [183, 394, 150, 150, 362], range: 1, difficulty: 3 },
   { area: 19116, name: '空襲 弱', enemies: [183, 394, 150, 362, 362], range: 1, difficulty: 3 },
   { area: 19116, name: 'D', enemies: [362, 362], range: 3, difficulty: 3 },
