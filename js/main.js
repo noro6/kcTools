@@ -2309,19 +2309,13 @@ function caluclateInit(objectData) {
   }
 
   // 基地情報更新
-  //console.time('updateLandBaseInfo');
   updateLandBaseInfo(objectData.landBaseData);
-  //console.timeEnd('updateLandBaseInfo');
 
   // 艦隊情報更新
-  //  console.time('updateFriendFleetInfo');
   updateFriendFleetInfo(objectData.friendFleetData);
-  // console.timeEnd('updateFriendFleetInfo');
 
   // 敵艦情報更新
-  //console.time('updateEnemyFleetInfo');
   updateEnemyFleetInfo(objectData.enemyFleetData, objectData.cellData);
-  //console.timeEnd('updateEnemyFleetInfo');
 
   // 自動保存する場合
   if (document.getElementById('auto_save')['checked']) {
@@ -2593,6 +2587,10 @@ function createLBPlaneObject(node) {
     lbPlane.name = plane.name;
     lbPlane.abbr = plane.abbr;
     lbPlane.type = plane.type;
+    if(RECONNAISSANCES.indexOf(lbPlane.type) > -1 && lbPlane.slot > 4) {
+      node_slot.textContent = 4;
+      lbPlane.slot = 4;
+    }
     lbPlane.AA = plane.AA;
     lbPlane.AB = plane.AB;
     lbPlane.IP = plane.IP;
@@ -3836,17 +3834,20 @@ function btn_ex_setting_Clicked($this) {
   const parentId = $this.closest('.contents').attr('id');
   const $modal = $('#modal_collectively_setting');
 
-  $modal.find('.btn').removeClass('d-none').data('target', parentId);;
+  $modal.find('.btn').removeClass('d-none');
+  $modal.data('target', parentId);
   switch (parentId) {
     case 'landBase':
       $modal.find('.modal-title').text('一括設定　-基地航空隊-');
       $modal.find('.btn_remove_ship_all').addClass('d-none');
       $modal.find('.btn_remove_enemy_all').addClass('d-none');
       $modal.find('.btn_slot_default').addClass('d-none');
+      $modal.find('.coll_slot_range').attr('max', 18).data('target', parentId);
       break;
     case 'friendFleet':
       $modal.find('.modal-title').text('一括設定　-艦娘-');
       $modal.find('.btn_remove_enemy_all').addClass('d-none');
+      $modal.find('.coll_slot_range').attr('max', 99).data('target', parentId);
       break;
     default:
       break;
@@ -3883,7 +3884,7 @@ function btn_reset_content_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function btn_remove_plane_all_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
   clearPlaneDivAll($targetContent);
 }
 
@@ -3900,15 +3901,15 @@ function btn_remove_ship_all_Clicked() {
  * @param {JqueryDomObject} $this
  */
 function btn_slot_max_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
   if ($targetContent.attr('id') === 'landBase') {
-    $targetContent.find('.lb_plane').each((i, e) => {
-      $(e).find('.slot').text($(e).find('.slot_range').attr('max'));
-    });
+    $('.coll_slot_range').val(18);
   }
   else if ($targetContent.attr('id') === 'friendFleet') {
-    $targetContent.find('.ship_plane').each((i, e) => $(e).find('.slot').text(99));
+    $('.coll_slot_range').val(99);
   }
+
+  coll_slot_range_Changed($('.coll_slot_range'));
 }
 
 /**
@@ -3916,7 +3917,7 @@ function btn_slot_max_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function btn_slot_default_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
   if ($targetContent.attr('id') === 'friendFleet') {
     $targetContent.find('.ship_plane').each((i, e) => {
       $(e).find('.slot').text($(e).find('.slot_ini').data('ini'));
@@ -3926,70 +3927,69 @@ function btn_slot_default_Clicked($this) {
 
 /**
  * 搭載数最小クリック
- * @param {JqueryDomObject} $this
  */
-function btn_slot_min_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
-  if ($targetContent.attr('id') === 'landBase') {
-    $targetContent.find('.lb_plane').each((i, e) => $(e).find('.slot').text(0));
-  }
-  else if ($targetContent.attr('id') === 'friendFleet') {
-    $targetContent.find('.ship_plane').each((i, e) => $(e).find('.slot').text(0));
-  }
+function btn_slot_min_Clicked() {
+  $('.coll_slot_range').val(0);
+  coll_slot_range_Changed($('.coll_slot_range'));
 }
 
 /**
- * 改修値最大クリック
+ * 一括変更搭載数レンジ変更
  * @param {JqueryDomObject} $this
  */
-function btn_remodel_max_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+function coll_slot_range_Changed($this) {
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
+  let value = castInt($this.val());
+  value = value > castInt($this.attr('max')) ? castInt($this.attr('max')) : value;
   if ($targetContent.attr('id') === 'landBase') {
-    $targetContent.find('.lb_plane').each((i, e) => $(e).find('.remodel_select:not(.remodel_disabled)').find('.remodel_value').text(10));
+    $targetContent.find('.lb_plane').each((i, e) => $(e).find('.slot').text(value));
   }
   else if ($targetContent.attr('id') === 'friendFleet') {
-    $targetContent.find('.ship_plane').each((i, e) => $(e).find('.remodel_select:not(.remodel_disabled)').find('.remodel_value').text(10));
+    $targetContent.find('.ship_plane').each((i, e) => $(e).find('.slot').text(value));
   }
+
+  $('.coll_slot_input').val(value);
 }
 
 /**
- * 改修値最小クリック
+ * 一括変更搭載数直接変更
  * @param {JqueryDomObject} $this
  */
-function btn_remodel_min_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
-  if ($targetContent.attr('id') === 'landBase') {
-    $targetContent.find('.lb_plane').each((i, e) => $(e).find('.remodel_select:not(.remodel_disabled)').find('.remodel_value').text(0));
-  }
-  else if ($targetContent.attr('id') === 'friendFleet') {
-    $targetContent.find('.ship_plane').each((i, e) => $(e).find('.remodel_select:not(.remodel_disabled)').find('.remodel_value').text(0));
-  }
+function coll_slot_input_Changed($this) {
+  // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
+  let value = $this.val();
+  const max = castInt($('.coll_slot_range').attr('max'));
+  const regex = new RegExp(/^[0-9]+$/);
+
+  if (!regex.test(value)) value = 0;
+  else if (value > max) value = max;
+  else if (value > 0) value = castInt(value);
+
+  $this.val(value);
+  $('.coll_slot_range').val(value);
+  coll_slot_range_Changed($('.coll_slot_range'));
 }
 
 /**
- * 熟練度最大クリック
+ * 一括改修値変更クリック
  * @param {JqueryDomObject} $this
  */
-function btn_prof_max_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+function btn_remodel_Clicked($this) {
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
+  const remodel = castInt($this[0].dataset.remodel);
   if ($targetContent.attr('id') === 'landBase') {
-    $targetContent.find('.lb_plane').each((i, e) => {
-      proficiency_Changed($(e).find('.prof_option[data-prof="7"]').parent(), true);
-    });
+    $targetContent.find('.lb_plane').each((i, e) => $(e).find('.remodel_select:not(.remodel_disabled)').find('.remodel_value').text(remodel));
   }
   else if ($targetContent.attr('id') === 'friendFleet') {
-    $targetContent.find('.ship_plane').each((i, e) => {
-      proficiency_Changed($(e).find('.prof_option[data-prof="7"]').parent(), true);
-    });
+    $targetContent.find('.ship_plane').each((i, e) => $(e).find('.remodel_select:not(.remodel_disabled)').find('.remodel_value').text(remodel));
   }
 }
 
 /**
  * 戦闘機のみ熟練度最大クリック
- * @param {JqueryDomObject} $this 
  */
-function btn_fighter_prof_max_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+function btn_fighter_prof_max_Clicked() {
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
   if ($targetContent.attr('id') === 'landBase') {
     $targetContent.find('.lb_plane').each((i, e) => {
       if (FIGHTERS.indexOf(Math.abs(castInt($(e)[0].dataset.type))) > -1) {
@@ -4007,19 +4007,20 @@ function btn_fighter_prof_max_Clicked($this) {
 }
 
 /**
- * 熟練度最小クリック
+ * 熟練度ボタンクリック
  * @param {JqueryDomObject} $this
  */
-function btn_prof_min_Clicked($this) {
-  const $targetContent = $('#' + $this.data('target'));
+function btn_prof_Clicked($this) {
+  const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
+  const prof = $this[0].dataset.prof;
   if ($targetContent.attr('id') === 'landBase') {
     $targetContent.find('.lb_plane').each((i, e) => {
-      proficiency_Changed($(e).find('.prof_option[data-prof="0"]').parent(), true);
+      proficiency_Changed($(e).find('.prof_option[data-prof="' + prof + '"]').parent(), true);
     });
   }
   else if ($targetContent.attr('id') === 'friendFleet') {
     $targetContent.find('.ship_plane').each((i, e) => {
-      proficiency_Changed($(e).find('.prof_option[data-prof="0"]').parent(), true);
+      proficiency_Changed($(e).find('.prof_option[data-prof="' + prof + '"]').parent(), true);
     });
   }
 }
@@ -5183,12 +5184,13 @@ $(function () {
   $(document).on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
   $(document).on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });
   $(document).on('click', '.btn_slot_default', function () { btn_slot_default_Clicked($(this)); });
-  $(document).on('click', '.btn_slot_min', function () { btn_slot_min_Clicked($(this)); });
-  $(document).on('click', '.btn_remodel_max', function () { btn_remodel_max_Clicked($(this)); });
-  $(document).on('click', '.btn_remodel_min', function () { btn_remodel_min_Clicked($(this)); });
-  $(document).on('click', '.btn_prof_max', function () { btn_prof_max_Clicked($(this)); });
-  $(document).on('click', '.btn_fighter_prof_max', function () { btn_fighter_prof_max_Clicked($(this)); });
-  $(document).on('click', '.btn_prof_min', function () { btn_prof_min_Clicked($(this)); });
+  $(document).on('click', '.btn_slot_min', btn_slot_min_Clicked);
+  $(document).on('input', '.coll_slot_range', function () { coll_slot_range_Changed($(this)); });
+  $(document).on('input', '.coll_slot_input', function () { coll_slot_input_Changed($(this)); });
+  $(document).on('focus', '.coll_slot_input', function () { $(this).select(); });
+  $(document).on('click', '.btn_remodel', function () { btn_remodel_Clicked($(this)); });
+  $(document).on('click', '.btn_fighter_prof_max', btn_fighter_prof_max_Clicked);
+  $(document).on('click', '.btn_prof', function () { btn_prof_Clicked($(this)); });
   $(document).on('input', '.preset_name', function () { preset_name_Changed($(this)); });
   $(document).on('blur', '.preset_name', function () { preset_name_Changed($(this)); });
   $('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });

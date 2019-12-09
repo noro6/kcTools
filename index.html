@@ -579,9 +579,10 @@
                                 <div class="my-2" id="shoot_down_table_content">
                                     <div class="d-flex mt-2 mb-1">
                                         <div class="pl-1 font_size_12 align-self-center">各戦闘開始時の搭載数の推移</div>
-                                        <div class="ml-auto custom-control custom-checkbox font_size_12 align-self-center">
-                                            <input type="checkbox"
-                                                class="custom-control-input cur_pointer" id="empty_slot_invisible">
+                                        <div
+                                            class="ml-auto custom-control custom-checkbox font_size_12 align-self-center">
+                                            <input type="checkbox" class="custom-control-input cur_pointer"
+                                                id="empty_slot_invisible">
                                             <label class="custom-control-label pt-0_5 cur_pointer"
                                                 for="empty_slot_invisible">未搭載スロットを非表示にする</label>
                                         </div>
@@ -966,12 +967,12 @@
                                             道中戦闘を考慮する場合は、<a href="#enemyFleet">敵艦情報</a>の戦闘回数を操作してください。
                                             設定した戦闘それぞれについて、制空状態の割合などの結果を表示できます。
                                         </div>
-                                        <div class="pl-3">
+                                        <div class="pl-3 mt-3">
                                             <a href="#result">結果表示</a>欄の「〇戦目」と書かれているタブをクリックすると、
                                             その戦闘結果が下部のグラフや表で表示されます。
                                         </div>
                                         <div class="pl-3">
-                                            道中戦闘の入力について、<u>夜戦マス、対潜戦闘マスは戦闘回数に含めない</u>ようにしてください。
+                                            道中戦闘の入力について、<u>夜戦マスは戦闘回数に含めない</u>ようにしてください。
                                             また、航空戦力を持つ敵艦のいない水雷戦隊等との戦闘は、基本的に敵艦は空のままとします。
                                         </div>
                                         <div class="pl-3">
@@ -980,7 +981,7 @@
                                         </div>
                                         <div class="pl-3">
                                             例2）6-5下ルート(BFIJM)のボスマスの計算…
-                                            戦闘回数を3回に設定、1戦目を空に、2戦目をI、3戦目をボスとする。(B:対潜マス、J:夜戦マスは省略する)
+                                            戦闘回数を4回に設定、1、2戦目を空に、3戦目をI、4戦目をボスとする。(J:夜戦マスは省略する)
                                         </div>
                                         <div class="pl-3">
                                             ※ 例1の場合、Aマスに基地を派遣する場合に限り、敵艦の偵察機を考慮する必要があるためフラヘを設定してください。
@@ -1116,22 +1117,7 @@
                                             使い方などの追記・改訂
                                         </div>
                                         <div class="pl-3">
-                                            Edgeで艦隊入力欄がズレる件
-                                        </div>
-                                        <div class="pl-3">
                                             その他、適宜
-                                        </div>
-                                        <div class="pl-3">
-                                            <span class="mr-1 badge badge-pill badge-success">済</span>
-                                            <s>艦隊保存・プリセット機能</s>
-                                        </div>
-                                        <div class="pl-3">
-                                            <span class="mr-1 badge badge-pill badge-success">済</span>
-                                            <s>共有URL生成</s>
-                                        </div>
-                                        <div class="pl-3">
-                                            <span class="mr-1 badge badge-pill badge-success">済</span>
-                                            <s>他サイト艦隊情報の取り込み・出力</s>
                                         </div>
                                     </div>
                                     <div class="my-5">
@@ -1609,41 +1595,54 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex mt-2">
-                        <div class="align-self-center">搭載数：</div>
+                        <div class="align-self-center">搭載：</div>
+                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_slot_min">
+                            最少
+                        </button>
+                        <div class="flex-grow-1 d-flex mx-2">
+                            <input type="range" class="align-self-center custom-range coll_slot_range" min="0" max="99"
+                                value="0">
+                        </div>
                         <button type="button" class="btn btn-sm btn-outline-info mx-1 btn_slot_max">
-                            全て最大にする
+                            最大
                         </button>
                         <button type="button" class="btn btn-sm btn-outline-success mx-1 btn_slot_default">
-                            全て初期値にする
+                            初期値
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_slot_min">
-                            全て 0 にする
-                        </button>
+                        <input type="number" class="form-control form-control-sm coll_slot_input align-self-center"
+                            value="0" min="0" max="99">
                     </div>
-                    <div class="d-flex mt-2">
-                        <div class="align-self-center">改修値：</div>
-                        <button type="button" class="btn btn-sm btn-outline-info mx-1 btn_remodel_max">
-                            全て最大にする
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_remodel_min">
-                            全て 0 にする
-                        </button>
+                    <div class="d-flex justify-content-between mt-3">
+                        <div class="align-self-center">改修：</div>
+                        <div class="btn_remodel" data-remodel="10"><i class="fas fa-star"></i>max</div>
+                        <div class="btn_remodel" data-remodel="9"><i class="fas fa-star"></i>+9</div>
+                        <div class="btn_remodel" data-remodel="8"><i class="fas fa-star"></i>+8</div>
+                        <div class="btn_remodel" data-remodel="7"><i class="fas fa-star"></i>+7</div>
+                        <div class="btn_remodel" data-remodel="6"><i class="fas fa-star"></i>+6</div>
+                        <div class="btn_remodel" data-remodel="5"><i class="fas fa-star"></i>+5</div>
+                        <div class="btn_remodel" data-remodel="4"><i class="fas fa-star"></i>+4</div>
+                        <div class="btn_remodel" data-remodel="3"><i class="fas fa-star"></i>+3</div>
+                        <div class="btn_remodel" data-remodel="2"><i class="fas fa-star"></i>+2</div>
+                        <div class="btn_remodel" data-remodel="1"><i class="fas fa-star"></i>+1</div>
+                        <div class="btn_remodel" data-remodel="0"><i class="fas fa-star"></i>+0</div>
                     </div>
-                    <div class="d-flex mt-2">
-                        <div class="align-self-center">熟練度：</div>
-                        <button type="button" class="btn btn-sm btn-outline-info mx-1 btn_prof_max">
-                            全て最大にする
-                        </button>
+                    <div class="d-flex justify-content-between mt-3">
+                        <div class="align-self-center">熟練：</div>
+                        <img class="btn_prof prof_yellow mx-1" alt=">>" data-prof="7" src="./img/util/prof7.png">
+                        <img class="btn_prof prof_yellow mx-1" alt="///" data-prof="6" src="./img/util/prof6.png">
+                        <img class="btn_prof prof_yellow mx-1" alt="//" data-prof="5" src="./img/util/prof5.png">
+                        <img class="btn_prof prof_yellow mx-1" alt="/" data-prof="4" src="./img/util/prof4.png">
+                        <img class="btn_prof prof_blue mx-1" alt="|||" data-prof="3" src="./img/util/prof3.png">
+                        <img class="btn_prof prof_blue mx-1" alt="||" data-prof="2" src="./img/util/prof2.png">
+                        <img class="btn_prof prof_blue mx-1" alt="|" data-prof="1" src="./img/util/prof1.png">
+                        <img class="btn_prof prof_none mx-1" alt="" data-prof="0" src="./img/util/prof0.png">
                         <button type="button" class="btn btn-sm btn-outline-success mx-1 btn_fighter_prof_max"
                             data-toggle="tooltip" data-html="true" title="以下の機体が対象です。<br>艦上戦闘機 / 水上戦闘機 / 陸軍戦闘機 / 局地戦闘機">
-                            戦闘機のみ最大にする
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_prof_min">
-                            全て 0 にする
+                            戦闘機のみ最大
                         </button>
                     </div>
                     <div class="d-flex mt-4">
-                        <div class="align-self-center">全解除：</div>
+                        <div class="align-self-center">解除：</div>
                         <button type="button" class="btn btn-sm btn-outline-danger mx-1 btn_remove_plane_all">
                             艦載機を全て解除する
                         </button>

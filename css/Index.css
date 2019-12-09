@@ -722,6 +722,32 @@ input[type="text"] { font-size: 12px; }
 }
 .enemy_pattern_tr { height: 46px; }
 
+/* ------------------------------
+  一括変更欄 #modal_collectively_setting
+-------------------------------- */
+.coll_slot_add {
+  font-size: 16px;
+  cursor: pointer;
+  transition: .2s;
+}
+.coll_slot_add:hover { filter: drop-shadow(0 0 6px #747474); }
+.coll_slot_input { width: 72px; }
+.btn_prof { 
+  cursor: pointer;
+  width: 25px;
+  height: auto;
+  transition: .2s;
+}
+.btn_remodel {
+  cursor: pointer;
+  font-size: 12px;
+  color: rgb(0, 170, 170);
+  border-radius: .25rem;
+  transition: .2s;
+  padding: 7px 4px;
+}
+.btn_remodel:hover { background-color: #eee; }
+
 
 /* ------------------------------
   入力情報欄 #input_data
