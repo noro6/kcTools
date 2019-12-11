@@ -1201,23 +1201,85 @@ const ENEMY_PATTERN = [
 
 
   // 甲
-  { area: 19116, name: '空襲 ラスト', enemies: [183, 394, 151, 150, 362], range: 1, difficulty: 3 },
-  { area: 19116, name: '空襲 強', enemies: [183, 394, 150, 150, 362], range: 1, difficulty: 3 },
+  { area: 19116, name: '空襲 強', enemies: [183, 394, 151, 150, 362], range: 1, difficulty: 3 },
+  { area: 19116, name: '空襲 中', enemies: [183, 394, 150, 150, 362], range: 1, difficulty: 3 },
   { area: 19116, name: '空襲 弱', enemies: [183, 394, 150, 362, 362], range: 1, difficulty: 3 },
   { area: 19116, name: 'D', enemies: [362, 362], range: 3, difficulty: 3 },
-  { area: 19116, name: 'E', enemies: [], range: 3, difficulty: 3 },
-  { area: 19116, name: 'H', enemies: [183, 151, 150, 150, 362], range: 3, difficulty: 3 },
+  { area: 19116, name: 'E', enemies: [183, 151, 150, 150, 362], range: 3, difficulty: 3 },
+  { area: 19116, name: 'E ラスト', enemies: [183, 152, 150, 150, 362], range: 3, difficulty: 3 },
+  { area: 19116, name: 'H', enemies: [183, 151, 151, 150, 362], range: 3, difficulty: 3 },
+  { area: 19116, name: 'H ラスト', enemies: [183, 152, 151, 150, 362], range: 3, difficulty: 3 },
   { area: 19116, name: 'J', enemies: [408, 118, 280, 280, 43, 362], range: 4, difficulty: 3 },
-  { area: 19116, name: 'L', enemies: [118, 43, 92, 265], range: 5, difficulty: 3 },
+  { area: 19116, name: 'L', enemies: [118, 43, 361, 266], range: 5, difficulty: 3 },
   { area: 19116, name: 'M', enemies: [183, 152, 151, 150, 362], range: 5, difficulty: 3 },
+  { area: 19116, name: 'M ラスト', enemies: [183, 152, 152, 150, 362], range: 5, difficulty: 3 },
   { area: 19116, name: 'N', enemies: [43, 43, 362, 362], range: 6, difficulty: 3 },
   { area: 19116, name: 'Pボス', enemies: [295, 27, 27, 95, 95, 92, 92, 92], range: 6, difficulty: 3, isGrand: true },
   { area: 19116, name: 'Pボス 輸送後', enemies: [298, 27, 27, 95, 92, 92], range: 6, difficulty: 3, isGrand: true },
-  { area: 19116, name: 'Q', enemies: [280, 266, 43, 362], range: 5, difficulty: 3 },
+  { area: 19116, name: 'Q', enemies: [280, 279, 43, 362], range: 5, difficulty: 3 },
   { area: 19116, name: 'S', enemies: [397, 397, 362, 92], range: 6, difficulty: 3 },
-  { area: 19116, name: 'V', enemies: [408, 118, 280, 280, 43, 362, 362], range: 6, difficulty: 3, isGrand: true },
-  { area: 19116, name: 'Wボス 前哨', enemies: [295, 295, 397, 397, 362], range: 7, difficulty: 3, isGrand: true },
-  { area: 19116, name: 'Wボス 最終', enemies: [298, 298, 397, 397, 362, 362], range: 7, difficulty: 3, isGrand: true }
+  { area: 19116, name: 'V 制空高', enemies: [408, 118, 280, 280, 43, 362, 362], range: 6, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'V 制空低', enemies: [408, 280, 280, 43, 43, 362, 362], range: 6, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Wボス 前哨', enemies: [294, 294, 397, 397, 362], range: 7, difficulty: 3, isGrand: true },
+  { area: 19116, name: 'Wボス 最終', enemies: [297, 297, 397, 397, 362, 362], range: 7, difficulty: 3, isGrand: true },
+
+  // 乙
+  { area: 19116, name: '空襲 強', enemies: [182, 150, 150, 150, 92], range: 1, difficulty: 2 },
+  { area: 19116, name: '空襲 弱', enemies: [182, 151, 150, 92], range: 1, difficulty: 2 },
+  { area: 19116, name: 'D', enemies: [362, 92], range: 3, difficulty: 2 },
+  { area: 19116, name: 'E', enemies: [182, 151, 150, 92, 92], range: 3, difficulty: 2 },
+  { area: 19116, name: 'H', enemies: [182, 151, 150, 92], range: 3, difficulty: 2 },
+  { area: 19116, name: 'J', enemies: [407, 117, 278, 278, 43, 92], range: 4, difficulty: 2 },
+  { area: 19116, name: 'L', enemies: [118, 43, 92, 265], range: 5, difficulty: 2 },
+  { area: 19116, name: 'M', enemies: [182, 151, 150, 150, 92], range: 5, difficulty: 2 },
+  { area: 19116, name: 'N', enemies: [43, 43, 92, 92], range: 6, difficulty: 2 },
+  { area: 19116, name: 'Pボス', enemies: [294, 27, 27, 95, 95, 92, 91], range: 6, difficulty: 2, isGrand: true },
+  { area: 19116, name: 'Pボス 輸送後', enemies: [297, 27, 27, 95, 92, 91], range: 6, difficulty: 2, isGrand: true },
+  // { area: 19116, name: 'Q', enemies: [280, 279, 43, 362], range: 5, difficulty: 2 },
+  { area: 19116, name: 'S', enemies: [396, 396, 92, 92], range: 6, difficulty: 2 },
+  { area: 19116, name: 'V 制空高', enemies: [407, 117, 278, 278, 92, 92], range: 6, difficulty: 2, isGrand: true },
+  { area: 19116, name: 'V 制空低', enemies: [407, 278, 278, 92, 92], range: 6, difficulty: 2, isGrand: true },
+  { area: 19116, name: 'Wボス 前哨', enemies: [396, 396, 92], range: 7, difficulty: 2, isGrand: true },
+  // { area: 19116, name: 'Wボス 最終', enemies: [297, 297, 397, 397, 362, 362], range: 7, difficulty: 2, isGrand: true },
+
+  // 丙
+  { area: 19116, name: '空襲 強', enemies: [182, 151, 150, 91], range: 1, difficulty: 1 },
+  { area: 19116, name: '空襲 中', enemies: [182, 150, 150, 91], range: 1, difficulty: 1 },
+  { area: 19116, name: '空襲 弱', enemies: [182, 150, 91], range: 1, difficulty: 1 },
+  { area: 19116, name: 'D', enemies: [92, 92], range: 3, difficulty: 1 },
+  { area: 19116, name: 'E', enemies: [182, 151, 91], range: 3, difficulty: 1 },
+  { area: 19116, name: 'H', enemies: [182, 150, 150, 91], range: 3, difficulty: 1 },
+  { area: 19116, name: 'J', enemies: [406, 116, 277, 277, 41, 91], range: 4, difficulty: 1 },
+  { area: 19116, name: 'L', enemies: [116, 41, 91, 276], range: 5, difficulty: 1 },
+  { area: 19116, name: 'M', enemies: [182, 151, 150, 92], range: 5, difficulty: 1 },
+  { area: 19116, name: 'N', enemies: [43, 92, 92], range: 6, difficulty: 1 },
+  { area: 19116, name: 'Pボス', enemies: [293, 27, 27, 94, 94, 91, 55, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Pボス 輸送後', enemies: [296, 27, 27, 95, 91, 55, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Q', enemies: [262, 276, 41, 91], range: 5, difficulty: 1 },
+  { area: 19116, name: 'S', enemies: [396, 395, 92, 91], range: 6, difficulty: 1 },
+  { area: 19116, name: 'V 制空高', enemies: [406, 116, 277, 277, 41, 91, 55, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'V 制空低', enemies: [406, 277, 277, 41, 41, 91, 55, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Wボス 前哨', enemies: [41, 41, 95, 95, 91, 55, 91], range: 7, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Wボス 最終', enemies: [41, 41, 395, 395, 91, 55, 91], range: 7, difficulty: 1, isGrand: true },
+
+  // 低
+  { area: 19116, name: '空襲 強', enemies: [182, 150, 150, 91], range: 1, difficulty: 1 },
+  { area: 19116, name: '空襲 弱', enemies: [182, 150, 91], range: 1, difficulty: 1 },
+  { area: 19116, name: 'D', enemies: [55, 91, 91], range: 3, difficulty: 1 },
+  { area: 19116, name: 'E', enemies: [182, 150, 91], range: 3, difficulty: 1 },
+  { area: 19116, name: 'H', enemies: [182, 150, 91], range: 3, difficulty: 1 },
+  { area: 19116, name: 'J', enemies: [406, 277, 23, 41, 91], range: 4, difficulty: 1 },
+  { area: 19116, name: 'L', enemies: [116, 41, 91, 276], range: 5, difficulty: 1 },
+  { area: 19116, name: 'M', enemies: [182, 150, 150, 92], range: 5, difficulty: 1 },
+  { area: 19116, name: 'N', enemies: [92, 91], range: 6, difficulty: 1 },
+  { area: 19116, name: 'Pボス', enemies: [293, 27, 27, 94, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Pボス 輸送後', enemies: [296, 27, 27, 94, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Q', enemies: [277, 276, 41, 91], range: 5, difficulty: 1 },
+  { area: 19116, name: 'S', enemies: [395, 395, 91, 91], range: 6, difficulty: 1 },
+  { area: 19116, name: 'V 制空高', enemies: [406, 23, 23, 41, 91, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'V 制空低', enemies: [406, 41, 91, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Wボス 前哨', enemies: [41, 94, 94, 91, 55], range: 7, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'Wボス 最終', enemies: [41, 41, 94, 94, 91, 55], range: 7, difficulty: 1, isGrand: true },
 ];
 
 /** デフォ機体プリセット */
@@ -1445,8 +1507,8 @@ let CHANGE_LOG = [
   {
     id: '1.3.5.4', changes: [
       {
-        type: 0, title: "2019秋イベント 対応開始しています。",
-        content: "確認できた敵編成から順次追加していきます。今後、強編成等が確認された場合は編成が変わる可能性があります。更新を確実に反映させる場合はブラウザのキャッシュを削除してみてください(Ctrlキー押下しながらF5を押下など)"
+        type: 0, title: "2019秋イベント 対応しています。",
+        content: "今後、強編成等が確認された場合は編成が変わる可能性があります。更新を確実に反映させる場合はブラウザのキャッシュを削除してみてください(Ctrlキー押下しながらF5を押下など)"
       },
       {
         type: 0, title: "計算結果欄に各種制空状態ボーダーを表示するようにしました。",
