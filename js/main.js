@@ -2151,7 +2151,7 @@ function drawResult() {
       $target_tr.find('.rate_td_status' + j).text('-');
       if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100.00%');
       else if (rates[j] > 0) {
-        $target_tr.find('.rate_td_status' + j).text(castInt(rates[j]).toFixed(2) + '%');
+        $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
         visible = true;
       }
     }
