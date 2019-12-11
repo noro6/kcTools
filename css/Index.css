@@ -883,7 +883,7 @@ input[type="text"] { font-size: 12px; }
   border-top:1px #e9ecef solid;
 }
 .rate_tr { transition: .2s; }
-.rate_td_name { width: 20%; }
+.rate_td_name { width: 15%; }
 .rate_td_normal { width: 10%; }
 .rate_tr_border_top > td { border-top: 1px #b8b8b8 solid !important; }
 .rate_tr_border_bottom > td { border-top: 1px #b8b8b8 solid !important; }

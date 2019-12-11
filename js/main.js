@@ -503,7 +503,7 @@ function initialize(callback) {
     const lb_num = Math.floor(i / 2) + 1;
     const wave = i % 2 + 1;
     $(e).attr('id', 'rate_row_' + (i + 1));
-    if (i < 6) $(e).find('.rate_td_name').text(`第${lb_num}基地航空隊 第${wave}波`);
+    if (i < 6) $(e).find('.rate_td_name').text(`第${lb_num}基地　${wave}波目`);
     else if (i === 6) $(e).find('.rate_td_name').text('本隊');
     else if (i === 7) $(e).find('.rate_td_name').text('防空');
 
@@ -2139,12 +2139,19 @@ function drawResult() {
 
     // 各制空状態比率の描画
     $target_tr.find('.rate_td_ap').text(ap);
-    $target_tr.find('.rate_td_eap').text(eap);
+    let text = eap + ' ( ';
+    for (let j = 0; j < border.length - 1; j++) {
+      if (j !== 0) text += '/';
+      if (border[j] < ap) text += ' <b>' + border[j] + '</b> ';
+      else text += ' ' + border[j] + ' ';
+    }
+    $target_tr.find('.rate_td_eap').html(text + ' )');
+
     for (let j = 0; j < rates.length; j++) {
       $target_tr.find('.rate_td_status' + j).text('-');
-      if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100%');
+      if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100.00%');
       else if (rates[j] > 0) {
-        $target_tr.find('.rate_td_status' + j).text(rates[j] + '%');
+        $target_tr.find('.rate_td_status' + j).text(castInt(rates[j]).toFixed(2) + '%');
         visible = true;
       }
     }
@@ -2587,7 +2594,7 @@ function createLBPlaneObject(node) {
     lbPlane.name = plane.name;
     lbPlane.abbr = plane.abbr;
     lbPlane.type = plane.type;
-    if(RECONNAISSANCES.indexOf(lbPlane.type) > -1 && lbPlane.slot > 4) {
+    if (RECONNAISSANCES.indexOf(lbPlane.type) > -1 && lbPlane.slot > 4) {
       node_slot.textContent = 4;
       lbPlane.slot = 4;
     }
