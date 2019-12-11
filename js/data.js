@@ -634,8 +634,8 @@ const ENEMY_DATA = [
   { id: 401, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [丙]", slot: [6], aa: [2], orig: 398, isSpR: true },
   { id: 402, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [乙]", slot: [6], aa: [2], orig: 398, isSpR: true },
   { id: 403, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [甲]", slot: [6], aa: [2], orig: 398, isSpR: true },
-  { id: 406, type: [11, 1, 1911], name: "空母棲姫改 [丙]", slot: [60, 52, 56, 30], aa: [11, 0, 5, 6], orig: 86, isSpR: false },
-  { id: 407, type: [11, 1, 1911], name: "空母棲姫改 [乙]", slot: [60, 52, 56, 30], aa: [11, 5, 5, 6], orig: 86, isSpR: false },
+  { id: 406, type: [11, 1, 1911], name: "空母棲姫改 [丙]", slot: [56, 52, 56, 30], aa: [11, 0, 5, 6], orig: 86, isSpR: false },
+  { id: 407, type: [11, 1, 1911], name: "空母棲姫改 [乙]", slot: [58, 52, 56, 30], aa: [11, 5, 5, 6], orig: 86, isSpR: false },
   { id: 408, type: [11, 1, 1911], name: "空母棲姫改 [甲]", slot: [60, 52, 56, 30], aa: [11, 5, 6, 6], orig: 86, isSpR: false },
 ];
 
