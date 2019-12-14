@@ -1727,8 +1727,9 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
       const enemyFleet = preset[2].find(v => v[0] === i);
       if (enemyFleet) {
         if (enemyFleet.length >= 3) $(e)[0].dataset.celldata = enemyFleet[2];
-        if (enemyFleet.length >= 4 && enemyFleet[3] === 2) $(e).find('.chk_enemy_grand').prop('checked', true);
         else $(e)[0].dataset.celldata = '';
+        
+        if (enemyFleet.length >= 4 && enemyFleet[3] === 2) $(e).find('.chk_enemy_grand').prop('checked', true);
 
         for (const id of enemyFleet[1]) {
           if (id > 0) setEnemyDiv($(e).find('.enemy_content:last()'), id);
