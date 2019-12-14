@@ -634,8 +634,8 @@ const ENEMY_DATA = [
   { id: 401, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [丙]", slot: [6], aa: [2], orig: 398, isSpR: true },
   { id: 402, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [乙]", slot: [6], aa: [2], orig: 398, isSpR: true },
   { id: 403, type: [11, 4, 1911], name: "バタビア沖棲姫-壊 [甲]", slot: [6], aa: [2], orig: 398, isSpR: true },
-  { id: 406, type: [11, 1, 1911], name: "空母棲姫改 [丙]", slot: [56, 52, 56, 30], aa: [11, 0, 5, 6], orig: 86, isSpR: false },
-  { id: 407, type: [11, 1, 1911], name: "空母棲姫改 [乙]", slot: [58, 52, 56, 30], aa: [11, 5, 5, 6], orig: 86, isSpR: false },
+  { id: 406, type: [11, 1, 1911], name: "空母棲姫改 [丙]", slot: [56, 52, 48, 30], aa: [11, 0, 5, 6], orig: 86, isSpR: false },
+  { id: 407, type: [11, 1, 1911], name: "空母棲姫改 [乙]", slot: [58, 52, 50, 30], aa: [11, 5, 5, 6], orig: 86, isSpR: false },
   { id: 408, type: [11, 1, 1911], name: "空母棲姫改 [甲]", slot: [60, 52, 56, 30], aa: [11, 5, 6, 6], orig: 86, isSpR: false },
 ];
 
@@ -1224,8 +1224,9 @@ const ENEMY_PATTERN = [
   { area: 19116, name: 'Wボス 最終', enemies: [297, 297, 397, 397, 362, 362], range: 7, difficulty: 3, isGrand: true },
 
   // 乙
-  { area: 19116, name: '空襲 強', enemies: [182, 150, 150, 150, 92], range: 1, difficulty: 2 },
-  { area: 19116, name: '空襲 弱', enemies: [182, 151, 150, 92], range: 1, difficulty: 2 },
+  { area: 19116, name: '空襲 強', enemies: [182, 151, 150, 150, 92], range: 1, difficulty: 2 },
+  { area: 19116, name: '空襲 中', enemies: [182, 150, 150, 150, 91], range: 1, difficulty: 2 },
+  { area: 19116, name: '空襲 弱', enemies: [182, 151, 150, 91], range: 1, difficulty: 2 },
   { area: 19116, name: 'D', enemies: [362, 92], range: 3, difficulty: 2 },
   { area: 19116, name: 'E', enemies: [182, 151, 150, 92, 92], range: 3, difficulty: 2 },
   { area: 19116, name: 'H', enemies: [182, 151, 150, 92], range: 3, difficulty: 2 },
@@ -1235,12 +1236,12 @@ const ENEMY_PATTERN = [
   { area: 19116, name: 'N', enemies: [43, 43, 92, 92], range: 6, difficulty: 2 },
   { area: 19116, name: 'Pボス', enemies: [294, 27, 27, 95, 95, 92, 91], range: 6, difficulty: 2, isGrand: true },
   { area: 19116, name: 'Pボス 輸送後', enemies: [297, 27, 27, 95, 92, 91], range: 6, difficulty: 2, isGrand: true },
-  // { area: 19116, name: 'Q', enemies: [280, 279, 43, 362], range: 5, difficulty: 2 },
+  { area: 19116, name: 'Q', enemies: [280, 265, 92], range: 5, difficulty: 2 },
   { area: 19116, name: 'S', enemies: [396, 396, 92, 92], range: 6, difficulty: 2 },
   { area: 19116, name: 'V 制空高', enemies: [407, 117, 278, 278, 92, 92], range: 6, difficulty: 2, isGrand: true },
   { area: 19116, name: 'V 制空低', enemies: [407, 278, 278, 92, 92], range: 6, difficulty: 2, isGrand: true },
   { area: 19116, name: 'Wボス 前哨', enemies: [396, 396, 92], range: 7, difficulty: 2, isGrand: true },
-  // { area: 19116, name: 'Wボス 最終', enemies: [297, 297, 397, 397, 362, 362], range: 7, difficulty: 2, isGrand: true },
+  { area: 19116, name: 'Wボス 最終', enemies: [396, 396, 92, 92], range: 7, difficulty: 2, isGrand: true },
 
   // 丙
   { area: 19116, name: '空襲 強', enemies: [182, 151, 150, 91], range: 1, difficulty: 1 },
