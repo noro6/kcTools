@@ -1277,8 +1277,8 @@ const ENEMY_PATTERN = [
   { area: 19116, name: 'Pボス 輸送後', enemies: [296, 27, 27, 94, 91], range: 6, difficulty: 1, isGrand: true },
   { area: 19116, name: 'Q', enemies: [277, 276, 41, 91], range: 5, difficulty: 1 },
   { area: 19116, name: 'S', enemies: [395, 395, 91, 91], range: 6, difficulty: 1 },
-  { area: 19116, name: 'V 制空高', enemies: [406, 23, 23, 41, 91, 91], range: 6, difficulty: 1, isGrand: true },
-  { area: 19116, name: 'V 制空低', enemies: [406, 41, 91, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'V 強', enemies: [406, 23, 23, 41, 91, 91], range: 6, difficulty: 1, isGrand: true },
+  { area: 19116, name: 'V 弱', enemies: [406, 41, 91, 91], range: 6, difficulty: 1, isGrand: true },
   { area: 19116, name: 'Wボス 前哨', enemies: [41, 94, 94, 91, 55], range: 7, difficulty: 1, isGrand: true },
   { area: 19116, name: 'Wボス 最終', enemies: [41, 41, 94, 94, 91, 55], range: 7, difficulty: 1, isGrand: true },
 ];
