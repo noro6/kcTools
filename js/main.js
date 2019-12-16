@@ -1594,7 +1594,9 @@ function drawMainPreset(preset) {
   }
   else {
     // プリセットが見つからなかったので新規登録
-    $modal.find('.preset_data').data('presetid', castInt(presets.length) + 1);
+    let maxId = 0;
+    for (const preset of presets) if(maxId < preset[0]) maxId = preset[0];
+    $modal.find('.preset_data').data('presetid', castInt(maxId) + 1);
     $modal.find('.btn_commit_preset').text('新規登録');
     $modal.find('.btn_commit_preset').prop('disabled', true);
     $modal.find('.btn_commit_preset_header').addClass('d-none');
@@ -1728,7 +1730,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
       if (enemyFleet) {
         if (enemyFleet.length >= 3) $(e)[0].dataset.celldata = enemyFleet[2];
         else $(e)[0].dataset.celldata = '';
-        
+
         if (enemyFleet.length >= 4 && enemyFleet[3] === 2) $(e).find('.chk_enemy_grand').prop('checked', true);
 
         for (const id of enemyFleet[1]) {
