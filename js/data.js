@@ -1164,7 +1164,7 @@ const ENEMY_PATTERN = [
   // { area: 19115, name: 'L', enemies: [407, 280, 280, 277], range: 5, difficulty: 2 },
   // { area: 19115, name: 'N', enemies: [266, 43, 265], range: 5, difficulty: 2 },
   { area: 19115, name: 'Oボス 前哨', enemies: [407, 278, 278, 95, 92], range: 5, difficulty: 2, isGrand: true },
-  // { area: 19115, name: 'Oボス 最終', enemies: [407, 408, 280, 280, 43, 43, 362], range: 5, difficulty: 2, isGrand: true },
+  { area: 19115, name: 'Oボス 最終', enemies: [407, 278, 278, 277, 92], range: 5, difficulty: 2, isGrand: true },
 
   // 丙
   { area: 19115, name: '空襲 強', enemies: [406, 277, 23, 91], range: 1, difficulty: 1 },
@@ -1517,10 +1517,10 @@ let CHANGE_LOG = [
       },
       {
         type: 2, title: "細かい修正を行いました。",
-        content: "保存した海域セル選択状況がうまく復帰できていなかった不具合を修正しました。"
+        content: "保存した海域セル選択状況がうまく復帰できていなかった不具合、プリセット新規登録時の不具合を修正しました。"
       },
     ],
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/14";
+const LAST_UPDATE_DATE = "2019/12/17";
