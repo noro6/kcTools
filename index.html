@@ -3,7 +3,8 @@
 
 <head>
     <title>制空権シミュレータ</title>
-    <meta name="description" content="「艦これ」の出撃時の制空に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊及び制空削りや、防空時の制空計算に対応しています。" />
+    <meta name="description"
+        content="「艦これ」の制空権に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊の制空削りや敵艦隊の対空砲火による撃墜を考慮した制空計算や、防空時の制空計算に対応しています。" />
     <meta name="viewport" content="width=device-width" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@noro_006" />
@@ -73,20 +74,6 @@
                                 </li>
                                 <li class="nav-item" id="li_config">
                                     <a class="nav-link" href="#config">詳細設定</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item mt-5">
-                            <span class="pl-3 text-light">他のツール</span>
-                            <ul class="nav flex-column mt-1 mb-2 ml-3">
-                                <li class="nav-item">
-                                    <span class="nav-link disabled_nav" href="#">支援判定機</span>
-                                </li>
-                                <li class="nav-item disabled_nav">
-                                    <span class="nav-link disabled_nav" href="#">ダメージ計算機</span>
-                                </li>
-                                <li class="nav-item disabled_nav">
-                                    <span class="nav-link disabled_nav" href="#">その他</span>
                                 </li>
                             </ul>
                         </li>
@@ -350,13 +337,18 @@
                                                                     <span
                                                                         class="dropdown-header py-1 px-1 font_size_12">搭載数を入力
                                                                     </span>
-                                                                    <div class="d-flex mb-2">
-                                                                        <input type="number"
-                                                                            class="form-control form-control-sm slot_input align-self-center mr-2"
-                                                                            value="0" min="0" max="99">
-                                                                        <button type="button"
-                                                                            class="btn btn-sm btn-info ml-auto align-self-center slot_ini"
-                                                                            data-ini="0">初期値</button>
+                                                                    <div class="d-flex mb-2 justify-content-between">
+                                                                        <div class="align-self-center flex-grow-1">
+                                                                            <input type="number"
+                                                                                class="form-control form-control-sm slot_input"
+                                                                                value="0" min="0" max="99">
+                                                                        </div>
+                                                                        <div class="ml-1 align-self-center">
+                                                                            <button type="button" data-ini="0"
+                                                                                class="btn btn-sm btn-info slot_ini">
+                                                                                <sapn class="text-nowrap">初期値</sapn>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                     <input type="range" class="custom-range slot_range"
                                                                         value="0" min="0" max="99">
@@ -496,40 +488,58 @@
                                 </div>
                                 <div class="enemy_tab">
                                     <div class="d-flex flex-wrap" id="battle_container">
-                                        <div class="battle_content general_box bg-white px-1 py-1 mx-1 my-2">
-                                            <div class="d-flex">
+                                        <div class="battle_content general_box bg-white py-1 mx-1 my-2">
+                                            <div class="d-flex justify-content-between">
                                                 <div class="pl-2 flex-grow-1 align-self-center sortable_handle">
                                                     <span class="battle_no">1</span>戦目
                                                 </div>
-                                                <div class="ml-auto btn_enemy_preset align-self-center border">
-                                                    海域選択
-                                                </div>
-                                                <div class="ml-2 mr-2 align-self-center btn_reset btn_reset_battle btn_icon"
-                                                    data-toggle="tooltip" title="リセット"
-                                                    data-delay='{"show": 300, "hide": 0}'>
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </div>
-                                            </div>
-                                            <div class="border-bottom sortable_handle d-flex pb-2 flex-row-reverse">
-                                                <div class="align-self-center mr-2 font_size_12">
-                                                    制空:<span class="enemy_sum_ap">0</span>
-                                                    (<span class="enemy_sum_lbap">0</span>)
-                                                </div>
-                                                <div class="align-self-center mr-2 font_size_12">
-                                                    半径:<span class="enemy_range">0</span>
-                                                </div>
-                                                <div class="mr-auto ml-2 font_size_12">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                            class="custom-control-input cur_pointer chk_enemy_grand"
-                                                            id="grand">
-                                                        <label class="custom-control-label pt-0_5 cur_pointer"
-                                                            for="grand">敵連合</label>
+                                                <div class="d-flex align-self-center">
+                                                    <div class="mx-1 btn_enemy_preset border font_size_12">
+                                                        海域選択
+                                                    </div>
+                                                    <div class="ml-2 mr-2 btn_reset btn_reset_battle btn_icon"
+                                                        data-toggle="tooltip" title="リセット"
+                                                        data-delay='{"show": 300, "hide": 0}'>
+                                                        <i class="fas fa-trash-alt"></i>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="d-flex px-2 pt-1 justify-content-between cell_info">
+                                                <select
+                                                    class="custom-select custom-select-sm align-self-center font_size_12 cell_type mr-1">
+                                                    <optgroup label="戦闘形式">
+                                                        <option value="1" selected>通常戦闘</option>
+                                                        <option value="2">敵連合</option>
+                                                        <option value="3">空襲戦</option>
+                                                        <!-- <option value="4">開幕夜戦</option> -->
+                                                    </optgroup>
+                                                </select>
+                                                <select
+                                                    class="custom-select custom-select-sm align-self-center font_size_12 formation ml-1">
+                                                    <optgroup label="敵陣形">
+                                                        <option value="1" selected>単縦陣</option>
+                                                        <option value="2">複縦陣</option>
+                                                        <option value="3">輪形陣</option>
+                                                        <option value="4">梯形陣</option>
+                                                        <option value="5">単横陣</option>
+                                                        <option class="d-none" value="15">第一警戒</option>
+                                                        <option class="d-none" value="12">第二警戒</option>
+                                                        <option class="d-none" value="13">第三警戒</option>
+                                                        <option class="d-none" value="11">第四警戒</option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                            <div class="border-bottom d-flex pb-2 pt-1 px-2 flex-row-reverse">
+                                                <div class="align-self-center font_size_12">
+                                                    制空 : <span class="enemy_sum_ap">0</span>
+                                                    (<span class="enemy_sum_lbap">0</span>)
+                                                </div>
+                                                <div class="mr-2 align-self-center font_size_12">
+                                                    半径 : <span class="enemy_range">0</span>
+                                                </div>
+                                            </div>
                                             <div class="enemyFleet_item py-1 px-1">
-                                                <div class="enemy_content py-1 pr-1 d-flex enemy_draggable">
+                                                <div class="enemy_content py-1_5 pr-1 d-flex enemy_draggable">
                                                     <div class="enemy_index align-self-center text-primary">1
                                                     </div>
                                                     <div class="enemy_name">
@@ -584,7 +594,7 @@
                                             <input type="checkbox" class="custom-control-input cur_pointer"
                                                 id="empty_slot_invisible">
                                             <label class="custom-control-label pt-0_5 cur_pointer"
-                                                for="empty_slot_invisible">未搭載スロットを非表示にする</label>
+                                                for="empty_slot_invisible">未装備スロットを非表示にする</label>
                                         </div>
                                     </div>
                                     <table class="text-center w-100" id="shoot_down_table">
@@ -664,7 +674,10 @@
                                             <tr class="rate_tr" id="rate_row_0">
                                                 <td class="rate_td_name"></td>
                                                 <td class="rate_td_normal rate_td_ap">制空値</td>
-                                                <td class="rate_td_eap">敵制空値 ( 確保 / 優勢 / 均衡 / 劣勢 )</td>
+                                                <td class="rate_td_eap">
+                                                    <span class="mr-1">敵制空値</span>
+                                                    <span class="text-nowrap">( 確保 / 優勢 / 均衡 / 劣勢 )</span>
+                                                </td>
                                                 <td class="rate_td_normal rate_td_status0">確保</td>
                                                 <td class="rate_td_normal rate_td_status1">優勢</td>
                                                 <td class="rate_td_normal rate_td_status2">均衡</td>
@@ -764,6 +777,12 @@
                                                 </thead>
                                                 <tbody></tbody>
                                             </table>
+                                        </div>
+                                    </div>
+                                    <div class="my-3 px-2">
+                                        <div>掲示板等貼り付け用</div>
+                                        <div class="my-1">
+                                            <textarea class="form-control font_size_11" id="input_summary"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -890,13 +909,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="ml-3 mt-3 d-flex">
+                                    <div class="ml-3 mt-3">
                                         <div class="custom-control custom-checkbox" data-toggle="tooltip"
                                             data-html="true" title="最後に計算が行われた編成を保持し、<br>次回サイトに訪れた際に自動で復帰します。">
                                             <input type="checkbox" class="custom-control-input" id="auto_save">
                                             <label class="custom-control-label" for="auto_save">
                                                 編成の自動保存を有効にする
                                             </label>
+                                        </div>
+                                        <div class="ml-1 font_size_12">
+                                            最後に計算が行われた編成を保持し、次回サイトに訪れた際に自動で復帰させる機能です。
                                         </div>
                                     </div>
                                     <div class="ml-3 mt-3 d-none">
@@ -955,7 +977,7 @@
                                             ブラウザゲーム『艦隊これくしょん -艦これ-』の出撃時の制空に関する計算およびシミュレーションを行うサイトです。
                                         </div>
                                         <div class="pl-3">
-                                            道中戦闘時や、基地航空隊による制空削りをある程度考慮したシミュレーションが可能です。
+                                            道中戦闘や、基地航空隊による制空削り、敵の対空砲火による撃墜をある程度考慮したシミュレーションが可能です。
                                             また、基地空襲に対する防空時の制空計算も可能です。
                                         </div>
                                     </div>
@@ -975,24 +997,17 @@
                                         </div>
                                         <div class="pl-3">
                                             道中戦闘の入力について、<u>夜戦マスは戦闘回数に含めない</u>ようにしてください。
-                                            また、航空戦力を持つ敵艦のいない水雷戦隊等との戦闘は、基本的に敵艦は空のままとします。
                                         </div>
                                         <div class="pl-3">
                                             例1）6-5上ルート(ACDGM)のボスマスの計算…
-                                            戦闘回数を5回に設定、1戦目を空に、2戦目をC、3戦目をD、4戦目をG、5戦目をボスとする。
+                                            戦闘回数を5回に設定、1戦目をA、2戦目をC、3戦目をD、4戦目をG、5戦目をボスとする。
                                         </div>
                                         <div class="pl-3">
                                             例2）6-5下ルート(BFIJM)のボスマスの計算…
-                                            戦闘回数を4回に設定、1、2戦目を空に、3戦目をI、4戦目をボスとする。(J:夜戦マスは省略する)
+                                            戦闘回数を4回に設定、1戦目をB、2戦目をF、3戦目をI、4戦目をボスとする。(J:夜戦マスは省略する)
                                         </div>
                                         <div class="pl-3">
-                                            ※ 例1の場合、Aマスに基地を派遣する場合に限り、敵艦の偵察機を考慮する必要があるためフラヘを設定してください。
-                                        </div>
-                                        <div class="pl-3">
-                                            ※ 同様に例2の場合、Fマスに基地を派遣する場合に限り、敵艦の偵察機を考慮する必要があるためフラリなどを設定してください。
-                                        </div>
-                                        <div class="pl-3">
-                                            これらを含め、海域マップの敵艦情報は各戦闘の「海域選択」ボタンをクリックすると選択できるようになっています。なお、基地航空隊を派遣できない海域は偵察機を持つ敵艦がいるマスも省略しています。
+                                            海域マップの敵艦情報は各戦闘の「海域選択」ボタンをクリックすると選択できるようになっています。ご活用ください。
                                         </div>
                                         <div class="pl-3 mt-3">
                                             防空の計算がしたい場合は、基地航空隊の所謂"お札"を「防空」に設定してください。
@@ -1072,51 +1087,45 @@
                                     <div class="my-4">
                                         <p class="h6">注意事項</p>
                                         <div class="pl-3">
-                                            敵艦の制空値を直接入力とした場合、基地航空隊による制空削りは行われません。
+                                            本シミュレーションでは、各航空戦フェーズで敵艦が撃沈された場合を考慮していません。<span
+                                                class="font_color_ccc">また、道中での味方艦娘の轟沈も考慮しません</span>
+                                        </div>
+                                        <div class="pl-3 mt-2">
+                                            敵艦の制空値を「直接入力」とした場合、その敵艦への基地航空隊による制空削りは行われません。
+                                            また、加重対空値、艦隊防空ボーナス値も 0 として扱います。
+                                        </div>
+                                        <div class="pl-3 mt-2">
+                                            イベント時の敵艦隊編成や新装備などの更新はできる限り早めの更新を目指しますが、作者の目視による確認や手入力で更新を行うため、
+                                            正しくないデータが登録されている可能性があります。
                                         </div>
                                         <div class="pl-3">
-                                            また、道中の味方艦隊の被撃墜は制空状態による損耗のみを考慮しています(st1)。
-                                            攻撃機や爆撃機などは、敵の対空砲火により実際にはさらに損耗が発生します。
+                                            明らかに誤っている表記やデータを見かけたら、<a href="https://odaibako.net/u/noro_006"
+                                                　target="_blank">こちら</a>などからご報告お願いします。
                                         </div>
-                                        <div class="pl-3">
-                                            処理の最適化に努めてはおりますが、シミュレート回数を増やすほど精度は上がりますが計算に時間がかかるようになります。
-                                            動作が重い場合は、精度は下がりますが適度に回数を調節してください。<a href="#config">詳細設定</a>から変更が可能です。
-                                        </div>
-                                        <div class="pl-3">
+                                        <div class="pl-3 mt-2">
                                             上記を含めた様々な要因により、シミュレート結果と実際の制空権結果が一致しない可能性があります。
-                                            計算結果はあくまで目安としてお考え下さい。
+                                            計算結果はあくまでも目安としてお考え下さい。
+                                        </div>
+                                        <div class="pl-3 mt-3">
+                                            処理の最適化に努めてはおりますが、シミュレート回数を増やすほど精度は上がりますが計算に時間がかかるようになります。
                                         </div>
                                         <div class="pl-3">
+                                            動作が重い場合、精度は下がりますが適度に回数を調節してください。<a href="#config">詳細設定</a>から変更が可能です。
+                                        </div>
+                                        <div class="pl-3 mt-3">
+                                            ブラウザの横幅1200px以上で快適です。
                                             レガシーブラウザでは一部または全ての機能が正常に動作しない可能性があります。
                                         </div>
                                     </div>
                                     <div class="my-4">
                                         <p class="h6">バグ・不具合</p>
                                         <div class="pl-3">
-                                            奮闘していますが、きっと出ます。
+                                            奮闘していますがきっと出ます。
                                         </div>
                                         <div class="pl-3">
                                             もし遭遇してしまったら、
                                             <a href="https://odaibako.net/u/noro_006"
                                                 target="_blank">こちら</a>などからご報告よろしくお願いします。
-                                        </div>
-                                    </div>
-                                    <div class="my-4">
-                                        <p class="h6">改修構想</p>
-                                        <div class="pl-3">
-                                            制空値の振れ幅(試行全体での最大最小など)表示
-                                        </div>
-                                        <div class="pl-3">
-                                            内部熟練度に関して1刻み数値での対応
-                                        </div>
-                                        <div class="pl-3">
-                                            海域選択画面にマップ表示するとか
-                                        </div>
-                                        <div class="pl-3">
-                                            使い方などの追記・改訂
-                                        </div>
-                                        <div class="pl-3">
-                                            その他、適宜
                                         </div>
                                     </div>
                                     <div class="my-5">
@@ -1146,7 +1155,7 @@
                                             </a>
                                         </div>
                                         <div class="pl-3">
-                                            <a href="http://81.81.la/u/kancolle/seiku.htm" target="_blank">
+                                            <a href="https://dque.github.io/seiku/" target="_blank">
                                                 制空争いシミュレータカッコカリ
                                             </a>
                                         </div>
@@ -1177,7 +1186,7 @@
                     </div>
                     <div class="border-secondary border-top my-4 pt-3" id="main_footer">
                         <div class="ml-2 mt-2 font_size_12">
-                            質問・要望・バグ報告は<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>
+                            質問・要望・バグ報告・ご感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>まで
                         </div>
                         <div class="ml-2 mt-2 font_size_11">
                             著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。
@@ -1338,7 +1347,7 @@
                         <div class="enemy_table container-fluid mx-0 px-0">
                             <div class="enemy_tbody overflow-auto bg-white">
                                 <div class="enemy_thead d-flex bg-white py-2">
-                                    <div class="td_index font_size_12 font_color_777">#</div>
+                                    <div class="td_index font_size_12 font_color_777">ID</div>
                                     <div class="ml-1 enemy_td_name font_size_12 font_color_777">敵艦名</div>
                                     <div class="ml-auto enemy_td_ap font_size_12 font_color_777">制空値</div>
                                     <div class="enemy_td_lbAp font_size_12 font_color_777">制空値(基地)</div>
