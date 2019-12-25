@@ -2210,6 +2210,8 @@ function drawResult() {
     const deathRate = s.deathRate * 100;
     const node_tr = document.getElementsByClassName('slot' + s.slot + ' shipNo' + s.shipNo)[0];
     if (!node_tr) continue;
+    const initSlot = castInt(node_tr.getElementsByClassName('battle1')[0].textContent);
+    if (!node_tr.getElementsByClassName('battle1')[0].textContent) continue;
     const text = `<div class="text-left"><div>最大残数：${s.max}</div><div>最小残数：${s.min}</div><div>全滅回数：${s.death} / ${caluclateCount}</div><div></div>`;
 
     const node_battle_end = node_tr.getElementsByClassName('battle_end')[0];
@@ -2225,7 +2227,6 @@ function drawResult() {
     node_battle_death.title = text;
 
     // 1戦目との差分から平均ボーキ消費量を算出
-    const initSlot = castInt(node_tr.getElementsByClassName('battle1')[0].textContent);
     if (initSlot > 0) {
       sumBauxiteAvg += 5 * (initSlot - s.avg);
       sumBauxiteMax += 5 * (initSlot - s.max);
@@ -3087,7 +3088,7 @@ function updateFriendFleetInfo(friendFleetData) {
         // 掲示板用
         summary_text += ' ' + planeName + ' ' + getProfString(plane.level) + ',';
         // 艦娘でも被搭載スロットを表示しない場合は抜ける
-        if (ship && invisibleEmptySlot && plane.id === 0) continue;
+        if (ship && invisibleEmptySlot && (plane.id === 0 || plane.slot === 0)) continue;
 
         const backCss = getPlaneCss(plane.type).replace('css', 'shoot_table');
         // 撃墜テーブル構築
@@ -3462,6 +3463,9 @@ function updateEnemyFleetInfo(battleData) {
     node = node_battle_content.getElementsByClassName('enemy_range')[0];
     if (!castInt(node.textContent)) node.parentNode.classList.add('d-none');
     else node.parentNode.classList.remove('d-none');
+
+    node = node_battle_content.getElementsByClassName('fleet_AA')[0];
+    drawChangeValue(node, node.textContent, fleetAntiAir * 2, true);
 
 
     // 航路情報を取得　なければ手動
@@ -4259,7 +4263,7 @@ function coll_slot_input_Changed($this) {
   const max = castInt($('.coll_slot_range').attr('max'));
   const regex = new RegExp(/^[0-9]+$/);
 
-  if (!regex.test(value)) value = 0;
+  if (!regex.test(value)) value = 1;
   else if (value > max) value = max;
   else if (value > 0) value = castInt(value);
 
