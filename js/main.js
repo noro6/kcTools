@@ -3075,7 +3075,7 @@ function updateFriendFleetInfo(friendFleetData) {
       const invisibleEmptySlot = document.getElementById('empty_slot_invisible').checked;
       if (ship && !invisibleEmptySlot) planeCount = ship.slot.length;
 
-      summary_text = ship.name + '：';
+      summary_text = (ship ? ship.name : '未指定') + '：';
 
       for (let i = 0; i < shipPlanes.length; i++) {
         const plane = shipPlanes[i];
