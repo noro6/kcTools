@@ -3634,29 +3634,28 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
       // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
       if (airStatusIndex === 5) airStatusIndex = 0;
 
-      // st1撃墜
-      plane.slot -= getShootDownSlotHalfFF(airStatusIndex, plane.slot);
-
-      // st2撃墜 (平均)
-      if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
-        const stage2_1Len = battleInfo.stage2[plane.avoid][0].length
-        const stage2_2Len = battleInfo.stage2[plane.avoid][1].length
-        let avgSt2_1 = 0;
-        let avgSt2_2 = 0;
-        for (let i = 0; i < stage2_1Len; i++) avgSt2_1 += battleInfo.stage2[plane.avoid][0][i] * plane.slot;
-        for (let i = 0; i < stage2_2Len; i++) avgSt2_2 += battleInfo.stage2[plane.avoid][1][i];
-        // 割合撃墜
-        plane.slot -= avgSt2_1 / stage2_1Len;
-        // 固定撃墜
-        plane.slot -= avgSt2_2 / stage2_2Len;
+      // 平均で
+      const range = battleInfo.stage2[plane.avoid][0].length;
+      let sumSlotResult = 0;
+      for (let i = 0; i < 1000; i++) {
+        let tmpSlot = plane.slot;
+        // st1
+        tmpSlot -= getShootDownSlotFF(airStatusIndex, Math.round(tmpSlot));
+        if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
+          // 割合撃墜
+          tmpSlot -= Math.floor(battleInfo.stage2[plane.avoid][0][Math.floor(Math.random() * range)] * tmpSlot);
+          // 固定撃墜
+          tmpSlot -= battleInfo.stage2[plane.avoid][1][Math.floor(Math.random() * range)];
+        }
+        sumSlotResult += tmpSlot > 0 ? tmpSlot : 0;
       }
+
+      plane.slot = sumSlotResult / 1000;
 
       plane.ap = updateAp(plane);
     }
   }
 
-  // この戦闘開始直前の描画
-  const airStatusColor = 'airStatus' + airStatusIndex;
   // 彼我制空
   $('#shoot_down_table').find('.eap.battle' + (index + 1)).text(eap);
 }
@@ -4263,7 +4262,7 @@ function coll_slot_input_Changed($this) {
   const max = castInt($('.coll_slot_range').attr('max'));
   const regex = new RegExp(/^[0-9]+$/);
 
-  if (!regex.test(value)) value = 1;
+  if (!regex.test(value)) value = 0;
   else if (value > max) value = max;
   else if (value > 0) value = castInt(value);
 
