@@ -2347,14 +2347,10 @@ function caluclate() {
   mainCaluclate(objectData);
 
   // 各状態確率計算
-  console.time('rate');
   rateCaluclate(objectData);
-  console.timeEnd('rate');
 
   // 結果表示
-  console.time('dwaw');
   drawResult();
-  console.timeEnd('dwaw');
 }
 
 /**
