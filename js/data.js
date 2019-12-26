@@ -865,30 +865,43 @@ const ENEMY_PATTERN = [
   },
   {
     area: 31, lv: -1, cell: [
-      { type: 1, form: 1, name: 'D', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [28], range: 0 }
+      { type: 1, form: 2, name: 'B', enemies: [55, 18, 21, 21, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'C', enemies: [27, 55, 18, 76, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'D', enemies: [23, 22, 18, 18, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'F', enemies: [27, 27, 55, 76, 76, 76], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [28, 29, 29, 76, 76, 26], range: 0 }
     ]
   },
   {
     area: 32, lv: -1, cell: [
-      { type: 1, form: 1, name: 'A', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'K', enemies: [28, 28], range: 0 }
+      { type: 1, form: 3, name: 'A', enemies: [23, 22, 22, 19, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'C', enemies: [54, 21, 76, 76, 2, 2], range: 0 },
+      { type: 1, form: 2, name: 'H', enemies: [24, 24, 22, 19, 76, 76], range: 0 },
+      { type: 1, form: 1, name: 'J', enemies: [27, 55, 54, 76, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'K', enemies: [28, 28, 29, 24, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'ボス', enemies: [55, 19, 77, 77, 77, 26], range: 0 }
     ]
   },
   {
     area: 33, lv: -1, cell: [
-      { type: 1, form: 1, name: 'E', enemies: [23, 23, 23], range: 0 },
-      { type: 1, form: 1, name: 'G', enemies: [28, 23], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [23], range: 0 }
+      { type: 1, form: 4, name: 'A', enemies: [55, 22, 20, 20, 76, 76], range: 0 },
+      { type: 1, form: 1, name: 'B', enemies: [27, 27, 55, 20, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'E', enemies: [23, 23, 23, 22, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'G', enemies: [28, 23, 29, 54, 77, 77], range: 0 },
+      { type: 1, form: 1, name: 'K', enemies: [27, 27, 59, 55, 77, 77], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [29, 29, 23, 55, 77, 77], range: 0 }
     ]
   },
   {
     area: 34, lv: -1, cell: [
-      { type: 1, form: 1, name: 'C', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'G', enemies: [28], range: 0 },
-      { type: 1, form: 1, name: 'M', enemies: [60, 60], range: 0 },
-      { type: 1, form: 1, name: 'N', enemies: [60, 60], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [28, 28], range: 0 }
+      { type: 1, form: 4, name: 'A', enemies: [27, 27, 55, 20, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'B', enemies: [27, 27, 55, 20, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'C', enemies: [29, 29, 23, 54, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'G', enemies: [28, 29, 29, 55, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'H', enemies: [55, 59, 59, 59, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'M', enemies: [29, 60, 60, 55, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'N', enemies: [29, 60, 60, 55, 77, 77], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [28, 28, 29, 29, 77, 77], range: 0 }
     ]
   },
   {
@@ -1774,4 +1787,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/25";
+const LAST_UPDATE_DATE = "2019/12/26";
