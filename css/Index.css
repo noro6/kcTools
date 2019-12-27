@@ -706,7 +706,7 @@ input[type="text"] { font-size: 12px; }
   海域選択モーダル #modal_enemy_pattern
 ------------------------------------- */
 #select_difficulty_div { width: 160px; }
-.map_img {
+#map_img {
   width: 466px;
   height: auto;
 }

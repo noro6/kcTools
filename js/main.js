@@ -1512,10 +1512,14 @@ function createMapSelect() {
 function createNodeSelect() {
   const area = castInt($('#map_select').val());
   let difficulty = -1;
-  if (area < 1000) $('#select_difficulty_div').addClass('d-none');
+  if (area < 1000) {
+    $('#select_difficulty_div').addClass('d-none');
+    $('#map_img').addClass('d-none');
+  }
   else {
     $('#select_difficulty_div').removeClass('d-none');
     difficulty = castInt($('#select_difficulty').val());
+    $('#map_img').attr('src', './img/map/' + area + '.jpg').removeClass('d-none');
   }
   const patterns = ENEMY_PATTERN.find(v => v.area === area && difficulty === v.lv).cell;
   const len = patterns.length;
