@@ -625,71 +625,90 @@
                                 <div class="mt-2">
                                     <ul class="nav nav-tabs" id="display_battle_tab"></ul>
                                 </div>
-                                <div class="mt-1 py-2 px-2 border rounded">
-                                    <div class="d-flex">
-                                        <div class="progress_label"></div>
-                                        <div class="d-flex flex-grow-1 font_size_12">
-                                            <div class="bar_ex_label" style="width:10%;">喪失</div>
-                                            <div class="bar_divide align-self-end"></div>
-                                            <div class="bar_ex_label" style="width:10%;">劣勢</div>
-                                            <div class="bar_divide align-self-end"></div>
-                                            <div class="bar_ex_label" style="width:25%;">均衡</div>
-                                            <div class="bar_divide align-self-end"></div>
-                                            <div class="bar_ex_label" style="width:45%;">優勢</div>
-                                            <div class="bar_divide align-self-end"></div>
-                                            <div class="bar_ex_label" style="width:10%;">確保</div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="progress_label"></div>
-                                        <div class="progress result_bar_ex flex-grow-1 align-self-center">
-                                            <div class="progress-bar bar_ex_status4" style="width:10%;"></div>
-                                            <div class="progress-bar bar_ex_status3" style="width:10%;"></div>
-                                            <div class="progress-bar bar_ex_status2" style="width:25%;"></div>
-                                            <div class="progress-bar bar_ex_status1" style="width:45%;"></div>
-                                            <div class="progress-bar bar_ex_status0" style="width:10%;"></div>
-                                        </div>
-                                    </div>
-                                    <div id="result_bar">
-                                        <div class="d-flex mt-1 progress_area">
-                                            <div class="progress_label pr-2"></div>
-                                            <div class="progress flex-grow-1 align-self-center">
-                                                <div class="progress-bar result_bar" style="width:0%;"></div>
+                                <div id="battle_result">
+                                    <div class="mt-1 py-2 px-2 border rounded drag_handle cur_move">
+                                        <div class="d-flex">
+                                            <div class="progress_label"></div>
+                                            <div class="d-flex flex-grow-1 font_size_12">
+                                                <div class="bar_ex_label" style="width:10%;">喪失</div>
+                                                <div class="bar_divide align-self-end"></div>
+                                                <div class="bar_ex_label" style="width:10%;">劣勢</div>
+                                                <div class="bar_divide align-self-end"></div>
+                                                <div class="bar_ex_label" style="width:25%;">均衡</div>
+                                                <div class="bar_divide align-self-end"></div>
+                                                <div class="bar_ex_label" style="width:45%;">優勢</div>
+                                                <div class="bar_divide align-self-end"></div>
+                                                <div class="bar_ex_label" style="width:10%;">確保</div>
                                             </div>
                                         </div>
-                                        <div class="d-flex mt-1 progress_area"></div>
-                                        <div class="d-flex mt-2 progress_area"></div>
-                                        <div class="d-flex mt-1 progress_area"></div>
-                                        <div class="d-flex mt-2 progress_area"></div>
-                                        <div class="d-flex mt-1 progress_area"></div>
-                                        <div class="d-flex mt-3 progress_area"></div>
-                                        <div class="d-flex mt-1 progress_area"></div>
-                                    </div>
-                                </div>
-                                <div class="my-2">
-                                    <div class="d-flex mt-2 mb-1">
-                                        <div class="pl-1 font_size_12">
-                                            各制空状態の取り得る確率
+                                        <div class="d-flex">
+                                            <div class="progress_label"></div>
+                                            <div class="progress result_bar_ex flex-grow-1 align-self-center">
+                                                <div class="progress-bar bar_ex_status4" style="width:10%;"></div>
+                                                <div class="progress-bar bar_ex_status3" style="width:10%;"></div>
+                                                <div class="progress-bar bar_ex_status2" style="width:25%;"></div>
+                                                <div class="progress-bar bar_ex_status1" style="width:45%;"></div>
+                                                <div class="progress-bar bar_ex_status0" style="width:10%;"></div>
+                                            </div>
+                                        </div>
+                                        <div id="result_bar">
+                                            <div class="d-flex mt-1 progress_area">
+                                                <div class="progress_label pr-2"></div>
+                                                <div class="progress flex-grow-1 align-self-center">
+                                                    <div class="progress-bar result_bar" style="width:0%;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex mt-1 progress_area"></div>
+                                            <div class="d-flex mt-2 progress_area"></div>
+                                            <div class="d-flex mt-1 progress_area"></div>
+                                            <div class="d-flex mt-2 progress_area"></div>
+                                            <div class="d-flex mt-1 progress_area"></div>
+                                            <div class="d-flex mt-3 progress_area"></div>
+                                            <div class="d-flex mt-1 progress_area"></div>
                                         </div>
                                     </div>
-                                    <table class="text-center w-100" id="rate_table">
-                                        <thead>
-                                            <tr class="rate_tr" id="rate_row_0">
-                                                <td class="rate_td_name"></td>
-                                                <td class="rate_td_normal rate_td_ap">制空値</td>
-                                                <td class="rate_td_eap">
-                                                    <span class="mr-1">敵制空値</span>
-                                                    <span class="text-nowrap">( 確保 / 優勢 / 均衡 / 劣勢 )</span>
-                                                </td>
-                                                <td class="rate_td_normal rate_td_status0">確保</td>
-                                                <td class="rate_td_normal rate_td_status1">優勢</td>
-                                                <td class="rate_td_normal rate_td_status2">均衡</td>
-                                                <td class="rate_td_normal rate_td_status3">劣勢</td>
-                                                <td class="rate_td_normal rate_td_status4">喪失</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
+                                    <div class="my-2 drag_handle cur_move">
+                                        <div class="d-flex mt-2 align-self-center">
+                                            <div class="font_size_12">
+                                                各制空状態の取り得る確率
+                                            </div>
+                                            <div class="ml-auto font_size_12 align-self-center">
+                                                表示：
+                                            </div>
+                                            <div
+                                                class="ml-2 custom-control custom-checkbox font_size_12 align-self-center">
+                                                <input type="checkbox" class="custom-control-input cur_pointer"
+                                                    id="display_land_base_result">
+                                                <label class="custom-control-label pt-0_5 cur_pointer"
+                                                    for="display_land_base_result">基地</label>
+                                            </div>
+                                            <div
+                                                class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
+                                                <input type="checkbox" class="custom-control-input cur_pointer"
+                                                    id="display_fleet_result">
+                                                <label class="custom-control-label pt-0_5 cur_pointer"
+                                                    for="display_fleet_result">本隊</label>
+                                            </div>
+                                        </div>
+                                        <table class="text-center w-100" id="rate_table">
+                                            <thead>
+                                                <tr class="rate_tr" id="rate_row_0">
+                                                    <td class="rate_td_name"></td>
+                                                    <td class="rate_td_normal rate_td_ap">制空値</td>
+                                                    <td class="rate_td_eap">
+                                                        <span class="mr-1">敵制空値</span>
+                                                        <span class="text-nowrap">( 確保 / 優勢 / 均衡 / 劣勢 )</span>
+                                                    </td>
+                                                    <td class="rate_td_normal rate_td_status0">確保</td>
+                                                    <td class="rate_td_normal rate_td_status1">優勢</td>
+                                                    <td class="rate_td_normal rate_td_status2">均衡</td>
+                                                    <td class="rate_td_normal rate_td_status3">劣勢</td>
+                                                    <td class="rate_td_normal rate_td_status4">喪失</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

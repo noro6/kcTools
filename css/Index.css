@@ -915,6 +915,8 @@ input[type="text"] { font-size: 12px; }
 .rate_td_normal { width: 10%; }
 .rate_tr_border_top > td { border-top: 1px #b8b8b8 solid !important; }
 .rate_tr_border_bottom > td { border-top: 1px #b8b8b8 solid !important; }
+#rate_row_7 { border-bottom: 1px #b8b8b8 solid !important; }
+#rate_row_8 { border-bottom: 1px #b8b8b8 solid !important; }
 
 
 /* ------------------------------

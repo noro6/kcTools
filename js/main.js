@@ -483,6 +483,10 @@ function initialize(callback) {
   createMapSelect();
   createNodeSelect();
 
+  // 結果欄欄チェック初期化
+  $('#display_land_base_result').prop('checked', true);
+  $('#display_fleet_result').prop('checked', true);
+
   // 熟練度非活性
   $('.remodel_select').prop('disabled', true);
 
@@ -1519,7 +1523,7 @@ function createNodeSelect() {
   else {
     $('#select_difficulty_div').removeClass('d-none');
     difficulty = castInt($('#select_difficulty').val());
-    $('#map_img').attr('src', './img/map/' + area + '.jpg').removeClass('d-none');
+    $('#map_img').attr('src', './img/map/' + area + '.png').removeClass('d-none');
   }
   const patterns = ENEMY_PATTERN.find(v => v.area === area && difficulty === v.lv).cell;
   const len = patterns.length;
@@ -2133,8 +2137,8 @@ function convertToDeckBuikder() {
  */
 function drawResult() {
   // 初期化
-  $('#rate_table tbody').find('.rate_tr').addClass('d-none');
-  $('.progress_area').addClass('d-none').removeClass('d-flex');
+  $('#rate_table tbody').find('.rate_tr').addClass('d-none disabled_tr');
+  $('.progress_area').addClass('d-none disabled_bar').removeClass('d-flex');
   const data = Object.create(chartData);
   const len = data.own.length;
   for (let i = 0; i < len; i++) {
@@ -2199,8 +2203,8 @@ function drawResult() {
 
     // データなしの行はバー、比率ともに非表示
     if (visible || (isDefMode && targetRowIndex === 8)) {
-      $target_tr.removeClass('d-none');
-      $target_bar.closest('.progress_area').addClass('d-flex').removeClass('d-none');
+      $target_tr.removeClass('d-none disabled_tr');
+      $target_bar.closest('.progress_area').addClass('d-flex').removeClass('d-none disabled_bar');
     }
   }
 
@@ -5245,6 +5249,33 @@ function display_battle_tab_Changed($this) {
 }
 
 /**
+ * 
+ */
+function display_result_Changed() {
+  if ($('#display_land_base_result').prop('checked')) {
+    for (let i = 1; i < 7; i++) {
+      $('#rate_row_' + i + ':not(.disabled_tr)').removeClass('d-none');
+      $('#result_bar_' + i).closest('.progress_area:not(.disabled_bar)').removeClass('d-none').addClass('d-flex');
+    }
+  }
+  else {
+    for (let i = 1; i < 7; i++) {
+      $('#rate_row_' + i + ':not(.disabled_tr)').addClass('d-none');
+      $('#result_bar_' + i).closest('.progress_area:not(.disabled_bar)').addClass('d-none').removeClass('d-flex');
+    }
+  }
+
+  if ($('#display_fleet_result').prop('checked')) {
+    $('#rate_row_7:not(.disabled_tr)').removeClass('d-none');
+    $('#result_bar_7').closest('.progress_area:not(.disabled_bar)').removeClass('d-none').addClass('d-flex');
+  }
+  else {
+    $('#rate_row_7:not(.disabled_tr)').addClass('d-none');
+    $('#result_bar_7').closest('.progress_area:not(.disabled_bar)').addClass('d-none').removeClass('d-flex');
+  }
+}
+
+/**
  * 内部熟練度120計算機体カテゴリ変更時
  * @param {JqueryDomObject} $this
  */
@@ -5582,7 +5613,9 @@ $(function () {
   $('#enemyFleet_content').on('change', '#battle_count', function () { battle_count_Changed($(this)); });
   $('#enemyFleet_content').on('change', '#landBase_target', caluclate);
   $('#result_content').on('click', '#display_battle_tab .nav-item', function () { display_battle_tab_Changed($(this)); });
-  $('#result_content').on('click', '.custom-control-input', caluclate);
+  $('#result_content').on('click', '#empty_slot_invisible', caluclate);
+  $('#result_content').on('click', '#display_land_base_result', display_result_Changed);
+  $('#result_content').on('click', '#display_fleet_result', display_result_Changed);
   $('#config_content').on('focus', '#caluclate_count', function () { $(this).select(); });
   $('#config_content').on('input', '#caluclate_count', function () { caluclate_count_Changed($(this)); });
   $('#config_content').on('click', '#btn_reset_localStrage', btn_reset_localStrage_Clicked);
@@ -5667,7 +5700,11 @@ $(function () {
     handle: '.trade_enabled',
     animation: 150,
     scroll: true,
-    onEnd: main_contents_Sortable_End
+  });
+  Sortable.create($('#battle_result')[0], {
+    handle: '.drag_handle',
+    animation: 150,
+    scroll: true,
   });
 
   $('.lb_plane').draggable({
