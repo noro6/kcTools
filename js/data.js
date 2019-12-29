@@ -1794,4 +1794,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/26";
+const LAST_UPDATE_DATE = "2019/12/29";
