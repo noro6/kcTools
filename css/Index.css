@@ -188,13 +188,44 @@ input[type="text"] { font-size: 12px; }
   color: #fff;
   filter: drop-shadow(0px 0px 6px #fff);
 }
+#btn_twitter {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: #1da1f2;
+}
+#btn_twitter:hover {
+  color: rgb(29, 161, 242);
+  background-color: rgb(240, 250, 255);
+}
 #btn_preset_all {
-  color: #999;
-  transition: .2s;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: #eee;
 }
 #btn_preset_all:hover {
-  color: #ddd;
-  filter: drop-shadow(0px 0px 8px #aaa);
+  color: #fff;
+  background-color: #888;
+}
+#btn_deckBuilder {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: #00814b;
+}
+#btn_deckBuilder:hover {
+  color: #00814b;
+  background-color: rgb(240, 255, 250);
 }
 
 
@@ -308,6 +339,7 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   color: #00ccff;
 }
+
 
 
 /* -----------------------------------
@@ -740,7 +772,7 @@ input[type="text"] { font-size: 12px; }
 .coll_slot_input { width: 72px; }
 .btn_prof { 
   cursor: pointer;
-  width: 25px;
+  width: 20px;
   height: auto;
   transition: .2s;
 }
@@ -926,7 +958,9 @@ input[type="text"] { font-size: 12px; }
 #caluclate_count { width: 96px; }
 #manual_shoot_down_battle { width: 60px; }
 #manual_shoot_down_value { width: 96px; }
-
+#init_prof_parent .prof_select {
+  height: 24px;
+}
 
 /* ------------------------------
   サイトについて #site_information

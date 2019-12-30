@@ -65,6 +65,9 @@ let presets = null;
 // メモリ解放用タイマー
 let releaseTimer = null;
 
+// デフォルト熟練度リスト
+let default_prof = null;
+
 /*
   プリセットメモ
   全体: [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
@@ -540,17 +543,41 @@ function initialize(callback) {
     else if (i >= 6) $(e).addClass('rate_tr_border_top rate_tr_border_bottom');
   });
 
-  // 詳細設定
-  $('.enemy_ap').tooltip('disable');
+  // 詳細設定 初期熟練度欄複製
+  text = $('#init_prof_parent').html();
+  const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
+  for (const type of types) {
+    $('#init_prof_parent').append(text);
+    const $last = $('#init_prof_parent').find('.type_name:last')
+    $last.text(type.abbr);
+    $last.closest('.init_prof')[0].dataset.typeid = type.id;
+  }
+  $('#init_prof_parent').find('.init_prof:first').remove();
+
+  default_prof = loadLocalStrage('defaultProf');
+  if (!default_prof) {
+    default_prof = [];
+    for (const type of types) {
+      const d = { id: 0, prof: 0 };
+      d.id = type.id;
+      d.prof = INITIAL_MAX_LEVEL_PLANE.indexOf(type.id) !== -1 ? 7 : 0;
+      default_prof.push(d);
+    }
+    saveLocalStrage('defaultProf', default_prof);
+  }
+
+  for (const v of default_prof) {
+    proficiency_Changed($('.init_prof[data-typeid="' + v.id + '"').find('.prof_option[data-prof="' + v.prof + '"]').parent(), true);
+  }
+
+  // tooltip起動
   $('[data-toggle="tooltip"]').tooltip();
   $('[data-toggle="popover"]').popover();
 
   // localStrage の値を処理
-  // 自動計算するかどうかlocalStrageから読み込み　なければ自動計算する
+  // 自動計算絶対する
   const autoCaluclate = loadLocalStrage('autoCaluclate');
-  if (autoCaluclate !== null) $('#auto_caluclate').prop('checked', autoCaluclate);
-  else $('#auto_caluclate').prop('checked', true);
-  auto_caluclate_Clicked();
+  if (autoCaluclate !== null) deleteLocalStrage('autoCaluclate');
 
   // シミュレート回数をLocalStrageから読み込み　なければ5000
   const count = loadLocalStrage('simulateCount');
@@ -841,11 +868,12 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
     $remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel, 10));
   }
 
-  // 熟練度初期値 戦闘機系は最初から熟練Maxで 陸偵熟練は||
+  // 熟練度初期値 陸偵熟練は||
   let prof = 0;
   // デフォルト熟練度
-  if (INITIAL_MAX_LEVEL_PLANE.indexOf(Math.abs(plane.type)) !== -1) prof = 7;
-  else if (plane.id === 312) prof = 2;
+  let tmpDefault = default_prof.find(v => v.id === plane.type);
+  if (tmpDefault) prof = tmpDefault.prof;
+  if (plane.id === 312) prof = 2;
   // 特定熟練度を保持していた場合
   if (inputPlane.prof >= 0) prof = inputPlane.prof;
   const $prof_select = $div.find('.prof_select');
@@ -2425,23 +2453,6 @@ function caluclateInit(objectData) {
   if (document.getElementById('auto_save')['checked']) {
     saveLocalStrage('autoSaveData', encordPreset());
     saveLocalStrage('autoSave', true);
-  }
-
-  // 自動計算しない場合
-  if (!document.getElementById('auto_caluclate')['checked']) {
-    // 準備状態でない場合、準備状態に移行し終了
-    const node = document.getElementById('btn_caluclate');
-    if (node.classList.contains('caluclate_ready')) {
-      node.classList.add('caluclate_ready');
-      node.classList.remove('caluclate_end');
-      return false;
-    }
-    // 準備状態だった場合、シミュレート開始ボタンが押されていなければ終了
-    else if (!node.classList.contains('caluclate_start')) return false;
-
-    // 待機状態に戻す
-    node.classList.remove('caluclate_ready caluclate_start');
-    node.classList.add('caluclate_end');
   }
 
   // 空スロット表示可否
@@ -4025,18 +4036,6 @@ function caluclateLandBase(landBaseAps, landBaseModes, enemyFleet, enemyApDist, 
 ==================================*/
 
 /**
- * シミュレート開始ボタンクリック
- */
-function btn_caluclate_Clicked() {
-  // 準備状態だった場合のみ計算開始とする
-  const $this = $('#btn_caluclate');
-  if ($this.hasClass('caluclate_ready')) {
-    $this.addClass('caluclate_start');
-    caluclate();
-  }
-}
-
-/**
  * 各種モーダル終了時イベント
  * @param {JqueryDomObject} $this
  */
@@ -4085,6 +4084,7 @@ function sidebar_Clicked($this) {
 function btn_content_trade_Clicked($this) {
   $('body,html').animate({ scrollTop: 0 }, 200, 'swing');
   $('.btn_commit_trade').addClass('d-table').removeClass('d-none');
+  $('.btn_capture').addClass('d-none').removeClass('d-table');
   $('.btn_reset_content').addClass('d-none').removeClass('d-table');
   $('.btn_content_trade').addClass('d-none').removeClass('d-table');
   $('.btn_ex_setting').addClass('d-none').removeClass('d-table');
@@ -4128,6 +4128,7 @@ function commit_content_order() {
   $('.tmpHide').collapse('show');
   // handle解除
   $('.trade_enabled').removeClass('trade_enabled');
+  $('.btn_capture').removeClass('d-none').addClass('d-table');
   $('.btn_content_trade').removeClass('d-none').addClass('d-table');
   $('.btn_reset_content').removeClass('d-none').addClass('d-table');
   $('.btn_commit_trade').removeClass('d-table').addClass('d-none');
@@ -4163,6 +4164,41 @@ function btn_ex_setting_Clicked($this) {
   }
 
   $modal.modal('show');
+}
+
+/**
+ * コンテンツキャプチャクリック
+ * @param {JqueryDomObject} $this 
+ */
+function btn_capture_Clicked($this) {
+  const $targetContent = $this.closest('.contents');
+
+  // レンダリングできなさそうなやつを置換
+  $targetContent.find('.round_button').addClass('d-none').removeClass('d-table');
+  $targetContent.find('.custom-checkbox').addClass('d-none');
+  $targetContent.find('.display_label_result').addClass('d-none');
+  const bauxite = $targetContent.find('.battle_end.fap').html();
+  $targetContent.find('.battle_end.fap').html('ボーキ消費');
+
+  html2canvas($targetContent[0], {
+    onrendered: function (canvas) {
+      const imgData = canvas.toDataURL();
+
+      // 戻す
+      $targetContent.find('.custom-checkbox').removeClass('d-none')
+      $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
+      $targetContent.find('.display_label_result').removeClass('d-none');
+      $targetContent.find('.battle_end.fap').html(bauxite);
+
+      // 保存
+      const now = new Date();
+      const a = document.createElement('a');
+      a.href = imgData;
+      a.download = 'result_' + now.getFullYear() + (now.getMonth() + 1) + now.getDate() + '.jpg';
+      a.click();
+    }
+  });
+
 }
 
 /**
@@ -4393,6 +4429,20 @@ function proficiency_Changed($this, cancelCaluclate = false) {
   else $targetSelect.addClass('prof_none');
 
   if (!cancelCaluclate) caluclate();
+}
+
+/**
+ * 初期熟練度変更時
+ * @param {JqueryDomObject} $this
+ */
+function init_proficiency_Changed($this) {
+  proficiency_Changed($this, true);
+
+  // localStrage更新
+  const prof = castInt($this.find('.prof_option')[0].dataset.prof);
+  const tmp = default_prof.find(v => v.id === castInt($this.closest('.init_prof')[0].dataset.typeid));
+  tmp.prof = prof;
+  saveLocalStrage('defaultProf', default_prof);
 }
 
 /**
@@ -5311,16 +5361,6 @@ function caluclate_count_Changed($this) {
 }
 
 /**
- * 自動計算チェックボックスクリック時
- */
-function auto_caluclate_Clicked() {
-  if ($('#auto_caluclate').prop('checked')) $('#btn_caluclate').addClass('d-none');
-  else $('#btn_caluclate').removeClass('d-none');
-
-  saveLocalStrage('autoCaluclate', $('#auto_caluclate').prop('checked'));
-}
-
-/**
  * 自動保存クリック時
  */
 function auto_save_Clicked() {
@@ -5366,6 +5406,20 @@ function modal_confirm_ok_Clicked() {
 function btn_preset_all_Clicked() {
   loadMainPreset();
   $('#modal_main_preset').modal('show');
+}
+
+/**
+ * Twitterボタンクリック
+ */
+function btn_twitter_Clicked() {
+  window.open('https://twitter.com/share?url=https://noro6.github.io/kcTools/?d=' + encordPreset());
+}
+
+/**
+ * デッキビルダーボタンクリック
+ */
+function btn_deckBuilder_Clicked() {
+  window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuikder());
 }
 
 /**
@@ -5567,17 +5621,16 @@ $(function () {
   $(document).on('show.bs.collapse', '.collapse', function () { $(this).prev().find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down'); });
   $(document).on('hide.bs.collapse', '.collapse', function () { $(this).prev().find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-up'); });
   $(document).on('shown.bs.collapse', '.collapse', function () { $(this).removeClass('tmpHide'); });
-  $(document).on('click', '#btn_caluclate', btn_caluclate_Clicked);
   $(document).on('focus', '.slot_input', function () { $(this).select(); });
   $(document).on('input', '.slot_input', function () { slot_input_Changed($(this)); });
   $(document).on('input', '.slot_range', function () { slot_range_Changed($(this)); });
   $(document).on('click', '.slot_ini', function () { slot_ini_Clicked($(this)); });
   $(document).on('click', '.remodel_item', function () { $(this).addClass('remodel_item_selected'); });
-  $(document).on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $(document).on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
   $(document).on('click', '.btn_plane_preset', function () { btn_plane_preset_Clicked($(this)); });
   $(document).on('click', '.sidebar-sticky a[href^="#"]', function () { sidebar_Clicked($(this)); });
   $(document).on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
+  $(document).on('click', '.btn_capture', function () { btn_capture_Clicked($(this)); });
   $(document).on('click', '.btn_reset_content', function () { btn_reset_content_Clicked($(this)); });
   $(document).on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
   $(document).on('click', '.btn_commit_trade', commit_content_order);
@@ -5598,10 +5651,12 @@ $(function () {
   $('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });
   $('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
   $('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
+  $('#landBase_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
   $('#friendFleet_content').on('click', '.btn_reset_ship', function () { btn_reset_ship_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.btn_remove_plane', function () { btn_remove_ship_plane_Clicked($(this)); });
+  $('#friendFleet_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
   $('#enemyFleet_content').on('change', '.formation', caluclate);
   $('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });
@@ -5620,8 +5675,8 @@ $(function () {
   $('#config_content').on('input', '#caluclate_count', function () { caluclate_count_Changed($(this)); });
   $('#config_content').on('click', '#btn_reset_localStrage', btn_reset_localStrage_Clicked);
   $('#config_content').on('click', '#innerProfSetting .custom-control-input', function () { innerProfSetting_Clicked($(this)); });
-  $('#config_content').on('click', '#auto_caluclate', auto_caluclate_Clicked);
   $('#config_content').on('click', '#auto_save', auto_save_Clicked);
+  $('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
   $('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
   $('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
   $('#modal_plane_select').on('click', '.plane_thead div', function () { plane_thead_Clicked($(this)); });
@@ -5662,6 +5717,8 @@ $(function () {
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#modal_smart_menu').on('click', 'a[href^="#"]', function () { smart_menu_modal_link_Clicked($(this)); });
   $('#btn_preset_all').click(btn_preset_all_Clicked);
+  $('#btn_twitter').click(btn_twitter_Clicked);
+  $('#btn_deckBuilder').click(btn_deckBuilder_Clicked);
   $('#menu-small').click(menu_small_Clicked);
   $('#site_information').on('click', 'a[href^="#"]', function () { sidebar_Clicked($(this)); });
   $('#result_content').on({

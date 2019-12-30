@@ -22,6 +22,7 @@
     <script src="./js/jquery.ui.touch-punch.js"></script>
     <script src="./js/lz-string.js"></script>
     <script src="./js/sortable.js"></script>
+    <script src="./js/html2canvas.min.js"></script>
     <script src="./js/data.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/bootstrap.bundle.js"></script>
@@ -35,7 +36,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow">
+    <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow justify-content-start">
         <div class="d-block d-xl-none text-light pl-3 pt-3 py-2 cur_pointer">
             <div id="menu-small">
                 <div></div>
@@ -43,10 +44,19 @@
                 <div></div>
             </div>
         </div>
-        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2 mr-0" href="#">制空権シミュレータ</a>
-        <div class="w-100 caluclate_end caluclate_ready caluclate_start d-none" id="btn_caluclate">シミュレート開始</div>
-        <div class="px-3 cur_pointer" id="btn_preset_all">
-            <div class="py-1 text-nowrap">編成保存・展開</div>
+        <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2" href="#">制空権シミュレータ</a>
+        <div class="mx-1 px-2 py-1" id="btn_preset_all" data-toggle="tooltip" data-html="true"
+            title="現在の編成を保存したり、保存した編成を展開したりできます。<br>デッキビルダー形式データの取り込みもこちらから。">
+            <i class="fas fa-save"></i>
+            <span class="ml-1">編成保存・展開</span>
+        </div>
+        <div class="mx-1 px-2 py-1" id="btn_twitter" data-toggle="tooltip" title="現在の編成をTwitterでつぶやいて共有できます。">
+            <i class="fab fa-twitter"></i>
+            <span class="ml-1">Twitterに投稿</span>
+        </div>
+        <div class="mx-1 px-2 py-1" id="btn_deckBuilder" data-toggle="tooltip" title="現在の編成をデッキビルダーで開きます。">
+            <i class="fas fa-share-square"></i>
+            <span class="ml-1">デッキビルダーで開く</span>
         </div>
     </nav>
     <div class="container-fluid px-0">
@@ -574,11 +584,15 @@
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
                                 </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_capture"
+                                    data-toggle="tooltip" title="計算結果を画像で保存">
+                                    <i class="fas fa-camera d-table-cell align-middle"></i>
+                                </div>
                                 <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                                     data-toggle="tooltip" title="入れ替え終了">
                                     <i class="fas fa-check d-table-cell align-middle"></i>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                <div class="ml-2 round_button align-self-center d-table btn_content_trade"
                                     data-toggle="tooltip" title="順序入れ替え">
                                     <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                                 </div>
@@ -672,7 +686,7 @@
                                             <div class="font_size_12">
                                                 各制空状態の取り得る確率
                                             </div>
-                                            <div class="ml-auto font_size_12 align-self-center">
+                                            <div class="ml-auto font_size_12 align-self-center display_label_result">
                                                 表示：
                                             </div>
                                             <div
@@ -838,11 +852,43 @@
                                             D&amp;Dで交換や移動ではなく上書き複製する
                                         </label>
                                     </div>
-                                    <div class="custom-control custom-checkbox ml-3 mt-2">
-                                        <input type="checkbox" class="custom-control-input" id="auto_caluclate" checked>
-                                        <label class="custom-control-label" for="auto_caluclate">
-                                            自動で再計算を行う
-                                        </label>
+                                    <div class="ml-3 my-3">
+                                        <div>機体選択時の初期熟練度：</div>
+                                        <div class="d-flex flex-wrap" id="init_prof_parent">
+                                            <div class="init_prof d-flex mr-3" data-typeid="0">
+                                                <div class="align-self-center type_name"></div>
+                                                <div class="dropdown align-self-center prof_select_parent">
+                                                    <img class="prof_select prof_none" data-toggle="dropdown"
+                                                        src="./img/util/prof0.png">
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_yellow" alt=">>" data-prof="7"
+                                                                src="./img/util/prof7.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_yellow" alt="///" data-prof="6"
+                                                                src="./img/util/prof6.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_yellow" alt="//" data-prof="5"
+                                                                src="./img/util/prof5.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_yellow" alt="/" data-prof="4"
+                                                                src="./img/util/prof4.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_blue" alt="|||" data-prof="3"
+                                                                src="./img/util/prof3.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_blue" alt="||" data-prof="2"
+                                                                src="./img/util/prof2.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_blue" alt="|" data-prof="1"
+                                                                src="./img/util/prof1.png"></a>
+                                                        <a class="dropdown-item">
+                                                            <img class="prof_option prof_none" alt="" data-prof="0"
+                                                                src="./img/util/prof0.png"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="my-3 mx-2 px-2 py-2 general_box">
@@ -932,8 +978,7 @@
                                         </div>
                                     </div>
                                     <div class="ml-3 mt-3">
-                                        <div class="custom-control custom-checkbox" data-toggle="tooltip"
-                                            data-html="true" title="最後に計算が行われた編成を保持し、<br>次回サイトに訪れた際に自動で復帰します。">
+                                        <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="auto_save">
                                             <label class="custom-control-label" for="auto_save">
                                                 編成の自動保存を有効にする
@@ -1265,7 +1310,7 @@
                     <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex">
+                    <div class="d-flex flex-wrap">
                         <div class="my-1 input-group input-group-sm plane_type_select_parent">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">カテゴリ</span>
@@ -1452,7 +1497,7 @@
                         </div>
                     </div>
                     <div class="border-top mt-2" id="enemy_pattern_content">
-                        <img src="img/map/19111.jpg" class="py-2" id="map_img">
+                        <img src="img/map/19111.png" class="py-2" id="map_img">
                         <div class="row">
                             <div class="col">
                                 <div class="mb-2">戦闘マス一覧</div>

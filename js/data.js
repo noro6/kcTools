@@ -25,22 +25,22 @@ const RECONNAISSANCES = [4, 5, 8, 104];
 
 // 機体カテゴリ
 const PLANE_TYPE = [
-  { id: 1, name: '艦上戦闘機', css: 'css_fighter' },
-  { id: -1, name: '夜間戦闘機', css: 'css_cb_night_aircraft' },
-  { id: 2, name: '艦上攻撃機', css: 'css_torpedo_bomber' },
-  { id: -2, name: '夜間攻撃機', css: 'css_cb_night_aircraft' },
-  { id: 3, name: '艦上爆撃機', css: 'css_dive_bomber' },
-  { id: 4, name: '艦上偵察機', css: 'css_cb_reconnaissance' },
-  { id: 5, name: '水上偵察機', css: 'css_sp' },
-  { id: 6, name: '水上爆撃機', css: 'css_sp' },
-  { id: 7, name: '水上戦闘機', css: 'css_sp' },
-  { id: 8, name: '大型飛行艇', css: 'css_sp' },
-  { id: 9, name: '噴式爆撃機', css: 'css_cb_reconnaissance' },
-  { id: 101, name: '陸上攻撃機', css: 'css_lb_attack_aircraft' },
-  { id: -101, name: '対潜哨戒機', css: 'css_lb_asw_aircraft' },
-  { id: 102, name: '陸軍戦闘機', css: 'css_lb_fighter' },
-  { id: 103, name: '局地戦闘機', css: 'css_lb_attack_aircraft' },
-  { id: 104, name: '陸上偵察機', css: 'css_cb_reconnaissance' }
+  { id: 1, name: '艦上戦闘機', abbr: '艦戦', abbr: '艦戦', css: 'css_fighter' },
+  { id: -1, name: '夜間戦闘機', abbr: '夜戦', css: 'css_cb_night_aircraft' },
+  { id: 2, name: '艦上攻撃機', abbr: '艦攻', css: 'css_torpedo_bomber' },
+  { id: -2, name: '夜間攻撃機', abbr: '夜攻', css: 'css_cb_night_aircraft' },
+  { id: 3, name: '艦上爆撃機', abbr: '艦爆', css: 'css_dive_bomber' },
+  { id: 4, name: '艦上偵察機', abbr: '艦偵', css: 'css_cb_reconnaissance' },
+  { id: 5, name: '水上偵察機', abbr: '水偵', css: 'css_sp' },
+  { id: 6, name: '水上爆撃機', abbr: '水爆', css: 'css_sp' },
+  { id: 7, name: '水上戦闘機', abbr: '水戦', css: 'css_sp' },
+  { id: 8, name: '大型飛行艇', abbr: '飛行艇', css: 'css_sp' },
+  { id: 9, name: '噴式爆撃機', abbr: '噴式', css: 'css_cb_reconnaissance' },
+  { id: 101, name: '陸上攻撃機', abbr: '陸攻', css: 'css_lb_attack_aircraft' },
+  { id: -101, name: '対潜哨戒機', abbr: '陸攻', css: 'css_lb_asw_aircraft' },
+  { id: 102, name: '陸軍戦闘機', abbr: '陸戦', css: 'css_lb_fighter' },
+  { id: 103, name: '局地戦闘機', abbr: '局戦', css: 'css_lb_attack_aircraft' },
+  { id: 104, name: '陸上偵察機', abbr: '陸偵', css: 'css_cb_reconnaissance' }
 ];
 
 // 機体
@@ -1792,6 +1792,30 @@ let CHANGE_LOG = [
       },
     ],
   },
+  {
+    id: '1.4.1', changes: [
+      {
+        type: 0, title: "計算結果のスクショをワンボタンで保存できるようになりました。",
+        content: "計算結果欄のカメラのアイコンをクリックすると、クリックした時点の計算結果欄を画像化し、お使いの端末に保存します。"
+      },
+      {
+        type: 0, title: "Twitterでつぶやく機能を追加しました。",
+        content: "押した時点での編成URLがあらかじめ入力されたツイート画面に移動します。"
+      },
+      {
+        type: 0, title: "計算結果欄の表示を微妙にカスタマイズできるようになりました。",
+        content: "結果グラフと表をドラッグ&amp;ドロップで入れ替えられるようになりました。また、基地や本隊を指定して非表示にできるようになりました。"
+      },
+      {
+        type: 0, title: "機体配置時の初期熟練度を調整できるようになりました。",
+        content: "詳細設定欄から変更可能です。カテゴリ毎に、新たに機体を配置した際の熟練度を変更することが可能です。選択値は次回サイト訪問時に復元します。"
+      },
+      {
+        type: 1, title: "手動計算開始機能を廃止しました。",
+        content: "あまりにも空気機能でした。どうしても復活を希望する方がいればご一報ください。"
+      },
+    ],
+  },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/29";
+const LAST_UPDATE_DATE = "2019/12/30";
