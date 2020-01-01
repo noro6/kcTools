@@ -3760,7 +3760,7 @@ function mainCaluclate(objectData) {
     let isChanged = false;
     for (const enemyFleet of battleData) {
       for (const enemy of enemyFleet.enemies) {
-        if ([389, 390, 391, 392, 393, 394].indexOf(enemy.id) > -1) {
+        if ([389, 390, 391, 392, 393, 394].indexOf(enemy.id) > -1 || enemyFleet.cellType === 0) {
           sumAP = castInt($('.info_defApEx').text());
           isChanged = true;
           break;

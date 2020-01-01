@@ -12,7 +12,7 @@ const AIR_STATUS = [
 ];
 
 // セル種別
-const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4 };
+const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5 };
 
 // 艦戦系
 const FIGHTERS = [1, 7, 102, 103];
@@ -166,10 +166,10 @@ const PLANE_DATA = [
   { id: 200, type: 9, name: "橘花改", AA: 12, range: 2, IP: 0, AB: 0, imp: false, LOS: 0, cost: 13, abbr: '', avoid: 4 },
   { id: 168, type: 101, name: "九六式陸攻", AA: 1, range: 8, IP: 0, AB: 0, imp: false, LOS: 2, cost: 10, abbr: '', avoid: 0 },
   { id: 169, type: 101, name: "一式陸攻", AA: 2, range: 9, IP: 0, AB: 0, imp: false, LOS: 3, cost: 12, abbr: '', avoid: 0 },
-  { id: 170, type: 101, name: "一式陸攻(野中隊)", AA: 3, range: 9, IP: 0, AB: 0, imp: false, LOS: 4, cost: 12, abbr: '', avoid: 1 },
+  { id: 170, type: 101, name: "一式陸攻(野中隊)", AA: 3, range: 9, IP: 0, AB: 0, imp: true, LOS: 4, cost: 12, abbr: '', avoid: 1 },
   { id: 180, type: 101, name: "一式陸攻 二二型甲", AA: 3, range: 10, IP: 0, AB: 0, imp: false, LOS: 4, cost: 12, abbr: '', avoid: 0 },
-  { id: 186, type: 101, name: "一式陸攻 三四型", AA: 4, range: 8, IP: 0, AB: 0, imp: false, LOS: 4, cost: 12, abbr: '', avoid: 0 },
-  { id: 187, type: 101, name: "銀河", AA: 3, range: 9, IP: 0, AB: 0, imp: false, LOS: 3, cost: 13, abbr: '', avoid: 0 },
+  { id: 186, type: 101, name: "一式陸攻 三四型", AA: 4, range: 8, IP: 0, AB: 0, imp: true, LOS: 4, cost: 12, abbr: '', avoid: 0 },
+  { id: 187, type: 101, name: "銀河", AA: 3, range: 9, IP: 0, AB: 0, imp: true, LOS: 3, cost: 13, abbr: '', avoid: 0 },
   { id: 224, type: 101, name: "爆装一式戦 隼III型改(55戦隊)", AA: 6, range: 5, IP: 0, AB: 0, imp: false, LOS: 1, cost: 4, abbr: '爆装一式戦(55戦隊)', avoid: 0 },
   { id: 269, type: -101, name: "試製東海", AA: 0, range: 8, IP: 0, AB: 0, imp: false, LOS: 5, cost: 9, abbr: '', avoid: 0 },
   { id: 270, type: -101, name: "東海(九〇一空)", AA: 0, range: 8, IP: 0, AB: 0, imp: false, LOS: 6, cost: 9, abbr: '', avoid: 0 },
@@ -1326,9 +1326,9 @@ const ENEMY_PATTERN = [
     // 甲
     area: 19115, lv: 3, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [408, 280, 280, 280, 244, 244], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [408, 280, 280, 277, 243, 243], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [408, 280, 280, 92, 243, 243], range: 1 },
+        { type: 0, form: 3, name: '空襲 強', enemies: [408, 280, 280, 280, 244, 244], range: 1 },
+        { type: 0, form: 3, name: '空襲 中', enemies: [408, 280, 280, 277, 243, 243], range: 1 },
+        { type: 0, form: 3, name: '空襲 弱', enemies: [408, 280, 280, 92, 243, 243], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [238, 72, 71, 71], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [279, 279, 405, 362, 240, 240], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [238, 71, 71, 71], range: 1 },
@@ -1349,8 +1349,8 @@ const ENEMY_PATTERN = [
     // 乙
     area: 19115, lv: 2, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [407, 278, 277, 277, 240, 240], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [407, 277, 277, 91, 239, 239], range: 1 },
+        { type: 0, form: 3, name: '空襲 強', enemies: [407, 278, 277, 277, 240, 240], range: 1 },
+        { type: 0, form: 3, name: '空襲 弱', enemies: [407, 277, 277, 91, 239, 239], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [237, 71, 32, 32], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [264, 263, 404, 92, 239, 239], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [237, 32, 32, 32], range: 1 },
@@ -1371,8 +1371,8 @@ const ENEMY_PATTERN = [
     // 丙
     area: 19115, lv: 1, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [406, 277, 23, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [406, 23, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 強', enemies: [406, 277, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 中', enemies: [406, 23, 23, 91], range: 1 },
         { type: 3, form: 3, name: '空襲 弱', enemies: [406, 23, 91], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 32, 30], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [263, 262, 55, 91, 77, 1], range: 1 },
@@ -1394,8 +1394,8 @@ const ENEMY_PATTERN = [
     // 丁
     area: 19115, lv: 0, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [406, 23, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [406, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 強', enemies: [406, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 弱', enemies: [406, 91], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 30, 30], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [262, 23, 55, 91, 1, 1], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [236, 32, 30], range: 1 },
@@ -1416,9 +1416,9 @@ const ENEMY_PATTERN = [
     // 甲
     area: 19116, lv: 3, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [183, 394, 151, 150, 414, 362], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [183, 394, 150, 150, 411, 362], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [183, 394, 150, 362, 411, 362], range: 1 },
+        { type: 0, form: 3, name: '空襲 強', enemies: [183, 394, 151, 150, 414, 362], range: 1 },
+        { type: 0, form: 3, name: '空襲 中', enemies: [183, 394, 150, 150, 411, 362], range: 1 },
+        { type: 0, form: 3, name: '空襲 弱', enemies: [183, 394, 150, 362, 411, 362], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [238, 72, 72, 71, 71], range: 2 },
         { type: 1, form: 2, name: 'D', enemies: [405, 362, 362, 78, 78, 78], range: 3 },
         { type: 3, form: 3, name: 'E', enemies: [183, 151, 150, 150, 411, 362], range: 3 },
@@ -1446,9 +1446,9 @@ const ENEMY_PATTERN = [
     // 乙
     area: 19116, lv: 2, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [182, 151, 150, 150, 413, 92], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [182, 150, 150, 150, 410, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [182, 151, 150, 410, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 強', enemies: [182, 151, 150, 150, 413, 92], range: 1 },
+        { type: 0, form: 3, name: '空襲 中', enemies: [182, 150, 150, 150, 410, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 弱', enemies: [182, 151, 150, 410, 91], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [237, 71, 71, 71, 31], range: 2 },
         { type: 1, form: 2, name: 'D', enemies: [405, 362, 92, 78, 77, 77], range: 3 },
         { type: 3, form: 3, name: 'E', enemies: [182, 151, 150, 413, 92, 92], range: 3 },
