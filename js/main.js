@@ -2940,7 +2940,7 @@ function getBonusAA(plane, prevAp) {
   // 艦戦 夜戦 水戦
   if ([1, -1, 7].indexOf(type) !== -1) aa = 0.2 * remodel + taiku;
   // 艦爆
-  else if ([3].indexOf(type) !== -1) aa = 0.25 * remodel + taiku;
+  else if ([3 /*, 101 */].indexOf(type) !== -1) aa = 0.25 * remodel + taiku;
   // そのた
   else aa = taiku;
 
@@ -3756,7 +3756,7 @@ function mainCaluclate(objectData) {
     let sumAP = 0;
     for (let index = 0; index < 3; index++) if (landBaseData[index].mode !== -1) sumAP += landBaseData[index].ap;
 
-    // 高高度爆撃してくる敵艦が含まれていた場合
+    // 高高度爆撃してくる敵艦が含まれていた場合か、マス高高度爆撃
     let isChanged = false;
     for (const enemyFleet of battleData) {
       for (const enemy of enemyFleet.enemies) {

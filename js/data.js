@@ -181,7 +181,7 @@ const PLANE_DATA = [
   { id: 222, type: 102, name: "一式戦 隼III型甲", AA: 7, range: 6, IP: 3, AB: 1, imp: true, LOS: 0, cost: 4, abbr: '', avoid: 0 },
   { id: 223, type: 102, name: "一式戦 隼III型甲(54戦隊)", AA: 8, range: 7, IP: 3, AB: 1, imp: false, LOS: 1, cost: 4, abbr: '', avoid: 0 },
   { id: 225, type: 102, name: "一式戦 隼II型(64戦隊)", AA: 11, range: 7, IP: 5, AB: 1, imp: false, LOS: 1, cost: 4, abbr: '', avoid: 0 },
-  { id: 250, type: 102, name: "Spitfire Mk.I", AA: 7, range: 4, IP: 1, AB: 2, imp: false, LOS: 0, cost: 5, abbr: '', avoid: 0 },
+  { id: 250, type: 102, name: "Spitfire Mk.I", AA: 7, range: 4, IP: 1, AB: 2, imp: true, LOS: 0, cost: 5, abbr: '', avoid: 0 },
   { id: 251, type: 102, name: "Spitfire Mk.V", AA: 9, range: 5, IP: 2, AB: 3, imp: false, LOS: 0, cost: 5, abbr: '', avoid: 0 },
   { id: 253, type: 102, name: "Spitfire Mk.IX(熟練)", AA: 10, range: 4, IP: 4, AB: 2, imp: false, LOS: 0, cost: 6, abbr: '', avoid: 0 },
   { id: 175, type: 103, name: "雷電", AA: 6, range: 2, IP: 2, AB: 5, imp: false, LOS: 0, cost: 6, abbr: '', avoid: 0 },
