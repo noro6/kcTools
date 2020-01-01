@@ -1373,7 +1373,7 @@ const ENEMY_PATTERN = [
       [
         { type: 0, form: 3, name: '空襲 強', enemies: [406, 277, 23, 91], range: 1 },
         { type: 0, form: 3, name: '空襲 中', enemies: [406, 23, 23, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [406, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲 弱', enemies: [406, 23, 91], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 32, 30], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [263, 262, 55, 91, 77, 1], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [236, 32, 32], range: 1 },
@@ -1818,4 +1818,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2019/12/30";
+const LAST_UPDATE_DATE = "2020/01/01";
