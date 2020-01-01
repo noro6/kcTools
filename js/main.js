@@ -907,7 +907,6 @@ function setShipDiv($div, id) {
   $div.find('.ship_name_span').text(ship.name);
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
-
     const plane = {
       id: castInt($this[0].dataset.planeid),
       remodel: castInt($this.find('.remodel_value').text()),
@@ -923,7 +922,10 @@ function setShipDiv($div, id) {
       $this.find('.slot').text(ship.slot[i]);
       $this.find('.slot_ini').data('ini', ship.slot[i]);
     }
-    else $this.removeClass('d-flex').addClass('d-none');
+    else {
+      clearPlaneDiv($this);
+      $this.removeClass('d-flex').addClass('d-none');
+    }
   });
 }
 
@@ -1764,7 +1766,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
         setShipDiv($(e), ship[0]);
         $(e).find('.ship_plane').each((j, e) => {
           const raw = ship[1].find(v => v[4] === j);
-          if (raw) {
+          if (raw && !$(e).hasClass('d-none')) {
             const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
             setPlaneDiv($(e), plane, true);
           }
@@ -3059,7 +3061,7 @@ function updateFriendFleetInfo(friendFleetData) {
 
     let slotNo = 0;
     for (const node_ship_plane of node_ship_tab.getElementsByClassName('ship_plane')) {
-      // draggable部分は飛ばす
+      // draggable部分 非表示部分は飛ばす
       if (node_ship_plane.classList.contains('ui-draggable')) continue;
       // 機体オブジェクト生成
       const planeObj = createFleetPlaneObject(node_ship_plane, shipNo, slotNo++);
