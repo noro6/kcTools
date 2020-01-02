@@ -2814,9 +2814,9 @@ function getAirPower_lb(lb_plane) {
     sumPower = 1.0 * (0.25 * remodel + taiku) * Math.sqrt(slot);
   }
   // 陸攻
-  // else if ([101].indexOf(type) !== -1) {
-  //   sumPower = 1.0 * (0.5 * Math.sqrt(remodel) + taiku) * Math.sqrt(slot);
-  // }
+  else if ([101].indexOf(type) !== -1) {
+    sumPower = 1.0 * (0.5 * Math.sqrt(remodel) + taiku) * Math.sqrt(slot);
+  }
   // そのた
   else sumPower = 1.0 * taiku * Math.sqrt(slot);
 
