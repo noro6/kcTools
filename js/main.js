@@ -871,7 +871,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
   // 熟練度初期値 陸偵熟練は||
   let prof = 0;
   // デフォルト熟練度
-  let tmpDefault = default_prof.find(v => v.id === plane.type);
+  let tmpDefault = default_prof.find(v => v.id === Math.abs(plane.type));
   if (tmpDefault) prof = tmpDefault.prof;
   if (plane.id === 312) prof = 2;
   // 特定熟練度を保持していた場合
@@ -2813,6 +2813,10 @@ function getAirPower_lb(lb_plane) {
   else if ([3].indexOf(type) !== -1) {
     sumPower = 1.0 * (0.25 * remodel + taiku) * Math.sqrt(slot);
   }
+  // 陸攻
+  // else if ([101].indexOf(type) !== -1) {
+  //   sumPower = 1.0 * (0.5 * Math.sqrt(remodel) + taiku) * Math.sqrt(slot);
+  // }
   // そのた
   else sumPower = 1.0 * taiku * Math.sqrt(slot);
 
@@ -2942,7 +2946,7 @@ function getBonusAA(plane, prevAp) {
   // 艦戦 夜戦 水戦
   if ([1, -1, 7].indexOf(type) !== -1) aa = 0.2 * remodel + taiku;
   // 艦爆
-  else if ([3 /*, 101 */].indexOf(type) !== -1) aa = 0.25 * remodel + taiku;
+  else if (type === 3) aa = 0.25 * remodel + taiku;
   // そのた
   else aa = taiku;
 
