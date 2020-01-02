@@ -757,9 +757,9 @@ const WORLD_DATA = [
 
 // マップ
 const MAP_DATA = [
-  // { id: 11, name: '鎮守府正面海域' },
-  // { id: 12, name: '南西諸島沖' },
-  // { id: 13, name: '製油所地帯沿岸' },
+  { area: 11, name: '鎮守府正面海域' },
+  { area: 12, name: '南西諸島沖' },
+  { area: 13, name: '製油所地帯沿岸' },
   { area: 14, name: '南西諸島防衛線' },
   { area: 15, name: '鎮守府近海' },
   { area: 16, name: '鎮守府近海航路' },
@@ -785,7 +785,7 @@ const MAP_DATA = [
   { area: 55, name: 'サーモン海域北方' },
   { area: 61, name: '中部海域哨戒線' },
   { area: 62, name: 'MS諸島沖' },
-  // { area: 63, name: 'グアノ環礁沖海域' },
+  { area: 63, name: 'グアノ環礁沖海域' },
   { area: 64, name: '中部北海域ピーコック島沖' },
   { area: 65, name: 'KW環礁沖海域' },
   { area: 71, name: 'ブルネイ泊地沖' },
@@ -801,23 +801,61 @@ const MAP_DATA = [
 // 戦闘マス
 const ENEMY_PATTERN = [
   {
-    area: 14, lv: -1, cell: [
-      { type: 1, form: 1, name: 'H', enemies: [10, 10], range: 0 },
-      { type: 1, form: 1, name: 'I', enemies: [10, 10], range: 0 },
-      { type: 1, form: 1, name: 'J', enemies: [10, 10], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [12, 12], range: 0 }
+    area: 11, lv: -1, cell: [
+      { type: 1, form: 1, name: 'A', enemies: [1], range: 0 },
+      { type: 1, form: 1, name: 'B', enemies: [1, 1], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [5, 3, 2, 2], range: 0 }
     ]
   },
   {
-    area: 15, lv: -1, cell: [{ type: 1, form: 1, name: 'I', enemies: [28], range: 0 }]
+    area: 12, lv: -1, cell: [
+      { type: 1, form: 1, name: 'A', enemies: [6, 2, 2], range: 0 },
+      { type: 1, form: 1, name: 'C', enemies: [6, 2, 2], range: 0 },
+      { type: 1, form: 1, name: 'D', enemies: [6, 3, 2, 2], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [6, 8, 8, 3, 3], range: 0 }
+    ]
+  },
+  {
+    area: 13, lv: -1, cell: [
+      { type: 1, form: 1, name: 'C', enemies: [6, 3, 2, 2], range: 0 },
+      { type: 1, form: 1, name: 'E', enemies: [6, 3, 2, 2], range: 0 },
+      { type: 1, form: 2, name: 'F', enemies: [9, 9, 2, 2], range: 0 },
+      { type: 1, form: 2, name: 'ボス', enemies: [11, 8, 6, 2, 2], range: 0 }
+    ]
+  },
+  {
+    area: 14, lv: -1, cell: [
+      { type: 1, form: 2, name: 'B', enemies: [9, 6, 1, 1, 1], range: 0 },
+      { type: 1, form: 2, name: 'D', enemies: [9, 6, 1, 1, 1], range: 0 },
+      { type: 1, form: 3, name: 'H', enemies: [10, 10, 9, 6, 2, 2], range: 0 },
+      { type: 1, form: 3, name: 'I', enemies: [10, 10, 9, 5, 1, 1], range: 0 },
+      { type: 1, form: 2, name: 'J', enemies: [11, 10, 10, 6, 2, 2], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [12, 12, 9, 6, 2, 2], range: 0 }
+    ]
+  },
+  {
+    area: 15, lv: -1, cell: [
+      { type: 1, form: 4, name: 'A', enemies: [32, 30, 30], range: 0 },
+      { type: 1, form: 1, name: 'B', enemies: [55, 59, 59, 75, 75, 75], range: 0 },
+      { type: 1, form: 4, name: 'D', enemies: [33, 31, 31], range: 0 },
+      { type: 1, form: 4, name: 'E', enemies: [33, 32, 32], range: 0 },
+      { type: 1, form: 4, name: 'F', enemies: [33, 32, 32, 32], range: 0 },
+      { type: 1, form: 1, name: 'H', enemies: [55, 59, 59, 75, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'I', enemies: [28, 55, 55, 75, 75], range: 0 },
+      { type: 1, form: 4, name: 'ボス', enemies: [72, 33, 33, 30], range: 0 },
+    ]
   },
   {
     area: 16, lv: -1, cell: [
-      { type: 1, form: 1, name: 'B', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'D', enemies: [79, 23, 23], range: 0 },
-      { type: 1, form: 1, name: 'F', enemies: [28, 25], range: 0 },
-      { type: 1, form: 1, name: 'J', enemies: [65, 10, 10], range: 0 },
-      { type: 1, form: 1, name: 'L', enemies: [79, 79, 23], range: 0 }
+      { type: 1, form: 1, name: 'B', enemies: [55, 23, 75, 75, 1, 1], range: 0 },
+      { type: 1, form: 4, name: 'C', enemies: [32, 32, 30, 30, 30], range: 0 },
+      { type: 1, form: 3, name: 'D', enemies: [79, 23, 23, 92, 75, 75], range: 0 },
+      { type: 1, form: 4, name: 'E', enemies: [32, 32, 30, 30, 30], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [28, 25, 92, 1, 1, 1], range: 0 },
+      { type: 1, form: 4, name: 'I', enemies: [35, 32, 32, 30, 30], range: 0 },
+      { type: 1, form: 3, name: 'J', enemies: [65, 10, 10, 92, 75, 75], range: 0 },
+      { type: 1, form: 2, name: 'K', enemies: [27, 24, 20, 75, 1, 1], range: 0 },
+      { type: 1, form: 3, name: 'L', enemies: [79, 79, 23, 92, 1, 1], range: 0 }
     ]
   },
   {
@@ -917,44 +955,65 @@ const ENEMY_PATTERN = [
       { type: 1, form: 3, name: 'D（司令Lv90以上）強', enemies: [65, 79, 28, 43, 76, 76], range: 0 },
       { type: 1, form: 3, name: 'D（司令Lv90以上）弱', enemies: [79, 28, 43, 22, 75, 75], range: 0 },
       { type: 1, form: 3, name: 'D（司令Lv89以下）', enemies: [65, 79, 43, 22, 76, 76], range: 0 },
-      { type: 1, form: 2, name: 'E（前哨）', enemies: [29, 29, 77, 77, 34, 32], range: 0 },
-      { type: 1, form: 2, name: 'E（最終）', enemies: [60, 29, 29, 77, 77, 34], range: 0 },
+      { type: 1, form: 2, name: 'E(前哨)', enemies: [29, 29, 77, 77, 34, 32], range: 0 },
+      { type: 1, form: 2, name: 'E(最終)', enemies: [60, 29, 29, 77, 77, 34], range: 0 },
       { type: 1, form: 1, name: 'F', enemies: [55, 27, 21, 21, 76, 76], range: 0 },
-      { type: 1, form: 2, name: 'G（前哨）', enemies: [27, 22, 22, 20, 75, 75], range: 0 },
-      { type: 1, form: 3, name: 'G（最終）', enemies: [60, 27, 22, 77, 75, 75], range: 0 },
+      { type: 1, form: 2, name: 'G(前哨)', enemies: [27, 22, 22, 20, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'G(最終)', enemies: [60, 27, 22, 77, 75, 75], range: 0 },
       { type: 1, form: 3, name: 'H（司令Lv85～ 前哨）', enemies: [87, 49, 50, 51, 50, 51], range: 0 },
       { type: 1, form: 3, name: 'H（司令Lv85～ 最終）', enemies: [88, 49, 50, 51, 50, 51], range: 0 },
       { type: 1, form: 3, name: 'H（司令Lv～84 前哨）', enemies: [89, 49, 50, 51, 50, 51], range: 0 },
       { type: 1, form: 3, name: 'H（司令Lv～84 最終）', enemies: [90, 49, 50, 51, 50, 51], range: 0 },
-      { type: 1, form: 2, name: 'ボス（前哨）', enemies: [91, 26, 26, 29, 76, 76], range: 0 },
-      { type: 1, form: 1, name: 'ボス（最終）', enemies: [91, 58, 58, 43, 78, 78], range: 0 },
+      { type: 1, form: 2, name: 'ボス(前哨)', enemies: [91, 26, 26, 29, 76, 76], range: 0 },
+      { type: 1, form: 1, name: 'ボス(最終)', enemies: [91, 58, 58, 43, 78, 78], range: 0 },
     ]
   },
   {
-    area: 41, lv: -1, cell: [{ type: 1, form: 1, name: 'ボス', enemies: [23], range: 0 }]
+    area: 41, lv: -1, cell: [
+      { type: 1, form: 2, name: 'A', enemies: [54, 59, 21, 21, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'C', enemies: [27, 19, 19, 76, 75, 75], range: 0 },
+      { type: 1, form: 4, name: 'D', enemies: [32, 30, 30, 30, 30], range: 0 },
+      { type: 1, form: 2, name: 'E', enemies: [58, 58, 29, 29, 75, 75], range: 0 },
+      { type: 1, form: 2, name: 'G', enemies: [42, 42, 76, 76, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'H', enemies: [27, 27, 55, 54, 76, 76], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [27, 27, 23, 55, 76, 76], range: 0 }
+    ]
   },
   {
     area: 42, lv: -1, cell: [
-      { type: 1, form: 1, name: 'C', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'D', enemies: [28, 28], range: 0 },
-      { type: 1, form: 1, name: 'E', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [28], range: 0 }
+      { type: 1, form: 2, name: 'A', enemies: [27, 54, 18, 18, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'B', enemies: [33, 33, 30, 30, 20], range: 0 },
+      { type: 1, form: 3, name: 'C', enemies: [60, 27, 27, 54, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'D', enemies: [28, 28, 29, 55, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'E', enemies: [60, 27, 54, 18, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'G', enemies: [58, 26, 26, 54, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'H', enemies: [33, 33, 30, 30, 30, 30], range: 0 },
+      { type: 1, form: 2, name: 'ボス', enemies: [43, 28, 58, 58, 77, 77], range: 0 }
     ]
   },
   {
     area: 43, lv: -1, cell: [
-      { type: 1, form: 1, name: 'F', enemies: [28, 23], range: 0 },
-      { type: 1, form: 1, name: 'H', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'I', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [73, 60], range: 0 }
+      { type: 1, form: 4, name: 'A', enemies: [33, 30, 30, 20, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'C', enemies: [33, 33, 30, 30, 30], range: 0 },
+      { type: 1, form: 2, name: 'D', enemies: [27, 55, 19, 18, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [28, 23, 43, 55, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'G', enemies: [27, 55, 55, 19, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'H', enemies: [23, 42, 22, 18, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'I', enemies: [43, 42, 23, 18, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'L', enemies: [27, 19, 19, 76, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [73, 60, 76, 76, 13, 13], range: 0 }
     ]
   },
   {
     area: 44, lv: -1, cell: [
-      { type: 1, form: 1, name: 'F', enemies: [28, 23], range: 0 },
-      { type: 1, form: 1, name: 'G', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'H', enemies: [28], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [45], range: 0 }
+      { type: 1, form: 2, name: 'A', enemies: [27, 27, 55, 76, 1, 1], range: 0 },
+      { type: 1, form: 2, name: 'B', enemies: [27, 55, 76, 76, 32], range: 0 },
+      { type: 1, form: 4, name: 'E', enemies: [35, 32, 30, 30], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [28, 23, 43, 55, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'G', enemies: [43, 43, 23, 77, 77, 1], range: 0 },
+      { type: 1, form: 3, name: 'H', enemies: [28, 29, 27, 27, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'I', enemies: [27, 27, 55, 77, 77, 77], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [45, 43, 43, 77, 77, 31], range: 0 }
     ]
   },
   {
@@ -970,36 +1029,45 @@ const ENEMY_PATTERN = [
       { type: 1, form: 3, name: 'N', enemies: [58, 26, 26, 54, 76, 76], range: 0 },
       { type: 1, form: 4, name: 'O', enemies: [71, 71, 30, 30, 30, 30], range: 0 },
       { type: 1, form: 1, name: 'S', enemies: [60, 43, 95, 92, 77, 77], range: 0 },
-      { type: 1, form: 1, name: 'ボス（前哨）', enemies: [73, 50, 51, 67, 77, 77], range: 0 },
-      { type: 1, form: 1, name: 'ボス（最終）', enemies: [113, 49, 50, 67, 95, 58], range: 0 }]
+      { type: 1, form: 1, name: 'ボス(前哨)', enemies: [73, 50, 51, 67, 77, 77], range: 0 },
+      { type: 1, form: 1, name: 'ボス(最終)', enemies: [113, 49, 50, 67, 95, 58], range: 0 }]
   },
   {
     area: 51, lv: -1, cell: [
-      { type: 1, form: 1, name: 'D', enemies: [79, 79, 60], range: 0 },
-      { type: 1, form: 1, name: 'F', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'G', enemies: [23], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [79, 79], range: 0 }
+      { type: 1, form: 2, name: 'B', enemies: [27, 27, 55, 91, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'D', enemies: [79, 79, 60, 92, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'E', enemies: [34, 32, 32, 30, 30, 30], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [23, 95, 94, 91, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'G', enemies: [43, 42, 23, 91, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [79, 79, 43, 55, 77, 77], range: 0 }
     ]
   },
   {
     area: 52, lv: -1, cell: [
-      { type: 1, form: 1, name: 'C', enemies: [79, 79], range: 0 },
-      { type: 1, form: 1, name: 'E', enemies: [79], range: 0 },
-      { type: 1, form: 1, name: 'F', enemies: [79], range: 0 },
-      { type: 1, form: 1, name: 'I', enemies: [119, 65], range: 0 },
-      { type: 1, form: 1, name: 'L', enemies: [79, 79], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [119], range: 0 }]
+      { type: 3, form: 3, name: 'C', enemies: [79, 79, 27, 55, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'D', enemies: [26, 26, 26, 54, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'E', enemies: [79, 43, 55, 92, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [79, 27, 27, 55, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'I', enemies: [119, 65, 95, 92, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'K', enemies: [27, 27, 54, 76, 76, 76], range: 0 },
+      { type: 3, form: 3, name: 'L', enemies: [79, 79, 27, 55, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [119, 95, 95, 92, 76, 76], range: 0 }]
   },
   {
     area: 53, lv: -1, cell: [
-      { type: 1, form: 1, name: 'M', enemies: [79, 79, 79], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [48, 60, 60], range: 0 }
+      { type: 1, form: 2, name: 'C', enemies: [55, 92, 76, 76, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'M', enemies: [79, 79, 79, 92, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'ボス(強)', enemies: [48, 60, 60, 92, 77, 77], range: 0 },
+      { type: 1, form: 2, name: 'ボス(弱)', enemies: [48, 92, 92, 77, 77, 77], range: 0 }
     ]
   },
   {
     area: 54, lv: -1, cell: [
-      { type: 1, form: 1, name: 'G', enemies: [115, 115], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [264], range: 0 }
+      { type: 1, form: 1, name: 'C', enemies: [55, 91, 77, 77, 32, 32], range: 0 },
+      { type: 1, form: 2, name: 'E', enemies: [55, 18, 92, 77, 77, 1], range: 0 },
+      { type: 1, form: 3, name: 'G', enemies: [115, 115, 43, 95, 91, 77], range: 0 },
+      { type: 1, form: 3, name: 'L', enemies: [43, 43, 95, 91, 77, 77], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [58, 264, 43, 95, 77, 77], range: 0 }
     ]
   },
   {
@@ -1019,42 +1087,59 @@ const ENEMY_PATTERN = [
   },
   {
     area: 61, lv: -1, cell: [
-      { type: 1, form: 1, name: 'C', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'I', enemies: [85, 79], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [79], range: 0 }
+      { type: 1, form: 2, name: 'C', enemies: [29, 60, 27, 91, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'D', enemies: [54, 16, 16, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [55, 26, 26, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'H', enemies: [27, 16, 16, 91, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'I', enemies: [85, 79, 27, 91, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [79, 27, 92, 92, 78, 78], range: 0 }
     ]
   },
   {
     area: 62, lv: -1, cell: [
-      { type: 1, form: 1, name: 'B', enemies: [23, 23], range: 0 },
-      { type: 1, form: 1, name: 'C', enemies: [60, 60], range: 0 },
-      { type: 1, form: 1, name: 'F', enemies: [79, 79], range: 0 },
-      { type: 1, form: 1, name: 'H', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'I', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'J', enemies: [65], range: 0 },
-      { type: 1, form: 1, name: 'ボス', enemies: [79], range: 0 }
+      { type: 1, form: 3, name: 'B', enemies: [27, 23, 23, 91, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'C', enemies: [60, 60, 24, 91, 75, 75], range: 0 },
+      { type: 1, form: 3, name: 'F', enemies: [79, 79, 92, 76, 75, 75], range: 0 },
+      { type: 1, form: 2, name: 'H', enemies: [29, 29, 60, 91, 77, 78], range: 0 },
+      { type: 1, form: 3, name: 'I', enemies: [29, 29, 60, 91, 77, 78], range: 0 },
+      { type: 1, form: 3, name: 'J', enemies: [65, 29, 92, 77, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [58, 79, 67, 92, 78, 78], range: 0 }
+    ]
+  },
+  {
+    area: 63, lv: -1, cell: [
+      { type: 1, form: 1, name: 'B', enemies: [55, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'C', enemies: [71, 33, 32, 30, 30], range: 0 },
+      { type: 1, form: 2, name: 'D', enemies: [55, 76, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'E', enemies: [92, 21, 21, 75, 75], range: 0 },
+      { type: 1, form: 2, name: 'F', enemies: [95, 22, 20, 75, 75], range: 0 },
+      { type: 1, form: 1, name: 'ボス', enemies: [43, 43, 27, 97, 78, 78], range: 0 },
+      { type: 1, form: 1, name: 'ボス(最終)', enemies: [97, 43, 43, 27, 78, 78], range: 0 }
     ]
   },
   {
     area: 64, lv: -1, cell: [
-      { type: 1, form: 1, name: 'C', enemies: [29, 29, 55, 23], range: 3 },
-      { type: 1, form: 1, name: 'D', enemies: [169], range: 2 },
-      { type: 1, form: 1, name: 'E', enemies: [27], range: 2 },
-      { type: 1, form: 1, name: 'F', enemies: [169], range: 4 },
-      { type: 1, form: 1, name: 'G', enemies: [169], range: 3 },
-      { type: 1, form: 1, name: 'H', enemies: [29, 29, 55, 23], range: 7 },
-      { type: 1, form: 1, name: 'I', enemies: [169, 23], range: 6 },
-      { type: 1, form: 1, name: 'J', enemies: [118, 67, 95, 92], range: 6 },
-      { type: 1, form: 1, name: 'K', enemies: [117, 43, 27], range: 7 },
-      { type: 1, form: 1, name: 'L', enemies: [60, 60, 27], range: 7 },
-      { type: 1, form: 1, name: 'ボス', enemies: [171, 153], range: 5 },
-      { type: 1, form: 1, name: 'ボス（最終）', enemies: [156], range: 5 }
+      { type: 1, form: 1, name: 'A', enemies: [54, 59, 59, 77, 76, 76], range: 1 },
+      { type: 1, form: 1, name: 'B', enemies: [54, 77, 77, 76, 76], range: 1 },
+      { type: 1, form: 1, name: 'C', enemies: [29, 29, 55, 76, 76, 23], range: 3 },
+      { type: 3, form: 1, name: 'D', enemies: [169], range: 2 },
+      { type: 1, form: 1, name: 'E', enemies: [27, 54, 75, 75, 32, 32], range: 2 },
+      { type: 3, form: 1, name: 'F', enemies: [169], range: 4 },
+      { type: 3, form: 1, name: 'G', enemies: [169], range: 3 },
+      { type: 1, form: 1, name: 'H', enemies: [29, 29, 55, 78, 78, 23], range: 7 },
+      { type: 3, form: 3, name: 'I', enemies: [169, 23, 75, 75, 75], range: 6 },
+      { type: 1, form: 3, name: 'J', enemies: [118, 67, 95, 92, 76, 76], range: 6 },
+      { type: 1, form: 3, name: 'K', enemies: [117, 43, 27, 54, 76, 76], range: 7 },
+      { type: 1, form: 3, name: 'L', enemies: [60, 60, 27, 54, 75, 75], range: 7 },
+      { type: 1, form: 4, name: 'M', enemies: [72, 71, 71, 70, 70], range: 7 },
+      { type: 1, form: 1, name: 'ボス', enemies: [171, 167, 166, 165, 153, 58], range: 5 },
+      { type: 1, form: 1, name: 'ボス(最終)', enemies: [156, 167, 166, 165, 156, 55], range: 5 }
     ]
   },
   {
     area: 65, lv: -1, cell: [
-      { type: 3, form: 3, name: '空襲（前哨）', enemies: [86, 115], range: 1 },
-      { type: 3, form: 3, name: '空襲（最終）', enemies: [86, 115, 115], range: 1 },
+      { type: 3, form: 3, name: '空襲(前哨)', enemies: [86, 115], range: 1 },
+      { type: 3, form: 3, name: '空襲(最終)', enemies: [86, 115, 115], range: 1 },
       { type: 1, form: 1, name: 'A', enemies: [55, 55, 54, 54, 77, 77], range: 1 },
       { type: 1, form: 4, name: 'B', enemies: [34, 34, 32, 32, 32], range: 1 },
       { type: 1, form: 3, name: 'C', enemies: [118, 43, 95, 95, 77, 77], range: 2 },
@@ -1063,24 +1148,35 @@ const ENEMY_PATTERN = [
       { type: 1, form: 2, name: 'F', enemies: [66, 59, 59, 55, 76, 76], range: 2 },
       { type: 3, form: 3, name: 'G', enemies: [86, 115, 115, 92, 78, 78], range: 4 },
       { type: 3, form: 3, name: 'H', enemies: [115, 115, 92, 77, 77, 77], range: 4 },
-      { type: 3, form: 3, name: 'H（最終）', enemies: [86, 115, 92, 78, 78, 78], range: 4 },
+      { type: 3, form: 3, name: 'H(最終)', enemies: [86, 115, 92, 78, 78, 78], range: 4 },
       { type: 1, form: 3, name: 'I', enemies: [60, 60, 92, 77, 75, 75], range: 3 },
-      { type: 1, form: 3, name: 'I（最終）', enemies: [60, 60, 55, 92, 77, 77], range: 3 },
+      { type: 1, form: 3, name: 'I(最終)', enemies: [60, 60, 55, 92, 77, 77], range: 3 },
       // { type: 4, form: 3, name: 'K', enemies: [60, 55, 91, 76, 75, 75], range: 4 },
-      { type: 2, form: 13, name: 'ボス 弱', enemies: [86, 115, 27, 92, 76, 76, 55, 27, 75, 75, 75, 75], range: 5 },
-      { type: 2, form: 13, name: 'ボス 強 / 最終', enemies: [86, 115, 115, 92, 78, 78, 55, 27, 27, 77, 76, 76], range: 5 }
+      { type: 2, form: 13, name: 'ボス(弱)', enemies: [86, 115, 27, 92, 76, 76, 55, 27, 75, 75, 75, 75], range: 5 },
+      { type: 2, form: 13, name: 'ボス(強/最終)', enemies: [86, 115, 115, 92, 78, 78, 55, 27, 27, 77, 76, 76], range: 5 }
     ]
   },
   {
     area: 71, lv: -1, cell: [
-      { type: 1, form: 1, name: 'B', enemies: [60], range: 0 },
-      { type: 1, form: 1, name: 'C', enemies: [79], range: 0 }
+      { type: 1, form: 3, name: 'B', enemies: [60, 27, 27, 54, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'C', enemies: [79, 43, 95, 92, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'D', enemies: [71, 32, 32, 30, 30], range: 0 },
+      { type: 1, form: 4, name: 'F', enemies: [33, 33, 31, 31], range: 0 },
+      { type: 1, form: 2, name: 'G', enemies: [55, 54, 76, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'H', enemies: [71, 71, 31, 31], range: 0 },
+      { type: 1, form: 4, name: 'ボス', enemies: [72, 33, 33], range: 0 },
     ]
   },
   {
     area: 72, lv: -1, cell: [
-      { type: 1, form: 1, name: 'H', enemies: [118, 279, 23], range: 0 },
-      { type: 1, form: 3, name: 'ボス', enemies: [118, 279], range: 0 }
+      { type: 1, form: 2, name: 'B', enemies: [55, 54, 92, 76, 76, 76], range: 0 },
+      { type: 1, form: 4, name: 'C', enemies: [32, 32, 30, 30, 30], range: 0 },
+      { type: 1, form: 4, name: 'E', enemies: [32, 32, 32], range: 0 },
+      { type: 1, form: 4, name: 'Gボス', enemies: [72, 32, 32, 26, 76, 76], range: 0 },
+      { type: 3, form: 3, name: 'H', enemies: [118, 279, 23, 92, 76, 76], range: 0 },
+      { type: 1, form: 1, name: 'I', enemies: [27, 55, 54, 76, 76, 76], range: 0 },
+      { type: 1, form: 2, name: 'J', enemies: [29, 54, 58, 58, 76, 76], range: 0 },
+      { type: 1, form: 3, name: 'ボス', enemies: [118, 279, 95, 92, 76, 76], range: 0 },
     ]
   },
   {
@@ -1114,8 +1210,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'O', enemies: [95, 92], range: 5 },
         { type: 1, form: 1, name: 'P', enemies: [92, 95], range: 4 },
         { type: 1, form: 1, name: 'Q', enemies: [95, 92], range: 5 },
-        { type: 1, form: 1, name: 'Rボス 前哨', enemies: [161, 55, 55, 92], range: 6 },
-        { type: 1, form: 1, name: 'Rボス 最終', enemies: [164, 55, 55, 92], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(前哨)', enemies: [161, 55, 55, 92], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(最終)', enemies: [164, 55, 55, 92], range: 6 },
       ]
   },
   {
@@ -1134,8 +1230,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'O', enemies: [95, 91], range: 5 },
         { type: 1, form: 1, name: 'P', enemies: [94, 91], range: 4 },
         { type: 1, form: 1, name: 'Q', enemies: [94, 91], range: 5 },
-        { type: 1, form: 1, name: 'Rボス 前哨', enemies: [160, 91], range: 6 },
-        { type: 1, form: 1, name: 'Rボス 最終', enemies: [163, 91], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(前哨)', enemies: [160, 91], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(最終)', enemies: [163, 91], range: 6 },
       ]
   },
   {
@@ -1153,8 +1249,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'O', enemies: [94, 91], range: 5 },
         { type: 1, form: 1, name: 'P', enemies: [94, 91], range: 4 },
         { type: 1, form: 1, name: 'Q', enemies: [94, 91], range: 5 },
-        { type: 1, form: 1, name: 'Rボス 前哨', enemies: [159, 91], range: 6 },
-        { type: 1, form: 1, name: 'Rボス 最終', enemies: [162, 91], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(前哨)', enemies: [159, 91], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(最終)', enemies: [162, 91], range: 6 },
       ]
   },
   {
@@ -1172,8 +1268,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'O', enemies: [94, 91], range: 5 },
         { type: 1, form: 1, name: 'P', enemies: [94, 91], range: 4 },
         { type: 1, form: 1, name: 'Q', enemies: [94, 91], range: 5 },
-        { type: 1, form: 1, name: 'Rボス 前哨', enemies: [159], range: 6 },
-        { type: 1, form: 1, name: 'Rボス 最終', enemies: [162, 91], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(前哨)', enemies: [159], range: 6 },
+        { type: 1, form: 1, name: 'Rボス(最終)', enemies: [162, 91], range: 6 },
       ]
   },
   {
@@ -1185,8 +1281,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'I', enemies: [280, 27, 27, 92], range: 4 },
         { type: 1, form: 1, name: 'J', enemies: [27, 27, 92], range: 4 },
         { type: 1, form: 1, name: 'Mボス', enemies: [397, 92], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [104, 27, 276], range: 6 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [295, 27, 266, 92], range: 6 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [104, 27, 276], range: 6 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [295, 27, 266, 92], range: 6 },
       ]
   },
   {
@@ -1198,8 +1294,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'I', enemies: [277, 27, 27, 91], range: 4 },
         { type: 1, form: 1, name: 'J', enemies: [27, 27, 91], range: 4 },
         { type: 1, form: 1, name: 'Mボス', enemies: [396, 92], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [103, 27], range: 6 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [294, 27, 23], range: 6 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [103, 27], range: 6 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [294, 27, 23], range: 6 },
       ]
   },
   {
@@ -1211,8 +1307,8 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'I', enemies: [277, 22, 91], range: 4 },
         { type: 1, form: 1, name: 'J', enemies: [55, 27, 22], range: 4 },
         { type: 1, form: 1, name: 'Mボス', enemies: [395, 91], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [103, 22], range: 6 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [293, 22], range: 6 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [103, 22], range: 6 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [293, 22], range: 6 },
       ]
   },
   {
@@ -1231,9 +1327,9 @@ const ENEMY_PATTERN = [
     // 甲
     area: 19114, lv: 3, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [394, 394, 150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [394, 393, 150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [394, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(強)', enemies: [394, 394, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(中)', enemies: [394, 393, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(弱)', enemies: [394, 150, 150], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [72, 33, 33], range: 2 },
         { type: 1, form: 2, name: 'C', enemies: [404, 59, 59, 123, 76, 76], range: 3 },
         { type: 3, form: 3, name: 'D', enemies: [394, 394, 150, 150], range: 3 },
@@ -1246,18 +1342,18 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'Pボス', enemies: [397, 43, 55, 92, 243, 243], range: 5 },
         { type: 1, form: 4, name: 'Q', enemies: [72, 33, 33], range: 2 },
         { type: 3, form: 3, name: 'R', enemies: [400, 279, 262, 92, 243, 243], range: 6 },
-        { type: 3, form: 3, name: 'R 最終', enemies: [403, 279, 279, 92, 243, 243], range: 6 },
-        { type: 2, form: 11, name: 'Sボス 前哨', enemies: [400, 397, 27, 27, 240, 240, 404, 92, 240, 240, 240, 240], range: 7 },
-        { type: 2, form: 11, name: 'Sボス 最終', enemies: [403, 397, 279, 92, 243, 243, 405, 54, 243, 243, 243, 243], range: 7 },
+        { type: 3, form: 3, name: 'R(最終)', enemies: [403, 279, 279, 92, 243, 243], range: 6 },
+        { type: 2, form: 11, name: 'Sボス(前哨)', enemies: [400, 397, 27, 27, 240, 240, 404, 92, 240, 240, 240, 240], range: 7 },
+        { type: 2, form: 11, name: 'Sボス(最終)', enemies: [403, 397, 279, 92, 243, 243, 405, 54, 243, 243, 243, 243], range: 7 },
       ]
   },
   {
     // 乙
     area: 19114, lv: 2, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [393, 150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [392, 150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [392, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(強)', enemies: [393, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(中)', enemies: [392, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(弱)', enemies: [392, 150, 150], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [71, 32, 32], range: 2 },
         { type: 1, form: 2, name: 'C', enemies: [54, 59, 59, 77, 1, 1], range: 3 },
         // { type: 1, form: 1, name: 'D', enemies: [394, 394, 150, 150], range: 3},
@@ -1270,18 +1366,18 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'Pボス', enemies: [397, 42, 42, 55, 92, 240, 240], range: 5 },
         { type: 1, form: 4, name: 'Q', enemies: [71, 33, 33], range: 2 },
         { type: 3, form: 3, name: 'R', enemies: [399, 262, 262, 91, 242, 242], range: 6 },
-        { type: 3, form: 3, name: 'R 最終', enemies: [402, 263, 262, 91, 242, 242], range: 6 },
-        { type: 2, form: 11, name: 'Sボス 前哨', enemies: [399, 27, 27, 19, 239, 239, 54, 91, 239, 239, 1, 1], range: 7 },
-        { type: 2, form: 11, name: 'Sボス 最終', enemies: [402, 395, 262, 91, 242, 242, 404, 239, 239, 239, 239, 239], range: 7 },
+        { type: 3, form: 3, name: 'R(最終)', enemies: [402, 263, 262, 91, 242, 242], range: 6 },
+        { type: 2, form: 11, name: 'Sボス(前哨)', enemies: [399, 27, 27, 19, 239, 239, 54, 91, 239, 239, 1, 1], range: 7 },
+        { type: 2, form: 11, name: 'Sボス(最終)', enemies: [402, 395, 262, 91, 242, 242, 404, 239, 239, 239, 239, 239], range: 7 },
       ]
   },
   {
     // 丙
     area: 19114, lv: 1, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [150, 150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [150], range: 1 },
+        { type: 3, form: 3, name: '空襲(強)', enemies: [150, 150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(中)', enemies: [150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(弱)', enemies: [150], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [71, 31, 31], range: 2 },
         { type: 1, form: 2, name: 'C', enemies: [54, 21, 21, 77, 1, 1], range: 3 },
         { type: 3, form: 3, name: 'D', enemies: [150, 150, 150], range: 3 },
@@ -1294,17 +1390,17 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'Pボス', enemies: [395, 41, 41, 91, 239, 239], range: 5 },
         { type: 1, form: 4, name: 'Q', enemies: [71, 31, 31], range: 2 },
         { type: 3, form: 3, name: 'R', enemies: [398, 23, 23, 18, 1, 1], range: 6 },
-        { type: 3, form: 3, name: 'R 最終', enemies: [401, 262, 23, 19, 239, 239], range: 6 },
-        { type: 2, form: 11, name: 'Sボス 前哨', enemies: [398, 22, 19, 18, 239, 239, 18, 239, 239, 1, 1, 1], range: 7 },
-        { type: 2, form: 11, name: 'Sボス 最終', enemies: [401, 23, 91, 19, 239, 239, 18, 239, 239, 239, 1, 1], range: 7 },
+        { type: 3, form: 3, name: 'R(最終)', enemies: [401, 262, 23, 19, 239, 239], range: 6 },
+        { type: 2, form: 11, name: 'Sボス(前哨)', enemies: [398, 22, 19, 18, 239, 239, 18, 239, 239, 1, 1, 1], range: 7 },
+        { type: 2, form: 11, name: 'Sボス(最終)', enemies: [401, 23, 91, 19, 239, 239, 18, 239, 239, 239, 1, 1], range: 7 },
       ]
   },
   {
     // 丁
     area: 19114, lv: 0, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [150, 150], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [150], range: 1 },
+        { type: 3, form: 3, name: '空襲(強)', enemies: [150, 150], range: 1 },
+        { type: 3, form: 3, name: '空襲(弱)', enemies: [150], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [71, 30, 30], range: 2 },
         { type: 1, form: 2, name: 'C', enemies: [54, 21, 21, 77, 1, 1], range: 3 },
         // { type: 1, form: 1, name: 'D', enemies: [150, 150, 150], range: 3},
@@ -1317,18 +1413,18 @@ const ENEMY_PATTERN = [
         { type: 1, form: 1, name: 'Pボス', enemies: [395, 54, 239, 1, 1, 1], range: 5 },
         { type: 1, form: 4, name: 'Q', enemies: [71, 30, 30], range: 2 },
         { type: 3, form: 3, name: 'R', enemies: [398, 23, 18, 1, 1, 1], range: 6 },
-        { type: 3, form: 3, name: 'R 最終', enemies: [401, 23, 23], range: 6 },
-        { type: 2, form: 11, name: 'Sボス 前哨', enemies: [398, 18, 239, 1, 1, 1, 1, 1, 1, 1, 1, 1], range: 7 },
-        { type: 2, form: 11, name: 'Sボス 最終', enemies: [401, 22, 18, 239, 1, 1, 18, 1, 1, 1, 1, 1], range: 7 },
+        { type: 3, form: 3, name: 'R(最終)', enemies: [401, 23, 23], range: 6 },
+        { type: 2, form: 11, name: 'Sボス(前哨)', enemies: [398, 18, 239, 1, 1, 1, 1, 1, 1, 1, 1, 1], range: 7 },
+        { type: 2, form: 11, name: 'Sボス(最終)', enemies: [401, 22, 18, 239, 1, 1, 18, 1, 1, 1, 1, 1], range: 7 },
       ]
   },
   {
     // 甲
     area: 19115, lv: 3, cell:
       [
-        { type: 0, form: 3, name: '空襲 強', enemies: [408, 280, 280, 280, 244, 244], range: 1 },
-        { type: 0, form: 3, name: '空襲 中', enemies: [408, 280, 280, 277, 243, 243], range: 1 },
-        { type: 0, form: 3, name: '空襲 弱', enemies: [408, 280, 280, 92, 243, 243], range: 1 },
+        { type: 0, form: 3, name: '空襲(強)', enemies: [408, 280, 280, 280, 244, 244], range: 1 },
+        { type: 0, form: 3, name: '空襲(中)', enemies: [408, 280, 280, 277, 243, 243], range: 1 },
+        { type: 0, form: 3, name: '空襲(弱)', enemies: [408, 280, 280, 92, 243, 243], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [238, 72, 71, 71], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [279, 279, 405, 362, 240, 240], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [238, 71, 71, 71], range: 1 },
@@ -1341,16 +1437,16 @@ const ENEMY_PATTERN = [
         { type: 3, form: 3, name: 'K', enemies: [408, 280, 280, 280, 244, 244], range: 4 },
         { type: 3, form: 3, name: 'L', enemies: [408, 280, 280, 280, 244, 244], range: 5 },
         { type: 1, form: 3, name: 'N', enemies: [266, 266, 43, 58, 243, 243], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [408, 280, 280, 43, 95, 95, 405, 362, 244, 244, 240, 240], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [408, 408, 280, 280, 43, 43, 405, 362, 244, 244, 244, 244], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [408, 280, 280, 43, 95, 95, 405, 362, 244, 244, 240, 240], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [408, 408, 280, 280, 43, 43, 405, 362, 244, 244, 244, 244], range: 5 },
       ]
   },
   {
     // 乙
     area: 19115, lv: 2, cell:
       [
-        { type: 0, form: 3, name: '空襲 強', enemies: [407, 278, 277, 277, 240, 240], range: 1 },
-        { type: 0, form: 3, name: '空襲 弱', enemies: [407, 277, 277, 91, 239, 239], range: 1 },
+        { type: 0, form: 3, name: '空襲(強)', enemies: [407, 278, 277, 277, 240, 240], range: 1 },
+        { type: 0, form: 3, name: '空襲(弱)', enemies: [407, 277, 277, 91, 239, 239], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [237, 71, 32, 32], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [264, 263, 404, 92, 239, 239], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [237, 32, 32, 32], range: 1 },
@@ -1363,17 +1459,17 @@ const ENEMY_PATTERN = [
         { type: 3, form: 3, name: 'K', enemies: [407, 278, 278, 277, 240, 240], range: 4 },
         // { type: 1, form: 1, name: 'L', enemies: [407, 280, 280, 277], range: 5},
         // { type: 1, form: 1, name: 'N', enemies: [266, 43, 265], range: 5},
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [407, 278, 278, 42, 95, 240, 404, 92, 240, 239, 239, 239], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [407, 278, 278, 277, 42, 42, 404, 92, 240, 240, 240, 240], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [407, 278, 278, 42, 95, 240, 404, 92, 240, 239, 239, 239], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [407, 278, 278, 277, 42, 42, 404, 92, 240, 240, 240, 240], range: 5 },
       ]
   },
   {
     // 丙
     area: 19115, lv: 1, cell:
       [
-        { type: 0, form: 3, name: '空襲 強', enemies: [406, 277, 23, 91], range: 1 },
-        { type: 0, form: 3, name: '空襲 中', enemies: [406, 23, 23, 91], range: 1 },
-        { type: 0, form: 3, name: '空襲 弱', enemies: [406, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(強)', enemies: [406, 277, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(中)', enemies: [406, 23, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(弱)', enemies: [406, 23, 91], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 32, 30], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [263, 262, 55, 91, 77, 1], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [236, 32, 32], range: 1 },
@@ -1386,16 +1482,16 @@ const ENEMY_PATTERN = [
         { type: 3, form: 3, name: 'K', enemies: [406, 277, 23, 91, 239, 239], range: 4 },
         { type: 3, form: 3, name: 'L', enemies: [406, 277, 23, 91, 239, 239], range: 5 },
         { type: 1, form: 3, name: 'N', enemies: [276, 276, 42, 26, 239, 239], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [406, 277, 23, 42, 94, 239, 55, 91, 239, 1, 1, 1], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [406, 277, 277, 42, 42, 239, 55, 91, 239, 239, 1, 1], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [406, 277, 23, 42, 94, 239, 55, 91, 239, 1, 1, 1], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [406, 277, 277, 42, 42, 239, 55, 91, 239, 239, 1, 1], range: 5 },
       ]
   },
   {
     // 丁
     area: 19115, lv: 0, cell:
       [
-        { type: 0, form: 3, name: '空襲 強', enemies: [406, 23, 91], range: 1 },
-        { type: 0, form: 3, name: '空襲 弱', enemies: [406, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(強)', enemies: [406, 23, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(弱)', enemies: [406, 91], range: 1 },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 30, 30], range: 1 },
         { type: 3, form: 3, name: 'B', enemies: [262, 23, 55, 91, 1, 1], range: 1 },
         { type: 1, form: 4, name: 'C', enemies: [236, 32, 30], range: 1 },
@@ -1408,76 +1504,76 @@ const ENEMY_PATTERN = [
         { type: 3, form: 3, name: 'K', enemies: [406, 23, 91, 239, 1, 1], range: 4 },
         { type: 3, form: 3, name: 'L', enemies: [406, 23, 91, 239, 1, 1], range: 5 },
         { type: 1, form: 3, name: 'N', enemies: [276, 26, 41, 239, 239, 1], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 前哨', enemies: [406, 23, 41, 94, 1, 1, 91, 1, 1, 1, 1, 1], range: 5 },
-        { type: 2, form: 11, name: 'Oボス 最終', enemies: [406, 23, 23, 41, 41, 239, 91, 239, 1, 1, 1, 1], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(前哨)', enemies: [406, 23, 41, 94, 1, 1, 91, 1, 1, 1, 1, 1], range: 5 },
+        { type: 2, form: 11, name: 'Oボス(最終)', enemies: [406, 23, 23, 41, 41, 239, 91, 239, 1, 1, 1, 1], range: 5 },
       ]
   },
   {
     // 甲
     area: 19116, lv: 3, cell:
       [
-        { type: 0, form: 3, name: '空襲 強', enemies: [183, 394, 151, 150, 414, 362], range: 1 },
-        { type: 0, form: 3, name: '空襲 中', enemies: [183, 394, 150, 150, 411, 362], range: 1 },
-        { type: 0, form: 3, name: '空襲 弱', enemies: [183, 394, 150, 362, 411, 362], range: 1 },
+        { type: 0, form: 3, name: '空襲(強)', enemies: [183, 394, 151, 150, 414, 362], range: 1 },
+        { type: 0, form: 3, name: '空襲(中)', enemies: [183, 394, 150, 150, 411, 362], range: 1 },
+        { type: 0, form: 3, name: '空襲(弱)', enemies: [183, 394, 150, 362, 411, 362], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [238, 72, 72, 71, 71], range: 2 },
         { type: 1, form: 2, name: 'D', enemies: [405, 362, 362, 78, 78, 78], range: 3 },
         { type: 3, form: 3, name: 'E', enemies: [183, 151, 150, 150, 411, 362], range: 3 },
-        { type: 3, form: 3, name: 'E ラスト', enemies: [183, 152, 150, 150, 414, 362], range: 3 },
+        { type: 3, form: 3, name: 'E(最終)', enemies: [183, 152, 150, 150, 414, 362], range: 3 },
         { type: 1, form: 4, name: 'F', enemies: [238, 72, 72, 71, 71], range: 3 },
         { type: 3, form: 3, name: 'H', enemies: [183, 151, 151, 150, 411, 362], range: 3 },
-        { type: 3, form: 3, name: 'H ラスト', enemies: [183, 152, 151, 150, 414, 362], range: 3 },
+        { type: 3, form: 3, name: 'H(最終)', enemies: [183, 152, 151, 150, 414, 362], range: 3 },
         { type: 3, form: 3, name: 'J', enemies: [408, 118, 280, 280, 43, 362], range: 4 },
         // { type: 4, form: 2, name: 'K', enemies: [405, 392, 124, 124, 78, 78], range: 5 },
         { type: 1, form: 3, name: 'L', enemies: [118, 43, 362, 266, 243, 243], range: 5 },
         { type: 3, form: 3, name: 'M', enemies: [183, 152, 151, 150, 411, 362], range: 5 },
-        { type: 3, form: 3, name: 'M ラスト', enemies: [183, 152, 152, 150, 414, 362], range: 5 },
+        { type: 3, form: 3, name: 'M(最終)', enemies: [183, 152, 152, 150, 414, 362], range: 5 },
         { type: 1, form: 2, name: 'N', enemies: [43, 43, 362, 362, 244, 244], range: 6 },
         { type: 2, form: 11, name: 'Pボス', enemies: [295, 27, 27, 95, 95, 92, 405, 92, 92, 243, 243, 243], range: 6 },
         { type: 2, form: 11, name: 'Pボス 輸送後', enemies: [298, 27, 27, 95, 92, 26, 405, 92, 243, 243, 243, 243], range: 6 },
         { type: 1, form: 3, name: 'Q', enemies: [280, 266, 43, 362, 244, 244], range: 5 },
         { type: 1, form: 2, name: 'S', enemies: [397, 397, 362, 92, 243, 243], range: 6 },
-        { type: 2, form: 11, name: 'V 強', enemies: [408, 118, 280, 280, 43, 362, 405, 362, 244, 244, 243, 243], range: 6 },
-        { type: 2, form: 11, name: 'V 弱', enemies: [408, 280, 280, 43, 43, 362, 405, 362, 244, 244, 243, 243], range: 6 },
-        { type: 2, form: 11, name: 'Wボス 前哨', enemies: [411, 294, 294, 397, 397, 362, 405, 244, 244, 243, 243, 139], range: 7 },
-        { type: 2, form: 11, name: 'Wボス 最終', enemies: [414, 297, 297, 397, 397, 362, 405, 362, 244, 244, 244, 140], range: 7 },
+        { type: 2, form: 11, name: 'V(強)', enemies: [408, 118, 280, 280, 43, 362, 405, 362, 244, 244, 243, 243], range: 6 },
+        { type: 2, form: 11, name: 'V(弱)', enemies: [408, 280, 280, 43, 43, 362, 405, 362, 244, 244, 243, 243], range: 6 },
+        { type: 2, form: 11, name: 'Wボス(前哨)', enemies: [411, 294, 294, 397, 397, 362, 405, 244, 244, 243, 243, 139], range: 7 },
+        { type: 2, form: 11, name: 'Wボス(最終)', enemies: [414, 297, 297, 397, 397, 362, 405, 362, 244, 244, 244, 140], range: 7 },
       ]
   },
   {
     // 乙
     area: 19116, lv: 2, cell:
       [
-        { type: 0, form: 3, name: '空襲 強', enemies: [182, 151, 150, 150, 413, 92], range: 1 },
-        { type: 0, form: 3, name: '空襲 中', enemies: [182, 150, 150, 150, 410, 91], range: 1 },
-        { type: 0, form: 3, name: '空襲 弱', enemies: [182, 151, 150, 410, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(強)', enemies: [182, 151, 150, 150, 413, 92], range: 1 },
+        { type: 0, form: 3, name: '空襲(中)', enemies: [182, 150, 150, 150, 410, 91], range: 1 },
+        { type: 0, form: 3, name: '空襲(弱)', enemies: [182, 151, 150, 410, 91], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [237, 71, 71, 71, 31], range: 2 },
         { type: 1, form: 2, name: 'D', enemies: [405, 362, 92, 78, 77, 77], range: 3 },
         { type: 3, form: 3, name: 'E', enemies: [182, 151, 150, 413, 92, 92], range: 3 },
         { type: 1, form: 4, name: 'F', enemies: [237, 71, 71, 71, 31], range: 3 },
         { type: 3, form: 3, name: 'H', enemies: [182, 150, 150, 150, 410, 92], range: 3 },
-        { type: 3, form: 3, name: 'H ラスト', enemies: [182, 151, 150, 150, 413, 92], range: 3 },
+        { type: 3, form: 3, name: 'H(最終)', enemies: [182, 151, 150, 150, 413, 92], range: 3 },
         { type: 3, form: 3, name: 'J', enemies: [407, 117, 278, 278, 42, 92], range: 4 },
         // { type: 4, form: 2, name: 'K', enemies: [404, 92, 124, 78, 77, 77], range: 5 },
         { type: 1, form: 3, name: 'L', enemies: [118, 43, 92, 265, 243, 243], range: 5 },
         { type: 3, form: 3, name: 'M', enemies: [182, 151, 150, 150, 410, 92], range: 5 },
-        { type: 3, form: 3, name: 'M ラスト', enemies: [182, 152, 150, 150, 413, 92], range: 5 },
+        { type: 3, form: 3, name: 'M(最終)', enemies: [182, 152, 150, 150, 413, 92], range: 5 },
         { type: 1, form: 2, name: 'N', enemies: [43, 43, 92, 92, 243, 243], range: 6 },
         { type: 2, form: 11, name: 'Pボス', enemies: [294, 27, 27, 95, 95, 92, 404, 91, 242, 242, 1, 1], range: 6 },
         { type: 2, form: 11, name: 'Pボス 輸送後', enemies: [297, 27, 27, 95, 92, 26, 404, 91, 242, 242, 1, 1], range: 6 },
         { type: 1, form: 3, name: 'Q', enemies: [278, 276, 42, 92, 242, 242], range: 5 },
         { type: 1, form: 2, name: 'S', enemies: [396, 396, 92, 92, 243, 243], range: 6 },
-        { type: 2, form: 11, name: 'V 強', enemies: [407, 117, 278, 278, 42, 92, 404, 92, 243, 243, 242, 242], range: 6 },
-        { type: 2, form: 11, name: 'V 弱', enemies: [407, 278, 278, 42, 42, 92, 404, 92, 243, 243, 242, 242], range: 6 },
-        { type: 2, form: 11, name: 'Wボス 前哨', enemies: [410, 42, 42, 396, 396, 92, 404, 243, 243, 239, 239, 138], range: 7 },
-        { type: 2, form: 11, name: 'Wボス 最終', enemies: [413, 42, 42, 396, 396, 92, , 404, 92, 243, 243, 243, 139], range: 7 },
+        { type: 2, form: 11, name: 'V(強)', enemies: [407, 117, 278, 278, 42, 92, 404, 92, 243, 243, 242, 242], range: 6 },
+        { type: 2, form: 11, name: 'V(弱)', enemies: [407, 278, 278, 42, 42, 92, 404, 92, 243, 243, 242, 242], range: 6 },
+        { type: 2, form: 11, name: 'Wボス(前哨)', enemies: [410, 42, 42, 396, 396, 92, 404, 243, 243, 239, 239, 138], range: 7 },
+        { type: 2, form: 11, name: 'Wボス(最終)', enemies: [413, 42, 42, 396, 396, 92, , 404, 92, 243, 243, 243, 139], range: 7 },
       ]
   },
   {
     // 丙
     area: 19116, lv: 1, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [182, 151, 150, 409, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 中', enemies: [182, 150, 150, 409, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [182, 150, 409, 91], range: 1 },
+        { type: 3, form: 3, name: '空襲(強)', enemies: [182, 151, 150, 409, 91], range: 1 },
+        { type: 3, form: 3, name: '空襲(中)', enemies: [182, 150, 150, 409, 91], range: 1 },
+        { type: 3, form: 3, name: '空襲(弱)', enemies: [182, 150, 409, 91], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [236, 71, 31, 31, 31], range: 2 },
         { type: 1, form: 2, name: 'D', enemies: [404, 92, 92, 77, 77, 1], range: 3 },
         { type: 3, form: 3, name: 'E', enemies: [182, 151, 409, 91], range: 3 },
@@ -1492,18 +1588,18 @@ const ENEMY_PATTERN = [
         { type: 2, form: 11, name: 'Pボス 輸送後', enemies: [296, 27, 27, 95, 91, 13, 55, 91, 239, 239, 1, 1], range: 6 },
         { type: 1, form: 3, name: 'Q', enemies: [262, 276, 41, 91, 242, 242], range: 5 },
         { type: 1, form: 2, name: 'S', enemies: [396, 395, 92, 91, 242, 242], range: 6 },
-        { type: 2, form: 11, name: 'V 強', enemies: [406, 116, 277, 277, 41, 91, 55, 91, 242, 242, 1, 1], range: 6 },
-        { type: 2, form: 11, name: 'V 弱', enemies: [406, 277, 277, 41, 41, 91, 55, 91, 242, 242, 1, 1], range: 6 },
-        { type: 2, form: 11, name: 'Wボス 前哨', enemies: [409, 41, 41, 95, 95, 91, 55, 91, 239, 239, 1, 137], range: 7 },
-        { type: 2, form: 11, name: 'Wボス 最終', enemies: [412, 41, 41, 395, 395, 91, 55, 91, 239, 239, 239, 138], range: 7 },
+        { type: 2, form: 11, name: 'V(強)', enemies: [406, 116, 277, 277, 41, 91, 55, 91, 242, 242, 1, 1], range: 6 },
+        { type: 2, form: 11, name: 'V(弱)', enemies: [406, 277, 277, 41, 41, 91, 55, 91, 242, 242, 1, 1], range: 6 },
+        { type: 2, form: 11, name: 'Wボス(前哨)', enemies: [409, 41, 41, 95, 95, 91, 55, 91, 239, 239, 1, 137], range: 7 },
+        { type: 2, form: 11, name: 'Wボス(最終)', enemies: [412, 41, 41, 395, 395, 91, 55, 91, 239, 239, 239, 138], range: 7 },
       ]
   },
   {
     // 丁
     area: 19116, lv: 0, cell:
       [
-        { type: 3, form: 3, name: '空襲 強', enemies: [182, 150, 150, 409, 91], range: 1 },
-        { type: 3, form: 3, name: '空襲 弱', enemies: [182, 150, 409, 91], range: 1 },
+        { type: 3, form: 3, name: '空襲(強)', enemies: [182, 150, 150, 409, 91], range: 1 },
+        { type: 3, form: 3, name: '空襲(弱)', enemies: [182, 150, 409, 91], range: 1 },
         { type: 1, form: 4, name: 'B', enemies: [236, 71, 31, 31], range: 2 },
         { type: 1, form: 2, name: 'D', enemies: [55, 91, 91, 77, 77, 1], range: 3 },
         { type: 3, form: 3, name: 'E', enemies: [182, 150, 409, 91], range: 3 },
@@ -1515,13 +1611,13 @@ const ENEMY_PATTERN = [
         { type: 3, form: 3, name: 'M', enemies: [182, 150, 150, 409, 92], range: 5 },
         { type: 1, form: 2, name: 'N', enemies: [42, 42, 92, 91, 239, 239], range: 6 },
         { type: 2, form: 11, name: 'Pボス', enemies: [293, 27, 27, 94, 91, 13, 91, 239, 1, 1, 1, 1], range: 6 },
-        { type: 2, form: 11, name: 'Pボス 輸送後', enemies: [296, 27, 27, 94, 13, 13, 91, 239, 1, 1, 1, 1], range: 6 },
+        { type: 2, form: 11, name: 'Pボス(輸送後)', enemies: [296, 27, 27, 94, 13, 13, 91, 239, 1, 1, 1, 1], range: 6 },
         { type: 1, form: 3, name: 'Q', enemies: [277, 276, 41, 91, 242, 242], range: 5 },
         { type: 1, form: 2, name: 'S', enemies: [395, 395, 91, 91, 242, 242], range: 6 },
-        { type: 2, form: 11, name: 'V 強', enemies: [406, 23, 23, 41, 91, 239, 91, 239, 239, 1, 1, 1], range: 6 },
-        { type: 2, form: 11, name: 'V 弱', enemies: [406, 41, 91, 239, 1, 1, 91, 239, 239, 1, 1, 1], range: 6 },
-        { type: 2, form: 11, name: 'Wボス 前哨', enemies: [409, 41, 94, 94, 91, 239, 55, 1, 1, 1, 1, 137], range: 7 },
-        { type: 2, form: 11, name: 'Wボス 最終', enemies: [412, 41, 41, 94, 94, 91, 55, 239, 239, 1, 1, 137], range: 7 },
+        { type: 2, form: 11, name: 'V(強)', enemies: [406, 23, 23, 41, 91, 239, 91, 239, 239, 1, 1, 1], range: 6 },
+        { type: 2, form: 11, name: 'V(弱)', enemies: [406, 41, 91, 239, 1, 1, 91, 239, 239, 1, 1, 1], range: 6 },
+        { type: 2, form: 11, name: 'Wボス(前哨)', enemies: [409, 41, 94, 94, 91, 239, 55, 1, 1, 1, 1, 137], range: 7 },
+        { type: 2, form: 11, name: 'Wボス(最終)', enemies: [412, 41, 41, 94, 94, 91, 55, 239, 239, 1, 1, 137], range: 7 },
       ]
   },
 ];
