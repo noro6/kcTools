@@ -170,7 +170,7 @@ const PLANE_DATA = [
   { id: 180, type: 101, name: "一式陸攻 二二型甲", AA: 3, range: 10, IP: 0, AB: 0, imp: false, LOS: 4, cost: 12, abbr: '', avoid: 0 },
   { id: 186, type: 101, name: "一式陸攻 三四型", AA: 4, range: 8, IP: 0, AB: 0, imp: true, LOS: 4, cost: 12, abbr: '', avoid: 0 },
   { id: 187, type: 101, name: "銀河", AA: 3, range: 9, IP: 0, AB: 0, imp: true, LOS: 3, cost: 13, abbr: '', avoid: 0 },
-  { id: 224, type: 101, name: "爆装一式戦 隼III型改(55戦隊)", AA: 6, range: 5, IP: 0, AB: 0, imp: false, LOS: 1, cost: 4, abbr: '爆装一式戦(55戦隊)', avoid: 0 },
+  { id: 224, type: 101, name: "爆装一式戦 隼III型改(65戦隊)", AA: 6, range: 5, IP: 0, AB: 0, imp: false, LOS: 1, cost: 4, abbr: '爆装一式戦(65戦隊)', avoid: 0 },
   { id: 269, type: -101, name: "試製東海", AA: 0, range: 8, IP: 0, AB: 0, imp: false, LOS: 5, cost: 9, abbr: '', avoid: 0 },
   { id: 270, type: -101, name: "東海(九〇一空)", AA: 0, range: 8, IP: 0, AB: 0, imp: false, LOS: 6, cost: 9, abbr: '', avoid: 0 },
   { id: 176, type: 102, name: "三式戦 飛燕", AA: 8, range: 3, IP: 3, AB: 1, imp: true, LOS: 0, cost: 7, abbr: '', avoid: 0 },
@@ -1914,4 +1914,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/01/01";
+const LAST_UPDATE_DATE = "2020/01/03";
