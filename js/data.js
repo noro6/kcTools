@@ -74,7 +74,7 @@ const PLANE_DATA = [
   { id: 249, type: 1, name: "Fulmar", AA: 3, range: 4, IP: 0, AB: 0, imp: false, LOS: 1, cost: 5, abbr: '', avoid: 0 },
   { id: 252, type: 1, name: "Seafire Mk.III改", AA: 9, range: 4, IP: 0, AB: 0, imp: false, LOS: 0, cost: 6, abbr: '', avoid: 0 },
   { id: 271, type: 1, name: "紫電改四", AA: 10, range: 4, IP: 0, AB: 0, imp: false, LOS: 0, cost: 7, abbr: '', avoid: 0 },
-  { id: 335, type: 1, name: "烈風改(試製艦載型)", AA: 10, range: 5, IP: 0, AB: 0, imp: false, LOS: 0, cost: 10, abbr: '', avoid: 0 },
+  { id: 335, type: 1, name: "烈風改(試製艦載型)", AA: 10, range: 4, IP: 0, AB: 0, imp: false, LOS: 0, cost: 10, abbr: '', avoid: 0 },
   { id: 336, type: 1, name: "烈風改二", AA: 13, range: 5, IP: 0, AB: 0, imp: false, LOS: 0, cost: 10, abbr: '', avoid: 0 },
   { id: 353, type: 1, name: "Fw190 A-5改(熟練)", AA: 11, range: 4, IP: 0, AB: 0, imp: false, LOS: 0, cost: 6, abbr: '', avoid: 0 },
   { id: 254, type: -1, name: "F6F-3N", AA: 8, range: 5, IP: 0, AB: 0, imp: false, LOS: 2, cost: 9, abbr: '', avoid: 0 },
@@ -1914,4 +1914,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/01/03";
+const LAST_UPDATE_DATE = "2020/01/09";
