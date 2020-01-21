@@ -836,7 +836,7 @@ const ENEMY_PATTERN = [
   {
     area: 15, lv: -1, cell: [
       { type: 1, form: 4, name: 'A', enemies: [32, 30, 30], range: 0 },
-      { type: 1, form: 1, name: 'B', enemies: [55, 59, 59, 75, 75, 75], range: 0 },
+      { type: 1, form: 1, name: 'C', enemies: [55, 59, 59, 75, 75, 75], range: 0 },
       { type: 1, form: 4, name: 'D', enemies: [33, 31, 31], range: 0 },
       { type: 1, form: 4, name: 'E', enemies: [33, 32, 32], range: 0 },
       { type: 1, form: 4, name: 'F', enemies: [33, 32, 32, 32], range: 0 },
@@ -1914,4 +1914,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/01/16";
+const LAST_UPDATE_DATE = "2020/01/22";
