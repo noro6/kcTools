@@ -487,6 +487,7 @@ function initialize(callback) {
   createNodeSelect();
 
   // 結果欄欄チェック初期化
+  $('#display_bar').prop('checked', true);
   $('#display_land_base_result').prop('checked', true);
   $('#display_fleet_result').prop('checked', true);
 
@@ -1553,11 +1554,15 @@ function createNodeSelect() {
     $('#select_difficulty_div').removeClass('d-none');
     difficulty = castInt($('#select_difficulty').val());
   }
+
+  // マップ設定
   $('#map_img').attr('src', './img/map/' + area + '.png');
+
   const patterns = ENEMY_PATTERN.find(v => v.area === area && difficulty === v.lv).cell;
   const len = patterns.length;
   const label = DIFFICULTY.find(v => v.id === difficulty);
   let text = '';
+  let text2 = '';
   for (let index = 0; index < len; index++) {
     text += `
     <div class="node_tr d-flex pl-1 pr-2 py-2 w-100 cur_pointer" data-node="${patterns[index].name}">
@@ -1566,9 +1571,15 @@ function createNodeSelect() {
       <div class="align-self-center ml-auto font_size_12">${label ? '[' + label.name + ']' : ''}</div>
     </div>
   `;
+
+    // クリック座標設定
+    if (patterns[index].coords !== '') {
+      text2 += `<area class="node" title="${patterns[index].name}" coords="${patterns[index].coords}" shape="rect">`;
+    }
   }
 
   $('#node_tbody').html(text);
+  $('#clickable_nodes').html(text2);
   $('#enemy_pattern_tbody').html('');
   $('#btn_expand_enemies').prop('disabled', true);
 }
@@ -4182,6 +4193,7 @@ function btn_capture_Clicked($this) {
   $targetContent.find('.round_button').addClass('d-none').removeClass('d-table');
   $targetContent.find('.custom-checkbox').addClass('d-none');
   $targetContent.find('.display_label_result').addClass('d-none');
+  $targetContent.find('#input_summary_parent').addClass('d-none');
   const bauxite = $targetContent.find('.battle_end.fap').html();
   $targetContent.find('.battle_end.fap').html('ボーキ消費');
 
@@ -4193,13 +4205,19 @@ function btn_capture_Clicked($this) {
       $targetContent.find('.custom-checkbox').removeClass('d-none')
       $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
       $targetContent.find('.display_label_result').removeClass('d-none');
+      $targetContent.find('#input_summary_parent').removeClass('d-none');
       $targetContent.find('.battle_end.fap').html(bauxite);
 
       // 保存
       const now = new Date();
       const a = document.createElement('a');
+      const month = ('0' + (now.getMonth() + 1)).slice(-2);
+      const date = ('0' + now.getDate()).slice(-2);
+      const hours = ('0' + now.getHours()).slice(-2);
+      const minutes = ('0' + now.getMinutes()).slice(-2);
+      const sec = ('0' + now.getSeconds()).slice(-2);
       a.href = imgData;
-      a.download = 'result_' + now.getFullYear() + (now.getMonth() + 1) + now.getDate() + '.jpg';
+      a.download = 'screenshot_' + now.getFullYear() + month + date + hours + minutes + sec + '.jpg';
       a.click();
     }
   });
@@ -5188,6 +5206,18 @@ function node_tr_Clicked($this) {
 }
 
 /**
+ * マップ上のセルクリック時
+ * @param {JqueryDomObject} $this 
+ */
+function node_Clicked($this) {
+  $('.node_tr').removeClass('node_selected');
+  const $targetNode = $('.node_tr[data-node="' + $this.attr('title') + '"');
+  $targetNode.addClass('node_selected');
+  $targetNode[0].scrollIntoView(true);
+  createEnemyPattern();
+}
+
+/**
  * 敵編成展開クリック時
  */
 function btn_expand_enemies() {
@@ -5327,6 +5357,13 @@ function display_result_Changed() {
   else {
     $('#rate_row_7:not(.disabled_tr)').addClass('d-none');
     $('#result_bar_7').closest('.progress_area:not(.disabled_bar)').addClass('d-none').removeClass('d-flex');
+  }
+
+  if ($('#display_bar').prop('checked')) {
+    $('#result_bar_parent').removeClass('d-none');
+  }
+  else {
+    $('#result_bar_parent').addClass('d-none');
   }
 }
 
@@ -5676,6 +5713,7 @@ $(function () {
   $('#result_content').on('click', '#empty_slot_invisible', caluclate);
   $('#result_content').on('click', '#display_land_base_result', display_result_Changed);
   $('#result_content').on('click', '#display_fleet_result', display_result_Changed);
+  $('#result_content').on('click', '#display_bar', display_result_Changed);
   $('#config_content').on('focus', '#caluclate_count', function () { $(this).select(); });
   $('#config_content').on('input', '#caluclate_count', function () { caluclate_count_Changed($(this)); });
   $('#config_content').on('click', '#btn_reset_localStrage', btn_reset_localStrage_Clicked);
@@ -5702,6 +5740,7 @@ $(function () {
   $('#modal_enemy_pattern').on('change', '#node_select', createEnemyPattern);
   $('#modal_enemy_pattern').on('change', '#select_difficulty', createNodeSelect);
   $('#modal_enemy_pattern').on('click', '#btn_expand_enemies', btn_expand_enemies);
+  $('#modal_enemy_pattern').on('click', '.node', function () { node_Clicked($(this)) });
   $('#modal_main_preset').on('click', '.preset_tr', function () { main_preset_tr_Clicked($(this)); });
   $('#modal_main_preset').on('click', '.btn_commit_preset', btn_commit_main_preset_Clicked);
   $('#modal_main_preset').on('click', '.btn_commit_preset_header', btn_commit_preset_header_Clicked);
@@ -5760,11 +5799,6 @@ $(function () {
   ==================================*/
   Sortable.create($('#main_contents')[0], {
     handle: '.trade_enabled',
-    animation: 150,
-    scroll: true,
-  });
-  Sortable.create($('#battle_result')[0], {
-    handle: '.drag_handle',
     animation: 150,
     scroll: true,
   });

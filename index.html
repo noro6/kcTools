@@ -2,6 +2,7 @@
 <html lang="ja">
 
 <head>
+    <meta charset="utf-8">
     <title>制空権シミュレータ</title>
     <meta name="description"
         content="「艦これ」の制空権に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊の制空削りや敵艦隊の対空砲火による撃墜を考慮した制空計算や全滅率の試算、防空時の制空計算に対応しています。" />
@@ -12,7 +13,6 @@
     <meta property="og:title" content="制空権シミュレータ" />
     <meta property="og:description" content="道中での制空値減少、基地航空隊の敵制空削りを同時に計算し、より実戦に近いシミュレーションを行うことを目指したサイトです。" />
     <meta property="og:image" content="https://noro6.github.io/kcTools/img/util/image.png" />
-    <meta charset="utf-8">
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/Index.css">
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     <div id="main_contents">
-                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="landBase">
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="landBase">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">基地航空隊</span>
@@ -260,7 +260,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="friendFleet">
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="friendFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">自艦隊</span>
@@ -433,7 +433,7 @@
                             </div>
                         </div>
 
-                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="enemyFleet">
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="enemyFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">敵艦隊</span>
@@ -580,7 +580,7 @@
                             </div>
                         </div>
 
-                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="result">
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="result">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
@@ -609,7 +609,7 @@
                                         <div class="pl-1 font_size_12 align-self-center">各戦闘開始時の搭載数の推移</div>
                                         <div
                                             class="ml-auto custom-control custom-checkbox font_size_12 align-self-center">
-                                            <input type="checkbox" class="custom-control-input cur_pointer"
+                                            <input type="checkbox" class="custom-control-input"
                                                 id="empty_slot_invisible">
                                             <label class="custom-control-label pt-0_5 cur_pointer"
                                                 for="empty_slot_invisible">未装備スロットを非表示にする</label>
@@ -641,7 +641,7 @@
                                     <ul class="nav nav-tabs" id="display_battle_tab"></ul>
                                 </div>
                                 <div id="battle_result">
-                                    <div class="mt-1 py-2 px-2 border rounded drag_handle cur_move">
+                                    <div class="mt-1 py-2 px-2 border rounded" id="result_bar_parent">
                                         <div class="d-flex">
                                             <div class="progress_label"></div>
                                             <div class="d-flex flex-grow-1 font_size_12">
@@ -692,6 +692,11 @@
                                             </div>
                                             <div
                                                 class="ml-2 custom-control custom-checkbox font_size_12 align-self-center">
+                                                <input type="checkbox" class="custom-control-input" id="display_bar">
+                                                <label class="custom-control-label pt-0_5" for="display_bar">グラフ</label>
+                                            </div>
+                                            <div
+                                                class="ml-2 custom-control custom-checkbox font_size_12 align-self-center">
                                                 <input type="checkbox" class="custom-control-input cur_pointer"
                                                     id="display_land_base_result">
                                                 <label class="custom-control-label pt-0_5 cur_pointer"
@@ -728,16 +733,20 @@
                             </div>
                         </div>
 
-                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="input_data">
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="input_data">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">入力情報</span>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_capture"
+                                    data-toggle="tooltip" title="入力一覧を画像で保存">
+                                    <i class="fas fa-camera d-table-cell align-middle"></i>
                                 </div>
                                 <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                                     data-toggle="tooltip" title="入れ替え終了">
                                     <i class="fas fa-check d-table-cell align-middle"></i>
                                 </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                <div class="ml-2 round_button align-self-center d-table btn_content_trade"
                                     data-toggle="tooltip" title="順序入れ替え">
                                     <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                                 </div>
@@ -816,7 +825,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="my-3 px-2">
+                                    <div class="my-3 px-2" id="input_summary_parent">
                                         <div>掲示板等貼り付け用</div>
                                         <div class="my-1">
                                             <textarea class="form-control font_size_11" id="input_summary"></textarea>
@@ -825,7 +834,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="config">
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="config">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">詳細設定</span>
@@ -988,27 +997,6 @@
                                         <div class="ml-1 font_size_12">
                                             最後に計算が行われた編成を保持し、次回サイトに訪れた際に自動で復帰させる機能です。
                                         </div>
-                                    </div>
-                                    <div class="ml-3 mt-3 d-none">
-                                        <div class="align-self-center">対空砲火調整(仮)</div>
-                                    </div>
-                                    <div class="ml-4 d-none">
-                                        <select class="custom-select custom-select-sm" id="manual_shoot_down_battle">
-                                            <option value="1" selected>1</option>
-                                            <option value="2" class="d-none">2</option>
-                                            <option value="3" class="d-none">3</option>
-                                            <option value="4" class="d-none">4</option>
-                                            <option value="5" class="d-none">5</option>
-                                            <option value="6" class="d-none">6</option>
-                                            <option value="7" class="d-none">7</option>
-                                            <option value="8" class="d-none">8</option>
-                                            <option value="9" class="d-none">9</option>
-                                            <option value="10" class="d-none">10</option>
-                                        </select>
-                                        <div class="ml-1 align-self-center">戦目開始時、全ての攻撃機の搭載数を</div>
-                                        <input type="number" class="form-control form-control-sm align-self-center"
-                                            id="manual_shoot_down_value" value="1">
-                                        <div class="ml-1 align-self-center">にする</div>
                                     </div>
                                 </div>
                                 <div class="my-3 mx-2 px-2 py-2 general_box">
@@ -1396,8 +1384,8 @@
                             <span class="">複数列</span>
                         </div>
                         <div class="ml-2 custom-control custom-checkbox align-self-center">
-                            <input type="checkbox" class="custom-control-input cur_pointer" id="dispFinalOnly" checked>
-                            <label class="custom-control-label cur_pointer" for="dispFinalOnly">最終改造状態のみ</label>
+                            <input type="checkbox" class="custom-control-input" id="dispFinalOnly" checked>
+                            <label class="custom-control-label" for="dispFinalOnly">最終改造状態のみ</label>
                         </div>
                     </div>
                     <div class="ship_table_content bg-white border-top pt-2">
@@ -1498,8 +1486,14 @@
                         </div>
                     </div>
                     <div class="border-top mt-2" id="enemy_pattern_content">
-                        <img src="img/map/19111.png" class="py-2" id="map_img">
-                        <div class="row">
+                        <img class="pt-2" id="map_img" src="./img/map/11.png" usemap="#clickable_map">
+                        <map name="clickable_map" id="clickable_nodes">
+                            <area class="node" title="A" coords="232,122,8" shape="circle">
+                            <area class="node" title="B" coords="329,73,9" shape="circle">
+                            <area class="node" title="C" coords="337,186,12" shape="circle">
+                        </map>
+                        <div class="font_size_11">※画像内のマスをクリックしてもマスを選択できます。</div>
+                        <div class="mt-2 row">
                             <div class="col">
                                 <div class="mb-2">戦闘マス一覧</div>
                                 <div class="overflow-auto" id="node_tbody"></div>
@@ -1799,8 +1793,8 @@
                 <div class="modal-body"></div>
                 <div class="modal-footer">
                     <div class="custom-control custom-checkbox align-self-center">
-                        <input type="checkbox" class="custom-control-input cur_pointer" id="alreadyRead" checked>
-                        <label class="custom-control-label cur_pointer" for="alreadyRead">次回以降表示しない</label>
+                        <input type="checkbox" class="custom-control-input" id="alreadyRead" checked>
+                        <label class="custom-control-label" for="alreadyRead">次回以降表示しない</label>
                     </div>
                     <div class="ml-auto align-self-center">
                         <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>

@@ -140,11 +140,12 @@ input[type="text"] { font-size: 12px; }
   border-radius: 0.25rem;
 }
 .contents {
-  background-color: #fff;
   border-radius: .25rem;
   border: 1px solid #dee2e6;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.149);
 }
+.custom-control-input { cursor: pointer; }
+.custom-control-label { cursor: pointer; }
 
 
 /* -----------------------------------
@@ -225,6 +226,19 @@ input[type="text"] { font-size: 12px; }
 }
 #btn_deckBuilder:hover {
   color: #00814b;
+  background-color: rgb(240, 255, 250);
+}
+#btn_auto_expand {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: #ff8800;
+}
+#btn_auto_expand:hover {
+  color: #ff8800;
   background-color: rgb(240, 255, 250);
 }
 
@@ -759,6 +773,7 @@ input[type="text"] { font-size: 12px; }
   background-color: #7ac3ff !important;
 }
 .enemy_pattern_tr { height: 32px; }
+.node { cursor: pointer; }
 
 /* ------------------------------
   一括変更欄 #modal_collectively_setting
@@ -954,13 +969,57 @@ input[type="text"] { font-size: 12px; }
 /* ------------------------------
   詳細設定 #config
 -------------------------------- */
-#config_content label { cursor: pointer; }
 #caluclate_count { width: 96px; }
 #manual_shoot_down_battle { width: 60px; }
 #manual_shoot_down_value { width: 96px; }
 #init_prof_parent .prof_select {
   height: 24px;
 }
+
+
+/* ------------------------------
+  所持装備 #plane_stock
+-------------------------------- */
+#plane_stock_table {
+  font-size: 12px;
+  text-align: center;
+  height: 60vh;
+  min-height: 120px;
+  overflow-y: scroll;
+}
+#plane_stock_thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  padding: .1rem;
+}
+.stock_tr {
+  cursor: pointer;
+  border-bottom: 1px #e9ecef solid;
+  transition: .2s;
+}
+.stock_tr:hover {
+  background-color: #f5f5f5;
+}
+.stock_td_type { width: 10%; }
+.stock_td_name { width: 40%; }
+.stock_td_aa { width: 20%; }
+.stock_td_range { width: 20%; }
+.stock_td_stock { width: 20%; }
+
+
+/* ------------------------------
+  オートモード #auto_expand
+-------------------------------- */
+#simple_enemy_ap { width: 80px; }
+#dest_range { width: 120px; }
+#dest_ap { width: 120px; }
+
 
 /* ------------------------------
   サイトについて #site_information
