@@ -2692,9 +2692,9 @@ function updateLandBaseInfo(landBaseData) {
 
 /**
  * 基地航空隊 中隊オブジェクト生成
- * {id, name, abbr, type, AA, AB, IP, LOS, ap, range, cost, slot, remodel, level}
+ * {id, name, abbr, type, AA, AB, IP, los, ap, range, cost, slot, remodel, level}
  * @param {HTMLElement} node 生成元 lb_plane
- * @returns 機体オブジェクト {id, name, abbr, type, AA, AB, IP, LOS, ap, range, cost, slot, remodel, level}
+ * @returns 機体オブジェクト {id, name, abbr, type, AA, AB, IP, los, ap, range, cost, slot, remodel, level}
  */
 function createLBPlaneObject(node) {
   const id = castInt(node.dataset.planeid);
@@ -2717,7 +2717,7 @@ function createLBPlaneObject(node) {
   }
 
   const lbPlane = {
-    id: 0, name: '', abbr: '', type: 0, AA: 0, AB: 0, IP: 0, LOS: 0, ap: 0, range: 999, cost: 0,
+    id: 0, name: '', abbr: '', type: 0, AA: 0, AB: 0, IP: 0, los: 0, ap: 0, range: 999, cost: 0,
     slot: inputSlot,
     remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
     level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
@@ -2736,7 +2736,7 @@ function createLBPlaneObject(node) {
     lbPlane.AA = plane.AA;
     lbPlane.AB = plane.AB;
     lbPlane.IP = plane.IP;
-    lbPlane.LOS = plane.LOS;
+    lbPlane.los = plane.los;
     lbPlane.range = plane.range;
     lbPlane.cost = plane.cost;
     lbPlane.ap = getAirPower_lb(lbPlane);
@@ -2878,21 +2878,21 @@ function getUpdateLBAirPower(landBaseDatum) {
     // 出撃時補正
     if (!isDefMode && plane.type === 104) {
       // 陸上偵察機補正
-      apList.push(baseAP * (plane.LOS === 9 ? 1.18 : plane.LOS === 8 ? 1.15 : 1.00));
+      apList.push(baseAP * (plane.los === 9 ? 1.18 : plane.los === 8 ? 1.15 : 1.00));
     }
     // 防空時補正
     else if (isDefMode) {
       if (plane.type === 104) {
         // 陸上偵察機補正
-        apList.push(baseAP * (plane.LOS === 9 ? 1.24 : 1.18));
+        apList.push(baseAP * (plane.los === 9 ? 1.24 : 1.18));
       }
       else if (plane.type === 4) {
         // 艦上偵察機補正
-        apList.push(baseAP * (plane.LOS > 8 ? 1.3 : 1.2));
+        apList.push(baseAP * (plane.los > 8 ? 1.3 : 1.2));
       }
       else if ([5, 8].indexOf(plane.type) > -1) {
         // 水上偵察機補正
-        apList.push(baseAP * (plane.LOS > 8 ? 1.16 : plane.LOS === 8 ? 1.13 : 1.1));
+        apList.push(baseAP * (plane.los > 8 ? 1.16 : plane.los === 8 ? 1.13 : 1.1));
       }
     }
   }
@@ -2911,15 +2911,15 @@ function getUpdateLBAirPower(landBaseDatum) {
  */
 function getRange(landBaseDatum) {
   let minRange = 999;
-  let maxLOS = 1;
+  let maxLos = 1;
   for (const plane of landBaseDatum.planes) minRange = plane.range < minRange ? plane.range : minRange;
 
   // 最も足の長い偵察機の半径を取得
   for (const plane of landBaseDatum.planes) {
-    if ([4, 5, 8, 104].indexOf(plane.type) !== -1) maxLOS = maxLOS < plane.range ? plane.range : maxLOS;
+    if ([4, 5, 8, 104].indexOf(plane.type) !== -1) maxLos = maxLos < plane.range ? plane.range : maxLos;
   }
 
-  if (maxLOS < 999 && maxLOS > minRange) return Math.round(minRange + Math.min(Math.sqrt(maxLOS - minRange), 3));
+  if (maxLos < 999 && maxLos > minRange) return Math.round(minRange + Math.min(Math.sqrt(maxLos - minRange), 3));
   else return minRange === 999 ? 0 : minRange;
 }
 
