@@ -1338,10 +1338,12 @@ function createEnemyTable($table, type) {
 
     let ap = 0;
     let lbAp = 0;
-    const len = enemy.aa.length;
+    const len = enemy.slot.length;
     for (let i = 0; i < len; i++) {
-      if (!enemy.isSpR) ap += Math.floor(enemy.aa[i] * Math.sqrt(enemy.slot[i]));
-      else lbAp += Math.floor(enemy.aa[i] * Math.sqrt(enemy.slot[i]));
+      const plane = ENEMY_PLANE_DATA.find(v => v.id === enemy.eqp[i]);
+      if (!plane) continue;
+      if (plane.type !== 5) ap += Math.floor(plane.aa * Math.sqrt(enemy.slot[i]));
+      else lbAp += Math.floor(plane.aa * Math.sqrt(enemy.slot[i]));
     };
     lbAp += ap;
 
@@ -3530,13 +3532,18 @@ function createEnemyObject(id) {
   const enemy = { id: 0, type: 0, name: '', slots: [], aa: [], orgSlots: [], isSpR: false, ap: 0, lbAp: 0, origAp: 0, origLbAp: 0, aaw: 0, aabo: 0 };
 
   if (id !== 0 && tmp) {
+    for (const id of tmp.eqp) {
+      const plane = ENEMY_PLANE_DATA.find(v => v.id === id);
+      if (plane) {
+        enemy.aa.push(plane.aa);
+        if (plane.type === 5 && !enemy.isSpR) enemy.isSpR = true;
+      }
+    }
     enemy.id = tmp.id;
     enemy.type = tmp.type;
     enemy.name = tmp.name;
     enemy.slots = tmp.slot.concat();
-    enemy.aa = tmp.aa.concat();
     enemy.orgSlots = tmp.slot.concat();
-    enemy.isSpR = tmp.isSpR;
     enemy.aaw = tmp.aaw;
     enemy.aabo = tmp.aabo;
     enemy.ap = 0;
