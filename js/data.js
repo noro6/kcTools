@@ -1189,8 +1189,8 @@ const ENEMY_PATTERN = [
   },
   {
     area: 65, lv: -1, cell: [
-      { type: 3, form: 3, name: '空襲(前哨)', enemies: [86, 115], range: 1, coords: '' },
-      { type: 3, form: 3, name: '空襲(最終)', enemies: [86, 115, 115], range: 1, coords: '51,90,88,124' },
+      { type: 3, form: 3, name: '空襲(前哨)', enemies: [86, 115, 92, 77, 77, 77], range: 1, coords: '' },
+      { type: 3, form: 3, name: '空襲(最終)', enemies: [86, 115, 115, 92, 78, 78], range: 1, coords: '51,90,88,124' },
       { type: 1, form: 1, name: 'A', enemies: [55, 55, 54, 54, 77, 77], range: 1, coords: '121,84,149,118' },
       { type: 1, form: 4, name: 'B', enemies: [34, 34, 32, 32, 32], range: 1, coords: '158,166,189,203' },
       { type: 1, form: 3, name: 'C', enemies: [118, 43, 95, 95, 77, 77], range: 2, coords: '176,115,204,147' },
