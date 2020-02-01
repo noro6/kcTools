@@ -5809,6 +5809,11 @@ $(function () {
     animation: 150,
     scroll: true,
   });
+  Sortable.create($('#battle_result')[0], {
+    handle: '.drag_handle',
+    animation: 150,
+    scroll: true,
+  });
 
   $('.lb_plane').draggable({
     delay: 100,
