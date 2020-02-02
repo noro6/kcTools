@@ -23,6 +23,9 @@ const ATTACKERS = [2, -2, 3, 6, 9, 101, -101];
 // 偵察機
 const RECONNAISSANCES = [4, 5, 8, 104];
 
+// ロケット戦闘機
+const ROCKETS = [350, 351, 352];
+
 // 機体カテゴリ
 const PLANE_TYPE = [
   { id: 1, name: '艦上戦闘機', abbr: '艦戦', abbr: '艦戦', css: 'css_fighter' },
@@ -589,12 +592,12 @@ const ENEMY_DATA = [
   { id: 138, type: [6], name: "PT小鬼群 弱", slot: [], eqp: [], orig: 137, aaw: 8, aabo: 0 },
   { id: 139, type: [6], name: "PT小鬼群 中", slot: [], eqp: [], orig: 137, aaw: 8, aabo: 0 },
   { id: 140, type: [6], name: "PT小鬼群 強", slot: [], eqp: [], orig: 137, aaw: 9, aabo: 0 },
-  { id: 150, type: [110, 100, 1000], name: "飛行場姫 陸爆 弱", slot: [12, 12, 8, 4], eqp: [561, 561, 561, 561], orig: 56, aaw: 21, aabo: 2 },
-  { id: 151, type: [110, 100, 1000], name: "飛行場姫 陸爆 中", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 56, aaw: 21, aabo: 2 },
-  { id: 152, type: [110, 100, 1000], name: "飛行場姫 陸爆 強", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 56, aaw: 21, aabo: 3 },
-  { id: 153, type: [110, 100, 1000], name: "集積地棲姫 [丙]", slot: [12, 12, 8, 4], eqp: [561, 561, 561, 561], orig: 153, aaw: 15, aabo: 3 },
-  { id: 154, type: [110, 100, 1000], name: "集積地棲姫 [乙]", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 153, aaw: 16, aabo: 2 },
-  { id: 155, type: [110, 100, 1000], name: "集積地棲姫 [甲]", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 153, aaw: 17, aabo: 2 },
+  { id: 150, type: [110, 10, 1000], name: "飛行場姫 陸爆 弱", slot: [12, 12, 8, 4], eqp: [561, 561, 561, 561], orig: 56, aaw: 21, aabo: 2 },
+  { id: 151, type: [110, 10, 1000], name: "飛行場姫 陸爆 中", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 56, aaw: 21, aabo: 2 },
+  { id: 152, type: [110, 10, 1000], name: "飛行場姫 陸爆 強", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 56, aaw: 21, aabo: 3 },
+  { id: 153, type: [110, 10, 1000], name: "集積地棲姫 [丙]", slot: [12, 12, 8, 4], eqp: [561, 561, 561, 561], orig: 153, aaw: 15, aabo: 3 },
+  { id: 154, type: [110, 10, 1000], name: "集積地棲姫 [乙]", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 153, aaw: 16, aabo: 2 },
+  { id: 155, type: [110, 10, 1000], name: "集積地棲姫 [甲]", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 153, aaw: 17, aabo: 2 },
   { id: 156, type: [110, 100, 1000], name: "集積地棲姫-壊 [丙]", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 153, aaw: 16, aabo: 3 },
   { id: 157, type: [110, 100, 1000], name: "集積地棲姫-壊 [乙]", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 153, aaw: 17, aabo: 2 },
   { id: 158, type: [110, 100, 1000], name: "集積地棲姫-壊 [甲]", slot: [32, 32, 24, 8], eqp: [562, 562, 562, 561], orig: 153, aaw: 18, aabo: 2 },
@@ -1473,9 +1476,9 @@ const ENEMY_PATTERN = [
     // 甲
     area: 19115, lv: 3, cell:
       [
-        { type: 0, form: 3, name: '空襲(強)', enemies: [408, 280, 280, 280, 244, 244], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(中)', enemies: [408, 280, 280, 277, 243, 243], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(弱)', enemies: [408, 280, 280, 92, 243, 243], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(強)', enemies: [408, 280, 280, 280, 244, 244], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(中)', enemies: [408, 280, 280, 277, 243, 243], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(弱)', enemies: [408, 280, 280, 92, 243, 243], range: 1, coords: '' },
         { type: 1, form: 4, name: 'A', enemies: [238, 72, 71, 71], range: 1, coords: '' },
         { type: 3, form: 3, name: 'B', enemies: [279, 279, 405, 362, 240, 240], range: 1, coords: '' },
         { type: 1, form: 4, name: 'C', enemies: [238, 71, 71, 71], range: 1, coords: '' },
@@ -1496,8 +1499,8 @@ const ENEMY_PATTERN = [
     // 乙
     area: 19115, lv: 2, cell:
       [
-        { type: 0, form: 3, name: '空襲(強)', enemies: [407, 278, 277, 277, 240, 240], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(弱)', enemies: [407, 277, 277, 91, 239, 239], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(強)', enemies: [407, 278, 277, 277, 240, 240], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(弱)', enemies: [407, 277, 277, 91, 239, 239], range: 1, coords: '' },
         { type: 1, form: 4, name: 'A', enemies: [237, 71, 32, 32], range: 1, coords: '' },
         { type: 3, form: 3, name: 'B', enemies: [264, 263, 404, 92, 239, 239], range: 1, coords: '' },
         { type: 1, form: 4, name: 'C', enemies: [237, 32, 32, 32], range: 1, coords: '' },
@@ -1518,9 +1521,9 @@ const ENEMY_PATTERN = [
     // 丙
     area: 19115, lv: 1, cell:
       [
-        { type: 0, form: 3, name: '空襲(強)', enemies: [406, 277, 23, 91], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(中)', enemies: [406, 23, 23, 91], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(弱)', enemies: [406, 23, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(強)', enemies: [406, 277, 23, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(中)', enemies: [406, 23, 23, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(弱)', enemies: [406, 23, 91], range: 1, coords: '' },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 32, 30], range: 1, coords: '' },
         { type: 3, form: 3, name: 'B', enemies: [263, 262, 55, 91, 77, 1], range: 1, coords: '' },
         { type: 1, form: 4, name: 'C', enemies: [236, 32, 32], range: 1, coords: '' },
@@ -1541,8 +1544,8 @@ const ENEMY_PATTERN = [
     // 丁
     area: 19115, lv: 0, cell:
       [
-        { type: 0, form: 3, name: '空襲(強)', enemies: [406, 23, 91], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(弱)', enemies: [406, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(強)', enemies: [406, 23, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(弱)', enemies: [406, 91], range: 1, coords: '' },
         { type: 1, form: 4, name: 'A', enemies: [236, 32, 30, 30], range: 1, coords: '' },
         { type: 3, form: 3, name: 'B', enemies: [262, 23, 55, 91, 1, 1], range: 1, coords: '' },
         { type: 1, form: 4, name: 'C', enemies: [236, 32, 30], range: 1, coords: '' },
@@ -1563,9 +1566,9 @@ const ENEMY_PATTERN = [
     // 甲
     area: 19116, lv: 3, cell:
       [
-        { type: 0, form: 3, name: '空襲(強)', enemies: [183, 394, 151, 150, 414, 362], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(中)', enemies: [183, 394, 150, 150, 411, 362], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(弱)', enemies: [183, 394, 150, 362, 411, 362], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(強)', enemies: [183, 394, 151, 150, 414, 362], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(中)', enemies: [183, 394, 150, 150, 411, 362], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(弱)', enemies: [183, 394, 150, 362, 411, 362], range: 1, coords: '' },
         { type: 1, form: 4, name: 'B', enemies: [238, 72, 72, 71, 71], range: 2, coords: '' },
         { type: 1, form: 2, name: 'D', enemies: [405, 362, 362, 78, 78, 78], range: 3, coords: '' },
         { type: 3, form: 3, name: 'E', enemies: [183, 151, 150, 150, 411, 362], range: 3, coords: '' },
@@ -1593,9 +1596,9 @@ const ENEMY_PATTERN = [
     // 乙
     area: 19116, lv: 2, cell:
       [
-        { type: 0, form: 3, name: '空襲(強)', enemies: [182, 151, 150, 150, 413, 92], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(中)', enemies: [182, 150, 150, 150, 410, 91], range: 1, coords: '' },
-        { type: 0, form: 3, name: '空襲(弱)', enemies: [182, 151, 150, 410, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(強)', enemies: [182, 151, 150, 150, 413, 92], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(中)', enemies: [182, 150, 150, 150, 410, 91], range: 1, coords: '' },
+        { type: 5, form: 3, name: '空襲(弱)', enemies: [182, 151, 150, 410, 91], range: 1, coords: '' },
         { type: 1, form: 4, name: 'B', enemies: [237, 71, 71, 71, 31], range: 2, coords: '' },
         { type: 1, form: 2, name: 'D', enemies: [405, 362, 92, 78, 77, 77], range: 3, coords: '' },
         { type: 3, form: 3, name: 'E', enemies: [182, 151, 150, 413, 92, 92], range: 3, coords: '' },
@@ -1835,7 +1838,7 @@ let CHANGE_LOG = [
     id: '1.3.4', changes: [
       {
         type: 0, title: "公開しました。",
-        content: "デバッグ、動作検証に参加していただいた方、ありがとうございました。今後も改善案や要望、バグ報告など随時受け付けており、変更/修正/機能追加があった場合はこの画面にてお知らせしていきます。"
+        content: "デバッグ、動作検証に参加していただいた方、ありがとうございました。今後も改善案や要望、バグ報告など随時受け付けており、変更/修正/機能追加があった場合はお知らせしていきます。"
       },
       {
         type: 0, title: "海域からセルを選択した際に進行航路を表示するようにしました。",
@@ -1854,7 +1857,7 @@ let CHANGE_LOG = [
   {
     id: '1.3.5', changes: [
       {
-        type: 0, title: "2019秋イベント 対応開始",
+        type: 0, title: "2019秋イベント 対応",
         content: "確認できた敵編成から順次追加していきます。今後、強編成等が確認された場合は編成が変わる可能性があります。"
       },
     ],
@@ -1898,10 +1901,6 @@ let CHANGE_LOG = [
   {
     id: '1.3.5.4', changes: [
       {
-        type: 0, title: "2019秋イベント対応",
-        content: "今後、強編成等が確認された場合は編成が変わる可能性があります。更新を確実に反映させる場合はブラウザのキャッシュを削除してみてください(Ctrlキー押下しながらF5を押下など)"
-      },
-      {
         type: 0, title: "計算結果欄に各種制空状態ボーダーを表示するようにしました。",
         content: "基地航空隊を派遣した場合、基準となる表示敵制空値は「平均値」となりますので、実際の制空状態ボーダーは表示値から前後する点に注意してください。"
       },
@@ -1931,10 +1930,10 @@ let CHANGE_LOG = [
       },
       {
         type: 1, title: "敵艦データを更新しました。",
-        content: "対空放火による撃墜機能追加に伴い、駆逐艦などの非偵察機搭載艦などを追加しました。"
+        content: "対空砲火による撃墜機能追加に伴い、駆逐艦などの非偵察機搭載艦などを追加しました。"
       },
       {
-        type: 2, title: "細かい修正を行いました。",
+        type: 2, title: "不具合を修正しました。",
         content: "2019秋イベ E-6 [丁] の敵編成が表示されない不具合を修正しました。"
       },
     ],
@@ -1975,7 +1974,7 @@ let CHANGE_LOG = [
       },
       {
         type: 1, title: "計算結果欄の表示のカスタマイズ方法を変更しました。",
-        content: "スマホ閲覧時に入れ替えが誤爆してしまう対策としてドラッグ開始可能範囲を限定、グラフの表示、非表示をトグル式で変更するようにしました。"
+          content: "スマホ閲覧時に入れ替えが誤爆してしまう対策としてドラッグ開始可能範囲を限定、グラフの表示、非表示をトグル式で変更するようにしました。"
       },
       {
         type: 2, title: "細かい修正を行いました。",
@@ -1983,6 +1982,53 @@ let CHANGE_LOG = [
       },
     ],
   },
+  {
+    id: '1.4.3', changes: [
+      {
+        type: 0, title: "本隊航空戦stage1直後の敵艦載機数表示を追加しました。",
+        content: "計算結果欄最下部に表示されます。味方艦隊の対空砲火前の搭載数であることに注意してください。表示 / 非表示を選択可能です。"
+      },
+      {
+        type: 0, title: "基地、艦娘のドラッグ&amp;ドロップによる交換機能を追加しました。",
+        content: "ゲーム内編成画面のように、艦娘の画像をドラッグ&amp;ドロップすることで交換可能です。基地については「第X基地航空隊」の表示部分から交換可能です。"
+      },
+      {
+        type: 0, title: "味方の連合艦隊、通常艦隊を切り替えられるようになりました。",
+        content: "自艦隊欄「連合艦隊」チェックで変更できます。非チェック状態の場合、表示されている艦隊のみ計算対象になります。"
+      },
+      {
+        type: 0, title: "入力した艦娘の有効、無効を選択できるようになりました。",
+        content: "「無効」とした艦は、入力内容はそのままですが計算対象になりません。該当の艦娘を艦隊に入れるか入れないか調整する際にお役立てください。無効状態でも装備換装等は通常通り可能です。"
+      },
+      {
+        type: 0, title: "基地空襲をワンクリックで起こせるようになりました。",
+        content: "基地航空隊欄の右上部にあるボタンから、空襲時の被害を各航空隊の最上部スロに対してランダムに発生させます。その隣のボタンから補給も可能です。"
+      },
+      {
+        type: 0, title: "艦娘選択欄、および自艦隊欄に画像を追加しました。",
+        content: "艦娘選択欄については、従来通り文字のみの表示も可能です。画像表示チェックで操作してください。"
+      },
+    ],
+  },
+  // {
+  //   id: '1.5.0', changes: [
+  //     {
+  //       type: 0, title: "所持装備数入力機能を追加しました。",
+  //       content: "サイト下部「所持装備」欄から入力可能です。自分の所持している機体に合わせて所持数を入力すると、後述する新機能をより便利に活用できます。なお、従来通り所持数を気にせず利用したい場合は、全機体99機などにしてください。"
+  //     },
+  //     {
+  //       type: 0, title: "艦載機のおまかせ配備機能(仮)を実装しました。",
+  //       content: "所持機体をベースに、艦載機を自動で配備します。必ずしも最適な配置になるとは限らないため、制空調整初期のたたき台などに利用してみてください。"
+  //     },
+  //     {
+  //       type: 0, title: "未所持、使用済み装備を非表示にする機能を追加しました。",
+  //       content: "配備数が所持数を超えた機体を、一覧から非表示にできます。裏技として、あまり使わない機体の所持数を0とすることで、疑似的なフィルターになります。"
+  //     },
+  //   ],
+  // },
 ];
 
 const LAST_UPDATE_DATE = "2020/02/02";
+
+// お任せ機能CO
+// 所持機体CO

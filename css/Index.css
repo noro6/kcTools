@@ -56,6 +56,7 @@ input[type="text"] { font-size: 12px; }
   cursor: default !important;
 }
 .opacity2 { opacity: .2 !important; }
+.opacity4 { opacity: .4 !important; }
 .font_size_20 { font-size: 20px; }
 .font_size_16 { font-size: 16px; }
 .font_size_14 { font-size: 14px; }
@@ -68,6 +69,10 @@ input[type="text"] { font-size: 12px; }
 .font_color_aaa { color: #aaa; }
 .font_color_777 { color: #777; }
 .font_color_000 { color: #000; }
+.img-size-18_e {
+  width: auto;
+  height: 18px;
+}
 .img-size-18 {
   width: 18px;
   height: auto;
@@ -87,6 +92,10 @@ input[type="text"] { font-size: 12px; }
 .img-size-32 {
   padding-top: 3px;
   width: 32px;
+  height: auto;
+}
+.img-size-36 {
+  width: 36px;
   height: auto;
 }
 .size-25 {
@@ -134,15 +143,15 @@ input[type="text"] { font-size: 12px; }
 }
 .trade_enabled { cursor: move; }
 .general_box {
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   border-radius: 0.25rem;
 }
 .contents {
   border-radius: .25rem;
   border: 1px solid #dee2e6;
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.149);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
 }
 .custom-control-input { cursor: pointer; }
 .custom-control-label { cursor: pointer; }
@@ -394,7 +403,7 @@ input[type="text"] { font-size: 12px; }
   border: 2px #aaa solid;
   border-radius: 0.25rem;
 }
-.lb_plane:hover { background-color: rgba(250, 250, 250 0.2); }
+.lb_plane:hover { background-color: rgba(250, 250, 250, 0.2); }
 
 
 /* -----------------------------------
@@ -405,6 +414,7 @@ input[type="text"] { font-size: 12px; }
   min-width: 420px;
   max-width: 600px;
   flex: 1;
+  background-color: #fff;
 }
 .ship_name_span {
   cursor: pointer;
@@ -423,6 +433,14 @@ input[type="text"] { font-size: 12px; }
   border-radius: 0.25rem;
 }
 .ship_plane:hover { background-color: #f6f6f6; }
+.ship_img { 
+  height: 30px; 
+  width: auto;
+}
+.ship_img_sm { 
+  height: 25px; 
+  width: auto;
+}
 
 
 /* -----------------------------------
@@ -576,6 +594,10 @@ input[type="text"] { font-size: 12px; }
 .formation{ width: 100%; }
 .cellType{ width: 100%; }
 
+#air_raid_enemies {
+  width: 300px;
+}
+
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */
@@ -652,7 +674,7 @@ input[type="text"] { font-size: 12px; }
 }
 .ship_td_slot {
   text-align: center;
-  width: 48px;
+  width: 35px;
 }
 
 
@@ -785,7 +807,7 @@ input[type="text"] { font-size: 12px; }
 }
 .coll_slot_add:hover { filter: drop-shadow(0 0 6px #747474); }
 .coll_slot_input { width: 72px; }
-.btn_prof { 
+.btn_prof {
   cursor: pointer;
   width: 20px;
   height: auto;
@@ -965,6 +987,42 @@ input[type="text"] { font-size: 12px; }
 #rate_row_7 { border-bottom: 1px #b8b8b8 solid !important; }
 #rate_row_8 { border-bottom: 1px #b8b8b8 solid !important; }
 
+#enemy_shoot_down_table {
+  font-size: 12px;
+  border-collapse: collapse;
+}
+#enemy_shoot_down_table thead td {
+  cursor: default;
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+}
+#enemy_shoot_down_table tbody td {
+  cursor: pointer;
+  padding: .1rem;
+  border-top:1px #e9ecef solid;
+}
+#enemy_shoot_down_tbody .td_plane_name {
+  font-size: 11px;
+}
+#enemy_shoot_down_tbody td{ border-top:1px #e9ecef solid; }
+#enemy_shoot_down_tbody tr:last-child{ border-bottom:1px #b8b8b8 solid; }
+#enemy_shoot_down_tbody .last_slot { border-bottom: 1px #b8b8b8 solid; }
+#enemy_shoot_down_tbody .td_name {
+  width: 160px;
+  border-bottom:1px #b8b8b8 solid;
+}
+#enemy_shoot_down_tbody .td_plane_name { 
+  width: 140px;
+  text-align: left;
+  border-right:1px #b8b8b8 solid;
+}
+/* #enemy_shoot_down_tbody .td_init_slot { width: 15%; }
+#enemy_shoot_down_tbody .td_avg_slot { width: 15%; }
+#enemy_shoot_down_tbody .td_max_slot { width: 15%; }
+#enemy_shoot_down_tbody .td_min_slot { width: 15%; } */
 
 /* ------------------------------
   詳細設定 #config
