@@ -1222,7 +1222,7 @@ function createPlaneTable(planes) {
 
     // ラップ
     const $planeDiv = document.createElement('div');
-    $planeDiv.className = `plane plane_tr d-flex py-2 py-lg-1${(displayMode === "multi" ? ' tr_multi' : '')}`;
+    $planeDiv.className = `plane plane_tr d-flex py-2 py-lg-1${displayMode === "multi" ? ' tr_multi' : ''}`;
     $planeDiv.dataset.planeid = plane.id;
     $planeDiv.dataset.type = plane.type;
 
@@ -1412,7 +1412,7 @@ function createShipTable($table, type) {
     if (displayMode === 'single') {
       for (let index = 0; index < 5; index++) {
         slotText += `
-          <div class="ship_td_slot font_size_12 align-self-center ${(index === 0 ? 'ml-auto' : '')}">
+          <div class="ship_td_slot font_size_12 align-self-center ${index === 0 ? 'ml-auto' : ''}">
             ${(index < ship.slot.length ? ship.slot[index] : '')}
           </div>`;
       }
@@ -1427,9 +1427,9 @@ function createShipTable($table, type) {
     }
 
     insertHtml += `
-    <div class="ship ship_tr d-flex py-2 py-lg-1${(displayMode === "multi" ? ' tr_multi' : '')}" data-shipid="${ship.id}">
-        <div class="td_index text-primary font_size_11 align-self-center">${(ship.id > 1000 ? ship.orig : ship.id)}</div>
-        ${visibleImage ? '<div class="align-self-center"><img src="img/ship/'+ ship.id + '.png" class="ml-1 ship_img_sm"></div>' : ''}
+    <div class="ship ship_tr d-flex py-2 py-lg-1${displayMode === "multi" ? ' tr_multi' : ''}" data-shipid="${ship.id}">
+        <div class="td_index text-primary font_size_11 align-self-center">${ship.id > 1000 ? ship.orig : ship.id}</div>
+        ${visibleImage ? '<div class="align-self-center"><img src="img/ship/' + ship.id + '.png" class="ml-1 ship_img_sm"></div>' : ''}
         <div class="pl-1 ship_td_name align-self-center font_size_12">${ship.name}</div>
         ${displayMode === 'single' ? slotText : ''}
     </div>`;
@@ -1535,7 +1535,7 @@ function createEnemyTable($table, type) {
     }
 
     insertHtml += `
-    <div class="enemy enemy_tr d-flex py-2${(displayMode === "multi" ? ' tr_multi' : '')}" data-enemyid="${enemy.id}">
+    <div class="enemy enemy_tr d-flex py-2${displayMode === "multi" ? ' tr_multi' : ''}" data-enemyid="${enemy.id}">
       <div class="td_index text-primary font_size_11 align-self-center">${enemy.id + 1500}</div>
       <div class="ml-1 enemy_td_name align-self-center">${drawEnemyGradeColor(enemy.name)}</div>
       ${displayMode === "single" ? '<div class="ml-auto enemy_td_ap">' + ap + '</div>' : ''}
@@ -1899,7 +1899,7 @@ function updateMainPresetName() {
     // 空はないが念のため空が来た場合
     if (presetName.length === 0) {
       const today = new Date();
-      presetName = `preset-${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+      presetName = `preset-${today.getFullYear() + '' + today.getMonth() + 1 + '' + today.getDate()}`;
     }
     preset[1] = presetName;
     preset[3] = $('#preset_remarks').val().trim();
@@ -1986,7 +1986,15 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
         if (enemyFleet.length >= 3) $(e)[0].dataset.celldata = enemyFleet[2];
         else $(e)[0].dataset.celldata = '';
 
-        if (enemyFleet.length >= 4) $(e).find('.cell_type').val(enemyFleet[3]);
+        if (enemyFleet.length >= 4) {
+          if(isDefMode) {
+            const cellType = castInt(enemyFleet[3]);
+            $(e).find('.cell_type').val(cellType === 0 ? 5 : 3);
+          }
+          else{
+            $(e).find('.cell_type').val(enemyFleet[3]);
+          }
+        }
         else $(e).find('.cell_type').val(1);
         if (enemyFleet.length >= 5) $(e).find('.formation').val(enemyFleet[4]);
         else $(e).find('.formation').val(1);
@@ -3773,7 +3781,7 @@ function updateEnemyFleetInfo(battleData) {
       node_tr.dataset.rowindex = enemyNo;
       node_tr.dataset.css = backCss + '_hover';
 
-      enemy_name_td_text += '<img src="./img/plane/' + plane.id + '.png" class="img-size-36" title="'+ plane.name +'">'
+      enemy_name_td_text += '<img src="./img/plane/' + plane.id + '.png" class="img-size-36" title="' + plane.name + '">'
 
       const node_plane_name_td = document.createElement('td');
       node_plane_name_td.className = 'pl-1 td_plane_name align-middle ' + backCss + isLastSlot;
@@ -4203,6 +4211,7 @@ function rateCaluclate(objectData) {
   // 敵スロット明細 (各戦闘毎に以下データ [敵スロット番号, sum, max, min])
   let enemySlotResult = [];
   const maxBattle = isDefMode ? 1 : battleCount;
+  const defAp = chartData.own[0];
 
   mainBattle = mainBattle < battleData.length ? mainBattle : battleData.length - 1;
   for (let i = 0; i < 6; i++) landBaseASDist.push([0, 0, 0, 0, 0, 0]);
@@ -4246,7 +4255,7 @@ function rateCaluclate(objectData) {
     for (let battle = 0; battle < maxBattle; battle++) {
       const enemies = battleInfo[battle].enemies;
       const cellType = battleInfo[battle].cellType;
-      const fap = getFriendFleetAP(fleet, cellType);
+      const fap = isDefMode ? defAp : getFriendFleetAP(fleet, cellType);
       const eap = getEnemyFleetAP(enemies);
       const airIndex = getAirStatusIndex(fap, eap)
 
@@ -4969,7 +4978,6 @@ function autoLandBaseExpandDef(count) {
       unit = unit_sub;
       // 全航空隊総制空値更新
       sumAp += prevAp - unit_sub.ap;
-
     }
     if (isHeavyDef) {
       // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
@@ -4988,12 +4996,13 @@ function autoLandBaseExpandDef(count) {
     // 使用した装備削除
     for (const plane of unit.planes) {
       let isFirst = true;
-      planes = planes.filter(v => {
+      planes = planes.filter((v) => {
         if (isFirst && v.id === plane.id) {
           isFirst = false;
           return false;
         }
-        else return true;
+
+        return true;
       });
     }
 
@@ -7013,7 +7022,7 @@ $(function () {
       caluclate();
     }
   });
-  $('.fleet_tab').each((i, e)=>{
+  $('.fleet_tab').each((i, e) => {
     Sortable.create($(e)[0], {
       handle: '.drag_handle',
       animation: 200,
