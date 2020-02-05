@@ -60,7 +60,7 @@ const PLANE_DATA = [
   { id: 110, type: 1, name: "烈風(六〇一空)", AA: 11, range: 5, IP: 0, AB: 0, imp: true, los: 0, cost: 7, abbr: '烈風(601空)', avoid: 0, prio: 99 },
   { id: 152, type: 1, name: "零式艦戦52型(熟練)", AA: 9, range: 6, IP: 0, AB: 0, imp: true, los: 1, cost: 5, abbr: '', avoid: 0, prio: 99 },
   { id: 153, type: 1, name: "零式艦戦52型丙(付岩井小隊)", AA: 10, range: 6, IP: 0, AB: 0, imp: true, los: 1, cost: 5, abbr: '零式艦戦52型丙(岩井小隊)', avoid: 0, prio: 99 },
-  { id: 155, type: 1, name: "零式艦戦21型(付岩本小隊)", AA: 9, range: 7, IP: 0, AB: 0, imp: false, los: 1, cost: 4, abbr: '零式艦戦21型(岩本小隊)', avoid: 0, prio: 99 },
+  { id: 155, type: 1, name: "零式艦戦21型(付岩本小隊)", AA: 9, range: 7, IP: 0, AB: 0, imp: true, los: 1, cost: 4, abbr: '零式艦戦21型(岩本小隊)', avoid: 0, prio: 99 },
   { id: 156, type: 1, name: "零式艦戦52型甲(付岩本小隊)", AA: 11, range: 6, IP: 0, AB: 0, imp: true, los: 1, cost: 5, abbr: '零式艦戦52型甲(岩本小隊)', avoid: 0, prio: 99 },
   { id: 157, type: 1, name: "零式艦戦53型(岩本隊)", AA: 12, range: 6, IP: 0, AB: 0, imp: true, los: 3, cost: 6, abbr: '', avoid: 0, prio: 99 },
   { id: 158, type: 1, name: "Bf109T改", AA: 8, range: 2, IP: 0, AB: 0, imp: false, los: 0, cost: 6, abbr: '', avoid: 0, prio: 99 },
@@ -2028,7 +2028,7 @@ let CHANGE_LOG = [
   // },
 ];
 
-const LAST_UPDATE_DATE = "2020/02/02";
+const LAST_UPDATE_DATE = "2020/02/05";
 
 // お任せ機能CO
 // 所持機体CO
