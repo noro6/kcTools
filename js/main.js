@@ -4288,6 +4288,8 @@ function rateCaluclate(objectData) {
 
           // 補給
           enemy.slots = enemy.orgSlots.concat();
+          enemy.ap = enemy.origAp;
+          enemy.lbAp = enemy.origLbAp;
         }
       }
     }
