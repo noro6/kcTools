@@ -360,6 +360,13 @@ function checkInvalidPlane(shipID, plane) {
     if (special && special.equipmentIds.indexOf(plane.id) > -1) return true;
     return false;
   }
+
+  // 試製景雲チェック
+  if (plane.id === 151) {
+    if (!special) return false;
+    return special.equipmentIds.includes(plane.id);
+  }
+
   return true;
 }
 
@@ -5769,11 +5776,11 @@ function plane_type_select_Changed($this) {
     // 特別装備可能な装備対応
     if (special && special.equipmentIds.length > 0) {
       for (const id of special.equipmentIds) {
-        const addPlane = PLANE_DATA.find(v => v.id === id);
-        dispType.push(addPlane.type);
+        const plane = PLANE_DATA.find(v => v.id === id);
+        dispType.push(plane.type);
 
         // もしまだ追加されてないなら追加
-        if (!org.find(v => v.id === id)) org.push(addPlane);
+        if (!org.find(v => v.id === id) && (selectedType === 0 || selectedType === plane.type)) org.push(plane);
       }
     }
 
