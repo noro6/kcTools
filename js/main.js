@@ -424,6 +424,7 @@ function initialize(callback) {
 
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
+  document.getElementById('latest_version').textContent = serverVersion.id;
   if (setting.version !== serverVersion.id) {
     for (const v of serverVersion.changes) {
       // 変更通知
@@ -1987,11 +1988,11 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
         else $(e)[0].dataset.celldata = '';
 
         if (enemyFleet.length >= 4) {
-          if(isDefMode) {
+          if (isDefMode) {
             const cellType = castInt(enemyFleet[3]);
             $(e).find('.cell_type').val(cellType === 0 ? 5 : 3);
           }
-          else{
+          else {
             $(e).find('.cell_type').val(enemyFleet[3]);
           }
         }
@@ -5756,11 +5757,17 @@ function plane_type_select_Changed($this) {
     // 特別装備可能な装備カテゴリ対応
     if (special && special.equipmentTypes.length > 0) dispType = dispType.concat(special.equipmentTypes);
 
+    // 重複を切る
+    dispType = dispType.filter((x, i, self) => self.indexOf(x) === i);
+    dispType.sort((a, b) => a - b);
+
+    // カテゴリ一覧にないもの除外
+    org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
+
     // 特別装備可能な装備対応
     if (special && special.equipmentIds.length > 0) {
-      let addPlane = {};
       for (const id of special.equipmentIds) {
-        addPlane = PLANE_DATA.find(v => v.id === id);
+        const addPlane = PLANE_DATA.find(v => v.id === id);
         dispType.push(addPlane.type);
 
         // もしまだ追加されてないなら追加
@@ -5768,17 +5775,16 @@ function plane_type_select_Changed($this) {
       }
     }
 
-    // 重複を切る
-    dispType = dispType.filter((x, i, self) => self.indexOf(x) === i);
-    dispType.sort((a, b) => a - b);
-
     // 装備可能カテゴリ表示変更
     setPlaneType($this, dispType);
     $this.val(selectedType);
   }
+  else {
+    // カテゴリ一覧にないもの除外
+    org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
+  }
 
-  // カテゴリ一覧にないもの除外
-  org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
+
 
   // ソート反映
   const $target_table_div = $('.plane_table_content');

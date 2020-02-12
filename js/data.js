@@ -283,6 +283,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   { shipId: 296, equipmentTypes: [6, 7], equipmentIds: [] },
   // 金剛改二丙に 水爆
   { shipId: 391, equipmentTypes: [6], equipmentIds: [] },
+  // Richelieuに Late298B
+  { shipId: 1472, equipmentTypes: [], equipmentIds: [194] },
   // 由良改二に 水爆 水戦
   { shipId: 288, equipmentTypes: [6, 7], equipmentIds: [] },
   // 多摩改二に 水爆 水戦
@@ -442,6 +444,7 @@ const SHIP_DATA = [
   { id: 1455, type: 12, name: "伊14改", slot: [2, 1, 0], final: 1, orig: 295, deckid: 375 },
   { id: 1460, type: 3, name: "大鷹改", slot: [14, 14, 5, 3], final: 0, orig: 321, deckid: 380 },
   { id: 1461, type: 3, name: "神鷹改", slot: [9, 18, 6, 3], final: 0, orig: 324, deckid: 381 },
+  { id: 1472, type: 8, name: "Richelieu改", slot: [3, 3, 3, 3], final: 1, orig: 1472, deckid: 392 },
   { id: 1473, type: 1, name: "Ark Royal改", slot: [24, 30, 12, 12], final: 1, orig: 315, deckid: 393 },
   { id: 1476, type: 3, name: "Gambier Bay改", slot: [16, 12, 6], final: 1, orig: 344, deckid: 396 },
   { id: 1477, type: 1, name: "Intrepid改", slot: [40, 36, 21, 15], final: 1, orig: 349, deckid: 397 },
@@ -1974,7 +1977,7 @@ let CHANGE_LOG = [
       },
       {
         type: 1, title: "計算結果欄の表示のカスタマイズ方法を変更しました。",
-          content: "スマホ閲覧時に入れ替えが誤爆してしまう対策としてドラッグ開始可能範囲を限定、グラフの表示、非表示をトグル式で変更するようにしました。"
+        content: "スマホ閲覧時に入れ替えが誤爆してしまう対策としてドラッグ開始可能範囲を限定、グラフの表示、非表示をトグル式で変更するようにしました。"
       },
       {
         type: 2, title: "細かい修正を行いました。",
