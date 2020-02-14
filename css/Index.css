@@ -778,7 +778,10 @@ input[type="text"] { font-size: 12px; }
   width: 466px;
   height: auto;
 }
-#node_tbody{ height: 380px; }
+#node_tbody{ 
+  height: 380px; 
+  width: 120px;
+}
 .node_tr {
   width: 100%;
   cursor: pointer;
@@ -1069,6 +1072,38 @@ input[type="text"] { font-size: 12px; }
 .stock_td_aa { width: 20%; }
 .stock_td_range { width: 20%; }
 .stock_td_stock { width: 20%; }
+
+
+/* ------------------------------
+  所持装備編集 #modal_equipment_edit
+-------------------------------- */
+#plane_status_table {
+  font-size: 12px;
+  text-align: center;
+}
+.plane_status_thead {
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  padding: .1rem;
+}
+.plane_status_anti_air { width: 25%; }
+.plane_status_torpedo { width: 25%; }
+.plane_status_bomber { width: 25%; }
+.plane_status_radius { width: 25%; }
+.plane_status_interception { width: 33%; }
+.plane_status_anti_bomber { width: 33%; }
+.plane_status_avoid { width: 33%; }
+
+.remodel_label {
+  color: #00aaaa;
+}
+.img_plane_card {
+  width: 240px;
+  height: 240px;
+}
 
 
 /* ------------------------------
