@@ -633,13 +633,24 @@ input[type="text"] { font-size: 12px; }
   transition: .2s;
   border-radius: .25rem;
 }
+.plane_tr_disabled {
+  cursor: default;
+  color: #ff0000;
+  transition: .2s;
+  border-radius: .25rem;
+}
 .plane_tr:hover { background-color: #eee; }
+.plane_tr_disabled:hover { background-color: #fee; }
 .plane_tr:active { background-color: #7ac3ff !important; }
 .plane_td_basic { 
   text-align: center;
   width: 60px;
 }
 .plane_td_name { max-width: 300px; }
+.plane_td_stock {
+  color: #ff4400;
+  font-size: 10px;
+}
 .tr_multi {
   padding-top: .15rem;
   padding-bottom: .15rem;
@@ -702,6 +713,11 @@ input[type="text"] { font-size: 12px; }
 .enemy_td_lbAp {
   text-align: center;
   width: 84px;
+}
+.enemy_tr_multi {
+  padding-top: .15rem;
+  padding-bottom: .15rem;
+  width: 306px;
 }
 
 
