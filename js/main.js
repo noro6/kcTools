@@ -4757,7 +4757,7 @@ function autoFleetExpand(planeStock) {
   const planes = [];
   for (const stock of planeStock) {
     // 97艦攻 99艦爆 96艦戦 瑞雲 は無限
-    if (stock.id === 16 || stock.id === 19 || stock.id === 23 || stock.id === 26) stock.num = 60;
+    if ([16, 19, 23, 26].includes(stock.id)) stock.num = 60;
     if (getArraySum(stock.num) <= 0) continue;
     const plane = PLANE_DATA.find(v => v.id === stock.id);
     // 基地機体足切り
@@ -4945,7 +4945,12 @@ function autoLandBaseExpand(planes) {
   // 基地航空隊の攻撃機優先順位
   const atackers = [101, 2, 3, 6, 9];
   // スロット
-  const equipList = new Array(4);
+  const equipList = [
+    { id: 0, ap: 0, remodel: 0 },
+    { id: 0, ap: 0, remodel: 0 },
+    { id: 0, ap: 0, remodel: 0 },
+    { id: 0, ap: 0, remodel: 0 }
+  ];
   // スロット数
   const slotNumber = equipList.length;
 
@@ -4996,11 +5001,13 @@ function autoLandBaseExpand(planes) {
   const selectedFighters = [];
   isMax = false;
   const planeList = planes['type1'];
-  for (let i = 0; i < planeList.length; i++) {
-    const plane = planeList[i];
-    selectedFighters.push(plane);
-    isMax = selectedFighters.length === slotNumber;
-    if (isMax) break;
+  if (planeList) {
+    for (let i = 0; i < planeList.length; i++) {
+      const plane = planeList[i];
+      selectedFighters.push(plane);
+      isMax = selectedFighters.length === slotNumber;
+      if (isMax) break;
+    }
   }
 
   // 制空値を満たすまで艦戦系を追加
@@ -5018,7 +5025,7 @@ function autoLandBaseExpand(planes) {
 
   const selectedPlanes = [];
   for (const v of equipList) {
-    selectedPlanes.push({ id: v.id, remodel: v.remodel });
+    if (v) selectedPlanes.push({ id: v.id, remodel: v.remodel });
   }
   // 在庫から減らす
   for (const plane of selectedPlanes) {
@@ -5181,7 +5188,7 @@ function autoLandBaseExpandDef(count) {
     // 上位3つのロケット戦闘機のフラグを上げる
     for (let i = 0; i < 3; i++) {
       const index = planes.findIndex(v => v.isRocket === 0 && ROCKETS.includes(v.id));
-      planes[index].isRocket = 1;
+      if (index > -1) planes[index].isRocket = 1;
     }
     // あげたフラグでソート
     planes.sort((a, b) => b.isRocket - a.isRocket);
@@ -5233,7 +5240,7 @@ function autoLandBaseExpandDef(count) {
         const sumAp_ = Math.floor((rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2) * sumAp);
         if (sumAp_ >= destAp) break;
       }
-      if (sumAp >= destAp) break;
+      else if (sumAp >= destAp) break;
     }
 
     // 仮ユニットにて下位機体を偵察機に変更してみる (4スロ未満かつ制空が足りている場合は不要、ロケット戦闘機は3機確定で搭載されるので上書きされない)
@@ -5283,7 +5290,7 @@ function autoLandBaseExpandDef(count) {
     if (isHeavyDef) {
       // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
       const sumAp_ = Math.floor((rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2) * sumAp);
-      if(sumAp_ >= destAp);
+      if (sumAp_ >= destAp) break;
     }
     else if (sumAp >= destAp) break;
   }
