@@ -437,6 +437,7 @@ function initialize(callback) {
       visibleEquiped: false,
       visibleFinal: true,
       visibleImage: true,
+      enemyDisplayImage: true,
       displayMode: {
         'modal_plane_select': 'single',
         'modal_ship_select': 'single',
@@ -691,6 +692,10 @@ function initialize(callback) {
   $('#disp_in_stock').prop('checked', setting.inStockOnly);
   // 配備済み表示
   $('#disp_equiped').prop('checked', setting.visibleEquiped);
+  // 敵艦表示形式
+  $('#enemy_dispmay_image').prop('checked', setting.enemyDisplayImage);
+  // 敵艦表示形式
+  $('#enemy_dispmay_text').prop('checked', !setting.enemyDisplayImage);
 
   // おまかせ配備初期選択
   $('#modal_auto_expand').find('.custom-control-input').prop('checked', false);
@@ -1251,8 +1256,8 @@ function createPlaneTable(planes) {
   for (let i = 0; i < max_i; i++) {
     const plane = planes[i];
     const nmAA = plane.antiAir + 1.5 * plane.interception;
-    const defAA = plane.antiAir + plane.interception + 2.0 * plane.antiBomer;
-    const needTooltip = plane.antiBomer > 0 || plane.interception > 0;
+    const defAA = plane.antiAir + plane.interception + 2.0 * plane.antiBomber;
+    const needTooltip = plane.antiBomber > 0 || plane.interception > 0;
 
     // 使用済み機体チェック
     if (dispInStock && planeStock) {
@@ -1363,7 +1368,7 @@ function setPlaneStockTable() {
   for (let i = 0; i < max_i; i++) {
     const plane = planes[i];
     const nmAA = plane.antiAir + 1.5 * plane.interception;
-    const defAA = plane.antiAir + plane.interception + 2.0 * plane.antiBomer;
+    const defAA = plane.antiAir + plane.interception + 2.0 * plane.antiBomber;
     const stock = planeStock.find(v => v.id === plane.id);
 
     // ラップ
@@ -1777,77 +1782,133 @@ function createMapSelect() {
  */
 function createNodeSelect() {
   const area = castInt($('#map_select').val());
-  let difficulty = -1;
+  let lv = -1;
   if (area < 1000) {
     $('#select_difficulty_div').addClass('d-none');
   }
   else {
     $('#select_difficulty_div').removeClass('d-none');
-    difficulty = castInt($('#select_difficulty').val());
+    lv = castInt($('#select_difficulty').val());
   }
 
   // マップ設定
   $('#map_img').attr('src', './img/map/' + area + '.png');
 
-  const patterns = ENEMY_PATTERN.find(v => v.area === area && difficulty === v.lv).cell;
+  let patterns = ENEMY_PATTERN.filter(v => v.area === area && v.lv === lv);
+  // 重複は切る
+  patterns = patterns.filter((x, i, self) => self.findIndex(v => v.node === x.node) === i);
+
+  // 空襲はてっぺん
+  patterns.sort((a, b) => {
+    if (a.node == '空襲' && b.node == '空襲') return 0;
+    else if (a.node == '空襲') return -1;
+    else if (b.node == '空襲') return 1;
+    else return 0;
+  });
   const len = patterns.length;
-  const label = DIFFICULTY.find(v => v.id === difficulty);
   let text = '';
   let text2 = '';
   for (let index = 0; index < len; index++) {
+    const nodeName = patterns[index].node;
+    const coords = patterns[index].coords;
     text += `
-    <div class="node_tr pl-1 pr-2 py-2 w-100 cur_pointer" data-node="${patterns[index].name}">
-      <span class="align-self-center node_index text-primary">${index + 1}.</span>
-      <span class="align-self-center ml-2">${patterns[index].name}</span>
-      <span class="align-self-center ml-auto font_size_12">${label ? '[' + label.name + ']' : ''}</span>
+    <div class="d-flex node_tr justify-content-center py-2 w-100 cur_pointer" data-node="${nodeName}">
+      <div class="align-self-center">${nodeName}</div>
     </div>
   `;
 
     // クリック座標設定
-    if (patterns[index].coords !== '') {
-      text2 += `<area class="node" title="${patterns[index].name}" coords="${patterns[index].coords}" shape="rect">`;
+    if (coords !== '') {
+      text2 += `<area class="node" title="${nodeName}" coords="${coords}" shape="rect">`;
     }
   }
 
   $('#node_tbody').html(text);
   $('#clickable_nodes').html(text2);
   $('#enemy_pattern_tbody').html('');
+  $('#enemy_pattern_select').html('<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#">編成1</a></li>');
+  $('#enemy_pattern_air_power').text('0');
+  $('#enemy_display_mode_parent').addClass('d-none').removeClass('d-flex');
   $('#btn_expand_enemies').prop('disabled', true);
 }
 
 /**
  * 選択されている海域情報から敵艦隊を表示する
+ * @param {number} patternNo パターン番号 未指定時は0
  */
-function createEnemyPattern() {
+function createEnemyPattern(patternNo = 0) {
   const area = castInt($('#map_select').val());
   const node = $('.node_selected').data('node');
-  const patternNo = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
-  let difficulty = -1;
+  let lv = -1;
   if (area < 1000) $('#select_difficulty_div').addClass('d-none');
   else {
     $('#select_difficulty_div').removeClass('d-none');
-    difficulty = castInt($('#select_difficulty').val());
+    lv = castInt($('#select_difficulty').val());
   }
-  const cells = ENEMY_PATTERN.find(v => v.area === area && difficulty === v.lv);
-  const enemies = cells.cell.find(v => v.name === node).enemies;
-  const len = enemies.length;
+
+  // 敵艦隊一覧生成
   let text = '';
-  for (let index = 0; index < len; index++) {
+  let sumAp = 0;
+  const patterns = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv);
+  const pattern = patterns[patternNo];
+  const enemies = pattern.enemies;
+  const enemiesLength = enemies.length;
+  for (let index = 0; index < enemiesLength; index++) {
     const enemy = ENEMY_DATA.find(v => v.id === enemies[index]);
+    const enemyObj = createEnemyObject(enemy.id);
+    sumAp += enemyObj.ap;
+
     text += `
-      <div class="enemy_pattern_tr d-flex border-bottom" data-enemyid="${enemy.id}">
-        <div class="mr-2 align-self-center"><img src="./img/enemy/${enemy.id}.png" class="ship_img"></div>
-        <div class="align-self-center">
-          ${drawEnemyGradeColor(enemy.name)}
-        </div>
-        <div class="ml-auto align-self-center">
-          ${""}
-        </div>
+    <div class="enemy_pattern_tr mx-1 d-flex border-bottom" data-enemyid="${enemy.id}">
+      <div class="mr-1 align-self-center enemy_pattern_tr_image">
+        <img src="./img/enemy/${enemy.id}.png" class="enemy_img">
       </div>
-      `;
+      <div class="align-self-center enemy_pattern_tr_text">
+        <div class="font_size_11 text-primary">ID: ${enemy.id + 1500}</div>
+        <div>${drawEnemyGradeColor(enemy.name)}</div>
+      </div>
+    </div>
+    `;
   }
+
+  // 編成パターンタブ生成
+  if (patternNo === 0) {
+    let tabText = '';
+    for (let i = 0; i < patterns.length; i++) {
+      tabText += `
+      <li class="nav-item">
+        <a class="nav-link ${i === 0 ? 'active' : ''}" data-toggle="tab" data-disp="${i}" href="#">
+          ${(patterns[i].remarks ? patterns[i].remarks : '編成' + (i + 1))}
+          </a>
+      </li>
+      `;
+    }
+    $('#enemy_pattern_select').html(tabText);
+  }
+
+  const borders = getAirStatusBorder(sumAp);
   $('#enemy_pattern_tbody').html(text);
+  $('#enemy_pattern_air_power').text(sumAp);
+  $('#enemy_pattern_status0').text(borders[0]);
+  $('#enemy_pattern_status1').text(borders[1]);
+  $('#enemy_pattern_status2').text(borders[2]);
+  $('#enemy_pattern_status3').text(borders[3]);
   $('#btn_expand_enemies').prop('disabled', false);
+
+
+  // 表示形式切り替えの有効無効と表示形式
+  if (enemiesLength > 6) {
+    $('#enemy_display_mode_parent').removeClass('d-none').addClass('d-flex');
+    if (setting.enemyDisplayImage) {
+      $('#enemy_pattern_tbody').find('.enemy_pattern_tr_text').addClass('d-none');
+    }
+    else {
+      $('#enemy_pattern_tbody').find('.enemy_pattern_tr_image').addClass('d-none');
+    }
+  }
+  else {
+    $('#enemy_display_mode_parent').addClass('d-none').removeClass('d-flex');
+  }
 }
 
 /**
@@ -3002,9 +3063,8 @@ function updateLandBaseInfo(landBaseData) {
 
 /**
  * 基地航空隊 中隊オブジェクト生成
- * {id, name, abbr, type, AA, AB, IP, los, ap, range, cost, slot, remodel, level}
  * @param {HTMLElement} node 生成元 lb_plane
- * @returns 機体オブジェクト {id, name, abbr, type, AA, AB, IP, los, ap, range, cost, slot, remodel, level}
+ * @returns 機体オブジェクト
  */
 function createLBPlaneObject(node) {
   const id = castInt(node.dataset.planeid);
@@ -3044,7 +3104,7 @@ function createLBPlaneObject(node) {
       lbPlane.slot = 4;
     }
     lbPlane.antiAir = plane.antiAir;
-    lbPlane.antiBomer = plane.antiBomer;
+    lbPlane.antiBomber = plane.antiBomber;
     lbPlane.interception = plane.interception;
     lbPlane.scout = plane.scout;
     lbPlane.radius = plane.radius;
@@ -3073,9 +3133,9 @@ function createLBPlaneObject(node) {
 function getAirPower_lb(lb_plane) {
   if (lb_plane.id === 0) return 0;
   const type = lb_plane.type;
-  const taiku = lb_plane.antiAir;
-  const AB = lb_plane.antiBomer;
-  const IP = lb_plane.interception;
+  const antiAir = lb_plane.antiAir;
+  const antiBomber = lb_plane.antiBomber;
+  const interception = lb_plane.interception;
   const remodel = lb_plane.remodel;
   const level = lb_plane.level;
   const slot = lb_plane.slot;
@@ -3085,9 +3145,9 @@ function getAirPower_lb(lb_plane) {
   // 艦戦 夜戦 水戦 陸戦 局戦
   if ([1, -1, 7, 102, 103].indexOf(type) !== -1) {
     //防空時
-    if (isDefMode) sumPower = (0.2 * remodel + taiku + IP + 2.0 * AB) * Math.sqrt(slot);
+    if (isDefMode) sumPower = (0.2 * remodel + antiAir + interception + 2.0 * antiBomber) * Math.sqrt(slot);
     //出撃時
-    else sumPower = (0.2 * remodel + taiku + 1.5 * IP) * Math.sqrt(slot);
+    else sumPower = (0.2 * remodel + antiAir + 1.5 * interception) * Math.sqrt(slot);
 
     switch (level) {
       case 2:
@@ -3114,7 +3174,7 @@ function getAirPower_lb(lb_plane) {
   }
   // 水爆
   else if ([6].indexOf(type) !== -1) {
-    sumPower = 1.0 * taiku * Math.sqrt(slot);
+    sumPower = 1.0 * antiAir * Math.sqrt(slot);
     switch (level) {
       case 2:
         sumPower += 1;
@@ -3140,14 +3200,14 @@ function getAirPower_lb(lb_plane) {
   }
   // 艦爆
   else if ([3].indexOf(type) !== -1) {
-    sumPower = 1.0 * (0.25 * remodel + taiku) * Math.sqrt(slot);
+    sumPower = 1.0 * (0.25 * remodel + antiAir) * Math.sqrt(slot);
   }
   // 陸攻
   else if ([101].indexOf(type) !== -1) {
-    sumPower = 1.0 * (0.5 * Math.sqrt(remodel) + taiku) * Math.sqrt(slot);
+    sumPower = 1.0 * (0.5 * Math.sqrt(remodel) + antiAir) * Math.sqrt(slot);
   }
   // そのた
-  else sumPower = 1.0 * taiku * Math.sqrt(slot);
+  else sumPower = 1.0 * antiAir * Math.sqrt(slot);
 
   // 内部熟練度ボーナス
   if (slot > 0) {
@@ -4535,7 +4595,8 @@ function caluclateLandBase(landBaseAps, landBaseModes, enemyFleet, enemyApDist, 
     }
   }
 
-  enemyApDist[6] += getEnemyFleetAP(enemyFleet);
+  // 出撃時 → 本隊戦における制空値 / 防空時 →　生
+  enemyApDist[6] += isDefMode ? getEnemyFleetLBAP(enemyFleet) : getEnemyFleetAP(enemyFleet);
 }
 
 
@@ -4718,7 +4779,7 @@ function autoFleetExpand(planeStock) {
           remodel: i,
           stock: 1
         }
-        planeData.antiAir = getBonusAA(plane, planeData.antiAir);
+        planeData.antiAir = getBonusAA(planeData, planeData.antiAir);
         planes[typeName].push(planeData);
       }
     }
@@ -4741,6 +4802,7 @@ function autoFleetExpand(planeStock) {
 
   // 艦娘オブジェクト作成
   let fleetData = [];
+  let orderIndex = 0;
   $ship.each((i, e) => {
     const ship = SHIP_DATA.find(v => v.id === castInt($(e)[0].dataset.shipid));
     if (ship) {
@@ -4753,8 +4815,9 @@ function autoFleetExpand(planeStock) {
           slotNo: i2,
           num: slotCount,
           plane: { id: 0, ap: 0 },
-          order: 5 * i + i2,
-          num_: slotCount
+          order: orderIndex++,
+          num_: slotCount,
+          slotId: 'ship' + i + '_slot' + i2
         };
         // 空母以外は戦闘機系用にダミースロット数激減(20機以下の場合)  または10スロ未満でも。
         if ((![1, 2, 3].includes(ship.type) && slotData.num < 20) || slotData.num < 10) {
@@ -4763,7 +4826,7 @@ function autoFleetExpand(planeStock) {
         shipSlots.push(slotData);
       });
       // 戦艦、重巡級の戦闘機キャリア回避 (最大搭載数スロ以外除外)
-      if (needEmpty && [4, 5, 7, 8, 9].indexOf(ship.type) > -1) {
+      if (needEmpty && [4, 5, 7, 8, 9].includes(ship.type)) {
         shipSlots.sort((a, b) => b.num - a.num);
         fleetData.push(shipSlots[0]);
       }
@@ -4786,7 +4849,7 @@ function autoFleetExpand(planeStock) {
       for (const plane of planes['type' + type]) {
         if (plane.stock <= 0) continue;
         if (checkInvalidPlane(slotData.shipId, PLANE_DATA.find(v => v.id === plane.id))) {
-          const planeObj = getShipPlaneObject(slotData.num, plane.id);
+          const planeObj = getShipPlaneObject(slotData.num, plane);
           slotData.plane = planeObj;
           sumAp += planeObj.ap;
           plane.stock--;
@@ -4799,11 +4862,12 @@ function autoFleetExpand(planeStock) {
     }
   }
 
-  // 全艦娘搭載数の昇順に並び替え(重巡級、戦艦級は搭載の反転値をソート基準となっている)
+  // 全艦娘搭載数の昇順に並び替え(重巡級、戦艦級は搭載の反転値がソート基準となっている)
   fleetData.sort((a, b) => { return a.num_ === b.num_ ? b.slotNo - a.slotNo : a.num_ - b.num_; });
   const baseSumAp = sumAp;
   // 戦闘機の搭載が確定したスロット
   const fighterSlot = [];
+  // 搭載が確定した艦載機 fighterSlot と連動
   let decidePlaneObjs = [];
   let tmpStockData = [];
 
@@ -4814,7 +4878,9 @@ function autoFleetExpand(planeStock) {
     // 変更を戻す
     decidePlaneObjs = [];
     tmpStockData = [];
-    for (const plane of planes['type1']) tmpStockData.push({ id: plane.id, stock: plane.stock });
+    for (const plane of planes['type1']) {
+      tmpStockData.push({ id: plane.id, remodel: plane.remodel, antiAir: plane.antiAir, stock: plane.stock });
+    }
 
     sumAp = baseSumAp;
 
@@ -4827,7 +4893,7 @@ function autoFleetExpand(planeStock) {
       for (const plane of tmpStockData) {
         if (plane.stock <= 0) continue;
         if (checkInvalidPlane(slotData.shipId, PLANE_DATA.find(v => v.id === plane.id))) {
-          const planeObj = getShipPlaneObject(slotData.num, plane.id);
+          const planeObj = getShipPlaneObject(slotData.num, plane);
           const prevAp = slotData.plane.ap;
           if (prevAp < planeObj.ap) {
             // 搭載確定機体に追加
@@ -4839,6 +4905,10 @@ function autoFleetExpand(planeStock) {
           }
         }
         if (equiped) break;
+      }
+      // 搭載する機体がないよ！ → 今ある機体をそのまま確定
+      if (!equiped) {
+        decidePlaneObjs.push(slotData.plane)
       }
     }
   }
@@ -4852,11 +4922,14 @@ function autoFleetExpand(planeStock) {
   fleetData.sort((a, b) => a.order - b.order);
 
   // 実際に搭載
+  orderIndex = 0;
   $ship.each((i, e) => {
-    const shipId = castInt($(e)[0].dataset.shipid);
     $(e).find('.ship_plane:not(.d-none)').each((i2, e2) => {
-      const slotData = fleetData.find(v => v.shipId === shipId && v.slotNo === i2);
-      if (slotData) setPlaneDiv($(e2), { id: slotData.plane.id });
+      const slotData = fleetData.find(v => v.slotId === ('ship' + i + '_slot' + i2));
+      if (slotData) {
+        setPlaneDiv($(e2), slotData.plane);
+        orderIndex++;
+      }
       else setPlaneDiv($(e2));
     });
   });
@@ -4970,7 +5043,7 @@ function getLandBasePlaneObject(plane) {
   if (RECONNAISSANCES.indexOf(lbPlane.type) > -1 && lbPlane.slot > 4) lbPlane.slot = 4;
   lbPlane.antiAir = plane.antiAir;
   // 既に対空値に変換されているため不要
-  // lbPlane.antiBomer = plane.antiBomer;
+  // lbPlane.antiBomber = plane.antiBomber;
   // lbPlane.interception = plane.interception;
   lbPlane.scout = plane.scout;
   lbPlane.remodel = plane.remodel;
@@ -4984,21 +5057,22 @@ function getLandBasePlaneObject(plane) {
  * 艦娘スロットオブジェクト返却
  * @param {number} shipId 艦娘ID
  * @param {number} slotCount 搭載数
- * @param {number} planeiId 機体ID
+ * @param {number} inputPlane 機体
  */
-function getShipPlaneObject(slotCount, planeiId) {
-  const plane = PLANE_DATA.find(v => v.id === planeiId);
+function getShipPlaneObject(slotCount, inputPlane) {
+  const plane = PLANE_DATA.find(v => v.id === inputPlane.id);
   const shipPlane = { id: 0, type: 0, antiAir: 0, ap: 0, bonusAp: 0, remodel: 0, level: 0, slot: slotCount, canBattle: true };
   shipPlane.id = plane.id;
   shipPlane.name = plane.name;
   shipPlane.type = plane.type;
   shipPlane.canBattle = RECONNAISSANCES.indexOf(plane.type) === -1;
-  shipPlane.antiAir = getBonusAA(shipPlane, plane.antiAir);
+  shipPlane.remodel = inputPlane.remodel;
+  shipPlane.antiAir = getBonusAA(shipPlane, inputPlane.antiAir);
   shipPlane.level = setting.defaultProf.find(v => v.id === Math.abs(plane.type)).prof;
   shipPlane.bonusAp = getBonusAp(shipPlane);
   shipPlane.ap = updateAp(shipPlane);
 
-  return { id: shipPlane.id, type: shipPlane.type, ap: shipPlane.ap };
+  return { id: shipPlane.id, ap: shipPlane.ap, remodel: shipPlane.remodel, name: shipPlane.name };
 }
 
 /**
@@ -5067,6 +5141,7 @@ function autoLandBaseExpandDef(count) {
         if (stock.num[i] < 1) continue;
         const v = {
           id: plane.id,
+          antiAir: plane.antiAir,
           type: plane.type,
           adjust: 1,
           scout: plane.scout,
@@ -5085,7 +5160,9 @@ function autoLandBaseExpandDef(count) {
           id: plane.id,
           type: plane.type,
           remodel: i,
-          antiAir: (plane.antiAir + plane.interception + 2.0 * plane.antiBomer),
+          antiAir: (plane.antiAir + plane.interception + 2.0 * plane.antiBomber),
+          interception: plane.interception,
+          antiBomber: plane.antiBomber,
           isRocket: 0
         };
         v.antiAir = getBonusAA(v, v.antiAir);
@@ -5179,11 +5256,7 @@ function autoLandBaseExpandDef(count) {
       const prevAp = unit.ap;
       unit = unit_sub;
       // 全航空隊総制空値更新
-      sumAp += prevAp - unit_sub.ap;
-    }
-    if (isHeavyDef) {
-      // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
-      sumAp = Math.floor((rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2) * sumAp);
+      sumAp += unit_sub.ap - prevAp;
     }
 
     // 本ユニットセット
@@ -5203,12 +5276,16 @@ function autoLandBaseExpandDef(count) {
           isFirst = false;
           return false;
         }
-
         return true;
       });
     }
 
-    if (sumAp >= destAp) break;
+    if (isHeavyDef) {
+      // 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
+      const sumAp_ = Math.floor((rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2) * sumAp);
+      if(sumAp_ >= destAp);
+    }
+    else if (sumAp >= destAp) break;
   }
 
   return equipList;
@@ -6409,6 +6486,28 @@ function node_tr_Clicked($this) {
 }
 
 /**
+ * 敵編成パターン名クリック時
+ * @param {JqueryDomObject} $this
+ */
+function pattern_Changed($this) {
+  const pattern = castInt($this.find('.nav-link').data('disp'), -1);
+  if (pattern < 0) return;
+  createEnemyPattern(pattern);
+}
+
+/**
+ * 敵艦表示モード変更時
+ * @param {JqueryDomObject} $this
+ */
+function enemy_display_mode_Changed($this) {
+  setting.enemyDisplayImage = $this.attr('id').includes('enemy_dispmay_image');
+  saveLocalStrage('setting', setting);
+  const pattern = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
+  if (pattern > 0) createEnemyPattern(pattern);
+  else createEnemyPattern();
+}
+
+/**
  * マップ上のセルクリック時
  * @param {JqueryDomObject} $this
  */
@@ -6426,12 +6525,23 @@ function node_Clicked($this) {
 function btn_expand_enemies() {
   const area = castInt($('#map_select').val());
   const node = $('.node_selected').data('node');
-  let difficulty = -1;
+  const patternNo = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
+  let lv = -1;
   if (area >= 1000) {
-    difficulty = castInt($('#select_difficulty').val());
+    lv = castInt($('#select_difficulty').val());
   }
-  const cells = ENEMY_PATTERN.find(v => v.area === area && difficulty === v.lv);
-  const pattern = cells.cell.find(v => v.name === node);
+
+  const pattern = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv)[patternNo];
+
+  // 展開対象が空襲なら空襲モードに乗っ取り
+  if (!isDefMode && node === '空襲') {
+    isDefMode = true;
+    $target = $('#air_raid_enemies');
+  }
+  else if (isDefMode && node !== '空襲') {
+    isDefMode = false;
+    $target = $('.battle_content:first()');
+  }
 
   // 元の敵編成解除
   $target.find('.enemy_content:not(:first)').remove();
@@ -6448,7 +6558,7 @@ function btn_expand_enemies() {
   $target.find('.enemy_range').text(pattern.radius);
 
   // 進行航路情報を付与
-  $target[0].dataset.celldata = cells.area + "_" + pattern.name;
+  $target[0].dataset.celldata = area + "_" + pattern.node + (pattern.remarks ? '(' + pattern.remarks + ')' : '');
 
   $('#modal_enemy_pattern').modal('hide');
 }
@@ -6726,7 +6836,7 @@ function stock_tr_Clicked($this) {
   $tr.find('.plane_status_bomber').text(plane.bomber);
   $tr.find('.plane_status_radius').text(plane.radius);
   $tr.find('.plane_status_interception').text(plane.interception);
-  $tr.find('.plane_status_anti_bomber').text(plane.antiBomer);
+  $tr.find('.plane_status_anti_bomber').text(plane.antiBomber);
   $tr.find('.plane_status_avoid').text(AVOID_TYPE.find(v => v.id === plane.avoid).name);
   $modal.find('#edit_id').text(plane.id);
   $modal.find('.plane_status_name').text(plane.name);
@@ -7199,6 +7309,8 @@ $(function () {
   $('#modal_enemy_pattern').on('change', '#select_difficulty', createNodeSelect);
   $('#modal_enemy_pattern').on('click', '#btn_expand_enemies', btn_expand_enemies);
   $('#modal_enemy_pattern').on('click', '.node', function () { node_Clicked($(this)) });
+  $('#modal_enemy_pattern').on('click', '#enemy_pattern_select .nav-item', function () { pattern_Changed($(this)) });
+  $('#modal_enemy_pattern').on('click', 'input[name="enemy_display_mode"]', function () { enemy_display_mode_Changed($(this)) });
   $('#modal_main_preset').on('click', '.preset_tr', function () { main_preset_tr_Clicked($(this)); });
   $('#modal_main_preset').on('click', '.btn_commit_preset', btn_commit_main_preset_Clicked);
   $('#modal_main_preset').on('click', '.btn_commit_preset_header', btn_commit_preset_header_Clicked);

@@ -593,7 +593,6 @@ input[type="text"] { font-size: 12px; }
 #route { width: auto; }
 .formation{ width: 100%; }
 .cellType{ width: 100%; }
-
 #air_raid_enemies {
   width: 300px;
 }
@@ -795,8 +794,8 @@ input[type="text"] { font-size: 12px; }
   height: auto;
 }
 #node_tbody{ 
-  height: 380px; 
-  width: 120px;
+  height: 390px; 
+  width: 80px;
 }
 .node_tr {
   width: 100%;
@@ -813,8 +812,22 @@ input[type="text"] { font-size: 12px; }
   color: #fff !important;
   background-color: #7ac3ff !important;
 }
-.enemy_pattern_tr { height: 32px; }
+#enemy_pattern_tbody {
+  height: 244px;
+}
+.enemy_pattern_tr { 
+  height: 40px;
+}
 .node { cursor: pointer; }
+.enemy_img { 
+  height: 38px; 
+  width: auto;
+}
+.enemy_pattern_label {
+  text-align: right;
+  font-size: 12px;
+  color: #777;
+}
 
 /* ------------------------------
   一括変更欄 #modal_collectively_setting

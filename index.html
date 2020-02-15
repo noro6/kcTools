@@ -1681,8 +1681,8 @@
                     <h5 class="modal-title">敵艦隊一括入力</h5>
                     <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
-                <div class="modal-body">
-                    <div class="d-flex mt-2">
+                <div class="modal-body pb-1 pt-2 px-2">
+                    <div class="d-flex">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">海域</span>
@@ -1701,19 +1701,71 @@
                             </select>
                         </div>
                     </div>
-                    <div class="border-top mt-2" id="enemy_pattern_content">
-                        <img class="py-2" id="map_img" src="./img/map/11.png" usemap="#clickable_map">
-                        <map name="clickable_map" id="clickable_nodes">
+                    <div id="enemy_pattern_content">
+                        <div class="text-center">
+                            <img id="map_img" src="./img/map/11.png" usemap="#clickable_map">
+                            <map name="clickable_map" id="clickable_nodes">
+                        </div>
                         </map>
                         <div class="d-flex">
-                            <div class="mx-2">
-                                <div class="mb-2">戦闘マス一覧</div>
+                            <div class="mx-1">
                                 <div class="overflow-auto" id="node_tbody"></div>
                             </div>
-                            <div class="px-2 border-left d-flex flex-column">
-                                <div id="enemy_pattern_table">
-                                    <div>敵編成</div>
-                                    <div class="w-100" id="enemy_pattern_tbody"></div>
+                            <div class="pl-1 border-left flex-grow-1 d-flex flex-column">
+                                <div class="my-1">
+                                    <ul class="nav nav-tabs" id="enemy_pattern_select">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#">編成1</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mx-1 mb-2 flex-grow-1 d-flex flex-column" id="enemy_pattern_info">
+                                    <div>
+                                        <div class="d-flex">
+                                            <div class="align-self-center enemy_pattern_label">制空：</div>
+                                            <div class="align-self-center">
+                                                <span id="enemy_pattern_air_power">0</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="align-self-center enemy_pattern_label">確保：</div>
+                                            <div class="align-self-center">
+                                                <span id="enemy_pattern_status0">0</span>
+                                            </div>
+                                            <div class="ml-1 align-self-center enemy_pattern_label">優勢：</div>
+                                            <div class="align-self-center">
+                                                <span id="enemy_pattern_status1">0</span>
+                                            </div>
+                                            <div class="ml-1 align-self-center enemy_pattern_label">均衡：</div>
+                                            <div class="align-self-center">
+                                                <span id="enemy_pattern_status2">0</span>
+                                            </div>
+                                            <div class="ml-1 align-self-center enemy_pattern_label">劣勢：</div>
+                                            <div class="align-self-center">
+                                                <span id="enemy_pattern_status3">0</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-none" id="enemy_display_mode_parent">
+                                            <div class="enemy_pattern_label align-self-center">表示：</div>
+                                            <div class="custom-control custom-radio align-self-center">
+                                                <input type="radio" id="enemy_dispmay_image" name="enemy_display_mode"
+                                                    class="custom-control-input" checked>
+                                                <label class="custom-control-label" for="enemy_dispmay_image">画像</label>
+                                            </div>
+                                            <div class="ml-3 custom-control custom-radio align-self-center">
+                                                <input type="radio" id="enemy_dispmay_text" name="enemy_display_mode"
+                                                    class="custom-control-input">
+                                                <label class="custom-control-label" for="enemy_dispmay_text">テキスト</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-auto d-flex">
+                                        <div class="font_size_11 font_color_777 align-self-center">敵艦隊一覧</div>
+                                        <div class="ml-1 flex-grow-1 border-top align-self-center"></div>
+                                    </div>
+                                    <div class="mt-1 d-flex flex-column flex-wrap-reverse"
+                                        id="enemy_pattern_tbody">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2064,7 +2116,7 @@
                             <div class="h6">
                                 半径
                             </div>
-                            <div class="ml-2 font_size_12 cur_help" data-toggle="tooltip" 
+                            <div class="ml-2 font_size_12 cur_help" data-toggle="tooltip"
                                 title="搭載する機体を、設定した半径を満たす機体のみに制限します(基地航空隊のみ)">
                                 <i class="far fa-question-circle"></i>
                             </div>
