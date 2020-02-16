@@ -87,10 +87,10 @@
                                     <a class="nav-link" href="#input_data">入力情報</a>
                                 </li>
                                 <li class="nav-item" id="li_config">
-                                    <a class="nav-link" href="#config">詳細設定</a>
+                                    <a class="nav-link" href="#plane_stock">所持装備</a>
                                 </li>
                                 <li class="nav-item" id="li_config">
-                                    <a class="nav-link" href="#plane_stock">所持装備</a>
+                                    <a class="nav-link" href="#config">詳細設定</a>
                                 </li>
                             </ul>
                         </li>
@@ -185,8 +185,10 @@
                                             </div>
                                             <div class="d-flex my-2 px-0 lb_infomation">
                                                 <div class="ml-2 align-self-center lb_sammary">
-                                                    制空: <span class="ap">0</span>
-                                                    半径: <span class="range">0</span>
+                                                    <span class="font_color_555">制空: </span>
+                                                    <span class="ap">0</span>
+                                                    <span class="font_color_555">半径: </span>
+                                                    <span class="range">0</span>
                                                 </div>
                                                 <div class="ml-auto mr-1 align-self-center resource d-flex"
                                                     data-toggle="tooltip" data-html="true"
@@ -319,10 +321,14 @@
                             </div>
                             <div class="collapse show collapse_content" id="friendFleet_content">
                                 <div class="border-top"></div>
-                                <div class="my-2">
-                                    <div class="ml-2 custom-control custom-checkbox mr-2">
+                                <div class="my-2 d-flex">
+                                    <div class="ml-1 custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="union_fleet">
                                         <label class="custom-control-label" for="union_fleet">連合艦隊</label>
+                                    </div>
+                                    <div class="ml-2 cur_help align-self-center" data-toggle="tooltip" data-html="true"
+                                        title="第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。<br>チェックが外されている場合、表示されている艦隊のみが計算対象になります。">
+                                        <i class="far fa-question-circle"></i>
                                     </div>
                                 </div>
                                 <div class="my-2">
@@ -348,7 +354,8 @@
                                             </select>
                                             <div class="ml-1 align-self-center">隻</div>
                                             <div class="ml-4 align-self-center">
-                                                艦隊総制空値：<span class="fleet_ap">0</span>
+                                                <span class="font_color_555">艦隊総制空値: </span>
+                                                <span class="fleet_ap">0</span>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-center flex-wrap fleet_tab">
@@ -356,7 +363,7 @@
                                                 <div class="pb-2 px-1 px-xl-2">
                                                     <div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
                                                         <div class="drag_handle cur_move">
-                                                            <img src="img/ship/0.png" class="ml-1 ship_img d-none">
+                                                            <img src="img/ship/0.png" class="ship_img d-none">
                                                         </div>
                                                         <div class="ml-1 ship_name_span align-self-center px-1 text-truncate"
                                                             data-toggle="tooltip" data-placement="right"
@@ -364,23 +371,28 @@
                                                             艦娘を選択
                                                         </div>
                                                         <div class="ml-1 align-self-center ship_sumAP font_size_12">
-                                                            制空: <span class="ap">0</span>
+                                                            <span class="font_color_555">制空: </span>
+                                                            <span class="ap">0</span>
                                                         </div>
                                                         <div
-                                                            class="ml-auto align-self-center custom-control custom-checkbox mr-2">
+                                                            class="ml-auto align-self-center custom-control custom-checkbox">
                                                             <input type="checkbox"
                                                                 class="custom-control-input ship_disabled"
                                                                 id="disabled_ship_1">
                                                             <label class="custom-control-label ship_disabled_label"
                                                                 for="disabled_ship_1">無効</label>
                                                         </div>
-                                                        <div class="ml-2 btn_preset btn_plane_preset btn_icon"
+                                                        <div class="ml-1 cur_help pt-1_5 font_color_555 font_size_12"
+                                                            data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
+                                                            <i class="far fa-question-circle"></i>
+                                                        </div>
+                                                        <div class="ml-3 btn_preset btn_plane_preset btn_icon"
                                                             data-toggle="tooltip" title="プリセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-toolbox"></i>
                                                         </div>
                                                         <div class="ml-2_5 btn_reset btn_reset_ship btn_icon"
-                                                            data-toggle="tooltip" title="リセット"
+                                                            data-toggle="tooltip" title="装備リセット"
                                                             data-delay='{"show": 300, "hide": 0}'>
                                                             <i class="fas fa-trash-alt"></i>
                                                         </div>
@@ -589,14 +601,17 @@
                                             </div>
                                             <div class="border-bottom d-flex pb-2 pt-1 px-2 flex-row-reverse">
                                                 <div class="align-self-center font_size_12">
-                                                    制空 : <span class="enemy_sum_ap">0</span>
+                                                    <span class="font_color_555">制空: </span>
+                                                    <span class="enemy_sum_ap">0</span>
                                                     (<span class="enemy_sum_lbap">0</span>)
                                                 </div>
                                                 <div class="mr-2 align-self-center font_size_12">
-                                                    半径 : <span class="enemy_range">0</span>
+                                                    <span class="font_color_555">半径: </span>
+                                                    <span class="enemy_range">0</span>
                                                 </div>
                                                 <div class="mr-2 align-self-center font_size_12">
-                                                    艦隊防空 : <span class="fleet_AA">0</span>
+                                                    <span class="font_color_555">艦隊防空: </span>
+                                                    <span class="fleet_AA">0</span>
                                                 </div>
                                             </div>
                                             <div class="enemyFleet_item py-1 px-1">
@@ -651,8 +666,8 @@
                                                     <option value="5">高高度爆撃</option>
                                                 </optgroup>
                                             </select>
-                                            <div class="ml-auto align-self-center font_size_12">
-                                                制空 : <span class="enemy_sum_lbap">0</span>
+                                            <div class="ml-auto align-self-center font_size_12 font_color_555">
+                                                制空: <span class="enemy_sum_lbap">0</span>
                                             </div>
                                             <!-- 緩衝 -->
                                             <input type="hidden" class="formation">
@@ -966,6 +981,76 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="plane_stock">
+                            <div class="my-2 d-flex">
+                                <div class="h5 mb-0 align-self-center">
+                                    <span class="content_title align-middle">所持装備</span>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
+                                    data-toggle="tooltip" title="入れ替え終了">
+                                    <i class="fas fa-check d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
+                                    data-toggle="tooltip" title="順序入れ替え">
+                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
+                                </div>
+                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                                    data-toggle="collapse" data-target="#plane_stock_content">
+                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
+                                </div>
+                            </div>
+                            <div class="collapse collapse_content show" id="plane_stock_content">
+                                <div class="border-top"></div>
+                                <div class="mx-1 d-flex my-2">
+                                    <div class="input-group input-group-sm plane_type_select_parent">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">種別</span>
+                                        </div>
+                                        <select class="custom-select custom-select-sm" id="stock_type_select"></select>
+                                    </div>
+                                    <div class="ml-auto">
+                                        <button type="button" class="ml-auto btn btn-sm btn-danger text-nowrap"
+                                            id="btn_stock_all_clear">
+                                            全リセット
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mx-1" id="plane_stock_table">
+                                    <div class="d-flex" id="plane_stock_thead">
+                                        <div class="stock_td_type">種別</div>
+                                        <div class="stock_td_name flex-grow-1 ">装備名</div>
+                                        <div class="stock_td_aa">対空</div>
+                                        <div class="stock_td_range">半径</div>
+                                        <div class="stock_td_stock">全体所持数</div>
+                                    </div>
+                                    <div id="plane_stock_tbody"></div>
+                                </div>
+                                <div class="pt-2 border-top"></div>
+                                <div class="my-3 mx-2">
+                                    <div>
+                                        下記入力欄より、艦隊情報入力サイト
+                                        <a href="https://kancolle-fleetanalysis.firebaseapp.com/" target="_blank">
+                                            艦隊分析
+                                        </a>
+                                        様と同様の手順で装備一覧を反映できます。
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="form-group mr-1 flex-grow-1">
+                                            <textarea class="form-control font_size_12" id="input_equipment_json"
+                                                placeholder="装備情報を入力" rows="1"></textarea>
+                                            <div class="invalid-feedback">装備一覧のに失敗しました。</div>
+                                            <div class="valid-feedback">装備一覧の反映に成功しました！</div>
+                                        </div>
+                                        <div class="ml-auto">
+                                            <button type="button" class="ml-auto btn btn-sm btn-success text-nowrap"
+                                                id="btn_load_equipment_json" disabled>
+                                                反映
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="config">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
@@ -1051,10 +1136,11 @@
                                             <div class="align-self-center">シミュレート回数：</div>
                                             <input type="number" class="form-control form-control-sm align-self-center"
                                                 id="caluclate_count" value="1">
-                                        </div>
-                                        <div class="ml-1 font_size_12">
-                                            増やすと精度は上がりますが、処理に時間がかかります。
-                                            処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。
+                                            <div class="ml-2 cur_help align-self-center" data-toggle="tooltip"
+                                                data-html="true"
+                                                title="増やすと精度は上がりますが、処理に時間がかかります。<br>処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。">
+                                                <i class="far fa-question-circle"></i>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="ml-3 mt-3">
@@ -1130,15 +1216,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="ml-3 mt-3">
+                                    <div class="d-flex ml-3 mt-3">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="auto_save">
                                             <label class="custom-control-label" for="auto_save">
                                                 編成の自動保存を有効にする
                                             </label>
                                         </div>
-                                        <div class="ml-1 font_size_12">
-                                            最後に計算が行われた編成を保持し、次回サイトに訪れた際に自動で復帰させる機能です。
+                                        <div class="ml-2 cur_help pt-0_5" data-toggle="tooltip"
+                                            title="最後に計算が行われた編成を保持し、次回サイトに訪れた際に自動で復帰させる機能です。">
+                                            <i class="far fa-question-circle"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -1151,70 +1238,6 @@
                                         id="btn_reset_localStrage">
                                         設定削除
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="plane_stock">
-                            <div class="my-2 d-flex">
-                                <div class="h5 mb-0 align-self-center">
-                                    <span class="content_title align-middle">所持装備</span>
-                                </div>
-                                <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
-                                    data-toggle="tooltip" title="入れ替え終了">
-                                    <i class="fas fa-check d-table-cell align-middle"></i>
-                                </div>
-                                <div class="ml-auto round_button align-self-center d-table btn_content_trade"
-                                    data-toggle="tooltip" title="順序入れ替え">
-                                    <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
-                                </div>
-                                <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
-                                    data-toggle="collapse" data-target="#plane_stock_content">
-                                    <i class="fas fa-chevron-down d-table-cell align-middle"></i>
-                                </div>
-                            </div>
-                            <div class="collapse collapse_content show" id="plane_stock_content">
-                                <div class="border-top"></div>
-                                <div class="mx-1 d-flex my-2">
-                                    <div class="input-group input-group-sm plane_type_select_parent">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">種別</span>
-                                        </div>
-                                        <select class="custom-select custom-select-sm" id="stock_type_select"></select>
-                                    </div>
-                                </div>
-                                <div class="mx-1" id="plane_stock_table">
-                                    <div class="d-flex" id="plane_stock_thead">
-                                        <div class="stock_td_type">種別</div>
-                                        <div class="stock_td_name flex-grow-1 ">装備名</div>
-                                        <div class="stock_td_aa">対空</div>
-                                        <div class="stock_td_range">半径</div>
-                                        <div class="stock_td_stock">全体所持数</div>
-                                    </div>
-                                    <div id="plane_stock_tbody"></div>
-                                </div>
-                                <div class="pt-2 border-top"></div>
-                                <div class="my-3 mx-2">
-                                    <div>
-                                        下記入力欄より、艦隊情報入力サイト
-                                        <a href="https://kancolle-fleetanalysis.firebaseapp.com/" target="_blank">
-                                            艦隊分析
-                                        </a>
-                                        様と同様の手順で装備一覧を反映できます。
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="form-group mr-1 flex-grow-1">
-                                            <textarea class="form-control font_size_12" id="input_equipment_json"
-                                                placeholder="装備情報を入力" rows="1"></textarea>
-                                            <div class="invalid-feedback">装備一覧のに失敗しました。</div>
-                                            <div class="valid-feedback">装備一覧の反映に成功しました！</div>
-                                        </div>
-                                        <div class="ml-auto">
-                                            <button type="button" class="ml-auto btn btn-sm btn-success text-nowrap"
-                                                id="btn_load_equipment_json" disabled>
-                                                反映
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1599,17 +1622,12 @@
                             <input type="checkbox" class="custom-control-input" id="display_final" checked>
                             <label class="custom-control-label" for="display_final">最終改造状態のみ</label>
                         </div>
-                        <div class="ml-2 custom-control custom-checkbox align-self-center">
-                            <input type="checkbox" class="custom-control-input" id="display_ship_img" checked>
-                            <label class="custom-control-label" for="display_ship_img">画像表示</label>
-                        </div>
                     </div>
                     <div class="ship_table_content bg-white border-top pt-2">
                         <div class="ship_table container-fluid mx-0 px-0">
                             <div class="ship_tbody overflow-auto bg-white">
                                 <div class="ship_thead d-flex bg-white py-2">
-                                    <div class="td_index font_size_12 font_color_777 text-center">ID</div>
-                                    <div class="ml-1 ship_td_name font_size_12 font_color_777">艦娘名</div>
+                                    <div class="ml-1 font_size_12 font_color_777">艦娘名</div>
                                     <div class="ml-auto ship_td_slot font_size_12 font_color_777">搭載1</div>
                                     <div class="ship_td_slot font_size_12 font_color_777">搭載2</div>
                                     <div class="ship_td_slot font_size_12 font_color_777">搭載3</div>
@@ -1658,8 +1676,7 @@
                         <div class="enemy_table container-fluid mx-0 px-0">
                             <div class="enemy_tbody overflow-auto bg-white">
                                 <div class="enemy_thead d-flex bg-white py-2">
-                                    <div class="td_index font_size_12 font_color_777">ID</div>
-                                    <div class="ml-1 enemy_td_name font_size_12 font_color_777">敵艦名</div>
+                                    <div class="ml-1 font_size_12 font_color_777">敵艦ID / 敵艦名</div>
                                     <div class="ml-auto enemy_td_ap font_size_12 font_color_777">制空値</div>
                                     <div class="enemy_td_lbAp font_size_12 font_color_777">制空値(基地)</div>
                                 </div>
@@ -1707,7 +1724,8 @@
                             <map name="clickable_map" id="clickable_nodes"></map>
                         </div>
                         <div class="d-flex">
-                            <div class="mx-1">
+                            <div class="mx-1 mt-1">
+                                <div class="py-2 border-bottom text-center">マス</div>
                                 <div class="overflow-auto" id="node_tbody"></div>
                             </div>
                             <div class="pl-1 border-left flex-grow-1 d-flex flex-column">
@@ -1754,7 +1772,8 @@
                                             <div class="ml-3 custom-control custom-radio align-self-center">
                                                 <input type="radio" id="enemy_dispmay_text" name="enemy_display_mode"
                                                     class="custom-control-input">
-                                                <label class="custom-control-label" for="enemy_dispmay_text">テキスト</label>
+                                                <label class="custom-control-label"
+                                                    for="enemy_dispmay_text">テキスト</label>
                                             </div>
                                         </div>
                                     </div>
@@ -1762,8 +1781,7 @@
                                         <div class="font_size_11 font_color_777 align-self-center">敵艦隊一覧</div>
                                         <div class="ml-1 flex-grow-1 border-top align-self-center"></div>
                                     </div>
-                                    <div class="mt-1 d-flex flex-column flex-wrap-reverse"
-                                        id="enemy_pattern_tbody">
+                                    <div class="mt-1 d-flex flex-column flex-wrap-reverse" id="enemy_pattern_tbody">
                                     </div>
                                 </div>
                             </div>
@@ -2173,11 +2191,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal_equipment_edit" tabindex="-1">
+    <div class="modal fade" id="modal_plane_stock" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content mt-5">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal_equipment_edit_title">装備所持数入力</h5>
+                    <h5 class="modal-title" id="modal_plane_stock_title">装備所持数入力</h5>
                     <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
@@ -2280,7 +2298,7 @@
                                 <input type="number" id="stock_sum" class="form-control form-control-sm w-50" value="0"
                                     disabled>
                                 <button type="button" class="ml-auto btn btn-sm btn-danger" id="btn_stock_reset">
-                                    所持数リセット
+                                    所持数0にする
                                 </button>
                             </div>
                         </div>
@@ -2288,7 +2306,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="ml-auto">
-                        <button type="button" class="btn btn-sm btn-success" id="btn_save_equipment">
+                        <button type="button" class="btn btn-sm btn-success" id="btn_save_stock">
                             所持数更新
                         </button>
                         <button type="button" class="ml-3 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
@@ -2340,7 +2358,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modal_confirm" tabindex="-1">
+    <div class="modal" id="modal_confirm" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content mt-5">
                 <div class="modal-header">

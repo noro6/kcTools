@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 body {
   font-size: 0.875rem;
   background: #f0ebe6;
+  font-family: "Roboto", "Hiragino Sans W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 }
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
@@ -9,7 +11,7 @@ input[type="text"] { font-size: 12px; }
 #main_contents > div { max-width: 1200px; }
 #site_information > div { max-width: 1200px; }
 #modal_plane_select .modal-content { min-height: 80vh; }
-#modal_ship_select .modal-content { min-height: 84vh; }
+#modal_ship_select .modal-content { min-height: 80vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
 #modal_main_preset .modal-content { min-height: 584px; }
 #modal_main_preset .btn { max-height: 31px; }
@@ -37,7 +39,8 @@ input[type="text"] { font-size: 12px; }
 /* -----------------------------------
   ユーティリティ
 ----------------------------------- */
-.pt-0_5 {padding-top: .2rem;}
+.pt-0_5 { padding-top: .2rem; }
+.pt-1_5 { padding-top: .32rem; }
 .ml-2_5 { margin-left: 0.75rem !important; }
 .pt-3_5 { padding-top: 1.25rem !important; }
 .py-1_5 { padding-top: 0.3rem !important; padding-bottom: 0.3rem !important; }
@@ -60,6 +63,7 @@ input[type="text"] { font-size: 12px; }
 .font_size_20 { font-size: 20px; }
 .font_size_16 { font-size: 16px; }
 .font_size_14 { font-size: 14px; }
+.font_size_13 { font-size: 13px; }
 .font_size_12 { font-size: 12px; }
 .font_size_11 { font-size: 11px; }
 .font_size_10 { font-size: 10px; }
@@ -68,6 +72,7 @@ input[type="text"] { font-size: 12px; }
 .font_color_ccc { color: #ccc; }
 .font_color_aaa { color: #aaa; }
 .font_color_777 { color: #777; }
+.font_color_555 { color: #555; }
 .font_color_000 { color: #000; }
 .img-size-18_e {
   width: auto;
@@ -154,7 +159,10 @@ input[type="text"] { font-size: 12px; }
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
 }
 .custom-control-input { cursor: pointer; }
-.custom-control-label { cursor: pointer; }
+.custom-control-label { 
+  cursor: pointer; 
+  padding-top: .15rem;
+}
 
 
 /* -----------------------------------
@@ -364,7 +372,6 @@ input[type="text"] { font-size: 12px; }
 }
 
 
-
 /* -----------------------------------
   基地航空隊関連 #landBase
 ----------------------------------- */
@@ -380,8 +387,7 @@ input[type="text"] { font-size: 12px; }
 }
 /* 制空半径簡易 */
 .lb_sammary {
-  width: 102px;
-  font-size: 13px;
+  font-size: 12px;
 }
 /* 必要資材欄 */
 .resource {
@@ -434,11 +440,11 @@ input[type="text"] { font-size: 12px; }
 }
 .ship_plane:hover { background-color: #f6f6f6; }
 .ship_img { 
-  height: 30px; 
+  height: 25px; 
   width: auto;
 }
 .ship_img_sm { 
-  height: 25px; 
+  height: 30px; 
   width: auto;
 }
 
@@ -678,10 +684,6 @@ input[type="text"] { font-size: 12px; }
 }
 .ship_tr:hover { background-color: #eee; }
 .ship_tr:active { background-color: #7ac3ff !important; }
-.td_index {
-  text-align: right;
-  width: 24px;
-}
 .ship_td_slot {
   text-align: center;
   width: 35px;
@@ -718,7 +720,10 @@ input[type="text"] { font-size: 12px; }
   padding-bottom: .15rem;
   width: 306px;
 }
-
+.enemy_img_sm { 
+  height: 34px; 
+  width: 136px;
+}
 
 /* ------------------------------
   プリセットモーダル 共通
@@ -794,7 +799,7 @@ input[type="text"] { font-size: 12px; }
   height: auto;
 }
 #node_tbody{ 
-  height: 390px; 
+  height: 352px; 
   width: 80px;
 }
 .node_tr {
@@ -937,18 +942,18 @@ input[type="text"] { font-size: 12px; }
   border-bottom: 1px #b8b8b8 solid;
 }
 #shoot_down_table .td_name {
-  cursor: pointer;
+  cursor: default;
   width: 78px;
 }
 #shoot_down_table .td_plane_name {
-  cursor: pointer;
+  cursor: default;
   font-size: 11px;
   width: 168px;
 }
 #shoot_down_table_tbody td{ border-top:1px #e9ecef solid; }
 #shoot_down_table_tbody .td_plane_name { text-align: left; }
 #shoot_down_table .td_battle { max-width: 120px; }
-#shoot_down_table_tbody .td_battle { cursor: pointer; }
+#shoot_down_table_tbody .td_battle { cursor: default; }
 #shoot_down_table .battle1 { border-left: 1px #b8b8b8 solid; }
 #shoot_down_table .tr_fap td{ border-top:1px #b8b8b8 solid; }
 #shoot_down_table .fap.battle_end {
@@ -968,7 +973,7 @@ input[type="text"] { font-size: 12px; }
 .progress_label {
   text-align: right;
   font-size: 12px;
-  width: 80px;
+  width: 90px;
 }
 .progress {
   background-color: whitesmoke;
@@ -1007,7 +1012,7 @@ input[type="text"] { font-size: 12px; }
   border-bottom: 1px #b8b8b8 solid;
 }
 #rate_table tbody td {
-  cursor: pointer;
+  cursor: default;
   padding: .1rem;
   border-top:1px #e9ecef solid;
 }
@@ -1032,7 +1037,7 @@ input[type="text"] { font-size: 12px; }
   border-bottom: 1px #b8b8b8 solid;
 }
 #enemy_shoot_down_table tbody td {
-  cursor: pointer;
+  cursor: default;
   padding: .1rem;
   border-top:1px #e9ecef solid;
 }
@@ -1104,7 +1109,7 @@ input[type="text"] { font-size: 12px; }
 
 
 /* ------------------------------
-  所持装備編集 #modal_equipment_edit
+  所持装備編集 #modal_plane_stock
 -------------------------------- */
 #plane_status_table {
   font-size: 12px;

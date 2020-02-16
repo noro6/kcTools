@@ -1244,8 +1244,14 @@ function createPlaneTable(planes) {
     $tbody.prev().addClass('d-flex').removeClass('d-none');
   }
 
-  if (dispInStock) $('#disp_equiped').closest('div').removeClass('d-none');
-  else $('#disp_equiped').closest('div').addClass('d-none');
+  if (dispInStock) {
+    $('#disp_equiped').closest('div').removeClass('d-none');
+    $('#disp_in_stock').prop('checked', true);
+  }
+  else {
+    $('#disp_equiped').closest('div').addClass('d-none');
+    $('#disp_in_stock').prop('checked', false);
+  }
 
   const max_i = planes.length;
   let prevType = 0;
@@ -1436,11 +1442,9 @@ function createShipTable($table, type) {
   let insertHtml = '';
   let prevType = 0;
   const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
-  const visibleImage = $modal.find('#display_ship_img').prop('checked');
   const visibleFinal = $('#display_final').prop('checked');
 
   setting.visibleFinal = visibleFinal;
-  setting.visibleImage = visibleImage;
   saveLocalStrage('setting', setting);
 
   // 艦種ソート後、改造元idソート
@@ -1485,10 +1489,12 @@ function createShipTable($table, type) {
     }
 
     insertHtml += `
-    <div class="ship ship_tr d-flex py-2 py-lg-1${displayMode === "multi" ? ' tr_multi' : ''}" data-shipid="${ship.id}">
-        <div class="td_index text-primary font_size_11 align-self-center">${ship.id > 1000 ? ship.orig : ship.id}</div>
-        ${visibleImage ? '<div class="align-self-center"><img src="img/ship/' + ship.id + '.png" class="ml-1 ship_img_sm"></div>' : ''}
-        <div class="pl-1 ship_td_name align-self-center font_size_12">${ship.name}</div>
+    <div class="ship ship_tr d-flex ${displayMode === "multi" ? 'tr_multi' : 'py-1'}" data-shipid="${ship.id}">
+        <div class="align-self-center"><img src="img/ship/${ship.id}.png" class="ml-1 ship_img_sm"></div>
+        <div class="ml-1 align-self-center">
+            <div class="text-primary font_size_11">ID: ${ship.id > 1000 ? ship.orig + 'b' : ship.id}</div>
+            <div>${ship.name}</div>
+        </div>
         ${displayMode === 'single' ? slotText : ''}
     </div>`;
 
@@ -1593,12 +1599,14 @@ function createEnemyTable($table, type) {
     }
 
     insertHtml += `
-    <div class="enemy enemy_tr d-flex py-2${displayMode === "multi" ? ' enemy_tr_multi' : ''}" data-enemyid="${enemy.id}">
-      <div class="td_index text-primary font_size_11 align-self-center">${enemy.id + 1500}</div>
-      <div class="ml-1 align-self-center"><img class="ship_img_sm" src="./img/enemy/${enemy.id}.png"></div>
-      <div class="ml-1 enemy_td_name font_size_12 align-self-center">${drawEnemyGradeColor(enemy.name)}</div>
-      ${displayMode === "single" ? '<div class="ml-auto enemy_td_ap">' + ap + '</div>' : ''}
-      ${displayMode === "single" ? '<div class="enemy_td_lbAp">' + lbAp + '</div>' : ''}
+    <div class="enemy enemy_tr d-flex py-1 ${displayMode === "multi" ? 'enemy_tr_multi' : ''}" data-enemyid="${enemy.id}">
+      <div class="ml-1 align-self-center"><img class="enemy_img_sm" src="./img/enemy/${enemy.id}.png"></div>
+      <div class="ml-1 align-self-center">
+        <div class="text-primary font_size_11">ID: ${enemy.id + 1500}</div>
+        <div class="font_size_12">${drawEnemyGradeColor(enemy.name)}</div>
+      </div>
+      ${displayMode === "single" ? '<div class="ml-auto align-self-center enemy_td_ap">' + ap + '</div>' : ''}
+      ${displayMode === "single" ? '<div class="enemy_td_lbAp align-self-center">' + lbAp + '</div>' : ''}
     </div>`;
   }
 
@@ -2504,6 +2512,8 @@ function readEquipmentJson(input) {
 
     planeStock.sort((a, b) => a.id - b.id);
     saveLocalStrage('planeStock', planeStock);
+    setting.inStockOnly = true;
+    saveLocalStrage('setting', setting);
   } catch (error) {
     return false;
   }
@@ -3519,7 +3529,7 @@ function updateFriendFleetInfo(friendFleetData) {
 
       for (let i = 0; i < shipPlanes.length; i++) {
         const plane = shipPlanes[i];
-        const planeName = plane.name + (plane.remodel ? '★' + plane.remodel : '');
+        const planeName = plane.name;
         // 艦娘未指定の場合 搭載数 0 または艦載機未装備 のスロットは表示しない
         if (!ship && (plane.id === 0 || plane.slot === 0)) continue;
         // 艦娘の場合 スロット以上は作らない
@@ -5045,14 +5055,14 @@ function autoLandBaseExpand(planes) {
  */
 function getLandBasePlaneObject(plane) {
   const lbPlane = { id: 0, type: 0, antiAir: 0, antiBomber: 0, interception: 0, scout: 0, ap: 0, slot: 18, remodel: 0, level: 0 };
+  const rawPlane = PLANE_DATA.find(v => v.id === plane.id);
   lbPlane.id = plane.id;
   lbPlane.type = plane.type;
   if (RECONNAISSANCES.indexOf(lbPlane.type) > -1 && lbPlane.slot > 4) lbPlane.slot = 4;
-  lbPlane.antiAir = plane.antiAir;
-  // 既に対空値に変換されているため不要
-  // lbPlane.antiBomber = plane.antiBomber;
-  // lbPlane.interception = plane.interception;
-  lbPlane.scout = plane.scout;
+  lbPlane.antiAir = rawPlane.antiAir;
+  lbPlane.antiBomber = rawPlane.antiBomber;
+  lbPlane.interception = rawPlane.interception;
+  lbPlane.scout = rawPlane.scout;
   lbPlane.remodel = plane.remodel;
   lbPlane.level = setting.defaultProf.find(v => v.id === Math.abs(plane.type)).prof;
   lbPlane.ap = getAirPower_lb(lbPlane);
@@ -5856,7 +5866,7 @@ function lb_plane_Drop($this, ui) {
  * @param {JqueryDomObject} $this
  */
 function btn_reset_ship_Clicked($this) {
-  clearShipDiv($this.closest('.ship_tab'));
+  $this.closest('.ship_tab').find('.ship_plane').each((i, e) => { clearPlaneDiv($(e)) })
   caluclate();
 }
 
@@ -6768,7 +6778,7 @@ function btn_reset_localStrage_Clicked() {
     <div class="mt-3">登録されている編成プリセット、装備プリセット、各種詳細設定値などが削除されます。</div>
     <div class="mt-3">よろしければ、OKボタンを押してください。</div>
   `);
-  confirmType = "deleteLocalStrage";
+  confirmType = "deleteLocalStrageAll";
   $modal.modal('show');
 }
 
@@ -6823,12 +6833,27 @@ function input_equipment_json_Changed($this) {
   }
 }
 
+
+/**
+ * 所持数全リセット
+ */
+function btn_stock_all_clear_Clicked() {
+  const $modal = $('#modal_confirm');
+  $modal.find('.modal-body').html(`
+    <div>所持機体情報をリセットします。</div>
+    <div class="mt-3">現在保存されている所持装備情報が削除され、全ての機体の所持数が0となります。</div>
+    <div class="mt-3">よろしければ、OKボタンを押してください。</div>
+  `);
+  confirmType = "resetStock";
+  $modal.modal('show');
+}
+
 /**
  * 所持機体名クリック
  * @param {JqueryDomObject} $this
  */
 function stock_tr_Clicked($this) {
-  const $modal = $('#modal_equipment_edit');
+  const $modal = $('#modal_plane_stock');
   const $tr = $modal.find('.plane_status_tr');
   const plane = PLANE_DATA.find(v => v.id === castInt($this.data('planeid')));
   const planeStock = loadPlaneStock();
@@ -6876,7 +6901,7 @@ function stock_Changed($this) {
 /**
  * 所持機体数保存クリック
  */
-function btn_save_equipment_Clicked() {
+function btn_save_stock_Clicked() {
   const planeStock = loadPlaneStock();
   const planeId = castInt($('#edit_id').text());
 
@@ -6888,8 +6913,16 @@ function btn_save_equipment_Clicked() {
   planeStock.find(v => v.id === planeId).num = numArray;
   saveLocalStrage('planeStock', planeStock);
 
-  $('#modal_equipment_edit').modal('hide');
+  $('#modal_plane_stock').modal('hide');
   setPlaneStockTable();
+}
+
+/**
+ * 所持数リセットボタンクリック
+ */
+function btn_stock_reset_Clicked() {
+  $('#modal_plane_stock').find('.stock_num').val('0');
+  $('#modal_plane_stock').find('#stock_sum').val('0');
 }
 
 /**
@@ -7234,7 +7267,6 @@ $(function () {
   $(document).on('click', '.remodel_item', function () { $(this).addClass('remodel_item_selected'); });
   $(document).on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
   $(document).on('click', '.btn_plane_preset', function () { btn_plane_preset_Clicked($(this)); });
-  $(document).on('click', '.sidebar-sticky a[href^="#"]', function () { sidebar_Clicked($(this)); });
   $(document).on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
   $(document).on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
   $(document).on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
@@ -7292,6 +7324,7 @@ $(function () {
   $('#plane_stock').on('click', '#btn_load_equipment_json', btn_load_equipment_json_Clicked);
   $('#plane_stock').on('input', '#input_equipment_json', function () { input_equipment_json_Changed($(this)); });
   $('#plane_stock').on('focus', '#input_equipment_json', function () { $(this).select(); });
+  $('#plane_stock').on('click', '#btn_stock_all_clear', btn_stock_all_clear_Clicked);
   $('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
   $('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
   $('#modal_plane_select').on('click', '.plane_thead div', function () { plane_thead_Clicked($(this)); });
@@ -7306,7 +7339,6 @@ $(function () {
   $('#modal_ship_select').on('click', '.ship', function () { modal_ship_Selected($(this)); });
   $('#modal_ship_select').on('click', '.btn_remove', function () { modal_ship_select_btn_remove_Clicked($(this)); });
   $('#modal_ship_select').on('click', '#display_final', () => { createShipTable($('.ship_table'), [castInt($('#ship_type_select').val())]); });
-  $('#modal_ship_select').on('click', '#display_ship_img', () => { createShipTable($('.ship_table'), [castInt($('#ship_type_select').val())]); });
   $('#modal_enemy_select').on('click', '.modal-body .enemy', function () { modal_enemy_Selected($(this)); });
   $('#modal_enemy_select').on('click', '.btn_remove', function () { modal_enemy_select_btn_remove($(this)); });
   $('#modal_enemy_select').on('change', '#enemy_type_select', function () { createEnemyTable($('.enemy_table'), [castInt($(this).val())]); });
@@ -7341,8 +7373,9 @@ $(function () {
   $('#modal_auto_expand').on('input', '#simple_enemy_ap', function () { simple_enemy_ap_Changed($(this)); });
   $('#modal_auto_expand').on('input', '#dest_ap', function () { dest_ap_Changed($(this)); });
   $('#modal_auto_expand').on('input', '#dest_range', function () { dest_ap_Changed($(this)); });
-  $('#modal_equipment_edit').on('input', '.stock_num', function () { stock_Changed($(this)); });
-  $('#modal_equipment_edit').on('click', '#btn_save_equipment', btn_save_equipment_Clicked);
+  $('#modal_plane_stock').on('input', '.stock_num', function () { stock_Changed($(this)); });
+  $('#modal_plane_stock').on('click', '#btn_save_stock', btn_save_stock_Clicked);
+  $('#modal_plane_stock').on('click', '#btn_stock_reset', btn_stock_reset_Clicked);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#modal_smart_menu').on('click', 'a[href^="#"]', function () { smart_menu_modal_link_Clicked($(this)); });
   $('#btn_preset_all').click(btn_preset_all_Clicked);
@@ -7350,7 +7383,6 @@ $(function () {
   $('#btn_twitter').click(btn_twitter_Clicked);
   $('#btn_deckBuilder').click(btn_deckBuilder_Clicked);
   $('#menu-small').click(menu_small_Clicked);
-  $('#site_information').on('click', 'a[href^="#"]', function () { sidebar_Clicked($(this)); });
   $('#result_content').on({
     mouseenter: function () { shoot_down_table_tbody_MouseEnter($(this)); },
     mouseleave: function () { shoot_down_table_tbody_MouseLeave($(this)); }
@@ -7367,6 +7399,8 @@ $(function () {
     mouseenter: function () { enemy_shoot_down_table_tbody_MouseEnter($(this)); },
     mouseleave: function () { enemy_shoot_down_table_tbody_MouseLeave($(this)); }
   }, '#enemy_shoot_down_tbody td');
+  $('.sidebar-sticky a[href^="#"]').click(function () { return sidebar_Clicked($(this)); });
+  $('#site_information a[href^="#"]').click(function () { return sidebar_Clicked($(this)); });
 
   // 画面サイズ変更
   $(window).resize(function () {

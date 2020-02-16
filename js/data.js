@@ -956,9 +956,9 @@ const ENEMY_PATTERN = [
   { area: 34, node: 'N', remarks: '', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [29,60,60,55,77,77], coords: '363,153,394,181' },
   { area: 34, node: 'P', remarks: '', pattern: 1, lv: -1, type: 1, form: 1, radius: 0, enemies: [28,28,29,29,77,77], coords: '399,122,434,160' },
   { area: 35, node: 'B', remarks: '', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [54,27,42,21,75,75], coords: '119,87,149,115' },
-  { area: 35, node: 'D', remarks: '強', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [65,79,28,43,76,76], coords: '208,52,241,83' },
-  { area: 35, node: 'D', remarks: '中', pattern: 2, lv: -1, type: 1, form: 3, radius: 0, enemies: [79,28,43,22,75,75], coords: '208,52,241,83' },
-  { area: 35, node: 'D', remarks: '弱', pattern: 3, lv: -1, type: 1, form: 3, radius: 0, enemies: [65,79,43,22,76,76], coords: '208,52,241,83' },
+  { area: 35, node: 'D', remarks: '強編成', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [65,79,28,43,76,76], coords: '208,52,241,83' },
+  { area: 35, node: 'D', remarks: '中編成', pattern: 2, lv: -1, type: 1, form: 3, radius: 0, enemies: [79,28,43,22,75,75], coords: '208,52,241,83' },
+  { area: 35, node: 'D', remarks: '弱編成', pattern: 3, lv: -1, type: 1, form: 3, radius: 0, enemies: [65,79,43,22,76,76], coords: '208,52,241,83' },
   { area: 35, node: 'E', remarks: '前哨', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [29,29,77,77,34,32], coords: '228,118,262,150' },
   { area: 35, node: 'E', remarks: '最終', pattern: 2, lv: -1, type: 1, form: 2, radius: 0, enemies: [60,29,29,77,77,34], coords: '228,118,262,150' },
   { area: 35, node: 'F', remarks: '', pattern: 1, lv: -1, type: 1, form: 1, radius: 0, enemies: [55,27,21,21,76,76], coords: '245,181,280,216' },
@@ -1031,8 +1031,8 @@ const ENEMY_PATTERN = [
   { area: 52, node: 'O', remarks: '', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [119,95,95,92,76,76], coords: '122,181,160,219' },
   { area: 53, node: 'C', remarks: '', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [55,92,76,76,76,76], coords: '163,61,189,88' },
   { area: 53, node: 'M', remarks: '', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [79,79,79,92,77,77], coords: '294,48,325,77' },
-  { area: 53, node: 'Q', remarks: '強', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [48,60,60,92,77,77], coords: '176,101,210,143' },
-  { area: 53, node: 'Q', remarks: '弱', pattern: 2, lv: -1, type: 1, form: 2, radius: 0, enemies: [48,92,92,77,77,77], coords: '176,101,210,143' },
+  { area: 53, node: 'Q', remarks: '強編成', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [48,60,60,92,77,77], coords: '176,101,210,143' },
+  { area: 53, node: 'Q', remarks: '弱編成', pattern: 2, lv: -1, type: 1, form: 2, radius: 0, enemies: [48,92,92,77,77,77], coords: '176,101,210,143' },
   { area: 54, node: 'C', remarks: '', pattern: 1, lv: -1, type: 1, form: 1, radius: 0, enemies: [55,91,77,77,32,32], coords: '161,54,190,85' },
   { area: 54, node: 'E', remarks: '', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [55,18,92,77,77,1], coords: '198,120,222,150' },
   { area: 54, node: 'G', remarks: '', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [115,115,43,95,91,77], coords: '235,57,265,97' },
@@ -1096,10 +1096,10 @@ const ENEMY_PATTERN = [
   { area: 65, node: 'H', remarks: '最終', pattern: 2, lv: -1, type: 3, form: 3, radius: 4, enemies: [86,115,92,78,78,78], coords: '294,136,333,168' },
   { area: 65, node: 'I', remarks: '', pattern: 1, lv: -1, type: 1, form: 3, radius: 3, enemies: [60,60,92,77,75,75], coords: '306,191,333,222' },
   { area: 65, node: 'I', remarks: '最終', pattern: 2, lv: -1, type: 1, form: 3, radius: 3, enemies: [60,60,55,92,77,77], coords: '306,191,333,222' },
-  { area: 65, node: 'M', remarks: '弱', pattern: 1, lv: -1, type: 2, form: 13, radius: 5, enemies: [86,115,27,92,76,76,55,27,75,75,75,75], coords: '362,63,404,110' },
-  { area: 65, node: 'M', remarks: '強 / 最終', pattern: 2, lv: -1, type: 2, form: 13, radius: 5, enemies: [86,115,115,92,78,78,55,27,27,77,76,76], coords: '362,63,404,110' },
-  { area: 65, node: '空襲', remarks: '弱', pattern: 1, lv: -1, type: 3, form: 3, radius: 1, enemies: [86,115,92,77,77,77], coords: '51,90,88,124' },
-  { area: 65, node: '空襲', remarks: '強', pattern: 2, lv: -1, type: 3, form: 3, radius: 1, enemies: [86,115,115,92,78,78], coords: '51,90,88,124' },
+  { area: 65, node: 'M', remarks: '弱編成', pattern: 1, lv: -1, type: 2, form: 13, radius: 5, enemies: [86,115,27,92,76,76,55,27,75,75,75,75], coords: '362,63,404,110' },
+  { area: 65, node: 'M', remarks: '強編成', pattern: 2, lv: -1, type: 2, form: 13, radius: 5, enemies: [86,115,115,92,78,78,55,27,27,77,76,76], coords: '362,63,404,110' },
+  { area: 65, node: '空襲', remarks: '弱編成', pattern: 1, lv: -1, type: 3, form: 3, radius: 1, enemies: [86,115,92,77,77,77], coords: '51,90,88,124' },
+  { area: 65, node: '空襲', remarks: '強編成', pattern: 2, lv: -1, type: 3, form: 3, radius: 1, enemies: [86,115,115,92,78,78], coords: '51,90,88,124' },
   { area: 71, node: 'B', remarks: '', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [60,27,27,54,76,76], coords: '102,161,125,192' },
   { area: 71, node: 'C', remarks: '', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [79,43,95,92,76,76], coords: '122,56,145,86' },
   { area: 71, node: 'D', remarks: '', pattern: 1, lv: -1, type: 1, form: 4, radius: 0, enemies: [71,32,32,30,30], coords: '168,119,197,150' },
@@ -1411,7 +1411,7 @@ const ENEMY_PATTERN = [
   { area: 19116, node: '空襲', remarks: '中', pattern: 7, lv: 1, type: 3, form: 3, radius: 1, enemies: [182,150,150,409,91], coords: '' },
   { area: 19116, node: '空襲', remarks: '弱', pattern: 8, lv: 1, type: 3, form: 3, radius: 1, enemies: [182,150,409,91], coords: '' },
   { area: 19116, node: '空襲', remarks: '強', pattern: 9, lv: 0, type: 3, form: 3, radius: 1, enemies: [182,150,150,409,91], coords: '' },
-  { area: 19116, node: '空襲', remarks: '弱', pattern: 10, lv: 0, type: 3, form: 3, radius: 1, enemies: [182,150,409,91], coords: '' },  
+  { area: 19116, node: '空襲', remarks: '弱', pattern: 10, lv: 0, type: 3, form: 3, radius: 1, enemies: [182,150,409,91], coords: '' },
 ];
 
 /** デフォ機体プリセット */
@@ -1768,7 +1768,7 @@ let CHANGE_LOG = [
       },
       {
         type: 1, title: "敵艦隊選択欄の表示形式を変更しました。",
-        content: "パターン毎に分かれていたマスを統一し、マス選択後に編成をパターン内から選択するように変更しました。"
+        content: "パターン毎に分かれていたマスを統一し、マス選択後にさらに編成をパターン内から選択するように変更しました。"
       },
     ],
   },
