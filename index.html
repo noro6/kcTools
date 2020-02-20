@@ -1135,7 +1135,7 @@
                                         <div class="d-flex">
                                             <div class="align-self-center">シミュレート回数：</div>
                                             <input type="number" class="form-control form-control-sm align-self-center"
-                                                id="caluclate_count" value="1">
+                                                id="calculate_count" value="1">
                                             <div class="ml-2 cur_help align-self-center" data-toggle="tooltip"
                                                 data-html="true"
                                                 title="増やすと精度は上がりますが、処理に時間がかかります。<br>処理が重い場合は減らすことで改善が見込まれますが、精度は下がるので注意してください。">
@@ -2232,9 +2232,11 @@
                                 </div>
                             </div>
                             <div class="mt-auto">
-                                <div class="font_color_777 font_size_12">改修なし</div>
-                                <input type="number" class="form-control form-control-sm stock_num" value="0" min="0"
-                                    max="99">
+                                <div>
+                                    <div class="font_color_777 font_size_12">改修なし</div>
+                                    <input type="number" class="form-control form-control-sm stock_num" value="0"
+                                        min="0" max="99">
+                                </div>
                             </div>
                         </div>
                         <div class="ml-auto">
@@ -2292,14 +2294,10 @@
                             <input type="number" class="form-control form-control-sm stock_num" value="0" min="0"
                                 max="99">
                         </div>
-                        <div class="mx-2 my-2 w-100">
+                        <div class="mx-2">
                             <div class="font_size_12 font_color_777">全体所持数：</div>
                             <div class="d-flex">
-                                <input type="number" id="stock_sum" class="form-control form-control-sm w-50" value="0"
-                                    disabled>
-                                <button type="button" class="ml-auto btn btn-sm btn-danger" id="btn_stock_reset">
-                                    所持数0にする
-                                </button>
+                                <input type="number" id="stock_sum" class="form-control form-control-sm" value="0" disabled>
                             </div>
                         </div>
                     </div>
@@ -2308,6 +2306,9 @@
                     <div class="ml-auto">
                         <button type="button" class="btn btn-sm btn-success" id="btn_save_stock">
                             所持数更新
+                        </button>
+                        <button type="button" class="ml-3 btn btn-sm btn-danger" id="btn_stock_reset">
+                            所持数0にする
                         </button>
                         <button type="button" class="ml-3 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
                             キャンセル
