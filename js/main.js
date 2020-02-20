@@ -6052,29 +6052,32 @@ function plane_type_select_Changed($this) {
     // 特別装備可能な装備カテゴリ対応
     if (special && special.equipmentTypes.length > 0) dispType = dispType.concat(special.equipmentTypes);
 
-    // 特別装備可能な装備対応
-    if (special && special.equipmentIds.length > 0) {
-      let addPlane = {};
-      for (const id of special.equipmentIds) {
-        addPlane = PLANE_DATA.find(v => v.id === id);
-        dispType.push(addPlane.type);
-
-        // もしまだ追加されてないなら追加
-        if (!org.find(v => v.id === id)) org.push(addPlane);
-      }
-    }
-
     // 重複を切る
     dispType = dispType.filter((x, i, self) => self.indexOf(x) === i);
     dispType.sort((a, b) => a - b);
+
+    // カテゴリ一覧にないもの除外
+    org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
+
+    // 特別装備可能な装備対応
+    if (special && special.equipmentIds.length > 0) {
+      for (const id of special.equipmentIds) {
+        const plane = PLANE_DATA.find(v => v.id === id);
+        dispType.push(plane.type);
+
+        // もしまだ追加されてないなら追加
+        if (!org.find(v => v.id === id) && (selectedType === 0 || selectedType === plane.type)) org.push(plane);
+      }
+    }
 
     // 装備可能カテゴリ表示変更
     setPlaneType($this, dispType);
     $this.val(selectedType);
   }
-
-  // カテゴリ一覧にないもの除外
-  org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
+  else {
+    // カテゴリ一覧にないもの除外
+    org = org.filter(v => dispType.indexOf(Math.abs(v.type)) > -1);
+  }
 
   // ソート反映
   const $target_table_div = $('.plane_table_content');
