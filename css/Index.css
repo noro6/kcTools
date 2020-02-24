@@ -157,10 +157,11 @@ input[type="text"] { font-size: 12px; }
   border-radius: .25rem;
   border: 1px solid #dee2e6;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
+  background-color: #fff;
 }
 .custom-control-input { cursor: pointer; }
-.custom-control-label { 
-  cursor: pointer; 
+.custom-control-label {
+  cursor: pointer;
   padding-top: .15rem;
 }
 
@@ -421,13 +422,13 @@ input[type="text"] { font-size: 12px; }
   border-radius: 0.25rem;
 }
 .ship_plane:hover { background-color: #f6f6f6; }
-.ship_img { 
-  height: 25px; 
-  width: auto;
+.ship_img {
+  height: 25px;
+  width: 100px;
 }
-.ship_img_sm { 
-  height: 30px; 
-  width: auto;
+.ship_img_sm {
+  height: 30px;
+  width: 120px;
 }
 
 
@@ -702,8 +703,8 @@ input[type="text"] { font-size: 12px; }
   padding-bottom: .15rem;
   width: 306px;
 }
-.enemy_img_sm { 
-  height: 34px; 
+.enemy_img_sm {
+  height: 34px;
   width: 136px;
 }
 
@@ -778,10 +779,10 @@ input[type="text"] { font-size: 12px; }
 #select_difficulty_div { width: 160px; }
 #map_img {
   width: 466px;
-  height: auto;
+  height: 267px;
 }
-#node_tbody{ 
-  height: 352px; 
+#node_tbody{
+  height: 352px;
   width: 80px;
 }
 .node_tr {
@@ -802,13 +803,13 @@ input[type="text"] { font-size: 12px; }
 #enemy_pattern_tbody {
   height: 244px;
 }
-.enemy_pattern_tr { 
+.enemy_pattern_tr {
   height: 40px;
 }
 .node { cursor: pointer; }
-.enemy_img { 
-  height: 38px; 
-  width: auto;
+.enemy_img {
+  height: 38px;
+  width: 152px;
 }
 .enemy_pattern_label {
   text-align: right;

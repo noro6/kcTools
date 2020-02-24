@@ -1,3 +1,4 @@
+// https://closure-compiler.appspot.com/home
 /*==================================
     定数
 ==================================*/
@@ -454,7 +455,7 @@ function initialize(callback) {
       text += `
       <div class="mt-3">
         <div>
-          <span class="mr-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
+          <span class="mr-1 pt-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
             ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
           <span>${v.title}</span>
         </div>
@@ -748,7 +749,7 @@ function initialize(callback) {
     <div class="my-3 ver_log border-bottom">
       <div class="py-2">
         v${ver.id}
-        ${serverVersion.id === ver.id ? '<span class="ml-2 badge badge-pill badge-danger">New</span>' : ''}
+        ${serverVersion.id === ver.id ? '<span class="ml-2 pt-1 badge badge-pill badge-danger">New</span>' : ''}
       </div>
     `;
     for (const v of ver.changes) {
@@ -757,7 +758,7 @@ function initialize(callback) {
       <div class="py-2 px-2 d-flex history_item" data-toggle="collapse" data-target="#${logId}">
         <div class="d-flex flex-nowrap align-self-center">
           <div class="align-self-center">
-            <span class="mr-2 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
+            <span class="mr-2 pt-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
               ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
           </div>
           <div class="align-self-center">${v.title}</div>
@@ -1333,10 +1334,20 @@ function createPlaneTable(planes) {
 
     // 複数表示時カテゴリ分け
     if (displayMode === "multi" && prevType !== plane.type) {
+      const $typeDiv = document.createElement('div');
+      $typeDiv.className = 'd-flex w-100 mt-3 mb-1';
+
       const $type = document.createElement('div');
-      $type.className = 'w-100 font_size_12 font_color_777 mt-2';
+      $type.className = 'font_size_12 font_color_777 align-self-center';
       $type.textContent = PLANE_TYPE.find(v => v.id === plane.type).name;
-      fragment.appendChild($type);
+
+      const $typeLine = document.createElement('div');
+      $typeLine.className = 'flex-grow-1 border-bottom align-self-center mx-2';
+
+      $typeDiv.appendChild($type);
+      $typeDiv.appendChild($typeLine);
+
+      fragment.appendChild($typeDiv);
     }
 
     $iconDiv.appendChild(cvs);
@@ -1482,20 +1493,23 @@ function createShipTable($table, type) {
     // 複数表示時カテゴリ分け
     if (displayMode === "multi" && prevType !== ship.type) {
       insertHtml += `
-        <div class="w-100 font_size_12 font_color_777 mt-3">
-          ${SHIP_TYPE.find(v => v.id === ship.type).name}
-        </div>`;
+<div class="w-100 d-flex mt-3">
+<div class="font_size_12 font_color_777 align-self-center">
+${SHIP_TYPE.find(v => v.id === ship.type).name}
+</div>
+<div class="flex-grow-1 border-bottom align-self-center mx-2"></div>
+</div>`;
     }
 
     insertHtml += `
-    <div class="ship ship_tr d-flex ${displayMode === "multi" ? 'tr_multi' : 'py-1'}" data-shipid="${ship.id}">
-        <div class="align-self-center"><img src="img/ship/${ship.id}.png" class="ml-1 ship_img_sm"></div>
-        <div class="ml-1 align-self-center">
-            <div class="text-primary font_size_11">ID: ${ship.id > 1000 ? ship.orig + 'b' : ship.id}</div>
-            <div>${ship.name}</div>
-        </div>
-        ${displayMode === 'single' ? slotText : ''}
-    </div>`;
+<div class="ship ship_tr d-flex ${displayMode === "multi" ? 'tr_multi' : 'py-1'}" data-shipid="${ship.id}">
+<div class="align-self-center"><img src="img/ship/${ship.id}.png" class="ml-1 ship_img_sm"></div>
+<div class="ml-1 align-self-center">
+<div class="text-primary font_size_11">ID: ${ship.id > 1000 ? ship.orig + 'b' : ship.id}</div>
+<div>${ship.name}</div>
+</div>
+${displayMode === 'single' ? slotText : ''}
+</div>`;
 
     prevType = ship.type;
   }
@@ -1586,14 +1600,16 @@ function createEnemyTable($table, type) {
     lbAp += ap;
 
     // 複数表示時カテゴリ分け
-    if (displayMode === "multi" && enemy.id === -1) {
-      insertHtml += '<div class="w-100 font_size_12 font_color_777 mt-3">直接入力</div>';
-    }
-    else if (displayMode === "multi" && prevType !== enemy.type[0]) {
+    if (displayMode === "multi" && prevType !== enemy.type[0] && enemy.id !== -1) {
       insertHtml += `
-      <div class="w-100 font_size_12 font_color_777 mt-3">
-        ${ENEMY_TYPE.find(v => v.id === enemy.type[0]).name}
-      </div>`;
+<div class="w-100 d-flex mt-3">
+<div class="font_size_12 font_color_777 align-self-center">
+${ENEMY_TYPE.find(v => v.id === enemy.type[0]).name}
+</div>
+<div class="flex-grow-1 border-bottom align-self-center mx-2"></div>
+</div>
+`;
+
       prevType = enemy.type[0];
     }
 
@@ -5083,7 +5099,7 @@ function getShipPlaneObject(slotCount, inputPlane) {
   shipPlane.type = plane.type;
   shipPlane.canBattle = !RECONNAISSANCES.includes(plane.type);
   shipPlane.remodel = inputPlane.remodel;
-  shipPlane.antiAir = getBonusAA(shipPlane, inputPlane.antiAir);
+  shipPlane.antiAir = getBonusAA(shipPlane, plane.antiAir);
   shipPlane.level = setting.defaultProf.find(v => v.id === Math.abs(plane.type)).prof;
   shipPlane.bonusAp = getBonusAp(shipPlane);
   shipPlane.ap = updateAp(shipPlane);
@@ -7452,7 +7468,7 @@ $(function () {
   });
   $('.fleet_tab').each((i, e) => {
     Sortable.create($(e)[0], {
-      handle: '.drag_handle',
+      handle: '.sortable_handle',
       animation: 200,
       scroll: true,
       onEnd: function () {

@@ -48,19 +48,23 @@
         <div class="mx-1 px-2 py-1" id="btn_preset_all" data-toggle="tooltip" data-html="true"
             title="現在の編成を保存したり、保存した編成を展開したりできます。<br>デッキビルダー形式データの取り込みもこちらから。">
             <i class="fas fa-save"></i>
-            <span class="ml-1">編成保存・展開</span>
+            <span class="d-none d-md-inline  ml-1">編成保存・展開</span>
+            <span class="d-md-none ml-1">編成保存</span>
         </div>
         <div class="mx-1 px-2 py-1" id="btn_auto_expand" data-toggle="tooltip" title="制空値を指定し、おまかせで艦載機を配備します。">
             <i class="fas fa-robot"></i>
-            <span class="ml-1">おまかせ配備</span>
+            <span class="d-none d-md-inline ml-1">おまかせ配備</span>
+            <span class="d-md-none ml-1">おまかせ</span>
         </div>
         <div class="mx-1 px-2 py-1" id="btn_twitter" data-toggle="tooltip" title="現在の編成をTwitterでつぶやいて共有できます。">
             <i class="fab fa-twitter"></i>
-            <span class="ml-1">編成をツイート</span>
+            <span class="d-none d-md-inline ml-1">編成をツイート</span>
+            <span class="d-md-none ml-1">ツイート</span>
         </div>
         <div class="mx-1 px-2 py-1" id="btn_deckBuilder" data-toggle="tooltip" title="現在の編成をデッキビルダーで開きます。">
             <i class="fas fa-share-square"></i>
-            <span class="ml-1">デッキビルダーで開く</span>
+            <span class="d-none d-md-inline ml-1">デッキビルダーで開く</span>
+            <span class="d-md-none ml-1">デッキビルダー</span>
         </div>
     </nav>
     <div class="container-fluid px-0">
@@ -110,7 +114,7 @@
                         </div>
                     </div>
                     <div id="main_contents">
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="landBase">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="landBase">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">基地航空隊</span>
@@ -293,7 +297,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="friendFleet">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="friendFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">自艦隊</span>
@@ -326,9 +330,10 @@
                                         <input type="checkbox" class="custom-control-input" id="union_fleet">
                                         <label class="custom-control-label" for="union_fleet">連合艦隊</label>
                                     </div>
-                                    <div class="ml-2 cur_help align-self-center" data-toggle="tooltip" data-html="true"
-                                        title="第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。<br>チェックが外されている場合、表示されている艦隊のみが計算対象になります。">
-                                        <i class="far fa-question-circle"></i>
+                                    <div class="ml-2 align-self-center">
+                                        <i class="far fa-question-circle cur_help" data-toggle="tooltip"
+                                            data-offset="140,0" data-html="true"
+                                            title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>"></i>
                                     </div>
                                 </div>
                                 <div class="my-2">
@@ -362,7 +367,7 @@
                                             <div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_1">
                                                 <div class="pb-2 px-1 px-xl-2">
                                                     <div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
-                                                        <div class="drag_handle cur_move">
+                                                        <div class="sortable_handle cur_move">
                                                             <img src="img/ship/0.png" class="ship_img d-none">
                                                         </div>
                                                         <div class="ml-1 ship_name_span align-self-center px-1 text-truncate"
@@ -494,7 +499,7 @@
                             </div>
                         </div>
 
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="enemyFleet">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="enemyFleet">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">敵艦隊</span>
@@ -703,7 +708,7 @@
                             </div>
                         </div>
 
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="result">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="result">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">計算結果</span>
@@ -769,22 +774,20 @@
                                     </div>
                                     <div class="ml-2 custom-control custom-checkbox font_size_12 align-self-center">
                                         <input type="checkbox" class="custom-control-input" id="display_bar">
-                                        <label class="custom-control-label pt-0_5" for="display_bar">グラフ</label>
+                                        <label class="custom-control-label" for="display_bar">グラフ</label>
                                     </div>
                                     <div class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
                                         <input type="checkbox" class="custom-control-input"
                                             id="display_land_base_result">
-                                        <label class="custom-control-label pt-0_5"
-                                            for="display_land_base_result">基地</label>
+                                        <label class="custom-control-label" for="display_land_base_result">基地</label>
                                     </div>
                                     <div class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
                                         <input type="checkbox" class="custom-control-input" id="display_fleet_result">
-                                        <label class="custom-control-label pt-0_5" for="display_fleet_result">本隊</label>
+                                        <label class="custom-control-label" for="display_fleet_result">本隊</label>
                                     </div>
                                     <div class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
                                         <input type="checkbox" class="custom-control-input" id="display_enemy_table">
-                                        <label class="custom-control-label pt-0_5"
-                                            for="display_enemy_table">敵搭載数</label>
+                                        <label class="custom-control-label" for="display_enemy_table">敵搭載数</label>
                                     </div>
                                 </div>
                                 <div id="battle_result">
@@ -880,7 +883,7 @@
                             </div>
                         </div>
 
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="input_data">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="input_data">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">入力情報</span>
@@ -981,7 +984,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="plane_stock">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="plane_stock">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">所持装備</span>
@@ -1051,7 +1054,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="contents bg-white my-4 px-2 py-1 mx-auto mx-xl-1" id="config">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="config">
                             <div class="my-2 d-flex">
                                 <div class="h5 mb-0 align-self-center">
                                     <span class="content_title align-middle">詳細設定</span>
@@ -1243,7 +1246,7 @@
                         </div>
                     </div>
                     <div class="mt-5" id="site_information">
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="site_abstract">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="site_abstract">
                             <div class="my-2 d-flex">
                                 <div class="h6 mb-0 align-self-center">
                                     <span class="content_title align-middle">サイトについて</span>
@@ -1492,7 +1495,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="border bg-white shadow my-4 px-2 py-1 mx-auto mx-xl-1 rounded" id="site_history">
+                        <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="site_history">
                             <div class="my-2 d-flex">
                                 <div class="h6 mb-0 align-self-center">
                                     <span class="content_title align-middle">更新履歴</span>
@@ -2297,7 +2300,8 @@
                         <div class="mx-2">
                             <div class="font_size_12 font_color_777">全体所持数：</div>
                             <div class="d-flex">
-                                <input type="number" id="stock_sum" class="form-control form-control-sm" value="0" disabled>
+                                <input type="number" id="stock_sum" class="form-control form-control-sm" value="0"
+                                    disabled>
                             </div>
                         </div>
                     </div>
