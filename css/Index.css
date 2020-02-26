@@ -135,17 +135,6 @@ input[type="text"] { font-size: 12px; }
 }
 .btn_preset:hover { filter: drop-shadow(0px 0px 4px #ffb978); }
 .btn_reset { filter: drop-shadow(0px 0px 4px #b9b9b9); }
-.btn_enemy_preset {
-  padding: .25rem .5rem;
-  border-radius: .25rem;
-  color: #666;
-  transition: 0.4s;
-  cursor: pointer;
-}
-.btn_enemy_preset:hover {
-  color: #fff;
-  background-color: #888;
-}
 .trade_enabled { cursor: move; }
 .general_box {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
@@ -292,7 +281,7 @@ input[type="text"] { font-size: 12px; }
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1010;
+  z-index: 2000;
   width: 100vw;
   height: 100%;
   background-color: #252729;
@@ -586,10 +575,12 @@ input[type="text"] { font-size: 12px; }
   width: 300px;
 }
 
+
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */
-.plane_type_select_parent { width: 240px; }
+.plane_type_select_parent { width: 180px; }
+.plane_word_parent { width: 270px; }
 .toggle_display_type {
   background-color: #fff;
   border-radius: .25rem;
@@ -615,6 +606,7 @@ input[type="text"] { font-size: 12px; }
   font-weight: bold;
 }
 .sorted { font-weight: bold; }
+#plane_table { overflow-y: auto; }
 #plane_tbody { max-height: 58vh; }
 .plane_tr {
   cursor: pointer;
@@ -649,13 +641,11 @@ input[type="text"] { font-size: 12px; }
 /* --------------------------------
   艦娘選択モーダル #modal_ship_select
 -------------------------------- */
-.ship_type_select_parent { width: 240px; }
-.div_ship_table {
-  overflow-y: auto;
-  max-height: 40vh;
-}
-.ship_tbody { max-height: 58vh; }
-.ship_thead {
+.ship_type_select_parent { width: 180px; }
+.ship_word_parent { width: 270px; }
+#ship_table { overflow-y: auto; }
+#ship_tbody { max-height: 58vh; }
+#ship_thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -676,13 +666,15 @@ input[type="text"] { font-size: 12px; }
 /* ----------------------------------
   敵艦選択モーダル #modal_enemy_select
 ------------------------------------ */
-.enemy_type_select_parent { width: 240px; }
+.enemy_type_select_parent { width: 180px; }
+.enemy_word_parent { width: 270px; }
 .enemy_thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
 }
-.enemy_tbody { max-height: 58vh; }
+#enemy_table { overflow-y: auto; }
+#enemy_tbody { max-height: 58vh; }
 .enemy_tr {
   cursor: pointer;
   border-radius: .25rem;
@@ -1058,6 +1050,7 @@ input[type="text"] { font-size: 12px; }
 /* ------------------------------
   所持装備 #plane_stock
 -------------------------------- */
+.stock_word_parent { width: 270px; }
 #plane_stock_table {
   font-size: 12px;
   text-align: center;

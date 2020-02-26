@@ -23,9 +23,9 @@
     <script src="./js/lz-string.js"></script>
     <script src="./js/sortable.js"></script>
     <script src="./js/html2canvas.min.js"></script>
+    <script src="./js/bootstrap.bundle.js"></script>
     <script src="./js/data.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/bootstrap.bundle.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -570,9 +570,10 @@
                                                     <span class="battle_no">1</span>戦目
                                                 </div>
                                                 <div class="d-flex align-self-center">
-                                                    <div class="mx-1 btn_enemy_preset border font_size_12">
+                                                    <button type="button"
+                                                        class="mr-2 btn_enemy_preset btn btn-sm btn-outline-info font_size_12">
                                                         海域選択
-                                                    </div>
+                                                    </button>
                                                     <div class="ml-2 mr-2 btn_reset btn_reset_battle btn_icon"
                                                         data-toggle="tooltip" title="リセット"
                                                         data-delay='{"show": 300, "hide": 0}'>
@@ -653,9 +654,10 @@
                                                 基地空襲敵編成
                                             </div>
                                             <div class="d-flex align-self-center">
-                                                <div class="mx-1 btn_enemy_preset border font_size_12">
+                                                <button type="button"
+                                                    class="mr-2 btn_enemy_preset btn btn-sm btn-outline-info font_size_12">
                                                     海域一覧から選択
-                                                </div>
+                                                </button>
                                                 <div class="ml-2 mr-2 btn_reset btn_reset_battle btn_icon"
                                                     data-toggle="tooltip" title="リセット"
                                                     data-delay='{"show": 300, "hide": 0}'>
@@ -1010,6 +1012,13 @@
                                             <span class="input-group-text">種別</span>
                                         </div>
                                         <select class="custom-select custom-select-sm" id="stock_type_select"></select>
+                                    </div>
+                                    <div class="ml-2 input-group input-group-sm stock_word_parent">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">検索</span>
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm" id="stock_word"
+                                            maxlength="30">
                                     </div>
                                     <div class="ml-auto">
                                         <button type="button" class="ml-auto btn btn-sm btn-danger text-nowrap"
@@ -1531,23 +1540,30 @@
                     <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex flex-wrap mb-1">
                         <div class="my-1 input-group input-group-sm plane_type_select_parent">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">種別</span>
                             </div>
                             <select class="custom-select custom-select-sm" id="plane_type_select"></select>
                         </div>
-                        <div class="ml-2 align-self-center">表示 :</div>
-                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="single">
-                            <i class="fas fa-list"></i>
-                            <span class="">一列</span>
+                        <div class="my-1 mx-2 input-group input-group-sm plane_word_parent">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">検索</span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" id="plane_word" maxlength="30">
                         </div>
-                        <div class="ml-1 mr-2 px-2 py-1 align-self-center toggle_display_type border" data-mode="multi">
-                            <i class="fas fa-grip-horizontal"></i>
-                            <span class="">複数列</span>
+                        <div class="d-flex">
+                            <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
+                                <i class="fas fa-list"></i>
+                                <span>一列</span>
+                            </div>
+                            <div class="align-self-center px-2 py-1 toggle_display_type border" data-mode="multi">
+                                <i class="fas fa-grip-horizontal"></i>
+                                <span>複数列</span>
+                            </div>
                         </div>
-                        <div class="mr-2 custom-control custom-checkbox align-self-center">
+                        <div class="mx-2 custom-control custom-checkbox align-self-center">
                             <input type="checkbox" class="custom-control-input" id="disp_in_stock">
                             <label class="custom-control-label" for="disp_in_stock">所持装備から選択</label>
                         </div>
@@ -1557,7 +1573,7 @@
                         </div>
                     </div>
                     <div class="plane_table_content bg-white border-top pt-2">
-                        <div class="overflow-auto" id="plane_table_tbody">
+                        <div class="pb-1" id="plane_table">
                             <div class="plane_thead d-flex bg-white py-2">
                                 <div class="plane_td_type" id="th_default" data-order="asc">
                                     <img class="img-size-25" src="./img/type/undefined.png" alt="種">
@@ -1603,7 +1619,7 @@
                     <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex flex-wrap mb-1">
                         <div class="my-1 input-group input-group-sm ship_type_select_parent">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">艦種</span>
@@ -1612,32 +1628,38 @@
                                 <option value="0">全て</option>
                             </select>
                         </div>
-                        <div class="ml-2 align-self-center">表示 :</div>
-                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="single">
-                            <i class="fas fa-list"></i>
-                            <span class="">一列</span>
+                        <div class="my-1 mx-2 input-group input-group-sm ship_word_parent">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">検索</span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" id="ship_word" maxlength="30">
                         </div>
-                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="multi">
-                            <i class="fas fa-grip-horizontal"></i>
-                            <span class="">複数列</span>
+                        <div class="d-flex">
+                            <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
+                                <i class="fas fa-list"></i>
+                                <span>一列</span>
+                            </div>
+                            <div class="align-self-center px-2 py-1 toggle_display_type border" data-mode="multi">
+                                <i class="fas fa-grip-horizontal"></i>
+                                <span>複数列</span>
+                            </div>
                         </div>
-                        <div class="ml-2 custom-control custom-checkbox align-self-center">
+                        <div class="mx-2 custom-control custom-checkbox align-self-center">
                             <input type="checkbox" class="custom-control-input" id="display_final" checked>
                             <label class="custom-control-label" for="display_final">最終改造状態のみ</label>
                         </div>
                     </div>
-                    <div class="ship_table_content bg-white border-top pt-2">
-                        <div class="ship_table container-fluid mx-0 px-0">
-                            <div class="ship_tbody overflow-auto bg-white">
-                                <div class="ship_thead d-flex bg-white py-2">
-                                    <div class="ml-1 font_size_12 font_color_777">艦娘名</div>
-                                    <div class="ml-auto ship_td_slot font_size_12 font_color_777">搭載1</div>
-                                    <div class="ship_td_slot font_size_12 font_color_777">搭載2</div>
-                                    <div class="ship_td_slot font_size_12 font_color_777">搭載3</div>
-                                    <div class="ship_td_slot font_size_12 font_color_777">搭載4</div>
-                                    <div class="ship_td_slot font_size_12 font_color_777">搭載5</div>
-                                </div>
+                    <div class="bg-white border-top pt-2">
+                        <div class="pb-1" id="ship_table">
+                            <div class="d-flex bg-white py-2" id="ship_thead">
+                                <div class="ml-1 font_size_12 font_color_777">艦娘名</div>
+                                <div class="ml-auto ship_td_slot font_size_12 font_color_777">搭載1</div>
+                                <div class="ship_td_slot font_size_12 font_color_777">搭載2</div>
+                                <div class="ship_td_slot font_size_12 font_color_777">搭載3</div>
+                                <div class="ship_td_slot font_size_12 font_color_777">搭載4</div>
+                                <div class="ship_td_slot font_size_12 font_color_777">搭載5</div>
                             </div>
+                            <div id="ship_tbody"></div>
                         </div>
                     </div>
                 </div>
@@ -1656,7 +1678,7 @@
                     <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex flex-wrap mb-1">
                         <div class="my-1 input-group input-group-sm enemy_type_select_parent">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">艦種</span>
@@ -1665,25 +1687,31 @@
                                 <option value="0">全て</option>
                             </select>
                         </div>
-                        <div class="ml-2 align-self-center">表示 :</div>
-                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="single">
-                            <i class="fas fa-list"></i>
-                            <span class="">一列</span>
+                        <div class="my-1 mx-2 input-group input-group-sm enemy_word_parent">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">検索</span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" id="enemy_word" maxlength="30">
                         </div>
-                        <div class="ml-1 px-2 py-1 align-self-center toggle_display_type border" data-mode="multi">
-                            <i class="fas fa-grip-horizontal"></i>
-                            <span class="">複数列</span>
+                        <div class="d-flex">
+                            <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
+                                <i class="fas fa-list"></i>
+                                <span>一列</span>
+                            </div>
+                            <div class="align-self-center px-2 py-1 toggle_display_type border" data-mode="multi">
+                                <i class="fas fa-grip-horizontal"></i>
+                                <span>複数列</span>
+                            </div>
                         </div>
                     </div>
                     <div class="enemy_table_content bg-white pt-2 border-top">
-                        <div class="enemy_table container-fluid mx-0 px-0">
-                            <div class="enemy_tbody overflow-auto bg-white">
-                                <div class="enemy_thead d-flex bg-white py-2">
-                                    <div class="ml-1 font_size_12 font_color_777">敵艦ID / 敵艦名</div>
-                                    <div class="ml-auto enemy_td_ap font_size_12 font_color_777">制空値</div>
-                                    <div class="enemy_td_lbAp font_size_12 font_color_777">制空値(基地)</div>
-                                </div>
+                        <div class="pb-1" id="enemy_table">
+                            <div class="enemy_thead d-flex bg-white py-2">
+                                <div class="ml-1 font_size_12 font_color_777">敵艦ID / 敵艦名</div>
+                                <div class="ml-auto enemy_td_ap font_size_12 font_color_777">制空値</div>
+                                <div class="enemy_td_lbAp font_size_12 font_color_777">制空値(基地)</div>
                             </div>
+                            <div id="enemy_tbody"></div>
                         </div>
                     </div>
                 </div>
@@ -2243,7 +2271,7 @@
                             </div>
                         </div>
                         <div class="ml-auto">
-                            <img src="img/plane/16.png" class="img_plane_card">
+                            <img src="" class="img_plane_card">
                         </div>
                     </div>
                     <div class="d-flex flex-wrap justify-content-between">
