@@ -5038,7 +5038,7 @@ function autoFleetExpand(planeStock) {
         fleetData.push(shipSlots[0]);
 
         // 5スロ艦は2スロまで許容
-        if (shipSlots.length > 4) fleetData.push(shipSlots[1]);
+        // if (shipSlots.length > 4) fleetData.push(shipSlots[1]);
       }
       else fleetData = fleetData.concat(shipSlots);
     }
