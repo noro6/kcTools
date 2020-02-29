@@ -5000,7 +5000,7 @@ function autoFleetExpand(planeStock) {
     }
     // 爆装系は回避 → 爆装値ソート
     else if (['type3', 'type6'].includes(key)) {
-      planes[key].sort((a, b) => a.avoid === b.bomber ? b.bomber - a.bomber : b.avoid - a.avoid);
+      planes[key].sort((a, b) => a.avoid === b.avoid ? b.bomber - a.bomber : b.avoid - a.avoid);
     }
   });
 
