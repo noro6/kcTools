@@ -25,7 +25,7 @@
    <script src="./js/html2canvas.min.js"></script>
    <script src="./js/bootstrap.bundle.js"></script>
    <script src="./js/data.js"></script>
-   <script src="./js/main.js"></script>
+   <script src="./js/main.min.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -106,7 +106,7 @@
                <div id="main_header">
                   <div class="d-flex pt-3">
                      <h1 class="mt-3 ml-1">
-                        制空権シミュレータ
+                        <span id="main_title">制空権シミュレータ</span>
                         <span class="font_size_20 ml-2">
                            v.<span id="latest_version">0.0.0</span>
                         </span>
@@ -219,7 +219,7 @@
                                              </div>
                                           </div>
                                           <div class="ml-1 align-self-center">
-                                             <img src="./img/type/undefined.png" class="plane_img img-size-30" alt="">
+                                             <img src="./img/type/undefined.png" class="plane_img" alt="">
                                           </div>
                                           <div class="plane_name flex-grow-1 align-self-center">
                                              <span class="plane_name_span font_size_12 pl-1">
@@ -415,8 +415,7 @@
                                                 </div>
                                              </div>
                                              <div class="ml-1 align-self-center">
-                                                <img src="./img/type/undefined.png" class="plane_img img-size-30"
-                                                   alt="">
+                                                <img src="./img/type/undefined.png" class="plane_img" alt="">
                                              </div>
                                              <div class="plane_name align-self-center flex-grow-1">
                                                 <span class="plane_name_span font_size_12 pl-1">
@@ -551,10 +550,10 @@
                                     </div>
                                     <div class="d-flex align-self-center">
                                        <button type="button"
-                                          class="mr-2 btn_enemy_preset btn btn-sm btn-outline-info font_size_12">
+                                          class="mr-2_5 btn_enemy_preset btn btn-sm btn-outline-info font_size_12">
                                           海域選択
                                        </button>
-                                       <div class="ml-2 mr-2 btn_reset btn_reset_battle btn_icon" data-toggle="tooltip"
+                                       <div class="mr-2 btn_reset btn_reset_battle btn_icon" data-toggle="tooltip"
                                           title="リセット" data-delay='{"show": 300, "hide": 0}'>
                                           <i class="fas fa-trash-alt"></i>
                                        </div>
@@ -1295,7 +1294,7 @@
                                        <span class="slot">18</span>
                                     </div>
                                     <div class="ml-1 align-self-center drag_handle cur_move">
-                                       <img src="./img/type/type1.png" class="plane_img img-size-30" alt="">
+                                       <img src="./img/type/type1.png" class="plane_img" alt="">
                                     </div>
                                     <div class="flex-grow-1 align-self-center drag_handle cur_pointer">
                                        <span class="font_size_12 pl-1">
@@ -1335,7 +1334,7 @@
                               </div>
                               <div class="pl-3">
                                  この機能は上記設定にチェックを入れていない場合でも、ドロップ時にキーボードのCtrlキーを
-                                 押下していると一時的に有効になります。(Ctrlキーによる複製はスマホ未対応)
+                                 押下していると一時的に有効になります。
                               </div>
                               <div class="pl-3">
                                  同じ機体や、同じ敵艦を大量に入力したい場合などに利用してみてください。
@@ -1345,7 +1344,7 @@
                               <p class="h6">注意事項</p>
                               <div class="pl-3">
                                  本シミュレーションでは、各航空戦フェーズで敵艦が撃沈された場合を考慮していません。<span
-                                    class="font_color_ccc">また、道中での味方艦娘の轟沈も考慮しません</span>
+                                    class="font_color_ccc">また、道中での味方艦娘の轟沈も考慮しません。</span>
                               </div>
                               <div class="pl-3 mt-2">
                                  敵艦の制空値を「直接入力」とした場合、その敵艦への基地航空隊による制空削りは行われません。
@@ -1375,6 +1374,7 @@
                               <div class="pl-3 mt-3">
                                  ブラウザの横幅1200px以上で快適です。
                                  レガシーブラウザでは一部または全ての機能が正常に動作しない可能性があります。
+                                 <span class="font_color_ccc">Microsoft Edgeもたまにおかしくなる</span>
                               </div>
                            </div>
                            <div class="my-4">
@@ -1397,6 +1397,11 @@
                               </div>
                               <div class="pl-3">
                                  航空戦マス
+                                 <div class="ml-2 font_size_12">
+                                    航空戦マスについては、同じ戦闘を2回入力することで代用可能です。
+                                    航空戦マスは敵艦からの対空砲火が行われるため、戦闘形式には「通常」を選択してください。
+                                    (本サイトでは「空襲」を選択すると対空砲火を起こさない仕様になっているためです。)
+                                 </div>
                               </div>
                            </div>
                            <div class="my-4">
@@ -2100,7 +2105,7 @@
                      <div class="h6">
                         目標制空値
                      </div>
-                     <div class="ml-2 font_size_12 cur_help" data-toggle="tooltip" data-html="true"
+                     <div class="ml-2 mt-0_5 font_size_12 cur_help" data-toggle="tooltip" data-html="true"
                         title="目標値をなるべく満たすように機体が配備されます。<br>所持機体や搭載数等によっては、目標値を満たせない場合があります。">
                         <i class="far fa-question-circle"></i>
                      </div>
@@ -2115,7 +2120,7 @@
                      <div class="h6">
                         半径
                      </div>
-                     <div class="ml-2 font_size_12 cur_help" data-toggle="tooltip"
+                     <div class="ml-2 mt-0_5 font_size_12 cur_help" data-toggle="tooltip"
                         title="搭載する機体を、設定した半径を満たす機体のみに制限します(基地航空隊のみ)">
                         <i class="far fa-question-circle"></i>
                      </div>
@@ -2133,9 +2138,15 @@
                         <input type="checkbox" class="custom-control-input" id="allow_fighter">
                         <label class="custom-control-label" for="allow_fighter">基地航空隊に艦上戦闘機の搭載を許容する</label>
                      </div>
-                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="need_empty">
-                        <label class="custom-control-label" for="need_empty">重巡級、戦艦級の水戦キャリア化を避ける</label>
+                     <div class="d-flex">
+                        <div class="custom-control custom-checkbox align-self-center">
+                           <input type="checkbox" class="custom-control-input" id="need_empty">
+                           <label class="custom-control-label" for="need_empty">重巡級、戦艦級の水戦キャリア化を避ける</label>
+                        </div>
+                        <div class="ml-2 align-self-center font_size_12 cur_help" data-toggle="tooltip"
+                           title="水戦ガン積みを回避し、主砲などを搭載できるスロットを確保します。">
+                           <i class="far fa-question-circle"></i>
+                        </div>
                      </div>
                   </div>
                </div>
@@ -2313,7 +2324,7 @@
                   <span>&times;</span>
                </p>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body pt-0" id="version_inform_body"></div>
             <div class="modal-footer">
                <div>
                   <div class="custom-control custom-checkbox align-self-center">
@@ -2353,8 +2364,10 @@
    <div id="loading_back">
       <div class="h-100 d-flex flex-column">
          <div class="align-middle d-flex justify-content-center" id="loading_text_div">
-            <!-- <div class="spinner-grow align-self-center"></div> -->
-            <div class="px-5 align-self-center" id="loading_text">建造中</div>
+            <div class="px-5 align-self-center" id="loading_text">
+               <div class="text-center">建造中</div>
+               <div class="font_size_12 text-center" id="loading_info">DOM構築中</div>
+            </div>
          </div>
          <div id="loading_line"></div>
       </div>

@@ -39,10 +39,13 @@ input[type="text"] { font-size: 12px; }
 /* -----------------------------------
   ユーティリティ
 ----------------------------------- */
-.pt-0_5 { padding-top: .2rem; }
-.pt-1_5 { padding-top: .32rem; }
+.pt-0_5 { padding-top: .2rem !important; }
+.pt-1_5 { padding-top: .32rem !important; }
+.mt-0_5 { margin-top: .1rem !important; }
 .ml-2_5 { margin-left: 0.75rem !important; }
+.mr-2_5 { margin-right: 0.75rem !important; }
 .pt-3_5 { padding-top: 1.25rem !important; }
+.py-0_5 { padding-top: 0.2rem !important; padding-bottom: 0.2rem !important; }
 .py-1_5 { padding-top: 0.3rem !important; padding-bottom: 0.3rem !important; }
 .bg-dark1 { background: #3b3d3f !important; }
 .bg-dark2 { background: #282828 !important; }
@@ -74,10 +77,6 @@ input[type="text"] { font-size: 12px; }
 .font_color_777 { color: #777; }
 .font_color_555 { color: #555; }
 .font_color_000 { color: #000; }
-.img-size-18_e {
-  width: auto;
-  height: 18px;
-}
 .img-size-18 {
   width: 18px;
   height: auto;
@@ -138,7 +137,6 @@ input[type="text"] { font-size: 12px; }
 .trade_enabled { cursor: move; }
 .general_box {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   border-radius: 0.25rem;
 }
@@ -286,12 +284,8 @@ input[type="text"] { font-size: 12px; }
   width: 100vw;
   height: 100%;
   background-color: #252729;
-  font-size: 22px;
+  font-size: 24px;
   color: #ccc;
-}
-.spinner-grow {
-  width: 5rem;
-  height: 5rem;
 }
 #loading_text_div {
   position: absolute;
@@ -344,7 +338,7 @@ input[type="text"] { font-size: 12px; }
   padding-left: 10px;
   transition: .2s;
 }
-@media (max-width: 768) {
+@media (max-width: 768px) {
   #result a.nav-link {
     font-size: 12px;
     padding-right: 8px;
@@ -449,10 +443,6 @@ input[type="text"] { font-size: 12px; }
   height: 25px;
   width: 100px;
 }
-.ship_img_sm {
-  height: 30px;
-  width: 120px;
-}
 
 
 /* -----------------------------------
@@ -462,6 +452,10 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   border-radius: 0.2rem;
   transition: 0.5s;
+}
+.plane_img {
+  width: 30px;
+  height: auto;
 }
 .btn_remove_plane {
   cursor: pointer;
@@ -604,7 +598,6 @@ input[type="text"] { font-size: 12px; }
 }
 #route { width: auto; }
 .formation{ width: 100%; }
-.cellType{ width: 100%; }
 #air_raid_enemies {
   width: 300px;
 }
@@ -724,14 +717,21 @@ input[type="text"] { font-size: 12px; }
   text-align: center;
   width: 84px;
 }
-.enemy_tr_multi {
-  padding-top: .15rem;
-  padding-bottom: .15rem;
-  width: 306px;
+
+@media (max-width: 991px) {
+  .enemy_tr_multi {
+    width: 232px;
+  }
 }
-.enemy_img_sm {
-  height: 34px;
-  width: 136px;
+@media (min-width: 992px) {
+  .enemy_tr_multi {
+    width: 248px;
+  }
+}
+@media (min-width: 1200px) {
+  .enemy_tr_multi {
+    width: 306px;
+  }
 }
 
 /* ------------------------------
@@ -818,10 +818,6 @@ input[type="text"] { font-size: 12px; }
   border-radius: .25rem;
 }
 .node_tr:hover { background-color: #eee; }
-.node_index {
-  text-align: right;
-  width: 18px;
-}
 .node_selected {
   color: #fff !important;
   background-color: #7ac3ff !important;
@@ -846,12 +842,6 @@ input[type="text"] { font-size: 12px; }
 /* ------------------------------
   一括変更欄 #modal_collectively_setting
 -------------------------------- */
-.coll_slot_add {
-  font-size: 16px;
-  cursor: pointer;
-  transition: .2s;
-}
-.coll_slot_add:hover { filter: drop-shadow(0 0 6px #747474); }
 .coll_slot_input { width: 72px; }
 .btn_prof {
   cursor: pointer;
@@ -1065,17 +1055,11 @@ input[type="text"] { font-size: 12px; }
   text-align: left;
   border-right:1px #b8b8b8 solid;
 }
-/* #enemy_shoot_down_tbody .td_init_slot { width: 15%; }
-#enemy_shoot_down_tbody .td_avg_slot { width: 15%; }
-#enemy_shoot_down_tbody .td_max_slot { width: 15%; }
-#enemy_shoot_down_tbody .td_min_slot { width: 15%; } */
 
 /* ------------------------------
   詳細設定 #config
 -------------------------------- */
 #calculate_count { width: 96px; }
-#manual_shoot_down_battle { width: 60px; }
-#manual_shoot_down_value { width: 96px; }
 #init_prof_parent .prof_select {
   height: 24px;
 }
@@ -1187,7 +1171,10 @@ input[type="text"] { font-size: 12px; }
   transition: .2s;
   border-top: 1px solid #dee2e6;
 }
-.history_item:hover { background-color: #f6f6f6; }
+.history_item:not(.collapsed) { background-color: #f6f6f6 !important; }
+.history_item:hover { background-color: #f8f8f8; }
+.history_item_no_content { cursor: default; }
+.history_content { background-color: #fafafa; }
 .ver_log .history_item:last-of-type { border-bottom: 1px solid #dee2e6; }
 
 

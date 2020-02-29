@@ -753,7 +753,7 @@ const ENEMY_DATA = [
   { id: 414, type: [110, 5], name: "防空巡棲姫-壊 [甲]", slot: [], eqp: [], orig: 409, aaw: 234, aabo: 20 },
   { id: 415, type: [110, 8], name: "潜水棲姫改flagship [丙]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
   { id: 416, type: [110, 8], name: "潜水棲姫改flagship [乙]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
-  { id: 417, type: [110, 8], name: "潜水棲姫改flagship　[甲]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
+  { id: 417, type: [110, 8], name: "潜水棲姫改flagship [甲]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
   { id: 418, type: [110, 8], name: "潜水棲姫改-壊flagship [丙]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
   { id: 419, type: [110, 8], name: "潜水棲姫改-壊flagship [乙]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
   { id: 420, type: [110, 8], name: "潜水棲姫改-壊flagship [甲]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
@@ -1042,8 +1042,8 @@ const ENEMY_PATTERN = [
   { area: 34, node: 'P', remarks: '', pattern: 2, lv: -1, type: 1, form: 1, radius: 0, enemies: [28, 29, 29, 29, 55, 77], coords: '399,122,434,160' },
   { area: 35, node: 'B', remarks: '', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [54, 27, 42, 21, 75, 75], coords: '119,87,149,115' },
   { area: 35, node: 'D', remarks: '強編成', pattern: 1, lv: -1, type: 1, form: 3, radius: 0, enemies: [65, 79, 28, 43, 76, 76], coords: '208,52,241,83' },
-  { area: 35, node: 'D', remarks: '中編成', pattern: 2, lv: -1, type: 1, form: 3, radius: 0, enemies: [79, 28, 43, 22, 75, 75], coords: '208,52,241,83' },
-  { area: 35, node: 'D', remarks: '弱編成', pattern: 3, lv: -1, type: 1, form: 3, radius: 0, enemies: [65, 79, 43, 22, 76, 76], coords: '208,52,241,83' },
+  { area: 35, node: 'D', remarks: '中編成', pattern: 2, lv: -1, type: 1, form: 3, radius: 0, enemies: [65, 79, 43, 22, 76, 76], coords: '208,52,241,83' },
+  { area: 35, node: 'D', remarks: '弱編成', pattern: 3, lv: -1, type: 1, form: 3, radius: 0, enemies: [79, 28, 43, 22, 75, 75], coords: '208,52,241,83' },
   { area: 35, node: 'E', remarks: '前哨', pattern: 1, lv: -1, type: 1, form: 2, radius: 0, enemies: [29, 29, 77, 77, 34, 32], coords: '228,118,262,150' },
   { area: 35, node: 'E', remarks: '最終', pattern: 2, lv: -1, type: 1, form: 2, radius: 0, enemies: [60, 29, 29, 77, 77, 34], coords: '228,118,262,150' },
   { area: 35, node: 'F', remarks: '', pattern: 1, lv: -1, type: 1, form: 1, radius: 0, enemies: [55, 27, 21, 21, 76, 76], coords: '245,181,280,216' },
@@ -1769,8 +1769,8 @@ let CHANGE_LOG = [
         content: "1機です。知りませんでしたm(_ _)m　なお、その他の機体と同様、手動で搭載数を変更する場合は1機以上を設定しても問題ありません。"
       },
       {
-        type: 2, title: "ドラッグ&ドロップ時の挙動の不具合を修正しました。",
-        content: "艦隊欄でのドラッグ&ドロップ時に改修値がおかしくなる現象、偵察機系の最大搭載数がおかしくなる現象を修正しました。"
+        type: 2, title: "ドラッグ&amp;ドロップ時の挙動の不具合を修正しました。",
+        content: "艦隊欄でのドラッグ&amp;ドロップ時に改修値がおかしくなる現象、偵察機系の最大搭載数がおかしくなる現象を修正しました。"
       },
     ],
   },
@@ -1845,7 +1845,7 @@ let CHANGE_LOG = [
   {
     id: '1.4.0', changes: [
       {
-        type: 0, title: "敵の対空砲火による撃墜(stage2)を実装しました。",
+        type: 0, title: "敵の対空砲火による撃墜(stage2)処理を実装しました。",
         content: "同機能実装に伴い、より正確な道中の被撃墜計算を行うには、制空争いに関係ない敵艦(駆逐艦や潜水艦など)の入力が必要になります。なお、計算結果欄の出撃後搭載数、および制空値はシミュレート全体における平均値が表示されています。"
       },
       {
@@ -1938,7 +1938,7 @@ let CHANGE_LOG = [
       },
       {
         type: 0, title: "艦娘選択欄、および自艦隊欄に画像を追加しました。",
-        content: "艦娘選択欄については、従来通り文字のみの表示も可能です。画像表示チェックで操作してください。"
+        content: ""
       },
       {
         type: 2, title: "不具合の修正を行いました。",
@@ -1954,30 +1954,26 @@ let CHANGE_LOG = [
       },
       {
         type: 0, title: "所持機体から機体を選択する機能を追加しました。",
-        content: "「所持装備」で設定した機体のみ選択できる機能です。改修値が複数設定された機体は、改修値が多いものから順に配備します。この制約は機体一覧から機体を選択する際に適用され、保存した編成の読み込みや、プリセット展開などは従来通り利用可能です。"
+        content: "「所持装備」で設定した機体のみ選択できる機能です。改修値が設定されている場合、改修値が多いものから順に配備します。なお、保存した編成の読み込みや、プリセット展開などは、所持機体に関わらず従来通り利用可能です。"
       },
       {
         type: 0, title: "艦載機のおまかせ自動配備機能(仮)を実装しました。",
-        content: "所持機体をベースに、艦載機を一気に自動で配備してくれる機能です。現段階では単純なアルゴリズムで配備を行うため、必ずしも最適な配置になるとは限りません。制空調整初期のたたき台などに利用してみてください。"
+        content: "「所持装備」で設定した機体から艦載機を一気に自動で配備してくれる機能です。現段階では単純なアルゴリズムで配備を行うため、必ずしも最適な配置になるとは限りません。制空調整初期のたたき台などに利用してみてください。"
       },
       {
         type: 0, title: "各種一覧画面に、名称検索フォームを設置しました。",
         content: "装備、艦娘、敵艦の一覧画面に設置されています。入力文字列に部分一致したデータを表示します。"
       },
       {
-        type: 1, title: "敵艦隊選択欄の表示形式を変更しました。",
+        type: 1, title: "海域マップ選択画面の表示形式を変更しました。",
         content: "パターン毎に分かれていたマスを統一し、マス選択後にさらに編成を選択するように変更しました。また、通常海域の敵編成パターンをある程度追加しました。"
       },
       {
-        type: 1, title: "UI レイアウトの調整を行いました。",
-        content: "主に装備、艦娘、敵艦一覧画面のレイアウトを調整しました。"
-      },
-      {
-        type: 2, title: "不具合の修正を行いました。",
-        content: "特定条件下で艦載機のカテゴリが空欄になってしまう不具合を修正しました。"
+        type: 1, title: "UI / レイアウトの調整を行いました。",
+        content: "とにかくいろいろ"
       },
     ],
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/02/12";
+const LAST_UPDATE_DATE = "2020/02/28";

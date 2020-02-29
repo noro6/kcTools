@@ -414,7 +414,7 @@ function validateInputNumber(value, max, min = 0) {
  * @param {*} callback コールバック
  */
 function initialize(callback) {
-
+  let fragment = document.createDocumentFragment();
   let text = '';
 
   // URLパラメータチェック
@@ -434,6 +434,7 @@ function initialize(callback) {
     if (i === PLANE_TYPE.length - 1) {
       // 最後の画像読み込みが終わったら所持装備欄初期表示
       img.addEventListener('load', () => {
+        $('#loading_info').text('画像データ読み込み完了');
         setPlaneStockTable();
         $('#loading_text').addClass('load_end_text');
         $('#loading_text').text('完了');
@@ -491,21 +492,38 @@ function initialize(callback) {
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
   document.getElementById('latest_version').textContent = serverVersion.id;
   if (setting.version !== serverVersion.id) {
+    fragment = document.createDocumentFragment();
     for (const v of serverVersion.changes) {
       // 変更通知
-      text += `
-      <div class="mt-3">
-        <div>
-          <span class="mr-1 pt-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
-            ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
-          <span>${v.title}</span>
-        </div>
-        <div class="font_size_12 pl-3">${v.content}</div>
-      </div>`;
+      const $change_wrap = document.createElement('div');
+      $change_wrap.className = 'mt-3';
+
+      const $badge_wrap = document.createElement('div');
+
+      const $badge = document.createElement('span');
+      $badge.className = 'mr-1 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+      $badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
+
+      const $title_text = document.createElement('span');
+      $title_text.innerHTML = v.title;
+
+      $badge_wrap.appendChild($badge);
+      $badge_wrap.appendChild($title_text);
+      $change_wrap.appendChild($badge_wrap);
+
+      if (v.content) {
+        const $content = document.createElement('div');
+        $content.className = 'font_size_12 pl-3';
+        $content.innerHTML = v.content;
+
+        $change_wrap.appendChild($content);
+      }
+
+      fragment.appendChild($change_wrap);
     }
 
-    $('#modal_version_inform').find('#version').text(serverVersion.id);
-    $('#modal_version_inform').find('.modal-body').html(text);
+    document.getElementById('version').textContent = serverVersion.id;
+    document.getElementById('version_inform_body').appendChild(fragment);
 
     // 1.5.0対応 散らばったlocalStrage転写 & データ削除
     const s = loadLocalStrage('defaultProf');
@@ -553,9 +571,9 @@ function initialize(callback) {
   // 改修値選択欄生成
   text = '';
   for (let i = 0; i <= 10; i++) {
-    if (i === 0) text += '<div class="remodel_item" data-remodel="0" ><i class="fas fa-star"></i>+0</div>';
-    else if (i === 10) text += '<div class="remodel_item" data-remodel="10"><i class="fas fa-star"></i>max</div>';
-    else text += '<div class="remodel_item" data-remodel="' + i + '"><i class="fas fa-star"></i>+' + i + '</div>';
+    text += `<div class="remodel_item" data-remodel="${i}"><i class="fas fa-star"></i>`;
+    if (i === 10) text += 'max</div>';
+    else text += `+${i}</div>`;
   }
   $('.remodel_select').next().append(text);
 
@@ -675,7 +693,7 @@ function initialize(callback) {
   const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
   for (const type of types) {
     $('#init_prof_parent').append(text);
-    const $last = $('#init_prof_parent').find('.type_name:last')
+    const $last = $('#init_prof_parent').find('.type_name:last');
     $last.text(type.abbr);
     $last.closest('.init_prof')[0].dataset.typeid = type.id;
   }
@@ -773,42 +791,85 @@ function initialize(callback) {
   }
 
   // 更新履歴
-  text = '';
+  fragment = document.createDocumentFragment();
   let verIndex = 0;
   for (const ver of CHANGE_LOG) {
-    let index = 0;
-    text += `
-    <div class="my-3 ver_log border-bottom">
-      <div class="py-2">
-        v${ver.id}
-        ${serverVersion.id === ver.id ? '<span class="ml-2 pt-1 badge badge-pill badge-danger">New</span>' : ''}
-      </div>
-    `;
-    for (const v of ver.changes) {
-      const logId = 'log_' + verIndex++ + '_' + index++;
-      text += `
-      <div class="py-2 px-2 d-flex history_item" data-toggle="collapse" data-target="#${logId}">
-        <div class="d-flex flex-nowrap align-self-center">
-          <div class="align-self-center">
-            <span class="mr-2 pt-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}">
-              ${v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正'}</span>
-          </div>
-          <div class="align-self-center">${v.title}</div>
-        </div>
-      </div>
-      <div class="collapse border-top" id="${logId}">
-        <div class="pl-4 py-2 font_size_12">${v.content}</div>
-      </div>
-      `;
+    const $ver_parent = document.createElement('div');
+    $ver_parent.className = 'my-3 ver_log border-bottom';
+
+    const $ver_title = document.createElement('div');
+    $ver_title.className = 'py-2';
+    $ver_title.textContent = 'v' + ver.id;
+
+    if (serverVersion.id === ver.id) {
+      const $ver_new = document.createElement('span');
+      $ver_new.className = 'ml-2 pt-1 badge badge-pill badge-danger';
+      $ver_new.textContent = 'New';
+      $ver_title.appendChild($ver_new);
     }
-    text += `</div>`;
+
+    $ver_parent.appendChild($ver_title);
+
+    for (let i = 0; i < ver.changes.length; i++) {
+      const v = ver.changes[i];
+      const logId = 'log_' + verIndex++ + '_' + i;
+
+      const $history_header = document.createElement('div');
+      $history_header.className = 'py-2 px-2 d-flex collapsed history_item history_item_no_content';
+
+      const $history_badge_wrap = document.createElement('div');
+      $history_badge_wrap.className = 'd-flex flex-nowrap align-self-center';
+
+      const $history_badge_div = document.createElement('div');
+      $history_badge_div.className = 'align-self-center';
+
+      const $history_badge = document.createElement('span');
+      $history_badge.className = 'mr-2 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+      $history_badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
+
+      const $history_title = document.createElement('div');
+      $history_title.className = 'align-self-center';
+      $history_title.innerHTML = v.title;
+
+      $history_badge_div.appendChild($history_badge);
+      $history_badge_wrap.appendChild($history_badge_div);
+      $history_badge_wrap.appendChild($history_title);
+      $history_header.appendChild($history_badge_wrap);
+      $ver_parent.appendChild($history_header);
+
+      // 更新詳細内容がある場合、クリックで出てくる感じに
+      if (v.content) {
+        $history_header.dataset.toggle = 'collapse';
+        $history_header.dataset.target = '#' + logId;
+        $history_header.classList.remove('history_item_no_content');
+
+        const $history_content_wrap = document.createElement('div');
+        $history_content_wrap.id = logId;
+        $history_content_wrap.className = 'border-top collapse history_content';
+
+        const $history_content = document.createElement('div');
+        $history_content.className = 'pl-3 py-2 font_size_12';
+        $history_content.innerHTML = v.content;
+
+        $history_content_wrap.appendChild($history_content);
+        $ver_parent.appendChild($history_content_wrap);
+      }
+
+      fragment.appendChild($ver_parent);
+    }
   }
-  $('#site_history_body').html(text);
-  $('#site_history_body').append(`<div class="mt-2 font_size_12">最終更新：${LAST_UPDATE_DATE}</div>`);
+
+  const $last_update = document.createElement('div');
+  $last_update.className = 'mt-2 font_size_12';
+  $last_update.textContent = LAST_UPDATE_DATE;
+  fragment.appendChild($last_update);
+
+  document.getElementById('site_history_body').appendChild(fragment);
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
 
+  $('#loading_info').text('初期計算中');
   callback();
 }
 
@@ -1522,7 +1583,7 @@ function createShipTable(type) {
 
     // アイコンラッパー
     const $iconDiv = document.createElement('div');
-    $iconDiv.className = 'align-self-center';
+    $iconDiv.className = 'ml-1 align-self-center pt-1';
     // アイコン
     const cvs = document.createElement('canvas');
     const ctx = cvs.getContext('2d');
@@ -1538,7 +1599,7 @@ function createShipTable(type) {
     // ID
     const $idDiv = document.createElement('div');
     $idDiv.className = 'text-primary font_size_11';
-    $idDiv.textContent = 'ID: ' + (ship.id > 1000 ? ship.orig + 'b' : ship.id);
+    $idDiv.textContent = 'ID : ' + (ship.id > 1000 ? ship.orig + 'b' : ship.id);
     // 名称
     const $nameDiv = document.createElement('div');
     $nameDiv.textContent = ship.name;
@@ -1624,8 +1685,8 @@ function createEnemyTable(type) {
   const $tbody = $('#enemy_tbody');
   const target = document.getElementById('enemy_tbody');
   const fragment = document.createDocumentFragment();
-  const imgWidth = 136;
-  const imgHeight = 34;
+  const imgWidth = 128;
+  const imgHeight = 32;
   let dispData = [];
   let prevType = 0;
   const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
@@ -1673,12 +1734,12 @@ function createEnemyTable(type) {
 
     // ラッパー
     const $enemyDiv = document.createElement('div');
-    $enemyDiv.className = 'enemy enemy_tr d-flex py-1 ' + (displayMode === "multi" ? 'enemy_tr_multi' : '');
-    $enemyDiv.dataset.shipid = enemy.id;
+    $enemyDiv.className = 'enemy enemy_tr d-flex ' + (displayMode === "multi" ? 'enemy_tr_multi' : '');
+    $enemyDiv.dataset.enemyid = enemy.id;
 
     // アイコンラッパー
     const $iconDiv = document.createElement('div');
-    $iconDiv.className = 'align-self-center';
+    $iconDiv.className = 'ml-1 align-self-center pt-1_5';
     // アイコン
     const cvs = document.createElement('canvas');
     const ctx = cvs.getContext('2d');
@@ -1694,7 +1755,7 @@ function createEnemyTable(type) {
     // ID
     const $idDiv = document.createElement('div');
     $idDiv.className = 'text-primary font_size_11';
-    $idDiv.textContent = 'ID: ' + (enemy.id + 1500);
+    $idDiv.textContent = 'ID : ' + (enemy.id + 1500);
     // 名称
     const $nameDiv = document.createElement('div');
     $nameDiv.className = 'font_size_12';
@@ -1768,7 +1829,7 @@ function loadPlanePreset() {
   for (let index = 0; index < len; index++) {
     const preset = planePreset[index];
     let infoText = `
-      <div class="preset_td preset_td_info text-danger cur_help ml-auto" data-toggle="tooltip" data-boundary="window" 
+      <div class="preset_td preset_td_info text-danger cur_help ml-auto" data-toggle="tooltip" data-boundary="window"
         title="全ての装備が展開できません。">
         <i class="fas fa-exclamation-triangle"></i>
       </div>
@@ -1777,7 +1838,7 @@ function loadPlanePreset() {
     for (const planeId of preset.planes) {
       if (checkInvalidPlane(parentId, PLANE_DATA.find(v => v.id === planeId))) {
         infoText = `
-        <div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window" 
+        <div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window"
           title="展開できない装備が含まれています。">
           <i class="fas fa-exclamation-triangle"></i>
         </div>
@@ -2230,7 +2291,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
     }
 
     // 敵艦展開
-    let battle = 1
+    let battle = 1;
     for (let index = 0; index < preset[2].length; index++) {
       if (battle < preset[2][index][0] + 1) battle = preset[2][index][0] + 1;
     }
@@ -2921,7 +2982,7 @@ function calculateInit(objectData) {
   document.getElementById('ship_info_table').getElementsByTagName('tbody')[0].innerHTML = "";
   document.getElementById('shoot_down_table').getElementsByTagName('tbody')[0].innerHTML = "";
   document.getElementById('enemy_shoot_down_table').getElementsByTagName('tbody')[0].innerHTML = "";
-  document.getElementById('input_summary').value = '\n';
+  document.getElementById('input_summary').value = '';
   for (const node of document.getElementById('shoot_down_table').getElementsByTagName('tfoot')[0].getElementsByClassName('td_battle')) {
     node.innerHTML = "";
   }
@@ -3013,7 +3074,7 @@ function updateLandBaseInfo(landBaseData) {
     let tmpLandBaseDatum = { baseNo: lbNo, planes: [], ap: 0, mode: -1 };
     tmpLbPlanes.length = 0;
 
-    summary_text = '第' + lbNo + '基地航空隊：'
+    summary_text = '第' + lbNo + '基地航空隊：';
 
     // 基地航空隊 各種制空値表示
     const node_lb_planes = node_lb_tab.getElementsByClassName('lb_plane');
@@ -3129,7 +3190,7 @@ function updateLandBaseInfo(landBaseData) {
 
     // 待機 or 機体なしの場合飛ばす
     if (tmpLandBaseDatum.mode !== -1 && tmpLandBaseDatum.planes.length) {
-      document.getElementById('input_summary').value += summary_text.slice(0, -1) + '\n';
+      document.getElementById('input_summary').value += summary_text.trim() + '\n';
     }
   }
 
@@ -3485,7 +3546,7 @@ function getBonusAA(plane, prevAp) {
   const remodel = plane.remodel;
   let aa = 0;
 
-  // 艦戦 夜戦 水戦 
+  // 艦戦 夜戦 水戦
   if (FIGHTERS.includes(Math.abs(type))) aa = 0.2 * remodel + prevAp;
   // 艦爆
   else if (type === 3) aa = 0.25 * remodel + prevAp;
@@ -3821,6 +3882,7 @@ function updateFriendFleetInfo(friendFleetData) {
   const $textarea = $('#input_summary');
   const lines = ($textarea.val() + '\n').match(/\n/g).length;
   $textarea.height(castInt($textarea.css('lineHeight')) * lines + 2);
+  $textarea.text($textarea.text().trim());
 }
 
 
@@ -4000,16 +4062,16 @@ function updateEnemyFleetInfo(battleData) {
     let aj1 = 1.0;
     switch (castInt(node_battle_content.getElementsByClassName('formation')[0].value)) {
       case 2:
-        aj1 = 1.2
+        aj1 = 1.2;
         break;
       case 3:
-        aj1 = 1.6
+        aj1 = 1.6;
         break;
       case 12:
-        aj1 = 1.1
+        aj1 = 1.1;
         break;
       case 13:
-        aj1 = 1.5
+        aj1 = 1.5;
         break;
       default:
         break;
@@ -4072,7 +4134,7 @@ function updateEnemyFleetInfo(battleData) {
     const mapInfo = !node_battle_content.dataset.celldata ? map.replace('-', '') + "_手動" : node_battle_content.dataset.celldata;
     let world = mapInfo.split('_')[0].slice(0, -1);
     world = world > 1000 ? "E-" : world + "-";
-    const area = world + mapInfo.split('_')[0].slice(-1)
+    const area = world + mapInfo.split('_')[0].slice(-1);
     const cellText = mapInfo.split('_')[1];
     if (map === "999-1") map = area;
     else if (!isMixed && map !== area) isMixed = true;
@@ -4109,7 +4171,7 @@ function updateEnemyFleetInfo(battleData) {
       node_tr.dataset.rowindex = enemyNo;
       node_tr.dataset.css = backCss + '_hover';
 
-      enemy_name_td_text += '<img src="./img/plane/' + plane.id + '.png" class="img-size-36" title="' + plane.name + '">'
+      enemy_name_td_text += '<img src="./img/plane/' + plane.id + '.png" class="img-size-36" title="' + plane.name + '">';
 
       const node_plane_name_td = document.createElement('td');
       node_plane_name_td.className = 'pl-1 td_plane_name align-middle ' + backCss + isLastSlot;
@@ -4196,7 +4258,7 @@ function createEnemyObject(id) {
     enemy.origAp = enemy.ap;
     enemy.origLbAp = enemy.lbAp;
   }
-  return enemy
+  return enemy;
 }
 
 /**
@@ -4516,7 +4578,7 @@ function calculateLandBasePhase(landBaseData, enemyFleet, needChart) {
 function rateCalculate(objectData) {
   const landBaseData = objectData.landBaseData;
   const friendFleetData = objectData.friendFleetData;
-  const battleData = objectData.battleData
+  const battleData = objectData.battleData;
   let maxCount = castInt($('#calculate_count').val());
   $('#calculate_count').val(maxCount === 0 ? ++maxCount : maxCount);
 
@@ -4585,7 +4647,7 @@ function rateCalculate(objectData) {
       const cellType = battleInfo[battle].cellType;
       const fap = isDefMode ? defAp : getFriendFleetAP(fleet, cellType);
       const eap = getEnemyFleetAP(enemies);
-      const airIndex = getAirStatusIndex(fap, eap)
+      const airIndex = getAirStatusIndex(fap, eap);
 
       if (battle === mainBattle) fleetASDist[airIndex]++;
 
@@ -4648,7 +4710,7 @@ function rateCalculate(objectData) {
     returnDist = landBaseASDist.concat();
 
     // 結果表示戦闘と基地戦闘が一致していたらチャート用データも置き換える
-    chartData.enemy = shootDownEnemyAp
+    chartData.enemy = shootDownEnemyAp;
   }
 
   returnDist.push(fleetASDist);
@@ -4818,7 +4880,7 @@ function autoExpandNormal() {
       // 対潜哨戒機足切り
       if (plane.type === -101) continue;
       // 艦戦非許容時艦戦足切り
-      if (!allowFighter && plane.type === 1) continue;
+      if (!allowFighter && Math.abs(plane.type) === 1) continue;
       // カテゴリ毎に分けて格納(艦戦系は合同)
       const typeName = 'type' + Math.abs(FIGHTERS.includes(plane.type) ? 1 : plane.type);
       if (!planes.hasOwnProperty(typeName)) planes[typeName] = [];
@@ -4951,6 +5013,9 @@ function autoFleetExpand(planeStock) {
       const shipSlots = [];
       $(e).find('.ship_plane:not(.d-none)').each((i2, e2) => {
         const slotCount = castInt($(e2).find('.slot').text());
+        // 0スロそぎ落とし
+        if (slotCount < 1) return;
+        
         const slotData = {
           shipId: ship.id,
           shipType: ship.type,
@@ -4971,6 +5036,9 @@ function autoFleetExpand(planeStock) {
       if (needEmpty && [4, 5, 7, 8, 9].includes(ship.type)) {
         shipSlots.sort((a, b) => b.num - a.num);
         fleetData.push(shipSlots[0]);
+
+        // 5スロ艦は2スロまで許容
+        if (shipSlots.length > 4) fleetData.push(shipSlots[1]);
       }
       else fleetData = fleetData.concat(shipSlots);
     }
@@ -5050,7 +5118,7 @@ function autoFleetExpand(planeStock) {
       }
       // 搭載する機体がないよ！ → 今ある機体をそのまま確定
       if (!equiped) {
-        decidePlaneObjs.push(slotData.plane)
+        decidePlaneObjs.push(slotData.plane);
       }
     }
   }
@@ -5280,7 +5348,7 @@ function autoLandBaseExpandDef(count) {
   const maxSlot = 4 * count;
   for (const stock of planeStock) {
     // 96艦戦、零式水偵無印は無限
-    if (stock.id === 25 || stock.id === 19) stock.num[0] = maxSlot;
+    if (stock.id === 25 || stock.id === 19) stock.num = [maxSlot, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (getArraySum(stock.num) <= 0) continue;
     const plane = PLANE_DATA.find(v => v.id === stock.id);
     // 偵察機系のみ別
@@ -5317,7 +5385,8 @@ function autoLandBaseExpandDef(count) {
         v.antiAir = getBonusAA(v, v.antiAir);
         if (v.antiAir === 0) continue;
         for (let j = 0; j < stock.num[i]; j++) {
-          planes.push(v);
+          // オブジェクトの値のみコピー
+          planes.push(Object.assign({}, v));
         }
       }
     }
@@ -5620,7 +5689,7 @@ function btn_capture_Clicked($this) {
       const imgData = canvas.toDataURL();
 
       // 戻す
-      $targetContent.find('.custom-checkbox').removeClass('d-none')
+      $targetContent.find('.custom-checkbox').removeClass('d-none');
       $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
       $targetContent.find('.display_label_result').removeClass('d-none');
       $targetContent.find('.battle_end.fap').html(bauxite);
@@ -5643,7 +5712,7 @@ function btn_capture_Clicked($this) {
 
 /**
  * コンテンツ一括解除クリック
- * @param {JqueryDomObject} $this 
+ * @param {JqueryDomObject} $this
  */
 function btn_reset_content_Clicked($this) {
   const parentId = $this.closest('.contents').attr('id');
@@ -5998,7 +6067,7 @@ function lb_plane_Drop($this, ui) {
  * @param {JqueryDomObject} $this
  */
 function btn_reset_ship_Clicked($this) {
-  $this.closest('.ship_tab').find('.ship_plane').each((i, e) => { clearPlaneDiv($(e)) })
+  $this.closest('.ship_tab').find('.ship_plane').each((i, e) => { clearPlaneDiv($(e)) });
   calculate();
 }
 
@@ -6219,6 +6288,9 @@ function plane_type_select_Changed($this) {
   }
 
   if (searchWord) {
+    searchWord = searchWord.replace('601', '六〇一');
+    searchWord = searchWord.replace('634', '六三四');
+    searchWord = searchWord.replace('931', '九三一');
     searchWord = searchWord.replace('22', '二二');
     searchWord = searchWord.replace('34', '三四');
     searchWord = searchWord.replace('96', '九六');
@@ -6726,7 +6798,7 @@ function btn_expand_enemies() {
 
   const pattern = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv)[patternNo];
 
-  // 展開対象が空襲なら空襲モードに乗っ取り
+  // 展開対象が空襲なら防空モードに乗っ取り
   if (!isDefMode && node === '空襲') {
     isDefMode = true;
     $target = $('#air_raid_enemies');
@@ -6737,7 +6809,9 @@ function btn_expand_enemies() {
   }
 
   // 元の敵編成解除
-  $target.find('.enemy_content:not(:first)').remove();
+  if ($target.find('.enemy_content:not(:first)').length) {
+    $target.find('.enemy_content:not(:first)').remove();
+  }
   clearEnemyDiv($target.find('.enemy_content'));
 
   // 戦闘マス情報
@@ -6929,7 +7003,7 @@ function calculate_count_Changed($this) {
   // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
   const value = validateInputNumber($this.val(), 100000);
 
-  $this.val(value)
+  $this.val(value);
   setting.simulateCount = value;
   // ローカルストレージへ保存
   saveLocalStrage('setting', setting);
@@ -6965,6 +7039,9 @@ function stock_type_select_Changed() {
   const displayType = Math.abs(castInt($('#stock_type_select').val()));
   let searchWord = $('#stock_word').val().trim();
   if (searchWord) {
+    searchWord = searchWord.replace('601', '六〇一');
+    searchWord = searchWord.replace('634', '六三四');
+    searchWord = searchWord.replace('931', '九三一');
     searchWord = searchWord.replace('22', '二二');
     searchWord = searchWord.replace('34', '三四');
     searchWord = searchWord.replace('96', '九六');
@@ -7006,7 +7083,7 @@ function btn_load_equipment_json_Clicked() {
 
 /**
  * 装備情報テキスト変更時
- * @param {*} $this 
+ * @param {*} $this
  */
 function input_equipment_json_Changed($this) {
   // 入力検証　0文字はアウト
@@ -7447,14 +7524,14 @@ $(function () {
 
   // イベント貼り付け
   $('#modal_version_inform').on('hide.bs.modal', varsion_Closed);
-  $(document).keyup(function (e) { if (isCtrlPress && e.keyCode === 17) isCtrlPress = false; });
-  $(document).keydown(function (e) { if (!isCtrlPress && e.keyCode === 17) isCtrlPress = true; });
   $('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
   $('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
   $('.slot_select_parent').on('show.bs.dropdown', function () { slot_select_parent_Show($(this)); });
   $('.slot_select_parent').on('hide.bs.dropdown', function () { slot_select_parent_Close($(this)); });
-  $('.remodel_select_parent').on('show.bs.dropdown', function () { $(this).find('.remodel_item_selected').removeClass('remodel_item_selected'); });
   $('.remodel_select_parent').on('hide.bs.dropdown', function () { remodelSelect_Changed($(this)); });
+  $('.remodel_select_parent').on('show.bs.dropdown', function () { $(this).find('.remodel_item_selected').removeClass('remodel_item_selected'); });
+  $(document).keyup(function (e) { if (isCtrlPress && e.keyCode === 17) isCtrlPress = false; });
+  $(document).keydown(function (e) { if (!isCtrlPress && e.keyCode === 17) isCtrlPress = true; });
   $(document).on('show.bs.dropdown', '.enemy_ap_select_parent', function () { enemy_ap_select_parent_Show($(this)); });
   $(document).on('hide.bs.dropdown', '.enemy_ap_select_parent', function () { enemy_ap_select_parent_Close($(this)); });
   $(document).on('show.bs.collapse', '.collapse', function () { $(this).prev().find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down'); });
@@ -7499,7 +7576,7 @@ $(function () {
   $('#friendFleet_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $('#friendFleet_content').on('click', '.ship_disabled', function () { ship_disabled_Changed($(this)); });
   $('#friendFleet_content').on('click', '#union_fleet', calculate);
-  $('#friendFleet_content .nav-link[data-toggle="tab"]').on('shown.bs.tab', fleet_select_tab_Clicked)
+  $('#friendFleet_content .nav-link[data-toggle="tab"]').on('shown.bs.tab', fleet_select_tab_Clicked);
   $('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
   $('#enemyFleet_content').on('change', '.formation', calculate);
   $('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });
