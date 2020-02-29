@@ -4955,7 +4955,6 @@ function autoFleetExpand(planeStock) {
   // 目標制空値を取得
   const destAp = castInt($('#dest_ap').val());
   const $ship = $('.ship_tab[data-shipid!=""]');
-  const needEmpty = $('#need_empty').prop('checked');
 
   // 利用可能機体群
   const planes = [];
@@ -5013,9 +5012,7 @@ function autoFleetExpand(planeStock) {
       const shipSlots = [];
       $(e).find('.ship_plane:not(.d-none)').each((i2, e2) => {
         const slotCount = castInt($(e2).find('.slot').text());
-        // 0スロそぎ落とし
-        if (slotCount < 1) return;
-        
+        const isLocked = $(e2).find('.plane_unlock').hasClass('d-none');
         const slotData = {
           shipId: ship.id,
           shipType: ship.type,
@@ -5024,23 +5021,37 @@ function autoFleetExpand(planeStock) {
           plane: { id: 0, ap: 0 },
           order: orderIndex++,
           num_: slotCount,
-          slotId: 'ship' + i + '_slot' + i2
+          slotId: 'ship' + i + '_slot' + i2,
+          isLock: isLocked,
+          lockedPlane: null
         };
-        // 空母以外は戦闘機系用にダミースロット数激減(20機以下の場合)  または10スロ未満でも。
-        if ((![1, 2, 3].includes(ship.type) && slotData.num < 20) || slotData.num < 10) {
+
+        if (isLocked) {
+          const inputPlane = PLANE_DATA.find(v => v.id === castInt($(e2)[0].dataset.planeid));
+          if (inputPlane) {
+            const inputRemodel = castInt($(e2).find('.remodel_value').text());
+            slotData.lockedPlane = { id: inputPlane.id, remodel: inputRemodel };
+            // ロック済み機体があれば在庫から減らしておく
+            Object.keys(planes).forEach((key) => {
+              const deleteTraget = planes[key].findIndex(v => v.id === inputPlane.id && v.remodel === inputRemodel);
+              if (deleteTraget > -1) {
+                planes[key].splice(deleteTraget, 1);
+              }
+            });
+          }
+        }
+        else if(slotCount === 0) {
+          slotData.isLock = true;
+        }
+
+        // 空母以外は戦闘機系用にダミースロット数激減(20機以下の場合) 
+        if (![1, 2, 3].includes(ship.type)) {
           slotData.num_ = slotCount - 100;
         }
         shipSlots.push(slotData);
       });
-      // 戦艦、重巡級の戦闘機キャリア回避 (最大搭載数スロ以外除外)
-      if (needEmpty && [4, 5, 7, 8, 9].includes(ship.type)) {
-        shipSlots.sort((a, b) => b.num - a.num);
-        fleetData.push(shipSlots[0]);
 
-        // 5スロ艦は2スロまで許容
-        // if (shipSlots.length > 4) fleetData.push(shipSlots[1]);
-      }
-      else fleetData = fleetData.concat(shipSlots);
+      fleetData = fleetData.concat(shipSlots);
     }
   });
 
@@ -5053,6 +5064,17 @@ function autoFleetExpand(planeStock) {
   for (const slotData of fleetData) {
     let equiped = false;
     for (let type of atackers) {
+      // 装備ロックしていたらそいつを適用
+      if (slotData.isLock) {
+        if (slotData.lockedPlane) {
+          const planeObj = getShipPlaneObject(slotData.num, slotData.lockedPlane);
+          slotData.plane = planeObj;
+          sumAp += planeObj.ap;
+        }
+        equiped = true;
+        break;
+      }
+
       // 空母の2スロ目は艦爆を試行
       const shipType = slotData.shipType;
       if ((shipType === 1 || shipType === 2 || shipType === 3) && slotData.slotNo === 1) type = 3;
@@ -5084,6 +5106,9 @@ function autoFleetExpand(planeStock) {
   for (let i = 0; i < fleetData.length; i++) {
     // 制空を満たしたら終了
     if (sumAp >= destAp) break;
+
+    // ロック済み機体飛ばし
+    if (fleetData[i].isLock) continue;
 
     // 変更を戻す
     decidePlaneObjs = [];
@@ -5124,8 +5149,14 @@ function autoFleetExpand(planeStock) {
   }
 
   // 確定処理
-  for (let i = 0; i < decidePlaneObjs.length; i++) {
-    fleetData[i].plane = decidePlaneObjs[decidePlaneObjs.length - 1 - i];
+  let equipedCount = 0;
+  const decidePlaneCount = decidePlaneObjs.length;
+  for (let i = 0; i < fleetData.length; i++) {
+    if (fleetData[i].isLock) continue;
+    if (equipedCount >= decidePlaneCount) break;
+
+    // 確定機体ズの後ろから搭載
+    fleetData[i].plane = decidePlaneObjs[(decidePlaneCount - 1) - equipedCount++];
   }
 
   // 元の順に戻す
@@ -5902,6 +5933,17 @@ function ohuda_Changed($this, cancelCalculate = false) {
   if (!cancelCalculate) calculate();
 }
 
+
+function plane_lock_Clicked($this) {
+  $this.addClass('d-none');
+  $this.closest('.ship_plane').find('.plane_unlock').removeClass('d-none');
+}
+
+function plane_unlock_Clicked($this) {
+  $this.addClass('d-none');
+  $this.closest('.ship_plane').find('.plane_lock').removeClass('d-none');
+}
+
 /**
  * 改修値変更時
  * @param {JqueryDomObject} $this
@@ -6081,6 +6123,8 @@ function ship_plane_DragStart(ui) {
     .css('width', 320);
   $(ui.helper).find('.slot_select_parent').remove();
   $(ui.helper).find('.btn_remove_plane').remove();
+  $(ui.helper).find('.plane_lock').remove();
+  $(ui.helper).find('.plane_unlock').remove();
   $(ui.helper).find('.prof_select_parent').addClass('mr-2');
 }
 
@@ -7563,6 +7607,8 @@ $(function () {
   $(document).on('click', '.btn_remodel', function () { btn_remodel_Clicked($(this)); });
   $(document).on('click', '.btn_fighter_prof_max', btn_fighter_prof_max_Clicked);
   $(document).on('click', '.btn_prof', function () { btn_prof_Clicked($(this)); });
+  $(document).on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
+  $(document).on('click', '.plane_unlock', function () { plane_unlock_Clicked($(this)); });
   $(document).on('input', '.preset_name', function () { preset_name_Changed($(this)); });
   $(document).on('blur', '.preset_name', function () { preset_name_Changed($(this)); });
   $('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });

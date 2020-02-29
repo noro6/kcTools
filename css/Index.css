@@ -457,6 +457,21 @@ input[type="text"] { font-size: 12px; }
   width: 30px;
   height: auto;
 }
+.plane_lock {
+  width: 16px;
+  cursor: pointer;
+  color: #ffa600;
+}
+.plane_unlock {
+  width: 16px;
+  cursor: pointer;
+  color: #ffa600;
+  opacity: .4;
+  transition: .4s;
+}
+.plane_unlock:hover {
+  opacity: 1;
+}
 .btn_remove_plane {
   cursor: pointer;
   transition: 0.4s;
