@@ -345,9 +345,6 @@ const SHIP_DATA = [
   { id: 1506, type: 12, name: "伊400改", slot: [3, 3], final: 1, orig: 293, deckid: 606 },
 ];
 const ENEMY_TYPE = [
-  { id: 0, name: "現行イベント" },
-  { id: 1, name: "鬼/姫" },
-  { id: 2, name: "地上施設" },
   { id: 11, name: "正規空母" },
   { id: 12, name: "軽空母" },
   { id: 13, name: "戦艦" },
@@ -359,6 +356,9 @@ const ENEMY_TYPE = [
   { id: 19, name: "補給艦" },
   { id: 20, name: "水上機母艦" },
   { id: 21, name: "浮遊/護衛 要塞" },
+  { id: 0, name: "現行イベント" },
+  { id: 1, name: "鬼/姫" },
+  { id: 2, name: "地上施設" },
 ];
 const ENEMY_DATA = [
   { id: -1, type: [1, 2, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], name: "直接入力", slot: [], eqp: [], orig: -1, aaw: 0, aabo: 0 },
