@@ -4955,6 +4955,7 @@ function autoFleetExpand(planeStock) {
   // 目標制空値を取得
   const destAp = castInt($('#dest_ap').val());
   const $ship = $('.ship_tab[data-shipid!=""]');
+  const allowFBA = !$('#no_FBA').prop('checked');
 
   // 利用可能機体群
   const planes = [];
@@ -5040,12 +5041,16 @@ function autoFleetExpand(planeStock) {
             });
           }
         }
-        else if(slotCount === 0) {
+        else if (slotCount === 0) {
           slotData.isLock = true;
         }
 
         // 空母以外は戦闘機系用にダミースロット数激減(20機以下の場合) 
         if (![1, 2, 3].includes(ship.type)) {
+          slotData.num_ = slotCount - 100;
+        }
+        // 空母も小スロットは艦戦優先度上げる
+        else if(slotCount < 10) {
           slotData.num_ = slotCount - 100;
         }
         shipSlots.push(slotData);
@@ -5077,7 +5082,7 @@ function autoFleetExpand(planeStock) {
 
       // 空母の2スロ目は艦爆を試行
       const shipType = slotData.shipType;
-      if ((shipType === 1 || shipType === 2 || shipType === 3) && slotData.slotNo === 1) type = 3;
+      if (allowFBA && ([1, 2, 3].includes(shipType)) && slotData.slotNo === 1) type = 3;
       for (const plane of planes['type' + type]) {
         if (plane.stock <= 0) continue;
         if (checkInvalidPlane(slotData.shipId, PLANE_DATA.find(v => v.id === plane.id))) {
