@@ -687,7 +687,7 @@ const WORLD_DATA = [
   { world: 4, name: "西方海域" },
   { world: 5, name: "南方海域" },
   { world: 6, name: "中部海域" },
-  { world: 2003, name: "【ミニ期間限定海域】桃の節句！沖に立つ波" },
+  { world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
   { world: 1911, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
 ];
 const MAP_DATA = [
@@ -1484,10 +1484,13 @@ const ENEMY_PATTERN = [
   { area: 19116, node: "空襲", remarks: "弱", pattern: 8, lv: 1, type: 3, form: 3, radius: 1, enemies: [182, 150, 409, 91], coords: "" },
   { area: 19116, node: "空襲", remarks: "強", pattern: 9, lv: 0, type: 3, form: 3, radius: 1, enemies: [182, 150, 150, 409, 91], coords: "" },
   { area: 19116, node: "空襲", remarks: "弱", pattern: 10, lv: 0, type: 3, form: 3, radius: 1, enemies: [182, 150, 409, 91], coords: "" },
-  { area: 20031, node: "A", remarks: "仮置き", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [1], coords: "" },
-  { area: 20031, node: "A", remarks: "", pattern: 2, lv: 2, type: 1, form: 1, radius: 0, enemies: [1], coords: "" },
-  { area: 20031, node: "A", remarks: "", pattern: 3, lv: 1, type: 1, form: 1, radius: 0, enemies: [1], coords: "" },
-  { area: 20031, node: "A", remarks: "", pattern: 4, lv: 0, type: 1, form: 1, radius: 0, enemies: [1], coords: "" },
+  { area: 20031, node: "A", remarks: "仮置き", pattern: 1, lv: 3, type: 1, form: 4, radius: 0, enemies: [238, 72, 72, 72], coords: "219,112,246,149" },
+  { area: 20031, node: "A", remarks: "", pattern: 2, lv: 2, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
+  { area: 20031, node: "A", remarks: "", pattern: 3, lv: 1, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
+  { area: 20031, node: "A", remarks: "", pattern: 4, lv: 0, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
+  { area: 20031, node: "B", remarks: "仮置き", pattern: 1, lv: 3, type: 1, form: 3, radius: 0, enemies: [408, 408, 280, 280, 362, 362], coords: "319,63,349,99" },
+  { area: 20031, node: "C", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [298, 292, 292, 408, 408, 420], coords: "321,167,355,213" },
+  { area: 20031, node: "C", remarks: "", pattern: 2, lv: 3, type: 2, form: 11, radius: 0, enemies: [98, 244, 244, 244, 244, 244, 244, 244, 244, 244, 244, 244], coords: "321,167,355,213" },
 ];
 // 制空状態
 const AIR_STATUS = [
