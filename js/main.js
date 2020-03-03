@@ -5050,7 +5050,7 @@ function autoFleetExpand(planeStock) {
           slotData.num_ = slotCount - 100;
         }
         // 空母も小スロットは艦戦優先度上げる
-        else if(slotCount < 10) {
+        else if (slotCount < 10) {
           slotData.num_ = slotCount - 100;
         }
         shipSlots.push(slotData);
@@ -6850,10 +6850,13 @@ function btn_expand_enemies() {
   // 展開対象が空襲なら防空モードに乗っ取り
   if (!isDefMode && node === '空襲') {
     isDefMode = true;
+    // みんな防空に 
+    $('.ohuda_select').each((i, e) => { $(e).val(0); });
     $target = $('#air_raid_enemies');
   }
   else if (isDefMode && node !== '空襲') {
     isDefMode = false;
+    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) === 0) $(e).val(-1); });
     $target = $('.battle_content:first()');
   }
 
