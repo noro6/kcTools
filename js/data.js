@@ -1504,9 +1504,9 @@ const ENEMY_PATTERN = [
   { area: 20031, node: "R", remarks: "", pattern: 1, lv: 3, type: 1, form: 3, radius: 0, enemies: [280, 280, 92, 240, 240, 26], coords: "397, 143, 427, 167" },
   { area: 20031, node: "T", remarks: "前哨", pattern: 1, lv: 3, type: 2, form: 11, radius: 0, enemies: [408, 280, 280, 43, 95, 95, 405, 362, 243, 243, 243, 243], coords: "310, 63, 355, 100" },
   { area: 20031, node: "T", remarks: "最終", pattern: 2, lv: 3, type: 2, form: 11, radius: 0, enemies: [408, 292, 280, 280, 397, 397, 405, 362, 362, 243, 243, 243], coords: "310, 63, 355, 100" },
-  { area: 20031, node: "空襲", remarks: "強編成", pattern: 1, lv: 3, type: 3, form: 3, radius: 1, enemies: [394, 394, 151, 150], coords: "200, 93, 225, 115" },
-  { area: 20031, node: "空襲", remarks: "中編成", pattern: 2, lv: 3, type: 3, form: 3, radius: 1, enemies: [394, 390, 151, 150], coords: "200, 93, 225, 115" },
-  { area: 20031, node: "空襲", remarks: "弱編成", pattern: 3, lv: 3, type: 3, form: 3, radius: 1, enemies: [390, 151, 151], coords: "200, 93, 225, 115" },
+  { area: 20031, node: "空襲", remarks: "強編成", pattern: 1, lv: 3, type: 5, form: 3, radius: 1, enemies: [394, 394, 151, 150], coords: "200, 93, 225, 115" },
+  { area: 20031, node: "空襲", remarks: "中編成", pattern: 2, lv: 3, type: 5, form: 3, radius: 1, enemies: [394, 390, 151, 150], coords: "200, 93, 225, 115" },
+  { area: 20031, node: "空襲", remarks: "弱編成", pattern: 3, lv: 3, type: 5, form: 3, radius: 1, enemies: [390, 151, 151], coords: "200, 93, 225, 115" },
 ];
 // 制空状態
 const AIR_STATUS = [
