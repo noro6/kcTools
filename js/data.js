@@ -1490,6 +1490,7 @@ const ENEMY_PATTERN = [
   { area: 19116, node: "空襲", remarks: "強", pattern: 9, lv: 0, type: 3, form: 3, radius: 1, enemies: [182, 150, 150, 409, 91], coords: "" },
   { area: 19116, node: "空襲", remarks: "弱", pattern: 10, lv: 0, type: 3, form: 3, radius: 1, enemies: [182, 150, 409, 91], coords: "" },
   { area: 20031, node: "A", remarks: "", pattern: 1, lv: 3, type: 1, form: 2, radius: 4, enemies: [405, 54, 92, 76, 76, 76], coords: "110, 152, 140, 182" },
+  { area: 20031, node: "C", remarks: "", pattern: 1, lv: 3, type: 3, form: 3, radius: 4, enemies: [408, 279, 264, 397, 243, 243], coords: "130, 49, 169, 70" },
   { area: 20031, node: "D", remarks: "", pattern: 1, lv: 3, type: 1, form: 4, radius: 3, enemies: [238, 71, 71, 71], coords: "142, 135, 172, 165" },
   { area: 20031, node: "E", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 4, enemies: [396, 95, 95, 92, 76, 76], coords: "152, 170, 170, 202" },
   { area: 20031, node: "I", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 3, enemies: [67, 92, 122, 122, 122, 122], coords: "222, 124, 250, 152" },
@@ -1501,7 +1502,7 @@ const ENEMY_PATTERN = [
   { area: 20031, node: "Q", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [280, 280, 43, 92, 240, 240], coords: "" },
   { area: 20031, node: "R", remarks: "", pattern: 1, lv: 3, type: 1, form: 3, radius: 0, enemies: [280, 280, 92, 240, 240, 26], coords: "" },
   { area: 20031, node: "T", remarks: "前哨", pattern: 1, lv: 3, type: 2, form: 11, radius: 0, enemies: [408, 280, 280, 43, 95, 95, 405, 362, 243, 243, 243, 243], coords: "" },
-  { area: 20031, node: "空襲", remarks: "", pattern: 1, lv: 3, type: 3, form: 3, radius: 1, enemies: [394, 390, 151, 150], coords: "200, 93, 225, 115" },
+  { area: 20031, node: "空襲", remarks: "", pattern: 1, lv: 3, type: 3, form: 3, radius: 1, enemies: [394, 394, 151, 150], coords: "200, 93, 225, 115" },
 ];
 // 制空状態
 const AIR_STATUS = [
