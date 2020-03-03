@@ -345,6 +345,7 @@ const SHIP_DATA = [
   { id: 1506, type: 12, name: "伊400改", slot: [3, 3], final: 1, orig: 293, deckid: 606 },
 ];
 const ENEMY_TYPE = [
+  { id: 0, name: "現行イベント" },
   { id: 11, name: "正規空母" },
   { id: 12, name: "軽空母" },
   { id: 13, name: "戦艦" },
@@ -356,7 +357,6 @@ const ENEMY_TYPE = [
   { id: 19, name: "補給艦" },
   { id: 20, name: "水上機母艦" },
   { id: 21, name: "浮遊/護衛 要塞" },
-  { id: 0, name: "現行イベント" },
   { id: 1, name: "鬼/姫" },
   { id: 2, name: "地上施設" },
 ];
@@ -680,6 +680,7 @@ const DIFFICULTY = [
   { id: 3, name: "甲" },
 ];
 const WORLD_DATA = [
+  { world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
   { world: 1, name: "鎮守府海域" },
   { world: 2, name: "南西諸島海域" },
   { world: 3, name: "北方海域" },
@@ -687,7 +688,6 @@ const WORLD_DATA = [
   { world: 4, name: "西方海域" },
   { world: 5, name: "南方海域" },
   { world: 6, name: "中部海域" },
-  { world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
   { world: 1911, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
 ];
 const MAP_DATA = [
@@ -730,8 +730,7 @@ const MAP_DATA = [
   { area: 19114, name: "バタビア沖" },
   { area: 19115, name: "ダバオ沖/太平洋南西部" },
   { area: 19116, name: "ソロモン諸島沖" },
-  { area: 20031, name: "第1海域" },
-  { area: 20032, name: "第2海域" },
+  { area: 20031, name: "期間限定海域:マニラ沖" },
 ];
 const ENEMY_PATTERN = [
   { area: 11, node: "A", remarks: "", pattern: 1, lv: -1, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
@@ -1484,13 +1483,14 @@ const ENEMY_PATTERN = [
   { area: 19116, node: "空襲", remarks: "弱", pattern: 8, lv: 1, type: 3, form: 3, radius: 1, enemies: [182, 150, 409, 91], coords: "" },
   { area: 19116, node: "空襲", remarks: "強", pattern: 9, lv: 0, type: 3, form: 3, radius: 1, enemies: [182, 150, 150, 409, 91], coords: "" },
   { area: 19116, node: "空襲", remarks: "弱", pattern: 10, lv: 0, type: 3, form: 3, radius: 1, enemies: [182, 150, 409, 91], coords: "" },
-  { area: 20031, node: "A", remarks: "仮置き", pattern: 1, lv: 3, type: 1, form: 4, radius: 0, enemies: [238, 72, 72, 72], coords: "219,112,246,149" },
-  { area: 20031, node: "A", remarks: "", pattern: 2, lv: 2, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
-  { area: 20031, node: "A", remarks: "", pattern: 3, lv: 1, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
-  { area: 20031, node: "A", remarks: "", pattern: 4, lv: 0, type: 1, form: 1, radius: 0, enemies: [1], coords: "219,112,246,149" },
-  { area: 20031, node: "B", remarks: "仮置き", pattern: 1, lv: 3, type: 1, form: 3, radius: 0, enemies: [408, 408, 280, 280, 362, 362], coords: "319,63,349,99" },
-  { area: 20031, node: "C", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [298, 292, 292, 408, 408, 420], coords: "321,167,355,213" },
-  { area: 20031, node: "C", remarks: "", pattern: 2, lv: 3, type: 2, form: 11, radius: 0, enemies: [98, 244, 244, 244, 244, 244, 244, 244, 244, 244, 244, 244], coords: "321,167,355,213" },
+  { area: 20031, node: "A", remarks: "", pattern: 1, lv: 3, type: 1, form: 2, radius: 0, enemies: [405, 54, 92, 76, 76, 76], coords: "110, 152, 140, 182" },
+  { area: 20031, node: "D", remarks: "", pattern: 1, lv: 3, type: 1, form: 4, radius: 0, enemies: [238, 71, 71, 71], coords: "142, 135, 172, 165" },
+  { area: 20031, node: "E", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [396, 95, 95, 92, 76, 76], coords: "152, 170, 170, 202" },
+  { area: 20031, node: "I", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [67, 92, 122, 122, 122, 122], coords: "222, 124, 250, 152" },
+  { area: 20031, node: "L", remarks: "", pattern: 1, lv: 3, type: 1, form: 1, radius: 0, enemies: [361, 361, 140, 140, 140, 140], coords: "264, 185, 287, 215" },
+  { area: 20031, node: "N", remarks: "", pattern: 1, lv: 3, type: 3, form: 3, radius: 0, enemies: [280, 277, 277, 92, 240, 240], coords: "288, 178, 310, 210" },
+  { area: 20031, node: "O", remarks: "", pattern: 1, lv: 3, type: 3, form: 3, radius: 0, enemies: [408, 280, 277, 277, 243, 243], coords: "313, 170, 340, 200" },
+  { area: 20031, node: "空襲", remarks: "", pattern: 1, lv: 3, type: 3, form: 3, radius: 0, enemies: [394, 390, 151, 150], coords: "200, 93, 225, 115" },
 ];
 // 制空状態
 const AIR_STATUS = [
