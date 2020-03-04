@@ -632,10 +632,10 @@ const ENEMY_DATA = [
   { id: 418, type: [1, 18], name: "潜水棲姫改-壊flagship [丙]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
   { id: 419, type: [1, 18], name: "潜水棲姫改-壊flagship [乙]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
   { id: 420, type: [1, 18], name: "潜水棲姫改-壊flagship [甲]", slot: [], eqp: [], orig: 415, aaw: 0, aabo: 0 },
-  { id: 421, type: [1, 2], name: "集積地棲姫Ⅱ制空?[丙]", slot: [12, 12, 8, 4], eqp: [561, 561, 561, 561], orig: 421, aaw: 0, aabo: 0 },
+  { id: 421, type: [1, 2], name: "集積地棲姫Ⅱ[丙]", slot: [12, 12, 8, 4], eqp: [561, 561, 561, 561], orig: 421, aaw: 0, aabo: 0 },
   { id: 422, type: [1, 2], name: "集積地棲姫Ⅱ制空?[乙]", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 422, aaw: 0, aabo: 0 },
   { id: 423, type: [1, 2], name: "集積地棲姫Ⅱ[甲]", slot: [28, 28, 16, 16], eqp: [562, 562, 561, 561], orig: 423, aaw: 0, aabo: 0 },
-  { id: 424, type: [1, 2], name: "集積地棲姫Ⅱ-壊 制空?[丙]", slot: [16, 16, 12, 4], eqp: [562, 561, 561, 561], orig: 424, aaw: 0, aabo: 0 },
+  { id: 424, type: [1, 2], name: "集積地棲姫Ⅱ-壊 [丙]", slot: [16, 16, 12, 12], eqp: [562, 561, 561, 561], orig: 424, aaw: 0, aabo: 0 },
   { id: 425, type: [1, 2], name: "集積地棲姫Ⅱ-壊 制空?[乙]", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 425, aaw: 0, aabo: 0 },
   { id: 426, type: [1, 2], name: "集積地棲姫Ⅱ-壊 制空?[甲]", slot: [32, 32, 24, 8], eqp: [562, 562, 562, 561], orig: 426, aaw: 0, aabo: 0 },
 ];
