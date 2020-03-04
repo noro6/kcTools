@@ -151,7 +151,7 @@ const PLANE_DATA = [
   { id: 176, type: 102, name: "三式戦飛燕", abbr: "", antiAir: 8, torpedo: 0, bomber: 0, antiBomber: 1, interception: 3, scout: 0, canRemodel: 1, radius: 3, cost: 7, avoid: 0 },
   { id: 177, type: 102, name: "三式戦飛燕(飛行第244戦隊)", abbr: "三式戦飛燕(第244戦隊)", antiAir: 9, torpedo: 0, bomber: 0, antiBomber: 3, interception: 4, scout: 0, canRemodel: 1, radius: 4, cost: 7, avoid: 0 },
   { id: 185, type: 102, name: "三式戦飛燕一型丁(キ61-I丁)", abbr: "三式戦飛燕一型丁", antiAir: 9, torpedo: 0, bomber: 0, antiBomber: 2, interception: 3, scout: 0, canRemodel: 1, radius: 4, cost: 7, avoid: 0 },
-  { id: 218, type: 102, name: "四式戦疾風", abbr: "", antiAir: 10, torpedo: 0, bomber: 0, antiBomber: 1, interception: 1, scout: 0, canRemodel: 0, radius: 5, cost: 7, avoid: 0 },
+  { id: 218, type: 102, name: "四式戦疾風", abbr: "", antiAir: 10, torpedo: 0, bomber: 0, antiBomber: 1, interception: 1, scout: 0, canRemodel: 1, radius: 5, cost: 7, avoid: 0 },
   { id: 221, type: 102, name: "一式戦隼II型", abbr: "", antiAir: 6, torpedo: 0, bomber: 0, antiBomber: 0, interception: 2, scout: 0, canRemodel: 1, radius: 6, cost: 4, avoid: 0 },
   { id: 222, type: 102, name: "一式戦隼III型甲", abbr: "", antiAir: 7, torpedo: 0, bomber: 0, antiBomber: 1, interception: 3, scout: 0, canRemodel: 1, radius: 6, cost: 4, avoid: 0 },
   { id: 223, type: 102, name: "一式戦隼III型甲(54戦隊)", abbr: "", antiAir: 8, torpedo: 0, bomber: 0, antiBomber: 1, interception: 3, scout: 1, canRemodel: 0, radius: 7, cost: 4, avoid: 0 },
