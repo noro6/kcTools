@@ -786,6 +786,7 @@ function initialize(callback) {
   // 基地欄タブ化するかどうか
   if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
     $('.lb_tab').addClass('tab-pane fade');
+    $('.baseNo').removeClass('cur_move sortable_handle');
     $('.lb_tab:first').addClass('show active');
     $('#lb_item1').addClass('active');
   }
@@ -2363,9 +2364,8 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 function createLandBasePreset() {
   const landBasePreset = [[], []];
   $('.ohuda_select').each((i, e) => { landBasePreset[1].push(castInt($(e).val())); });
-  $('.lb_plane').each((i, e) => {
+  $('.lb_plane:not(.ui-draggable-dragging)').each((i, e) => {
     const $e = $(e);
-    if ($e.hasClass('ui-draggable-dragging')) return;
     const plane = [
       castInt($e[0].dataset.planeid),
       castInt($e.find('.prof_select')[0].dataset.prof),
@@ -2394,7 +2394,7 @@ function createFriendFleetPreset() {
     if ($(e).attr('class').includes('d-none')) return;
 
     const ship = [castInt($(e)[0].dataset.shipid), [], shipIndex];
-    $(e).find('.ship_plane').each((j, ce) => {
+    $(e).find('.ship_plane:not(.ui-draggable-dragging)').each((j, ce) => {
       const $ce = $(ce);
       const plane = [
         castInt($ce[0].dataset.planeid),
@@ -5711,14 +5711,23 @@ function btn_supply_Clicked() {
  */
 function btn_capture_Clicked($this) {
   const $targetContent = $this.closest('.contents');
+  $targetContent.width(1000);
 
-  // レンダリングできなさそうなやつを置換
+  // 基地横並びに。
+  $targetContent.find('.lb_tab').removeClass('tab-pane fade');
+
+  // レンダリングできなさそうなやつを置換 or 非表示
+  const $no_captures = $targetContent.find('.no_capture:not(.d-none)');
+  $no_captures.addClass('d-none');
   $targetContent.find('.round_button').addClass('d-none').removeClass('d-table');
   $targetContent.find('.custom-checkbox').addClass('d-none');
-  $targetContent.find('.display_label_result').addClass('d-none');
-  const bauxite = $targetContent.find('.battle_end.fap').html();
-  $targetContent.find('.battle_end.fap').html('ボーキ消費');
-  $targetContent.find('#input_summary_parent').addClass('d-none');
+
+  // レンダリングズレ修正
+  $targetContent.find('.custom-select').addClass('pt-0');
+  $targetContent.find('.form-control').addClass('pt-0');
+  $targetContent.find('.general_box').addClass('general_box_capture');
+
+  const prevY = window.pageYOffset;
 
   html2canvas($targetContent[0], {
     onrendered: function (canvas) {
@@ -5727,9 +5736,18 @@ function btn_capture_Clicked($this) {
       // 戻す
       $targetContent.find('.custom-checkbox').removeClass('d-none');
       $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
-      $targetContent.find('.display_label_result').removeClass('d-none');
-      $targetContent.find('.battle_end.fap').html(bauxite);
-      $targetContent.find('#input_summary_parent').removeClass('d-none');
+      $no_captures.removeClass('d-none');
+
+      $targetContent.find('.custom-select').removeClass('pt-0');
+      $targetContent.find('.form-control').removeClass('pt-0');
+      $targetContent.find('.general_box').removeClass('general_box_capture');
+
+      $targetContent.width("");
+      if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
+        $('.lb_tab').addClass('tab-pane fade');
+        $('.lb_tab:first').tab('show');
+      }
+      window.scrollTo(0, prevY);
 
       // 保存
       const now = new Date();
@@ -7746,9 +7764,11 @@ $(function () {
       if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
         $('.lb_tab').addClass('tab-pane fade');
         $('.lb_tab:first').tab('show');
+        $('.baseNo').removeClass('sortable_handle cur_move');
       }
       else if ($('#lb_tab_select').css('display') === 'none' && $('#lb_item1').attr('class').includes('tab-pane')) {
         $('.lb_tab').removeClass('tab-pane fade').show().fadeIn();
+        $('.baseNo').addClass('sortable_handle cur_move');
       }
     }, 50);
   });
@@ -7767,7 +7787,7 @@ $(function () {
     scroll: true,
   });
   Sortable.create($('#lb_tab_parent')[0], {
-    handle: '.drag_handle',
+    handle: '.sortable_handle',
     animation: 200,
     onEnd: function () {
       // 第何航空隊か整合性取る
