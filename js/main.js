@@ -526,9 +526,7 @@ function initialize(callback) {
     document.getElementById('version').textContent = serverVersion.id;
     document.getElementById('version_inform_body').appendChild(fragment);
 
-    // 1.5.0対応 散らばったlocalStrage転写 & データ削除
-    const s = loadLocalStrage('defaultProf');
-    if (!s) setting.defaultProf = s;
+    // 1.5.0対応 散らばったデータ削除
     deleteLocalStrage('version');
     deleteLocalStrage('autoSave');
     deleteLocalStrage('simulateCount');
@@ -722,6 +720,14 @@ function initialize(callback) {
   // シミュレート回数
   if (setting.simulateCount) $('#calculate_count').val(setting.simulateCount);
   else $('#calculate_count').val(5000);
+
+  // 内部熟練度120
+  if (setting.initialProf120) {
+    initialProf120Plane = setting.initialProf120;
+  }
+  for (const type of initialProf120Plane) {
+    $('#prof120_' + type).prop('checked', true);
+  }
 
   // 表示形式(一列/複数列)
   if (setting.displayMode) {
@@ -7098,6 +7104,10 @@ function innerProfSetting_Clicked($this) {
   else if (!$this.prop('checked') && initialProf120Plane.includes(clickedType)) {
     initialProf120Plane = initialProf120Plane.filter(v => v !== clickedType);
   }
+
+  setting.initialProf120 = initialProf120Plane.sort((a, b) => a - b);
+  saveLocalStrage('setting', setting);
+
   calculate();
 }
 
