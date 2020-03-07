@@ -176,8 +176,8 @@ function b64_to_utf8(input) {
 function copyInputTextToClipboard($this) {
   try {
     if (!$this.attr('id')) return false;
-    const taegrt = document.getElementById($this.attr('id'));
-    taegrt.select();
+    const t = document.getElementById($this.attr('id'));
+    t.select();
     return document.execCommand('copy');
   } catch (error) {
     return false;
@@ -480,6 +480,7 @@ function initialize(callback) {
       visibleFinal: true,
       visibleImage: true,
       enemyDisplayImage: true,
+      copyToClipbord: false,
       displayMode: {
         'modal_plane_select': 'single',
         'modal_ship_select': 'single',
@@ -732,6 +733,8 @@ function initialize(callback) {
 
   // 自動保存
   $('#auto_save').prop('checked', setting.autoSave);
+  // クリップボード保存
+  $('#auto_save').prop('checked', setting.copyToClipbord);
   // 空スロット表示
   $('#empty_slot_invisible').prop('checked', setting.emptySlotInvisible);
   // 在庫有のみ表示
@@ -5733,7 +5736,21 @@ function btn_capture_Clicked($this) {
   html2canvas($targetContent[0], {
     onrendered: function (canvas) {
       const imgData = canvas.toDataURL();
-      downloadImage(imgData);
+
+      // クリップボードコピー
+      if ($('#clipbord_mode').prop('checked') && typeof ClipboardItem === "function") {
+        try {
+          canvas.toBlob(blob => {
+            navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+          });
+        } catch (error) {
+          downloadImage(imgData);
+        }
+      }
+      else {
+        downloadImage(imgData);
+      }
+
       // 戻す
       $targetContent.find('.custom-checkbox').removeClass('d-none');
       $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
@@ -5776,9 +5793,10 @@ function downloadImage(data) {
     const blob = new Blob([outdata], ["image/png"]);
     window.navigator.msSaveOrOpenBlob(blob, fname);
   } else {
-    document.getElementById("getImage").href = data;
-    document.getElementById("getImage").download = fname;
-    document.getElementById("getImage").click();
+    const a = document.getElementById("getImage");
+    a.href = data;
+    a.download = fname;
+    a.click();
   }
 }
 
@@ -7107,6 +7125,22 @@ function auto_save_Clicked() {
 }
 
 /**
+ * クリップボード保存チェック
+ */
+function clipbord_mode_Clicked() {
+  // 未対応の場合強制 false
+  if (typeof ClipboardItem !== "function") {
+    $('#clipbord_mode').prop('checked', false);
+    $('#cant_use_clipbord').removeClass('d-none');
+  }
+
+  setting.copyToClipbord = $('#clipbord_mode').prop('checked');
+  saveLocalStrage('setting', setting);
+
+  if (!setting.autoSave) deleteLocalStrage('autoSaveData');
+}
+
+/**
  * 設定削除クリック時
  */
 function btn_reset_localStrage_Clicked() {
@@ -7685,6 +7719,7 @@ $(function () {
   $('#config_content').on('click', '#btn_reset_localStrage', btn_reset_localStrage_Clicked);
   $('#config_content').on('click', '#innerProfSetting .custom-control-input', function () { innerProfSetting_Clicked($(this)); });
   $('#config_content').on('click', '#auto_save', auto_save_Clicked);
+  $('#config_content').on('click', '#clipbord_mode', clipbord_mode_Clicked);
   $('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
   $('#plane_stock').on('change', '#stock_type_select', function () { stock_type_select_Changed($(this)); });
   $('#plane_stock').on('click', '.stock_tr', function () { stock_tr_Clicked($(this)); });
