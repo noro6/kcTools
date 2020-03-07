@@ -135,10 +135,10 @@
                            title="一括設定">
                            <i class="fas fa-tools d-table-cell align-middle"></i>
                         </div>
-                        <!-- <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
+                        <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
                            title="基地航空隊入力情報を画像で保存">
                            <i class="fas fa-camera d-table-cell align-middle"></i>
-                        </div> -->
+                        </div>
                         <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                            data-toggle="tooltip" title="入れ替え終了">
                            <i class="fas fa-check d-table-cell align-middle"></i>
@@ -275,7 +275,7 @@
                                                 </a>
                                              </div>
                                           </div>
-                                          <div class="mx-1 btn_remove_plane opacity0 align-self-center">
+                                          <div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
                                              <i class="fas fa-times"></i>
                                           </div>
                                        </div>
@@ -307,10 +307,10 @@
                            title="一括設定">
                            <i class="fas fa-tools d-table-cell align-middle"></i>
                         </div>
-                        <!-- <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
+                        <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
                            title="艦隊入力情報を画像で保存">
                            <i class="fas fa-camera d-table-cell align-middle"></i>
-                        </div> -->
+                        </div>
                         <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                            data-toggle="tooltip" title="入れ替え終了">
                            <i class="fas fa-check d-table-cell align-middle"></i>
@@ -351,14 +351,14 @@
                            <div class="tab-pane fade show active friendFleet_tab container-fluid px-0"
                               id="friendFleet_item1">
                               <div class="d-flex">
-                                 <div class="ml-2 mr-1 align-self-center">表示隻数：</div>
-                                 <select class="custom-select custom-select-sm display_ship_count">
+                                 <div class="ml-2 mr-1 align-self-center no_capture">表示隻数：</div>
+                                 <select class="custom-select custom-select-sm display_ship_count no_capture">
                                     <option value="2" selected>2</option>
                                     <option value="4">4</option>
                                     <option value="6">6</option>
                                  </select>
-                                 <div class="ml-1 align-self-center">隻</div>
-                                 <div class="ml-4 align-self-center">
+                                 <div class="ml-1 mr-2 align-self-center no_capture">隻</div>
+                                 <div class="ml-2 align-self-center">
                                     <span class="font_color_555">艦隊総制空値: </span>
                                     <span class="fleet_ap">0</span>
                                  </div>
@@ -450,7 +450,7 @@
                                                    src="./img/util/prof0.png">
                                                 <div class="dropdown-menu"></div>
                                              </div>
-                                             <div class="mx-1 btn_remove_plane opacity0 align-self-center">
+                                             <div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
                                                 <i class="fas fa-times"></i>
                                              </div>
                                           </div>
@@ -504,10 +504,10 @@
                            data-toggle="tooltip" title="敵艦隊全リセット">
                            <i class="fas fa-trash d-table-cell align-middle"></i>
                         </div>
-                        <!-- <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
+                        <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
                            title="敵艦隊入力情報を画像で保存">
                            <i class="fas fa-camera d-table-cell align-middle"></i>
-                        </div> -->
+                        </div>
                         <div class="ml-auto round_button align-self-center d-none btn_commit_trade"
                            data-toggle="tooltip" title="入れ替え終了">
                            <i class="fas fa-check d-table-cell align-middle"></i>
@@ -2385,6 +2385,9 @@
          </div>
          <div id="loading_line"></div>
       </div>
+   </div>
+   <div class="d-none">
+      <a id="getImage" href="" download="image.png"></a>
    </div>
 </body>
 

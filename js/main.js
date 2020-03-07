@@ -5724,6 +5724,7 @@ function btn_capture_Clicked($this) {
 
   // レンダリングズレ修正
   $targetContent.find('.custom-select').addClass('pt-0');
+  $targetContent.find('.custom-select option').addClass('d-none');
   $targetContent.find('.form-control').addClass('pt-0');
   $targetContent.find('.general_box').addClass('general_box_capture');
 
@@ -5732,13 +5733,14 @@ function btn_capture_Clicked($this) {
   html2canvas($targetContent[0], {
     onrendered: function (canvas) {
       const imgData = canvas.toDataURL();
-
+      downloadImage(imgData);
       // 戻す
       $targetContent.find('.custom-checkbox').removeClass('d-none');
       $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
       $no_captures.removeClass('d-none');
 
       $targetContent.find('.custom-select').removeClass('pt-0');
+      $targetContent.find('.custom-select option').removeClass('d-none');
       $targetContent.find('.form-control').removeClass('pt-0');
       $targetContent.find('.general_box').removeClass('general_box_capture');
 
@@ -5748,20 +5750,36 @@ function btn_capture_Clicked($this) {
         $('.lb_tab:first').tab('show');
       }
       window.scrollTo(0, prevY);
-
-      // 保存
-      const now = new Date();
-      const a = document.createElement('a');
-      const month = ('0' + (now.getMonth() + 1)).slice(-2);
-      const date = ('0' + now.getDate()).slice(-2);
-      const hours = ('0' + now.getHours()).slice(-2);
-      const minutes = ('0' + now.getMinutes()).slice(-2);
-      const sec = ('0' + now.getSeconds()).slice(-2);
-      a.href = imgData;
-      a.download = 'screenshot_' + now.getFullYear() + month + date + hours + minutes + sec + '.jpg';
-      a.click();
     }
   });
+}
+
+/**
+ * 保存処理
+ * @param {*} data 
+ */
+function downloadImage(data) {
+  const now = new Date();
+  const month = ('0' + (now.getMonth() + 1)).slice(-2);
+  const date = ('0' + now.getDate()).slice(-2);
+  const hours = ('0' + now.getHours()).slice(-2);
+  const minutes = ('0' + now.getMinutes()).slice(-2);
+  const sec = ('0' + now.getSeconds()).slice(-2);
+  const fname = 'screenshot_' + now.getFullYear() + month + date + hours + minutes + sec + '.jpg';
+
+  if (window.navigator.msSaveBlob) {
+    const encdata = atob(data.replace(/^.*,/, ''));
+    const outdata = new Uint8Array(encdata.length);
+    for (var i = 0; i < encdata.length; i++) {
+      outdata[i] = encdata.charCodeAt(i);
+    }
+    const blob = new Blob([outdata], ["image/png"]);
+    window.navigator.msSaveOrOpenBlob(blob, fname);
+  } else {
+    document.getElementById("getImage").href = data;
+    document.getElementById("getImage").download = fname;
+    document.getElementById("getImage").click();
+  }
 }
 
 /**
