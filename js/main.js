@@ -7647,6 +7647,14 @@ function varsion_Closed() {
   }
 }
 
+/**
+ * 使い方クリック時
+ */
+function site_manual_Clicked() {
+  $('#site_abstract_content').collapse('show');
+  setTimeout(() => { window.scrollTo(0, $('#site_abstract').offset().top - 20); }, 300);
+}
+
 /*==================================
     イベントハンドラ
 ==================================*/
@@ -7793,12 +7801,12 @@ $(function () {
   $('#modal_plane_stock').on('click', '#btn_save_stock', btn_save_stock_Clicked);
   $('#modal_plane_stock').on('click', '#btn_stock_reset', btn_stock_reset_Clicked);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
-  $('#modal_smart_menu').on('click', 'a[href^="#"]', function () { smart_menu_modal_link_Clicked($(this)); });
   $('#btn_preset_all').click(btn_preset_all_Clicked);
   $('#btn_auto_expand').click(btn_auto_expand_Clicked);
   $('#btn_twitter').click(btn_twitter_Clicked);
   $('#btn_deckBuilder').click(btn_deckBuilder_Clicked);
   $('#menu-small').click(menu_small_Clicked);
+  $('#site_manual').click(site_manual_Clicked);
   $('#result_content').on({
     mouseenter: function () { shoot_down_table_tbody_MouseEnter($(this)); },
     mouseleave: function () { shoot_down_table_tbody_MouseLeave($(this)); }
@@ -7817,6 +7825,7 @@ $(function () {
   }, '#enemy_shoot_down_tbody td');
   $('.sidebar-sticky a[href^="#"]').click(function () { return sidebar_Clicked($(this)); });
   $('#site_information a[href^="#"]').click(function () { return sidebar_Clicked($(this)); });
+  $('#modal_smart_menu a[href^="#"]').click(function () { return smart_menu_modal_link_Clicked($(this)); });
 
   // 画面サイズ変更
   $(window).resize(function () {
