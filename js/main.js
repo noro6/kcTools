@@ -481,7 +481,7 @@ function initialize(callback) {
       visibleImage: true,
       enemyDisplayImage: true,
       copyToClipbord: false,
-      airRaidMax: false,
+      airRaidMax: true,
       displayMode: {
         'modal_plane_select': 'single',
         'modal_ship_select': 'single',
@@ -743,6 +743,7 @@ function initialize(callback) {
   // クリップボード保存
   $('#clipbord_mode').prop('checked', setting.copyToClipbord);
   // 空襲被害最大
+  if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
   $('#air_raid_max').prop('checked', setting.airRaidMax);
   // 空スロット表示
   $('#empty_slot_invisible').prop('checked', setting.emptySlotInvisible);
