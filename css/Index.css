@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 body {
-  font-size: 0.875rem;
+  font-size: 14px;
   background: #f0ebe6;
   font-family: "Roboto", "Hiragino Sans W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 }
@@ -384,12 +384,11 @@ input[type="text"] { font-size: 12px; }
 .lb_tab { max-width: 500px; }
 .lb_infomation {
   font-size: 12px;
-  height: 32px;
 }
 /* 基地札 */
 .ohuda_select {
   font-size: 12px;
-  width: 72px;
+  width: 82px;
 }
 /* 制空半径簡易 */
 .lb_sammary {
@@ -402,12 +401,11 @@ input[type="text"] { font-size: 12px; }
   width: 156px;
 }
 .resource:hover {
-  opacity: 1;
   cursor: help;
 }
 .resource_img {
   width: 20px;
-  height: auto;
+  height: 20px;
 }
 /* 基地機体選択欄 */
 .lb_plane {
@@ -627,8 +625,7 @@ input[type="text"] { font-size: 12px; }
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */
-.plane_type_select_parent { width: 180px; }
-.plane_word_parent { width: 270px; }
+.search_basic{ width: 460px; }
 .toggle_display_type {
   background-color: #fff;
   border-radius: .25rem;
@@ -689,8 +686,6 @@ input[type="text"] { font-size: 12px; }
 /* --------------------------------
   艦娘選択モーダル #modal_ship_select
 -------------------------------- */
-.ship_type_select_parent { width: 180px; }
-.ship_word_parent { width: 270px; }
 #ship_table { overflow-y: auto; }
 #ship_tbody { max-height: 58vh; }
 #ship_thead {
@@ -714,8 +709,6 @@ input[type="text"] { font-size: 12px; }
 /* ----------------------------------
   敵艦選択モーダル #modal_enemy_select
 ------------------------------------ */
-.enemy_type_select_parent { width: 180px; }
-.enemy_word_parent { width: 270px; }
 .enemy_thead {
   position: -webkit-sticky;
   position: sticky;

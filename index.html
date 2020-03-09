@@ -205,9 +205,9 @@
                                                         ※ 被撃墜時、母港補充時の消費量ではありません。">
                                        <img src="./img/util/fuel.png" class="resource_img ml-auto" alt="fuel">
                                        <span class="ml-1 fuel">0</span>
-                                       <img src="./img/util/ammo.png" class="resource_img ml-3" alt="ammo">
+                                       <img src="./img/util/ammo.png" class="resource_img ml-2" alt="ammo">
                                        <span class="ml-1 ammo">0</span>
-                                       <img src="./img/util/bauxite.png" class="resource_img ml-3" alt="bauxite">
+                                       <img src="./img/util/bauxite.png" class="resource_img ml-2" alt="bauxite">
                                        <span class="ml-1 bauxite">0</span>
                                     </div>
                                  </div>
@@ -1148,6 +1148,14 @@
                                  <div>申し訳ありませんが、お使いのブラウザは本サイトのクリップボードへの保存機能に対応していません。</div>
                               </div>
                            </div>
+                           <div class="ml-3 my-3">
+                              <div class="custom-control custom-checkbox">
+                                 <input type="checkbox" class="custom-control-input" id="air_raid_max">
+                                 <label class="custom-control-label" for="air_raid_max">
+                                    基地空襲ボタンによる被撃墜被害を4機に固定する
+                                 </label>
+                              </div>
+                           </div>
                         </div>
                         <div class="my-3 mx-2 px-2 py-2 general_box">
                            <div class="h6"><i class="fas fa-calculator mr-2"></i>シミュレート設定</div>
@@ -1561,17 +1569,19 @@
             </div>
             <div class="modal-body">
                <div class="d-flex flex-wrap mb-1">
-                  <div class="my-1 input-group input-group-sm plane_type_select_parent">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text">種別</span>
+                  <div class="d-flex search_basic">
+                     <div class="my-1 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text">種別</span>
+                        </div>
+                        <select class="custom-select custom-select-sm" id="plane_type_select"></select>
                      </div>
-                     <select class="custom-select custom-select-sm" id="plane_type_select"></select>
-                  </div>
-                  <div class="my-1 mx-2 input-group input-group-sm plane_word_parent">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text">検索</span>
+                     <div class="my-1 mx-2 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text">検索</span>
+                        </div>
+                        <input type="text" class="form-control form-control-sm" id="plane_word" maxlength="30">
                      </div>
-                     <input type="text" class="form-control form-control-sm" id="plane_word" maxlength="30">
                   </div>
                   <div class="d-flex">
                      <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
@@ -1592,7 +1602,7 @@
                      <label class="custom-control-label" for="disp_equiped">配備済機体も表示</label>
                   </div>
                </div>
-               <div class="plane_table_content bg-white border-top pt-2">
+               <div class="bg-white border-top pt-2">
                   <div class="pb-1" id="plane_table">
                      <div class="plane_thead d-flex bg-white py-2">
                         <div class="plane_td_type" id="th_default" data-order="asc">
@@ -1640,19 +1650,21 @@
             </div>
             <div class="modal-body">
                <div class="d-flex flex-wrap mb-1">
-                  <div class="my-1 input-group input-group-sm ship_type_select_parent">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text">艦種</span>
+                  <div class="d-flex search_basic">
+                     <div class="my-1 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text">艦種</span>
+                        </div>
+                        <select class="custom-select custom-select-sm" id="ship_type_select">
+                           <option value="0">全て</option>
+                        </select>
                      </div>
-                     <select class="custom-select custom-select-sm" id="ship_type_select">
-                        <option value="0">全て</option>
-                     </select>
-                  </div>
-                  <div class="my-1 mx-2 input-group input-group-sm ship_word_parent">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text">検索</span>
+                     <div class="my-1 mx-2 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text">検索</span>
+                        </div>
+                        <input type="text" class="form-control form-control-sm" id="ship_word" maxlength="30">
                      </div>
-                     <input type="text" class="form-control form-control-sm" id="ship_word" maxlength="30">
                   </div>
                   <div class="d-flex">
                      <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
@@ -1699,19 +1711,21 @@
             </div>
             <div class="modal-body">
                <div class="d-flex flex-wrap mb-1">
-                  <div class="my-1 input-group input-group-sm enemy_type_select_parent">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text">艦種</span>
+                  <div class="d-flex search_basic">
+                     <div class="my-1 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text">艦種</span>
+                        </div>
+                        <select class="custom-select custom-select-sm" id="enemy_type_select">
+                           <option value="0">全て</option>
+                        </select>
                      </div>
-                     <select class="custom-select custom-select-sm" id="enemy_type_select">
-                        <option value="0">全て</option>
-                     </select>
-                  </div>
-                  <div class="my-1 mx-2 input-group input-group-sm enemy_word_parent">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text">検索</span>
+                     <div class="my-1 mx-2 input-group input-group-sm">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text">検索</span>
+                        </div>
+                        <input type="text" class="form-control form-control-sm" id="enemy_word" maxlength="30">
                      </div>
-                     <input type="text" class="form-control form-control-sm" id="enemy_word" maxlength="30">
                   </div>
                   <div class="d-flex">
                      <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
@@ -1794,21 +1808,29 @@
                                  <div class="align-self-center">
                                     <span id="enemy_pattern_air_power">0</span>
                                  </div>
+                                 <div class="ml-3 align-self-center enemy_pattern_label">陣形：</div>
+                                 <div class="align-self-center">
+                                    <span id="enemy_pattern_formation">単縦陣</span>
+                                 </div>
+                                 <div class="ml-3 align-self-center enemy_pattern_label">艦隊防空：</div>
+                                 <div class="align-self-center">
+                                    <span id="enemy_pattern_anti_air">0</span>
+                                 </div>
                               </div>
                               <div class="d-flex">
                                  <div class="align-self-center enemy_pattern_label">確保：</div>
                                  <div class="align-self-center">
                                     <span id="enemy_pattern_status0">0</span>
                                  </div>
-                                 <div class="ml-1 align-self-center enemy_pattern_label">優勢：</div>
+                                 <div class="ml-2 align-self-center enemy_pattern_label">優勢：</div>
                                  <div class="align-self-center">
                                     <span id="enemy_pattern_status1">0</span>
                                  </div>
-                                 <div class="ml-1 align-self-center enemy_pattern_label">均衡：</div>
+                                 <div class="ml-2 align-self-center enemy_pattern_label">均衡：</div>
                                  <div class="align-self-center">
                                     <span id="enemy_pattern_status2">0</span>
                                  </div>
-                                 <div class="ml-1 align-self-center enemy_pattern_label">劣勢：</div>
+                                 <div class="ml-2 align-self-center enemy_pattern_label">劣勢：</div>
                                  <div class="align-self-center">
                                     <span id="enemy_pattern_status3">0</span>
                                  </div>

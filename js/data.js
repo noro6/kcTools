@@ -1632,6 +1632,19 @@ const AVOID_TYPE = [
   { id: 3, name: "強" },
   { id: 4, name: "超" },
 ];
+// 陣形
+const FORMATION = [
+  {id: 1, name: "単縦陣", correction: 1.0},
+  {id: 2, name: "複縦陣", correction: 1.2},
+  {id: 3, name: "輪形陣", correction: 1.6},
+  {id: 4, name: "梯形陣", correction: 1.0},
+  {id: 5, name: "単横陣", correction: 1.0},
+  {id: 15, name: "第一警戒", correction: 1.0},
+  {id: 12, name: "第二警戒", correction: 1.1},
+  {id: 13, name: "第三警戒", correction: 1.5},
+  {id: 11, name: "第四警戒", correction: 1.0},
+]
+
 
 // 艦種毎装備可能カテゴリ(最低限)
 const LINK_SHIP_EQUIPMENT = [
@@ -2102,6 +2115,26 @@ let CHANGE_LOG = [
       },
     ],
   },
+  // {
+  //   id: "1.5.3", changes: [
+  //     {
+  //       type: 0, title: "機体選択画面内の対空値ソート機能を強化改修しました。",
+  //       content: "表示を「一列」にしている場合、装備スペック対空値（従来通り）、出撃時の対空値、防空時の対空値それぞれでソートできます。"
+  //     },
+  //     {
+  //       type: 0, title: "基地空襲被害を4機固定にできるようになりました。",
+  //       content: "「詳細設定」欄から、該当のオプションのON/OFFを切り替えられます。"
+  //     },
+  //     {
+  //       type: 0, title: "海域選択画面にて、陣形敵艦隊防空値の表示を追加しました。",
+  //       content: ""
+  //     },
+  //     {
+  //       type: 2, title: "表示・レイアウトの修正を行いました。",
+  //       content: "特定の環境において、想定していない描画がなされているケースがありましたので対策を入れました。また、一部表記揺れのあった文言を修正しました。"
+  //     },
+  //   ],
+  // },
 ];
 
-const LAST_UPDATE_DATE = "2020/03/08";
+const LAST_UPDATE_DATE = "2020/03/10";
