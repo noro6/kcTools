@@ -85,6 +85,10 @@ input[type="text"] { font-size: 12px; }
   height: 20px;
   width: auto;
 }
+.img-size-20_lock {
+  height: 20px;
+  width: 20px;
+}
 .img-size-25 {
   width: 25px;
   height: auto;
@@ -633,22 +637,24 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   transition: .4s;
 }
-.toggle_display_type:hover { 
+.toggle_display_type:hover {
   background-color: #f6f6f6;
-  color: #999; 
+  color: #999;
 }
-.toggle_display_type.selected { 
+.toggle_display_type.selected {
   background-color: #eee;
-  color: #000; 
+  color: #000;
 }
 .plane_thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-}
-.plane_thead div:hover {
-  cursor: pointer;
-  font-weight: bold;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+  color: #666;
+  background-color: #e9ecef;
+  font-size: 11px;
+  padding: .1rem;
 }
 .sorted { font-weight: bold; }
 #plane_table { overflow-y: auto; }
@@ -1083,6 +1089,7 @@ input[type="text"] { font-size: 12px; }
   所持装備 #plane_stock
 -------------------------------- */
 .stock_word_parent { width: 270px; }
+#plane_type_select_parent { width: 200px; }
 #plane_stock_table {
   font-size: 12px;
   text-align: center;

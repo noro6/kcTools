@@ -487,6 +487,9 @@ function initialize(callback) {
         'modal_ship_select': 'single',
         'modal_enemy_select': 'single'
       },
+      orderBy: {
+        'modal_plane_select': ['default', 'desc'],
+      }
     };
   }
 
@@ -737,7 +740,14 @@ function initialize(callback) {
     });
   }
   else $('.toggle_display_type[data-mode="single"]').addClass('selected');
-
+  // ソート
+  if (!setting.orderBy) {
+    setting.orderBy = { 'modal_plane_select': ['default', 'desc'] };
+  }
+  Object.keys(setting.orderBy).forEach((key) => {
+    $(`#${key} .sort_select`).val(setting.orderBy[key][0]);
+    $(`#${key} .order_` + setting.orderBy[key][1]).prop('checked', true);
+  });
   // 自動保存
   $('#auto_save').prop('checked', setting.autoSave);
   // クリップボード保存
@@ -1339,6 +1349,7 @@ function createPlaneTable(planes) {
   const planeStock = loadPlaneStock();
   const dispInStock = setting.inStockOnly;
   const dispEquiped = setting.visibleEquiped;
+  const sortKey = $('#plane_sort_select').val();
 
   if (displayMode === "multi") {
     $modal.addClass('modal-xl');
@@ -1439,8 +1450,8 @@ function createPlaneTable(planes) {
     $rangeDiv.className = 'plane_td_basic align-self-center';
     $rangeDiv.textContent = plane.radius;
 
-    // 複数表示時カテゴリ分け
-    if (displayMode === "multi" && prevType !== plane.type) {
+    // 複数表示時分割
+    if (displayMode === "multi" && prevType !== plane.type && sortKey === 'default') {
       const $typeDiv = document.createElement('div');
       $typeDiv.className = 'd-flex w-100 mt-3 mb-1';
 
@@ -6340,9 +6351,9 @@ function enemy_ap_select_parent_Close($this) {
 
 /**
  * 機体選択欄 機体カテゴリ変更時
- * @param {JqueryDomObject} $this
  */
-function plane_type_select_Changed($this) {
+function plane_type_select_Changed() {
+  const $this = $('#plane_type_select');
   // 選択時のカテゴリ
   let selectedType = castInt($this.val());
   // ベース機体一覧
@@ -6412,36 +6423,34 @@ function plane_type_select_Changed($this) {
   }
 
   // ソート反映
-  const sorted = $('#plane_table').find('.sorted');
-  const displayMode = $('#modal_plane_select').find('.toggle_display_type.selected').data('mode');
-  if (displayMode === 'single' && sorted.data('order')) {
-    const isAsc = sorted.data('order').includes('asc');
-    switch (sorted.attr('id')) {
-      case 'th_name':
-        if (isAsc) org.sort((a, b) => a.name - b.name);
-        else org.sort((a, b) => -(a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
-        break;
-      case 'th_aa':
-        // 防空モード時防空時対空ソート
-        if (isDefMode) {
-          if (isAsc) org.sort((a, b) => (a.antiAir + a.interception + 2.0 * a.antiBomber) - (b.antiAir + b.interception + 2.0 * b.antiBomber));
-          else org.sort((a, b) => (b.antiAir + b.interception + 2.0 * b.antiBomber) - (a.antiAir + a.interception + 2.0 * a.antiBomber));
-        }
-        // 出撃時対空ソート
-        else {
-          if (isAsc) org.sort((a, b) => (a.antiAir + 1.5 * a.interception) - (b.antiAir + 1.5 * b.interception));
-          else org.sort((a, b) => (b.antiAir + 1.5 * b.interception) - (a.antiAir + 1.5 * a.interception));
-        }
-        break;
-      case 'th_range':
-        if (isAsc) org.sort((a, b) => a.radius - b.radius);
-        else org.sort((a, b) => b.radius - a.radius);
-        break;
-      default:
-        org.sort((a, b) => a.type - b.type);
-        break;
-    }
+  const sortKey = $('#plane_sort_select').val();
+  const isAsc = $('#plane_asc').prop('checked');
+
+  $('#plane_asc').prop('disabled', false);
+  $('#plane_desc').prop('disabled', false);
+  switch (sortKey) {
+    case 'battle_anti_air':
+      if (isAsc) org.sort((a, b) => (a.antiAir + 1.5 * a.interception) - (b.antiAir + 1.5 * b.interception));
+      else org.sort((a, b) => (b.antiAir + 1.5 * b.interception) - (a.antiAir + 1.5 * a.interception));
+      break;
+    case 'defense_anti_air':
+      if (isAsc) org.sort((a, b) => (a.antiAir + a.interception + 2.0 * a.antiBomber) - (b.antiAir + b.interception + 2.0 * b.antiBomber));
+      else org.sort((a, b) => (b.antiAir + b.interception + 2.0 * b.antiBomber) - (a.antiAir + a.interception + 2.0 * a.antiBomber));
+      break;
+    case 'radius':
+      if (isAsc) org.sort((a, b) => a.radius - b.radius);
+      else org.sort((a, b) => b.radius - a.radius);
+      break;
+    case 'default':
+      $('#plane_asc').prop('disabled', true);
+      $('#plane_desc').prop('disabled', true);
+      break;
+    default:
+      if (isAsc) org.sort((a, b) => a[sortKey] - b[sortKey]);
+      else org.sort((a, b) => b[sortKey] - a[sortKey]);
+      break;
   }
+
   createPlaneTable(org);
 }
 
@@ -6450,7 +6459,7 @@ function plane_type_select_Changed($this) {
  */
 function plane_word_TextChanged() {
   if (timer !== false) clearTimeout(timer);
-  timer = setTimeout(function () { plane_type_select_Changed($('#plane_type_select')); }, 250);
+  timer = setTimeout(function () { plane_type_select_Changed(); }, 250);
 }
 
 /**
@@ -6459,7 +6468,7 @@ function plane_word_TextChanged() {
 function disp_in_stock_Checked_Chenged() {
   setting.inStockOnly = $('#disp_in_stock').prop('checked');
   saveLocalStrage('setting', setting);
-  plane_type_select_Changed($('#plane_type_select'));
+  plane_type_select_Changed();
 }
 
 /**
@@ -6468,7 +6477,7 @@ function disp_in_stock_Checked_Chenged() {
 function disp_equiped_Checked_Chenged() {
   setting.visibleEquiped = $('#disp_equiped').prop('checked');
   saveLocalStrage('setting', setting);
-  plane_type_select_Changed($('#plane_type_select'));
+  plane_type_select_Changed();
 }
 
 /**
@@ -6486,35 +6495,6 @@ function btn_remove_lb_plane_Clicked($this) {
 }
 
 /**
- * 機体選択欄 ヘッダクリック時
- * @param {JqueryDomObject} $this
- */
-function plane_thead_Clicked($this) {
-  const sortKey = $this.attr('id');
-  const order = $this.data('order');
-  const nextOrder = order === 'asc' ? 'desc' : 'asc';
-
-  // 順序反転
-  $('.plane_thead div').removeClass('sorted');
-  $('.plane_thead').find('.fas:not(.fa-sort)').addClass('d-none');
-  $('.plane_thead').find('.fa-sort').removeClass('d-none');
-  $this.parent().find('div').removeData();
-
-  if (sortKey !== 'th_default') {
-    $this
-      .data('order', nextOrder)
-      .addClass('sorted');
-    $this.find('.fas:first')
-      .removeClass('d-none fa-sort-' + (order === 'asc' ? 'up' : 'down'))
-      .addClass('fa-sort-' + (order === 'asc' ? 'down' : 'up'));
-    $this.find('.fa-sort').addClass('d-none');
-  }
-
-  // 再度カテゴリ検索をかけて反映する
-  $('#plane_type_select').change();
-}
-
-/**
  * 各種選択欄　表示形式クリック時
  * @param {JqueryDomObject} $this
  */
@@ -6526,6 +6506,20 @@ function toggle_display_type_Clicked($this) {
   setting.displayMode[$parentModal.attr('id')] = $this.data('mode');
   saveLocalStrage('setting', setting);
   $parentModal.find('select').change();
+}
+
+/**
+ * 各種選択欄　ソート変更時
+ * @param {JqueryDomObject} $this
+ */
+function sort_Changed($this) {
+  const $parentModal = $this.closest('.modal');
+  const sortKey = $parentModal.find('.sort_select').val();
+  const isAsc = $parentModal.find('.order_asc').prop('checked');
+  setting.orderBy[$parentModal.attr('id')] = [sortKey, isAsc ? 'asc' : 'desc'];
+
+  saveLocalStrage('setting', setting);
+  $parentModal.find('select:first').change();
 }
 
 /**
@@ -6927,7 +6921,7 @@ function btn_expand_enemies() {
   else if (isDefMode && node !== '空襲') {
     isDefMode = false;
     $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) === 0) $(e).val(-1); });
-    $target = $('.battle_content:first()');
+    $target = $('.battle_content:first');
   }
 
   // 元の敵編成解除
@@ -7765,11 +7759,13 @@ $(function () {
   $('#plane_stock').on('input', '#stock_word', stock_word_TextChanged);
   $('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
   $('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
-  $('#modal_plane_select').on('click', '.plane_thead div', function () { plane_thead_Clicked($(this)); });
-  $('#modal_plane_select').on('change', '#plane_type_select', function () { plane_type_select_Changed($(this)); });
+  $('#modal_plane_select').on('change', '#plane_type_select', plane_type_select_Changed);
   $('#modal_plane_select').on('click', '#disp_in_stock', disp_in_stock_Checked_Chenged);
   $('#modal_plane_select').on('click', '#disp_equiped', disp_equiped_Checked_Chenged);
   $('#modal_plane_select').on('input', '#plane_word', plane_word_TextChanged);
+  $('#modal_plane_select').on('change', '#plane_sort_select', function () { sort_Changed($(this)); });
+  $('#modal_plane_select').on('click', '#plane_asc', function () { sort_Changed($(this)); });
+  $('#modal_plane_select').on('click', '#plane_desc', function () { sort_Changed($(this)); });
   $('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
   $('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
   $('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
