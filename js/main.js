@@ -1443,7 +1443,19 @@ function createPlaneTable(planes) {
       $aaDiv.dataset.toggle = 'tooltip';
       $aaDiv.title = '出撃時:' + nmAA + ' , 防空時:' + defAA;
     }
-    $aaDiv.textContent = plane.antiAir;
+
+    // 対空の表示トグル
+    switch (sortKey) {
+      case 'battle_anti_air':
+        $aaDiv.textContent = nmAA;
+        break;
+      case 'defense_anti_air':
+        $aaDiv.textContent = defAA;
+        break;
+      default:
+        $aaDiv.textContent = plane.antiAir;
+        break;
+    }
 
     // 半径
     const $rangeDiv = document.createElement('div');
@@ -1717,17 +1729,15 @@ function createEnemyTable(type) {
   const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
   const searchWord = $('#enemy_word').val().trim();
 
-  // 第1艦種(type[0]行目)順で取得後、無印idソート（イロハ級のみ）
-  for (const typeObj of ENEMY_TYPE) {
-    const tmp = ENEMY_DATA.filter(x => x.type[0] === typeObj.id && x.type[0] < 100);
+  for (const typeObject of ENEMY_TYPE) {
+    // 姫級以外取得
+    if (typeObject.id === 1) continue;
+    const tmp = ENEMY_DATA.filter(x => x.type[0] === typeObject.id);
     dispData = dispData.concat(tmp.sort((a, b) => a.orig > b.orig ? 1 : a.orig < b.orig ? -1 : a.id - b.id));
   }
-
-  // IDソート(姫系)
-  for (const typeObj of ENEMY_TYPE) {
-    const tmp = ENEMY_DATA.filter(x => x.type[0] === typeObj.id && x.type[0] >= 100);
-    dispData = dispData.concat(tmp.sort((a, b) => a.id > b.id ? 1 : -1));
-  }
+  // 姫系取得、IDソートして結合
+  const princesses = ENEMY_DATA.filter(x => x.type[0] === 1);
+  dispData = dispData.concat(princesses.sort((a, b) => a.id > b.id ? 1 : -1));
 
   if (displayMode === "multi") {
     $modal.addClass('modal-xl');
@@ -5606,11 +5616,15 @@ function modal_Closed($this) {
  * @param {JqueryDomObject} $this
  */
 function sidebar_Clicked($this) {
-  const speed = 300;
   const href = $this.attr("href");
   const target = $(href === "#" || href === "" ? 'html' : href);
-  const position = target.offset().top - 60;
-  $('body,html').animate({ scrollTop: position }, speed, 'swing');
+
+  if (href === '#first_time_content') first_time_Clicked();
+  else if (href === '#site_manual_content') site_manual_Clicked();
+  else if (href === '#site_abstract_content' || href === '#site_FAQ_content' || href === '#site_history_content') scrollContent($(href));
+  else {
+    $('body,html').animate({ scrollTop: target.offset().top - 60 }, 300, 'swing');
+  }
   return false;
 }
 
@@ -7287,7 +7301,18 @@ function stock_tr_Clicked($this) {
   $tr.find('.plane_status_radius').text(plane.radius);
   $tr.find('.plane_status_interception').text(plane.interception);
   $tr.find('.plane_status_anti_bomber').text(plane.antiBomber);
-  $tr.find('.plane_status_avoid').text(AVOID_TYPE.find(v => v.id === plane.avoid).name);
+
+  const $avoid = $tr.find('.plane_status_avoid');
+  const avoid = AVOID_TYPE.find(v => v.id === plane.avoid);
+  if (avoid) {
+    $avoid.text(avoid.name);
+    $avoid.attr('title', '割合撃墜補正：' + avoid.adj[0] + ', 固定撃墜補正：' + avoid.adj[1]);
+  }
+  else {
+    $avoid.text('なし');
+    $avoid.attr('title', '割合撃墜補正：1.0, 固定撃墜補正：1.0');
+  }
+
   $modal.find('#edit_id').text(plane.id);
   $modal.find('.plane_status_name').text(plane.name);
   $modal.find('#stock_sum').val(getArraySum(stockData.num));
@@ -7638,11 +7663,7 @@ function menu_small_Clicked() {
  * @param {JqueryDomObject} $this
  */
 function smart_menu_modal_link_Clicked($this) {
-  const speed = 300;
-  const href = $this.attr("href");
-  const target = $(href === "#" || href === "" ? 'html' : href);
-  const position = target.offset().top - 60;
-  $('body,html').animate({ scrollTop: position }, speed, 'swing');
+  sidebar_Clicked($this);
   setTimeout(() => { $('#modal_smart_menu').modal('hide'); }, 220);
   return false;
 }
@@ -7658,11 +7679,32 @@ function varsion_Closed() {
 }
 
 /**
+ * 初めての方クリック時
+ */
+function first_time_Clicked() {
+  $('#site_abstract_content').collapse('show');
+  setTimeout(() => { $('body,html').animate({ scrollTop: $('#first_time_content').offset().top - 80 }, 300, 'swing'); }, 200);
+  return false;
+}
+
+/**
  * 使い方クリック時
  */
 function site_manual_Clicked() {
   $('#site_abstract_content').collapse('show');
-  setTimeout(() => { window.scrollTo(0, $('#site_abstract').offset().top - 20); }, 300);
+  setTimeout(() => { $('body,html').animate({ scrollTop: $('#site_manual_content').offset().top - 80 }, 300, 'swing'); }, 200);
+  return false;
+}
+
+/**
+ * 指定したidを持つ要素までスクロール
+ * 折り畳みなら開く
+ * @param {JqueryDomObject} $destination
+ */
+function scrollContent($destination) {
+  $destination.collapse('show');
+  setTimeout(() => { $('body,html').animate({ scrollTop: $destination.offset().top - 80 }, 300, 'swing'); }, 250);
+  return false;
 }
 
 /*==================================
@@ -7695,28 +7737,15 @@ $(function () {
   $(document).on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
   $(document).on('click', '.btn_plane_preset', function () { btn_plane_preset_Clicked($(this)); });
   $(document).on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
-  $(document).on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
-  $(document).on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
-  $(document).on('click', '.btn_capture', function () { btn_capture_Clicked($(this)); });
-  $(document).on('click', '.btn_reset_content', function () { btn_reset_content_Clicked($(this)); });
-  $(document).on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
-  $(document).on('click', '.btn_commit_trade', commit_content_order);
-  $(document).on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
-  $(document).on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
-  $(document).on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
-  $(document).on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });
-  $(document).on('click', '.btn_slot_default', function () { btn_slot_default_Clicked($(this)); });
-  $(document).on('click', '.btn_slot_min', btn_slot_min_Clicked);
-  $(document).on('input', '.coll_slot_range', function () { coll_slot_range_Changed($(this)); });
-  $(document).on('input', '.coll_slot_input', function () { coll_slot_input_Changed($(this)); });
-  $(document).on('focus', '.coll_slot_input', function () { $(this).select(); });
-  $(document).on('click', '.btn_remodel', function () { btn_remodel_Clicked($(this)); });
-  $(document).on('click', '.btn_fighter_prof_max', btn_fighter_prof_max_Clicked);
-  $(document).on('click', '.btn_prof', function () { btn_prof_Clicked($(this)); });
-  $(document).on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
-  $(document).on('click', '.plane_unlock', function () { plane_unlock_Clicked($(this)); });
   $(document).on('input', '.preset_name', function () { preset_name_Changed($(this)); });
   $(document).on('blur', '.preset_name', function () { preset_name_Changed($(this)); });
+  $('#main').on('click', '.btn_capture', function () { btn_capture_Clicked($(this)); });
+  $('#main').on('click', '.btn_reset_content', function () { btn_reset_content_Clicked($(this)); });
+  $('#main').on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
+  $('#main').on('click', '.btn_commit_trade', commit_content_order);
+  $('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
+  $('#landBase').on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
+  $('#landBase').on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
   $('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });
   $('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
   $('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
@@ -7729,6 +7758,8 @@ $(function () {
   $('#friendFleet_content').on('click', '.ship_disabled', function () { ship_disabled_Changed($(this)); });
   $('#friendFleet_content').on('click', '#union_fleet', calculate);
   $('#friendFleet_content .nav-link[data-toggle="tab"]').on('shown.bs.tab', fleet_select_tab_Clicked);
+  $('#friendFleet_content').on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
+  $('#friendFleet_content').on('click', '.plane_unlock', function () { plane_unlock_Clicked($(this)); });
   $('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
   $('#enemyFleet_content').on('change', '.formation', calculate);
   $('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });
@@ -7739,6 +7770,7 @@ $(function () {
   $('#enemyFleet_content').on('click', '.btn_enemy_preset', function () { btn_enemy_preset_Clicked($(this)); });
   $('#enemyFleet_content').on('change', '#battle_count', function () { battle_count_Changed($(this)); });
   $('#enemyFleet_content').on('change', '#landBase_target', calculate);
+  $('#result').on('click', '#btn_calculate', calculate);
   $('#result_content').on('click', '#display_battle_tab .nav-item', function () { display_battle_tab_Changed($(this)); });
   $('#result_content').on('click', '#empty_slot_invisible', calculate);
   $('#result_content').on('click', '#display_setting .custom-control-input', display_result_Changed);
@@ -7813,13 +7845,29 @@ $(function () {
   $('#modal_plane_stock').on('input', '.stock_num', function () { stock_Changed($(this)); });
   $('#modal_plane_stock').on('click', '#btn_save_stock', btn_save_stock_Clicked);
   $('#modal_plane_stock').on('click', '#btn_stock_reset', btn_stock_reset_Clicked);
+  $('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
+  $('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
+  $('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });
+  $('#modal_collectively_setting').on('click', '.btn_slot_min', btn_slot_min_Clicked);
+  $('#modal_collectively_setting').on('click', '.btn_slot_default', function () { btn_slot_default_Clicked($(this)); });
+  $('#modal_collectively_setting').on('input', '.coll_slot_range', function () { coll_slot_range_Changed($(this)); });
+  $('#modal_collectively_setting').on('input', '.coll_slot_input', function () { coll_slot_input_Changed($(this)); });
+  $('#modal_collectively_setting').on('focus', '.coll_slot_input', function () { $(this).select(); });
+  $('#modal_collectively_setting').on('click', '.btn_remodel', function () { btn_remodel_Clicked($(this)); });
+  $('#modal_collectively_setting').on('click', '.btn_fighter_prof_max', btn_fighter_prof_max_Clicked);
+  $('#modal_collectively_setting').on('click', '.btn_prof', function () { btn_prof_Clicked($(this)); });
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#btn_preset_all').click(btn_preset_all_Clicked);
   $('#btn_auto_expand').click(btn_auto_expand_Clicked);
   $('#btn_twitter').click(btn_twitter_Clicked);
   $('#btn_deckBuilder').click(btn_deckBuilder_Clicked);
-  $('#menu-small').click(menu_small_Clicked);
-  $('#site_manual').click(site_manual_Clicked);
+  $('#smart_menu').click(menu_small_Clicked);
+  $('#main').on('click', '.btn_first_time', first_time_Clicked);
+  $('#main').on('click', '.btn_site_manual', site_manual_Clicked);
+  $('#Navbar').on('click', 'a[href^="#"]', function () { return sidebar_Clicked($(this)); });
+  $('#site_information').on('click', 'a[href^="#"]', function () { return sidebar_Clicked($(this)); });
+  $('#modal_smart_menu').on('click', 'a[href^="#"]', function () { return smart_menu_modal_link_Clicked($(this)); });
+
   $('#result_content').on({
     mouseenter: function () { shoot_down_table_tbody_MouseEnter($(this)); },
     mouseleave: function () { shoot_down_table_tbody_MouseLeave($(this)); }
@@ -7836,9 +7884,6 @@ $(function () {
     mouseenter: function () { enemy_shoot_down_table_tbody_MouseEnter($(this)); },
     mouseleave: function () { enemy_shoot_down_table_tbody_MouseLeave($(this)); }
   }, '#enemy_shoot_down_tbody td');
-  $('.sidebar-sticky a[href^="#"]').click(function () { return sidebar_Clicked($(this)); });
-  $('#site_information a[href^="#"]').click(function () { return sidebar_Clicked($(this)); });
-  $('#modal_smart_menu a[href^="#"]').click(function () { return smart_menu_modal_link_Clicked($(this)); });
 
   // 画面サイズ変更
   $(window).resize(function () {
@@ -7865,6 +7910,7 @@ $(function () {
     handle: '.trade_enabled',
     animation: 200,
     scroll: true,
+    onEnd: main_contents_Sortable_End
   });
   Sortable.create($('#battle_result')[0], {
     handle: '.drag_handle',

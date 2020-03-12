@@ -25,7 +25,7 @@
    <script src="./js/html2canvas.min.js"></script>
    <script src="./js/bootstrap.bundle.js"></script>
    <script src="./js/data.js"></script>
-   <script src="./js/main.min.js"></script>
+   <script src="./js/main.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -37,7 +37,7 @@
 
 <body>
    <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow justify-content-start">
-      <div class="d-block d-xl-none text-light px-2 pt-3 py-2 cur_pointer">
+      <div class="d-block d-xl-none text-light px-2 pt-3 py-2 cur_pointer" id="smart_menu">
          <div id="menu-small">
             <div></div>
             <div></div>
@@ -90,7 +90,7 @@
                         <li class="nav-item" id="li_input_data">
                            <a class="nav-link" href="#input_data">入力情報</a>
                         </li>
-                        <li class="nav-item" id="li_config">
+                        <li class="nav-item" id="li_plane_stock">
                            <a class="nav-link" href="#plane_stock">所持装備</a>
                         </li>
                         <li class="nav-item" id="li_config">
@@ -98,6 +98,27 @@
                         </li>
                      </ul>
                   </li>
+                  <div class="my-3 mx-3 border-bottom border-secondary"></div>
+                  <li class="nav-item">
+                     <ul class="nav flex-column mt-1 mb-2 ml-3">
+                        <li class="nav-item">
+                           <a class="nav-link" href="#site_abstract_content">サイトについて</a>
+                        </li>
+                        <li class="nav-item">
+                           <a class="nav-link" href="#first_time_content">初めての方へ</a>
+                        </li>
+                        <li class="nav-item">
+                           <a class="nav-link" href="#site_manual_content">使い方</a>
+                        </li>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="#site_FAQ_content">よくある質問</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="#site_history_content">更新履歴</a>
+                  </li>
+               </ul>
+               </li>
                </ul>
             </div>
          </nav>
@@ -105,14 +126,19 @@
             <div id="main">
                <div id="main_header">
                   <div class="d-flex pt-3">
-                     <h1 class="mt-3 ml-1">
-                        <span id="main_title">制空権シミュレータ</span>
+                     <h1 class="ml-1" id="main_title">
+                        <span>制空権シミュレータ</span>
                         <span class="font_size_20 ml-2">
                            v.<span id="latest_version">0.0.0</span>
                         </span>
                      </h1>
-                     <div class="mt-3 ml-auto">
-                        <button class="btn btn-sm btn-outline-info" id="site_manual">
+                     <div class="ml-auto align-self-center">
+                        <button class="btn btn-sm btn-outline-success btn_first_time">
+                           初めての方
+                        </button>
+                     </div>
+                     <div class="ml-1 align-self-center">
+                        <button class="btn btn-sm btn-outline-info btn_site_manual">
                            ツールの使い方
                         </button>
                      </div>
@@ -716,7 +742,11 @@
                         <div class="h5 mb-0 align-self-center">
                            <span class="content_title align-middle">計算結果</span>
                         </div>
-                        <div class="ml-auto round_button align-self-center d-table btn_capture" data-toggle="tooltip"
+                        <div class="ml-auto round_button align-self-center d-table" id="btn_calculate"
+                           data-toggle="tooltip" title="再計算を行う">
+                           <i class="fas fa-redo-alt d-table-cell align-middle"></i>
+                        </div>
+                        <div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
                            title="計算結果を画像で保存">
                            <i class="fas fa-camera d-table-cell align-middle"></i>
                         </div>
@@ -1281,10 +1311,42 @@
                               </div>
                               <div class="pl-3">
                                  道中戦闘や、基地航空隊による制空削り、敵の対空砲火による撃墜をある程度考慮したシミュレーションが可能です。
-                                 また、基地空襲に対する防空時の制空計算も可能です。
+                                 また、基地空襲時の防空制空計算も可能です。
                               </div>
                            </div>
-                           <div class="my-4">
+                           <div class="my-4" id="first_time_content">
+                              <p class="h6">初めての方へ</p>
+                              <div class="mt-2 pl-3">
+                                 サイト訪問ありがとうございます。初めて本シミュレータを利用するにあたり、ここではどのようなことが分かるのかを簡単に紹介します。
+                              </div>
+                              <div class="mt-1 pl-3">
+                                 シミュレータでは入力された編成、装備、敵編成の情報から、次の要素を計算します。
+                                 <div class="ml-3">■ 基地航空隊による敵艦載機(制空値)の削り</div>
+                                 <div class="ml-3">■ 道中戦闘を含めた各戦闘毎の制空状態</div>
+                                 <div class="ml-3">■ 道中戦闘を含めた各戦闘毎の味方艦載機の減少値</div>
+                                 <div class="ml-3">■ 全戦闘終了時の艦載機の全滅率</div>
+                                 <div class="ml-3">■ 戦闘毎の敵艦隊の艦載機の減少値</div>
+                                 <div class="ml-3">■ 基地防空時の制空状態</div>
+                              </div>
+                              <div class="mt-1 pl-3">
+                                 特に、味方艦載機の減少値については、制空状態による艦載機の撃墜のほか、軽巡ツ級などによる<span
+                                    class="font_size_16_b">敵艦隊の対空砲火による艦載機の撃墜</span>の計算も行っています。そのため、道中戦闘を正しく設定した場合、普通は味方艦隊の艦載機をあらかじめ減らしておくなどの調整は不要です。
+                              </div>
+                              <div class="pl-3">
+                                 シミュレータでは上記のような結果表示を、検証によって得られた計算式を元に実際の航空戦と同様の処理を複数回(通常5000回)実行して導出しています。
+                                 分かりやすく言えば、<span
+                                    class="font-weight-bold">出撃を5000回繰り返した結果を集計して表示</span>しているイメージです。そのため、再計算が行われる度に計算結果が多少変化します。完全に正確な数値が求まるものではないことに注意してください。
+                              </div>
+                              <div class="pl-3">
+                                 また、現在、実装に必要な資料がないため、次の要素が計算できません。ご注意ください。
+                                 <div class="ml-3">■ 噴式フェーズの被撃墜</div>
+                                 <div class="ml-3">■ 敵対空CI発動時の撃墜補正</div>
+                              </div>
+                              <div class="mt-2 pl-3">
+                                 以上の点をふまえ、本シミュレータを利用していただければ幸いです。また、時間があれば、下記の「使い方」に目を通してみてください。
+                              </div>
+                           </div>
+                           <div class="my-4" id="site_manual_content">
                               <p class="h6">使い方</p>
                               <div>簡単な使い方や機能は下記動画を参照してください。</div>
                               <div class="px-3 mt-3">
@@ -1423,7 +1485,7 @@
                               </div>
                               <div class="pl-3">
                                  明らかに誤っている表記やデータを見かけたら、<a href="https://odaibako.net/u/noro_006"
-                                    　target="_blank">こちら</a>などからご報告お願いします。
+                                    target="_blank">こちら</a>などからご報告お願いします。
                               </div>
                               <div class="pl-3 mt-2">
                                  上記を含めた様々な要因により、シミュレート結果と実際の制空権結果が一致しない可能性があります。
@@ -1527,6 +1589,134 @@
                                     target="_blank">
                                     対空射撃回避参考データ3
                                  </a>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="site_FAQ">
+                     <div class="my-2 d-flex">
+                        <div class="h6 mb-0 align-self-center">
+                           <span class="content_title align-middle">よくある質問</span>
+                        </div>
+                        <div class="ml-auto rounded-circle round_button btn_cllapse align-self-center d-table"
+                           data-toggle="collapse" data-target="#site_FAQ_content">
+                           <i class="fas fa-chevron-up d-table-cell align-middle"></i>
+                        </div>
+                     </div>
+                     <div class="collapse show collapse_content" id="site_FAQ_content">
+                        <div class="border-top"></div>
+                        <div class="d-flex flex-column px-3" id="site_FAQ_body">
+                           <div class="mt-4">・本当によくあったり、勝手によくある扱いにした質問とその回答</div>
+                           <div class="mt-1 mb-3 border-bottom">
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_1">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. なにができるの？</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_1">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    基地航空隊による敵艦載機(制空値)の削り、道中戦闘を含めた各戦闘毎の制空状態、道中戦闘を含めた各戦闘毎の味方艦載機の減少値、全戦闘終了時の艦載機の全滅率、戦闘毎の敵艦隊の艦載機の減少、基地防空時の制空状態などが計算できます。その他各種機能や使い方については、「サイトについて
+                                    > 使い方」を参照してください。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_2">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. なにができないの？</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_2">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    噴式フェーズの被撃墜、敵対空CI発動時の撃墜補正の計算が現状資料不足で未実装です。また、基地航空隊を分散させて別のマスに同時に飛ばす機能はまだ未実装です。（第一基地航空隊をAマスに、第二基地航空隊をボスマスに飛ばす…など）
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_3">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 防空の計算がしたい ／ 基地の札が防空にできない。</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_3">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    ゲーム同様、基地に機体を1つ以上配備すると、防空札を選択できるようになり、これを選ぶと防空計算ができるようになります。または、艦隊一覧から空襲時の編成を展開した場合も防空計算モードになります。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_4">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 味方艦隊欄が消えた</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_4">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A. 防空計算モードでは味方艦隊欄が非表示になります。基地の防空札を全て待機か、集中等にし、防空計算モードを解除してください。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_5">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 同じ制空値の機体を入れ替えただけなのに計算結果が微妙に変わるんだけど？</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_5">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    機体を入れ替えるたび計算を行っているからです。本シミュレータは、仮想的に出撃を5000回繰り返した結果を集計し表示しています。そのため、数値には多少のぶれが発生します。なお、この回数は「詳細設定」欄にて変更可能ですが、あまり数を増やしすぎると計算に時間がかかってレスポンスが悪くなります。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_6">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 優勢確実だったり、全滅率もかなり低いはずなのに、出撃したら優勢取れなかったり全滅した…</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_6">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    過去のケースでは、原因として敵編成が正しく入力されていない（甲なのに丙の編成を選んでいた、敵駆逐などを省略して入力していた）ケースが何件かありました。また、基地空襲の被害（空襲発生時、各航空隊の最上部スロットに1～4機の被害が発生した結果、実際の基地の制空状態が違っていた）を考慮していないケースもありました。それらの要因により、諸所の確率が大きく変わることがあります。今一度、編成、装備、敵編成を確認してみてください。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_7">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 計算結果の「各戦闘開始時の搭載数の推移」って何の数値？</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_7">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    シミュレートにより複数回出撃を行った結果の平均値です。悪い制空状態を取り続けた場合や、攻撃機系などは、この数値から大きくブレることがあります。おおよその参考程度に見てください。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_8">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 機体一覧に機体が一つもない…</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_8">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    機体選択画面内「所持装備から選択」にチェックが入っていませんか？その場合、「所持装備」欄にて艦載機の所持数を登録していないと機体が表示されません。また、検索条件や、機種の選択が問題ないかも確認してみてください。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_9">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. おまかせ配備すると、伊勢型が瑞雲満載したりするしなんか変</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_9">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A. 基本的には、まず攻撃機で有効なスロットを全て埋め、制空が足りなければ戦闘機系を埋めるようなアルゴリズムです。艦隊欄の<i
+                                       class="mx-1 fas fa-lock-open"
+                                       style="color: #ffa600;"></i>をクリックし、搭載を回避したいスロットを固定してからおまかせ配備を行うと多少ましになります。
+                                 </div>
                               </div>
                            </div>
                         </div>
@@ -1646,15 +1836,9 @@
                      <div class="plane_td_type">
                         <img class="img-size-20_lock" src="./img/type/undefined.png" alt="種">
                      </div>
-                     <div class="pl-2 plane_td_name">
-                        <span class="font_size_12">装備名</span>
-                     </div>
-                     <div class="ml-auto plane_td_basic">
-                        <span class="font_size_12">対空</span>
-                     </div>
-                     <div class="plane_td_basic">
-                        <span class=" font_size_12">半径</span>
-                     </div>
+                     <div class="pl-2 plane_td_name">装備名</div>
+                     <div class="ml-auto plane_td_basic">対空</div>
+                     <div class="plane_td_basic">半径</div>
                   </div>
                   <div id="plane_tbody"></div>
                </div>
@@ -1706,18 +1890,16 @@
                      <label class="custom-control-label" for="display_final">最終改造状態のみ</label>
                   </div>
                </div>
-               <div class="bg-white border-top pt-2">
-                  <div class="pb-1" id="ship_table">
-                     <div class="d-flex bg-white py-2" id="ship_thead">
-                        <div class="ml-1 font_size_12 font_color_777">艦娘名</div>
-                        <div class="ml-auto ship_td_slot font_size_12 font_color_777">搭載1</div>
-                        <div class="ship_td_slot font_size_12 font_color_777">搭載2</div>
-                        <div class="ship_td_slot font_size_12 font_color_777">搭載3</div>
-                        <div class="ship_td_slot font_size_12 font_color_777">搭載4</div>
-                        <div class="ship_td_slot font_size_12 font_color_777">搭載5</div>
-                     </div>
-                     <div id="ship_tbody"></div>
+               <div class="pb-1" id="ship_table">
+                  <div class="d-flex" id="ship_thead">
+                     <div class="ml-2">艦娘名</div>
+                     <div class="ml-auto ship_td_slot">搭載1</div>
+                     <div class="ship_td_slot">搭載2</div>
+                     <div class="ship_td_slot">搭載3</div>
+                     <div class="ship_td_slot">搭載4</div>
+                     <div class="ship_td_slot">搭載5</div>
                   </div>
+                  <div id="ship_tbody"></div>
                </div>
             </div>
             <div class="modal-footer">
@@ -1763,15 +1945,13 @@
                      </div>
                   </div>
                </div>
-               <div class="enemy_table_content bg-white pt-2 border-top">
-                  <div class="pb-1" id="enemy_table">
-                     <div class="enemy_thead d-flex bg-white py-2">
-                        <div class="ml-1 font_size_12 font_color_777">敵艦ID / 敵艦名</div>
-                        <div class="ml-auto enemy_td_ap font_size_12 font_color_777">制空値</div>
-                        <div class="enemy_td_lbAp font_size_12 font_color_777">制空値(基地)</div>
-                     </div>
-                     <div id="enemy_tbody"></div>
+               <div class="pb-1" id="enemy_table">
+                  <div class="enemy_thead d-flex">
+                     <div class="ml-1">敵艦ID / 敵艦名</div>
+                     <div class="ml-auto enemy_td_ap">制空値</div>
+                     <div class="enemy_td_lbAp">制空値(基地)</div>
                   </div>
+                  <div id="enemy_tbody"></div>
                </div>
             </div>
             <div class="modal-footer">
@@ -2318,7 +2498,7 @@
                         <div class="d-flex plane_status_tr border-bottom">
                            <div class="plane_status_interception">0</div>
                            <div class="plane_status_anti_bomber">0</div>
-                           <div class="plane_status_avoid">強</div>
+                           <div class="plane_status_avoid cur_help">強</div>
                         </div>
                      </div>
                      <div class="mt-auto">

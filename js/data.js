@@ -357,7 +357,7 @@ const ENEMY_TYPE = [
   { id: 2, name: "地上施設" },
 ];
 const ENEMY_DATA = [
-  { id: -1, type: [1, 2, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], name: "直接入力", slot: [], eqp: [], orig: -1, aaw: 0, aabo: 0 },
+  { id: -1, type: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 1, 2], name: "直接入力", slot: [], eqp: [], orig: -1, aaw: 0, aabo: 0 },
   { id: 1, type: [16], name: "駆逐イ級", slot: [], eqp: [], orig: 1, aaw: 4, aabo: 0 },
   { id: 2, type: [16], name: "駆逐ロ級", slot: [], eqp: [], orig: 2, aaw: 5, aabo: 0 },
   { id: 3, type: [16], name: "駆逐ハ級", slot: [], eqp: [], orig: 3, aaw: 4, aabo: 0 },
@@ -492,9 +492,9 @@ const ENEMY_DATA = [
   { id: 162, type: [1, 14], name: "重巡棲姫 [丙] 強", slot: [4], eqp: [564], orig: 159, aaw: 18, aabo: 0 },
   { id: 163, type: [1, 14], name: "重巡棲姫 [乙] 強", slot: [4], eqp: [564], orig: 159, aaw: 18, aabo: 0 },
   { id: 164, type: [1, 14], name: "重巡棲姫 [甲] 強", slot: [4], eqp: [564], orig: 159, aaw: 19, aabo: 0 },
-  { id: 165, type: [2], name: "砲台小鬼", slot: [], eqp: [], orig: 0, aaw: 76, aabo: 3 },
-  { id: 166, type: [2], name: "砲台小鬼 機銃", slot: [], eqp: [], orig: 0, aaw: 149, aabo: 5 },
-  { id: 167, type: [2], name: "砲台小鬼 対空CI", slot: [], eqp: [], orig: 0, aaw: 138, aabo: 8 },
+  { id: 165, type: [2], name: "砲台小鬼", slot: [], eqp: [], orig: 165, aaw: 76, aabo: 3 },
+  { id: 166, type: [2], name: "砲台小鬼 機銃", slot: [], eqp: [], orig: 166, aaw: 149, aabo: 5 },
+  { id: 167, type: [2], name: "砲台小鬼 対空CI", slot: [], eqp: [], orig: 167, aaw: 138, aabo: 8 },
   { id: 168, type: [1, 2], name: "離島棲姫(陸爆弱)", slot: [16, 12, 12, 8], eqp: [562, 561, 561, 566], orig: 168, aaw: 21, aabo: 3 },
   { id: 169, type: [1, 2], name: "離島棲姫(陸爆強)", slot: [20, 18, 18, 8], eqp: [562, 561, 566, 566], orig: 169, aaw: 21, aabo: 4 },
   { id: 171, type: [1, 2], name: "離島棲姫", slot: [32, 32], eqp: [566, 566], orig: 171, aaw: 22, aabo: 2 },
@@ -1626,23 +1626,23 @@ const ROCKETS = [350, 351, 352];
 
 // 射撃回避
 const AVOID_TYPE = [
-  { id: 0, name: "なし" },
-  { id: 1, name: "弱" },
-  { id: 2, name: "中" },
-  { id: 3, name: "強" },
-  { id: 4, name: "超" },
+  { id: 0, name: "なし", adj: [1.0, 1.0] },
+  { id: 1, name: "弱", adj: [0.6, 1.0] },
+  { id: 2, name: "中", adj: [0.6, 0.7] },
+  { id: 3, name: "強", adj: [0.5, 0.7] },
+  { id: 4, name: "超", adj: [0.5, 0.5] },
 ];
 // 陣形
 const FORMATION = [
-  {id: 1, name: "単縦陣", correction: 1.0},
-  {id: 2, name: "複縦陣", correction: 1.2},
-  {id: 3, name: "輪形陣", correction: 1.6},
-  {id: 4, name: "梯形陣", correction: 1.0},
-  {id: 5, name: "単横陣", correction: 1.0},
-  {id: 15, name: "第一警戒", correction: 1.0},
-  {id: 12, name: "第二警戒", correction: 1.1},
-  {id: 13, name: "第三警戒", correction: 1.5},
-  {id: 11, name: "第四警戒", correction: 1.0},
+  { id: 1, name: "単縦陣", correction: 1.0 },
+  { id: 2, name: "複縦陣", correction: 1.2 },
+  { id: 3, name: "輪形陣", correction: 1.6 },
+  { id: 4, name: "梯形陣", correction: 1.0 },
+  { id: 5, name: "単横陣", correction: 1.0 },
+  { id: 15, name: "第一警戒", correction: 1.0 },
+  { id: 12, name: "第二警戒", correction: 1.1 },
+  { id: 13, name: "第三警戒", correction: 1.5 },
+  { id: 11, name: "第四警戒", correction: 1.0 },
 ]
 
 
@@ -2137,4 +2137,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/03/11";
+const LAST_UPDATE_DATE = "2020/03/12";
