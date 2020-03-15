@@ -482,6 +482,7 @@ function initialize(callback) {
       enemyDisplayImage: true,
       copyToClipbord: false,
       airRaidMax: true,
+      isUnion: true,
       displayMode: {
         'modal_plane_select': 'single',
         'modal_ship_select': 'single',
@@ -610,8 +611,6 @@ function initialize(callback) {
   });
   // 表示隻数初期化
   $('.display_ship_count').val(2);
-  // 連合艦隊チェック初期化
-  $('#union_fleet').prop('checked', true);
 
   // 敵艦隊欄複製
   text = $('#battle_container').html();
@@ -748,8 +747,14 @@ function initialize(callback) {
     $(`#${key} .sort_select`).val(setting.orderBy[key][0]);
     $(`#${key} .order_` + setting.orderBy[key][1]).prop('checked', true);
   });
+
+  if (!setting.hasOwnProperty('isUnion')) {
+    setting.isUnion = true;
+  }
   // 自動保存
   $('#auto_save').prop('checked', setting.autoSave);
+  // 連合艦隊チェック初期化
+  $('#union_fleet').prop('checked', setting.isUnion);
   // クリップボード保存
   $('#clipbord_mode').prop('checked', setting.copyToClipbord);
   // 空襲被害最大
@@ -3716,6 +3721,8 @@ function updateFriendFleetInfo(friendFleetData) {
     // 非連合艦隊モードの場合、表示されている艦隊を対象とする
     node_ship_tabs = $('.friendFleet_tab.show.active')[0].getElementsByClassName('ship_tab');
   }
+  setting.isUnion = isUnionFleet;
+  saveLocalStrage(setting);
 
   for (let index = 0; index < node_ship_tabs.length; index++) {
     const node_ship_tab = node_ship_tabs[index];
