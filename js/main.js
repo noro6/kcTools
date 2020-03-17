@@ -63,6 +63,9 @@ let isCtrlPress = false;
 // 編成プリセット
 let presets = null;
 
+// バックアッププリセ
+let backUpPresets = null;
+
 // メモリ解放用タイマー
 let releaseTimer = null;
 
@@ -405,6 +408,50 @@ function validateInputNumber(value, max, min = 0) {
   return ret;
 }
 
+/**
+ * 設定データ初期化
+ */
+function initializeSetting() {
+  // 設定データ読み込み
+  setting = loadLocalStrage('setting');
+  if (!setting) setting = {};
+  if (!setting.hasOwnProperty('version')) setting.version = '0.0.0';
+  if (!setting.hasOwnProperty('simulateCount')) setting.simulateCount = 5000;
+  if (!setting.hasOwnProperty('autoSave')) setting.autoSave = true;
+  if (!setting.hasOwnProperty('emptySlotInvisible')) setting.emptySlotInvisible = false;
+  if (!setting.hasOwnProperty('inStockOnly')) setting.inStockOnly = false;
+  if (!setting.hasOwnProperty('visibleEquiped')) setting.visibleEquiped = false;
+  if (!setting.hasOwnProperty('visibleFinal')) setting.visibleFinal = true;
+  if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
+  if (!setting.hasOwnProperty('copyToClipbord')) setting.copyToClipbord = false;
+  if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
+  if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
+  if (!setting.hasOwnProperty('backUpEnabled')) setting.backUpEnabled = true;
+  if (!setting.hasOwnProperty('backUpCount')) setting.backUpCount = 10;
+  if (!setting.hasOwnProperty('defaultProf')) {
+    setting.defaultProf = [];
+    const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
+    for (const type of types) {
+      const d = { id: type.id, prof: INITIAL_MAX_LEVEL_PLANE.includes(type.id) ? 7 : 0 };
+      setting.defaultProf.push(d);
+    }
+  }
+  if (!setting.hasOwnProperty('displayMode')) {
+    setting.displayMode = {
+      'modal_plane_select': 'single',
+      'modal_ship_select': 'single',
+      'modal_enemy_select': 'single'
+    };
+  }
+  if (!setting.hasOwnProperty('orderBy')) {
+    setting.orderBy = {
+      'modal_plane_select': ['default', 'desc'],
+    };
+  }
+
+  saveLocalStrage('setting', setting);
+}
+
 /*==================================
     DOM 操作
 ==================================*/
@@ -417,14 +464,11 @@ function initialize(callback) {
   let fragment = document.createDocumentFragment();
   let text = '';
 
-  // URLパラメータチェック
-  const params = getUrlParams();
-
   // 競合回避
   $.widget.bridge('uibutton', $.ui.button);
   $.widget.bridge('uitooltip', $.ui.tooltip);
 
-  // 機体カテゴリ画像のプリロード
+  // 画像のプリロード
   for (let i = 0; i < PLANE_TYPE.length; i++) {
     const img = new Image();
     const id = PLANE_TYPE[i].id;
@@ -466,33 +510,11 @@ function initialize(callback) {
     IMAGES["enemy" + id] = img;
   }
 
+  // URLパラメータチェック
+  const params = getUrlParams();
+
   // 設定データ読み込み
-  setting = loadLocalStrage('setting');
-  if (!setting) {
-    setting = {
-      version: '0.0.0',
-      simulateCount: 5000,
-      autoSave: true,
-      defaultProf: null,
-      emptySlotInvisible: false,
-      inStockOnly: false,
-      visibleEquiped: false,
-      visibleFinal: true,
-      visibleImage: true,
-      enemyDisplayImage: true,
-      copyToClipbord: false,
-      airRaidMax: true,
-      isUnion: true,
-      displayMode: {
-        'modal_plane_select': 'single',
-        'modal_ship_select': 'single',
-        'modal_enemy_select': 'single'
-      },
-      orderBy: {
-        'modal_plane_select': ['default', 'desc'],
-      }
-    };
-  }
+  initializeSetting();
 
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
@@ -531,7 +553,7 @@ function initialize(callback) {
     document.getElementById('version').textContent = serverVersion.id;
     document.getElementById('version_inform_body').appendChild(fragment);
 
-    // 1.5.0対応 散らばったデータ削除
+    // バージョン変更毎にデータ削除
     deleteLocalStrage('version');
     deleteLocalStrage('autoSave');
     deleteLocalStrage('simulateCount');
@@ -565,8 +587,6 @@ function initialize(callback) {
   });
   createPlaneTable(planes);
 
-  // 艦娘画像表示
-  $('#display_ship_img').prop('checked', setting.visibleImage);
   // 最終状態のみ表示
   $('#display_final').prop('checked', setting.visibleFinal);
   createShipTable([0]);
@@ -701,20 +721,12 @@ function initialize(callback) {
   }
   $('#init_prof_parent').find('.init_prof:first').remove();
 
-  if (!setting.defaultProf) {
-    setting.defaultProf = [];
-    for (const type of types) {
-      const d = { id: 0, prof: 0 };
-      d.id = type.id;
-      d.prof = INITIAL_MAX_LEVEL_PLANE.includes(type.id) ? 7 : 0;
-      setting.defaultProf.push(d);
-    }
-    saveLocalStrage('setting', setting);
-  }
-
   for (const v of setting.defaultProf) {
     proficiency_Changed($('.init_prof[data-typeid="' + v.id + '"').find('.prof_option[data-prof="' + v.prof + '"]').parent(), true);
   }
+
+  // 編成プリセット欄初期化
+  loadMainPreset();
 
   // tooltip起動
   $('[data-toggle="tooltip"]').tooltip();
@@ -748,17 +760,20 @@ function initialize(callback) {
     $(`#${key} .order_` + setting.orderBy[key][1]).prop('checked', true);
   });
 
-  if (!setting.hasOwnProperty('isUnion')) {
-    setting.isUnion = true;
-  }
   // 自動保存
   $('#auto_save').prop('checked', setting.autoSave);
+  // バックアップ有効
+  $('#backup_enabled').prop('checked', setting.backUpEnabled);
+  $('#suspend_backup').prop('checked', false);
+
+  // バックアップ件数
+  $('#backup_count').prop('disabled', !setting.backUpEnabled);
+  $('#backup_count').val(setting.backUpCount);
   // 連合艦隊チェック初期化
   $('#union_fleet').prop('checked', setting.isUnion);
   // クリップボード保存
   $('#clipbord_mode').prop('checked', setting.copyToClipbord);
   // 空襲被害最大
-  if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
   $('#air_raid_max').prop('checked', setting.airRaidMax);
   // 空スロット表示
   $('#empty_slot_invisible').prop('checked', setting.emptySlotInvisible);
@@ -782,33 +797,41 @@ function initialize(callback) {
   $('#dest_ap').val(100);
   $('#dest_range').val(6);
 
+  // 自動保存展開
+  if (setting.autoSave) {
+    const autoSaveData = loadLocalStrage('autoSaveData');
+    expandMainPreset(decordPreset(autoSaveData));
+  }
+
   // URLパラメータチェック
-  let existParam = false;
+  const urlDeck = [null, null];
   if (params.hasOwnProperty("d")) {
+
+    urlDeck[1] = decordPreset(params.d);
+
     expandMainPreset(decordPreset(params.d));
     existParam = true;
   }
+  // デッキビルダーー形式読み込み
   else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
     if (params.hasOwnProperty("predeck")) {
+
+      urlDeck[1] = readDeckBuilder(params.predeck);
+
       const deck = readDeckBuilder(params.predeck);
       if (deck) expandMainPreset(deck, deck[0][0].length > 0, true, false);
-      existParam = true;
     }
     if (params.hasOwnProperty("lb")) {
       try {
         const lbData = JSON.parse(decodeURIComponent(params.lb));
-        if (lbData.length >= 2) expandMainPreset([lbData, [], []], true, false, false);
-        existParam = true;
+        if (lbData.length >= 2) {
+          urlDeck[0] = lbData;
+          expandMainPreset([lbData, [], []], true, false, false);
+        }
       }
       catch (error) {
       }
     }
-  }
-
-  if (!existParam && setting.autoSave) {
-    // パラメータがないなら自動保存データをlocalStrageから読み込み
-    const autoSaveData = loadLocalStrage('autoSaveData');
-    expandMainPreset(decordPreset(autoSaveData));
   }
 
   // 基地欄タブ化するかどうか
@@ -2164,22 +2187,28 @@ function createEnemyPattern(patternNo = 0) {
 
 /**
  * 編成プリセット読み込み
+ * @param {boolean} forceBackUp 強制バックアップモード
  */
-function loadMainPreset() {
+function loadMainPreset(forceBackUp = false) {
   const $modal = $('#modal_main_preset');
+  const isBackUpMode = $('#main_preset_back_up').hasClass('active') || forceBackUp;
+
   // strage 読み込み
   presets = loadLocalStrage('presets');
-  // strage に存在しなかった場合
   if (!presets) presets = [];
 
+  backUpPresets = loadLocalStrage('backUpPresets');
+  if (!backUpPresets) backUpPresets = [];
+
+  let basePresets = isBackUpMode ? backUpPresets : presets;
+
   let text = '';
-  const len = presets.length;
-  for (let index = 0; index < len; index++) {
-    const preset = presets[index];
+  for (let index = 0; index < basePresets.length; index++) {
+    const preset = basePresets[index];
     text += `
       <div class="preset_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
         <div class="preset_td text-primary">${index + 1}.</div>
-        <div class="preset_td ml-2">${preset[1]}</div>
+        <div class="preset_td ml-2 font_size_12">${preset[1]}</div>
       </div>
     `;
   }
@@ -2209,17 +2238,28 @@ function drawMainPreset(preset) {
   $modal.find('.btn_expand_preset').prop('disabled', !preset);
   $modal.find('.btn_delete_preset').prop('disabled', !preset);
 
-  if (preset) {
+  if (preset && preset[0] > 0) {
     $modal.find('.preset_data').data('presetid', preset[0]);
     $modal.find('.preset_name').val(preset[1]);
+    $modal.find('#preset_remarks').val(preset[3]);
     $modal.find('.btn_commit_preset').text('編成変更');
     $modal.find('.btn_commit_preset').prop('disabled', false);
     $modal.find('.btn_commit_preset_header').removeClass('d-none');
     $modal.find('.btn_commit_preset_header').prop('disabled', false);
+  }
+  else if (preset && preset[0] < 0) {
+    // バックアップデータ 現登録済みプリセットidの最大+1で新規登録モード開始
+    let maxId = 0;
+    for (const set of presets) if (maxId < set[0]) maxId = set[0];
+    $modal.find('.preset_data').data('presetid', castInt(maxId) + 1);
+    $modal.find('.preset_name').val(preset[1]);
     $modal.find('#preset_remarks').val(preset[3]);
+    $modal.find('.btn_commit_preset').text('プリセット保存');
+    $modal.find('.btn_commit_preset').prop('disabled', true);
+    $modal.find('.btn_commit_preset_header').addClass('d-none');
   }
   else {
-    // プリセットが見つからなかったので新規登録
+    // プリセットが見つからなかった
     let maxId = 0;
     for (const preset of presets) if (maxId < preset[0]) maxId = preset[0];
     $modal.find('.preset_data').data('presetid', castInt(maxId) + 1);
@@ -2561,9 +2601,17 @@ function decordPreset(input) {
  * @param {number} id 削除対象プリセットid
  */
 function deleteMainPreset(id) {
-  presets = presets.filter(v => v[0] !== id);
-  presets.sort((a, b) => a[0] - b[0]);
-  saveLocalStrage('presets', presets);
+  const isBackUpMode = $('#main_preset_back_up').hasClass('active');
+  if (isBackUpMode) {
+    backUpPresets = backUpPresets.filter(v => v[0] !== id);
+    backUpPresets.sort((a, b) => a[0] - b[0]);
+    saveLocalStrage('backUpPresets', backUpPresets);
+  }
+  else {
+    presets = presets.filter(v => v[0] !== id);
+    presets.sort((a, b) => a[0] - b[0]);
+    saveLocalStrage('presets', presets);
+  }
   const $modal = $('#modal_main_preset');
   $modal.find('.alert').removeClass('hide').addClass('show');
   $modal.find('.task').text('削除');
@@ -3084,9 +3132,52 @@ function calculateInit(objectData) {
 
   // 自動保存する場合
   if (document.getElementById('auto_save')['checked']) {
-    saveLocalStrage('autoSaveData', encordPreset());
+    const currentData = encordPreset();
+    saveLocalStrage('autoSaveData', currentData);
+
     setting.autoSave = true;
     saveLocalStrage('setting', setting);
+
+    // バックアップ
+    if (document.getElementById('backup_enabled')['checked'] && !document.getElementById('suspend_backup')['checked']) {
+      backUpPresets = loadLocalStrage('backUpPresets');
+      if (!backUpPresets) backUpPresets = [];
+
+      // 今回のバックアップデータ
+      const now = new Date();
+      const nowDate = [
+        now.getFullYear().toString(),
+        ('0' + (now.getMonth() + 1)).slice(-2),
+        ('0' + now.getDate()).slice(-2)
+      ];
+      const nowTime = [
+        ('0' + now.getHours()).slice(-2),
+        ('0' + now.getMinutes()).slice(-2),
+        ('0' + now.getSeconds()).slice(-2),
+      ];
+      const backUpData = [
+        0,
+        'backup-' + nowDate.join("") + nowTime.join(""),
+        currentData,
+        nowDate.join("/") + " " + nowTime.join(":") + "の編成\r\n\r\n" + $('#input_summary').val()
+      ];
+
+      // 同じデータ削除
+      backUpPresets = backUpPresets.filter(v => v[2] !== currentData);
+
+      // 戦闘に挿入
+      backUpPresets.unshift(backUpData);
+
+      // 保存件数までケツから削る
+      backUpPresets = backUpPresets.splice(0, setting.backUpCount);
+
+      // id付与
+      for (let i = 0; i < backUpPresets.length; i++) {
+        backUpPresets[i][0] = - (i + 1);
+      }
+
+      saveLocalStrage('backUpPresets', backUpPresets);
+    }
   }
 
   // 空スロット表示可否
@@ -3098,8 +3189,6 @@ function calculateInit(objectData) {
 
   // 事前計算テーブルチェック
   setPreCalculateTable();
-
-  return true;
 }
 
 /**
@@ -3722,7 +3811,7 @@ function updateFriendFleetInfo(friendFleetData) {
     node_ship_tabs = $('.friendFleet_tab.show.active')[0].getElementsByClassName('ship_tab');
   }
   setting.isUnion = isUnionFleet;
-  saveLocalStrage(setting);
+  saveLocalStrage('setting', setting);
 
   for (let index = 0; index < node_ship_tabs.length; index++) {
     const node_ship_tab = node_ship_tabs[index];
@@ -3936,7 +4025,7 @@ function updateFriendFleetInfo(friendFleetData) {
   const $textarea = $('#input_summary');
   const lines = ($textarea.val() + '\n').match(/\n/g).length;
   $textarea.height(castInt($textarea.css('lineHeight')) * lines + 2);
-  $textarea.text($textarea.text().trim());
+  $textarea.val($textarea.val().trim());
 }
 
 
@@ -5610,7 +5699,6 @@ function modal_Closed($this) {
       calculate();
       break;
     case "modal_main_preset":
-      presets = null;
       calculate();
       break;
     default:
@@ -6087,6 +6175,17 @@ function init_proficiency_Changed($this) {
   const prof = castInt($this.find('.prof_option')[0].dataset.prof);
   const tmp = setting.defaultProf.find(v => v.id === castInt($this.closest('.init_prof')[0].dataset.typeid));
   tmp.prof = prof;
+  saveLocalStrage('setting', setting);
+}
+
+/**
+ * バックアップ設定変更時
+ */
+function backup_enabled_Clicked() {
+  setting.backUpEnabled = document.getElementById('backup_enabled')['checked'];
+  setting.backUpCount = castInt(document.getElementById('backup_count').value);
+  document.getElementById('backup_count').disabled = !setting.backUpEnabled;
+
   saveLocalStrage('setting', setting);
 }
 
@@ -7400,7 +7499,6 @@ function modal_confirm_ok_Clicked() {
  * 編成保存・展開ボタンクリック
  */
 function btn_preset_all_Clicked() {
-  loadMainPreset();
   $('#modal_main_preset').modal('show');
 }
 
@@ -7427,13 +7525,35 @@ function btn_deckBuilder_Clicked() {
 }
 
 /**
+ * 機体プリセット内 一部タブクリック(描写が消えたら発動 消えたタブがthis)
+ * @param {object} e
+ */
+function main_preset_tab_Changed(e) {
+  const tabId = e.relatedTarget.id;
+  if (tabId === 'main_preset_back_up') {
+    // バックアップページ展開
+    $('#modal_main_preset').find('.preset_thead').addClass('d-none');
+    $('.back_up_text').removeClass('d-none');
+    loadMainPreset(true);
+  }
+  else {
+    // 通常プリセットページ展開
+    $('#modal_main_preset').find('.preset_thead').removeClass('d-none');
+    $('.back_up_text').addClass('d-none');
+    loadMainPreset(false);
+  }
+}
+
+/**
  * 機体プリセット内 プリセット一覧名クリック
  * @param {JqueryDomObject} $this
  */
 function main_preset_tr_Clicked($this) {
+  const isBackUpMode = $('#main_preset_back_up').hasClass('active');
   $('.preset_tr').removeClass('preset_selected');
   $this.addClass('preset_selected');
-  drawMainPreset(presets.find(v => v[0] === castInt($this.data('presetid'))));
+  const basePreset = isBackUpMode ? backUpPresets : presets;
+  drawMainPreset(basePreset.find(v => v[0] === castInt($this.data('presetid'))));
 }
 
 /**
@@ -7518,7 +7638,7 @@ function btn_commit_preset_header_Clicked() {
  * 編成プリセット削除ボタンクリック
  */
 function btn_delete_main_preset_Clicked() {
-  const presetId = castInt($('#modal_main_preset').find('.preset_data').data('presetid'));
+  const presetId = castInt($('#modal_main_preset').find('.preset_selected').data('presetid'));
   deleteMainPreset(presetId);
 }
 
@@ -7573,7 +7693,9 @@ function btn_output_deck_Clicked() {
  */
 function btn_expand_main_preset_Clicked() {
   // 展開するプリセット
-  const preset = presets.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_data').data('presetid')));
+  const isBackUpMode = $('#main_preset_back_up').hasClass('active');
+  const basePreset = isBackUpMode ? backUpPresets : presets;
+  const preset = basePreset.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_selected')[0].dataset.presetid));
   expandMainPreset(decordPreset(preset[2]));
   $('#modal_main_preset').modal('hide');
 }
@@ -7734,6 +7856,7 @@ $(function () {
   $('.slot_select_parent').on('hide.bs.dropdown', function () { slot_select_parent_Close($(this)); });
   $('.remodel_select_parent').on('hide.bs.dropdown', function () { remodelSelect_Changed($(this)); });
   $('.remodel_select_parent').on('show.bs.dropdown', function () { $(this).find('.remodel_item_selected').removeClass('remodel_item_selected'); });
+  $('.main_preset_select').on('hidden.bs.tab', function (e) { main_preset_tab_Changed(e); });
   $('#main').on('show.bs.dropdown', '.enemy_ap_select_parent', function () { enemy_ap_select_parent_Show($(this)); });
   $('#main').on('hide.bs.dropdown', '.enemy_ap_select_parent', function () { enemy_ap_select_parent_Close($(this)); });
   $('#main').on('show.bs.collapse', '.collapse', function () { $(this).prev().find('.fa-chevron-up').removeClass('fa-chevron-up').addClass('fa-chevron-down'); });
@@ -7789,6 +7912,8 @@ $(function () {
   $('#config_content').on('click', '#clipbord_mode', clipbord_mode_Clicked);
   $('#config_content').on('click', '#air_raid_max', air_raid_max_Clicked);
   $('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
+  $('#config_content').on('click', '#backup_enabled', backup_enabled_Clicked);
+  $('#config_content').on('change', '#backup_count', backup_enabled_Clicked);
   $('#plane_stock').on('change', '#stock_type_select', function () { stock_type_select_Changed($(this)); });
   $('#plane_stock').on('click', '.stock_tr', function () { stock_tr_Clicked($(this)); });
   $('#plane_stock').on('click', '#btn_load_equipment_json', btn_load_equipment_json_Clicked);

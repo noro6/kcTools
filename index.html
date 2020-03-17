@@ -1276,6 +1276,32 @@
                                  <i class="far fa-question-circle"></i>
                               </div>
                            </div>
+                           <div class="d-flex ml-3 mt-3">
+                              <div class="custom-control custom-checkbox">
+                                 <input type="checkbox" class="custom-control-input" id="backup_enabled">
+                                 <label class="custom-control-label" for="backup_enabled">
+                                    編成のバックアップを有効にする
+                                 </label>
+                              </div>
+                              <div class="ml-2 cur_help pt-0_5" data-toggle="tooltip"
+                                 title="バックアップの復帰や確認は、「編成保存・展開」の「バックアップ」タブから操作してください。">
+                                 <i class="far fa-question-circle"></i>
+                              </div>
+                           </div>
+                           <div class="d-flex ml-5 mt-1">
+                              <div class="align-self-center">バックアップ保存件数：</div>
+                              <div class="align-self-center ml-2 mr-1">最新の</div>
+                              <select class="custom-select custom-select-sm" id="backup_count">
+                                 <option value="5">5</option>
+                                 <option value="10" selected>10</option>
+                                 <option value="15">15</option>
+                                 <option value="20">20</option>
+                                 <option value="30">30</option>
+                                 <option value="50">50</option>
+                                 <option value="100">100</option>
+                              </select>
+                              <div class="ml-1 align-self-center">件</div>
+                           </div>
                         </div>
                         <div class="mt-2 mx-2 border-top"></div>
                         <div class="my-2 mx-2">
@@ -1316,10 +1342,10 @@
                            <div class="my-4" id="first_time_content">
                               <p class="h6">初めての方へ</p>
                               <div class="mt-2 pl-3">
-                                 サイト訪問ありがとうございます。初めて本シミュレータを利用するにあたり、ここではどのようなことが分かるのかを簡単に紹介します。
+                                 サイト訪問ありがとうございます。初めて本サイトを利用するにあたり、ここではどのようなことが分かるのかを簡単に紹介します。
                               </div>
                               <div class="mt-1 pl-3">
-                                 シミュレータでは入力された編成、装備、敵編成の情報から、次の要素を計算します。
+                                 本サイトでは入力された編成、装備、敵編成の情報から、次の要素を計算します。
                                  <div class="ml-3">■ 基地航空隊による敵艦載機(制空値)の削り</div>
                                  <div class="ml-3">■ 道中戦闘を含めた各戦闘毎の制空状態</div>
                                  <div class="ml-3">■ 道中戦闘を含めた各戦闘毎の味方艦載機の減少値</div>
@@ -1332,7 +1358,7 @@
                                     class="font_size_16_b">敵艦隊の対空砲火による艦載機の撃墜</span>の計算も行っています。そのため、道中戦闘を正しく設定した場合、普通は味方艦隊の艦載機をあらかじめ減らしておくなどの調整は不要です。
                               </div>
                               <div class="pl-3">
-                                 シミュレータでは上記のような結果表示を、検証によって得られた計算式を元に実際の航空戦と同様の処理を複数回(通常5000回)実行して導出しています。
+                                 本サイトでは上記のような結果表示を、検証によって得られた計算式を元に実際の航空戦と同様の処理を複数回(通常5000回)実行して導出しています。
                                  分かりやすく言えば、<span
                                     class="font-weight-bold">出撃を5000回繰り返した結果を集計して表示</span>しているイメージです。そのため、再計算が行われる度に計算結果が多少変化します。完全に正確な数値が求まるものではないことに注意してください。
                               </div>
@@ -1342,7 +1368,7 @@
                                  <div class="ml-3">■ 敵対空CI発動時の撃墜補正</div>
                               </div>
                               <div class="mt-2 pl-3">
-                                 以上の点をふまえ、本シミュレータを利用していただければ幸いです。また、時間があれば、下記の「使い方」に目を通してみてください。
+                                 以上の点をふまえ、本サイトを利用していただければ幸いです。また、時間があれば、下記の「使い方」に目を通してみてください。
                               </div>
                            </div>
                            <div class="my-4" id="site_manual_content">
@@ -1397,7 +1423,7 @@
                                  防空の計算がしたい場合は、基地航空隊の所謂"お札"を「防空」に設定してください。
                               </div>
                               <div class="pl-3">
-                                 いずれか1部隊でも防空に設定されていると、シミュレータは防空仕様となり、
+                                 いずれか1部隊でも防空に設定されていると、本サイトは防空仕様となり、
                                  <u>味方艦隊情報、道中戦闘回数が編集できなくなります。</u>
                               </div>
                               <div class="pl-3">
@@ -1606,7 +1632,8 @@
                      <div class="collapse show collapse_content" id="site_FAQ_content">
                         <div class="border-top"></div>
                         <div class="d-flex flex-column px-3" id="site_FAQ_body">
-                           <div class="mt-4">・本当によくあったり、勝手によくある扱いにした質問とその回答<span class="font_size_11">（クリックで回答が表示されます）</span></div>
+                           <div class="mt-4">・本当によくあったり、勝手によくある扱いにした質問とその回答<span
+                                 class="font_size_11">（クリックで回答が表示されます）</span></div>
                            <div class="mt-1 mb-3 border-bottom">
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
                                  data-target="#faq_1">
@@ -1665,7 +1692,7 @@
                               <div class="border-top collapse history_content" id="faq_5">
                                  <div class="pl-3 py-2 font_size_12">
                                     A.
-                                    機体を入れ替えるたび計算を行っているからです。本シミュレータは、仮想的に出撃を5000回繰り返した結果を集計し表示しています。そのため、数値には多少のぶれが発生します。なお、この回数は「詳細設定」欄にて変更可能ですが、あまり数を増やしすぎると計算に時間がかかってレスポンスが悪くなります。
+                                    機体を入れ替えるたび計算を行っているからです。本サイトは、仮想的に出撃を5000回繰り返した結果を集計し表示しているようなものなので、数値には多少のぶれが発生します。なお、この回数は「詳細設定」欄にて変更可能ですが、あまり数を増やしすぎると計算に時間がかかってレスポンスが悪くなります。
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
@@ -2123,27 +2150,42 @@
       <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
             <div class="modal-header">
-               <h5 class="modal-title">編成保存・展開</h5>
+               <h5 class="modal-title">編成保存／展開</h5>
                <p class="close cur_pointer cur_pointer" data-dismiss="modal"><span>&times;</span></p>
             </div>
             <div class="modal-body pt-2">
                <div class="mb-3">
                   <ul class="nav nav-tabs">
                      <li class="nav-item">
-                        <a class="nav-link active" id="main_preset_edit" data-toggle="tab"
-                           href="#main_preset_edit_tab">編成登録・編集</a>
+                        <a class="nav-link active main_preset_select" id="main_preset_edit" data-toggle="tab"
+                           href="#main_preset_edit_tab">保存／編集</a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link" id="main_preset_load" data-toggle="tab"
-                           href="#main_preset_load_tab">編成取り込み・共有</a>
+                        <a class="nav-link main_preset_select" id="main_preset_load" data-toggle="tab"
+                           href="#main_preset_load_tab">取込／共有</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link main_preset_select" id="main_preset_back_up" data-toggle="tab"
+                           href="#main_preset_edit_tab">バックアップ</a>
                      </li>
                   </ul>
                </div>
-               <div class="tab-content bg-white">
+               <div class="tab-content">
                   <div class="tab-pane fade show active" id="main_preset_edit_tab">
+                     <div class="back_up_text font_size_12 mb-1 px-2 pb-1 border-bottom d-none">
+                        <div class="custom-control custom-checkbox">
+                           <input type="checkbox" class="custom-control-input" id="suspend_backup">
+                           <label class="custom-control-label" for="suspend_backup">
+                              バックアップの書き込みを一時停止
+                           </label>
+                        </div>
+                        <div class="text-danger">
+                           意図せずバックアップが流れるのを防ぐため、「書き込みを一時停止」にチェックを入れてからバックアップの確認／展開することを強く推奨します。
+                        </div>
+                     </div>
                      <div class="d-flex">
-                        <div class="col pl-0 preset_list">
-                           <div class="preset_table bg-white">
+                        <div class="col pl-0">
+                           <div class="preset_table">
                               <div class="preset_thead border-bottom pb-2 mb-2 w-100">
                                  <div class="preset_tr py-2 text-center btn_create_preset border" data-presetid="-1">
                                     <div>現在の編成で新規登録</div>
