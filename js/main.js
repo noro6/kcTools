@@ -2605,6 +2605,10 @@ function deleteMainPreset(id) {
   if (isBackUpMode) {
     backUpPresets = backUpPresets.filter(v => v[0] !== id);
     backUpPresets.sort((a, b) => a[0] - b[0]);
+    // id付けなおし
+    for (let i = 0; i < backUpPresets.length; i++) {
+      backUpPresets[i][0] = - (i + 1);
+    }
     saveLocalStrage('backUpPresets', backUpPresets);
   }
   else {
@@ -7499,6 +7503,7 @@ function modal_confirm_ok_Clicked() {
  * 編成保存・展開ボタンクリック
  */
 function btn_preset_all_Clicked() {
+  loadMainPreset();
   $('#modal_main_preset').modal('show');
 }
 
