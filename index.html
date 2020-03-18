@@ -404,6 +404,9 @@
                                              data-toggle="tooltip" data-placement="right" data-html="true" title="">
                                              艦娘を選択
                                           </div>
+                                          <div class="mx-1 btn_remove_ship opacity0 align-self-center no_capture">
+                                             <i class="fas fa-times"></i>
+                                          </div>
                                           <div class="ml-1 align-self-center ship_sumAP font_size_12">
                                              <span class="font_color_555">制空: </span>
                                              <span class="ap">0</span>
@@ -553,8 +556,17 @@
                      </div>
                      <div class="collapse show collapse_content" id="enemyFleet_content">
                         <div class="border-top"></div>
-                        <div class="d-flex my-2 flex-wrap" id="battle_count_content">
-                           <div class="ml-2 mr-1 my-1 align-self-center">戦闘数：</div>
+                        <div class="d-flex my-1 py-1 flex-wrap" id="battle_count_content">
+                           <div class="d-flex w-100 ml-2 mr-4 mb-2">
+                              <button type="button" id="btn_world_expand"
+                                 class="btn btn-sm btn-info font_size_12 align-self-center no_capture">
+                                 海域マップから一括入力
+                              </button>
+                              <div class="ml-2 align-self-center">進行航路：</div>
+                              <input type="text" class="ml-1 form-control form-control-sm align-self-center flex-grow-1"
+                                 id="route" readonly>
+                           </div>
+                           <div class="ml-2 mr-1 align-self-center">戦闘数：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="battle_count">
                               <option value="1" selected>1</option>
                               <option value="2">2</option>
@@ -567,8 +579,8 @@
                               <option value="9">9</option>
                               <option value="10">10</option>
                            </select>
-                           <div class="ml-1 my-1 align-self-center">戦</div>
-                           <div class="ml-3 mr-1 my-1 align-self-center">基地を派遣する戦闘：</div>
+                           <div class="ml-1 align-self-center">戦</div>
+                           <div class="ml-3 my-1 align-self-center">基地を派遣する戦闘：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="landBase_target">
                               <option value="1" selected>1</option>
                               <option value="2" class="d-none">2</option>
@@ -581,11 +593,7 @@
                               <option value="9" class="d-none">9</option>
                               <option value="10" class="d-none">10</option>
                            </select>
-                           <div class="ml-1 mr-2 my-1 align-self-center">戦目</div>
-                           <div class="ml-2 my-1 align-self-center">進行航路：</div>
-                           <input type="text"
-                              class="mr-4 ml-1 my-1 form-control form-control-sm align-self-center flex-grow-1"
-                              id="route" readonly>
+                           <div class="ml-1 align-self-center">戦目</div>
                         </div>
                         <div class="alert alert-warning py-2 mb-1 d-none" id="lb_range_warning">
                            第<span id="ng_range">1</span>基地航空隊の半径が不足しています。
@@ -1398,7 +1406,7 @@
                                  <a href="#enemyFleet">敵艦情報</a> から選択可能です。
                               </div>
                               <div class="pl-3 mt-3">
-                                 道中戦闘を考慮する場合は、<a href="#enemyFleet">敵艦情報</a>の戦闘回数を操作してください。
+                                 道中戦闘を考慮する場合は、<a href="#enemyFleet">敵艦情報</a>の戦闘回数を操作したり、海域マップから一括入力を行ってください。
                                  設定した戦闘それぞれについて、制空状態の割合などの結果を表示できます。
                               </div>
                               <div class="pl-3 mt-3">
@@ -1417,7 +1425,7 @@
                                  戦闘回数を4回に設定、1戦目をB、2戦目をF、3戦目をI、4戦目をボスとする。(J:夜戦マスは省略する)
                               </div>
                               <div class="pl-3">
-                                 海域マップの敵艦情報は各戦闘の「海域選択」ボタンをクリックすると選択できるようになっています。ご活用ください。
+                                 海域マップの敵艦情報は各戦闘の「海域選択」ボタンや「海域マップから一括入力」をクリックすると選択できるようになっています。ご活用ください。
                               </div>
                               <div class="pl-3 mt-3">
                                  防空の計算がしたい場合は、基地航空隊の所謂"お札"を「防空」に設定してください。
@@ -1801,7 +1809,7 @@
                         <input type="text" class="form-control form-control-sm" id="plane_word" maxlength="30">
                      </div>
                   </div>
-                  <div class="d-flex sort_control my-1">
+                  <div class="d-flex my-1">
                      <div class="align-self-center">
                         <div class="input-group input-group-sm">
                            <div class="input-group-prepend">
@@ -1837,11 +1845,11 @@
                      </div>
                   </div>
                   <div class="d-flex my-1">
-                     <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
+                     <div class="align-self-center mr-1 toggle_display_type" data-mode="single">
                         <i class="fas fa-list"></i>
                         <span>一列</span>
                      </div>
-                     <div class="align-self-center px-2 py-1 toggle_display_type border" data-mode="multi">
+                     <div class="align-self-center toggle_display_type" data-mode="multi">
                         <i class="fas fa-grip-horizontal"></i>
                         <span>複数列</span>
                      </div>
@@ -1871,7 +1879,7 @@
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
-               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
             </div>
          </div>
       </div>
@@ -1902,11 +1910,11 @@
                      </div>
                   </div>
                   <div class="d-flex">
-                     <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
+                     <div class="align-self-center mr-1 toggle_display_type" data-mode="single">
                         <i class="fas fa-list"></i>
                         <span>一列</span>
                      </div>
-                     <div class="align-self-center px-2 py-1 toggle_display_type border" data-mode="multi">
+                     <div class="align-self-center toggle_display_type" data-mode="multi">
                         <i class="fas fa-grip-horizontal"></i>
                         <span>複数列</span>
                      </div>
@@ -1930,7 +1938,7 @@
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
-               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
             </div>
          </div>
       </div>
@@ -1961,11 +1969,11 @@
                      </div>
                   </div>
                   <div class="d-flex">
-                     <div class="align-self-center mr-1 px-2 py-1 toggle_display_type border" data-mode="single">
+                     <div class="align-self-center mr-1 toggle_display_type" data-mode="single">
                         <i class="fas fa-list"></i>
                         <span>一列</span>
                      </div>
-                     <div class="align-self-center px-2 py-1 toggle_display_type border" data-mode="multi">
+                     <div class="align-self-center toggle_display_type" data-mode="multi">
                         <i class="fas fa-grip-horizontal"></i>
                         <span>複数列</span>
                      </div>
@@ -1982,7 +1990,7 @@
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
-               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
             </div>
          </div>
       </div>
@@ -2092,8 +2100,12 @@
                </div>
             </div>
             <div class="modal-footer">
+               <div class="mr-auto font_size_12" id="expand_target_parent">
+                  <span id="expand_target">1</span>戦目の敵艦隊を展開してください。
+               </div>
+               <button type="button" class="btn btn-sm btn-primary d-none" id="btn_continue_expand">敵艦隊展開</button>
                <button type="button" class="btn btn-sm btn-primary" id="btn_expand_enemies">敵艦隊展開</button>
-               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
             </div>
          </div>
       </div>
@@ -2140,7 +2152,7 @@
             <div class="modal-footer">
                <button type="button" class="btn btn-sm btn-primary btn_expand_preset">プリセット展開</button>
                <button type="button" class="btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
-                  キャンセル
+                  閉じる
                </button>
             </div>
          </div>
@@ -2297,7 +2309,7 @@
             <div class="modal-footer">
                <button type="button" class="btn btn-sm btn-primary btn_expand_preset">編成展開</button>
                <button type="button" class="btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
-                  キャンセル
+                  閉じる
                </button>
             </div>
          </div>
@@ -2612,7 +2624,7 @@
                      所持数0にする
                   </button>
                   <button type="button" class="ml-3 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
-                     キャンセル
+                     閉じる
                   </button>
                </div>
             </div>
@@ -2673,7 +2685,7 @@
                   <button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">OK</button>
                </div>
                <div class="ml-2">
-                  <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+                  <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
                </div>
             </div>
          </div>

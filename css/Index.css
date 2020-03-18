@@ -459,6 +459,18 @@ input[type="text"] { font-size: 12px; }
   height: 25px;
   width: 100px;
 }
+.btn_remove_ship {
+  cursor: pointer;
+  transition: 0.4s;
+  opacity: 0.2;
+  font-size: 16px;
+}
+.btn_remove_ship:hover {
+  color: #000;
+  opacity: .6;
+  filter: drop-shadow(0px 0px 4px #787878);
+}
+.btn_remove_ship > i { font-size: 16px; }
 
 
 /* -----------------------------------
@@ -639,7 +651,9 @@ input[type="text"] { font-size: 12px; }
 ----------------------------------- */
 .search_basic{ width: 460px; }
 .toggle_display_type {
+  padding: .25rem .5rem .25rem .5rem;
   background-color: #fff;
+  border: 1px #dee2e6 solid;
   border-radius: .25rem;
   color: #ccc;
   cursor: pointer;
@@ -886,7 +900,7 @@ input[type="text"] { font-size: 12px; }
 .btn_prof {
   cursor: pointer;
   width: 20px;
-  height: auto;
+  height: 30px;
   transition: .2s;
 }
 .btn_remodel {

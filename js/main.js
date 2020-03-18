@@ -79,8 +79,8 @@ let usedPlane = [];
   プリセットメモ
   全体: [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
   基地: [0:機体群, 1:札群]
-  艦隊: [0: id, 1: plane配列, 2: 配属位置]
-  機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置]
+  艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ]
+  機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
   敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マスid]
 
   在庫メモ
@@ -1152,6 +1152,7 @@ function setShipDiv($div, id) {
   $div.find('.ship_img').attr('src', './img/ship/' + id + '.png');
   $div.find('.ship_img').removeClass('d-none');
   $div.find('.ship_name_span').text(ship.name);
+  $div.find('.btn_remove_ship').removeClass('opacity0');
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
     const plane = {
@@ -1186,6 +1187,7 @@ function clearShipDiv($div) {
   $div.find('.ship_img').addClass('d-none');
   $div.find('.ship_img').attr('src', './img/ship/0.png');
   $div.find('.ship_name_span').text('艦娘を選択');
+  $div.find('.btn_remove_ship').addClass('opacity0');
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
     clearPlaneDiv($this);
@@ -1713,8 +1715,8 @@ function createShipTable(type) {
 }
 
 /**
- * 敵艦入力欄を生成
- * @param {number} count 生成する個数
+ * 敵艦入力欄を生成(可視化)
+ * @param {number} count (可視化)する個数
  */
 function createEnemyInput(count) {
   battleCount = count;
@@ -1723,6 +1725,7 @@ function createEnemyInput(count) {
     else $(e).addClass('d-none');
   });
 
+  $('#battle_count').val(count);
   // 基地派遣セレクト調整
   $('#landBase_target').find('option').each((i, e) => {
     if (i < battleCount) $(e).prop('disabled', false).removeClass('d-none');
@@ -2094,6 +2097,7 @@ function createNodeSelect() {
   $('#enemy_pattern_air_power').text('0');
   $('#enemy_display_mode_parent').addClass('d-none').removeClass('d-flex');
   $('#btn_expand_enemies').prop('disabled', true);
+  $('#btn_continue_expand').prop('disabled', true);
 }
 
 /**
@@ -2168,6 +2172,7 @@ function createEnemyPattern(patternNo = 0) {
   $('#enemy_pattern_status2').text(borders[2]);
   $('#enemy_pattern_status3').text(borders[3]);
   $('#btn_expand_enemies').prop('disabled', false);
+  $('#btn_continue_expand').prop('disabled', false);
 
 
   // 表示形式切り替えの有効無効と表示形式
@@ -2183,6 +2188,53 @@ function createEnemyPattern(patternNo = 0) {
   else {
     $('#enemy_display_mode_parent').addClass('d-none').removeClass('d-flex');
   }
+}
+
+/**
+ * 敵艦隊を展開する
+ */
+function expandEnemy() {
+  const area = castInt($('#map_select').val());
+  const node = $('.node_selected').data('node');
+  const patternNo = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
+  let lv = -1;
+  if (area >= 1000) {
+    lv = castInt($('#select_difficulty').val());
+  }
+
+  const pattern = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv)[patternNo];
+
+  // 展開対象が空襲なら防空モードに乗っ取り
+  if (!isDefMode && node === '空襲') {
+    isDefMode = true;
+    // みんな防空に
+    $('.ohuda_select').each((i, e) => { $(e).val(0); });
+    $target = $('#air_raid_enemies');
+  }
+  else if (isDefMode && node !== '空襲') {
+    isDefMode = false;
+    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) === 0) $(e).val(-1); });
+    $target = $('.battle_content:first');
+  }
+
+  // 元の敵編成解除
+  if ($target.find('.enemy_content:not(:first)').length) {
+    $target.find('.enemy_content:not(:first)').remove();
+  }
+  clearEnemyDiv($target.find('.enemy_content'));
+
+  // 戦闘マス情報
+  $target.find('.cell_type').val(isDefMode && pattern.type !== 5 ? 3 : pattern.type);
+  // 陣形
+  $target.find('.formation').val(pattern.form);
+
+  // 敵展開
+  for (const id of pattern.enemies) setEnemyDiv($target.find('.enemy_content:last()'), id);
+  // 半径
+  $target.find('.enemy_range').text(pattern.radius);
+
+  // 進行航路情報を付与
+  $target[0].dataset.celldata = area + "_" + pattern.node + (pattern.remarks ? '(' + pattern.remarks + ')' : '');
 }
 
 /**
@@ -2358,17 +2410,33 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
       let shipCountFleet1 = 0;
       let shipCountFleet2 = 0;
       // 艦娘展開
-      $('.ship_tab').each((i, e) => {
+      $('.ship_tab').each((i, ship_tab) => {
         const ship = preset[1].find(v => v[2] === i);
         if (!ship) return;
-        setShipDiv($(e), ship[0]);
-        $(e).find('.ship_plane').each((j, e) => {
+        const $ship_tab = $(ship_tab);
+        // 艦娘設置
+        setShipDiv($ship_tab, ship[0]);
+
+        // 機体設置
+        $ship_tab.find('.ship_plane').each((j, e) => {
+          const $ship_plane = $(e);
           const raw = ship[1].find(v => v[4] === j);
-          if (raw && !$(e).hasClass('d-none')) {
+          if (raw && !$ship_plane.hasClass('d-none')) {
             const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
-            setPlaneDiv($(e), plane, true);
+            setPlaneDiv($ship_plane, plane, true);
+
+            // スロットロック反映
+            if (raw.length >= 6 && raw[5]) plane_unlock_Clicked($ship_plane.find('.plane_unlock'));
           }
         });
+
+        // 無効化
+        if (ship.length >= 4) {
+          $ship_tab.find('.ship_disabled').prop('checked', ship[3]);
+          if (ship[3]) $ship_tab.addClass('opacity4');
+          else $ship_tab.removeClass('opacity4');
+        }
+
         if (i <= 6) shipCountFleet1 = (i + 1);
         else shipCountFleet2 = (i + 1) - 6;
       });
@@ -2482,7 +2550,7 @@ function createFriendFleetPreset() {
     // 非表示なら飛ばす
     if ($(e).attr('class').includes('d-none')) return;
 
-    const ship = [castInt($(e)[0].dataset.shipid), [], shipIndex];
+    const ship = [castInt($(e)[0].dataset.shipid), [], shipIndex, ($(e).find('.ship_disabled').prop('checked') ? 1 : 0)];
     $(e).find('.ship_plane:not(.ui-draggable-dragging)').each((j, ce) => {
       const $ce = $(ce);
       const plane = [
@@ -2490,7 +2558,8 @@ function createFriendFleetPreset() {
         castInt($ce.find('.prof_select')[0].dataset.prof),
         castInt($ce.find('.remodel_value').text()),
         castInt($ce.find('.slot').text()),
-        j
+        j,
+        ($ce.find('.plane_unlock').hasClass('d-none') ? 1 : 0)
       ];
       // 装備されていない場合飛ばす
       if (plane[0] !== 0) ship[1].push(plane);
@@ -6254,7 +6323,8 @@ function slot_select_parent_Close($this) {
  * @param {JqueryDomObject} $this
  */
 function btn_reset_landBase_Clicked($this) {
-  $this.closest('.lb_tab').find('.lb_plane').each((i, e) => {
+  const $landBase = $this.closest('.lb_tab');
+  $landBase.find('.lb_plane').each((i, e) => {
     $(e).find('.slot').text(0);
     setLBPlaneDiv($(e));
   });
@@ -6873,6 +6943,15 @@ function ship_name_span_Clicked($this) {
   $('#modal_ship_select').modal('show');
 }
 
+/**
+ * 艦娘外す
+ * @param {JqueryDomObject} $this
+ */
+function btn_remove_ship_Clicked($this) {
+  clearShipDiv($this.closest('.ship_tab'));
+  calculate();
+}
+
 
 /**
  * 検索語句が変更された(艦娘)
@@ -6966,6 +7045,19 @@ function modal_enemy_select_btn_remove($this) {
   $('#modal_enemy_select').modal('hide');
 }
 
+
+/**
+ * 海域一括入力クリック
+ */
+function btn_world_expand_Clicked() {
+  $target = $('.battle_content:first');
+  $('#expand_target').text(1);
+  $('#btn_expand_enemies').addClass('d-none');
+  $('#btn_continue_expand').removeClass('d-none');
+  $('#expand_target_parent').removeClass('d-none');
+  $('#modal_enemy_pattern').modal('show');
+}
+
 /**
  * 海域一覧クリック時
  * @param {JqueryDomObject} $this
@@ -6973,8 +7065,10 @@ function modal_enemy_select_btn_remove($this) {
 function btn_enemy_preset_Clicked($this) {
   $target = $this.closest('.battle_content');
   if (isDefMode) $target = $('#air_raid_enemies');
+  $('#btn_expand_enemies').removeClass('d-none');
+  $('#btn_continue_expand').addClass('d-none');
+  $('#expand_target_parent').addClass('d-none');
   $('#modal_enemy_pattern').modal('show');
-  $this.blur();
 }
 
 /**
@@ -7025,49 +7119,35 @@ function node_Clicked($this) {
  * 敵編成展開クリック時
  */
 function btn_expand_enemies() {
-  const area = castInt($('#map_select').val());
-  const node = $('.node_selected').data('node');
-  const patternNo = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
-  let lv = -1;
-  if (area >= 1000) {
-    lv = castInt($('#select_difficulty').val());
-  }
 
-  const pattern = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv)[patternNo];
-
-  // 展開対象が空襲なら防空モードに乗っ取り
-  if (!isDefMode && node === '空襲') {
-    isDefMode = true;
-    // みんな防空に 
-    $('.ohuda_select').each((i, e) => { $(e).val(0); });
-    $target = $('#air_raid_enemies');
-  }
-  else if (isDefMode && node !== '空襲') {
-    isDefMode = false;
-    $('.ohuda_select').each((i, e) => { if (castInt($(e).val()) === 0) $(e).val(-1); });
-    $target = $('.battle_content:first');
-  }
-
-  // 元の敵編成解除
-  if ($target.find('.enemy_content:not(:first)').length) {
-    $target.find('.enemy_content:not(:first)').remove();
-  }
-  clearEnemyDiv($target.find('.enemy_content'));
-
-  // 戦闘マス情報
-  $target.find('.cell_type').val(isDefMode && pattern.type !== 5 ? 3 : pattern.type);
-  // 陣形
-  $target.find('.formation').val(pattern.form);
-
-  // 敵展開
-  for (const id of pattern.enemies) setEnemyDiv($target.find('.enemy_content:last()'), id);
-  // 半径
-  $target.find('.enemy_range').text(pattern.radius);
-
-  // 進行航路情報を付与
-  $target[0].dataset.celldata = area + "_" + pattern.node + (pattern.remarks ? '(' + pattern.remarks + ')' : '');
-
+  expandEnemy();
   $('#modal_enemy_pattern').modal('hide');
+}
+
+/**
+ * 連続展開
+ */
+function btn_continue_expand() {
+  let currentBattle = castInt($('#expand_target').text());
+  // 1戦目を入れた時点でクリアかける
+  if (currentBattle === 1) {
+    clearEnemyDivAll();
+  }
+  // 今から入れる分生成
+  createEnemyInput(currentBattle);
+  // 次の戦闘用意
+  $('#expand_target').text(currentBattle + 1);
+  // 誤爆防止にいったん展開ボタン無効化
+  $('#btn_continue_expand').prop('disabled', true);
+
+  $target = $(document.getElementsByClassName('battle_content')[currentBattle - 1]);
+  // 通常通り展開
+  expandEnemy();
+
+  // 空襲編成入れてきた or 10戦目まで入力されたら閉じて終了
+  if (isDefMode || currentBattle === 10) {
+    $('#modal_enemy_pattern').modal('hide');
+  }
 }
 
 /**
@@ -7887,6 +7967,7 @@ $(function () {
   $('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
   $('#friendFleet_content').on('click', '.btn_reset_ship', function () { btn_reset_ship_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
+  $('#friendFleet_content').on('click', '.btn_remove_ship', function () { btn_remove_ship_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.btn_remove_plane', function () { btn_remove_ship_plane_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $('#friendFleet_content').on('click', '.ship_disabled', function () { ship_disabled_Changed($(this)); });
@@ -7902,6 +7983,7 @@ $(function () {
   $('#enemyFleet_content').on('input', '.enemy_ap_range', function () { enemy_ap_range_Changed($(this)); });
   $('#enemyFleet_content').on('click', '.enemy_name', function () { enemy_name_Clicked($(this)); });
   $('#enemyFleet_content').on('click', '.btn_reset_battle', function () { btn_reset_battle_Clicked($(this)); });
+  $('#enemyFleet_content').on('click', '#btn_world_expand', btn_world_expand_Clicked);
   $('#enemyFleet_content').on('click', '.btn_enemy_preset', function () { btn_enemy_preset_Clicked($(this)); });
   $('#enemyFleet_content').on('change', '#battle_count', function () { battle_count_Changed($(this)); });
   $('#enemyFleet_content').on('change', '#landBase_target', calculate);
@@ -7953,6 +8035,7 @@ $(function () {
   $('#modal_enemy_pattern').on('change', '#node_select', createEnemyPattern);
   $('#modal_enemy_pattern').on('change', '#select_difficulty', createNodeSelect);
   $('#modal_enemy_pattern').on('click', '#btn_expand_enemies', btn_expand_enemies);
+  $('#modal_enemy_pattern').on('click', '#btn_continue_expand', btn_continue_expand);
   $('#modal_enemy_pattern').on('click', '.node', function () { node_Clicked($(this)) });
   $('#modal_enemy_pattern').on('click', '#enemy_pattern_select .nav-item', function () { pattern_Changed($(this)) });
   $('#modal_enemy_pattern').on('click', 'input[name="enemy_display_mode"]', function () { enemy_display_mode_Changed($(this)) });
