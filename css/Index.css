@@ -459,19 +459,29 @@ input[type="text"] { font-size: 12px; }
   height: 25px;
   width: 100px;
 }
-.btn_remove_ship {
+.btn_reset_ship_plane {
+  margin-top: -0.5rem;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
-  transition: 0.4s;
-  opacity: 0.2;
+  transition: .1s;
+  opacity: .5;
   font-size: 16px;
 }
-.btn_remove_ship:hover {
-  color: #000;
-  opacity: .6;
-  filter: drop-shadow(0px 0px 4px #787878);
+.btn_reset_ship_plane:hover {
+  color: rgb(0, 220, 255);
+  opacity: 1;
+  filter: drop-shadow(0px 0px 1px rgb(0, 220, 255));
 }
-.btn_remove_ship > i { font-size: 16px; }
-
+.btn_reset_ship_plane > i { font-size: 16px; }
+.remove_line {
+  transition: .3s;
+  border-right: 3px rgb(185, 185, 185) solid;
+}
+.remove_line.ready {
+  border-right: 3px rgb(0, 220, 255) solid;
+  filter: drop-shadow(0px 0px 1px rgb(0, 220, 255));
+}
 
 /* -----------------------------------
   機体コントロール関連

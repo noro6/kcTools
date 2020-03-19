@@ -1152,7 +1152,6 @@ function setShipDiv($div, id) {
   $div.find('.ship_img').attr('src', './img/ship/' + id + '.png');
   $div.find('.ship_img').removeClass('d-none');
   $div.find('.ship_name_span').text(ship.name);
-  $div.find('.btn_remove_ship').removeClass('opacity0');
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
     const plane = {
@@ -1187,7 +1186,6 @@ function clearShipDiv($div) {
   $div.find('.ship_img').addClass('d-none');
   $div.find('.ship_img').attr('src', './img/ship/0.png');
   $div.find('.ship_name_span').text('艦娘を選択');
-  $div.find('.btn_remove_ship').addClass('opacity0');
   $div.find('.ship_plane').each((i, e) => {
     const $this = $(e);
     clearPlaneDiv($this);
@@ -3028,6 +3026,8 @@ function drawResult() {
     node_tr.getElementsByClassName('td_max_slot')[0].textContent = s[3];
     node_tr.getElementsByClassName('td_min_slot')[0].textContent = s[4];
   }
+
+  display_result_Changed();
 }
 
 /*==================================
@@ -6378,10 +6378,10 @@ function lb_plane_Drop($this, ui) {
 }
 
 /**
- * 艦娘リセットボタン押下時
+ * 艦娘装備リセットボタン押下時
  * @param {JqueryDomObject} $this
  */
-function btn_reset_ship_Clicked($this) {
+function btn_reset_ship_plane_Clicked($this) {
   $this.closest('.ship_tab').find('.ship_plane').each((i, e) => { clearPlaneDiv($(e)) });
   calculate();
 }
@@ -7271,8 +7271,8 @@ function display_result_Changed() {
   }
   else {
     for (let i = 1; i < 7; i++) {
-      $('#rate_row_' + i + ':not(.disabled_tr)').addClass('d-none');
-      $('#result_bar_' + i).closest('.progress_area:not(.disabled_bar)').addClass('d-none').removeClass('d-flex');
+      $('#rate_row_' + i).addClass('d-none');
+      $('#result_bar_' + i).closest('.progress_area').addClass('d-none').removeClass('d-flex');
     }
   }
 
@@ -7281,8 +7281,8 @@ function display_result_Changed() {
     $('#result_bar_7').closest('.progress_area:not(.disabled_bar)').removeClass('d-none').addClass('d-flex');
   }
   else {
-    $('#rate_row_7:not(.disabled_tr)').addClass('d-none');
-    $('#result_bar_7').closest('.progress_area:not(.disabled_bar)').addClass('d-none').removeClass('d-flex');
+    $('#rate_row_7').addClass('d-none');
+    $('#result_bar_7').closest('.progress_area').addClass('d-none').removeClass('d-flex');
   }
 
   if ($('#display_bar').prop('checked')) {
@@ -7965,10 +7965,11 @@ $(function () {
   $('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
   $('#landBase_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
-  $('#friendFleet_content').on('click', '.btn_reset_ship', function () { btn_reset_ship_Clicked($(this)); });
+  $('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.btn_remove_ship', function () { btn_remove_ship_Clicked($(this)); });
   $('#friendFleet_content').on('click', '.btn_remove_plane', function () { btn_remove_ship_plane_Clicked($(this)); });
+  $('#friendFleet_content').on({ mouseenter: function () { $(this).closest('.ship_tab').find('.remove_line').addClass('ready'); }, mouseleave: function () { $(this).closest('.ship_tab').find('.remove_line').removeClass('ready'); }, }, '.btn_reset_ship_plane');
   $('#friendFleet_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
   $('#friendFleet_content').on('click', '.ship_disabled', function () { ship_disabled_Changed($(this)); });
   $('#friendFleet_content').on('click', '#union_fleet', calculate);

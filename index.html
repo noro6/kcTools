@@ -1,5 +1,6 @@
 ﻿<!doctype html>
 <html lang="ja">
+
 <head>
    <meta charset="utf-8">
    <title>制空権シミュレータ</title>
@@ -395,8 +396,8 @@
                               </div>
                               <div class="d-flex justify-content-center flex-wrap fleet_tab">
                                  <div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_1">
-                                    <div class="pb-2 px-1 px-xl-2">
-                                       <div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-0">
+                                    <div class="pb-1 pl-1 px-1 px-xl-2">
+                                       <div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
                                           <div class="sortable_handle cur_move">
                                              <img src="img/ship/0.png" class="ship_img d-none">
                                           </div>
@@ -404,11 +405,8 @@
                                              data-toggle="tooltip" data-placement="right" data-html="true" title="">
                                              艦娘を選択
                                           </div>
-                                          <div class="mx-1 btn_remove_ship opacity0 align-self-center no_capture">
-                                             <i class="fas fa-times"></i>
-                                          </div>
                                           <div class="ml-1 align-self-center ship_sumAP font_size_12">
-                                             <span class="font_color_555">制空: </span>
+                                             <span class="font_color_555">総制空: </span>
                                              <span class="ap">0</span>
                                           </div>
                                           <div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -425,73 +423,83 @@
                                              data-toggle="tooltip" title="プリセット" data-delay='{"show": 300, "hide": 0}'>
                                              <i class="fas fa-toolbox"></i>
                                           </div>
-                                          <div class="ml-2_5 btn_reset btn_reset_ship btn_icon no_capture"
-                                             data-toggle="tooltip" title="装備リセット" data-delay='{"show": 300, "hide": 0}'>
+                                          <div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture"
+                                             data-toggle="tooltip" title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
                                              <i class="fas fa-trash-alt"></i>
                                           </div>
                                        </div>
-                                       <div class="ship_plane mt-1 d-flex">
-                                          <div class="flex-grow-1 d-flex flex-nowrap ship_plane_draggable">
-                                             <div class="ml-1 dropdown align-self-center slot_select_parent">
-                                                <span class="slot" data-toggle="dropdown">0</span>
-                                                <div class="dropdown-menu px-2">
-                                                   <span class="dropdown-header py-1 px-1 font_size_12">
-                                                      搭載数を入力
-                                                   </span>
-                                                   <div class="d-flex mb-2 justify-content-between">
-                                                      <div class="align-self-center flex-grow-1">
-                                                         <input type="number"
-                                                            class="form-control form-control-sm slot_input" value="0"
+                                       <div class="d-flex">
+                                          <div class="no_capture px-1 py-1 mr-1">
+                                             <div class="remove_line h-100"></div>
+                                          </div>
+                                          <div class="flex-grow-1">
+                                             <div class="ship_plane mt-1 d-flex">
+                                                <div class="flex-grow-1 d-flex flex-nowrap ship_plane_draggable">
+                                                   <div class="ml-1 dropdown align-self-center slot_select_parent">
+                                                      <span class="slot" data-toggle="dropdown">0</span>
+                                                      <div class="dropdown-menu px-2">
+                                                         <span class="dropdown-header py-1 px-1 font_size_12">
+                                                            搭載数を入力
+                                                         </span>
+                                                         <div class="d-flex mb-2 justify-content-between">
+                                                            <div class="align-self-center flex-grow-1">
+                                                               <input type="number"
+                                                                  class="form-control form-control-sm slot_input"
+                                                                  value="0" min="0" max="99">
+                                                            </div>
+                                                            <div class="ml-1 align-self-center">
+                                                               <button type="button" data-ini="0"
+                                                                  class="btn btn-sm btn-info slot_ini">
+                                                                  <sapn class="text-nowrap">初期値</sapn>
+                                                               </button>
+                                                            </div>
+                                                         </div>
+                                                         <input type="range" class="custom-range slot_range" value="0"
                                                             min="0" max="99">
                                                       </div>
-                                                      <div class="ml-1 align-self-center">
-                                                         <button type="button" data-ini="0"
-                                                            class="btn btn-sm btn-info slot_ini">
-                                                            <sapn class="text-nowrap">初期値</sapn>
-                                                         </button>
-                                                      </div>
                                                    </div>
-                                                   <input type="range" class="custom-range slot_range" value="0" min="0"
-                                                      max="99">
+                                                   <div class="ml-1 align-self-center plane_unlock no_capture"
+                                                      data-toggle="tooltip" title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+                                                      <i class="fas fa-lock-open"></i>
+                                                   </div>
+                                                   <div class="ml-1 align-self-center plane_lock d-none no_capture"
+                                                      data-toggle="tooltip" title="ロック中です。おまかせ配備使用時、このスロットは変更されません。">
+                                                      <i class="fas fa-lock"></i>
+                                                   </div>
+                                                   <div class="ml-1 align-self-center">
+                                                      <img src="./img/type/undefined.png" class="plane_img" alt="">
+                                                   </div>
+                                                   <div class="plane_name align-self-center flex-grow-1">
+                                                      <span class="plane_name_span font_size_12 pl-1">
+                                                         機体を選択
+                                                      </span>
+                                                   </div>
+                                                   <div class="dropdown remodel_select_parent align-self-center">
+                                                      <div class="remodel_select remodel_disabled"
+                                                         data-toggle="dropdown" data-remodel="0">
+                                                         <span>★<span class="remodel_value">0</span></span>
+                                                      </div>
+                                                      <div class="dropdown-menu"></div>
+                                                   </div>
+                                                   <div class="dropdown prof_select_parent align-self-center">
+                                                      <img class="prof_select prof_none" data-prof="0"
+                                                         data-toggle="dropdown" src="./img/util/prof0.png">
+                                                      <div class="dropdown-menu"></div>
+                                                   </div>
+                                                   <div
+                                                      class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
+                                                      <i class="fas fa-times"></i>
+                                                   </div>
                                                 </div>
                                              </div>
-                                             <div class="ml-1 align-self-center plane_unlock no_capture"
-                                                data-toggle="tooltip" title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
-                                                <i class="fas fa-lock-open"></i>
-                                             </div>
-                                             <div class="ml-1 align-self-center plane_lock d-none no_capture"
-                                                data-toggle="tooltip" title="ロック中です。おまかせ配備使用時、このスロットは変更されません。">
-                                                <i class="fas fa-lock"></i>
-                                             </div>
-                                             <div class="ml-1 align-self-center">
-                                                <img src="./img/type/undefined.png" class="plane_img" alt="">
-                                             </div>
-                                             <div class="plane_name align-self-center flex-grow-1">
-                                                <span class="plane_name_span font_size_12 pl-1">
-                                                   機体を選択
-                                                </span>
-                                             </div>
-                                             <div class="dropdown remodel_select_parent align-self-center">
-                                                <div class="remodel_select remodel_disabled" data-toggle="dropdown"
-                                                   data-remodel="0">
-                                                   <span>★<span class="remodel_value">0</span></span>
-                                                </div>
-                                                <div class="dropdown-menu"></div>
-                                             </div>
-                                             <div class="dropdown prof_select_parent align-self-center">
-                                                <img class="prof_select prof_none" data-prof="0" data-toggle="dropdown"
-                                                   src="./img/util/prof0.png">
-                                                <div class="dropdown-menu"></div>
-                                             </div>
-                                             <div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
-                                                <i class="fas fa-times"></i>
-                                             </div>
+                                             <div class="ship_plane mt-1 d-flex"></div>
+                                             <div class="ship_plane mt-1 d-flex"></div>
+                                             <div class="ship_plane mt-1 d-flex"></div>
+                                             <div class="ship_plane mt-1 d-none"></div>
                                           </div>
                                        </div>
-                                       <div class="ship_plane mt-1 d-flex"></div>
-                                       <div class="ship_plane mt-1 d-flex"></div>
-                                       <div class="ship_plane mt-1 d-flex"></div>
-                                       <div class="ship_plane mt-1 d-none">
+                                       <div class="no_capture btn_reset_ship_plane mb-1">
+                                          <i class="fas fa-times"></i>
                                        </div>
                                     </div>
                                  </div>
@@ -2631,7 +2639,6 @@
          </div>
       </div>
    </div>
-
    <div class="modal fade" id="modal_smart_menu" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content mt-5 bg-dark2">
