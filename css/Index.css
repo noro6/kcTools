@@ -469,9 +469,9 @@ input[type="text"] { font-size: 12px; }
   font-size: 16px;
 }
 .btn_reset_ship_plane:hover {
-  color: rgb(0, 220, 255);
+  color: rgb(60, 225, 220);
   opacity: 1;
-  filter: drop-shadow(0px 0px 1px rgb(0, 220, 255));
+  filter: drop-shadow(0px 0px 1px rgb(60, 225, 220));
 }
 .btn_reset_ship_plane > i { font-size: 16px; }
 .remove_line {
@@ -479,8 +479,8 @@ input[type="text"] { font-size: 12px; }
   border-right: 3px rgb(185, 185, 185) solid;
 }
 .remove_line.ready {
-  border-right: 3px rgb(0, 220, 255) solid;
-  filter: drop-shadow(0px 0px 1px rgb(0, 220, 255));
+  border-right: 3px rgb(125, 225, 220) solid;
+  filter: drop-shadow(0px 0px 1px rgb(125, 225, 220));
 }
 
 /* -----------------------------------
