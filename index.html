@@ -17,6 +17,7 @@
    <link rel="stylesheet" href="./css/bootstrap.min.css">
    <link rel="stylesheet" href="./css/Index.css">
    <link rel="stylesheet" href="./css/all.min.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
    <script src="./js/jquery-3.4.1.min.js"></script>
    <script src="./js/jquery-ui.min.js"></script>
    <script src="./js/jquery.ui.touch-punch.js"></script>
@@ -918,6 +919,7 @@
                                        <td class="td_avg_slot">残数平均</td>
                                        <td class="td_max_slot">残数最大</td>
                                        <td class="td_min_slot">残数最小</td>
+                                       <td class="td_detail_slot">詳細</td>
                                     </tr>
                                  </thead>
                                  <tbody id="enemy_shoot_down_tbody">
@@ -2634,6 +2636,24 @@
                   <button type="button" class="ml-3 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
                      閉じる
                   </button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="modal_result_detail" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content mt-5">
+            <div class="modal-header">
+               <h5 class="modal-title">計算結果詳細</h5>
+               <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+            </div>
+            <div class="modal-body">
+               <canvas id="detailChart"></canvas>
+            </div>
+            <div class="modal-footer">
+               <div class="ml-auto">
+                  <button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">閉じる</button>
                </div>
             </div>
          </div>

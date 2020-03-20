@@ -3028,6 +3028,40 @@ function drawResult() {
   }
 
   display_result_Changed();
+  
+  if (!chartData.enSlots) return;
+
+  chartData.enSlots[0][5].sort((a, b) => a - b);
+  const scatterChartData = [];
+  for (const v of chartData.enSlots[0][5]) {
+    const obj = scatterChartData.find(o => o.x === v);
+    if (obj) obj.y++;
+    else {
+      scatterChartData.push({ y: 1, x: v });
+    }
+  }
+  const ctx = document.getElementById("detailChart");
+  var scatterChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: '残敵艦載機数の分布',
+        data: scatterChartData
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          position: 'bottom',
+          scaleLabel: {
+            display: true,
+            labelString: '敵艦載機残数',
+         },
+        }]
+      }
+    }
+  });
 }
 
 /*==================================
@@ -4400,6 +4434,11 @@ function updateEnemyFleetInfo(battleData) {
       node_min_td.textContent = slotNum;
       node_tr.appendChild(node_min_td);
 
+      const node_detail = document.createElement('td');
+      node_detail.className = 'td_detail_slot align-middle' + isLastSlot;
+      node_detail.innerHTML = '<i class="fas fa-file-signature"></i>';
+      node_tr.appendChild(node_detail);
+
       enemy_fragment.appendChild(node_tr);
     }
 
@@ -4820,7 +4859,7 @@ function rateCalculate(objectData) {
     if (enemy.isSpR || enemy.slots.length === 0) continue;
     const enemyNo = enemySlotResult.length === 0 ? 0 : enemySlotResult[enemySlotResult.length - 1][0] + 1;
     for (let j = 0; j < enemy.slots.length; j++) {
-      enemySlotResult.push([enemyNo, j, 0, 0, 999]);
+      enemySlotResult.push([enemyNo, j, 0, 0, 999, []]);
     }
   }
 
@@ -4876,6 +4915,7 @@ function rateCalculate(objectData) {
             if (slotResult[3] < slotValue) slotResult[3] = slotValue;
             // 最小値更新
             if (slotResult[4] > slotValue) slotResult[4] = slotValue;
+            slotResult[5].push(slotValue);
           }
 
           // 補給
@@ -7301,6 +7341,14 @@ function display_result_Changed() {
 }
 
 /**
+ * 計算結果詳細展開
+ * @param {JqueryDomObject} $this
+ */
+function detail_slot_Clicked($this) {
+  $('#modal_result_detail').modal('show');
+}
+
+/**
  * 内部熟練度120計算機体カテゴリ変更時
  * @param {JqueryDomObject} $this
  */
@@ -7992,6 +8040,7 @@ $(function () {
   $('#result_content').on('click', '#display_battle_tab .nav-item', function () { display_battle_tab_Changed($(this)); });
   $('#result_content').on('click', '#empty_slot_invisible', calculate);
   $('#result_content').on('click', '#display_setting .custom-control-input', display_result_Changed);
+  $('#result_content').on('click', '#enemy_shoot_down_tbody .td_detail_slot', function () { detail_slot_Clicked($(this)); });
   $('#config_content').on('focus', '#calculate_count', function () { $(this).select(); });
   $('#config_content').on('input', '#calculate_count', function () { calculate_count_Changed($(this)); });
   $('#config_content').on('click', '#btn_reset_localStrage', btn_reset_localStrage_Clicked);

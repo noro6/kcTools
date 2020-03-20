@@ -1119,6 +1119,16 @@ input[type="text"] { font-size: 12px; }
   text-align: left;
   border-right:1px #b8b8b8 solid;
 }
+.td_detail_slot {
+  cursor: pointer !important;
+}
+#enemy_shoot_down_tbody .td_detail_slot {
+  opacity: 0.5;
+  transition: .4s;
+}
+#enemy_shoot_down_tbody .td_detail_slot:hover {
+  opacity: 1;
+}
 
 /* ------------------------------
   詳細設定 #config
