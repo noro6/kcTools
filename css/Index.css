@@ -1210,6 +1210,11 @@ input[type="text"] { font-size: 12px; }
 
 
 /* ------------------------------
+  所持装備編集 #modal_plane_stock
+-------------------------------- */
+#detail_calculate_count { width: 120px; }
+
+/* ------------------------------
   オートモード #auto_expand
 -------------------------------- */
 #simple_enemy_ap { width: 80px; }

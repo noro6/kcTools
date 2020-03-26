@@ -2184,7 +2184,15 @@ let CHANGE_LOG = [
       },
     ],
   },
+  {
+    id: "1.5.7", changes: [
+      {
+        type: 0, title: "詳細計算機能を追加しました。",
+        content: "本隊航空戦終了後の敵艦載機の残数の詳細表示が可能になりました。対空装備をどの程度積むのかの参考にしてください。"
+      },
+    ],
+  },
 ];
 
 
-const LAST_UPDATE_DATE = "2020/03/20";
+const LAST_UPDATE_DATE = "2020/03/26";
