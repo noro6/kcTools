@@ -127,6 +127,8 @@ const PLANE_DATA = [
   { id: 237, type: 6, name: "瑞雲(六三四空/熟練)", abbr: "瑞雲(634空/熟練)", antiAir: 4, torpedo: 0, bomber: 9, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, radius: 5, cost: 6, avoid: 2 },
   { id: 322, type: 6, name: "瑞雲改二(六三四空)", abbr: "瑞雲改二(634空)", antiAir: 4, torpedo: 0, bomber: 10, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, radius: 5, cost: 8, avoid: 3 },
   { id: 323, type: 6, name: "瑞雲改二(六三四空/熟練)", abbr: "瑞雲改二(634空/熟練)", antiAir: 5, torpedo: 0, bomber: 11, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, radius: 5, cost: 8, avoid: 4 },
+  { id: 367, type: 6, name: "Swordfish(水上機型)", abbr: "", antiAir: 0, torpedo: 5, bomber: 5, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, radius: 3, cost: 5, avoid: 0 },
+  { id: 368, type: 6, name: "SwordfishMk.III改(水上機型)", abbr: "", antiAir: 0, torpedo: 6, bomber: 7, antiBomber: 0, interception: 0, scout: 3, canRemodel: 0, radius: 3, cost: 6, avoid: 0 },
   { id: 164, type: 7, name: "Ro.44水上戦闘機", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, radius: 3, cost: 4, avoid: 0 },
   { id: 165, type: 7, name: "二式水戦改", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 1, radius: 4, cost: 5, avoid: 0 },
   { id: 215, type: 7, name: "Ro.44水上戦闘機bis", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, radius: 3, cost: 4, avoid: 0 },
