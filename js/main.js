@@ -2899,6 +2899,15 @@ function loadPlaneStock() {
     planeStock = initStock.concat();
     saveLocalStrage('planeStock', planeStock);
   }
+  else {
+    // 追加装備チェック
+    for (const plane of PLANE_DATA) {
+      if (!planeStock.find(v => v.id === plane.id)) {
+        planeStock.push({ id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+        saveLocalStrage('planeStock', planeStock);
+      }
+    }
+  }
 
   return planeStock;
 }
