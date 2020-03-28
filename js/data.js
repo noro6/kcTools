@@ -684,7 +684,6 @@ const DIFFICULTY = [
   { id: 3, name: "甲" },
 ];
 const WORLD_DATA = [
-  { world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
   { world: 1, name: "鎮守府海域" },
   { world: 2, name: "南西諸島海域" },
   { world: 3, name: "北方海域" },
@@ -693,6 +692,7 @@ const WORLD_DATA = [
   { world: 5, name: "南方海域" },
   { world: 6, name: "中部海域" },
   { world: 1911, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
+  { world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
 ];
 const MAP_DATA = [
   { area: 11, name: "鎮守府正面海域" },
