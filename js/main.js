@@ -5172,11 +5172,19 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
   const lbAttackBattle = isDefMode ? 0 : (castInt($('#landBase_target').val()) - 1);
   // チャート用散布
   const data = [];
-  // 今回の記録用の敵さん
+  // 今回の記録用の敵データ
   const targetEnemy = battleInfo[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.isSpR)[enemyNo];
-
+  const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
+  const plane = ENEMY_PLANE_DATA.find(v => v.id === enemy.eqp[slotNo]);
   // 例外排除
   mainBattle = mainBattle < battleInfo.length ? mainBattle : battleInfo.length - 1;
+
+  // 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
+  const rate = Math.abs(plane.type) === 2 ? [0.8, 1.5] : Math.abs(plane.type) === 1 ? [0] : [1.0];
+  const fire = Math.abs(plane.type) === 2 ? plane.torpedo : plane.bomber;
+
+  // 搭載表示 or 航空戦火力表示
+  const isSlotDetail = $('#slot_detail').prop('checked');
 
   // 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
   for (const info of battleInfo) {
@@ -5238,8 +5246,19 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
         // 本隊の分のst1起こす
         shootDownEnemy(airIndex, enemies);
 
-        // 指定した敵とスロットの数を格納
-        data.push(targetEnemy.slots[slotNo]);
+        if (isSlotDetail) {
+          // 指定した敵とスロットの数を格納
+          data.push(targetEnemy.slots[slotNo]);
+        }
+        else {
+          // 航空戦火力
+          if (targetEnemy.slots[slotNo]) {
+            data.push(Math.floor(rate[Math.floor(Math.random() * rate.length)] * (fire * Math.sqrt(targetEnemy.slots[slotNo]) + 25)));
+          }
+          else {
+            data.push(0);
+          }
+        }
 
         // 補給
         for (let i = 0; i < enemies.length; i++) {
@@ -5273,8 +5292,9 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
   const min_i = Math.min.apply({}, data);
   let par50 = 0, par90 = 0, par95 = 0, par99 = 0, sumRate = 0;
   for (let i = min_i; i <= max_i; i++) {
-    xLabels.push(i);
     const num = data.filter(v => v === i).length;
+    if (!num) continue;
+    xLabels.push(i);
     actualData.push((100 * num / maxCount).toFixed(maxCount >= 100000 ? 5 : maxCount >= 10000 ? 4 : maxCount >= 1000 ? 3 : 2));
     sumRate += 100 * num / maxCount;
     rateData.push(sumRate.toFixed(1));
@@ -5292,14 +5312,8 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
   $('#detail_95').text(par95);
   $('#detail_99').text(par99);
 
-  if (chartDataSet) {
-    // グラフ更新
-    chartDataSet.data.labels = xLabels;
-    chartDataSet.data.datasets[0].data = actualData;
-    chartDataSet.data.datasets[1].data = rateData;
-    chartDataSet.update();
-  }
-  else {
+  const mainLabel = isSlotDetail ? '残機数 [機]' : '航空戦火力(キャップ前、小数切捨て)';
+  if (!chartDataSet) {
     // 初回
     const ctx = document.getElementById("detailChart");
     chartDataSet = new Chart(ctx, {
@@ -5326,72 +5340,79 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
         responsive: true,
         scales: {
           xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: '残機数 [機]',
-            },
-            gridLines: {
-              display: false
-            },
-            ticks: {
-              fontSize: 10
-            }
+            scaleLabel: { display: true, labelString: mainLabel },
+            gridLines: { display: false },
+            ticks: { fontSize: 10 }
           }],
           yAxes: [{
             id: "y-axis-1",
             type: "linear",
             position: "left",
-            scaleLabel: {
-              display: true,
-              labelString: '確率分布 [％]'
-            }
+            scaleLabel: { display: true, labelString: '確率分布 [％]' },
+            ticks: { min: 0 },
           },
           {
             id: "y-axis-2",
             type: "linear",
             position: "right",
-            scaleLabel: {
-              display: true,
-              labelString: '累積確率 [％]'
-            },
-            ticks: {
-              max: 100,
-              min: 0,
-              stepSize: 50
-            },
+            scaleLabel: { display: true, labelString: '累積確率 [％]' },
+            ticks: { max: 100, min: 0, stepSize: 25 },
           }],
         },
         tooltips: {
           mode: 'index',
           callbacks: {
-            title: (tooltipItem, data) => "残機数：" + tooltipItem[0].xLabel + ' 機',
-            label: (tooltipItem, data) => [tooltipItem.yLabel + " %"],
+            title: (tooltipItem, data) => {
+              const value = tooltipItem[0].xLabel;
+              if (isSlotDetail) {
+                const af = Math.floor(rate[0] * (fire * Math.sqrt(value) + 25));
+                const af2 = rate.length === 2 ? Math.floor(rate[1] * (fire * Math.sqrt(value) + 25)) : 0;
+                const ap = `航空戦火力：${af}${af2 ? ` or ${af2}` : ''}`
+                return `残機数：${value} 機${'\n' + ap}`;
+              }
+              else return `航空戦火力：${value}`;
+            },
+            label: (tooltipItem, data) => [`${tooltipItem.yLabel} %`],
           }
         }
       }
     });
 
     // 説明表示
-    const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
-    const plane = ENEMY_PLANE_DATA.find(v => v.id === enemy.eqp[slotNo]);
     $('#detail_title').data('mode', 'enemy_slot_detail');
     $('#detail_title').data('enemy_no', enemyNo);
     $('#detail_title').data('slot_no', slotNo);
     const detailHtml = `
-    <div>
-      <div class="d-flex">
-        <div class="align-self-center">敵艦：</div>
-        <img src="./img/enemy/${enemy.id}.png" class="enemy_img align-self-center">
-        <div class="ml-1 align-self-center">${enemy.name}</div>
-      </div>
-      <div class="mt-1 d-flex">
-        <div class="align-self-center">装備：</div>
-        <img src="./img/type/type${plane.type}.png" class="plane_img align-self-center">
-        <div class="ml-1 align-self-center">${plane.name} (搭載${targetEnemy.slots[slotNo]}機)</div>
-      </div>
+    <div class="d-flex">
+      <div class="align-self-center">敵艦：</div>
+      <img src="./img/enemy/${enemy.id}.png" class="enemy_img align-self-center">
+      <div class="ml-1 align-self-center">${enemy.name}</div>
     </div>
-    `;
+    <div class="mt-1 d-flex">
+      <div class="align-self-center">装備：</div>
+      <img src="./img/type/type${plane.type}.png" class="plane_img align-self-center">
+      <div class="ml-1 align-self-center">${plane.name} (搭載：${targetEnemy.slots[slotNo]}機　雷装：${plane.torpedo}　爆装：${plane.bomber})</div>
+    </div>`;
     $('#detail_title').html(detailHtml);
+  }
+  else {
+    // グラフ更新
+    chartDataSet.data.labels = xLabels;
+    chartDataSet.data.datasets[0].data = actualData;
+    chartDataSet.data.datasets[1].data = rateData;
+    chartDataSet.options.scales.xAxes[0].scaleLabel.labelString = mainLabel;
+    chartDataSet.options.tooltips.callbacks.title = (tooltipItem, data) => {
+      const value = tooltipItem[0].xLabel;
+      if (isSlotDetail) {
+        const af = Math.floor(rate[0] * (fire * Math.sqrt(value) + 25));
+        const af2 = rate.length === 2 ? Math.floor(rate[1] * (fire * Math.sqrt(value) + 25)) : 0;
+        const ap = `航空戦火力：${af}${af2 ? ` or ${af2}` : ''}`
+        return `残機数：${value} 機${'\n' + ap}`;
+      }
+      else return `航空戦火力：${value}`;
+    }
+
+    chartDataSet.update();
   }
 }
 
@@ -8491,6 +8512,7 @@ $(function () {
   $('#modal_plane_stock').on('click', '#btn_stock_reset', btn_stock_reset_Clicked);
   $('#modal_result_detail').on('click', '#btn_calculate_detail', btn_calculate_detail);
   $('#modal_result_detail').on('change', '#detail_calculate_count', () => $('#btn_calculate_detail').prop('disabled', false));
+  $('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
   $('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
   $('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
   $('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });

@@ -2650,10 +2650,24 @@
             </div>
             <div class="modal-body">
                <div id="detail_title"></div>
+               <div class="my-2 d-flex">
+                  <div class="align-self-center mx-2">
+                     <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="slot_detail" name="detail_display" checked
+                           class="custom-control-input">
+                        <label class="custom-control-label" for="slot_detail">搭載数</label>
+                     </div>
+                     <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="fire_detail" name="detail_display"
+                           class="custom-control-input">
+                        <label class="custom-control-label" for="fire_detail">航空戦火力(キャップ前)</label>
+                     </div>
+                  </div>
+               </div>
                <canvas id="detailChart" width="460" height="300"></canvas>
                <div class="mt-3">
                   <table class="table table-sm text-center border-bottom">
-                     <thead class="bg-light">
+                     <thead class="bg-light font_size_11">
                         <tr>
                            <td>最大</td>
                            <td>最小</td>
