@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 body {
   font-size: 14px;
-  background: #f0ebe6;
   font-family: "Roboto", "Hiragino Sans W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+  background-color: #f0ebe6;
 }
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
@@ -159,8 +159,9 @@ input[type="text"] { font-size: 12px; }
   border-radius: .25rem;
   border: 1px solid #dee2e6;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.966);
 }
+
 .custom-control-input { cursor: pointer; }
 .custom-control-label {
   cursor: pointer;
@@ -424,8 +425,9 @@ input[type="text"] { font-size: 12px; }
   min-width: 290px;
   border: 2px #aaa solid;
   border-radius: 0.25rem;
+  background-color: #fff;
 }
-.lb_plane:hover { background-color: rgba(250, 250, 250, 0.2); }
+.lb_plane:hover { background-color: #f6f6f6; }
 
 
 /* -----------------------------------
@@ -436,7 +438,6 @@ input[type="text"] { font-size: 12px; }
   min-width: 420px;
   max-width: 600px;
   flex: 1;
-  background-color: #fff;
 }
 .ship_name_span {
   cursor: pointer;
@@ -453,6 +454,7 @@ input[type="text"] { font-size: 12px; }
   width: 100%;
   border: 2px #aaa solid;
   border-radius: 0.25rem;
+  background-color: #fff;
 }
 .ship_plane:hover { background-color: #f6f6f6; }
 .ship_img {
@@ -662,7 +664,6 @@ input[type="text"] { font-size: 12px; }
 .search_basic{ width: 460px; }
 .toggle_display_type {
   padding: .25rem .5rem .25rem .5rem;
-  background-color: #fff;
   border: 1px #dee2e6 solid;
   border-radius: .25rem;
   color: #ccc;
@@ -870,6 +871,7 @@ input[type="text"] { font-size: 12px; }
 #map_img {
   width: 466px;
   height: 267px;
+  user-select: none;
 }
 #node_tbody{
   height: 352px;
@@ -1009,14 +1011,14 @@ input[type="text"] { font-size: 12px; }
   width: 78px;
 }
 #shoot_down_table .td_plane_name {
-  cursor: default;
+  cursor: pointer;
   font-size: 11px;
   width: 168px;
 }
 #shoot_down_table_tbody td{ border-top:1px #e9ecef solid; }
 #shoot_down_table_tbody .td_plane_name { text-align: left; }
 #shoot_down_table .td_battle { max-width: 120px; }
-#shoot_down_table_tbody .td_battle { cursor: default; }
+#shoot_down_table_tbody .td_battle { cursor: pointer; }
 #shoot_down_table .battle1 { border-left: 1px #b8b8b8 solid; }
 #shoot_down_table .tr_fap td{ border-top:1px #b8b8b8 solid; }
 #shoot_down_table .fap.battle_end {
@@ -1114,7 +1116,7 @@ input[type="text"] { font-size: 12px; }
   width: 160px;
   border-bottom:1px #b8b8b8 solid;
 }
-#enemy_shoot_down_tbody .td_plane_name { 
+#enemy_shoot_down_tbody .td_plane_name {
   width: 140px;
   text-align: left;
   border-right:1px #b8b8b8 solid;
@@ -1210,8 +1212,21 @@ input[type="text"] { font-size: 12px; }
 
 
 /* ------------------------------
-  所持装備編集 #modal_plane_stock
+  計算詳細 #modal_result_detail
 -------------------------------- */
+#detail_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#detail_table td { padding: 0.2rem; }
+#detail_table_thead td {
+  color: #666;
+  font-size: 12px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+  background-color: #e9ecef;
+}
 #detail_calculate_count { width: 120px; }
 
 /* ------------------------------

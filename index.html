@@ -17,7 +17,6 @@
    <link rel="stylesheet" href="./css/bootstrap.min.css">
    <link rel="stylesheet" href="./css/Index.css">
    <link rel="stylesheet" href="./css/all.min.css">
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
    <script src="./js/jquery-3.4.1.min.js"></script>
    <script src="./js/jquery-ui.min.js"></script>
    <script src="./js/jquery.ui.touch-punch.js"></script>
@@ -25,8 +24,9 @@
    <script src="./js/sortable.js"></script>
    <script src="./js/html2canvas.min.js"></script>
    <script src="./js/bootstrap.bundle.js"></script>
+   <script src="./js/chart.min.js"></script>
    <script src="./js/data.js"></script>
-   <script src="./js/main.min.js"></script>
+   <script src="./js/main.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -589,7 +589,7 @@
                               <option value="10">10</option>
                            </select>
                            <div class="ml-1 align-self-center">戦</div>
-                           <div class="ml-3 my-1 align-self-center">基地を派遣する戦闘：</div>
+                           <div class="ml-3 my-1 align-self-center">基地派遣：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="landBase_target">
                               <option value="1" selected>1</option>
                               <option value="2" class="d-none">2</option>
@@ -610,7 +610,7 @@
                         </div>
                         <div id="normal_enemies">
                            <div class="d-flex flex-wrap" id="battle_container">
-                              <div class="battle_content general_box bg-white py-1 mx-1 my-2">
+                              <div class="battle_content general_box py-1 mx-1 my-2">
                                  <div class="d-flex justify-content-between">
                                     <div class="pl-2 flex-grow-1 align-self-center sortable_handle">
                                        <span class="battle_no">1</span>戦目
@@ -666,7 +666,7 @@
                                     </div>
                                  </div>
                                  <div class="enemyFleet_item py-1 px-1">
-                                    <div class="enemy_content py-1_5 pr-1 d-flex enemy_draggable">
+                                    <div class="enemy_content py-0_5 pr-1 d-flex enemy_draggable">
                                        <div class="enemy_index align-self-center text-primary">
                                           1
                                        </div>
@@ -692,7 +692,7 @@
                            </div>
                         </div>
                         <div class="" id="air_raid_enemies">
-                           <div class="general_box bg-white py-1 mx-1 my-2">
+                           <div class="general_box py-1 mx-1 my-2">
                               <div class="d-flex justify-content-between">
                                  <div class="pl-2 flex-grow-1 align-self-center sortable_handle">
                                     基地空襲敵編成
@@ -882,7 +882,7 @@
                            <div class="mb-2">
                               <div class="font_size_14">
                                  <span class="drag_handle cur_move">
-                                    各制空状態の取り得る確率
+                                    各制空状態を取り得る確率
                                  </span>
                               </div>
                               <table class="text-center w-100" id="rate_table">
@@ -1203,6 +1203,17 @@
                                  </label>
                               </div>
                            </div>
+                           <div class="ml-3 my-3">
+                              <div>■ 「よく使う」として学習された装備や艦娘の情報をリセットする</div>
+                              <button type="button" class="btn btn-sm btn-secondary"
+                                 id="btn_reset_selected_plane_history">
+                                 装備情報
+                              </button>
+                              <button type="button" class="ml-2 btn btn-sm btn-secondary"
+                                 id="btn_reset_selected_ship_history">
+                                 艦娘情報
+                              </button>
+                           </div>
                         </div>
                         <div class="my-3 mx-2 px-2 py-2 general_box">
                            <div class="h6"><i class="fas fa-calculator mr-2"></i>シミュレート設定</div>
@@ -1319,6 +1330,23 @@
                                  <option value="100">100</option>
                               </select>
                               <div class="ml-1 align-self-center">件</div>
+                           </div>
+                        </div>
+                        <div class="my-3 mx-2 px-2 py-2 general_box">
+                           <div class="h6"><i class="fas fa-cogs mr-2"></i>その他</div>
+                           <div class="ml-3">
+                              <div class="d-flex">
+                                 <div class="align-self-center">背景色：</div>
+                                 <input type="color" class="align-self-center ml-2" id="theme_color">
+                                 <button type="button" class="ml-2 btn btn-sm btn-success align-self-center"
+                                    id="btn_random_theme_color">
+                                    おまかせ
+                                 </button>
+                                 <button type="button" class="ml-2 btn btn-sm btn-secondary align-self-center"
+                                    id="btn_reset_theme_color">
+                                    デフォルト
+                                 </button>
+                              </div>
                            </div>
                         </div>
                         <div class="mt-2 mx-2 border-top"></div>
@@ -1693,73 +1721,96 @@
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
                                  data-target="#faq_4">
                                  <div class="d-flex flex-nowrap align-self-center">
-                                    <div class="align-self-center">Q. 味方艦隊欄が消えた</div>
+                                    <div class="align-self-center">Q. 出撃と防空は同時に設定できない？</div>
                                  </div>
                               </div>
                               <div class="border-top collapse history_content" id="faq_4">
                                  <div class="pl-3 py-2 font_size_12">
-                                    A. 防空計算モードでは味方艦隊欄が非表示になります。基地の防空札を全て待機か、集中等にし、防空計算モードを解除してください。
+                                    A. 計算結果の表示や敵艦隊入力欄の単純化のため、現在は同時に計算することはできません。防空時の計算と出撃時の計算はそれぞれ個別で計算してください。
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
                                  data-target="#faq_5">
                                  <div class="d-flex flex-nowrap align-self-center">
-                                    <div class="align-self-center">Q. 同じ制空値の機体を入れ替えただけなのに計算結果が微妙に変わるんだけど？</div>
+                                    <div class="align-self-center">Q. 味方艦隊欄が消えた</div>
                                  </div>
                               </div>
                               <div class="border-top collapse history_content" id="faq_5">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A. 防空計算モードでは味方艦隊欄が非表示になります。基地の防空札を全て待機か、集中等にし、防空計算モードを解除してください。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_6">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 同じ制空値の機体を入れ替えただけなのに計算結果が微妙に変わるんだけど？</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_6">
                                  <div class="pl-3 py-2 font_size_12">
                                     A.
                                     機体を入れ替えるたび計算を行っているからです。本サイトは、仮想的に出撃を5000回繰り返した結果を集計し表示しているようなものなので、数値には多少のぶれが発生します。なお、この回数は「詳細設定」欄にて変更可能ですが、あまり数を増やしすぎると計算に時間がかかってレスポンスが悪くなります。
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
-                                 data-target="#faq_6">
+                                 data-target="#faq_7">
                                  <div class="d-flex flex-nowrap align-self-center">
                                     <div class="align-self-center">Q. 優勢確実だったり、全滅率もかなり低いはずなのに、出撃したら優勢取れなかったり全滅した…</div>
                                  </div>
                               </div>
-                              <div class="border-top collapse history_content" id="faq_6">
+                              <div class="border-top collapse history_content" id="faq_7">
                                  <div class="pl-3 py-2 font_size_12">
                                     A.
                                     過去のケースでは、原因として敵編成が正しく入力されていない（甲なのに丙の編成を選んでいた、敵駆逐などを省略して入力していた）ケースが何件かありました。また、基地空襲の被害（空襲発生時、各航空隊の最上部スロットに1～4機の被害が発生した結果、実際の基地の制空状態が違っていた）を考慮していないケースもありました。それらの要因により、諸所の確率が大きく変わることがあります。今一度、編成、装備、敵編成を確認してみてください。
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
-                                 data-target="#faq_7">
+                                 data-target="#faq_8">
                                  <div class="d-flex flex-nowrap align-self-center">
                                     <div class="align-self-center">Q. 計算結果の「各戦闘開始時の搭載数の推移」って何の数値？</div>
                                  </div>
                               </div>
-                              <div class="border-top collapse history_content" id="faq_7">
+                              <div class="border-top collapse history_content" id="faq_8">
                                  <div class="pl-3 py-2 font_size_12">
                                     A.
-                                    シミュレートにより複数回出撃を行った結果の平均値です。悪い制空状態を取り続けた場合や、攻撃機系などは、この数値から大きくブレることがあります。おおよその参考程度に見てください。
+                                    シミュレートにより複数回出撃を行った結果の平均値です。悪い制空状態を取り続けた場合や、攻撃機系などは、この数値から大きくブレることがあります。おおよその参考程度に見てください。クリックすると残数の分布を表示できますので参考にしてください。
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
-                                 data-target="#faq_8">
+                                 data-target="#faq_9">
                                  <div class="d-flex flex-nowrap align-self-center">
                                     <div class="align-self-center">Q. 機体一覧に機体が一つもない…</div>
                                  </div>
                               </div>
-                              <div class="border-top collapse history_content" id="faq_8">
+                              <div class="border-top collapse history_content" id="faq_9">
                                  <div class="pl-3 py-2 font_size_12">
                                     A.
                                     機体選択画面内「所持装備から選択」にチェックが入っていませんか？その場合、「所持装備」欄にて艦載機の所持数を登録していないと機体が表示されません。また、検索条件や、機種の選択が問題ないかも確認してみてください。
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
-                                 data-target="#faq_9">
+                                 data-target="#faq_10">
                                  <div class="d-flex flex-nowrap align-self-center">
                                     <div class="align-self-center">Q. おまかせ配備すると、伊勢型が瑞雲満載したりするしなんか変</div>
                                  </div>
                               </div>
-                              <div class="border-top collapse history_content" id="faq_9">
+                              <div class="border-top collapse history_content" id="faq_10">
                                  <div class="pl-3 py-2 font_size_12">
                                     A. 基本的には、まず攻撃機で有効なスロットを全て埋め、制空が足りなければ戦闘機系を埋めるようなアルゴリズムです。艦隊欄の<i
                                        class="mx-1 fas fa-lock-open"
                                        style="color: #ffa600;"></i>をクリックし、搭載を回避したいスロットを固定してからおまかせ配備を行うと多少ましになります。
+                                 </div>
+                              </div>
+                              <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
+                                 data-target="#faq_11">
+                                 <div class="d-flex flex-nowrap align-self-center">
+                                    <div class="align-self-center">Q. 「噴式景雲改」「橘花改」が見当たらない</div>
+                                 </div>
+                              </div>
+                              <div class="border-top collapse history_content" id="faq_11">
+                                 <div class="pl-3 py-2 font_size_12">
+                                    A.
+                                    ゲーム同様、装備できる艦娘のスロットから機体選択ボタンをクリックしないと表示されません。具体的には翔鶴改二甲および瑞鶴改二甲の2隻のみが該当します。もし表示されていない場合は、同改二「甲」を正しく選択しているか確認してください。
                                  </div>
                               </div>
                            </div>
@@ -1827,6 +1878,7 @@
                            </div>
                            <select class="custom-select custom-select-sm sort_select" id="plane_sort_select">
                               <option value="default">カテゴリ</option>
+                              <option value="history">よく使う</option>
                               <option value="id">図鑑No</option>
                               <option value="antiAir">装備対空</option>
                               <option value="battle_anti_air">出撃時対空</option>
@@ -1929,9 +1981,13 @@
                         <span>複数列</span>
                      </div>
                   </div>
-                  <div class="mx-2 custom-control custom-checkbox align-self-center">
+                  <div class="ml-2 custom-control custom-checkbox align-self-center">
                      <input type="checkbox" class="custom-control-input" id="display_final" checked>
                      <label class="custom-control-label" for="display_final">最終改造状態のみ</label>
+                  </div>
+                  <div class="ml-2 custom-control custom-checkbox align-self-center">
+                     <input type="checkbox" class="custom-control-input" id="frequent_ship">
+                     <label class="custom-control-label" for="frequent_ship">よく使う艦優先</label>
                   </div>
                </div>
                <div class="pb-1" id="ship_table">
@@ -2128,9 +2184,9 @@
                <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
             </div>
             <div class="modal-body">
-               <div class="plane_preset_content row bg-white">
+               <div class="plane_preset_content row">
                   <div class="col preset_list">
-                     <div class="preset_table bg-white">
+                     <div class="preset_table">
                         <div class="preset_thead border-bottom pb-2 mb-2 w-100">
                            <div class="preset_tr py-2 text-center btn_create_preset border" data-presetid="-1">
                               <div>現在の装備をプリセットに登録</div>
@@ -2645,29 +2701,27 @@
       <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content mt-5">
             <div class="modal-header">
-               <h5 class="modal-title">計算結果詳細</h5>
+               <h5 class="modal-title">艦載機残数詳細計算</h5>
                <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
             </div>
             <div class="modal-body">
                <div id="detail_title"></div>
-               <div class="my-2 d-flex">
+               <div class="my-2 d-flex" id="detail_fire">
                   <div class="align-self-center mx-2">
                      <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="slot_detail" name="detail_display" checked
-                           class="custom-control-input">
+                        <input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
                         <label class="custom-control-label" for="slot_detail">搭載数</label>
                      </div>
                      <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" id="fire_detail" name="detail_display"
-                           class="custom-control-input">
+                        <input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
                         <label class="custom-control-label" for="fire_detail">航空戦火力(キャップ前)</label>
                      </div>
                   </div>
                </div>
                <canvas id="detailChart" width="460" height="300"></canvas>
                <div class="mt-3">
-                  <table class="table table-sm text-center border-bottom">
-                     <thead class="bg-light font_size_11">
+                  <table class="text-center border-bottom" id="detail_table">
+                     <thead id="detail_table_thead">
                         <tr>
                            <td>最大</td>
                            <td>最小</td>
