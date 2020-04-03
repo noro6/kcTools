@@ -26,7 +26,7 @@
    <script src="./js/bootstrap.bundle.js"></script>
    <script src="./js/chart.min.js"></script>
    <script src="./js/data.js"></script>
-   <script src="./js/main.js"></script>
+   <script src="./js/main.min.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -179,7 +179,7 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#landBase_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
@@ -351,7 +351,7 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#friendFleet_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
@@ -451,7 +451,7 @@
                                                             <div class="ml-1 align-self-center">
                                                                <button type="button" data-ini="0"
                                                                   class="btn btn-sm btn-info slot_ini">
-                                                                  <sapn class="text-nowrap">初期値</sapn>
+                                                                  <span class="text-nowrap">初期値</span>
                                                                </button>
                                                             </div>
                                                          </div>
@@ -558,7 +558,7 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#enemyFleet_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
@@ -774,7 +774,7 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#result_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
@@ -947,7 +947,7 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#input_data_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
@@ -1044,7 +1044,7 @@
                            data-toggle="tooltip" title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#plane_stock_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
@@ -1120,7 +1120,7 @@
                            data-toggle="tooltip" title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#config_content">
                            <i class="fas fa-chevron-up d-table-cell align-middle"></i>
                         </div>
@@ -1186,12 +1186,12 @@
                            </div>
                            <div class="ml-3 my-3">
                               <div class="custom-control custom-checkbox">
-                                 <input type="checkbox" class="custom-control-input" id="clipbord_mode">
-                                 <label class="custom-control-label" for="clipbord_mode">
+                                 <input type="checkbox" class="custom-control-input" id="clipboard_mode">
+                                 <label class="custom-control-label" for="clipboard_mode">
                                     スクリーンショット保存時、クリップボードにコピーする
                                  </label>
                               </div>
-                              <div class="alert alert-danger px-1 py-1 mt-2 d-none font_size_12" id="cant_use_clipbord">
+                              <div class="alert alert-danger px-1 py-1 mt-2 d-none font_size_12" id="cant_use_clipboard">
                                  <div>申し訳ありませんが、お使いのブラウザは本サイトのクリップボードへの保存機能に対応していません。</div>
                               </div>
                            </div>
@@ -1352,9 +1352,9 @@
                         <div class="mt-2 mx-2 border-top"></div>
                         <div class="my-2 mx-2">
                            <div class="font_size_12">
-                              ブラウザに保存された LocalStrage データをすべて削除する場合は以下のボタンをクリックしてください。
+                              ブラウザに保存された LocalStorage データをすべて削除する場合は以下のボタンをクリックしてください。
                            </div>
-                           <button type="button" class="btn btn-sm btn-outline-danger" id="btn_reset_localStrage">
+                           <button type="button" class="btn btn-sm btn-outline-danger" id="btn_reset_localStorage">
                               設定削除
                            </button>
                         </div>
@@ -1367,7 +1367,7 @@
                         <div class="h6 mb-0 align-self-center">
                            <span class="content_title align-middle">サイトについて</span>
                         </div>
-                        <div class="ml-auto rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-auto rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#site_abstract_content">
                            <i class="fas fa-chevron-up d-table-cell align-middle"></i>
                         </div>
@@ -1670,7 +1670,7 @@
                         <div class="h6 mb-0 align-self-center">
                            <span class="content_title align-middle">よくある質問</span>
                         </div>
-                        <div class="ml-auto rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-auto rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#site_FAQ_content">
                            <i class="fas fa-chevron-up d-table-cell align-middle"></i>
                         </div>
@@ -1822,7 +1822,7 @@
                         <div class="h6 mb-0 align-self-center">
                            <span class="content_title align-middle">更新履歴</span>
                         </div>
-                        <div class="ml-auto rounded-circle round_button btn_cllapse align-self-center d-table"
+                        <div class="ml-auto rounded-circle round_button align-self-center d-table"
                            data-toggle="collapse" data-target="#site_history_content">
                            <i class="fas fa-chevron-up d-table-cell align-middle"></i>
                         </div>
@@ -1922,8 +1922,8 @@
                         <label class="custom-control-label" for="disp_in_stock">所持装備から選択</label>
                      </div>
                      <div class="custom-control custom-checkbox align-self-center">
-                        <input type="checkbox" class="custom-control-input" id="disp_equiped">
-                        <label class="custom-control-label" for="disp_equiped">配備済機体も表示</label>
+                        <input type="checkbox" class="custom-control-input" id="disp_equipped">
+                        <label class="custom-control-label" for="disp_equipped">配備済機体も表示</label>
                      </div>
                   </div>
                </div>
@@ -2143,14 +2143,14 @@
                               <div class="d-none" id="enemy_display_mode_parent">
                                  <div class="enemy_pattern_label align-self-center">表示：</div>
                                  <div class="custom-control custom-radio align-self-center">
-                                    <input type="radio" id="enemy_dispmay_image" name="enemy_display_mode"
+                                    <input type="radio" id="enemy_display_image" name="enemy_display_mode"
                                        class="custom-control-input" checked>
-                                    <label class="custom-control-label" for="enemy_dispmay_image">画像</label>
+                                    <label class="custom-control-label" for="enemy_display_image">画像</label>
                                  </div>
                                  <div class="ml-3 custom-control custom-radio align-self-center">
-                                    <input type="radio" id="enemy_dispmay_text" name="enemy_display_mode"
+                                    <input type="radio" id="enemy_display_text" name="enemy_display_mode"
                                        class="custom-control-input">
-                                    <label class="custom-control-label" for="enemy_dispmay_text">テキスト</label>
+                                    <label class="custom-control-label" for="enemy_display_text">テキスト</label>
                                  </div>
                               </div>
                            </div>

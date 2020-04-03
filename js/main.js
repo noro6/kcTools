@@ -424,7 +424,7 @@ function checkInvalidPlane(shipID, plane) {
  * 数値入力バリデーション
  * @param {string} value 入力文字列
  * @param {number} max 最大値
- * @param {string} min 最小値　未指定時0
+ * @param {number} min 最小値　未指定時0
  * @returns {number} 検証結果数値
  */
 function validateInputNumber(value, max, min = 0) {
@@ -444,17 +444,17 @@ function validateInputNumber(value, max, min = 0) {
  */
 function initializeSetting() {
   // 設定データ読み込み
-  setting = loadLocalStrage('setting');
+  setting = loadLocalStorage('setting');
   if (!setting) setting = {};
   if (!setting.hasOwnProperty('version')) setting.version = '0.0.0';
   if (!setting.hasOwnProperty('simulateCount')) setting.simulateCount = 5000;
   if (!setting.hasOwnProperty('autoSave')) setting.autoSave = true;
   if (!setting.hasOwnProperty('emptySlotInvisible')) setting.emptySlotInvisible = false;
   if (!setting.hasOwnProperty('inStockOnly')) setting.inStockOnly = false;
-  if (!setting.hasOwnProperty('visibleEquiped')) setting.visibleEquiped = false;
+  if (!setting.hasOwnProperty('visibleEquipped')) setting.visibleEquipped = false;
   if (!setting.hasOwnProperty('visibleFinal')) setting.visibleFinal = true;
   if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
-  if (!setting.hasOwnProperty('copyToClipbord')) setting.copyToClipbord = false;
+  if (!setting.hasOwnProperty('copyToClipboard')) setting.copyToClipboard = false;
   if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
   if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
   if (!setting.hasOwnProperty('backUpEnabled')) setting.backUpEnabled = true;
@@ -483,7 +483,17 @@ function initializeSetting() {
     };
   }
 
-  saveLocalStrage('setting', setting);
+  // 過去のデータ削除 というかtypo
+  if (setting.hasOwnProperty('copyToClipbord')) {
+    setting.copyToClipboard = setting.copyToClipbord;
+    delete setting.copyToClipbord;
+  }
+  if (setting.hasOwnProperty('visibleEquiped')) {
+    setting.visibleEquipped = setting.visibleEquiped;
+    delete setting.visibleEquiped;
+  }
+
+  saveLocalStorage('setting', setting);
 }
 
 /*==================================
@@ -592,16 +602,16 @@ function initialize(callback) {
     document.getElementById('version_inform_body').appendChild(fragment);
 
     // バージョン変更毎にデータ削除
-    deleteLocalStrage('version');
-    deleteLocalStrage('autoSave');
-    deleteLocalStrage('simulateCount');
-    deleteLocalStrage('emptySlotInvisible');
-    deleteLocalStrage('modalDisplayMode');
-    deleteLocalStrage('defaultProf');
+    deleteLocalStorage('version');
+    deleteLocalStorage('autoSave');
+    deleteLocalStorage('simulateCount');
+    deleteLocalStorage('emptySlotInvisible');
+    deleteLocalStorage('modalDisplayMode');
+    deleteLocalStorage('defaultProf');
 
-    const planeStock = loadLocalStrage('planeStock');
+    const planeStock = loadLocalStorage('planeStock');
     if (planeStock && planeStock.length > 0 && !planeStock[0].num.length) {
-      deleteLocalStrage('planeStock');
+      deleteLocalStorage('planeStock');
     }
   }
 
@@ -811,7 +821,7 @@ function initialize(callback) {
   // 連合艦隊チェック初期化
   $('#union_fleet').prop('checked', setting.isUnion);
   // クリップボード保存
-  $('#clipbord_mode').prop('checked', setting.copyToClipbord);
+  $('#clipboard_mode').prop('checked', setting.copyToClipboard);
   // 空襲被害最大
   $('#air_raid_max').prop('checked', setting.airRaidMax);
   // 空スロット表示
@@ -819,11 +829,11 @@ function initialize(callback) {
   // 在庫有のみ表示
   $('#disp_in_stock').prop('checked', setting.inStockOnly);
   // 配備済み表示
-  $('#disp_equiped').prop('checked', setting.visibleEquiped);
+  $('#disp_equipped').prop('checked', setting.visibleEquipped);
   // 敵艦表示形式
-  $('#enemy_dispmay_image').prop('checked', setting.enemyDisplayImage);
+  $('#enemy_display_image').prop('checked', setting.enemyDisplayImage);
   // 敵艦表示形式
-  $('#enemy_dispmay_text').prop('checked', !setting.enemyDisplayImage);
+  $('#enemy_display_text').prop('checked', !setting.enemyDisplayImage);
   $('#plane_word').val('');
   $('#ship_word').val('');
   $('#enemy_word').val('');
@@ -838,17 +848,17 @@ function initialize(callback) {
 
   // 自動保存展開
   if (setting.autoSave) {
-    const autoSaveData = loadLocalStrage('autoSaveData');
-    expandMainPreset(decordPreset(autoSaveData));
+    const autoSaveData = loadLocalStorage('autoSaveData');
+    expandMainPreset(decodePreset(autoSaveData));
   }
 
   // URLパラメータチェック
   const urlDeck = [null, null];
   if (params.hasOwnProperty("d")) {
 
-    urlDeck[1] = decordPreset(params.d);
+    urlDeck[1] = decodePreset(params.d);
 
-    expandMainPreset(decordPreset(params.d));
+    expandMainPreset(decodePreset(params.d));
     existParam = true;
   }
   // デッキビルダーー形式読み込み
@@ -1414,7 +1424,7 @@ function createPlaneTable(planes) {
   const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
   const planeStock = loadPlaneStock();
   const dispInStock = setting.inStockOnly;
-  const dispEquiped = setting.visibleEquiped;
+  const dispEquiped = setting.visibleEquipped;
   const sortKey = $('#plane_sort_select').val();
 
   if (displayMode === "multi") {
@@ -1429,11 +1439,11 @@ function createPlaneTable(planes) {
   }
 
   if (dispInStock) {
-    $('#disp_equiped').closest('div').removeClass('d-none');
+    $('#disp_equipped').closest('div').removeClass('d-none');
     $('#disp_in_stock').prop('checked', true);
   }
   else {
-    $('#disp_equiped').closest('div').addClass('d-none');
+    $('#disp_equipped').closest('div').addClass('d-none');
     $('#disp_in_stock').prop('checked', false);
   }
 
@@ -1651,11 +1661,11 @@ function createShipTable(type) {
   const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
   const visibleFinal = $('#display_final').prop('checked');
   const searchWord = $('#ship_word').val().trim();
-  const isFreqent = $('#frequent_ship').prop('checked');
+  const isFrequent = $('#frequent_ship').prop('checked');
 
   setting.visibleFinal = visibleFinal;
-  setting.orderByFrequency = isFreqent;
-  saveLocalStrage('setting', setting);
+  setting.orderByFrequency = isFrequent;
+  saveLocalStorage('setting', setting);
 
   // 艦種ソート後、改造元idソート
   for (const typeObj of SHIP_TYPE) {
@@ -1665,7 +1675,7 @@ function createShipTable(type) {
   }
 
   // よく使う順に並び替え
-  if (isFreqent && setting.selectedHistory[1]) {
+  if (isFrequent && setting.selectedHistory[1]) {
     const lst = setting.selectedHistory[1];
     dispData.sort((a, b) => lst.filter(v => v === b.id).length - lst.filter(v => v === a.id).length);
   }
@@ -1903,12 +1913,12 @@ function createEnemyTable(type) {
       $apDiv.className = 'ml-auto align-self-center enemy_td_ap';
       $apDiv.textContent = ap;
 
-      const $lbapDiv = document.createElement('div');
-      $lbapDiv.className = 'enemy_td_lbAp align-self-center';
-      $lbapDiv.textContent = lbAp;
+      const $lbApDiv = document.createElement('div');
+      $lbApDiv.className = 'enemy_td_lbAp align-self-center';
+      $lbApDiv.textContent = lbAp;
 
       $enemyDiv.appendChild($apDiv);
-      $enemyDiv.appendChild($lbapDiv);
+      $enemyDiv.appendChild($lbApDiv);
     }
 
     fragment.appendChild($enemyDiv);
@@ -1925,10 +1935,10 @@ function createEnemyTable(type) {
  */
 function loadPlanePreset() {
   const $modal = $('#modal_plane_preset');
-  // strage 読み込み
-  planePreset = loadLocalStrage('planePreset');
+  // storage 読み込み
+  planePreset = loadLocalStorage('planePreset');
 
-  // strage に存在しなかった場合初期プリセットを展開
+  // storage に存在しなかった場合初期プリセットを展開
   if (!planePreset) {
     planePreset = DEFAULT_PLANE_PRESET.concat();
   }
@@ -2057,7 +2067,7 @@ function updatePlanePreset() {
   planePreset.push(newPreset);
   planePreset.sort((a, b) => a.id - b.id);
   // ローカルストレージ保存
-  saveLocalStrage('planePreset', planePreset);
+  saveLocalStorage('planePreset', planePreset);
 }
 
 /**
@@ -2068,7 +2078,7 @@ function deletePlanePreset() {
   planePreset = planePreset.filter(v => v.id !== presetId);
   planePreset.sort((a, b) => a.id - b.id);
   // ローカルストレージ保存
-  saveLocalStrage('planePreset', planePreset);
+  saveLocalStorage('planePreset', planePreset);
 }
 
 /**
@@ -2161,7 +2171,7 @@ function createEnemyPattern(patternNo = 0) {
   // 敵艦隊一覧生成
   let text = '';
   let sumAp = 0;
-  let sumFreetAntiAir = 0;
+  let sumFleetAntiAir = 0;
   const patterns = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv);
   const pattern = patterns[patternNo];
   const enemies = pattern.enemies;
@@ -2170,7 +2180,7 @@ function createEnemyPattern(patternNo = 0) {
     const enemy = ENEMY_DATA.find(v => v.id === enemies[index]);
     const enemyObj = createEnemyObject(enemy.id);
     sumAp += enemyObj.ap;
-    sumFreetAntiAir += enemyObj.aabo;
+    sumFleetAntiAir += enemyObj.aabo;
     text += `
     <div class="enemy_pattern_tr mx-1 d-flex border-bottom" data-enemyid="${enemy.id}">
       <div class="mr-1 align-self-center enemy_pattern_tr_image">
@@ -2187,7 +2197,7 @@ function createEnemyPattern(patternNo = 0) {
   // 陣形補正
   const formation = FORMATION.find(v => v.id === pattern.form);
   // 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計] * 2
-  const fleetAntiAir = Math.floor(formation.correction * sumFreetAntiAir) * 2;
+  const fleetAntiAir = Math.floor(formation.correction * sumFleetAntiAir) * 2;
 
   $('#enemy_pattern_anti_air').text(fleetAntiAir);
   $('#enemy_pattern_formation').text(formation.name);
@@ -2291,11 +2301,11 @@ function loadMainPreset(forceBackUp = false) {
   const $modal = $('#modal_main_preset');
   const isBackUpMode = $('#main_preset_back_up').hasClass('active') || forceBackUp;
 
-  // strage 読み込み
-  presets = loadLocalStrage('presets');
+  // storage 読み込み
+  presets = loadLocalStorage('presets');
   if (!presets) presets = [];
 
-  backUpPresets = loadLocalStrage('backUpPresets');
+  backUpPresets = loadLocalStorage('backUpPresets');
   if (!backUpPresets) backUpPresets = [];
 
   let basePresets = isBackUpMode ? backUpPresets : presets;
@@ -2392,7 +2402,7 @@ function updateMainPreset() {
   }
   // 更新がなかったら新規登録
   if (!isUpdate) presets.push(preset);
-  saveLocalStrage('presets', presets);
+  saveLocalStorage('presets', presets);
 
   $('#modal_main_preset').find('.task').text(isUpdate ? '編成更新' : '新規登録');
   $('#modal_main_preset').find('.alert').removeClass('hide').addClass('show');
@@ -2413,7 +2423,7 @@ function updateMainPresetName() {
     preset[1] = presetName;
     preset[3] = $('#preset_remarks').val().trim();
   }
-  saveLocalStrage('presets', presets);
+  saveLocalStorage('presets', presets);
 
   $('#modal_main_preset').find('.task').text('更新');
   $('#modal_main_preset').find('.alert').removeClass('hide').addClass('show');
@@ -2660,7 +2670,7 @@ function createPreset() {
   const preset = [
     castInt($('#modal_main_preset').find('.preset_data').data('presetid')),
     presetName,
-    encordPreset(),
+    encodePreset(),
     $('#preset_remarks').val().trim()
   ];
 
@@ -2672,7 +2682,7 @@ function createPreset() {
  * 現在の入力状況からbase64エンコード済みプリセットデータを生成、返却する
  * @returns {string} エンコード済プリセットデータ
  */
-function encordPreset() {
+function encodePreset() {
   try {
     // 現在のプリセットを取得し、オブジェクトを文字列化
     const preset = [
@@ -2700,7 +2710,7 @@ function encordPreset() {
  * @param {string} input
  * @returns {array} 基地 艦隊 敵艦プリセット 失敗時空プリセット[[],[],[]]
  */
-function decordPreset(input) {
+function decodePreset(input) {
   try {
     const str = b64_to_utf8(input);
     const preset = JSON.parse(str);
@@ -2724,12 +2734,12 @@ function deleteMainPreset(id) {
     for (let i = 0; i < backUpPresets.length; i++) {
       backUpPresets[i][0] = - (i + 1);
     }
-    saveLocalStrage('backUpPresets', backUpPresets);
+    saveLocalStorage('backUpPresets', backUpPresets);
   }
   else {
     presets = presets.filter(v => v[0] !== id);
     presets.sort((a, b) => a[0] - b[0]);
-    saveLocalStrage('presets', presets);
+    saveLocalStorage('presets', presets);
   }
   const $modal = $('#modal_main_preset');
   $modal.find('.alert').removeClass('hide').addClass('show');
@@ -2847,7 +2857,7 @@ function readDeckBuilder(deck) {
  * デッキフォーマット {version: 4.2, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
  * @param {string} デッキビルダー形式データ
  */
-function convertToDeckBuikder() {
+function convertToDeckBuilder() {
   try {
     const fleet = createFriendFleetPreset();
     const landBase = createLandBasePreset();
@@ -2920,9 +2930,9 @@ function readEquipmentJson(input) {
     }
 
     planeStock.sort((a, b) => a.id - b.id);
-    saveLocalStrage('planeStock', planeStock);
+    saveLocalStorage('planeStock', planeStock);
     setting.inStockOnly = true;
-    saveLocalStrage('setting', setting);
+    saveLocalStorage('setting', setting);
   } catch (error) {
     return false;
   }
@@ -2933,7 +2943,7 @@ function readEquipmentJson(input) {
  * 機体在庫読み込み　未定義の場合は初期化したものを返却
  */
 function loadPlaneStock() {
-  let planeStock = loadLocalStrage('planeStock');
+  let planeStock = loadLocalStorage('planeStock');
 
   if (!planeStock || !planeStock.length) {
     const initStock = [];
@@ -2942,14 +2952,14 @@ function loadPlaneStock() {
       initStock.push(stock);
     }
     planeStock = initStock.concat();
-    saveLocalStrage('planeStock', planeStock);
+    saveLocalStorage('planeStock', planeStock);
   }
   else {
     // 追加装備チェック
     for (const plane of PLANE_DATA) {
       if (!planeStock.find(v => v.id === plane.id)) {
         planeStock.push({ id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-        saveLocalStrage('planeStock', planeStock);
+        saveLocalStorage('planeStock', planeStock);
       }
     }
   }
@@ -2966,7 +2976,7 @@ function updatePlaneSelectedHistory(id) {
   setting.selectedHistory[0].unshift(id);
   // 100件以降はケツから削る
   setting.selectedHistory[0] = setting.selectedHistory[0].splice(0, 100);
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -2978,7 +2988,7 @@ function updateShipSelectedHistory(id) {
   setting.selectedHistory[1].unshift(id);
   // 100件以降はケツから削る
   setting.selectedHistory[1] = setting.selectedHistory[1].splice(0, 100);
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -3118,14 +3128,14 @@ function drawResult() {
 }
 
 /*==================================
-    Web Strage
+    Web Storage
 ==================================*/
 /**
- * local Strage からデータ取得(Json.parse済)
+ * local Storage からデータ取得(Json.parse済)
  * @param {string} key key
  * @returns データ(Json.parse済) 存在しない、または失敗したら null
  */
-function loadLocalStrage(key) {
+function loadLocalStorage(key) {
   if (!window.localStorage) return null;
   try {
     return JSON.parse(window.localStorage.getItem(key));
@@ -3134,12 +3144,12 @@ function loadLocalStrage(key) {
   }
 }
 /**
- * local Strage にデータ格納
+ * local Storage にデータ格納
  * @param {string} key キー名
  * @param {Object} data 格納する生データ
  * @returns
  */
-function saveLocalStrage(key, data) {
+function saveLocalStorage(key, data) {
   if (!window.localStorage || key.length === 0) return false;
   try {
     window.localStorage.setItem(key, JSON.stringify(data));
@@ -3150,10 +3160,10 @@ function saveLocalStrage(key, data) {
   }
 }
 /**
- * local Strage 特定データ消去
+ * local Storage 特定データ消去
  * @param {String} key 消去対象key
  */
-function deleteLocalStrage(key) {
+function deleteLocalStorage(key) {
   if (!window.localStorage || key.length === 0) return false;
   window.localStorage.removeItem(key);
   return true;
@@ -3292,15 +3302,15 @@ function calculateInit(objectData) {
 
   // 自動保存する場合
   if (document.getElementById('auto_save')['checked']) {
-    const currentData = encordPreset();
-    saveLocalStrage('autoSaveData', currentData);
+    const currentData = encodePreset();
+    saveLocalStorage('autoSaveData', currentData);
 
     setting.autoSave = true;
-    saveLocalStrage('setting', setting);
+    saveLocalStorage('setting', setting);
 
     // バックアップ
     if (document.getElementById('backup_enabled')['checked'] && !document.getElementById('suspend_backup')['checked']) {
-      backUpPresets = loadLocalStrage('backUpPresets');
+      backUpPresets = loadLocalStorage('backUpPresets');
       if (!backUpPresets) backUpPresets = [];
 
       // 今回のバックアップデータ
@@ -3336,13 +3346,13 @@ function calculateInit(objectData) {
         backUpPresets[i][0] = - (i + 1);
       }
 
-      saveLocalStrage('backUpPresets', backUpPresets);
+      saveLocalStorage('backUpPresets', backUpPresets);
     }
   }
 
   // 空スロット表示可否
   setting.emptySlotInvisible = document.getElementById('empty_slot_invisible').checked;
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 
   // チャートデータ初期化
   chartData = { own: [], enemy: [], rate: [], slots: [], enSlots: [] };
@@ -3355,7 +3365,7 @@ function calculateInit(objectData) {
  * 基地航空隊入力情報更新
  * 値の表示と制空値、半径計算も行う
  * @param {Array.<Object>} landBaseData
- * @param {boolean} updateDisplay 表示物の更新を行う場合 ture デフォルト true
+ * @param {boolean} updateDisplay 表示物の更新を行う場合 true デフォルト true
  */
 function updateLandBaseInfo(landBaseData, updateDisplay = true) {
   const tmpLbPlanes = [];
@@ -3757,17 +3767,17 @@ function getAirPower_lb(lb_plane) {
 /**
  * 航空隊の制空補正値を返却
  * @param {*} plane
- * @param {boolean} [isDeffence=false] 防空時の補正が必要な場合true
+ * @param {boolean} [isDefence=false] 防空時の補正が必要な場合true
  * @returns 補正倍率
  */
-function getReconnaissancesAdjust(plane, isDeffence = false) {
+function getReconnaissancesAdjust(plane, isDefence = false) {
   // 出撃時補正
-  if (!isDeffence && plane.type === 104) {
+  if (!isDefence && plane.type === 104) {
     // 陸上偵察機補正
     return (plane.scout === 9 ? 1.18 : plane.scout === 8 ? 1.15 : 1.00);
   }
   // 防空時補正
-  else if (isDeffence) {
+  else if (isDefence) {
     if (plane.type === 104) {
       // 陸上偵察機補正
       return (plane.scout === 9 ? 1.24 : 1.18);
@@ -3793,7 +3803,7 @@ function updateLBAirPower(landBaseDatum) {
   const baseAP = landBaseDatum.ap;
   // 搭載機全ての補正パターンを比較し、最大を返す。Listにすべての補正パターンを保持
   const apList = [landBaseDatum.ap];
-  let reslutAP = landBaseDatum.ap;
+  let resultAP = landBaseDatum.ap;
 
   for (const plane of landBaseDatum.planes) {
     // 補正値を乗算して格納
@@ -3801,10 +3811,10 @@ function updateLBAirPower(landBaseDatum) {
   }
   // 補正が最大だったものに更新
   for (const value of apList) {
-    reslutAP = reslutAP < value ? value : reslutAP;
+    resultAP = resultAP < value ? value : resultAP;
   }
 
-  landBaseDatum.ap = Math.floor(reslutAP);
+  landBaseDatum.ap = Math.floor(resultAP);
 }
 
 /**
@@ -3960,7 +3970,7 @@ function getBonusAp(plane) {
  * 艦娘入力情報更新
  * 値の表示と制空値計算も行う
  * @param {Array.<Object>} friendFleetData
- * @param {boolean} updateDisplay 表示物の更新を行う場合 ture デフォルト true
+ * @param {boolean} updateDisplay 表示物の更新を行う場合 true デフォルト true
  */
 function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
   const shipPlanes = [];
@@ -3981,7 +3991,7 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
     node_ship_tabs = $('.friendFleet_tab.show.active')[0].getElementsByClassName('ship_tab');
   }
   setting.isUnion = isUnionFleet;
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 
   for (let index = 0; index < node_ship_tabs.length; index++) {
     const node_ship_tab = node_ship_tabs[index];
@@ -6020,22 +6030,22 @@ function autoLandBaseExpand(planes) {
   let isMax = false;
 
   // 攻撃機系上位最大4つ取ってくる
-  const selectedAtackers = [];
+  const selectedAttackers = [];
   for (const type of atackers) {
     const planeList = planes['type' + type];
     if (!planeList || planeList.length === 0) continue;
     for (let i = 0; i < planeList.length; i++) {
       const plane = planeList[i];
-      selectedAtackers.push(plane);
-      isMax = selectedAtackers.length === slotNumber;
+      selectedAttackers.push(plane);
+      isMax = selectedAttackers.length === slotNumber;
       if (isMax) break;
     }
     if (isMax) break;
   }
 
   // スロット下から攻撃機搭載
-  for (let i = 0; i < selectedAtackers.length; i++) {
-    const plane = getLandBasePlaneObject(selectedAtackers[i]);
+  for (let i = 0; i < selectedAttackers.length; i++) {
+    const plane = getLandBasePlaneObject(selectedAttackers[i]);
     equipList[(equipList.length - 1) - i] = plane;
     sumAp += plane.ap;
   }
@@ -6560,7 +6570,7 @@ function btn_capture_Clicked($this) {
       const imgData = canvas.toDataURL();
 
       // クリップボードコピー
-      if ($('#clipbord_mode').prop('checked') && typeof ClipboardItem === "function") {
+      if ($('#clipboard_mode').prop('checked') && typeof ClipboardItem === "function") {
         try {
           canvas.toBlob(blob => {
             navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
@@ -6595,7 +6605,7 @@ function btn_capture_Clicked($this) {
 
 /**
  * 保存処理
- * @param {*} data 
+ * @param {*} data
  */
 function downloadImage(data) {
   const now = new Date();
@@ -6607,12 +6617,12 @@ function downloadImage(data) {
   const fname = 'screenshot_' + now.getFullYear() + month + date + hours + minutes + sec + '.jpg';
 
   if (window.navigator.msSaveBlob) {
-    const encdata = atob(data.replace(/^.*,/, ''));
-    const outdata = new Uint8Array(encdata.length);
-    for (var i = 0; i < encdata.length; i++) {
-      outdata[i] = encdata.charCodeAt(i);
+    const encodeData = atob(data.replace(/^.*,/, ''));
+    const outData = new Uint8Array(encodeData.length);
+    for (var i = 0; i < encodeData.length; i++) {
+      outData[i] = encodeData.charCodeAt(i);
     }
-    const blob = new Blob([outdata], ["image/png"]);
+    const blob = new Blob([outData], ["image/png"]);
     window.navigator.msSaveOrOpenBlob(blob, fname);
   } else {
     const a = document.getElementById("getImage");
@@ -6864,11 +6874,11 @@ function proficiency_Changed($this, cancelCalculate = false) {
 function init_proficiency_Changed($this) {
   proficiency_Changed($this, true);
 
-  // localStrage更新
+  // localStorage更新
   const prof = castInt($this.find('.prof_option')[0].dataset.prof);
   const tmp = setting.defaultProf.find(v => v.id === castInt($this.closest('.init_prof')[0].dataset.typeid));
   tmp.prof = prof;
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -6879,7 +6889,7 @@ function backup_enabled_Clicked() {
   setting.backUpCount = castInt(document.getElementById('backup_count').value);
   document.getElementById('backup_count').disabled = !setting.backUpEnabled;
 
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -7099,21 +7109,21 @@ function ship_plane_Drop($this, ui) {
  * @param {JqueryDomObject} $this
  */
 function cell_type_Changed($this) {
-  const $paerntContent = $this.closest('.battle_content');
+  const $parentContent = $this.closest('.battle_content');
   const cellType = castInt($this.val());
-  $paerntContent.find('.enemy_content').each((i, e) => {
+  $parentContent.find('.enemy_content').each((i, e) => {
     if (cellType !== CELL_TYPE.grand && i > 5) $(e).addClass('d-none').removeClass('d-flex');
     else $(e).removeClass('d-none').addClass('d-flex');
   });
 
-  const $lastEnemy = $paerntContent.find('.enemy_content:last');
+  const $lastEnemy = $parentContent.find('.enemy_content:last');
   if ($lastEnemy.hasClass('ui-draggable')) {
     const id = castInt($lastEnemy[0].dataset.enemyid);
     const ap = castInt($lastEnemy.text());
     setEnemyDiv($lastEnemy, id, ap);
   }
 
-  const $formation = $paerntContent.find('.formation');
+  const $formation = $parentContent.find('.formation');
   changeFormationSelectOption($formation, cellType);
 
   calculate();
@@ -7295,16 +7305,16 @@ function plane_word_TextChanged() {
  */
 function disp_in_stock_Checked_Chenged() {
   setting.inStockOnly = $('#disp_in_stock').prop('checked');
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
   plane_type_select_Changed();
 }
 
 /**
  * 配備済みも表示クリック時
  */
-function disp_equiped_Checked_Chenged() {
-  setting.visibleEquiped = $('#disp_equiped').prop('checked');
-  saveLocalStrage('setting', setting);
+function disp_equipped_Checked_Chenged() {
+  setting.visibleEquipped = $('#disp_equipped').prop('checked');
+  saveLocalStorage('setting', setting);
   plane_type_select_Changed();
 }
 
@@ -7332,7 +7342,7 @@ function toggle_display_type_Clicked($this) {
   $this.addClass('selected');
 
   setting.displayMode[$parentModal.attr('id')] = $this.data('mode');
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
   $parentModal.find('select').change();
 }
 
@@ -7346,7 +7356,7 @@ function sort_Changed($this) {
   const isAsc = $parentModal.find('.order_asc').prop('checked');
   setting.orderBy[$parentModal.attr('id')] = [sortKey, isAsc ? 'asc' : 'desc'];
 
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
   $parentModal.find('select:first').change();
 }
 
@@ -7737,8 +7747,8 @@ function pattern_Changed($this) {
  * @param {JqueryDomObject} $this
  */
 function enemy_display_mode_Changed($this) {
-  setting.enemyDisplayImage = $this.attr('id').includes('enemy_dispmay_image');
-  saveLocalStrage('setting', setting);
+  setting.enemyDisplayImage = $this.attr('id').includes('enemy_display_image');
+  saveLocalStorage('setting', setting);
   const pattern = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
   if (pattern > 0) createEnemyPattern(pattern);
   else createEnemyPattern();
@@ -8001,7 +8011,7 @@ function innerProfSetting_Clicked($this) {
   }
 
   setting.initialProf120 = initialProf120Plane.sort((a, b) => a - b);
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 
   calculate();
 }
@@ -8017,7 +8027,7 @@ function calculate_count_Changed($this) {
   $this.val(value);
   setting.simulateCount = value;
   // ローカルストレージへ保存
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -8025,22 +8035,22 @@ function calculate_count_Changed($this) {
  */
 function auto_save_Clicked() {
   setting.autoSave = $('#auto_save').prop('checked');
-  saveLocalStrage('setting', setting);
-  if (!setting.autoSave) deleteLocalStrage('autoSaveData');
+  saveLocalStorage('setting', setting);
+  if (!setting.autoSave) deleteLocalStorage('autoSaveData');
 }
 
 /**
  * クリップボード保存チェック
  */
-function clipbord_mode_Clicked() {
+function clipboard_mode_Clicked() {
   // 未対応の場合強制 false
   if (typeof ClipboardItem !== "function") {
-    $('#clipbord_mode').prop('checked', false);
-    $('#cant_use_clipbord').removeClass('d-none');
+    $('#clipboard_mode').prop('checked', false);
+    $('#cant_use_clipboard').removeClass('d-none');
   }
 
-  setting.copyToClipbord = $('#clipbord_mode').prop('checked');
-  saveLocalStrage('setting', setting);
+  setting.copyToClipboard = $('#clipboard_mode').prop('checked');
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -8048,20 +8058,20 @@ function clipbord_mode_Clicked() {
  */
 function air_raid_max_Clicked() {
   setting.airRaidMax = $('#air_raid_max').prop('checked');
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 /**
  * 設定削除クリック時
  */
-function btn_reset_localStrage_Clicked() {
+function btn_reset_localStorage_Clicked() {
   const $modal = $('#modal_confirm');
   $modal.find('.modal-body').html(`
     <div>ブラウザに保存された設定を削除します。</div>
     <div class="mt-3">登録されている編成プリセット、装備プリセット、各種詳細設定値などが削除されます。</div>
     <div class="mt-3">よろしければ、OKボタンを押してください。</div>
   `);
-  confirmType = "deleteLocalStrageAll";
+  confirmType = "deleteLocalStorageAll";
   $modal.modal('show');
 }
 
@@ -8105,7 +8115,7 @@ function theme_color_Changed() {
   }
 
   setting.themeColor = code;
-  saveLocalStrage('setting', setting);
+  saveLocalStorage('setting', setting);
 }
 
 
@@ -8297,7 +8307,7 @@ function btn_save_stock_Clicked() {
   });
 
   planeStock.find(v => v.id === planeId).num = numArray;
-  saveLocalStrage('planeStock', planeStock);
+  saveLocalStorage('planeStock', planeStock);
 
   $('#modal_plane_stock').modal('hide');
   setPlaneStockTable();
@@ -8330,20 +8340,20 @@ function btn_calculate_detail() {
  */
 function modal_confirm_ok_Clicked() {
   switch (confirmType) {
-    case "deleteLocalStrageAll":
+    case "deleteLocalStorageAll":
       window.localStorage.clear();
       break;
     case "resetStock":
-      deleteLocalStrage('planeStock');
+      deleteLocalStorage('planeStock');
       setPlaneStockTable();
       break;
     case "deleteSelectedPlaneHistory":
       setting.selectedHistory[0] = [];
-      saveLocalStrage('setting', setting);
+      saveLocalStorage('setting', setting);
       break;
     case "deleteSelectedShipHistory":
       setting.selectedHistory[1] = [];
-      saveLocalStrage('setting', setting);
+      saveLocalStorage('setting', setting);
       break;
     case "Error":
       break;
@@ -8374,14 +8384,14 @@ function btn_auto_expand_Clicked() {
  * Twitterボタンクリック
  */
 function btn_twitter_Clicked() {
-  window.open('https://twitter.com/share?url=https://noro6.github.io/kcTools/?d=' + encordPreset());
+  window.open('https://twitter.com/share?url=https://noro6.github.io/kcTools/?d=' + encodePreset());
 }
 
 /**
  * デッキビルダーボタンクリック
  */
 function btn_deckBuilder_Clicked() {
-  window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuikder());
+  window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuilder());
 }
 
 /**
@@ -8525,7 +8535,7 @@ function btn_load_deck_Clicked() {
 function btn_output_url_Clicked() {
   try {
     const $output = $('#output_url');
-    $output.val(location.protocol + "//" + location.hostname + location.pathname + "?d=" + encordPreset());
+    $output.val(location.protocol + "//" + location.hostname + location.pathname + "?d=" + encodePreset());
     $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
     $output.removeClass('is-invalid').addClass('is-valid');
   } catch (error) {
@@ -8538,7 +8548,7 @@ function btn_output_url_Clicked() {
  * デッキビルダー形式生成ボタンクリック
  */
 function btn_output_deck_Clicked() {
-  const dataString = convertToDeckBuikder();
+  const dataString = convertToDeckBuilder();
   const $output = $('#output_deck');
   $('#output_deck').val(dataString);
   if (dataString) {
@@ -8556,7 +8566,7 @@ function btn_expand_main_preset_Clicked() {
   const isBackUpMode = $('#main_preset_back_up').hasClass('active');
   const basePreset = isBackUpMode ? backUpPresets : presets;
   const preset = basePreset.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_selected')[0].dataset.presetid));
-  expandMainPreset(decordPreset(preset[2]));
+  expandMainPreset(decodePreset(preset[2]));
   $('#modal_main_preset').modal('hide');
 }
 
@@ -8663,7 +8673,7 @@ function smart_menu_modal_link_Clicked($this) {
 function varsion_Closed() {
   if ($('#alreadyRead').prop('checked')) {
     setting.version = $('#version').text();
-    saveLocalStrage('setting', setting);
+    saveLocalStorage('setting', setting);
   }
 }
 
@@ -8771,10 +8781,10 @@ $(function () {
   $('#result_content').on('click', '#enemy_shoot_down_tbody .td_detail_slot', function () { enemy_slot_Clicked($(this)); });
   $('#config_content').on('focus', '#calculate_count', function () { $(this).select(); });
   $('#config_content').on('input', '#calculate_count', function () { calculate_count_Changed($(this)); });
-  $('#config_content').on('click', '#btn_reset_localStrage', btn_reset_localStrage_Clicked);
+  $('#config_content').on('click', '#btn_reset_localStorage', btn_reset_localStorage_Clicked);
   $('#config_content').on('click', '#innerProfSetting .custom-control-input', function () { innerProfSetting_Clicked($(this)); });
   $('#config_content').on('click', '#auto_save', auto_save_Clicked);
-  $('#config_content').on('click', '#clipbord_mode', clipbord_mode_Clicked);
+  $('#config_content').on('click', '#clipboard_mode', clipboard_mode_Clicked);
   $('#config_content').on('click', '#air_raid_max', air_raid_max_Clicked);
   $('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
   $('#config_content').on('click', '#backup_enabled', backup_enabled_Clicked);
@@ -8796,7 +8806,7 @@ $(function () {
   $('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
   $('#modal_plane_select').on('change', '#plane_type_select', plane_type_select_Changed);
   $('#modal_plane_select').on('click', '#disp_in_stock', disp_in_stock_Checked_Chenged);
-  $('#modal_plane_select').on('click', '#disp_equiped', disp_equiped_Checked_Chenged);
+  $('#modal_plane_select').on('click', '#disp_equipped', disp_equipped_Checked_Chenged);
   $('#modal_plane_select').on('input', '#plane_word', plane_word_TextChanged);
   $('#modal_plane_select').on('change', '#plane_sort_select', function () { sort_Changed($(this)); });
   $('#modal_plane_select').on('click', '#plane_asc', function () { sort_Changed($(this)); });
