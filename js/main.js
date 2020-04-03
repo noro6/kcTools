@@ -5349,7 +5349,9 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
         ${plane.abbr ? plane.abbr : plane.name}
         <span class="font_size_12">（搭載: ${targetShip[slotNo].origSlot}機 雷装: ${plane.torpedo} 爆装: ${plane.bomber}）</span>
       </div>
-    </div>`;
+    </div>
+    <div class="mt-1 font_size_11">※最終戦闘の航空戦終了時点での残数の分布を表示しています。</div>
+    `;
   $('#detail_title').html(detailHtml);
 }
 
