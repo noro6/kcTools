@@ -783,10 +783,6 @@ function initialize(callback) {
   // 編成プリセット欄初期化
   loadMainPreset();
 
-  // tooltip起動
-  $('[data-toggle="tooltip"]').tooltip();
-  $('[data-toggle="popover"]').popover();
-
   // シミュレート回数
   if (setting.simulateCount) $('#calculate_count').val(setting.simulateCount);
   else $('#calculate_count').val(5000);
@@ -997,6 +993,10 @@ function initialize(callback) {
       $sideIndex.append($li);
     }
   }
+
+  // tooltip起動
+  $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="popover"]').popover();
 
   $('#loading_info').text('初期計算中');
   callback();
@@ -3661,7 +3661,6 @@ function createLBPlaneObject(node) {
     lbPlane.ap = getAirPower_lb(lbPlane);
     lbPlane.avoid = plane.avoid;
     lbPlane.canAttack = ATTACKERS.includes(plane.type);
-    lbPlane.canBattle = !RECONNAISSANCES.includes(plane.type);
 
     // 機体使用数テーブル更新
     let usedData = usedPlane.find(v => v.id === plane.id);
@@ -5452,20 +5451,18 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
             const plane = landBase.planes[index];
             const prevSlot = plane.origSlot;
 
-            if (plane.canBattle) {
-              // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
-              if (airStatusIndex === 5) airStatusIndex = 0;
-              // st1撃墜
-              plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
-              // st2撃墜
-              if (plane.canAttack && enabledStage2) {
-                // 迎撃担当
-                const shootIndex = Math.floor(Math.random() * range);
-                // 割合撃墜
-                plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
-                // 固定撃墜
-                plane.slot -= battleData.stage2[plane.avoid][1][shootIndex] * Math.floor(Math.random() * 2);
-              }
+            // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
+            if (airStatusIndex === 5) airStatusIndex = 0;
+            // st1撃墜
+            plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
+            // st2撃墜
+            if (plane.canAttack && enabledStage2) {
+              // 迎撃担当
+              const shootIndex = Math.floor(Math.random() * range);
+              // 割合撃墜
+              plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
+              // 固定撃墜
+              plane.slot -= battleData.stage2[plane.avoid][1][shootIndex] * Math.floor(Math.random() * 2);
             }
 
             // 記録
@@ -5494,14 +5491,12 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
             const plane = landBase.planes[index];
             const prevSlot = plane.origSlot;
 
-            if (plane.canBattle) {
-              if (airStatusIndex === 5) airStatusIndex = 0;
-              plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
-              if (plane.canAttack && enabledStage2) {
-                const shootIndex = Math.floor(Math.random() * range);
-                plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
-                plane.slot -= battleData.stage2[plane.avoid][1][shootIndex] * Math.floor(Math.random() * 2);
-              }
+            if (airStatusIndex === 5) airStatusIndex = 0;
+            plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
+            if (plane.canAttack && enabledStage2) {
+              const shootIndex = Math.floor(Math.random() * range);
+              plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
+              plane.slot -= battleData.stage2[plane.avoid][1][shootIndex] * Math.floor(Math.random() * 2);
             }
             const slotResult = plane.slot < 0 ? 0 : plane.slot;
             if (index === slotNo) data.push(slotResult);
