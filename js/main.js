@@ -462,6 +462,7 @@ function initializeSetting() {
   if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
   if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
   if (!setting.hasOwnProperty('themeColor')) setting.themeColor = '#f0ebe6';
+  if (!setting.hasOwnProperty('contentsOrder')) setting.contentsOrder = [];
   if (!setting.hasOwnProperty('defaultProf')) {
     setting.defaultProf = [];
     const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
@@ -751,7 +752,12 @@ function initialize(callback) {
     const lb_num = Math.floor(i / 2) + 1;
     const wave = i % 2 + 1;
     $(e).attr('id', 'rate_row_' + (i + 1));
-    if (i < 6) $(e).find('.rate_td_name').html(`<span class="mr-1">第${lb_num}基地</span><span class="text-nowrap">${wave}波目</span>`);
+    if (i < 6) {
+      // 基地部分
+      $(e).find('.rate_td_name').html(`<span class="mr-1">第${lb_num}基地</span><span class="text-nowrap">${wave}波目</span>`);
+      $(e).data('base_no', lb_num - 1);
+      $(e).addClass('cur_pointer land_base_detail');
+    }
     else if (i === 6) $(e).find('.rate_td_name').text('本隊');
     else if (i === 7) $(e).find('.rate_td_name').text('防空');
 
@@ -969,6 +975,28 @@ function initialize(callback) {
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
+
+  // コンテンツ順序復帰
+  if (setting.contentsOrder.length) {
+    const $main = $('#main_contents');
+    const $sideIndex = $('#side_index');
+    // いったん退避し削除
+    const contents = [];
+    const lis = [];
+    $('.contents').each((i, e) => { contents.push($(e)) });
+    $main.empty();
+    $sideIndex.find('li').each((i, e) => { lis.push($(e)) });
+    $sideIndex.empty();
+
+    // でてきたid順にアペンド
+    for (const id of setting.contentsOrder) {
+      const $content = contents.find($e => $e.attr('id') === id);
+      $main.append($content);
+
+      const $li = lis.find($e => $e.attr('id') === 'li_' + id);
+      $sideIndex.append($li);
+    }
+  }
 
   $('#loading_info').text('初期計算中');
   callback();
@@ -3612,7 +3640,7 @@ function createLBPlaneObject(node) {
     slot: inputSlot,
     remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
     level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
-    avoid: 0
+    avoid: 0, canAttack: false, canBattle: false
   };
 
   if (plane) {
@@ -3632,6 +3660,8 @@ function createLBPlaneObject(node) {
     lbPlane.cost = plane.cost;
     lbPlane.ap = getAirPower_lb(lbPlane);
     lbPlane.avoid = plane.avoid;
+    lbPlane.canAttack = ATTACKERS.includes(plane.type);
+    lbPlane.canBattle = !RECONNAISSANCES.includes(plane.type);
 
     // 機体使用数テーブル更新
     let usedData = usedPlane.find(v => v.id === plane.id);
@@ -4221,50 +4251,6 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 
 
 /**
- * 艦隊入力情報オブジェクトのみ取得
- */
-function createFriendFleetInfo() {
-  const shipPlanes = [];
-  let node_ship_tabs = null;
-
-  // 連合艦隊モードかどうか
-  const isUnionFleet = $('#union_fleet').prop('checked');
-
-  if (isUnionFleet) {
-    // 連合艦隊モードの場合、全艦を対象とする
-    node_ship_tabs = document.getElementsByClassName('ship_tab');
-  }
-  else {
-    // 非連合艦隊モードの場合、表示されている艦隊を対象とする
-    node_ship_tabs = $('.friendFleet_tab.show.active')[0].getElementsByClassName('ship_tab');
-  }
-  for (let index = 0; index < node_ship_tabs.length; index++) {
-    const node_ship_tab = node_ship_tabs[index];
-    // 非表示 / 無効 なら飛ばす
-    if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].checked) continue;
-    shipPlanes.length = 0;
-
-    let slotNo = 0;
-    for (const node_ship_plane of node_ship_tab.getElementsByClassName('ship_plane')) {
-      // draggable部分 非表示部分は飛ばす
-      if (node_ship_plane.classList.contains('ui-draggable')) continue;
-      // 機体オブジェクト生成
-      const planeObj = createFleetPlaneObject(node_ship_plane, index + 1, slotNo++);
-      shipPlanes.push(planeObj);
-    }
-
-    let exist = false;
-    // 艦載機の有無チェック
-    for (const v of shipPlanes) {
-      if (!exist && v.id > 0) exist = true;
-    }
-    // 代入
-    if (exist) friendFleetData.push(shipPlanes.concat());
-  }
-}
-
-
-/**
  * 艦娘 装備オブジェクト生成
  * @param {HTMLElement} $ship_plane 生成元 ship_plane
  * @param {number} shipNo 何隻目の艦か
@@ -4595,15 +4581,6 @@ function createStage2Table(enemies, cellType, formationId) {
     }
   }
 
-  // stage2 撃墜失敗用データ付与
-  const len = stage2.length;
-  for (let i = 0; i < enemyCount; i++) {
-    for (let i = 0; i < len; i++) stage2[i][0].push(0);
-    for (let i = 0; i < len; i++) stage2[i][1].push(0);
-  }
-  if (stage2[0][0].length < 1) for (let i = 0; i < len; i++) stage2[i][0].push(0);
-  if (stage2[0][1].length < 1) for (let i = 0; i < len; i++) stage2[i][1].push(0);
-
   return stage2;
 }
 
@@ -4770,10 +4747,12 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
         // st1
         tmpSlot -= getShootDownSlotFF(airStatusIndex, Math.round(tmpSlot));
         if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
-          // 割合撃墜
-          tmpSlot -= Math.floor(battleInfo.stage2[plane.avoid][0][Math.floor(Math.random() * range)] * tmpSlot);
-          // 固定撃墜
-          tmpSlot -= battleInfo.stage2[plane.avoid][1][Math.floor(Math.random() * range)];
+          // 迎撃担当インデックス
+          const index = Math.floor(Math.random() * range);
+          // 割合撃墜 50% で失敗
+          tmpSlot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * tmpSlot) * Math.floor(Math.random() * 2);
+          // 固定撃墜 50% で失敗
+          tmpSlot -= battleInfo.stage2[plane.avoid][1][index] * Math.floor(Math.random() * 2);
         }
         sumSlotResult += tmpSlot > 0 ? tmpSlot : 0;
       }
@@ -4789,13 +4768,14 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
 }
 
 /**
- * 道中被撃墜
+ * 自陣被撃墜
  * @param {number} airStatusIndex 制空状態
  * @param {Array.<Object>} friendFleetData 味方艦隊
  * @param {number} battleInfo 戦闘情報(enemies: 敵id羅列 stage2: st2撃墜テーブル cellType: 戦闘タイプ)
  */
 function shootDownFriend(airStatusIndex, friendFleetData, battleInfo) {
   const len = friendFleetData.length;
+  const range = battleInfo.stage2[0][0].length;
   for (let i = 0; i < len; i++) {
     const ship = friendFleetData[i];
     const shipLen = ship.length;
@@ -4809,11 +4789,12 @@ function shootDownFriend(airStatusIndex, friendFleetData, battleInfo) {
       plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
       // st2撃墜
       if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
-        const range = battleInfo.stage2[plane.avoid][0].length;
+        // 迎撃担当
+        const index = Math.floor(Math.random() * range);
         // 割合撃墜
-        plane.slot -= Math.floor(battleInfo.stage2[plane.avoid][0][Math.floor(Math.random() * range)] * plane.slot);
+        plane.slot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * plane.slot) * Math.floor(Math.random() * 2);
         // 固定撃墜
-        plane.slot -= battleInfo.stage2[plane.avoid][1][Math.floor(Math.random() * range)];
+        plane.slot -= battleInfo.stage2[plane.avoid][1][index] * Math.floor(Math.random() * 2);
       }
       // 制空値再計算
       plane.ap = updateAp(plane);
@@ -5193,12 +5174,15 @@ function calculateLandBase(landBaseAps, landBaseModes, enemyFleet, enemyApDist, 
  */
 function detailCalculate() {
   // 計算する対象の取得
-  switch ($('#detail_title').data('mode')) {
+  switch ($('#detail_info').data('mode')) {
     case "enemy_slot_detail":
-      enemySlotDetailCalculate(castInt($('#detail_title').data('enemy_no')), castInt($('#detail_title').data('slot_no')));
+      enemySlotDetailCalculate(castInt($('#detail_info').data('enemy_no')), castInt($('#detail_info').data('slot_no')));
       break;
     case "fleet_slot_detail":
-      fleetSlotDetailCalculate(castInt($('#detail_title').data('ship_no')), castInt($('#detail_title').data('slot_no')), castInt($('#detail_title').data('ship_id')));
+      fleetSlotDetailCalculate(castInt($('#detail_info').data('ship_no')), castInt($('#detail_info').data('slot_no')), castInt($('#detail_info').data('ship_id')));
+      break;
+    case "land_base_detail":
+      landBaseDetailCalculate(castInt($('#detail_info').data('base_no')), castInt($('#detail_info').data('slot_no')));
       break;
     default:
       break;
@@ -5320,7 +5304,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
         if (!value) return `残機数：${value} 機${'\n'}航空戦火力：0`;
         const af = Math.floor(rate[0] * (fire * Math.sqrt(value) + 25));
         const af2 = rate.length === 2 ? Math.floor(rate[1] * (fire * Math.sqrt(value) + 25)) : 0;
-        const ap = `航空戦火力(無補正)：${af}${af2 ? ` or ${af2}` : ''}`
+        const ap = `航空戦火力：${af}${af2 ? ` or ${af2}` : ''}`
         return `残機数：${value} 機${'\n' + ap}`;
       },
       label: (tooltipItem, data) => [`${tooltipItem.yLabel} %`],
@@ -5329,30 +5313,300 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
   // グラフ描画
   updateDetailChart(data, '残機数 [機]', tooltips);
 
+  const $slots = $('#show_detail_slot .nav-item');
+
   // 説明表示
-  $('#detail_fire').addClass('d-none').removeClass('d-flex');
-  $('#detail_title').data('mode', 'fleet_slot_detail');
-  $('#detail_title').data('ship_id', shipId);
-  $('#detail_title').data('ship_no', shipNo);
-  $('#detail_title').data('slot_no', slotNo);
   const ship = SHIP_DATA.find(v => v.id === shipId);
-  const detailHtml = `
-    <div class="d-flex">
-      <div class="align-self-center">艦娘：</div>
-      <img src="./img/ship/${shipId}.png" class="ship_img align-self-center">
-      <div class="ml-1 align-self-center">${ship ? ship.name : '未指定'}</div>
-    </div>
-    <div class="mt-1 d-flex">
-      <div class="align-self-center">装備：</div>
-      <img src="./img/type/type${plane.type}.png" class="plane_img align-self-center">
-      <div class="ml-1 align-self-center">
-        ${plane.abbr ? plane.abbr : plane.name}
-        <span class="font_size_12">（搭載: ${targetShip[slotNo].origSlot}機 雷装: ${plane.torpedo} 爆装: ${plane.bomber}）</span>
+  let planeText = '';
+  let index = 0;
+
+  $('#land_base_detail_table').addClass('d-none');
+  $('#detail_fire').addClass('d-none').removeClass('d-flex');
+  $('#detail_wave').addClass('d-none').removeClass('d-flex');
+  $('#detail_info').data('mode', 'fleet_slot_detail');
+  $('#detail_info').data('ship_id', shipId);
+  $('#detail_info').data('ship_no', shipNo);
+  $('#detail_info').data('slot_no', slotNo);
+  const warningText = `
+    <div>※ 航空戦火力はキャップ前でクリティカル補正、触接補正なし。小数切捨て</div>
+    <div>※ 最終戦闘の航空戦終了時点での残数の分布を表示しています。</div>`;
+  $('#detail_warning').html(warningText);
+
+  $slots.find('.nav-link').addClass('disabled');
+  $slots.addClass('d-none');
+
+  for (const pl of targetShip) {
+    const p = PLANE_DATA.find(v => v.id === pl.id);
+    if (p && p.id) {
+      $slots.eq(index).find('.nav-link').removeClass('disabled');
+      $slots.eq(index).data('slot_no', index);
+    }
+    if (index === (ship ? ship.slot.length : 4)) break;
+    $slots.eq(index).removeClass('d-none');
+    const name = p ? (p.abbr ? p.abbr : p.name) : '-';
+    planeText += `
+    <div class="row">
+      <div class="col-2 align-self-center text-right font_size_12">装備${index + 1}:</div>
+      <div class="col d-flex align-self-end font_size_12 pl-0">
+        <img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
+        <div class="align-self-end">${name}</div>
       </div>
-    </div>
-    <div class="mt-1 font_size_11">※最終戦闘の航空戦終了時点での残数の分布を表示しています。</div>
-    `;
-  $('#detail_title').html(detailHtml);
+      <div class="col font_size_11 align-self-end">
+        ${p ? (`(搭載: ${targetShip[index].slot}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
+      </div>
+    </div>`;
+    index++;
+  }
+
+  const detailLegend = `
+    <img src="./img/ship/${shipId}.png" class="ship_img align-self-center ${shipId ? '' : 'd-none'}">
+    <span class="ml-1 align-self-center">${ship ? ship.name : '未指定'}</span>
+  `;
+
+  $slots.eq(slotNo).find('.nav-link').tab('show');
+  $('#detail_legend').html(detailLegend);
+  $('#detail_info').html(planeText);
+}
+
+
+/**
+ * 基地航空隊詳細計算
+ */
+function landBaseDetailCalculate(landBaseNo, slotNo) {
+  // 事前計算テーブルチェック
+  setPreCalculateTable();
+  const landBaseData = [], battleInfo = [];
+  // 基地オブジェクト取得
+  updateLandBaseInfo(landBaseData, false);
+  // 戦闘情報オブジェクト取得
+  updateEnemyFleetInfo(battleInfo, false);
+  // 計算回数
+  const maxCount = castInt($('#calculate_count').val());
+  // 基地タゲ
+  const lbAttackBattle = isDefMode ? 0 : (castInt($('#landBase_target').val()) - 1);
+  // チャート用散布
+  const data = [];
+  // 今回の戦闘データ
+  const battleData = battleInfo[lbAttackBattle];
+  const enemies = battleData.enemies;
+
+  // 各隊の機体
+  const planes = landBaseData[landBaseNo].planes;
+  // 元の全機数
+  let suppliedSlot = 0;
+
+  // 有効なスロットかチェック & 元の全機数チェック
+  for (let index = 0; index < planes.length; index++) {
+    const plane = planes[index];
+    if (planes[slotNo].id === 0 && plane.id !== 0) slotNo = index;
+    suppliedSlot += plane.slot;
+  }
+
+  // 今回見る機体
+  const targetPlaneData = planes[slotNo];
+  const rawPlane = PLANE_DATA.find(v => v.id === targetPlaneData.id);
+  const planeType = Math.abs(rawPlane.type);
+
+  // 今回 stage2きるのかどうか　
+  const enabledStage2 = battleData.cellType <= CELL_TYPE.grand;
+  const range = battleData.stage2[0][0].length;
+
+  // どっちのwaveを見るのか
+  const wave1 = $('#detail_wave1').prop('checked');
+  // 撃墜された数を記録
+  const aliveCount = [];
+
+  // 補給用スロ数追加
+  for (const v of landBaseData) {
+    for (const plane of v.planes) {
+      plane.origSlot = plane.slot;
+      plane.origAp = plane.ap;
+    }
+  }
+
+  // 指定回数撃墜、記録
+  for (let i = 0; i < maxCount; i++) {
+    // 敵機補給
+    for (const enemy of enemies) {
+      enemy.slots = enemy.orgSlots.concat();
+      enemy.ap = enemy.origAp;
+      enemy.lbAp = enemy.origLbAp;
+    }
+
+    // 基地メイン
+    for (let j = 0; j < 3; j++) {
+      const landBase = landBaseData[j];
+      const fap = landBase.ap
+
+      if (landBase.mode > 0) {
+        // 出撃第一波
+        const eap = getEnemyFleetLBAP(enemies);
+        let airStatusIndex = getLBAirStatusIndex(fap, eap);
+        shootDownEnemy(airStatusIndex, enemies);
+
+        // 基地撃墜記録
+        if (wave1 && j === landBaseNo) {
+          // 基地撃墜
+          let sumAlive = 0;
+          for (let index = 0; index < landBase.planes.length; index++) {
+            const plane = landBase.planes[index];
+            const prevSlot = plane.origSlot;
+
+            if (plane.canBattle) {
+              // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
+              if (airStatusIndex === 5) airStatusIndex = 0;
+              // st1撃墜
+              plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
+              // st2撃墜
+              if (plane.canAttack && enabledStage2) {
+                // 迎撃担当
+                const shootIndex = Math.floor(Math.random() * range);
+                // 割合撃墜
+                plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
+                // 固定撃墜
+                plane.slot -= battleData.stage2[plane.avoid][1][shootIndex] * Math.floor(Math.random() * 2);
+              }
+            }
+
+            // 記録
+            const slotResult = plane.slot < 0 ? 0 : plane.slot;
+            if (index === slotNo) data.push(slotResult);
+
+            // 差分記録
+            sumAlive += slotResult;
+            // 補給
+            plane.slot = prevSlot;
+          }
+          aliveCount.push(sumAlive);
+        }
+      }
+
+      if (landBase.mode === 2) {
+        // 出撃第二波
+        const eap = getEnemyFleetLBAP(enemies);
+        let airStatusIndex = getLBAirStatusIndex(fap, eap);
+        shootDownEnemy(airStatusIndex, enemies);
+
+        // 2波目はこっち
+        if (!wave1 && j === landBaseNo) {
+          let sumAlive = 0;
+          for (let index = 0; index < landBase.planes.length; index++) {
+            const plane = landBase.planes[index];
+            const prevSlot = plane.origSlot;
+
+            if (plane.canBattle) {
+              if (airStatusIndex === 5) airStatusIndex = 0;
+              plane.slot -= getShootDownSlotFF(airStatusIndex, plane.slot);
+              if (plane.canAttack && enabledStage2) {
+                const shootIndex = Math.floor(Math.random() * range);
+                plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
+                plane.slot -= battleData.stage2[plane.avoid][1][shootIndex] * Math.floor(Math.random() * 2);
+              }
+            }
+            const slotResult = plane.slot < 0 ? 0 : plane.slot;
+            if (index === slotNo) data.push(slotResult);
+            sumAlive += slotResult;
+            plane.slot = prevSlot;
+          }
+          aliveCount.push(sumAlive);
+        }
+      }
+    }
+  }
+
+  // 改修値
+  const remodel = planeType === 3 ? 0 : planes[slotNo].remodel;
+  // 実雷装 or 爆装
+  const fire = 0.2 * remodel + ([2, 101].includes(planeType) ? rawPlane.torpedo : rawPlane.bomber);
+  // 陸攻補正：陸攻 = 1.8、陸攻以外 = 1.0
+  const adj1 = planeType === 101 ? 1.8 : 1.0;
+  // 陸偵補正：二式陸偵 = 1.125、二式陸偵(熟練) = 1.15
+  const adj2 = planes.find(v => v.id === 312) ? 1.15 : planes.find(v => v.id === 311) ? 1.125 : 1.0;
+  // 敵連合特効：対敵通常艦隊 = 1.0、対敵連合艦隊 = 1.1
+  const adj3 = battleData.cellType === CELL_TYPE.grand ? 1.1 : 1.0;
+  // ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)
+  const baseAdj = [2, 3, 6].includes(planeType) ? 1.0 : planeType === 101 ? 0.8 : planeType === 9 ? 0.7071 : 0;
+  const tooltips = {
+    mode: 'index',
+    callbacks: {
+      title: (tooltipItem, data) => {
+        const value = tooltipItem[0].xLabel;
+        if (!value) return `残機数：${value} 機${'\n'}航空戦火力：0`;
+
+        // 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
+        const base = Math.floor(baseAdj * Math.floor(fire * Math.sqrt(1.8 * value) + 25));
+        const last = base * adj1 * adj2 * adj3;
+        const ap = `航空戦火力：${last.toFixed(1)}`
+        return `残機数：${value} 機${'\n' + ap}`;
+      },
+      label: (tooltipItem, data) => [`${tooltipItem.yLabel} %`],
+    }
+  }
+  // グラフ描画
+  updateDetailChart(data, '残機数 [機]', tooltips);
+
+  // 未帰還機多数とかのアレ
+  let count1 = 0;
+  let count2 = 0;
+  let count3 = 0;
+
+  for (const v of aliveCount) {
+    // 生存率
+    const aliveRate = v / suppliedSlot;
+    if (v === 0) count3++;
+    else if (aliveRate < 0.25) count2++;
+    else if (aliveRate < 0.4) count1++;
+  }
+  $('#status_s').text((100 * count1 / maxCount) + ' %');
+  $('#status_m').text((100 * count2 / maxCount) + ' %');
+  $('#status_l').text((100 * count3 / maxCount) + ' %');
+
+
+  const $slots = $('#show_detail_slot .nav-item');
+  $slots.eq(slotNo).find('.nav-link').tab('show');
+
+  // 説明表示
+  let planeText = '';
+  let index = 0;
+
+  $('#land_base_detail_table').removeClass('d-none');
+  $('#detail_fire').addClass('d-none').removeClass('d-flex');
+  $('#detail_wave').removeClass('d-none').addClass('d-flex');
+  $('#detail_info').data('mode', 'land_base_detail');
+  $('#detail_info').data('base_no', landBaseNo);
+  $('#detail_info').data('slot_no', slotNo);
+  const warningText = `
+    <div>※ 航空戦火力はクリティカル補正、触接補正なしで対水上艦の場合</div>
+    <div>※ 対敵連合補正、陸偵補正については、該当する戦闘、装備であれば有効</div>`;
+  $('#detail_warning').html(warningText);
+
+  $slots.find('.nav-link').addClass('disabled');
+  $slots.addClass('d-none');
+
+  for (const pl of landBaseData[landBaseNo].planes) {
+    const p = PLANE_DATA.find(v => v.id === pl.id);
+    if (p && p.id) {
+      $slots.eq(index).find('.nav-link').removeClass('disabled');
+      $slots.eq(index).data('slot_no', index);
+    }
+    $slots.eq(index).removeClass('d-none');
+    const name = p ? (p.abbr ? p.abbr : p.name) : '-';
+    planeText += `
+    <div class="row">
+      <div class="col-2 align-self-center text-right font_size_12">装備${index + 1}:</div>
+      <div class="col d-flex align-self-end font_size_12 pl-0">
+        <img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
+        <div class="align-self-end">${name}</div>
+      </div>
+      <div class="col font_size_11 align-self-end">
+        ${p ? (`(搭載: ${pl.slot}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
+      </div>
+    </div>`;
+    index++;
+  }
+
+  $('#detail_legend').html(`<span>第${landBaseNo + 1}基地航空隊</span>`);
+  $('#detail_info').html(planeText);
 }
 
 /**
@@ -5490,7 +5744,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
     }
   }
 
-  const label = isSlotDetail ? '残機数 [機]' : '航空戦火力(キャップ前、小数切捨て)';
+  const label = isSlotDetail ? '残機数 [機]' : '航空戦火力';
   const tooltips = {
     mode: 'index',
     callbacks: {
@@ -5510,28 +5764,50 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
   }
 
   // 描画
-  updateDetailChart(data, label, tooltips)
+  updateDetailChart(data, label, tooltips);
 
-  // 説明表示
-  $('#detail_fire').removeClass('d-none').addClass('d-flex');
-  $('#detail_title').data('mode', 'enemy_slot_detail');
-  $('#detail_title').data('enemy_no', enemyNo);
-  $('#detail_title').data('slot_no', slotNo);
-  const detailHtml = `
-    <div class="d-flex">
-      <div class="align-self-center">敵艦：</div>
-      <img src="./img/enemy/${enemy.id}.png" class="enemy_img align-self-center">
-      <div class="ml-1 align-self-center">${enemy.name}</div>
-    </div>
-    <div class="mt-1 d-flex border-bottom pb-2">
-      <div class="align-self-center">装備：</div>
-      <img src="./img/type/type${plane.type}.png" class="plane_img align-self-center">
-      <div class="ml-1 align-self-center">
-        ${plane.name}
-        <span class="font_size_12"> (搭載：${targetEnemy.slots[slotNo]}機　雷装：${plane.torpedo}　爆装：${plane.bomber})</span>
-      </div>
-    </div>`;
-  $('#detail_title').html(detailHtml);
+  const $slots = $('#show_detail_slot .nav-item');
+  $slots.eq(slotNo).find('.nav-link').tab('show');
+
+  // 必要なら説明表示
+  if ($('#detail_info').data('mode') !== 'enemy_slot_detail' || $('#detail_info').data('enemy_no') != enemyNo) {
+    $('#land_base_detail_table').addClass('d-none');
+    $('#detail_fire').removeClass('d-none').addClass('d-flex');
+    $('#detail_wave').addClass('d-none').removeClass('d-flex');
+    $('#detail_info').data('mode', 'enemy_slot_detail');
+    $('#detail_info').data('enemy_no', enemyNo);
+    $('#detail_info').data('slot_no', slotNo);
+    $('#detail_warning').text('※ 航空戦火力はキャップ前でクリティカル、触接補正なし小数切捨て');
+
+    let planeText = '';
+    let index = 0;
+    $slots.addClass('d-none');
+    for (const id of enemy.eqp) {
+      const p = ENEMY_PLANE_DATA.find(v => v.id === id);
+      $slots.eq(index).removeClass('d-none');
+      $slots.eq(index).data('slot_no', index);
+      planeText += `
+      <div class="row">
+        <div class="col-2 align-self-center">装備${index + 1}:</div>
+        <div class="col d-flex align-self-end">
+          <img src="./img/type/type${p.type}.png" class="plane_img_sm align-self-center">
+          <div class="align-self-end">${p.name}</div>
+        </div>
+        <div class="col font_size_12 align-self-end">
+          (搭載: ${targetEnemy.slots[index++]}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
+        </div>
+      </div>`;
+    }
+
+    const detailLegend = `
+      <img src="./img/enemy/${enemy.id}.png" class="ship_img align-self-center">
+      <span class="ml-1 text-primary font_size_11 align-self-center">ID: ${enemy.id + 1500}</span>
+      <span class="ml-1 align-self-center">${enemy.name}</span>
+    `;
+
+    $('#detail_legend').html(detailLegend);
+    $('#detail_info').html(planeText);
+  }
 }
 
 
@@ -6451,17 +6727,24 @@ function btn_content_trade_Clicked($this) {
  */
 function main_contents_Sortable_End() {
   const org = [];
-  const $parent = $('#li_index');
-  $parent.find('li').each((i, e) => { org.push($(e).clone()) });
-  $parent.empty();
+  const $sideIndex = $('#side_index');
+  $sideIndex.find('li').each((i, e) => { org.push($(e).clone()) });
+  $sideIndex.empty();
+
+  setting.contentsOrder = [];
   $('#main_contents > div').each((i, e) => {
-    for (const $div of org) {
-      if ($div.attr('id') === 'li_' + $(e).attr('id')) {
-        $parent.append($div);
-        continue;
+    const contentId = $(e).attr('id');
+    setting.contentsOrder.push(contentId);
+
+    for (const $li of org) {
+      if ($li.attr('id') === 'li_' + contentId) {
+        $sideIndex.append($li);
+        break;
       }
     }
   });
+
+  saveLocalStorage('setting', setting);
 }
 
 /**
@@ -7973,6 +8256,16 @@ function display_result_Changed() {
 }
 
 /**
+ * 基地計算結果詳細展開
+ * @param {JqueryDomObject} $this
+ */
+function land_base_detail_Clicked($this) {
+  // 詳細計算対象の取得
+  landBaseDetailCalculate(castInt($this.data('base_no')), 0);
+  $('#modal_result_detail').modal('show');
+}
+
+/**
  * 計算結果詳細展開
  * @param {JqueryDomObject} $this
  */
@@ -8069,8 +8362,10 @@ function air_raid_max_Clicked() {
 function btn_reset_localStorage_Clicked() {
   const $modal = $('#modal_confirm');
   $modal.find('.modal-body').html(`
-    <div>ブラウザに保存された設定を削除します。</div>
-    <div class="mt-3">登録されている編成プリセット、装備プリセット、各種詳細設定値などが削除されます。</div>
+    <div>ブラウザに保存された入力・設定データを削除します。</div>
+    <div class="mt-3">登録・保存されている編成データや装備プリセット、所持装備情報や各種詳細設定値など全てのデータが削除されます。</div>
+    <div>削除したデータは元に戻せませんので注意してください。</div>
+    <div class="mt-3">本サイトの利用を中止する場合、削除後にページを再読み込みしてしまうと再度設定データが生成されるため、削除後は直ちにサイトを閉じてください。</div>
     <div class="mt-3">よろしければ、OKボタンを押してください。</div>
   `);
   confirmType = "deleteLocalStorageAll";
@@ -8335,6 +8630,16 @@ function btn_calculate_detail() {
 
   $('#btn_calculate_detail').prop('disabled', true);
   $('#calculate_count').val(originalCount);
+}
+
+/**
+ * 表示戦闘タブ変更時
+ * @param {JqueryDomObject} $this
+ */
+function detail_slot_tab_Changed($this) {
+  if ($this.find('.nav-link').hasClass('disabled')) return;
+  $('#detail_info').data('slot_no', castInt($this.data('slot_no')));
+  detailCalculate();
 }
 
 /**
@@ -8780,6 +9085,7 @@ $(function () {
   $('#result_content').on('click', '#empty_slot_invisible', calculate);
   $('#result_content').on('click', '#display_setting .custom-control-input', display_result_Changed);
   $('#result_content').on('click', '#shoot_down_table_tbody tr', function () { fleet_slot_Clicked($(this)); });
+  $('#result_content').on('click', '#rate_table .land_base_detail', function () { land_base_detail_Clicked($(this)); });
   $('#result_content').on('click', '#enemy_shoot_down_tbody .td_detail_slot', function () { enemy_slot_Clicked($(this)); });
   $('#config_content').on('focus', '#calculate_count', function () { $(this).select(); });
   $('#config_content').on('input', '#calculate_count', function () { calculate_count_Changed($(this)); });
@@ -8868,6 +9174,7 @@ $(function () {
   $('#modal_result_detail').on('click', '#btn_calculate_detail', btn_calculate_detail);
   $('#modal_result_detail').on('change', '#detail_calculate_count', () => $('#btn_calculate_detail').prop('disabled', false));
   $('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
+  $('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
   $('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
   $('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
   $('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });

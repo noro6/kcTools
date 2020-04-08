@@ -75,7 +75,7 @@
                <ul class="nav flex-column">
                   <li class="nav-item">
                      <span class="pl-3 text-light">Index</span>
-                     <ul class="nav flex-column mt-1 mb-2 ml-3" id="li_index">
+                     <ul class="nav flex-column mt-1 mb-2 ml-3" id="side_index">
                         <li class="nav-item" id="li_landBase">
                            <a class="nav-link" href="#landBase">基地航空隊</a>
                         </li>
@@ -179,8 +179,8 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#landBase_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#landBase_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -351,8 +351,8 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#friendFleet_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#friendFleet_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -558,8 +558,8 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#enemyFleet_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#enemyFleet_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -774,8 +774,8 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#result_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#result_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -783,11 +783,14 @@
                         <div class="border-top"></div>
                         <div class="my-2" id="shoot_down_table_content">
                            <div class="d-flex mt-2 mb-1">
-                              <div class="pl-1 font_size_12 align-self-center">各戦闘開始時の搭載数の推移</div>
+                              <div class="pl-1 font_size_12 align-self-center">
+                                 各戦闘開始時の搭載数の推移
+                                 <span class="ml-1 font_size_11 no_capture">※各行クリックで詳細を表示</span>
+                              </div>
                               <div class="ml-auto custom-control custom-checkbox font_size_12 align-self-center">
                                  <input type="checkbox" class="custom-control-input" id="empty_slot_invisible">
                                  <label class="custom-control-label pt-0_5 cur_pointer"
-                                    for="empty_slot_invisible">未装備スロットを非表示にする</label>
+                                    for="empty_slot_invisible">未装備スロット非表示</label>
                               </div>
                            </div>
                            <table class="text-center w-100" id="shoot_down_table">
@@ -882,7 +885,8 @@
                            <div class="mb-2">
                               <div class="font_size_14">
                                  <span class="drag_handle cur_move">
-                                    各制空状態を取り得る確率
+                                    各制空状態の確率
+                                    <span class="ml-1 font_size_11 no_capture">※基地行クリックで基地詳細を表示</span>
                                  </span>
                               </div>
                               <table class="text-center w-100" id="rate_table">
@@ -906,9 +910,10 @@
                            </div>
                            <div class="mb-2" id="enemy_shoot_down_table_parent">
                               <div class="font_size_14">
-                                 <span class="drag_handle cur_move">
+                                 <div class="drag_handle cur_move">
                                     敵艦隊の搭載数（本隊航空戦 stage1 後）
-                                 </span>
+                                    <span class="ml-1 font_size_11 no_capture">※各行クリックで詳細を表示</span>
+                                 </div>
                               </div>
                               <table class="text-center w-100" id="enemy_shoot_down_table">
                                  <thead>
@@ -947,8 +952,8 @@
                            title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#input_data_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#input_data_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -1044,8 +1049,8 @@
                            data-toggle="tooltip" title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#plane_stock_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#plane_stock_content">
                            <i class="fas fa-chevron-down d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -1120,8 +1125,8 @@
                            data-toggle="tooltip" title="順序入れ替え">
                            <i class="fas fa-arrows-alt-v d-table-cell align-middle"></i>
                         </div>
-                        <div class="ml-2 rounded-circle round_button align-self-center d-table"
-                           data-toggle="collapse" data-target="#config_content">
+                        <div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+                           data-target="#config_content">
                            <i class="fas fa-chevron-up d-table-cell align-middle"></i>
                         </div>
                      </div>
@@ -1191,7 +1196,8 @@
                                     スクリーンショット保存時、クリップボードにコピーする
                                  </label>
                               </div>
-                              <div class="alert alert-danger px-1 py-1 mt-2 d-none font_size_12" id="cant_use_clipboard">
+                              <div class="alert alert-danger px-1 py-1 mt-2 d-none font_size_12"
+                                 id="cant_use_clipboard">
                                  <div>申し訳ありませんが、お使いのブラウザは本サイトのクリップボードへの保存機能に対応していません。</div>
                               </div>
                            </div>
@@ -2704,9 +2710,31 @@
                <h5 class="modal-title">艦載機残数詳細計算</h5>
                <p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
             </div>
-            <div class="modal-body">
-               <div id="detail_title"></div>
-               <div class="my-2 d-flex" id="detail_fire">
+            <div class="modal-body py-1">
+               <fieldset class="border rounded">
+                  <legend class="font_size_14 w-auto ml-2 px-1" id="detail_legend">搭載艦情報</legend>
+                  <div class="container-fluid px-2 pb-2" id="detail_info"></div>
+               </fieldset>
+               <div class="my-1">
+                  <ul class="nav nav-tabs" id="show_detail_slot">
+                     <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#">装備1</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#">装備2</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#">装備3</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#">装備4</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#">装備5</a>
+                     </li>
+                  </ul>
+               </div>
+               <div class="d-flex" id="detail_fire">
                   <div class="align-self-center mx-2">
                      <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
@@ -2714,14 +2742,27 @@
                      </div>
                      <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
-                        <label class="custom-control-label" for="fire_detail">航空戦火力(キャップ前)</label>
+                        <label class="custom-control-label" for="fire_detail">航空戦火力</label>
                      </div>
                   </div>
                </div>
-               <canvas id="detailChart" width="460" height="300"></canvas>
-               <div class="mt-3">
-                  <table class="text-center border-bottom" id="detail_table">
-                     <thead id="detail_table_thead">
+               <div class="d-flex" id="detail_wave">
+                  <div class="align-self-center mx-2">
+                     <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="detail_wave1" name="detail_wave_select" checked
+                           class="custom-control-input">
+                        <label class="custom-control-label" for="detail_wave1">第1波</label>
+                     </div>
+                     <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="detail_wave2" name="detail_wave_select" class="custom-control-input">
+                        <label class="custom-control-label" for="detail_wave2">第2波</label>
+                     </div>
+                  </div>
+               </div>
+               <canvas id="detailChart" width="440" height="260"></canvas>
+               <div>
+                  <table class="text-center" id="detail_table">
+                     <thead>
                         <tr>
                            <td>最大</td>
                            <td>最小</td>
@@ -2742,25 +2783,40 @@
                         </tr>
                      </tbody>
                   </table>
+                  <table class="text-center" id="land_base_detail_table">
+                     <thead>
+                        <tr>
+                           <td class="text_orange font-weight-bold">攻撃機未帰還機多数!</td>
+                           <td class="text_deep_orange font-weight-bold">攻撃隊被害甚大!</td>
+                           <td class="text_red font-weight-bold">攻撃隊全滅!</td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td id="status_s"></td>
+                           <td id="status_m"></td>
+                           <td id="status_l"></td>
+                        </tr>
+                     </tbody>
+                  </table>
                </div>
-               <div class="mt-3">
-                  <div>計算回数（本画面内のみ有効）</div>
-                  <div class="d-flex">
-                     <select class="custom-select custom-select-sm" id="detail_calculate_count">
-                        <option value="1000">1000</option>
-                        <option value="5000" selected>5000</option>
-                        <option value="10000">10000</option>
-                        <option value="20000">20000</option>
-                        <option value="50000">50000</option>
-                        <option value="100000">100000</option>
-                     </select>
-                     <button type="button" class="btn btn-sm btn-info ml-2" id="btn_calculate_detail">再計算</button>
-                  </div>
-                  <div>計算回数を増やすと処理が重くなるので注意してください。</div>
-               </div>
+               <div class="border-top pt-1 font_size_11" id="detail_warning">注意事項</div>
             </div>
             <div class="modal-footer">
+               <div class="font_size_12">計算回数(本画面のみ有効)</div>
+               <div class="d-flex">
+                  <select class="custom-select custom-select-sm" id="detail_calculate_count">
+                     <option value="1000">1000</option>
+                     <option value="5000" selected>5000</option>
+                     <option value="10000">10000</option>
+                     <option value="20000">20000</option>
+                     <option value="50000">50000</option>
+                     <option value="100000">100000</option>
+                  </select>
+               </div>
+               <div>回</div>
                <div class="ml-auto">
+                  <button type="button" class="btn btn-sm btn-info mr-2" id="btn_calculate_detail">再計算</button>
                   <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
                </div>
             </div>
