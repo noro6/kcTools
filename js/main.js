@@ -261,10 +261,10 @@ function setPreCalculateTable() {
   // 制空ボーダーテーブル
   if (!AIR_STATUS_TABLE) {
     AIR_STATUS_TABLE = [];
-    const max_ap = 2000;
+    const max_ap = 1000;
     for (let i = 0; i <= max_ap; i++) {
-      const tmp = [];
-      for (let j = 0; j <= max_ap; j++) {
+      const tmp = new Uint16Array(Math.max(3 * i + 1, 2));
+      for (let j = 0; j <= tmp.length; j++) {
         if (i === 0 && j === 0) tmp[j] = 5;
         else if (i >= 3 * j) tmp[j] = 0;
         else if (2 * i >= 3 * j) tmp[j] = 1;
@@ -383,6 +383,24 @@ function getProfString(remodel) {
       return ">>";
   }
   return "";
+}
+
+/**
+ * 漢数字を数字に変換
+ * @param {string} word 入力値
+ */
+function replaceKnji(word) {
+  if (word) {
+    word = word.replace('601', '六〇一');
+    word = word.replace('634', '六三四');
+    word = word.replace('931', '九三一');
+    word = word.replace('22', '二二');
+    word = word.replace('34', '三四');
+    word = word.replace('96', '九六');
+    word = word.replace('97', '九七');
+    word = word.replace('99', '九九');
+  }
+  return word;
 }
 
 /**
@@ -755,7 +773,7 @@ function initialize(callback) {
     if (i < 6) {
       // 基地部分
       $(e).find('.rate_td_name').html(`<span class="mr-1">第${lb_num}基地</span><span class="text-nowrap">${wave}波目</span>`);
-      $(e).data('base_no', lb_num - 1);
+      $(e)[0].dataset.base_no =  lb_num - 1;
       $(e).addClass('cur_pointer land_base_detail');
     }
     else if (i === 6) $(e).find('.rate_td_name').text('本隊');
@@ -778,6 +796,28 @@ function initialize(callback) {
 
   for (const v of setting.defaultProf) {
     proficiency_Changed($('.init_prof[data-typeid="' + v.id + '"').find('.prof_option[data-prof="' + v.prof + '"]').parent(), true);
+  }
+
+  // コンテンツ順序復帰
+  if (setting.contentsOrder.length) {
+    const $main = $('#main_contents');
+    const $sideIndex = $('#side_index');
+    // いったん退避し削除
+    const contents = [];
+    const lis = [];
+    $('.contents').each((i, e) => { contents.push($(e)) });
+    $main.empty();
+    $sideIndex.find('li').each((i, e) => { lis.push($(e)) });
+    $sideIndex.empty();
+
+    // でてきたid順にアペンド
+    for (const id of setting.contentsOrder) {
+      const $content = contents.find($e => $e.attr('id') === id);
+      $main.append($content);
+
+      const $li = lis.find($e => $e.attr('id') === 'li_' + id);
+      $sideIndex.append($li);
+    }
   }
 
   // 編成プリセット欄初期化
@@ -971,28 +1011,6 @@ function initialize(callback) {
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
-
-  // コンテンツ順序復帰
-  if (setting.contentsOrder.length) {
-    const $main = $('#main_contents');
-    const $sideIndex = $('#side_index');
-    // いったん退避し削除
-    const contents = [];
-    const lis = [];
-    $('.contents').each((i, e) => { contents.push($(e)) });
-    $main.empty();
-    $sideIndex.find('li').each((i, e) => { lis.push($(e)) });
-    $sideIndex.empty();
-
-    // でてきたid順にアペンド
-    for (const id of setting.contentsOrder) {
-      const $content = contents.find($e => $e.attr('id') === id);
-      $main.append($content);
-
-      const $li = lis.find($e => $e.attr('id') === 'li_' + id);
-      $sideIndex.append($li);
-    }
-  }
 
   // tooltip起動
   $('[data-toggle="tooltip"]').tooltip();
@@ -3207,8 +3225,8 @@ function deleteLocalStorage(key) {
  * @returns {number} 制空状態 index (0:確保 1:優勢...)
  */
 function getAirStatusIndex(x, y) {
-  // 味方艦隊2000以下なら事前計算テーブルから制空状態取得
-  if (x <= 2000) {
+  // 味方艦隊1000以下なら事前計算テーブルから制空状態取得
+  if (x <= 1000) {
     const max = AIR_STATUS_TABLE[x].length - 1;
     if (y < max) return AIR_STATUS_TABLE[x][y];
     return AIR_STATUS_TABLE[x][max];
@@ -4827,6 +4845,58 @@ function getShootDownSlotHalfFF(index, slot) {
 }
 
 /**
+ * 基地航空隊基本火力取得
+ * @param {number} id 機体id
+ * @param {number} slot 搭載数
+ * @param {number} remodel 改修値
+ */
+function getLandBasePower(id, slot, remodel) {
+  const plane = PLANE_DATA.find(v => v.id === id);
+  if (!plane) return 0;
+
+  const type = Math.abs(plane.type);
+
+  // 実雷装 or 爆装 陸攻は改修係数0.7
+  let fire = 0;
+  // ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)　そのた0
+  let adj = 0;
+  switch (type) {
+    case 2:
+      fire = 0.2 * remodel + plane.torpedo;
+      adj = 1.0;
+      break;
+    case 3:
+      fire = 0.0 * remodel + plane.bomber;
+      adj = 1.0;
+      break;
+    case 6:
+      fire = 0.2 * remodel + plane.bomber;
+      adj = 1.0;
+      break;
+    case 9:
+      fire = 0.0 * remodel + plane.bomber;
+      adj = 0.7071;
+      break;
+    case 101:
+      fire = 0.7 * remodel + plane.torpedo;
+      adj = 0.8;
+      break;
+    default:
+      break;
+  }
+
+  // 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
+  const p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
+  // 陸攻補正
+  if (type === 101) {
+    return 1.8 * p;
+  }
+  else {
+    return 1.0 * p;
+  }
+}
+
+/**
  * メイン計算処理
  * @param {Object} objectData
  */
@@ -5172,16 +5242,18 @@ function calculateLandBase(landBaseAps, landBaseModes, enemyFleet, enemyApDist, 
  * 詳細結果表示
  */
 function detailCalculate() {
+  const baseNo = castInt($('#detail_info').data('base_no'));
+  const slot = castInt($('#detail_info').data('slot_no'));
   // 計算する対象の取得
   switch ($('#detail_info').data('mode')) {
     case "enemy_slot_detail":
-      enemySlotDetailCalculate(castInt($('#detail_info').data('enemy_no')), castInt($('#detail_info').data('slot_no')));
+      enemySlotDetailCalculate(baseNo, slot);
       break;
     case "fleet_slot_detail":
-      fleetSlotDetailCalculate(castInt($('#detail_info').data('ship_no')), castInt($('#detail_info').data('slot_no')), castInt($('#detail_info').data('ship_id')));
+      fleetSlotDetailCalculate(baseNo, slot, castInt($('#detail_info').data('ship_id')));
       break;
     case "land_base_detail":
-      landBaseDetailCalculate(castInt($('#detail_info').data('base_no')), castInt($('#detail_info').data('slot_no')));
+      landBaseDetailCalculate(baseNo, slot);
       break;
     default:
       break;
@@ -5324,7 +5396,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
   $('#detail_wave').addClass('d-none').removeClass('d-flex');
   $('#detail_info').data('mode', 'fleet_slot_detail');
   $('#detail_info').data('ship_id', shipId);
-  $('#detail_info').data('ship_no', shipNo);
+  $('#detail_info').data('base_no', shipNo);
   $('#detail_info').data('slot_no', slotNo);
   const warningText = `
     <div>※ 航空戦火力はキャップ前でクリティカル補正、触接補正なし。小数切捨て</div>
@@ -5400,11 +5472,6 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
     if (planes[slotNo].id === 0 && plane.id !== 0) slotNo = index;
     suppliedSlot += plane.slot;
   }
-
-  // 今回見る機体
-  const targetPlaneData = planes[slotNo];
-  const rawPlane = PLANE_DATA.find(v => v.id === targetPlaneData.id);
-  const planeType = Math.abs(rawPlane.type);
 
   // 今回 stage2きるのかどうか　
   const enabledStage2 = battleData.cellType <= CELL_TYPE.grand;
@@ -5509,30 +5576,23 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
     }
   }
 
+  // 機体id
+  const planeId = planes[slotNo].id;
   // 改修値
-  const remodel = planeType === 3 ? 0 : planes[slotNo].remodel;
-  // 実雷装 or 爆装
-  const fire = 0.2 * remodel + ([2, 101].includes(planeType) ? rawPlane.torpedo : rawPlane.bomber);
-  // 陸攻補正：陸攻 = 1.8、陸攻以外 = 1.0
-  const adj1 = planeType === 101 ? 1.8 : 1.0;
+  const remodel = planes[slotNo].remodel;
   // 陸偵補正：二式陸偵 = 1.125、二式陸偵(熟練) = 1.15
   const adj2 = planes.find(v => v.id === 312) ? 1.15 : planes.find(v => v.id === 311) ? 1.125 : 1.0;
   // 敵連合特効：対敵通常艦隊 = 1.0、対敵連合艦隊 = 1.1
   const adj3 = battleData.cellType === CELL_TYPE.grand ? 1.1 : 1.0;
-  // ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)
-  const baseAdj = [2, 3, 6].includes(planeType) ? 1.0 : planeType === 101 ? 0.8 : planeType === 9 ? 0.7071 : 0;
   const tooltips = {
     mode: 'index',
     callbacks: {
       title: (tooltipItem, data) => {
         const value = tooltipItem[0].xLabel;
-        if (!value) return `残機数：${value} 機${'\n'}航空戦火力：0`;
-
-        // 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
-        const base = Math.floor(baseAdj * Math.floor(fire * Math.sqrt(1.8 * value) + 25));
-        const last = base * adj1 * adj2 * adj3;
+        const last = getLandBasePower(planeId, value, remodel) * adj2 * adj3;
         const ap = `航空戦火力：${last.toFixed(1)}`
-        return `残機数：${value} 機${'\n' + ap}`;
+        if (!value) return `残機数：0 機${'\n'}航空戦火力：0`;
+        else return `残機数：${value} 機${'\n' + ap}`;
       },
       label: (tooltipItem, data) => [`${tooltipItem.yLabel} %`],
     }
@@ -5765,12 +5825,12 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
   $slots.eq(slotNo).find('.nav-link').tab('show');
 
   // 必要なら説明表示
-  if ($('#detail_info').data('mode') !== 'enemy_slot_detail' || $('#detail_info').data('enemy_no') != enemyNo) {
+  if ($('#detail_info').data('mode') !== 'enemy_slot_detail' || $('#detail_info').data('base_no') != enemyNo) {
     $('#land_base_detail_table').addClass('d-none');
     $('#detail_fire').removeClass('d-none').addClass('d-flex');
     $('#detail_wave').addClass('d-none').removeClass('d-flex');
     $('#detail_info').data('mode', 'enemy_slot_detail');
-    $('#detail_info').data('enemy_no', enemyNo);
+    $('#detail_info').data('base_no', enemyNo);
     $('#detail_info').data('slot_no', slotNo);
     $('#detail_warning').text('※ 航空戦火力はキャップ前でクリティカル、触接補正なし小数切捨て');
 
@@ -7524,14 +7584,7 @@ function plane_type_select_Changed() {
   }
 
   if (searchWord) {
-    searchWord = searchWord.replace('601', '六〇一');
-    searchWord = searchWord.replace('634', '六三四');
-    searchWord = searchWord.replace('931', '九三一');
-    searchWord = searchWord.replace('22', '二二');
-    searchWord = searchWord.replace('34', '三四');
-    searchWord = searchWord.replace('96', '九六');
-    searchWord = searchWord.replace('97', '九七');
-    searchWord = searchWord.replace('99', '九九');
+    searchWord = replaceKnji(searchWord);
     org = org.filter(v => v.name.includes(searchWord) || v.abbr.includes(searchWord));
   }
 
@@ -7549,6 +7602,10 @@ function plane_type_select_Changed() {
     case 'defense_anti_air':
       if (isAsc) org.sort((a, b) => (a.antiAir + a.interception + 2.0 * a.antiBomber) - (b.antiAir + b.interception + 2.0 * b.antiBomber));
       else org.sort((a, b) => (b.antiAir + b.interception + 2.0 * b.antiBomber) - (a.antiAir + a.interception + 2.0 * a.antiBomber));
+      break;
+    case 'land_base_power':
+      if (isAsc) org.sort((a, b) => getLandBasePower(a.id, 18, 0) - getLandBasePower(b.id, 18, 0));
+      else org.sort((a, b) => getLandBasePower(b.id, 18, 0) - getLandBasePower(a.id, 18, 0));
       break;
     case 'radius':
       if (isAsc) org.sort((a, b) => a.radius - b.radius);
@@ -8440,14 +8497,7 @@ function stock_type_select_Changed() {
   const displayType = Math.abs(castInt($('#stock_type_select').val()));
   let searchWord = $('#stock_word').val().trim();
   if (searchWord) {
-    searchWord = searchWord.replace('601', '六〇一');
-    searchWord = searchWord.replace('634', '六三四');
-    searchWord = searchWord.replace('931', '九三一');
-    searchWord = searchWord.replace('22', '二二');
-    searchWord = searchWord.replace('34', '三四');
-    searchWord = searchWord.replace('96', '九六');
-    searchWord = searchWord.replace('97', '九七');
-    searchWord = searchWord.replace('99', '九九');
+    searchWord = replaceKnji(searchWord);
   }
 
   $('.stock_tr').each((i, e) => {
