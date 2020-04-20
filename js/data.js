@@ -2249,7 +2249,19 @@ let CHANGE_LOG = [
       },
     ],
   },
+  {
+    id: "1.6.2", changes: [
+      {
+        type: 0, title: "敵艦隊の対空砲火計算機能を追加しました。",
+        content: "入力した敵艦隊毎に、敵艦それぞれの割合、固定撃墜数などを一覧で表示します。同画面内にて簡易的な撃墜数の試算も可能です。敵艦隊欄の <i class='fas fa-exclamation-circle text-primary'></i> アイコンをクリックすると起動します。"
+      },
+      {
+        type: 2, title: "不具合の修正を行いました。",
+        content: "敵艦隊未設定時に計算結果欄の表示が意図していない表示になっていた現象を修正しました"
+      },
+    ],
+  },
 ];
 
 
-const LAST_UPDATE_DATE = "2020/04/10";
+const LAST_UPDATE_DATE = "2020/04/20";

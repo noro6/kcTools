@@ -773,7 +773,7 @@ function initialize(callback) {
     if (i < 6) {
       // 基地部分
       $(e).find('.rate_td_name').html(`<span class="mr-1">第${lb_num}基地</span><span class="text-nowrap">${wave}波目</span>`);
-      $(e)[0].dataset.base_no =  lb_num - 1;
+      $(e)[0].dataset.base_no = lb_num - 1;
       $(e).addClass('cur_pointer land_base_detail');
     }
     else if (i === 6) $(e).find('.rate_td_name').text('本隊');
@@ -822,6 +822,9 @@ function initialize(callback) {
 
   // 編成プリセット欄初期化
   loadMainPreset();
+
+  $('#stage2_detail_slot').val(18);
+  $('#stage2_detail_avoid').val(0);
 
   // シミュレート回数
   if (setting.simulateCount) $('#calculate_count').val(setting.simulateCount);
@@ -4554,18 +4557,18 @@ function createStage2Table(enemies, cellType, formationId) {
     const enm = enemies[i];
     // 加重対空格納
     aawList.push(enm.aaw);
-
     // stage2用 割合撃墜係数テーブル
     for (let j = 0; j < AVOID_TYPE.length; j++) {
-      const adj = AVOID_TYPE[j].adj[0];
+      // 補正後加重対空値
+      const antiAirWeight = Math.floor(enm.aaw * AVOID_TYPE[j].adj[0]);
       if (cellType === CELL_TYPE.grand) {
         // 敵連合艦隊補正
-        if (i < 6) stage2[j][0].push(Math.floor(enm.aaw * adj) * 0.8 / 400);
-        else stage2[j][0].push(Math.floor(enm.aaw * adj) * 0.48 / 400);
+        if (i < 6) stage2[j][0].push(antiAirWeight * 0.8 / 400);
+        else stage2[j][0].push(antiAirWeight * 0.48 / 400);
       }
       else {
         // 通常艦隊
-        stage2[j][0].push(Math.floor(enm.aaw * adj) / 400);
+        stage2[j][0].push(antiAirWeight / 400);
       }
     }
     // 艦隊防空ボーナス加算
@@ -4577,23 +4580,25 @@ function createStage2Table(enemies, cellType, formationId) {
   const aj1 = formation ? formation.correction : 1.0;
 
   // 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計] * 2
-  const fleetAntiAir = Math.floor(aj1 * sumAntiAirBonus);
+  const fleetAntiAir = Math.floor((aj1 * sumAntiAirBonus) * 2);
   // stage2用 固定撃墜値テーブル
   for (let i = 0; i < enemyCount; i++) {
     const aaw = aawList[i];
     for (let j = 0; j < AVOID_TYPE.length; j++) {
-      const adj1 = AVOID_TYPE[j].adj[0];
-      const adj2 = AVOID_TYPE[j].adj[1];
+      // 補正後加重対空値
+      const antiAirWeight = Math.floor(aaw * AVOID_TYPE[j].adj[0]);
+      // 補正後艦隊防空値
+      const fleetAA = Math.floor(fleetAntiAir * AVOID_TYPE[j].adj[1]);
       if (cellType === CELL_TYPE.grand) {
         // 敵連合艦隊補正
         // 第1艦隊
-        if (i < 6) stage2[j][1].push(Math.floor((Math.floor(aaw * adj1) + Math.floor(fleetAntiAir * adj2) * 2) * 0.8 / 10.6));
+        if (i < 6) stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.8 * 0.09375));
         // 第2艦隊
-        else stage2[j][1].push(Math.floor((Math.floor(aaw * adj1) + Math.floor(fleetAntiAir * adj2) * 2) * 0.48 / 10.6));
+        else stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.48 * 0.09375));
       }
       else {
         // 通常艦隊
-        stage2[j][1].push(Math.floor((Math.floor(aaw * adj1) + Math.floor(fleetAntiAir * adj2) * 2) / 10.6));
+        stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.09375));
       }
     }
   }
@@ -4793,6 +4798,7 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
 function shootDownFriend(airStatusIndex, friendFleetData, battleInfo) {
   const len = friendFleetData.length;
   const range = battleInfo.stage2[0][0].length;
+  if (!range) return;
   for (let i = 0; i < len; i++) {
     const ship = friendFleetData[i];
     const shipLen = ship.length;
@@ -8059,6 +8065,93 @@ function btn_enemy_preset_Clicked($this) {
   $('#modal_enemy_pattern').modal('show');
 }
 
+
+/**
+ * 対空砲火詳細クリック
+ * @param {JqueryDomObject} $this
+ */
+function btn_stage2_Clicked($this) {
+  const $battleContent = $this.closest('.battle_content');
+  const battleNo = castInt($battleContent.find('.battle_no').text()) - 1;
+  const formationId = castInt($battleContent.find('.formation').val());
+
+  $('#modal_stage2_detail').data('battleno', battleNo);
+  $('#modal_stage2_detail').data('formationid', formationId);
+
+  calculateStage2Detail();
+  $('#modal_stage2_detail').modal('show');
+}
+
+/**
+ * 対空砲火シミュ内搭載数変更
+ */
+function stage2_slot_input_Changed() {
+  const $this = $('#stage2_detail_slot');
+  // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
+  const value = validateInputNumber($this.val(), castInt($this.attr('max')));
+  $this.val(value);
+  calculateStage2Detail();
+}
+
+/**
+ * 簡易撃墜シミュレート
+ */
+function calculateStage2Detail() {
+  const battleNo = castInt($('#modal_stage2_detail').data('battleno'));
+  const formationId = castInt($('#modal_stage2_detail').data('formationid'));
+  const all = [];
+  updateEnemyFleetInfo(all, false);
+  const battleData = all[battleNo];
+  const slot = castInt($('#stage2_detail_slot').val());
+  const avoid = castInt($('#stage2_detail_avoid').val());
+  let sumAntiAirBonus = 0;
+  let tableHtml = '';
+  let cutInWarnning = false;
+  const cutInEnemy = [166, 167, 409, 410, 411, 412, 413, 414];
+  for (let index = 0; index < battleData.enemies.length; index++) {
+    const enemy = battleData.enemies[index];
+    const rate = Math.floor(slot * battleData.stage2[avoid][0][index]);
+    const fix = battleData.stage2[avoid][1][index];
+    const sum = rate + fix;
+    if (cutInEnemy.includes(enemy.id)) cutInWarnning = true;
+    sumAntiAirBonus += enemy.aabo;
+    tableHtml += `
+    <tr class="${sum >= slot ? 'stage2_table_death' : sum >= (slot / 2) ? 'stage2_table_half' : ''}">
+      <td class="font_size_12 text-left td_enm_name" data-toggle="tooltip" data-html="true"
+        data-title="<div><div>加重対空値：${enemy.aaw}</div><div>防空ボーナス：${enemy.aabo}</div></div>">
+        <span class="ml-2">
+          ${drawEnemyGradeColor(enemy.name)}
+        </span>
+      </td>
+      <td>
+        <span class="text-right">
+          ${(battleData.stage2[avoid][0][index] * 100).toFixed(1)}% (${rate}機)</span>
+      </td>
+      <td>${fix}機</td>
+      <td>${sum}機</td>
+    </tr>
+    `;
+  }
+
+  // 陣形補正
+  const formation = FORMATION.find(v => v.id === formationId);
+  const aj1 = formation ? formation.correction : 1.0;
+  // 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計] * 2
+  const sumfleetAntiAir = Math.floor(aj1 * sumAntiAirBonus) * 2;
+
+  // 空襲なので撃墜ないよ注意
+  if (battleData.cellType <= CELL_TYPE.grand) $('#is_air_raid').addClass('d-none');
+  else $('#is_air_raid').removeClass('d-none');
+  // 対空CIあるよ注意
+  if (battleData.cellType <= CELL_TYPE.grand && cutInWarnning) $('#stage2_warning').removeClass('d-none');
+  else $('#stage2_warning').addClass('d-none');
+
+  $('#stage2_table tbody').html(tableHtml);
+  $('.td_enm_name').tooltip();
+  $('#stage2_detail_formation').text(formation.name);
+  $('#sumfleetAntiAir').text(sumfleetAntiAir);
+}
+
 /**
  * 敵編成一覧名クリック時
  * @param {JqueryDomObject} $this
@@ -9123,6 +9216,7 @@ $(function () {
   $('#enemyFleet_content').on('click', '.btn_reset_battle', function () { btn_reset_battle_Clicked($(this)); });
   $('#enemyFleet_content').on('click', '#btn_world_expand', btn_world_expand_Clicked);
   $('#enemyFleet_content').on('click', '.btn_enemy_preset', function () { btn_enemy_preset_Clicked($(this)); });
+  $('#enemyFleet_content').on('click', '.btn_stage2', function () { btn_stage2_Clicked($(this)); });
   $('#enemyFleet_content').on('change', '#battle_count', function () { battle_count_Changed($(this)); });
   $('#enemyFleet_content').on('change', '#landBase_target', calculate);
   $('#result').on('click', '#btn_calculate', calculate);
@@ -9231,6 +9325,8 @@ $(function () {
   $('#modal_collectively_setting').on('click', '.btn_remodel', function () { btn_remodel_Clicked($(this)); });
   $('#modal_collectively_setting').on('click', '.btn_fighter_prof_max', btn_fighter_prof_max_Clicked);
   $('#modal_collectively_setting').on('click', '.btn_prof', function () { btn_prof_Clicked($(this)); });
+  $('#modal_stage2_detail').on('input', '#stage2_detail_slot', stage2_slot_input_Changed);
+  $('#modal_stage2_detail').on('change', '#stage2_detail_avoid', calculateStage2Detail);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#btn_preset_all').click(btn_preset_all_Clicked);
   $('#btn_auto_expand').click(btn_auto_expand_Clicked);

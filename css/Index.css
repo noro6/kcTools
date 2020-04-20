@@ -121,7 +121,10 @@ input[type="text"] { font-size: 12px; }
 .text_orange { color: rgb(255, 120, 0); }
 .text_deep_orange { color: rgb(255, 80, 0); }
 .text_red { color: rgb(255, 0, 0); }
-
+.w_40 { width: 40% }
+.w_30 { width: 30% }
+.w_20 { width: 20% }
+.w_15 { width: 15% }
 
 /* -----------------------------------
   カスタムコントロール
@@ -141,7 +144,7 @@ input[type="text"] { font-size: 12px; }
 .btn_icon {
   font-size: 18px;
   transition: 0.4s;
-  opacity: 0.3;
+  opacity: 0.4;
 }
 .btn_icon:hover {
   opacity: 1;
@@ -1246,6 +1249,45 @@ input[type="text"] { font-size: 12px; }
   background-color: #e9ecef;
 }
 #detail_calculate_count { width: 120px; }
+
+
+/* ------------------------------
+  stage2詳細 #modal_stage2_detail
+-------------------------------- */
+#stage2_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#stage2_table thead td {
+  color: #666;
+  font-size: 12px;
+  border-top: 1px #b8b8b8 solid;
+  border-bottom: 1px #b8b8b8 solid;
+  background-color: #e9ecef;
+}
+#stage2_table tbody td {
+  padding: .1rem;
+  border-bottom:1px #e9ecef solid;
+}
+#stage2_table tbody tr:hover {
+  background-color: #fafafa;
+}
+.stage2_table_death {
+  background-color: rgb(255, 240, 240) !important;
+}
+.stage2_table_death:hover {
+  background-color: rgb(255, 230, 230) !important;
+}
+.stage2_table_half {
+  background-color: rgb(255, 255, 240) !important;
+}
+.stage2_table_half:hover {
+  background-color: rgb(255, 255, 220) !important;
+}
+#stage2_detail_slot {
+  width: 120px;
+}
 
 /* ------------------------------
   オートモード #auto_expand
