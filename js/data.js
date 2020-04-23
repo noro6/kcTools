@@ -295,14 +295,16 @@ const SHIP_DATA = [
   { id: 360, type: 3, name: "瑞鳳改二乙", slot: [18, 15, 15, 2], final: 1, orig: 112, deckid: 560 },
   { id: 373, type: 7, name: "陸奥改二", slot: [2, 3, 3, 7], final: 1, orig: 2, deckid: 573 },
   { id: 374, type: 14, name: "Gotland", slot: [2, 3, 6], final: 0, orig: 374, deckid: 574 },
-  { id: 379, type: 14, name: "Gotland改", slot: [1, 1, 1, 1], final: 1, orig: 374, deckid: 579 },
+  { id: 379, type: 14, name: "Gotland改", slot: [1, 1, 1, 1], final: 0, orig: 374, deckid: 579 },
   { id: 381, type: 6, name: "日進", slot: [8, 8, 12], final: 0, orig: 381, deckid: 581 },
   { id: 386, type: 6, name: "日進甲", slot: [8, 8, 12, 4], final: 1, orig: 381, deckid: 586 },
   { id: 391, type: 8, name: "金剛改二丙", slot: [2, 2, 3, 6], final: 1, orig: 391, deckid: 591 },
+  { id: 392, type: 8, name: "比叡改二丙", slot: [2, 2, 2, 2], final: 1, orig: 392, deckid: 592 },
   { id: 404, type: 1, name: "赤城改二", slot: [21, 21, 32, 12, 4], final: 1, orig: 6, deckid: 594 },
   { id: 409, type: 1, name: "赤城改二戊", slot: [16, 16, 40, 4, 2], final: 1, orig: 6, deckid: 599 },
   { id: 421, type: 10, name: "神州丸", slot: [2, 2, 8], final: 0, orig: 421, deckid: 621 },
   { id: 426, type: 10, name: "神州丸改", slot: [2, 2, 4, 8], final: 1, orig: 421, deckid: 626 },
+  { id: 430, type: 14, name: "Gotland andra", slot: [2, 2, 3, 7], final: 1, orig: 374, deckid: 630 },
   { id: 1375, type: 7, name: "長門改", slot: [3, 3, 3, 3], final: 0, orig: 1, deckid: 275 },
   { id: 1376, type: 7, name: "陸奥改", slot: [3, 3, 3, 3], final: 0, orig: 2, deckid: 276 },
   { id: 1377, type: 1, name: "赤城改", slot: [20, 20, 32, 10], final: 0, orig: 6, deckid: 277 },
@@ -1710,6 +1712,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   { shipId: 296, equipmentTypes: [6, 7], equipmentIds: [] },
   // 金剛改二丙に 水爆
   { shipId: 391, equipmentTypes: [6], equipmentIds: [] },
+  // 比叡改二丙に 水戦
+  { shipId: 392, equipmentTypes: [7], equipmentIds: [] },
   // Richelieuに Late298B
   { shipId: 1472, equipmentTypes: [], equipmentIds: [194] },
   // 由良改二に 水爆 水戦
@@ -1724,6 +1728,7 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // Gotlandに 水爆
   { shipId: 374, equipmentTypes: [6], equipmentIds: [] },
   { shipId: 379, equipmentTypes: [6], equipmentIds: [] },
+  { shipId: 430, equipmentTypes: [6], equipmentIds: [] },
   // あきつ丸に 艦戦
   { shipId: 166, equipmentTypes: [1], equipmentIds: [] },
   // 神州丸に 水戦 水偵
