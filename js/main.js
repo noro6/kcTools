@@ -250,6 +250,22 @@ function getArrayMin(array) {
   return min;
 }
 
+/**
+ * 短いURL取得要求
+ * @param {string} url 
+ */
+async function postURLData(url) {
+  const data = {
+    longDynamicLink: `https://aircalc.page.link/?link=${url}`,
+    suffix: { option: "SHORT" }
+  };
+  return await fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${xxx}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  }).then(response => response.json());
+}
+
 /*==================================
     値/オブジェクト 作成・操作・取得等
 ==================================*/
@@ -8828,8 +8844,16 @@ function btn_auto_expand_Clicked() {
 /**
  * Twitterボタンクリック
  */
-function btn_twitter_Clicked() {
-  window.open('https://twitter.com/share?url=https://noro6.github.io/kcTools/?d=' + encodePreset());
+async function btn_twitter_Clicked() {
+  const url = 'https://noro6.github.io/kcTools/?d=' + encodePreset();
+  let shortURL = url;
+  await postURLData(url)
+    .then(json => {
+      if (json.error || !json.shortLink) console.log(json);
+      else shortURL = json.shortLink;
+    })
+    .catch(error => console.error(error));
+  window.open('https://twitter.com/share?url=' + shortURL);
 }
 
 /**
@@ -8975,12 +8999,21 @@ function btn_load_deck_Clicked() {
 }
 
 /**
- * 共有URL生成ボタンクリック
+ * 共有リンク生成ボタンクリック
  */
-function btn_output_url_Clicked() {
+async function btn_output_url_Clicked() {
   try {
     const $output = $('#output_url');
-    $output.val(location.protocol + "//" + location.hostname + location.pathname + "?d=" + encodePreset());
+    const url = 'https://noro6.github.io/kcTools/?d=' + encodePreset();
+    let shortURL = url;
+    await postURLData(url)
+      .then(json => {
+        if (json.error || !json.shortLink) console.log(json);
+        else shortURL = json.shortLink;
+      })
+      .catch(error => console.error(error));
+
+    $output.val(shortURL);
     $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
     $output.removeClass('is-invalid').addClass('is-valid');
   } catch (error) {
@@ -8988,6 +9021,7 @@ function btn_output_url_Clicked() {
     return;
   }
 }
+const xxx = "AIzaSyC_rEnvKFFlZv54xvxP8MXPht081xYol4s";
 
 /**
  * デッキビルダー形式生成ボタンクリック
