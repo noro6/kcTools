@@ -825,7 +825,7 @@ input[type="text"] { font-size: 12px; }
   display: table-cell;
   vertical-align: middle;
 }
-.preset_tbody{ height: 320px; }
+.preset_tbody{ height: 340px; }
 .preset_tr {
   width: 100%;
   cursor: pointer;
@@ -872,6 +872,8 @@ input[type="text"] { font-size: 12px; }
   min-height: calc( 1.55em * 4 );
   line-height: 1.3;
 }
+
+#modal_main_preset .modal-content { height: 620px; }
 
 
 /* -----------------------------------
