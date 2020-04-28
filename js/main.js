@@ -8857,6 +8857,19 @@ async function btn_twitter_Clicked() {
 }
 
 /**
+ * URL短縮コンソール用
+ * @param {string} url 
+ */
+async function getShortURL(url) {
+  await postURLData(url)
+    .then(json => {
+      if (json.error || !json.shortLink) console.log(json);
+      else console.log(json.shortLink);
+    })
+    .catch(error => console.error(error));
+}
+
+/**
  * デッキビルダーボタンクリック
  */
 function btn_deckBuilder_Clicked() {
