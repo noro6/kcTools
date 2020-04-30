@@ -43,9 +43,18 @@
          right: 0;
          bottom: 0;
          margin: auto;
+         display: -ms-flexbox;
+         display: flex;
+         -ms-flex-pack: center;
+         justify-content: center;
+         vertical-align: middle;
       }
 
       #loading_text {
+         padding-right: 3rem;
+         padding-left: 3rem;
+         -ms-flex-item-align: center;
+         align-self: center;
          background-color: #252729;
          box-shadow: 0 0 1rem #252729;
       }
@@ -104,8 +113,8 @@
 
 <body>
    <div id="loading_back">
-      <div class="align-middle d-flex justify-content-center" id="loading_text_div">
-         <div class="px-5 align-self-center" id="loading_text">
+      <div id="loading_text_div">
+         <div id="loading_text">
             <div style="text-align: center;">建造中</div>
             <div id="loading_info">DOM構築中</div>
          </div>
