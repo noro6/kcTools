@@ -558,20 +558,7 @@ function initialize(callback) {
     if (i === PLANE_TYPE.length - 1) {
       // 最後の画像読み込みが終わったら所持装備欄初期表示
       img.addEventListener('load', () => {
-        $('#loading_info').text('画像データ読み込み完了');
         setPlaneStockTable();
-        $('#loading_text').addClass('load_end_text');
-        $('#loading_text').text('完了');
-        $('#loading_back').addClass('load_end');
-        $('#loading_line').addClass('loading_line_expand');
-
-        if ($('#modal_version_inform').find('.modal-body').html()) {
-          // バージョン変更通知
-          $('#modal_version_inform').modal('show');
-        }
-        setTimeout(() => {
-          $('#loading_back').remove();
-        }, 1000);
       }, false);
     }
   }
@@ -1037,6 +1024,20 @@ function initialize(callback) {
 
   $('#loading_info').text('初期計算中');
   callback();
+
+  // さっさと明け渡す
+  $('#loading_text').addClass('load_end_text');
+  $('#loading_text').text('完了');
+  $('#loading_line').addClass('loading_line_expand');
+  $('#loading_back').addClass('load_end');
+
+  if ($('#modal_version_inform').find('.modal-body').html()) {
+    // バージョン変更通知
+    $('#modal_version_inform').modal('show');
+  }
+  setTimeout(() => {
+    $('#loading_back').remove();
+  }, 1000);
 }
 
 /**
