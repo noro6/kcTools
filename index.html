@@ -13,14 +13,69 @@
    <meta property="og:title" content="制空権シミュレータ" />
    <meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
    <meta property="og:image" content="https://noro6.github.io/kcTools/img/util/image.png" />
-   <link rel="stylesheet" href="./css/jquery-ui.min.css">
-   <link rel="stylesheet" href="./css/bootstrap.min.css">
-   <link rel="stylesheet" href="./css/Index.css">
-   <link rel="stylesheet" href="./css/all.min.css">
-   <script src="./js/jquery-3.4.1.min.js"></script>
-   <script src="./js/jquery-ui.min.js"></script>
-   <script src="./js/jquery.ui.touch-punch.js"></script>
-   <script src="./js/bootstrap.bundle.js"></script>
+   <style>
+      #loading_back {
+         font-family: "游ゴシック体", YuGothic, "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック", "Yu Gothic", sans-serif;
+         min-width: 526px;
+         position: fixed;
+         top: 0;
+         left: 0;
+         z-index: 2000;
+         width: 100vw;
+         height: 100%;
+         background-color: #252729;
+         font-size: 24px;
+         color: #ccc;
+      }
+      #loading_text_div {
+         position: absolute;
+         width: auto;
+         height: auto;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         margin: auto;
+      }
+      #loading_text {
+         background-color: #252729;
+         box-shadow: 0 0 1rem #252729;
+      }
+      .load_end_text {
+         color: #252729;
+         background-color: transparent !important;
+         box-shadow: none !important;
+      }
+      #loading_line {
+         background-color: #aaa;
+         height: 2px;
+         margin-top: auto;
+         margin-bottom: auto;
+      }
+      .loading_line_expand {
+         background-color: #ddd !important;
+         transition: .5s !important;
+         height: 100% !important;
+      }
+      .load_end {
+         opacity: 0;
+         transition: .8s ease-in;
+      }
+   </style>
+   <link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
+   <link rel="stylesheet" href="./css/bootstrap.min.css" media="print" onload="this.media='all'">
+   <link rel="stylesheet" href="./css/Index.css" media="print" onload="this.media='all'">
+   <link rel="stylesheet" href="./css/all.min.css" media="print" onload="this.media='all'">
+   <script async src="./js/lz-string.js"></script>
+   <script async src="./js/html2canvas.min.js"></script>
+   <script async src="./js/chart.min.js"></script>
+   <script defer src="./js/jquery-3.4.1.min.js"></script>
+   <script defer src="./js/jquery-ui.min.js"></script>
+   <script defer src="./js/jquery.ui.touch-punch.js"></script>
+   <script defer src="./js/bootstrap.bundle.js"></script>
+   <script defer src="./js/sortable.js"></script>
+   <script defer src="./js/data.js"></script>
+   <script defer src="./js/main.min.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -31,6 +86,17 @@
 </head>
 
 <body>
+   <div id="loading_back">
+      <div class="h-100 d-flex flex-column">
+         <div class="align-middle d-flex justify-content-center" id="loading_text_div">
+            <div class="px-5 align-self-center" id="loading_text">
+               <div class="text-center">建造中</div>
+               <div class="font_size_12 text-center" id="loading_info">DOM構築中</div>
+            </div>
+         </div>
+         <div id="loading_line"></div>
+      </div>
+   </div>
    <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow justify-content-start">
       <div class="d-block d-xl-none text-light px-2 pt-3 py-2 cur_pointer" id="smart_menu">
          <div id="menu-small">
@@ -2960,26 +3026,9 @@
          </div>
       </div>
    </div>
-   <div id="loading_back">
-      <div class="h-100 d-flex flex-column">
-         <div class="align-middle d-flex justify-content-center" id="loading_text_div">
-            <div class="px-5 align-self-center" id="loading_text">
-               <div class="text-center">建造中</div>
-               <div class="font_size_12 text-center" id="loading_info">DOM構築中</div>
-            </div>
-         </div>
-         <div id="loading_line"></div>
-      </div>
-   </div>
    <div class="d-none">
       <a id="getImage" href="" download="image.png"></a>
    </div>
-   <script src="./js/lz-string.js"></script>
-   <script src="./js/html2canvas.min.js"></script>
-   <script src="./js/chart.min.js"></script>
-   <script src="./js/sortable.js"></script>
-   <script src="./js/data.js"></script>
-   <script src="./js/main.min.js"></script>
 </body>
 
 </html>
