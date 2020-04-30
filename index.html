@@ -15,6 +15,7 @@
    <meta property="og:image" content="https://noro6.github.io/kcTools/img/util/image.png" />
    <style>
       #loading_back {
+         font-size: 14px;
          font-family: "游ゴシック体", YuGothic, "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック", "Yu Gothic", sans-serif;
          min-width: 526px;
          position: fixed;
@@ -26,7 +27,13 @@
          background-color: #252729;
          font-size: 24px;
          color: #ccc;
+         height: 100%;
+         display: -ms-flexbox;
+         display: flex;
+         -ms-flex-direction: column;
+         flex-direction: column;
       }
+
       #loading_text_div {
          position: absolute;
          width: auto;
@@ -37,26 +44,36 @@
          bottom: 0;
          margin: auto;
       }
+
       #loading_text {
          background-color: #252729;
          box-shadow: 0 0 1rem #252729;
       }
+
       .load_end_text {
          color: #252729;
          background-color: transparent !important;
          box-shadow: none !important;
       }
+
+      #loading_info {
+         font-size: 12px;
+         text-align: center;
+      }
+
       #loading_line {
          background-color: #aaa;
          height: 2px;
          margin-top: auto;
          margin-bottom: auto;
       }
+
       .loading_line_expand {
          background-color: #ddd !important;
          transition: .5s !important;
          height: 100% !important;
       }
+
       .load_end {
          opacity: 0;
          transition: .8s ease-in;
@@ -87,15 +104,13 @@
 
 <body>
    <div id="loading_back">
-      <div class="h-100 d-flex flex-column">
-         <div class="align-middle d-flex justify-content-center" id="loading_text_div">
-            <div class="px-5 align-self-center" id="loading_text">
-               <div class="text-center">建造中</div>
-               <div class="font_size_12 text-center" id="loading_info">DOM構築中</div>
-            </div>
+      <div class="align-middle d-flex justify-content-center" id="loading_text_div">
+         <div class="px-5 align-self-center" id="loading_text">
+            <div style="text-align: center;">建造中</div>
+            <div id="loading_info">DOM構築中</div>
          </div>
-         <div id="loading_line"></div>
       </div>
+      <div id="loading_line"></div>
    </div>
    <nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow justify-content-start">
       <div class="d-block d-xl-none text-light px-2 pt-3 py-2 cur_pointer" id="smart_menu">
