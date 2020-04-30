@@ -80,7 +80,7 @@ const PLANE_DATA = [
   { id: 344, type: -2, name: "九七式艦攻改試製三号戊型(空六号電探改装備機)", abbr: "97艦攻改(空六号電探)", antiAir: 0, torpedo: 7, bomber: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, radius: 4, cost: 6, avoid: 0 },
   { id: 345, type: -2, name: "九七式艦攻改(熟練)試製三号戊型(空六号電探改装備機)", abbr: "97艦攻改(熟練/空六号電探)", antiAir: 0, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, radius: 4, cost: 6, avoid: 0 },
   { id: 373, type: -2, name: "天山一二型甲改(空六号電探改装備機)", abbr: "天山12型(空六号電探)", antiAir: 1, torpedo: 11, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 5, cost: 8, avoid: 0 },
-  { id: 374, type: -2, name: "天山一二型甲改(熟練/空六号電探改装備機)", abbr: "天山12型(熟練/空六号電探)", antiAir: 1, torpedo: 13, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 6, cost: 8, avoid: 0 },
+  { id: 374, type: -2, name: "天山一二型甲改(熟練/空六号電探改装備機)", abbr: "天山12型(熟練/空六号電探)", antiAir: 1, torpedo: 13, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 6, cost: 8, avoid: 1 },
   { id: 23, type: 3, name: "九九式艦爆", abbr: "", antiAir: 0, torpedo: 0, bomber: 5, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 4, avoid: 0 },
   { id: 24, type: 3, name: "彗星", abbr: "", antiAir: 0, torpedo: 0, bomber: 8, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 5, avoid: 0 },
   { id: 57, type: 3, name: "彗星一二型甲", abbr: "", antiAir: 0, torpedo: 0, bomber: 10, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, radius: 5, cost: 6, avoid: 0 },
