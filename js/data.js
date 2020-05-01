@@ -2271,8 +2271,12 @@ let CHANGE_LOG = [
         type: 2, title: "不具合の修正を行いました。",
         content: "敵艦隊未設定時に計算結果欄の表示が意図していない表示になっていた現象を修正しました"
       },
+      {
+        type: 0, title: "新装備を追加しました。",
+        content: "天山一二型甲改2種、XF5Uを追加しました。"
+      },
     ],
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/04/30";
+const LAST_UPDATE_DATE = "2020/05/01";
