@@ -127,7 +127,7 @@ const PLANE_DATA = [
   { id: 80, type: 6, name: "瑞雲12型", abbr: "", antiAir: 3, torpedo: 0, bomber: 7, antiBomber: 0, interception: 0, scout: 6, canRemodel: 0, radius: 5, cost: 7, avoid: 1 },
   { id: 81, type: 6, name: "瑞雲12型(六三四空)", abbr: "瑞雲12型(634空)", antiAir: 3, torpedo: 0, bomber: 9, antiBomber: 0, interception: 0, scout: 7, canRemodel: 0, radius: 5, cost: 7, avoid: 2 },
   { id: 194, type: 6, name: "Laté298B", abbr: "", antiAir: 1, torpedo: 4, bomber: 5, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, radius: 4, cost: 7, avoid: 0 },
-  { id: 207, type: 6, name: "瑞雲(六三一空)", abbr: "瑞雲(631空)", antiAir: 1, torpedo: 0, bomber: 7, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, radius: 5, cost: 6, avoid: 0 },
+  { id: 207, type: 6, name: "瑞雲(六三一空)", abbr: "瑞雲(631空)", antiAir: 1, torpedo: 0, bomber: 7, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, radius: 5, cost: 6, avoid: 0 },
   { id: 208, type: 6, name: "晴嵐(六三一空)", abbr: "晴嵐(631空)", antiAir: 0, torpedo: 0, bomber: 12, antiBomber: 0, interception: 0, scout: 6, canRemodel: 0, radius: 4, cost: 10, avoid: 0 },
   { id: 237, type: 6, name: "瑞雲(六三四空/熟練)", abbr: "瑞雲(634空/熟練)", antiAir: 4, torpedo: 0, bomber: 9, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, radius: 5, cost: 6, avoid: 2 },
   { id: 322, type: 6, name: "瑞雲改二(六三四空)", abbr: "瑞雲改二(634空)", antiAir: 4, torpedo: 0, bomber: 10, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, radius: 5, cost: 8, avoid: 3 },
