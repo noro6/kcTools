@@ -45,7 +45,7 @@ const PLANE_DATA = [
   { id: 228, type: 1, name: "九六式艦戦改", abbr: "", antiAir: 4, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 3, avoid: 0 },
   { id: 249, type: 1, name: "Fulmar", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, radius: 4, cost: 5, avoid: 0 },
   { id: 252, type: 1, name: "SeafireMk.III改", abbr: "", antiAir: 9, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 6, avoid: 0 },
-  { id: 271, type: 1, name: "紫電改四", abbr: "", antiAir: 10, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 7, avoid: 0 },
+  { id: 271, type: 1, name: "紫電改四", abbr: "", antiAir: 10, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, radius: 4, cost: 7, avoid: 0 },
   { id: 335, type: 1, name: "烈風改(試製艦載型)", abbr: "", antiAir: 10, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 10, avoid: 0 },
   { id: 336, type: 1, name: "烈風改二", abbr: "", antiAir: 13, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 5, cost: 10, avoid: 0 },
   { id: 353, type: 1, name: "Fw190A-5改(熟練)", abbr: "", antiAir: 11, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 4, cost: 6, avoid: 0 },
@@ -2269,12 +2269,12 @@ let CHANGE_LOG = [
         content: ""
       },
       {
-        type: 2, title: "不具合の修正を行いました。",
-        content: "敵艦隊未設定時に計算結果欄の表示が意図していない表示になっていた現象を修正しました"
-      },
-      {
         type: 0, title: "新装備を追加しました。",
         content: "天山一二型甲改2種、XF5Uを追加しました。"
+      },
+      {
+        type: 2, title: "不具合の修正を行いました。",
+        content: "敵艦隊未設定時に計算結果欄の表示が意図していない表示になっていた現象を修正しました。神州丸改に水上爆撃機が搭載できない件を修正しました。"
       },
     ],
   },
