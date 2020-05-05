@@ -1736,7 +1736,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   { shipId: 166, equipmentTypes: [1], equipmentIds: [] },
   // 神州丸に 水戦 水偵
   { shipId: 421, equipmentTypes: [5, 7], equipmentIds: [] },
-  { shipId: 426, equipmentTypes: [5, 7], equipmentIds: [] },
+  // 神州丸改に 水戦 水偵 水爆
+  { shipId: 426, equipmentTypes: [5, 6, 7], equipmentIds: [] },
 ];
 
 /** デフォ機体プリセット */
