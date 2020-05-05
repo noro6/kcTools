@@ -103,7 +103,7 @@ const PLANE_DATA = [
   { id: 306, type: 3, name: "Ju87C改二(KMX搭載機/熟練)", abbr: "", antiAir: 0, torpedo: 0, bomber: 10, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, radius: 4, cost: 8, avoid: 0 },
   { id: 316, type: 3, name: "Re.2001CB改", abbr: "", antiAir: 4, torpedo: 0, bomber: 6, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 3, cost: 6, avoid: 0 },
   { id: 319, type: 3, name: "彗星一二型(六三四空/三号爆弾搭載機)", abbr: "彗星12型(634空/3号爆弾)", antiAir: 3, torpedo: 0, bomber: 12, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 5, cost: 5, avoid: 1 },
-  { id: 320, type: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", abbr: "彗星12型(31号光電管爆弾)", antiAir: 0, torpedo: 0, bomber: 11, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 5, cost: 6, avoid: 1 },
+  { id: 320, type: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", abbr: "彗星12型(31号光電管爆弾)", antiAir: 0, torpedo: 0, bomber: 11, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, radius: 5, cost: 6, avoid: 1 },
   { id: 54, type: 4, name: "彩雲", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, radius: 8, cost: 9, avoid: 0 },
   { id: 61, type: 4, name: "二式艦上偵察機", abbr: "", antiAir: 1, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, radius: 5, cost: 6, avoid: 0 },
   { id: 151, type: 4, name: "試製景雲(艦偵型)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 11, canRemodel: 1, radius: 8, cost: 12, avoid: 0 },
