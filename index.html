@@ -102,7 +102,7 @@
    <script defer src="./js/bootstrap.bundle.js"></script>
    <script defer src="./js/sortable.js"></script>
    <script defer src="./js/data.js"></script>
-   <script defer src="./js/main.min.js"></script>
+   <script defer src="./js/main.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -651,7 +651,7 @@
                      <div class="collapse show collapse_content" id="enemyFleet_content">
                         <div class="border-top"></div>
                         <div class="d-flex my-1 py-1 flex-wrap" id="battle_count_content">
-                           <div class="d-flex w-100 ml-2 mr-4 mb-2">
+                           <div class="d-flex w-100 ml-2 mb-2">
                               <button type="button" id="btn_world_expand"
                                  class="btn btn-sm btn-info font_size_12 align-self-center no_capture">
                                  海域マップから一括入力
@@ -660,7 +660,7 @@
                               <input type="text" class="ml-1 form-control form-control-sm align-self-center flex-grow-1"
                                  id="route" readonly>
                            </div>
-                           <div class="ml-2 mr-1 align-self-center">戦闘数：</div>
+                           <div class="ml-2 align-self-center">戦闘数：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="battle_count">
                               <option value="1" selected>1</option>
                               <option value="2">2</option>
@@ -674,7 +674,7 @@
                               <option value="10">10</option>
                            </select>
                            <div class="ml-1 align-self-center">戦</div>
-                           <div class="ml-3 my-1 align-self-center">基地派遣：</div>
+                           <div class="ml-2 my-1 align-self-center">基地派遣：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="landBase_target">
                               <option value="1" selected>1</option>
                               <option value="2" class="d-none">2</option>
@@ -688,6 +688,19 @@
                               <option value="10" class="d-none">10</option>
                            </select>
                            <div class="ml-1 align-self-center">戦目</div>
+                           <div class="ml-auto d-flex" id="enemy_fleet_display">
+                              <div class="align-self-center">表示：</div>
+                              <div class="ml-1 custom-control custom-radio align-self-center">
+                                 <input type="radio" id="enemy_fleet_display_text" name="enemy_fleet_display_mode"
+                                    class="custom-control-input" checked>
+                                 <label class="custom-control-label" for="enemy_fleet_display_text">名称</label>
+                              </div>
+                              <div class="ml-1 custom-control custom-radio align-self-center">
+                                 <input type="radio" id="enemy_fleet_display_image" name="enemy_fleet_display_mode"
+                                    class="custom-control-input">
+                                 <label class="custom-control-label" for="enemy_fleet_display_image">画像</label>
+                              </div>
+                           </div>
                         </div>
                         <div class="alert alert-warning py-2 mb-1 d-none" id="lb_range_warning">
                            第<span id="ng_range">1</span>基地航空隊の半径が不足しています。
@@ -759,7 +772,7 @@
                                        <div class="enemy_index align-self-center text-primary">
                                           1
                                        </div>
-                                       <div class="enemy_name">
+                                       <div class="align-self-center enemy_name">
                                           <span class="enemy_name_span px-1">敵艦を選択</span>
                                        </div>
                                        <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">

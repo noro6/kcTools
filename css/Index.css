@@ -48,6 +48,7 @@ input[type="text"] { font-size: 12px; }
 .ml-2_5 { margin-left: 0.75rem !important; }
 .mr-2_5 { margin-right: 0.75rem !important; }
 .pt-3_5 { padding-top: 1.25rem !important; }
+.pb-0_1 { padding-bottom: 0.1rem !important; }
 .py-0_5 { padding-top: 0.2rem !important; padding-bottom: 0.2rem !important; }
 .py-1_5 { padding-top: 0.3rem !important; padding-bottom: 0.3rem !important; }
 .bg-dark1 { background: #3b3d3f !important; }
@@ -125,6 +126,7 @@ input[type="text"] { font-size: 12px; }
 .w_30 { width: 30% }
 .w_20 { width: 20% }
 .w_15 { width: 15% }
+.min-h-31px { min-height: 31px }
 
 /* -----------------------------------
   カスタムコントロール
@@ -594,6 +596,10 @@ input[type="text"] { font-size: 12px; }
   width: 160px;
   font-size: 12px;
   border-radius: .25rem;
+}
+.enemy_name_img {
+  height: 30px;
+  width: 120px;
 }
 .enemy_name_span {
   display: table-cell;

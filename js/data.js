@@ -1641,7 +1641,7 @@ const AVOID_TYPE = [
   { id: 1, name: "弱", adj: [0.6, 1.0] },
   { id: 2, name: "中", adj: [0.6, 0.7] },
   { id: 3, name: "強", adj: [0.5, 0.7] },
-  { id: 4, name: "超", adj: [0.5, 0.5] },
+  { id: 4, name: "超", adj: [0.5, 0.499999] },
 ];
 // 陣形
 const FORMATION = [
