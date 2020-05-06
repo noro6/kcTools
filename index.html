@@ -2960,12 +2960,25 @@
                      <div class="font_size_12 font_color_777">射撃回避：</div>
                      <div>
                         <select class="custom-select custom-select-sm" id="stage2_detail_avoid">
-                           <option value="0">なし</option>
+                           <option value="0" selected>なし</option>
                            <option value="1">弱（加重対空補正:0.6)</option>
                            <option value="2">中（加重対空補正:0.6 艦隊防空補正:0.7)</option>
                            <option value="3">強（加重対空補正:0.5 艦隊防空補正:0.7)</option>
                            <option value="4">超（加重対空補正:0.5 艦隊防空補正:0.5)</option>
+                           <option value="5">任意</option>
                         </select>
+                     </div>
+                     <div class="pt-2 d-none" id="free_modify">
+                        <div>
+                           <div class="font_size_11 font_color_777">加重対空補正：</div>
+                           <input type="number" step="0.01" class="form-control form-control-sm" id="free_anti_air_weight" value="1.0"
+                              min="0" max="10" maxlength="5">
+                        </div>
+                        <div class="ml-4">
+                           <div class="font_size_11 font_color_777">艦隊防空補正：</div>
+                           <input type="number" step="0.01" class="form-control form-control-sm" id="free_anti_air_bornus" value="1.0"
+                              min="0" max="10" maxlength="5">
+                        </div>
                      </div>
                   </div>
                </div>

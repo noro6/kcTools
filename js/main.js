@@ -474,6 +474,25 @@ function validateInputNumber(value, max, min = 0) {
 }
 
 /**
+ * 数値入力バリデーション
+ * @param {string} value 入力文字列
+ * @param {number} max 最大値
+ * @param {number} min 最小値　未指定時0
+ * @returns {number} 検証結果数値
+ */
+function validateInputNumberFloat(value, max, min = 0) {
+  const regex = new RegExp(/^\d+(\.\d{0,4})?$/);
+  let ret = 0;
+
+  if (!regex.test(value)) ret = min;
+  else if (value > max) ret = max;
+  else if (value < min) ret = min;
+  else ret = castFloat(value);
+
+  return ret;
+}
+
+/**
  * 設定データ初期化
  */
 function initializeSetting() {
@@ -4402,7 +4421,6 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
   let sumAp = 0;
   let sumLBAp = 0;
   let sumAntiAirBonus = 0;
-  let aawList = [];
   let map = "999-1";
   let cells = "";
   let isMixed = false;
@@ -4419,7 +4437,6 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
     sumAp = 0;
     sumLBAp = 0;
     sumAntiAirBonus = 0;
-    aawList = [];
 
     // マス情報格納
     battleInfo.cellType = castInt(node_battle_content.getElementsByClassName('cell_type')[0].value);
@@ -4588,10 +4605,13 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
  * 敵艦隊からstage2テーブルを生成
  */
 function createStage2Table(enemies, cellType, formationId) {
-  const stage2 = [[[], []], [[], []], [[], []], [[], []], [[], []]];
+  const stage2 = [[[], []], [[], []], [[], []], [[], []], [[], []], [[], []]];
   const enemyCount = enemies.length;
   let aawList = [];
   let sumAntiAirBonus = 0;
+
+  AVOID_TYPE[5].adj[0] = castFloat($('#free_anti_air_weight').val());
+  AVOID_TYPE[5].adj[1] = castFloat($('#free_anti_air_bornus').val());
   for (let i = 0; i < enemyCount; i++) {
     const enm = enemies[i];
     // 加重対空格納
@@ -8185,6 +8205,17 @@ function stage2_slot_input_Changed() {
 }
 
 /**
+ * 射撃回避補正任意調整
+ * @param {JqueryDomObject}} $this 
+ */
+function free_modify_input_Changed($this) {
+  // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
+  const value = validateInputNumberFloat($this.val(), castInt($this.attr('max')));
+  $this.val(value);
+  calculateStage2Detail();
+}
+
+/**
  * 簡易撃墜シミュレート
  */
 function calculateStage2Detail() {
@@ -8199,6 +8230,14 @@ function calculateStage2Detail() {
   let tableHtml = '';
   let cutInWarnning = false;
   const cutInEnemy = [166, 167, 409, 410, 411, 412, 413, 414];
+
+  if(avoid === 5) {
+    $('#free_modify').addClass('d-flex').removeClass('d-none');
+  }
+  else{
+    $('#free_modify').removeClass('d-flex').addClass('d-none');
+  }
+
   for (let index = 0; index < battleData.enemies.length; index++) {
     const enemy = battleData.enemies[index];
     const rate = Math.floor(slot * battleData.stage2[avoid][0][index]);
@@ -9450,6 +9489,8 @@ $(function () {
   $('#modal_collectively_setting').on('click', '.btn_prof', function () { btn_prof_Clicked($(this)); });
   $('#modal_stage2_detail').on('input', '#stage2_detail_slot', stage2_slot_input_Changed);
   $('#modal_stage2_detail').on('change', '#stage2_detail_avoid', calculateStage2Detail);
+  $('#modal_stage2_detail').on('input', '#free_anti_air_weight', function () { free_modify_input_Changed($(this)) });
+  $('#modal_stage2_detail').on('input', '#free_anti_air_bornus', function () { free_modify_input_Changed($(this)) });
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#btn_preset_all').click(btn_preset_all_Clicked);
   $('#btn_auto_expand').click(btn_auto_expand_Clicked);
