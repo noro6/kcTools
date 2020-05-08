@@ -1701,7 +1701,7 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 長門型改以降に 水戦
   { shipId: 341, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 373, equipmentTypes: [7], equipmentIds: [] },
-  { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 1375, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
   // 大和型改以降に 水戦
   { shipId: 136, equipmentTypes: [7], equipmentIds: [] },
