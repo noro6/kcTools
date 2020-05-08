@@ -1642,6 +1642,7 @@ const AVOID_TYPE = [
   { id: 2, name: "中", adj: [0.6, 0.7] },
   { id: 3, name: "強", adj: [0.5, 0.7] },
   { id: 4, name: "超", adj: [0.5, 0.5] },
+  { id: 5, name: "任意", adj: [1.0, 1.0] },
 ];
 // 陣形
 const FORMATION = [
@@ -1650,8 +1651,8 @@ const FORMATION = [
   { id: 3, name: "輪形陣", correction: 1.6 },
   { id: 4, name: "梯形陣", correction: 1.0 },
   { id: 5, name: "単横陣", correction: 1.0 },
-  { id: 15, name: "第一警戒", correction: 1.0 },
-  { id: 12, name: "第二警戒", correction: 1.1 },
+  { id: 15, name: "第一警戒", correction: 1.1 },
+  { id: 12, name: "第二警戒", correction: 1.0 },
   { id: 13, name: "第三警戒", correction: 1.5 },
   { id: 11, name: "第四警戒", correction: 1.0 },
 ]
@@ -1700,7 +1701,7 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
   // 長門型改以降に 水戦
   { shipId: 341, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 373, equipmentTypes: [7], equipmentIds: [] },
-  { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
+  { shipId: 1375, equipmentTypes: [7], equipmentIds: [] },
   { shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
   // 大和型改以降に 水戦
   { shipId: 136, equipmentTypes: [7], equipmentIds: [] },
@@ -2278,6 +2279,30 @@ let CHANGE_LOG = [
       },
     ],
   },
+  {
+    id: "1.7.0", changes: [
+      {
+        type: 0, title: "噴式強襲航空攻撃による撃墜を実装しました。",
+        content: "内部的な処理の追加ですので、今までと特に入力方法を変更する必要はありません。なお、計算結果欄の各戦闘毎の表示に関して、搭載数については<span class='font-weight-bold'>噴式強襲前</span>の搭載数、制空値(自艦隊)については<span class='font-weight-bold'>噴式強襲後</span>の制空値が表示されています。"
+      },
+      {
+        type: 0, title: "噴式爆撃機の通常航空戦Stage1撃墜軽減処理を追加しました。",
+        content: ""
+      },
+      {
+        type: 0, title: "敵艦隊欄の敵艦を画像表示できるようになりました。",
+        content: "従来通りの敵艦名称表示と、画像表示とで切り替えられます。お好きな方をご利用ください。"
+      },
+      {
+        type: 1, title: "敵側の撃墜処理を微修正しました。",
+        content: ""
+      },
+      {
+        type: 2, title: "不具合の修正を行いました。",
+        content: "改修不可で、かつ★付きの装備の改修値が変更できない問題を修正しました。一部艦爆の改修効果が間違っていた箇所を修正しました。"
+      },
+    ],
+  },
 ];
 
-const LAST_UPDATE_DATE = "2020/05/01";
+const LAST_UPDATE_DATE = "2020/05/08";

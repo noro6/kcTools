@@ -102,7 +102,7 @@
    <script defer src="./js/bootstrap.bundle.js"></script>
    <script defer src="./js/sortable.js"></script>
    <script defer src="./js/data.js"></script>
-   <script defer src="./js/main.min.js"></script>
+   <script defer src="./js/main.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -651,7 +651,7 @@
                      <div class="collapse show collapse_content" id="enemyFleet_content">
                         <div class="border-top"></div>
                         <div class="d-flex my-1 py-1 flex-wrap" id="battle_count_content">
-                           <div class="d-flex w-100 ml-2 mr-4 mb-2">
+                           <div class="d-flex w-100 ml-2 mb-2">
                               <button type="button" id="btn_world_expand"
                                  class="btn btn-sm btn-info font_size_12 align-self-center no_capture">
                                  海域マップから一括入力
@@ -660,7 +660,7 @@
                               <input type="text" class="ml-1 form-control form-control-sm align-self-center flex-grow-1"
                                  id="route" readonly>
                            </div>
-                           <div class="ml-2 mr-1 align-self-center">戦闘数：</div>
+                           <div class="ml-2 align-self-center">戦闘数：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="battle_count">
                               <option value="1" selected>1</option>
                               <option value="2">2</option>
@@ -674,7 +674,7 @@
                               <option value="10">10</option>
                            </select>
                            <div class="ml-1 align-self-center">戦</div>
-                           <div class="ml-3 my-1 align-self-center">基地派遣：</div>
+                           <div class="ml-2 my-1 align-self-center">基地派遣：</div>
                            <select class="custom-select custom-select-sm align-self-center" id="landBase_target">
                               <option value="1" selected>1</option>
                               <option value="2" class="d-none">2</option>
@@ -688,6 +688,19 @@
                               <option value="10" class="d-none">10</option>
                            </select>
                            <div class="ml-1 align-self-center">戦目</div>
+                           <div class="ml-auto d-flex" id="enemy_fleet_display">
+                              <div class="align-self-center font_size_12">表示:</div>
+                              <div class="ml-1 custom-control custom-radio align-self-center">
+                                 <input type="radio" id="enemy_fleet_display_text" name="enemy_fleet_display_mode"
+                                    class="custom-control-input" checked>
+                                 <label class="custom-control-label" for="enemy_fleet_display_text">名称</label>
+                              </div>
+                              <div class="ml-1 custom-control custom-radio align-self-center">
+                                 <input type="radio" id="enemy_fleet_display_image" name="enemy_fleet_display_mode"
+                                    class="custom-control-input">
+                                 <label class="custom-control-label" for="enemy_fleet_display_image">画像</label>
+                              </div>
+                           </div>
                         </div>
                         <div class="alert alert-warning py-2 mb-1 d-none" id="lb_range_warning">
                            第<span id="ng_range">1</span>基地航空隊の半径が不足しています。
@@ -759,7 +772,7 @@
                                        <div class="enemy_index align-self-center text-primary">
                                           1
                                        </div>
-                                       <div class="enemy_name">
+                                       <div class="align-self-center enemy_name">
                                           <span class="enemy_name_span px-1">敵艦を選択</span>
                                        </div>
                                        <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
@@ -789,7 +802,7 @@
                                  <div class="d-flex align-self-center">
                                     <button type="button"
                                        class="mr-2 btn_enemy_preset btn btn-sm btn-outline-info font_size_12 no_capture">
-                                       海域一覧から選択
+                                       海域選択
                                     </button>
                                     <div class="ml-2 mr-2 btn_reset btn_reset_battle btn_icon no_capture"
                                        data-toggle="tooltip" title="リセット" data-delay='{"show": 300, "hide": 0}'>
@@ -806,7 +819,7 @@
                                     </optgroup>
                                  </select>
                                  <div class="ml-auto align-self-center font_size_12 font_color_555">
-                                    制空: <span class="enemy_sum_lbap">0</span>
+                                    総制空:<span class="ml-2 enemy_sum_lbap">0</span>
                                  </div>
                                  <!-- 緩衝 -->
                                  <input type="hidden" class="formation">
@@ -815,11 +828,11 @@
                                  <input type="hidden" class="fleet_AA">
                               </div>
                               <div class="enemyFleet_item py-1 px-1">
-                                 <div class="enemy_content py-1_5 pr-1 d-flex enemy_draggable">
+                                 <div class="enemy_content py-0_5 pr-1 d-flex enemy_draggable">
                                     <div class="enemy_index align-self-center text-primary">
                                        1
                                     </div>
-                                    <div class="enemy_name">
+                                    <div class="enemy_name flex-grow-1 align-self-center">
                                        <span class="enemy_name_span px-1">敵艦を選択</span>
                                     </div>
                                     <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
@@ -1505,7 +1518,6 @@
                               </div>
                               <div class="pl-3">
                                  また、現在、実装に必要な資料がないため、次の要素が計算できません。ご注意ください。
-                                 <div class="ml-3">■ 噴式フェーズの被撃墜</div>
                                  <div class="ml-3">■ 敵対空CI発動時の撃墜補正</div>
                               </div>
                               <div class="mt-2 pl-3">
@@ -1686,7 +1698,11 @@
                                  敵艦の対空CIによる撃墜補正
                               </div>
                               <div class="pl-3">
-                                 噴式爆撃機による噴式強襲フェーズ
+                                 基地航空隊の噴式強襲フェーズ
+                                 <div class="ml-2 font_size_12">
+                                    基地を派遣する敵編成欄にある<i class="fas fa-exclamation-circle"></i>ボタンより、
+                                    「敵艦隊対空性能詳細」を展開し、撃墜され得る機数を確認したうえで初期搭載数を減らすなどして調整してください。
+                                 </div>
                               </div>
                               <div class="pl-3">
                                  航空戦マス
@@ -1805,7 +1821,7 @@
                               <div class="border-top collapse history_content" id="faq_2">
                                  <div class="pl-3 py-2 font_size_12">
                                     A.
-                                    噴式フェーズの被撃墜、敵対空CI発動時の撃墜補正の計算が現状資料不足で未実装です。また、基地航空隊を分散させて別のマスに同時に飛ばす機能はまだ未実装です。（第一基地航空隊をAマスに、第二基地航空隊をボスマスに飛ばす…など）
+                                    敵対空CI発動時の撃墜補正の計算が現状資料不足で未実装です。また、基地航空隊を分散させて別のマスに同時に飛ばす機能はまだ未実装です。（第一基地航空隊をAマスに、第二基地航空隊をボスマスに飛ばす…など）
                                  </div>
                               </div>
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
@@ -2935,7 +2951,7 @@
                <div class="alert alert-warning py-1 mb-1 font_size_12" id="stage2_warning">
                   対空CI発動により、表示値以上の撃墜が発生する可能性があります。
                </div>
-               <div class="my-2 d-flex justify-content-between">
+               <div class="my-2 d-flex">
                   <div>
                      <div class="font_size_12 font_color_777">攻撃機搭載数：</div>
                      <div>
@@ -2943,16 +2959,31 @@
                            min="0" max="99">
                      </div>
                   </div>
-                  <div>
-                     <div class="font_size_12 font_color_777">射撃回避：</div>
+                  <div class="d-flex ml-5">
                      <div>
-                        <select class="custom-select custom-select-sm" id="stage2_detail_avoid">
-                           <option value="0">なし</option>
-                           <option value="1">弱（加重対空補正:0.6)</option>
-                           <option value="2">中（加重対空補正:0.6 艦隊防空補正:0.7)</option>
-                           <option value="3">強（加重対空補正:0.5 艦隊防空補正:0.7)</option>
-                           <option value="4">超（加重対空補正:0.5 艦隊防空補正:0.5)</option>
-                        </select>
+                        <div class="font_size_12 font_color_777">射撃回避：</div>
+                        <div>
+                           <select class="custom-select custom-select-sm" id="stage2_detail_avoid">
+                              <option value="0" selected>なし</option>
+                              <option value="1">弱</option>
+                              <option value="2">中</option>
+                              <option value="3">強</option>
+                              <option value="4">超</option>
+                              <option value="5">任意</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="ml-3 d-flex" id="free_modify">
+                        <div>
+                           <div class="font_size_12 font_color_777">加重対空補正：</div>
+                           <input type="number" step="0.01" class="form-control form-control-sm"
+                              id="free_anti_air_weight" value="1.0" min="0" max="10.0" maxlength="5">
+                        </div>
+                        <div class="ml-2">
+                           <div class="font_size_12 font_color_777">艦隊防空補正：</div>
+                           <input type="number" step="0.01" class="form-control form-control-sm"
+                              id="free_anti_air_bornus" value="1.0" min="0" max="10.0" maxlength="5">
+                        </div>
                      </div>
                   </div>
                </div>
