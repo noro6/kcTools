@@ -304,7 +304,7 @@ function setPreCalculateTable() {
       const tmpA = [];
       for (let i = 0; i < downRateLen; i++) {
         const tmpB = [];
-        for (let j = downRate[i][0]; j <= downRate[i][1]; j++) tmpB.push(Math.floor(slot * j / 256));
+        for (let j = downRate[i][0]; j <= downRate[i][1]; j++) tmpB.push(slot * j / 256);
 
         shuffleArray(tmpB);
         tmpA.push(tmpB);
@@ -481,13 +481,13 @@ function validateInputNumber(value, max, min = 0) {
  * @returns {number} 検証結果数値
  */
 function validateInputNumberFloat(value, max, min = 0) {
-  const regex = new RegExp(/^\d+(\.\d{0,4})?$/);
+  const regex = new RegExp(/^\d+(\.\d+)?$/);
   let ret = 0;
 
   if (!regex.test(value)) ret = min;
   else if (value > max) ret = max;
   else if (value < min) ret = min;
-  else ret = castFloat(value);
+  else ret = value;
 
   return ret;
 }
@@ -1368,7 +1368,7 @@ function setEnemyDiv($div, id, ap = 0) {
   $div[0].dataset.enemyid = enemy.id;
   const enemyNameText = `
     <div class="enemy_name_img_parent ${displayText ? ' d-none' : ' d-flex'}">
-      <img src="./img/enemy/${enemy.id}.png" class="enemy_name_img">
+      <img src="./img/enemy/${enemy.id}.png" class="align-self-center enemy_name_img">
       <span class="ml-auto align-self-center font_size_11">制空:</span>
     </div>
     <div class="enemy_name_text${displayText ? '' : ' d-none'}">${drawEnemyGradeColor(enemy.name)}</div>
@@ -1401,7 +1401,17 @@ function setEnemyDiv($div, id, ap = 0) {
     $div.parent().append($clone);
   }
   // インデックス振り直し
-  $parent.find('.enemy_content').each((i, e) => { $(e).find('.enemy_index').text(i + 1); });
+  $parent.find('.enemy_content').each((i, e) => { 
+    const idx = i + 1;
+    const $enemyIndex = $(e).find('.enemy_index');
+    $enemyIndex.text(idx);
+    if(idx > 6) {
+      $enemyIndex.removeClass('text-primary').addClass('text-success');
+    }
+    else{
+      $enemyIndex.removeClass('text-success').addClass('text-primary');
+    }
+  });
 
   // ドラッグ設定
   if (isDefMode) return;
@@ -1461,7 +1471,15 @@ function clearEnemyDiv($div) {
 
   // インデックス振り直し
   $parent.find('.enemy_content').each((i, e) => {
-    $(e).find('.enemy_index').text(i + 1);
+    const idx = i + 1;
+    const $enemyIndex = $(e).find('.enemy_index');
+    $enemyIndex.text(idx);
+    if(idx > 6) {
+      $enemyIndex.removeClass('text-primary').addClass('text-success');
+    }
+    else{
+      $enemyIndex.removeClass('text-success').addClass('text-primary');
+    }
   });
 }
 
@@ -3828,7 +3846,7 @@ function getAirPower_lb(lb_plane) {
     }
   }
   // 艦爆
-  else if ([3].includes(type)) {
+  else if ([3].includes(type) && antiAir > 0) {
     sumPower = 1.0 * (0.25 * remodel + antiAir) * Math.sqrt(slot);
   }
   // 陸攻
@@ -3975,7 +3993,9 @@ function getBonusAA(plane, prevAp) {
   // 艦戦 夜戦 水戦
   if (FIGHTERS.includes(Math.abs(type))) aa = 0.2 * remodel + prevAp;
   // 艦爆
-  else if (type === 3) aa = 0.25 * remodel + prevAp;
+  else if (type === 3 && prevAp > 0) {
+    aa = 0.25 * remodel + prevAp;
+  }
   // 陸攻
   else if (type === 101) aa = 0.5 * Math.sqrt(remodel) + prevAp;
   // そのた
@@ -4424,6 +4444,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
   let map = "999-1";
   let cells = "";
   let isMixed = false;
+  let isAllSubmarine = true;
 
   for (let node_battle_content of document.getElementsByClassName('battle_content')) {
     // 防空時は専用のフォームから。
@@ -4433,10 +4454,11 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
     // 非表示なら飛ばす
     if (node_battle_content.classList.contains('d-none')) continue;
 
-    battleInfo = { enemies: [], cellType: 0, stage2: [] };
+    battleInfo = { enemies: [], cellType: 0, stage2: [], isAllSubmarine: false };
     sumAp = 0;
     sumLBAp = 0;
     sumAntiAirBonus = 0;
+    isAllSubmarine = true;
 
     // マス情報格納
     battleInfo.cellType = castInt(node_battle_content.getElementsByClassName('cell_type')[0].value);
@@ -4457,6 +4479,8 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
         enm.origAp = inputAp;
         enm.origLbAp = inputAp;
       }
+      // 潜水以外が含まれていればAll潜水フラグを落とす
+      if (isAllSubmarine && !enm.type.includes(18)) isAllSubmarine = false;
 
       battleInfo.enemies.push(enm);
       sumAp += enm.ap;
@@ -4465,6 +4489,9 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
       // 艦隊防空ボーナス加算
       sumAntiAirBonus += enm.aabo;
     }
+
+    // 潜水マスフラグを持たせる
+    if (battleInfo.enemies.length) battleInfo.isAllSubmarine = isAllSubmarine;
 
     // 陣形補正
     const formationId = castInt(node_battle_content.getElementsByClassName('formation')[0].value);
@@ -4639,7 +4666,7 @@ function createStage2Table(enemies, cellType, formationId) {
   const aj1 = formation ? formation.correction : 1.0;
 
   // 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計] * 2
-  const fleetAntiAir = Math.floor((aj1 * sumAntiAirBonus) * 2);
+  const fleetAntiAir = Math.floor((aj1 * sumAntiAirBonus));
   // stage2用 固定撃墜値テーブル
   for (let i = 0; i < enemyCount; i++) {
     const aaw = aawList[i];
@@ -4647,7 +4674,7 @@ function createStage2Table(enemies, cellType, formationId) {
       // 補正後加重対空値
       const antiAirWeight = Math.floor(aaw * AVOID_TYPE[j].adj[0]);
       // 補正後艦隊防空値
-      const fleetAA = Math.floor(fleetAntiAir * AVOID_TYPE[j].adj[1]);
+      const fleetAA = 2 * Math.floor(fleetAntiAir * AVOID_TYPE[j].adj[1]);
       if (cellType === CELL_TYPE.grand) {
         // 敵連合艦隊補正
         // 第1艦隊
@@ -4800,35 +4827,74 @@ function updateEnemyAp(enemy) {
 }
 
 /**
+ * 噴式強襲_中央
  * @param {Array.<Object>} friendFleetData 味方艦隊
  * @param {Array.<Object>} battleInfo 敵艦隊
- * 噴式強襲_中央
+ * @param {number} index 何戦目か
  */
-function doJetPhaseHalf(friendFleetData, battleInfo) {
+function doJetPhaseHalf(friendFleetData, battleInfo, index) {
+  const range = battleInfo.stage2[0][0].length;
   for (let i = 0; i < friendFleetData.length; i++) {
     for (let j = 0; j < friendFleetData[i].length; j++) {
       const plane = friendFleetData[i][j];
       if (plane.type === 9) {
-        const range = battleInfo.stage2[plane.avoid][0].length;
+        // 噴式強襲前の値を直前の戦闘の搭載数欄に記録
+        $('#shoot_down_table_tbody')
+          .find(`.shipNo${plane.fleetNo}.slot${plane.slotNo} .battle${index + 1}`)
+          .text(plane.id > 0 ? Math.round(plane.slot) : '');
+        // 戦闘マスが通常/連合戦闘マスじゃないなら噴式強襲なし　ALL潜水も除外
+        if (!range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) continue;
+
         let sumSlotResult = 0;
         for (let count = 0; count < 1000; count++) {
-          // 噴式強襲st1
-          getShootDownSlotFF(0, plane.slot);
-
           let tmpSlot = plane.slot;
-          // st1 0.6掛け
+          // 噴式強襲st1 0.6掛け 
           tmpSlot -= Math.floor(0.6 * getShootDownSlotFF(0, Math.round(tmpSlot)));
 
-          if (battleInfo.cellType <= CELL_TYPE.grand) {
-            // 迎撃担当インデックス
-            const index = Math.floor(Math.random() * range);
-            // 割合撃墜 50% で失敗
-            tmpSlot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * tmpSlot) * Math.floor(Math.random() * 2);
-            // 固定撃墜 50% で失敗
-            tmpSlot -= battleInfo.stage2[plane.avoid][1][index] * Math.floor(Math.random() * 2);
-          }
+          // 噴式強襲st2
+          // 迎撃担当インデックス
+          const index = Math.floor(Math.random() * range);
+          // 割合撃墜 50% で失敗
+          tmpSlot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * tmpSlot) * Math.floor(Math.random() * 2);
+          // 固定撃墜 50% で失敗
+          tmpSlot -= battleInfo.stage2[plane.avoid][1][index] * Math.floor(Math.random() * 2);
+
           sumSlotResult += tmpSlot > 0 ? tmpSlot : 0;
         }
+
+        plane.slot = sumSlotResult / 1000;
+        plane.ap = updateAp(plane);
+      }
+    }
+  }
+}
+
+/**
+ * 噴式強襲
+ * @param {Array.<Object>} friendFleetData 味方艦隊
+ * @param {Array.<Object>} battleInfo 敵艦隊
+ */
+function doJetPhase(friendFleetData, battleInfo) {
+  const range = battleInfo.stage2[0][0].length;
+  // 戦闘マスが通常/連合戦闘マスじゃないなら強襲なし　ALL潜水も除外
+  if (!range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) return;
+  for (let i = 0; i < friendFleetData.length; i++) {
+    for (let j = 0; j < friendFleetData[i].length; j++) {
+      const plane = friendFleetData[i][j];
+      if (plane.type === 9) {
+        // 噴式強襲st1
+        // st1 0.6掛け
+        plane.slot -= Math.floor(0.6 * getShootDownSlotFF(0, Math.round(plane.slot)));
+
+        // 噴式強襲st2
+        // 迎撃担当インデックス
+        const index = Math.floor(Math.random() * range);
+        // 割合撃墜 50% で失敗
+        plane.slot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * plane.slot) * Math.floor(Math.random() * 2);
+        // 固定撃墜 50% で失敗
+        plane.slot -= battleInfo.stage2[plane.avoid][1][index] * Math.floor(Math.random() * 2);
+
+        plane.ap = updateAp(plane);
       }
     }
   }
@@ -4844,25 +4910,28 @@ function doJetPhaseHalf(friendFleetData, battleInfo) {
 function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
   const ap = getFriendFleetAP(friendFleetData, battleInfo.cellType);
   let airStatusIndex = getAirStatusIndex(ap, eap);
+  const range = battleInfo.stage2[0][0].length;
   for (const ship of friendFleetData) {
     for (const plane of ship) {
-      // 直前の搭載数をテーブルに反映
-      $('#shoot_down_table_tbody')
-        .find('.shipNo' + plane.fleetNo + '.slot' + plane.slotNo + ' .battle' + (index + 1))
-        .text(plane.id > 0 ? Math.round(plane.slot) : '');
+      // 噴式機以外は直前の搭載数をテーブルに反映(噴式機はdoJetでやってる)
+      if (plane.type !== 9) {
+        $('#shoot_down_table_tbody')
+          .find(`.shipNo${plane.fleetNo}.slot${plane.slotNo} .battle${index + 1}`)
+          .text(plane.id > 0 ? Math.round(plane.slot) : '');
+      }
       // 0スロ || 非戦闘機体 || (敵通常マス && 第2艦隊)　は飛ばす
       if (plane.slot === 0 || !plane.canBattle || (plane.fleetNo > 6 && battleInfo.cellType !== CELL_TYPE.grand) || battleInfo.cellType === CELL_TYPE.night) continue;
       // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
       if (airStatusIndex === 5) airStatusIndex = 0;
-
+      // 敵艦隊がいなければ何も撃墜せず終わる
+      if (!range) return;
       // 平均で
-      const range = battleInfo.stage2[plane.avoid][0].length;
       let sumSlotResult = 0;
       for (let i = 0; i < 1000; i++) {
         let tmpSlot = plane.slot;
         // st1 噴式の場合0.6掛け
         const downNumber = getShootDownSlotFF(airStatusIndex, Math.round(tmpSlot));
-        tmpSlot -= (plane.type === 9 ? Math.floor(0.6 * downNumber) : downNumber);
+        tmpSlot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
         if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
           // 迎撃担当インデックス
           const index = Math.floor(Math.random() * range);
@@ -4893,6 +4962,7 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
 function shootDownFriend(airStatusIndex, friendFleetData, battleInfo) {
   const len = friendFleetData.length;
   const range = battleInfo.stage2[0][0].length;
+  // 敵艦なしの場合スキップ
   if (!range) return;
   for (let i = 0; i < len; i++) {
     const ship = friendFleetData[i];
@@ -4900,12 +4970,12 @@ function shootDownFriend(airStatusIndex, friendFleetData, battleInfo) {
     for (let j = 0; j < shipLen; j++) {
       const plane = ship[j];
       // 0機スロ, 非制空争い機, 通常戦闘で味方第二艦隊の機体　のものはスキップ
-      if (plane.slot <= 0 || !plane.canBattle || (plane.fleetNo > 6 && battleInfo.cellType === 1)) continue;
+      if (plane.slot <= 0 || !plane.canBattle || (plane.fleetNo > 6 && battleInfo.cellType < CELL_TYPE.normal)) continue;
       // 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
       if (airStatusIndex === 5) airStatusIndex = 0;
       // st1撃墜 噴式の場合0.6掛け
       const downNumber = getShootDownSlotFF(airStatusIndex, plane.slot);
-      plane.slot -= (plane.type === 9 ? Math.floor(0.6 * downNumber) : downNumber);
+      plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
       // st2撃墜
       if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
         // 迎撃担当
@@ -5008,7 +5078,7 @@ function mainCalculate(objectData) {
     let isChanged = false;
     for (const enemyFleet of battleData) {
       for (const enemy of enemyFleet.enemies) {
-        if (enemyFleet.cellType === 5) {
+        if (enemyFleet.cellType === CELL_TYPE.highAirRaid) {
           sumAP = castInt($('.info_defApEx').text());
           isChanged = true;
           break;
@@ -5037,8 +5107,7 @@ function mainCalculate(objectData) {
       }
 
       // 噴進強襲フェーズ
-      //doJetPhaseHalf(friendFleetData);
-
+      doJetPhaseHalf(friendFleetData, battleData[battle], battle);
 
       // 計算結果に詳細表示する戦闘
       if (battle === mainBattle) {
@@ -5170,6 +5239,10 @@ function rateCalculate(objectData) {
 
     // 最終戦闘まで道中含めてブン回す
     for (let battle = 0; battle < maxBattle; battle++) {
+
+      // 噴式強襲フェーズ
+      doJetPhase(fleet, battleInfo[battle]);
+
       const enemies = battleInfo[battle].enemies;
       const cellType = battleInfo[battle].cellType;
       const fap = isDefMode ? defAp : getFriendFleetAP(fleet, cellType);
@@ -5434,6 +5507,9 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 
     // さいごまで道中含めてブン回す
     for (let battle = 0; battle < battleCount; battle++) {
+      // 噴式強襲
+      doJetPhase(friendFleetData, battleInfo[battle]);
+
       const enemies = battleInfo[battle].enemies;
       const cellType = battleInfo[battle].cellType;
       const fap = isDefMode ? defAp : getFriendFleetAP(friendFleetData, cellType);
@@ -5615,7 +5691,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
             if (airStatusIndex === 5) airStatusIndex = 0;
             // st1撃墜 噴式の場合0.6掛け
             const downNumber = getShootDownSlotFF(airStatusIndex, plane.slot);
-            plane.slot -= (plane.type === 9 ? Math.floor(0.6 * downNumber) : downNumber);
+            plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
             // st2撃墜
             if (plane.canAttack && enabledStage2) {
               // 迎撃担当
@@ -5654,7 +5730,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 
             if (airStatusIndex === 5) airStatusIndex = 0;
             const downNumber = getShootDownSlotFF(airStatusIndex, plane.slot);
-            plane.slot -= (plane.type === 9 ? Math.floor(0.6 * downNumber) : downNumber);
+            plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
             if (plane.canAttack && enabledStage2) {
               const shootIndex = Math.floor(Math.random() * range);
               plane.slot -= Math.floor(battleData.stage2[plane.avoid][0][shootIndex] * plane.slot) * Math.floor(Math.random() * 2);
@@ -8206,12 +8282,13 @@ function stage2_slot_input_Changed() {
 
 /**
  * 射撃回避補正任意調整
- * @param {JqueryDomObject}} $this 
+ * @param {JqueryDomObject} $this 
  */
 function free_modify_input_Changed($this) {
   // 入力検証 -> 数値 かつ 0 以上 max 以下　違ってたら修正
-  const value = validateInputNumberFloat($this.val(), castInt($this.attr('max')));
-  $this.val(value);
+  const value = validateInputNumberFloat($this.val(), castFloat($this.attr('max')));
+
+  if ($this.val() !== value) $this.val(value);
   calculateStage2Detail();
 }
 
@@ -8231,11 +8308,11 @@ function calculateStage2Detail() {
   let cutInWarnning = false;
   const cutInEnemy = [166, 167, 409, 410, 411, 412, 413, 414];
 
-  if(avoid === 5) {
-    $('#free_modify').addClass('d-flex').removeClass('d-none');
-  }
-  else{
-    $('#free_modify').removeClass('d-flex').addClass('d-none');
+  // 自由入力欄活性化
+  $('#free_modify').find('input').prop('readonly', avoid !== 5);
+  if (avoid < 5) {
+    $('#free_anti_air_weight').val(AVOID_TYPE[avoid].adj[0]);
+    $('#free_anti_air_bornus').val(AVOID_TYPE[avoid].adj[1]);
   }
 
   for (let index = 0; index < battleData.enemies.length; index++) {
