@@ -1401,14 +1401,14 @@ function setEnemyDiv($div, id, ap = 0) {
     $div.parent().append($clone);
   }
   // インデックス振り直し
-  $parent.find('.enemy_content').each((i, e) => { 
+  $parent.find('.enemy_content').each((i, e) => {
     const idx = i + 1;
     const $enemyIndex = $(e).find('.enemy_index');
     $enemyIndex.text(idx);
-    if(idx > 6) {
+    if (idx > 6) {
       $enemyIndex.removeClass('text-primary').addClass('text-success');
     }
-    else{
+    else {
       $enemyIndex.removeClass('text-success').addClass('text-primary');
     }
   });
@@ -1474,10 +1474,10 @@ function clearEnemyDiv($div) {
     const idx = i + 1;
     const $enemyIndex = $(e).find('.enemy_index');
     $enemyIndex.text(idx);
-    if(idx > 6) {
+    if (idx > 6) {
       $enemyIndex.removeClass('text-primary').addClass('text-success');
     }
-    else{
+    else {
       $enemyIndex.removeClass('text-success').addClass('text-primary');
     }
   });
@@ -4150,7 +4150,6 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 
     // 艦載機があれば代入
     if (exist) friendFleetData.push(shipPlanes.concat());
-
 
     // 以下表示系、未処理でいいなら次のレコードへ
     if (!updateDisplay) continue;
@@ -9068,6 +9067,49 @@ function btn_deckBuilder_Clicked() {
 }
 
 /**
+ * URL短縮ボタンクリック
+ */
+async function btn_url_shorten_Clicked() {
+  const button = document.getElementById('btn_url_shorten');
+  const textbox = document.getElementById('input_url');
+  const url = textbox.value.trim();
+
+  if (button.classList.contains('shortening')) return;
+  button.classList.add('shortening');
+  button.textContent = '短縮中';
+
+  // urlチェック
+  if (!url) {
+    textbox.value = "";
+    textbox.placeholder = "URLを入力してください。";
+  }
+  else if (!url.match(/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
+    textbox.value = "";
+    textbox.placeholder = "URLが不正です。";
+  }
+  else if(!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
+    await postURLData(url)
+      .then(json => {
+        if (json.error || !json.shortLink) {
+          textbox.value = "";
+          textbox.placeholder = "短縮に失敗しました";
+        }
+        else {
+          textbox.value = json.shortLink;
+          textbox.placeholder = "";
+        }
+      })
+      .catch(error => {
+        textbox.value = "";
+        textbox.placeholder = "短縮に失敗しました";
+      });
+  }
+
+  button.textContent = 'URL短縮';
+  button.classList.remove('shortening');
+}
+
+/**
  * 機体プリセット内 一部タブクリック(描写が消えたら発動 消えたタブがthis)
  * @param {object} e
  */
@@ -9574,6 +9616,8 @@ $(function () {
   $('#btn_twitter').click(btn_twitter_Clicked);
   $('#btn_deckBuilder').click(btn_deckBuilder_Clicked);
   $('#smart_menu').click(menu_small_Clicked);
+  $('#input_url').click(function () { $(this).select(); });
+  $('#btn_url_shorten').click(btn_url_shorten_Clicked);
   $('#main').on('click', '.btn_first_time', first_time_Clicked);
   $('#main').on('click', '.btn_site_manual', site_manual_Clicked);
   $('#Navbar').on('click', 'a[href^="#"]', function () { return sidebar_Clicked($(this)); });
