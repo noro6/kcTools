@@ -785,7 +785,7 @@ function initialize(callback) {
   for (let index = 1; index <= 10; index++) {
     text += `
       <li class="nav-item ${index === 1 ? '' : 'd-none'}">
-        <a class="nav-link ${index === 1 ? 'active' : ''}" data-toggle="tab" data-disp="${index}" href="#">${index}戦目</a>
+        <a class="nav-link ${mainColor === '#000000' ? '' : 'nav-link-dark'} ${index === 1 ? 'active' : ''}" data-toggle="tab" data-disp="${index}" href="#">${index}戦目</a>
       </li>`;
   }
   $('#display_battle_tab').html(text);
