@@ -518,7 +518,7 @@ function initializeSetting() {
   if (!setting.hasOwnProperty('backUpCount')) setting.backUpCount = 10;
   if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
   if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
-  if (!setting.hasOwnProperty('themeColor')) setting.themeColor = '#f0ebe6';
+  if (!setting.hasOwnProperty('themeColor')) setting.themeColor = 'normal';
   if (!setting.hasOwnProperty('contentsOrder')) setting.contentsOrder = [];
   if (!setting.hasOwnProperty('defaultProf')) {
     setting.defaultProf = [];
@@ -607,8 +607,9 @@ function initialize(callback) {
   initializeSetting();
 
   // テーマ変更
-  document.getElementById('theme_color').value = setting.themeColor;
-  theme_color_Changed();
+  $('#dark_theme').prop('checked', setting.themeColor === 'dark');
+  $('#normal_theme').prop('checked', setting.themeColor !== 'dark');
+  site_theme_Changed(false);
 
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
@@ -1811,12 +1812,12 @@ function createShipTable(type) {
   if (displayMode === "multi") {
     $modal.addClass('modal-xl');
     $tbody.addClass('d-flex flex-wrap');
-    $('#ship_thead').addClass('d-none').removeClass('d-flex');
+    $modal.find('.scroll_thead').addClass('d-none').removeClass('d-flex');
   }
   else {
     $modal.removeClass('modal-xl');
     $tbody.removeClass('d-flex flex-wrap');
-    $('#ship_thead').addClass('d-flex').removeClass('d-none');
+    $modal.find('.scroll_thead').addClass('d-flex').removeClass('d-none');
   }
 
   for (const ship of dispData) {
@@ -1955,12 +1956,12 @@ function createEnemyTable(type) {
   if (displayMode === "multi") {
     $modal.addClass('modal-xl');
     $tbody.addClass('d-flex flex-wrap');
-    $('.enemy_thead').addClass('d-none').removeClass('d-flex');
+    $modal.find('.scroll_thead').addClass('d-none').removeClass('d-flex');
   }
   else {
     $modal.removeClass('modal-xl');
     $tbody.removeClass('d-flex flex-wrap');
-    $('.enemy_thead').addClass('d-flex').removeClass('d-none');
+    $modal.find('.scroll_thead').addClass('d-flex').removeClass('d-none');
   }
 
   for (const enemy of dispData) {
@@ -8763,50 +8764,13 @@ function btn_reset_selected_ship_history_Clicked() {
 
 
 /**
- * 背景色変更
- */
-function theme_color_Changed() {
-  const code = document.getElementById('theme_color').value;
-  const shadow = `0 .5rem 1rem rgba(0, 0, 0, 0.4), 0 0 .75rem ${code}d1 inset`;
-  document.body.style.backgroundColor = code;
-  const contents = document.getElementsByClassName('contents');
-  for (const content of contents) {
-    // content.style.boxShadow = shadow;
-  }
-
-  setting.themeColor = code;
-  saveLocalStorage('setting', setting);
-}
-
-
-/**
- * 背景色ランダム
- */
-function btn_random_theme_color_Clicked() {
-  const seed = [];
-  for (let i = 180; i < 256; i++) seed.push(i.toString(16));
-  const len = seed.length;
-  const r = seed[Math.floor(len * Math.random())];
-  const g = seed[Math.floor(len * Math.random())];
-  const b = seed[Math.floor(len * Math.random())];
-  document.getElementById('theme_color').value = `#${r}${g}${b}`;
-  theme_color_Changed();
-}
-
-/**
- * 背景色デフォルトに戻す
- */
-function btn_reset_theme_color_Clicked() {
-  document.getElementById('theme_color').value = '#f0ebe6';
-  theme_color_Changed();
-}
-
-/**
  * サイトテーマカラー変更
+ * @param {boolean} withCalculate 計算を起こさない場合 false 計算を起こす場合は未指定でOK
  */
-function site_theme_Changed() {
+function site_theme_Changed(withCalculate = true) {
   const isDark = $('#dark_theme').prop('checked');
   if (isDark) {
+    setting.themeColor = 'dark';
     document.body.style.backgroundColor = "#202029";
     mainColor = "#e7e7e7";
     for (const content of document.getElementsByClassName('contents')) {
@@ -8859,6 +8823,7 @@ function site_theme_Changed() {
     }
   }
   else {
+    setting.themeColor = 'normal';
     document.body.style.backgroundColor = "#f0ebe6";
     mainColor = "#000000";
     for (const content of document.getElementsByClassName('contents')) {
@@ -8911,8 +8876,10 @@ function site_theme_Changed() {
     }
   }
 
+  document.getElementById('input_url').classList.add('form-control-dark');
+  saveLocalStorage('setting', setting);
   document.body.style.color = mainColor;
-  calculate();
+  if (withCalculate) calculate();
 }
 
 /**
@@ -9646,9 +9613,6 @@ $(function () {
   $('#config_content').on('change', '#backup_count', backup_enabled_Clicked);
   $('#config_content').on('click', '#btn_reset_selected_plane_history', btn_reset_selected_plane_history_Clicked);
   $('#config_content').on('click', '#btn_reset_selected_ship_history', btn_reset_selected_ship_history_Clicked);
-  $('#config_content').on('change', '#theme_color', theme_color_Changed);
-  $('#config_content').on('click', '#btn_random_theme_color', btn_random_theme_color_Clicked);
-  $('#config_content').on('click', '#btn_reset_theme_color', btn_reset_theme_color_Clicked);
   $('#config_content').on('click', 'input[name="site_theme"]', function () { site_theme_Changed(); });
   $('#plane_stock').on('change', '#stock_type_select', function () { stock_type_select_Changed($(this)); });
   $('#plane_stock').on('click', '.stock_tr', function () { stock_tr_Clicked($(this)); });
