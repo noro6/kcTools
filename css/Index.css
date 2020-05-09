@@ -127,7 +127,15 @@ input[type="text"] { font-size: 12px; }
 .w_20 { width: 20% }
 .w_15 { width: 15% }
 .min-h-31px { height: 31px }
-
+.form-control-dark {
+  color: #ccc;
+  background-color: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .1);
+}
+.form-control-dark:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
 /* -----------------------------------
   カスタムコントロール
 ----------------------------------- */
@@ -208,6 +216,7 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   transition: 0.4s;
   background-color: #1da1f2;
+  white-space: nowrap;
 }
 #btn_twitter:hover {
   color: rgb(29, 161, 242);
@@ -221,6 +230,7 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   transition: 0.4s;
   background-color: #eee;
+  white-space: nowrap;
 }
 #btn_preset_all:hover {
   color: #fff;
@@ -234,6 +244,7 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   transition: 0.4s;
   background-color: #00814b;
+  white-space: nowrap;
 }
 #btn_deckBuilder:hover {
   color: #00814b;
@@ -247,12 +258,33 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   transition: 0.4s;
   background-color: #ff8800;
+  white-space: nowrap;
 }
 #btn_auto_expand:hover {
   color: #ff8800;
   background-color: rgb(240, 255, 250);
 }
-
+#btn_url_shorten {
+  user-select: none;
+  cursor: pointer;
+  color: #ccc;
+  width: 80px;
+  border: 1px solid #ccc;
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+  border-radius: .25rem;
+  text-align: center;
+  transition: .4s;
+}
+#btn_url_shorten:hover {
+  background-color: #000;
+}
+#input_url::placeholder {
+  color: #ccc;
+}
+#input_url::-ms-input-placeholder {
+  color: #ccc;
+}
 
 /* -----------------------------------
   sideBar
