@@ -102,7 +102,7 @@
    <script defer src="./js/bootstrap.bundle.js"></script>
    <script defer src="./js/sortable.js"></script>
    <script defer src="./js/data.js"></script>
-   <script defer src="./js/main.min.js"></script>
+   <script defer src="./js/main.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -311,9 +311,9 @@
                                  </div>
                                  <div class="d-flex my-2 px-0 lb_infomation">
                                     <div class="ml-2 align-self-center lb_sammary">
-                                       <span class="font_color_555">制空: </span>
+                                       <span class="font_color_half">制空: </span>
                                        <span class="ap">0</span>
-                                       <span class="font_color_555">半径: </span>
+                                       <span class="font_color_half">半径: </span>
                                        <span class="range">0</span>
                                     </div>
                                     <div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
@@ -480,7 +480,7 @@
                                  </select>
                                  <div class="ml-1 mr-2 align-self-center no_capture">隻</div>
                                  <div class="ml-2 align-self-center">
-                                    <span class="font_color_555">艦隊総制空値: </span>
+                                    <span class="font_color_half">艦隊総制空値: </span>
                                     <span class="fleet_ap">0</span>
                                  </div>
                               </div>
@@ -496,7 +496,7 @@
                                              艦娘を選択
                                           </div>
                                           <div class="ml-1 align-self-center ship_sumAP font_size_12">
-                                             <span class="font_color_555">総制空: </span>
+                                             <span class="font_color_half">総制空: </span>
                                              <span class="ap">0</span>
                                           </div>
                                           <div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -505,7 +505,7 @@
                                              <label class="custom-control-label ship_disabled_label"
                                                 for="disabled_ship_1">無効</label>
                                           </div>
-                                          <div class="ml-1 cur_help pt-1_5 font_color_555 font_size_12 no_capture"
+                                          <div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
                                              data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
                                              <i class="far fa-question-circle"></i>
                                           </div>
@@ -758,16 +758,16 @@
                                  </div>
                                  <div class="border-bottom d-flex pb-2 pt-1 px-2 flex-row-reverse">
                                     <div class="align-self-center font_size_12">
-                                       <span class="font_color_555">制空: </span>
+                                       <span class="font_color_half">制空: </span>
                                        <span class="enemy_sum_ap">0</span>
                                        (<span class="enemy_sum_lbap">0</span>)
                                     </div>
                                     <div class="mr-2 align-self-center font_size_12">
-                                       <span class="font_color_555">半径: </span>
+                                       <span class="font_color_half">半径: </span>
                                        <span class="enemy_range">0</span>
                                     </div>
                                     <div class="mr-2 align-self-center font_size_12">
-                                       <span class="font_color_555">艦隊防空: </span>
+                                       <span class="font_color_half">艦隊防空: </span>
                                        <span class="fleet_AA">0</span>
                                     </div>
                                  </div>
@@ -822,7 +822,7 @@
                                        <option value="5">高高度爆撃</option>
                                     </optgroup>
                                  </select>
-                                 <div class="ml-auto align-self-center font_size_12 font_color_555">
+                                 <div class="ml-auto align-self-center font_size_12 font_color_half">
                                     総制空:<span class="ml-2 enemy_sum_lbap">0</span>
                                  </div>
                                  <!-- 緩衝 -->
@@ -900,7 +900,7 @@
                               </div>
                            </div>
                            <table class="text-center w-100" id="shoot_down_table">
-                              <thead class="bg-e9ecef" id="shoot_down_table_thead">
+                              <thead id="shoot_down_table_thead">
                                  <tr class="tr_header">
                                     <td class="td_name">艦娘名</td>
                                     <td class="td_plane_name text-nowrap text-center">装備名</td>
@@ -1183,12 +1183,12 @@
                            </div>
                         </div>
                         <div class="mx-1" id="plane_stock_table">
-                           <div class="d-flex" id="plane_stock_thead">
-                              <div class="stock_td_type">種別</div>
-                              <div class="stock_td_name flex-grow-1 ">装備名</div>
-                              <div class="stock_td_aa">対空</div>
-                              <div class="stock_td_range">半径</div>
-                              <div class="stock_td_stock">全体所持数</div>
+                           <div class="d-flex scroll_thead">
+                              <div class="stock_td_type align-self-center">種別</div>
+                              <div class="stock_td_name flex-grow-1 align-self-center">装備名</div>
+                              <div class="stock_td_aa align-self-center">対空</div>
+                              <div class="stock_td_range align-self-center">半径</div>
+                              <div class="stock_td_stock align-self-center">全体所持数</div>
                            </div>
                            <div id="plane_stock_tbody"></div>
                         </div>
@@ -1448,7 +1448,7 @@
                            <div class="h6"><i class="fas fa-cogs mr-2"></i>その他</div>
                            <div class="ml-3">
                               <div class="d-flex">
-                                 <div class="align-self-center">背景色：</div>
+                                 <div class="align-self-center">テーマ：</div>
                                  <input type="color" class="align-self-center ml-2" id="theme_color">
                                  <button type="button" class="ml-2 btn btn-sm btn-success align-self-center"
                                     id="btn_random_theme_color">
@@ -1458,6 +1458,16 @@
                                     id="btn_reset_theme_color">
                                     デフォルト
                                  </button>
+                                 <div class="ml-5 custom-control custom-radio align-self-center">
+                                    <input type="radio" id="normal_theme" name="site_theme"
+                                       class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="normal_theme">ノーマル</label>
+                                 </div>
+                                 <div class="ml-1 custom-control custom-radio align-self-center">
+                                    <input type="radio" id="dark_theme" name="site_theme"
+                                       class="custom-control-input">
+                                    <label class="custom-control-label" for="dark_theme">ダーク</label>
+                                 </div>
                               </div>
                            </div>
                         </div>
@@ -1652,7 +1662,7 @@
                               <p class="h6">注意事項</p>
                               <div class="pl-3">
                                  本シミュレーションでは、各航空戦フェーズで敵艦が撃沈された場合を考慮していません。<span
-                                    class="font_color_ccc">また、道中での味方艦娘の轟沈も考慮しません。</span>
+                                    class="font_color_half">また、道中での味方艦娘の轟沈も考慮しません。</span>
                               </div>
                               <div class="pl-3 mt-2">
                                  敵艦の制空値を「直接入力」とした場合、その敵艦への基地航空隊による制空削りは行われません。
@@ -1702,7 +1712,7 @@
                                  敵艦の対空CIによる撃墜補正
                               </div>
                               <div class="pl-3">
-                                 基地航空隊の噴式強襲フェーズ
+                                 基地航空隊の噴式強襲航空攻撃
                                  <div class="ml-2 font_size_12">
                                     基地を派遣する敵編成欄にある<i class="fas fa-exclamation-circle"></i>ボタンより、
                                     「敵艦隊対空性能詳細」を展開し、撃墜され得る機数を確認したうえで初期搭載数を減らすなどして調整してください。
@@ -2051,13 +2061,13 @@
                   </div>
                </div>
                <div class="pb-1" id="plane_table">
-                  <div class="plane_thead d-flex">
-                     <div class="plane_td_type">
+                  <div class="scroll_thead d-flex">
+                     <div class="plane_td_type align-self-center">
                         <img class="img-size-20_lock" src="./img/type/undefined.png" alt="種">
                      </div>
-                     <div class="pl-2 plane_td_name">装備名</div>
-                     <div class="ml-auto plane_td_basic">対空</div>
-                     <div class="plane_td_basic">半径</div>
+                     <div class="pl-2 plane_td_name align-self-center">装備名</div>
+                     <div class="ml-auto plane_td_basic align-self-center">対空</div>
+                     <div class="plane_td_basic align-self-center">半径</div>
                   </div>
                   <div id="plane_tbody"></div>
                </div>
@@ -2114,13 +2124,13 @@
                   </div>
                </div>
                <div class="pb-1" id="ship_table">
-                  <div class="d-flex" id="ship_thead">
-                     <div class="ml-2">艦娘名</div>
-                     <div class="ml-auto ship_td_slot">搭載1</div>
-                     <div class="ship_td_slot">搭載2</div>
-                     <div class="ship_td_slot">搭載3</div>
-                     <div class="ship_td_slot">搭載4</div>
-                     <div class="ship_td_slot">搭載5</div>
+                  <div class="d-flex scroll_thead">
+                     <div class="ml-2 align-self-center">艦娘名</div>
+                     <div class="ml-auto ship_td_slot align-self-center">搭載1</div>
+                     <div class="ship_td_slot align-self-center">搭載2</div>
+                     <div class="ship_td_slot align-self-center">搭載3</div>
+                     <div class="ship_td_slot align-self-center">搭載4</div>
+                     <div class="ship_td_slot align-self-center">搭載5</div>
                   </div>
                   <div id="ship_tbody"></div>
                </div>
@@ -2169,10 +2179,10 @@
                   </div>
                </div>
                <div class="pb-1" id="enemy_table">
-                  <div class="enemy_thead d-flex">
-                     <div class="ml-1">敵艦ID / 敵艦名</div>
-                     <div class="ml-auto enemy_td_ap">制空値</div>
-                     <div class="enemy_td_lbAp">制空値(基地)</div>
+                  <div class="scroll_thead d-flex">
+                     <div class="ml-1 align-self-center">敵艦ID / 敵艦名</div>
+                     <div class="ml-auto enemy_td_ap align-self-center">制空値</div>
+                     <div class="enemy_td_lbAp align-self-center">制空値(基地)</div>
                   </div>
                   <div id="enemy_tbody"></div>
                </div>
@@ -2278,7 +2288,7 @@
                               </div>
                            </div>
                            <div class="mt-auto d-flex">
-                              <div class="font_size_11 font_color_777 align-self-center">敵艦隊一覧</div>
+                              <div class="font_size_11 font_color_half align-self-center">敵艦隊一覧</div>
                               <div class="ml-1 flex-grow-1 border-top align-self-center"></div>
                            </div>
                            <div class="mt-1 d-flex flex-column flex-wrap-reverse" id="enemy_pattern_tbody">
@@ -2514,8 +2524,8 @@
             <div class="modal-body">
                <div class="d-flex mt-2">
                   <div class="align-self-center">搭載：</div>
-                  <button type="button" class="btn btn-sm btn-outline-dark mx-1 btn_slot_min">
-                     最少
+                  <button type="button" class="btn btn-sm btn-outline-secondary mx-1 btn_slot_min">
+                     最小
                   </button>
                   <div class="flex-grow-1 d-flex mx-2">
                      <input type="range" class="align-self-center custom-range coll_slot_range" min="0" max="99"
@@ -2715,11 +2725,11 @@
                   <div class="flex-grow-1 d-flex flex-column mr-2">
                      <div class="d-none" id="edit_id"></div>
                      <div>
-                        <div class="font_size_12 font_color_777">装備名：</div>
+                        <div class="font_size_12 font_color_half">装備名：</div>
                         <div class="plane_status_name">試製烈風 後期型</div>
                      </div>
                      <div class="mt-3" id="plane_status_table">
-                        <div class="font_size_12 font_color_777 text-left">簡易ステータス：</div>
+                        <div class="font_size_12 font_color_half text-left">簡易ステータス：</div>
                         <div class="d-flex plane_status_thead">
                            <div class="plane_status_anti_air">対空</div>
                            <div class="plane_status_torpedo">雷装</div>
@@ -2745,7 +2755,7 @@
                      </div>
                      <div class="mt-auto">
                         <div>
-                           <div class="font_color_777 font_size_12">改修なし</div>
+                           <div class="font_color_half font_size_12">改修なし</div>
                            <input type="number" class="form-control form-control-sm stock_num" value="0" min="0"
                               max="99">
                         </div>
@@ -2797,7 +2807,7 @@
                      <input type="number" class="form-control form-control-sm stock_num" value="0" min="0" max="99">
                   </div>
                   <div class="mx-2">
-                     <div class="font_size_12 font_color_777">全体所持数：</div>
+                     <div class="font_size_12 font_color_half">全体所持数：</div>
                      <div class="d-flex">
                         <input type="number" id="stock_sum" class="form-control form-control-sm" value="0" disabled>
                      </div>
@@ -2957,7 +2967,7 @@
                </div>
                <div class="my-2 d-flex">
                   <div>
-                     <div class="font_size_12 font_color_777">攻撃機搭載数：</div>
+                     <div class="font_size_12 font_color_half">攻撃機搭載数：</div>
                      <div>
                         <input type="number" class="form-control form-control-sm" id="stage2_detail_slot" value="0"
                            min="0" max="99">
@@ -2965,7 +2975,7 @@
                   </div>
                   <div class="d-flex ml-5">
                      <div>
-                        <div class="font_size_12 font_color_777">射撃回避：</div>
+                        <div class="font_size_12 font_color_half">射撃回避：</div>
                         <div>
                            <select class="custom-select custom-select-sm" id="stage2_detail_avoid">
                               <option value="0" selected>なし</option>
@@ -2979,12 +2989,12 @@
                      </div>
                      <div class="ml-3 d-flex" id="free_modify">
                         <div>
-                           <div class="font_size_12 font_color_777">加重対空補正：</div>
+                           <div class="font_size_12 font_color_half">加重対空補正：</div>
                            <input type="number" step="0.01" class="form-control form-control-sm"
                               id="free_anti_air_weight" value="1.0" min="0" max="10.0" maxlength="5">
                         </div>
                         <div class="ml-2">
-                           <div class="font_size_12 font_color_777">艦隊防空補正：</div>
+                           <div class="font_size_12 font_color_half">艦隊防空補正：</div>
                            <input type="number" step="0.01" class="form-control form-control-sm"
                               id="free_anti_air_bornus" value="1.0" min="0" max="10.0" maxlength="5">
                         </div>
@@ -2992,9 +3002,9 @@
                   </div>
                </div>
                <div class="border-top pt-2 my-2 d-flex">
-                  <div class="font_size_12 font_color_777 align-self-center">陣形：</div>
+                  <div class="font_size_12 font_color_half align-self-center">陣形：</div>
                   <div class="align-self-center" id="stage2_detail_formation"></div>
-                  <div class="ml-3 font_size_12 font_color_777 align-self-center">艦隊防空値：</div>
+                  <div class="ml-3 font_size_12 font_color_half align-self-center">艦隊防空値：</div>
                   <div class="align-self-center" id="sumfleetAntiAir"></div>
                </div>
                <table class="text-center" id="stage2_table">
