@@ -7103,8 +7103,18 @@ function btn_supply_Clicked() {
 function btn_capture_Clicked($this) {
   const $targetContent = $this.closest('.contents');
   const prevBack = $targetContent.css('backgroundColor');
+
   $targetContent.width(1000);
-  $targetContent.css('backgroundColor', mainColor === '#000000' ? '#ffffff' : 'rgb(43, 43, 50)');
+
+  if(setting.themeColor === 'dark-blue' || setting.themeColor === 'dark-blue2') {
+    $targetContent.css('backgroundColor', 'rgb(43, 43, 50)');
+  }
+  else if(setting.themeColor === 'deep-blue') {
+    $targetContent.css('backgroundColor', 'rgb(10, 20, 45)');
+  }
+  else{
+    $targetContent.css('backgroundColor', '#ffffff');
+  }
 
   // 基地横並びに。
   $targetContent.find('.lb_tab').removeClass('tab-pane fade');
