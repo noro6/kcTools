@@ -268,6 +268,18 @@ async function postURLData(url) {
   }).then(response => response.json());
 }
 
+/**
+ * RGBに変換
+ * @param {string} hex 
+ */
+function hexToRGB(hex) {
+  if (hex.slice(0, 1) == "#") hex = hex.slice(1);
+  if (hex.length == 3) hex = hex.slice(0, 1) + hex.slice(0, 1) + hex.slice(1, 2) + hex.slice(1, 2) + hex.slice(2, 3) + hex.slice(2, 3);
+  return [hex.slice(0, 2), hex.slice(2, 4), hex.slice(4, 6)].map(function (str) {
+    return parseInt(str, 16);
+  });
+}
+
 /*==================================
     値/オブジェクト 作成・操作・取得等
 ==================================*/
@@ -6099,6 +6111,8 @@ function updateDetailChart(data, xLabelString, tooltips) {
   if (!chartDataSet) {
     // 初回
     const ctx = document.getElementById("detailChart");
+
+    const textColor = "rgba(" + hexToRGB(mainColor).join(',') + ", 0.8)";
     chartDataSet = new Chart(ctx, {
       type: "bar",
       data: {
@@ -6123,30 +6137,30 @@ function updateDetailChart(data, xLabelString, tooltips) {
         responsive: true,
         scales: {
           xAxes: [{
-            scaleLabel: { display: true, labelString: xLabelString, fontColor: mainColor + "cc" },
+            scaleLabel: { display: true, labelString: xLabelString, fontColor: textColor },
             gridLines: { display: false },
-            ticks: { fontSize: 10, fontColor: mainColor + "cc" }
+            ticks: { fontSize: 10, fontColor: textColor }
           }],
           yAxes: [{
             id: "y-axis-1",
             type: "linear",
             position: "left",
-            gridLines: { display: true, color: "#80808033" },
-            scaleLabel: { display: true, labelString: '確率分布 [％]', fontColor: mainColor + "cc" },
-            ticks: { min: 0, fontColor: mainColor + "cc" },
+            gridLines: { display: true, color: "rgba(128, 128, 128, 0.2)" },
+            scaleLabel: { display: true, labelString: '確率分布 [％]', fontColor: textColor },
+            ticks: { min: 0, fontColor: textColor },
           },
           {
             id: "y-axis-2",
             type: "linear",
             position: "right",
-            gridLines: { display: true, color: "#80808033" },
-            scaleLabel: { display: true, labelString: '累積確率 [％]', fontColor: mainColor + "cc" },
-            ticks: { max: 100, min: 0, stepSize: 25, fontColor: mainColor + "cc" },
+            gridLines: { display: true, color: "rgba(128, 128, 128, 0.2)" },
+            scaleLabel: { display: true, labelString: '累積確率 [％]', fontColor: textColor },
+            ticks: { max: 100, min: 0, stepSize: 25, fontColor: textColor },
           }],
         },
         legend: {
           display: true,
-          labels: { fontColor: mainColor + "cc" }
+          labels: { fontColor: textColor }
         },
         tooltips: tooltips
       }
