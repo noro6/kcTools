@@ -78,6 +78,8 @@ let usedPlane = [];
 // Chart描画用データ
 let chartDataSet = null;
 
+let mainColor = "#000000";
+
 /*
   プリセットメモ
   全体: [0:id, 1:名前, 2:基地プリセット, 3:艦隊プリセット, 4:敵艦プリセット, 5:メモ]
@@ -516,7 +518,7 @@ function initializeSetting() {
   if (!setting.hasOwnProperty('backUpCount')) setting.backUpCount = 10;
   if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
   if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
-  if (!setting.hasOwnProperty('themeColor')) setting.themeColor = '#f0ebe6';
+  if (!setting.hasOwnProperty('themeColor')) setting.themeColor = 'normal';
   if (!setting.hasOwnProperty('contentsOrder')) setting.contentsOrder = [];
   if (!setting.hasOwnProperty('defaultProf')) {
     setting.defaultProf = [];
@@ -603,10 +605,6 @@ function initialize(callback) {
 
   // 設定データ読み込み
   initializeSetting();
-
-  // テーマ変更
-  document.getElementById('theme_color').value = setting.themeColor;
-  theme_color_Changed();
 
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
@@ -782,7 +780,7 @@ function initialize(callback) {
   for (let index = 1; index <= 10; index++) {
     text += `
       <li class="nav-item ${index === 1 ? '' : 'd-none'}">
-        <a class="nav-link ${index === 1 ? 'active' : ''}" data-toggle="tab" data-disp="${index}" href="#">${index}戦目</a>
+        <a class="nav-link ${mainColor === '#000000' ? '' : 'nav-link-dark'} ${index === 1 ? 'active' : ''}" data-toggle="tab" data-disp="${index}" href="#">${index}戦目</a>
       </li>`;
   }
   $('#display_battle_tab').html(text);
@@ -796,7 +794,7 @@ function initialize(callback) {
     $(e).attr('id', 'rate_row_' + (i + 1));
     if (i < 6) {
       // 基地部分
-      $(e).find('.rate_td_name').html(`<span class="mr-1">第${lb_num}基地</span><span class="text-nowrap">${wave}波目</span>`);
+      $(e).find('.rate_td_name').html(`<span class="mr-1">基地${lb_num}</span><span class="text-nowrap">${wave}波目</span>`);
       $(e)[0].dataset.base_no = lb_num - 1;
       $(e).addClass('cur_pointer land_base_detail');
     }
@@ -1040,6 +1038,24 @@ function initialize(callback) {
   fragment.appendChild($last_update);
 
   document.getElementById('site_history_body').appendChild(fragment);
+
+  // テーマカラー変更
+  if (setting.themeColor === 'dark-blue') {
+    $('#normal_theme').prop('checked', false);
+    $('#dark_blue_theme').prop('checked', true);
+    $('#dark_blue2_theme').prop('checked', false);
+  }
+  else if (setting.themeColor === 'dark-blue2') {
+    $('#normal_theme').prop('checked', false);
+    $('#dark_blue_theme').prop('checked', false);
+    $('#dark_blue2_theme').prop('checked', true);
+  }
+  else {
+    $('#normal_theme').prop('checked', true);
+    $('#dark_blue_theme').prop('checked', false);
+    $('#dark_blue2_theme').prop('checked', false);
+  }
+  site_theme_Changed(false);
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
@@ -1511,10 +1527,11 @@ function drawChangeValue(node, pre, cur, reverse) {
   if (castInt(pre) !== castInt(cur)) {
     $inline = $(node);
     $inline.text(cur).stop();
-    if (reverse) $inline.css('color', cur < pre ? '#0c5' : cur > pre ? '#f00' : '#000');
-    else $inline.css('color', cur > pre ? '#0c5' : cur < pre ? '#f00' : '#000');
-    $inline.delay(500).animate({ 'color': '#000' }, 1000);
+    if (reverse) $inline.css('color', cur < pre ? '#0c5' : cur > pre ? '#f00' : mainColor);
+    else $inline.css('color', cur > pre ? '#0c5' : cur < pre ? '#f00' : mainColor);
+    $inline.delay(500).animate({ 'color': mainColor }, 1000);
   }
+  else $(node).css('color', mainColor);
 }
 
 /**
@@ -1669,7 +1686,7 @@ function createPlaneTable(planes) {
       $typeDiv.className = 'd-flex w-100 mt-3 mb-1';
 
       const $type = document.createElement('div');
-      $type.className = 'font_size_12 font_color_777 align-self-center';
+      $type.className = 'font_size_12 font_color_half align-self-center';
       $type.textContent = PLANE_TYPE.find(v => v.id === plane.type).name;
 
       const $typeLine = document.createElement('div');
@@ -1808,12 +1825,12 @@ function createShipTable(type) {
   if (displayMode === "multi") {
     $modal.addClass('modal-xl');
     $tbody.addClass('d-flex flex-wrap');
-    $('#ship_thead').addClass('d-none').removeClass('d-flex');
+    $modal.find('.scroll_thead').addClass('d-none').removeClass('d-flex');
   }
   else {
     $modal.removeClass('modal-xl');
     $tbody.removeClass('d-flex flex-wrap');
-    $('#ship_thead').addClass('d-flex').removeClass('d-none');
+    $modal.find('.scroll_thead').addClass('d-flex').removeClass('d-none');
   }
 
   for (const ship of dispData) {
@@ -1859,7 +1876,7 @@ function createShipTable(type) {
       $typeDiv.className = 'w-100 d-flex mt-3';
 
       const $type = document.createElement('div');
-      $type.className = 'font_size_12 font_color_777 align-self-center';
+      $type.className = 'font_size_12 font_color_half align-self-center';
       $type.textContent = SHIP_TYPE.find(v => v.id === ship.type).name;
 
       const $typeLine = document.createElement('div');
@@ -1952,12 +1969,12 @@ function createEnemyTable(type) {
   if (displayMode === "multi") {
     $modal.addClass('modal-xl');
     $tbody.addClass('d-flex flex-wrap');
-    $('.enemy_thead').addClass('d-none').removeClass('d-flex');
+    $modal.find('.scroll_thead').addClass('d-none').removeClass('d-flex');
   }
   else {
     $modal.removeClass('modal-xl');
     $tbody.removeClass('d-flex flex-wrap');
-    $('.enemy_thead').addClass('d-flex').removeClass('d-none');
+    $modal.find('.scroll_thead').addClass('d-flex').removeClass('d-none');
   }
 
   for (const enemy of dispData) {
@@ -2015,7 +2032,7 @@ function createEnemyTable(type) {
       $typeDiv.className = 'w-100 d-flex mt-3';
 
       const $type = document.createElement('div');
-      $type.className = 'font_size_12 font_color_777 align-self-center';
+      $type.className = 'font_size_12 font_color_half align-self-center';
       $type.textContent = ENEMY_TYPE.find(v => v.id === enemy.type[0]).name;
 
       const $typeLine = document.createElement('div');
@@ -2272,7 +2289,7 @@ function createNodeSelect() {
   $('#node_tbody').html(text);
   $('#clickable_nodes').html(text2);
   $('#enemy_pattern_tbody').html('');
-  $('#enemy_pattern_select').html('<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#">編成1</a></li>');
+  $('#enemy_pattern_select').html('<li class="nav-item"><a class="nav-link ' + (mainColor === "#000000" ? '' : 'nav-link-dark') + ' active" data-toggle="tab" href="#">編成1</a></li>');
   $('#enemy_pattern_air_power').text('0');
   $('#enemy_display_mode_parent').addClass('d-none').removeClass('d-flex');
   $('#btn_expand_enemies').prop('disabled', true);
@@ -2334,7 +2351,7 @@ function createEnemyPattern(patternNo = 0) {
     for (let i = 0; i < patterns.length; i++) {
       tabText += `
       <li class="nav-item">
-        <a class="nav-link ${i === 0 ? 'active' : ''}" data-toggle="tab" data-disp="${i}" href="#">
+        <a class="nav-link ${mainColor === "#000000" ? '' : 'nav-link-dark'} ${i === 0 ? 'active' : ''}" data-toggle="tab" data-disp="${i}" href="#">
           ${(patterns[i].remarks ? patterns[i].remarks : '編成' + (i + 1))}
           </a>
       </li>
@@ -2686,8 +2703,8 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
           <a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただければ幸いです。
         </div>
         <div class="mt-2 px-2">報告を頂き次第、可能な限り早期のバグフィックスに努めます。</div>
-        <div class="mt-3 px-2 font_size_8 font_color_fff">message : ${error.message}</div>
-        <div class="px-2 font_size_8 font_color_fff">stack : ${error.stack}</div>
+        <div class="mt-3 px-2 font_size_8">message : ${error.message}</div>
+        <div class="px-2 font_size_8">stack : ${error.stack}</div>
       </div>
     `);
     confirmType = "Error";
@@ -6089,7 +6106,7 @@ function updateDetailChart(data, xLabelString, tooltips) {
           data: rateData,
           type: "line",
           fill: false,
-          borderColor: "rgb(54, 162, 235)",
+          borderColor: "rgb(54, 162, 255)",
           yAxisID: "y-axis-2",
         }]
       },
@@ -6097,24 +6114,30 @@ function updateDetailChart(data, xLabelString, tooltips) {
         responsive: true,
         scales: {
           xAxes: [{
-            scaleLabel: { display: true, labelString: xLabelString },
+            scaleLabel: { display: true, labelString: xLabelString, fontColor: mainColor + "cc" },
             gridLines: { display: false },
-            ticks: { fontSize: 10 }
+            ticks: { fontSize: 10, fontColor: mainColor + "cc" }
           }],
           yAxes: [{
             id: "y-axis-1",
             type: "linear",
             position: "left",
-            scaleLabel: { display: true, labelString: '確率分布 [％]' },
-            ticks: { min: 0 },
+            gridLines: { display: true, color: "#80808033" },
+            scaleLabel: { display: true, labelString: '確率分布 [％]', fontColor: mainColor + "cc" },
+            ticks: { min: 0, fontColor: mainColor + "cc" },
           },
           {
             id: "y-axis-2",
             type: "linear",
             position: "right",
-            scaleLabel: { display: true, labelString: '累積確率 [％]' },
-            ticks: { max: 100, min: 0, stepSize: 25 },
+            gridLines: { display: true, color: "#80808033" },
+            scaleLabel: { display: true, labelString: '累積確率 [％]', fontColor: mainColor + "cc" },
+            ticks: { max: 100, min: 0, stepSize: 25, fontColor: mainColor + "cc" },
           }],
+        },
+        legend: {
+          display: true,
+          labels: { fontColor: mainColor + "cc" }
         },
         tooltips: tooltips
       }
@@ -7056,7 +7079,9 @@ function btn_supply_Clicked() {
  */
 function btn_capture_Clicked($this) {
   const $targetContent = $this.closest('.contents');
+  const prevBack = $targetContent.css('backgroundColor');
   $targetContent.width(1000);
+  $targetContent.css('backgroundColor', mainColor === '#000000' ? '#ffffff' : 'rgb(43, 43, 50)');
 
   // 基地横並びに。
   $targetContent.find('.lb_tab').removeClass('tab-pane fade');
@@ -7094,6 +7119,7 @@ function btn_capture_Clicked($this) {
       }
 
       // 戻す
+      $targetContent.css('backgroundColor', prevBack);
       $targetContent.find('.custom-checkbox').removeClass('d-none');
       $targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
       $no_captures.removeClass('d-none');
@@ -8444,7 +8470,7 @@ function btn_continue_expand_Clicked() {
 
   // 展開されたことを示す視覚効果
   $('#enemy_pattern_tbody').html(`<div>${currentBattle} 戦目の敵艦隊が挿入されました。</div><div>続ける場合は再度戦闘マスを選択してください。<div>`);
-  $('#enemy_pattern_select').html('<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#">編成1</a></li>');
+  $('#enemy_pattern_select').html('<li class="nav-item"><a class="nav-link ' + (mainColor === "#000000" ? '' : 'nav-link-dark') + ' active" data-toggle="tab" href="#">編成1</a></li>');
   $('#enemy_pattern_air_power').text('0');
   $('#enemy_display_mode_parent').addClass('d-none').removeClass('d-flex');
   $('.node_selected').removeClass('node_selected');
@@ -8464,9 +8490,9 @@ function shoot_down_table_tbody_MouseEnter($this) {
   const $tr = $this.closest('tr');
   const rowIndex = castInt($tr[0].dataset.shipindex);
   const css = $tr[0].dataset.css;
-  $tr.addClass('bg-light');
+  $tr.addClass('bg-hover');
   $tr.find('.td_plane_name').addClass(css);
-  $('#shoot_down_table_tbody').find('.shipNo' + rowIndex + ':first').find('.td_name').addClass('bg-light');
+  $('#shoot_down_table_tbody').find('tr[data-shipindex="' + rowIndex + '"]:first').find('.td_name').addClass('bg-hover');
 }
 
 /**
@@ -8477,9 +8503,9 @@ function shoot_down_table_tbody_MouseLeave($this) {
   const $tr = $this.closest('tr');
   const rowIndex = castInt($tr[0].dataset.shipindex);
   const css = $tr[0].dataset.css;
-  $tr.removeClass('bg-light');
+  $tr.removeClass('bg-hover');
   $tr.find('.td_plane_name').removeClass(css);
-  $('#shoot_down_table_tbody').find('.shipNo' + rowIndex + ':first').find('.td_name').removeClass('bg-light');
+  $('#shoot_down_table_tbody').find('tr[data-shipindex="' + rowIndex + '"]:first').find('.td_name').removeClass('bg-hover');
 }
 
 /**
@@ -8538,9 +8564,9 @@ function enemy_shoot_down_table_tbody_MouseEnter($this) {
   const $tr = $this.closest('tr');
   const rowIndex = castInt($tr[0].dataset.rowindex);
   const css = $tr[0].dataset.css;
-  $tr.addClass('bg-light');
+  $tr.addClass('bg-hover');
   $tr.find('.td_plane_name').addClass(css);
-  $('#enemy_shoot_down_tbody').find('.enemy_no_' + rowIndex + ':first').find('.td_name').addClass('bg-light');
+  $('#enemy_shoot_down_tbody').find('.enemy_no_' + rowIndex + ':first').find('.td_name').addClass('bg-hover');
 }
 
 /**
@@ -8551,9 +8577,9 @@ function enemy_shoot_down_table_tbody_MouseLeave($this) {
   const $tr = $this.closest('tr');
   const rowIndex = castInt($tr[0].dataset.rowindex);
   const css = $tr[0].dataset.css;
-  $tr.removeClass('bg-light');
+  $tr.removeClass('bg-hover');
   $tr.find('.td_plane_name').removeClass(css);
-  $('#enemy_shoot_down_tbody').find('.enemy_no_' + rowIndex + ':first').find('.td_name').removeClass('bg-light');
+  $('#enemy_shoot_down_tbody').find('.enemy_no_' + rowIndex + ':first').find('.td_name').removeClass('bg-hover');
 }
 
 /**
@@ -8751,42 +8777,132 @@ function btn_reset_selected_ship_history_Clicked() {
 
 
 /**
- * 背景色変更
+ * サイトテーマカラー変更
+ * @param {boolean} withCalculate 計算を起こさない場合 false 計算を起こす場合は未指定でOK
  */
-function theme_color_Changed() {
-  const code = document.getElementById('theme_color').value;
-  const shadow = `0 .5rem 1rem rgba(0, 0, 0, 0.4), 0 0 .75rem ${code}cc inset`;
-  document.body.style.backgroundColor = code;
-  const contents = document.getElementsByClassName('contents');
-  for (const content of contents) {
-    content.style.boxShadow = shadow;
+function site_theme_Changed(withCalculate = true) {
+  if (!$('#normal_theme').prop('checked')) {
+    if ($('#dark_blue_theme').prop('checked')) {
+      setting.themeColor = 'dark-blue';
+      document.body.classList.remove('body-dark');
+      document.body.style.backgroundColor = "#20222d";
+    }
+    if ($('#dark_blue2_theme').prop('checked')) {
+      setting.themeColor = 'dark-blue2';
+      document.body.classList.add('body-dark');
+    }
+    mainColor = "#e0e0e0";
+
+    for (const element of document.getElementsByClassName('contents')) {
+      element.style.backgroundColor = "#ffffff0c";
+      element.classList.add('contents-dark');
+    }
+    for (const element of document.getElementsByClassName('form-control')) {
+      element.classList.add('form-control-dark');
+    }
+    for (const element of document.getElementsByClassName('input-group-text')) {
+      element.classList.add('input-group-text-dark');
+    }
+    for (const element of document.getElementsByClassName('custom-select')) {
+      element.classList.add('custom-select-dark');
+    }
+    for (const element of document.getElementsByClassName('border-top')) {
+      element.classList.add('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('border-bottom')) {
+      element.classList.add('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('border-left')) {
+      element.classList.add('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('border')) {
+      element.classList.add('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('modal-content')) {
+      element.classList.add('modal-content-dark');
+    }
+    for (const element of document.getElementsByClassName('modal-header')) {
+      element.classList.add('modal-header-dark');
+    }
+    for (const element of document.getElementsByClassName('modal-footer')) {
+      element.classList.add('modal-footer-dark');
+    }
+    for (const element of document.getElementsByClassName('scroll_thead')) {
+      element.classList.add('scroll_thead-dark');
+    }
+    for (const element of document.getElementsByClassName('nav-tabs')) {
+      element.classList.add('nav-tabs-dark');
+    }
+    for (const element of document.getElementsByClassName('nav-link')) {
+      element.classList.add('nav-link-dark');
+    }
+    for (const element of document.getElementsByClassName('dropdown-menu')) {
+      element.classList.add('dropdown-menu-dark');
+    }
+    for (const element of document.getElementsByClassName('dropdown-header')) {
+      element.classList.add('dropdown-header-dark');
+    }
+  }
+  else {
+    setting.themeColor = 'normal';
+    document.body.style.backgroundColor = "#f0ebe6";
+    document.body.classList.remove('body-dark');
+    mainColor = "#000000";
+    for (const element of document.getElementsByClassName('contents')) {
+      element.style.backgroundColor = "#fffffff0";
+      element.classList.remove('contents-dark');
+    }
+    for (const element of document.getElementsByClassName('form-control')) {
+      element.classList.remove('form-control-dark');
+    }
+    for (const element of document.getElementsByClassName('input-group-text')) {
+      element.classList.remove('input-group-text-dark');
+    }
+    for (const element of document.getElementsByClassName('custom-select')) {
+      element.classList.remove('custom-select-dark');
+    }
+    for (const element of document.getElementsByClassName('border-top')) {
+      element.classList.remove('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('border-bottom')) {
+      element.classList.remove('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('border-left')) {
+      element.classList.remove('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('border')) {
+      element.classList.remove('border-secondary');
+    }
+    for (const element of document.getElementsByClassName('modal-content')) {
+      element.classList.remove('modal-content-dark');
+    }
+    for (const element of document.getElementsByClassName('modal-header')) {
+      element.classList.remove('modal-header-dark');
+    }
+    for (const element of document.getElementsByClassName('modal-footer')) {
+      element.classList.remove('modal-footer-dark');
+    }
+    for (const element of document.getElementsByClassName('scroll_thead')) {
+      element.classList.remove('scroll_thead-dark');
+    }
+    for (const element of document.getElementsByClassName('nav-tabs')) {
+      element.classList.remove('nav-tabs-dark');
+    }
+    for (const element of document.getElementsByClassName('nav-link')) {
+      element.classList.remove('nav-link-dark');
+    }
+    for (const element of document.getElementsByClassName('dropdown-menu')) {
+      element.classList.remove('dropdown-menu-dark');
+    }
+    for (const element of document.getElementsByClassName('dropdown-header')) {
+      element.classList.remove('dropdown-header-dark');
+    }
   }
 
-  setting.themeColor = code;
+  document.getElementById('input_url').classList.add('form-control-dark');
   saveLocalStorage('setting', setting);
-}
-
-
-/**
- * 背景色ランダム
- */
-function btn_random_theme_color_Clicked() {
-  const seed = [];
-  for (let i = 180; i < 256; i++) seed.push(i.toString(16));
-  const len = seed.length;
-  const r = seed[Math.floor(len * Math.random())];
-  const g = seed[Math.floor(len * Math.random())];
-  const b = seed[Math.floor(len * Math.random())];
-  document.getElementById('theme_color').value = `#${r}${g}${b}`;
-  theme_color_Changed();
-}
-
-/**
- * 背景色デフォルトに戻す
- */
-function btn_reset_theme_color_Clicked() {
-  document.getElementById('theme_color').value = '#f0ebe6';
-  theme_color_Changed();
+  document.body.style.color = mainColor;
+  if (withCalculate) calculate();
 }
 
 /**
@@ -9087,7 +9203,7 @@ async function btn_url_shorten_Clicked() {
     textbox.value = "";
     textbox.placeholder = "URLが不正です。";
   }
-  else if(!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
+  else if (!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
     await postURLData(url)
       .then(json => {
         if (json.error || !json.shortLink) {
@@ -9520,9 +9636,7 @@ $(function () {
   $('#config_content').on('change', '#backup_count', backup_enabled_Clicked);
   $('#config_content').on('click', '#btn_reset_selected_plane_history', btn_reset_selected_plane_history_Clicked);
   $('#config_content').on('click', '#btn_reset_selected_ship_history', btn_reset_selected_ship_history_Clicked);
-  $('#config_content').on('change', '#theme_color', theme_color_Changed);
-  $('#config_content').on('click', '#btn_random_theme_color', btn_random_theme_color_Clicked);
-  $('#config_content').on('click', '#btn_reset_theme_color', btn_reset_theme_color_Clicked);
+  $('#config_content').on('click', 'input[name="site_theme"]', function () { site_theme_Changed(); });
   $('#plane_stock').on('change', '#stock_type_select', function () { stock_type_select_Changed($(this)); });
   $('#plane_stock').on('click', '.stock_tr', function () { stock_tr_Clicked($(this)); });
   $('#plane_stock').on('click', '#btn_load_equipment_json', btn_load_equipment_json_Clicked);
