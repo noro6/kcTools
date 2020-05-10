@@ -214,12 +214,12 @@ input[type="text"] { font-size: 12px; }
 .form-control-dark {
   color: #ddd;
   border-color: rgba(255, 255, 255, .2);
-  background-color: rgb(40, 40, 45, 0.4);
+  background-color: rgba(40, 40, 45, 0.4);
 }
 .form-control-dark:focus {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-  background-color: rgb(40, 40, 45, 0.4);
+  background-color: rgba(40, 40, 45, 0.4);
   color: #ddd;
 }
 .form-control-dark:disabled {
@@ -232,7 +232,7 @@ input[type="text"] { font-size: 12px; }
 .form-control-dark::-ms-input-placeholder { color: #ccc; }
 .custom-select-dark {
   color: #ccc;
-  background-color: rgb(40, 40, 45, 0.4) !important;
+  background-color: rgba(40, 40, 45, 0.4) !important;
   border-color: rgba(255, 255, 255, .3);
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23cccccc' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
 }
@@ -1067,7 +1067,7 @@ input[type="text"] { font-size: 12px; }
   width: 90px;
 }
 .progress {
-  background-color: rgb(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   height: 8px;
 }
 .result_bar {
@@ -1289,15 +1289,15 @@ input[type="text"] { font-size: 12px; }
 /* ------------------------------
   カラー
 -------------------------------- */
-.prof_none:hover { filter: drop-shadow(0 0 3px rgb(190, 190, 190, 0.5)); }
+.prof_none:hover { filter: drop-shadow(0 0 3px rgba(190, 190, 190, 0.5)); }
 .prof_yellow:hover { filter: drop-shadow(0 0 3px #fd0); }
 .prof_blue:hover { filter: drop-shadow(0 0 3px #64b4ff); }
 .css_fighter { border: 2px rgb(100, 200, 120) solid; background-color: rgba(0, 255, 100, 0.1); }
 .css_fighter:hover { background-color: rgba(0, 255, 100, 0.05); }
 .css_torpedo_bomber { border: 2px rgb(100, 190, 255) solid; background-color: rgba(0, 190, 255, 0.1); }
 .css_torpedo_bomber:hover { background-color: rgba(0, 190, 255, 0.05); }
-.css_dive_bomber { border: 2px rgb(247, 110, 110) solid; background-color: rgb(255, 0, 0, 0.1); }
-.css_dive_bomber:hover { background-color: rgb(255, 0, 0, 0.05); }
+.css_dive_bomber { border: 2px rgb(247, 110, 110) solid; background-color: rgba(255, 0, 0, 0.1); }
+.css_dive_bomber:hover { background-color: rgba(255, 0, 0, 0.05); }
 .css_cb_reconnaissance { border: 2px rgb(255, 200, 10) solid; background-color: rgba(255, 255, 70, 0.1); }
 .css_cb_reconnaissance:hover { background-color: rgba(255, 255, 70, 0.05); }
 .css_sp { border: 2px rgb(140, 205, 150) solid; background-color: rgba(86, 255, 122, 0.1); }
