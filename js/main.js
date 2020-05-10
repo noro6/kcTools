@@ -8796,6 +8796,8 @@ function site_theme_Changed(withCalculate = true) {
   document.body.classList.remove('body-deep-blue');
 
   if (!$('#normal_theme').prop('checked')) {
+    mainColor = "#e0e0e0";
+
     if ($('#dark_blue_theme').prop('checked')) {
       setting.themeColor = 'dark-blue';
       document.body.style.backgroundColor = "#20222d";
@@ -8804,11 +8806,12 @@ function site_theme_Changed(withCalculate = true) {
       setting.themeColor = 'dark-blue2';
       document.body.classList.add('body-dark');
     }
-    if ($('#deep_blue_theme').prop('checked')) {
+
+    const isDeep = $('#deep_blue_theme').prop('checked');
+    if (isDeep) {
       setting.themeColor = 'deep-blue';
       document.body.classList.add('body-deep-blue');
     }
-    mainColor = "#e0e0e0";
 
     for (const element of document.getElementsByClassName('contents')) {
       element.style.backgroundColor = "rgba(255, 255, 255, 0.047)";
@@ -8837,6 +8840,8 @@ function site_theme_Changed(withCalculate = true) {
     }
     for (const element of document.getElementsByClassName('modal-content')) {
       element.classList.add('modal-content-dark');
+      if (isDeep) element.classList.add('modal-content-deep');
+      else element.classList.remove('modal-content-deep');
     }
     for (const element of document.getElementsByClassName('modal-header')) {
       element.classList.add('modal-header-dark');
@@ -8891,6 +8896,7 @@ function site_theme_Changed(withCalculate = true) {
     }
     for (const element of document.getElementsByClassName('modal-content')) {
       element.classList.remove('modal-content-dark');
+      element.classList.remove('modal-content-deep');
     }
     for (const element of document.getElementsByClassName('modal-header')) {
       element.classList.remove('modal-header-dark');
