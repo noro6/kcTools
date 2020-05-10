@@ -606,11 +606,6 @@ function initialize(callback) {
   // 設定データ読み込み
   initializeSetting();
 
-  // テーマ変更
-  $('#dark_theme').prop('checked', setting.themeColor === 'dark');
-  $('#normal_theme').prop('checked', setting.themeColor !== 'dark');
-  site_theme_Changed(false);
-
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
   document.getElementById('latest_version').textContent = serverVersion.id;
@@ -799,7 +794,7 @@ function initialize(callback) {
     $(e).attr('id', 'rate_row_' + (i + 1));
     if (i < 6) {
       // 基地部分
-      $(e).find('.rate_td_name').html(`<span class="mr-1">第${lb_num}基地</span><span class="text-nowrap">${wave}波目</span>`);
+      $(e).find('.rate_td_name').html(`<span class="mr-1">基地${lb_num}</span><span class="text-nowrap">${wave}波目</span>`);
       $(e)[0].dataset.base_no = lb_num - 1;
       $(e).addClass('cur_pointer land_base_detail');
     }
@@ -1043,6 +1038,24 @@ function initialize(callback) {
   fragment.appendChild($last_update);
 
   document.getElementById('site_history_body').appendChild(fragment);
+
+  // テーマカラー変更
+  if (setting.themeColor === 'dark-blue') {
+    $('#normal_theme').prop('checked', false);
+    $('#dark_blue_theme').prop('checked', true);
+    $('#dark_blue2_theme').prop('checked', false);
+  }
+  else if (setting.themeColor === 'dark-blue2') {
+    $('#normal_theme').prop('checked', false);
+    $('#dark_blue_theme').prop('checked', false);
+    $('#dark_blue2_theme').prop('checked', true);
+  }
+  else {
+    $('#normal_theme').prop('checked', true);
+    $('#dark_blue_theme').prop('checked', false);
+    $('#dark_blue2_theme').prop('checked', false);
+  }
+  site_theme_Changed(false);
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
@@ -8768,13 +8781,21 @@ function btn_reset_selected_ship_history_Clicked() {
  * @param {boolean} withCalculate 計算を起こさない場合 false 計算を起こす場合は未指定でOK
  */
 function site_theme_Changed(withCalculate = true) {
-  const isDark = $('#dark_theme').prop('checked');
-  if (isDark) {
-    setting.themeColor = 'dark';
-    document.body.style.backgroundColor = "#202029";
-    mainColor = "#e7e7e7";
-    for (const content of document.getElementsByClassName('contents')) {
-      content.style.backgroundColor = "#ffffff0a";
+  if (!$('#normal_theme').prop('checked')) {
+    if ($('#dark_blue_theme').prop('checked')) {
+      setting.themeColor = 'dark-blue';
+      document.body.classList.remove('body-dark');
+      document.body.style.backgroundColor = "#20222d";
+    }
+    if ($('#dark_blue2_theme').prop('checked')) {
+      setting.themeColor = 'dark-blue2';
+      document.body.classList.add('body-dark');
+    }
+    mainColor = "#e0e0e0";
+
+    for (const element of document.getElementsByClassName('contents')) {
+      element.style.backgroundColor = "#ffffff0c";
+      element.classList.add('contents-dark');
     }
     for (const element of document.getElementsByClassName('form-control')) {
       element.classList.add('form-control-dark');
@@ -8825,9 +8846,11 @@ function site_theme_Changed(withCalculate = true) {
   else {
     setting.themeColor = 'normal';
     document.body.style.backgroundColor = "#f0ebe6";
+    document.body.classList.remove('body-dark');
     mainColor = "#000000";
-    for (const content of document.getElementsByClassName('contents')) {
-      content.style.backgroundColor = "#fffffff6";
+    for (const element of document.getElementsByClassName('contents')) {
+      element.style.backgroundColor = "#fffffff0";
+      element.classList.remove('contents-dark');
     }
     for (const element of document.getElementsByClassName('form-control')) {
       element.classList.remove('form-control-dark');

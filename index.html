@@ -12,7 +12,7 @@
    <meta property="og:url" content="https://noro6.github.io/kcTools/" />
    <meta property="og:title" content="制空権シミュレータ" />
    <meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
-   <meta property="og:image" content="https://noro6.github.io/kcTools/img/util/image.png" />
+   <meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
    <link rel="icon" href="favicon.ico">
    <style>
       #loading_back {
@@ -154,7 +154,7 @@
       </div>
       <div class="d-none d-md-flex mx-1 px-2 py-1 flex-grow-1" id="url_shortener">
          <input class="form-control form-control-dark align-self-center" type="text" id="input_url" placeholder="">
-         <div class="ml-2 align-self-center" id="btn_url_shorten">URL短縮</button>
+         <div class="ml-2 align-self-center" id="btn_url_shorten">URL短縮</div>
       </div>
    </nav>
    <div class="container-fluid px-0">
@@ -539,7 +539,7 @@
                                                             </div>
                                                             <div class="ml-1 align-self-center">
                                                                <button type="button" data-ini="0"
-                                                                  class="btn btn-sm btn-info slot_ini">
+                                                                  class="btn btn-sm btn-primary slot_ini">
                                                                   <span class="text-nowrap">初期値</span>
                                                                </button>
                                                             </div>
@@ -657,7 +657,7 @@
                         <div class="d-flex my-1 py-1 flex-wrap" id="battle_count_content">
                            <div class="d-flex w-100 ml-2 mb-2">
                               <button type="button" id="btn_world_expand"
-                                 class="btn btn-sm btn-info font_size_12 align-self-center no_capture">
+                                 class="btn btn-sm btn-primary font_size_12 align-self-center no_capture">
                                  海域マップから一括入力
                               </button>
                               <div class="ml-2 align-self-center">進行航路：</div>
@@ -692,14 +692,14 @@
                               <option value="10" class="d-none">10</option>
                            </select>
                            <div class="ml-1 align-self-center">戦目</div>
-                           <div class="ml-auto d-flex no_capture" id="enemy_fleet_display">
-                              <div class="align-self-center font_size_12">表示:</div>
-                              <div class="ml-1 custom-control custom-radio align-self-center">
+                           <div class="ml-auto d-flex" id="enemy_fleet_display">
+                              <div class="align-self-center font_size_12 no_capture">表示:</div>
+                              <div class="ml-1 custom-control custom-radio align-self-center no_capture">
                                  <input type="radio" id="enemy_fleet_display_text" name="enemy_fleet_display_mode"
                                     class="custom-control-input" checked>
                                  <label class="custom-control-label" for="enemy_fleet_display_text">文字</label>
                               </div>
-                              <div class="ml-1 custom-control custom-radio align-self-center">
+                              <div class="ml-1 custom-control custom-radio align-self-center no_capture">
                                  <input type="radio" id="enemy_fleet_display_image" name="enemy_fleet_display_mode"
                                     class="custom-control-input">
                                  <label class="custom-control-label" for="enemy_fleet_display_image">画像</label>
@@ -719,7 +719,7 @@
                                     </div>
                                     <div class="d-flex align-self-center">
                                        <button type="button"
-                                          class="mr-2_5 btn_enemy_preset btn btn-sm btn-outline-info font_size_12 no_capture">
+                                          class="mr-2_5 btn_enemy_preset btn btn-sm btn-outline-primary font_size_12 no_capture">
                                           海域選択
                                        </button>
                                        <div class="mr-2 btn_stage2 btn_icon no_capture text-primary"
@@ -805,7 +805,7 @@
                                  </div>
                                  <div class="d-flex align-self-center">
                                     <button type="button"
-                                       class="mr-2 btn_enemy_preset btn btn-sm btn-outline-info font_size_12 no_capture">
+                                       class="mr-2 btn_enemy_preset btn btn-sm btn-outline-primary font_size_12 no_capture">
                                        海域選択
                                     </button>
                                     <div class="ml-2 mr-2 btn_reset btn_reset_battle btn_icon no_capture"
@@ -900,7 +900,7 @@
                               </div>
                            </div>
                            <table class="text-center w-100" id="shoot_down_table">
-                              <thead id="shoot_down_table_thead">
+                              <thead class="general_thead">
                                  <tr class="tr_header">
                                     <td class="td_name">艦娘名</td>
                                     <td class="td_plane_name text-nowrap text-center">装備名</td>
@@ -996,7 +996,7 @@
                                  </span>
                               </div>
                               <table class="text-center w-100" id="rate_table">
-                                 <thead>
+                                 <thead class="general_thead">
                                     <tr class="rate_tr" id="rate_row_0">
                                        <td class="rate_td_name"></td>
                                        <td class="rate_td_normal rate_td_ap">制空値</td>
@@ -1022,7 +1022,7 @@
                                  </div>
                               </div>
                               <table class="text-center w-100" id="enemy_shoot_down_table">
-                                 <thead>
+                                 <thead class="general_thead">
                                     <tr class="enemy_shoot_down_tr">
                                        <td class="td_name">敵艦名</td>
                                        <td class="td_plane_name">装備名</td>
@@ -1069,7 +1069,7 @@
                               <div class="col-12 col-lg-6 my-2 order-1 order-lg-2" id="lb_info">
                                  <div class="mt-2 mb-1 pl-1 font_size_12">基地航空隊</div>
                                  <table class="text-center w-100 info_table" id="lb_info_table">
-                                    <thead>
+                                    <thead class="general_thead">
                                        <tr>
                                           <td class="info_name">航空隊</td>
                                           <td>装備名</td>
@@ -1176,7 +1176,7 @@
                               <input type="text" class="form-control form-control-sm" id="stock_word" maxlength="30">
                            </div>
                            <div class="ml-auto">
-                              <button type="button" class="ml-auto btn btn-sm btn-danger text-nowrap"
+                              <button type="button" class="ml-auto btn btn-sm btn-secondary text-nowrap"
                                  id="btn_stock_all_clear">
                                  全リセット
                               </button>
@@ -1450,14 +1450,19 @@
                               <div class="d-flex">
                                  <div class="align-self-center">テーマ：</div>
                                  <div class="ml-2 custom-control custom-radio align-self-center">
-                                    <input type="radio" id="normal_theme" name="site_theme"
-                                       class="custom-control-input" checked>
+                                    <input type="radio" id="normal_theme" name="site_theme" class="custom-control-input"
+                                       checked>
                                     <label class="custom-control-label" for="normal_theme">ノーマル</label>
                                  </div>
-                                 <div class="ml-3 custom-control custom-radio align-self-center">
-                                    <input type="radio" id="dark_theme" name="site_theme"
+                                 <div class="ml-4 custom-control custom-radio align-self-center">
+                                    <input type="radio" id="dark_blue_theme" name="site_theme"
                                        class="custom-control-input">
-                                    <label class="custom-control-label" for="dark_theme">ダーク(β)</label>
+                                    <label class="custom-control-label" for="dark_blue_theme">ダークβ</label>
+                                 </div>
+                                 <div class="ml-3 custom-control custom-radio align-self-center">
+                                    <input type="radio" id="dark_blue2_theme" name="site_theme"
+                                       class="custom-control-input">
+                                    <label class="custom-control-label" for="dark_blue2_theme">ダーク(グラデーション)β</label>
                                  </div>
                               </div>
                            </div>
@@ -1801,7 +1806,7 @@
                      <div class="collapse show collapse_content" id="site_FAQ_content">
                         <div class="border-top"></div>
                         <div class="d-flex flex-column px-3" id="site_FAQ_body">
-                           <div class="mt-4">・本当によくあったり、勝手によくある扱いにした質問とその回答<span
+                           <div class="mt-4">本当によくあったり、勝手によくある扱いにした質問とその回答<span
                                  class="font_size_11">（クリックで回答が表示されます）</span></div>
                            <div class="mt-1 mb-3 border-bottom">
                               <div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse"
@@ -2522,10 +2527,10 @@
                      <input type="range" class="align-self-center custom-range coll_slot_range" min="0" max="99"
                         value="0">
                   </div>
-                  <button type="button" class="btn btn-sm btn-outline-info mx-1 btn_slot_max">
+                  <button type="button" class="btn btn-sm btn-outline-success mx-1 btn_slot_max">
                      最大
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-success mx-1 btn_slot_default">
+                  <button type="button" class="btn btn-sm btn-outline-primary mx-1 btn_slot_default">
                      初期値
                   </button>
                   <input type="number" class="form-control form-control-sm coll_slot_input align-self-center" value="0"
@@ -2692,7 +2697,7 @@
             </div>
             <div class="modal-footer">
                <div class="ml-auto">
-                  <button type="button" class="btn btn-sm btn-success" id="btn_start_auto_expand">
+                  <button type="button" class="btn btn-sm btn-primary" id="btn_start_auto_expand">
                      おまかせ配備開始
                   </button>
                   <button type="button" class="ml-3 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
@@ -2721,7 +2726,7 @@
                      </div>
                      <div class="mt-3" id="plane_status_table">
                         <div class="font_size_12 font_color_half text-left">簡易ステータス：</div>
-                        <div class="d-flex plane_status_thead">
+                        <div class="d-flex general_thead_div">
                            <div class="plane_status_anti_air">対空</div>
                            <div class="plane_status_torpedo">雷装</div>
                            <div class="plane_status_bomber">爆装</div>
@@ -2733,7 +2738,7 @@
                            <div class="plane_status_bomber">0</div>
                            <div class="plane_status_radius">5</div>
                         </div>
-                        <div class="d-flex plane_status_thead">
+                        <div class="d-flex general_thead_div">
                            <div class="plane_status_interception">迎撃</div>
                            <div class="plane_status_anti_bomber">対爆</div>
                            <div class="plane_status_avoid">回避補正</div>
@@ -2807,7 +2812,7 @@
             </div>
             <div class="modal-footer">
                <div class="ml-auto">
-                  <button type="button" class="btn btn-sm btn-success" id="btn_save_stock">
+                  <button type="button" class="btn btn-sm btn-primary" id="btn_save_stock">
                      所持数更新
                   </button>
                   <button type="button" class="ml-3 btn btn-sm btn-danger" id="btn_stock_reset">
@@ -2880,7 +2885,7 @@
                <canvas id="detailChart" width="440" height="260"></canvas>
                <div>
                   <table class="text-center" id="detail_table">
-                     <thead>
+                     <thead class="general_thead">
                         <tr>
                            <td>最大</td>
                            <td>最小</td>
@@ -2902,7 +2907,7 @@
                      </tbody>
                   </table>
                   <table class="text-center" id="land_base_detail_table">
-                     <thead>
+                     <thead class="general_thead">
                         <tr>
                            <td class="text_orange font-weight-bold">攻撃機未帰還機多数!</td>
                            <td class="text_deep_orange font-weight-bold">攻撃隊被害甚大!</td>
@@ -2934,7 +2939,7 @@
                </div>
                <div>回</div>
                <div class="ml-auto">
-                  <button type="button" class="btn btn-sm btn-info mr-2" id="btn_calculate_detail">再計算</button>
+                  <button type="button" class="btn btn-sm btn-primary mr-2" id="btn_calculate_detail">再計算</button>
                   <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
                </div>
             </div>
@@ -2999,7 +3004,7 @@
                   <div class="align-self-center" id="sumfleetAntiAir"></div>
                </div>
                <table class="text-center" id="stage2_table">
-                  <thead>
+                  <thead class="general_thead">
                      <tr>
                         <td class="w_40">敵艦</td>
                         <td class="w_20">割合撃墜</td>

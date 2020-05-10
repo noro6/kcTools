@@ -4,6 +4,10 @@ body {
   font-family: "Roboto", "Hiragino Sans W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   background-color: #f0ebe6;
 }
+.body-dark {
+  background: linear-gradient(rgb(53, 55, 68), rgb(12, 15, 25));
+  background-attachment: fixed;
+}
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
@@ -52,8 +56,8 @@ input[type="text"] { font-size: 12px; }
 .pb-0_1 { padding-top: 0.1rem !important; }
 .py-0_5 { padding-top: 0.2rem !important; padding-bottom: 0.2rem !important; }
 .py-1_5 { padding-top: 0.3rem !important; padding-bottom: 0.3rem !important; }
-.bg-dark1 { background: #3b3d3f !important; }
-.bg-dark2 { background: #282828 !important; }
+.bg-dark1 { background: rgb(65, 65, 68) !important; }
+.bg-dark2 { background: rgb(40, 40, 43) !important; }
 .bg-ddd { background-color: #ddd; }
 .bg-ccc { background-color: #ccc; }
 .bg-aaa { background-color: #aaa; }
@@ -143,7 +147,7 @@ input[type="text"] { font-size: 12px; }
 .btn_icon {
   font-size: 18px;
   transition: 0.4s;
-  opacity: 0.4;
+  opacity: 0.5;
 }
 .btn_icon:hover {
   opacity: 1;
@@ -156,7 +160,7 @@ input[type="text"] { font-size: 12px; }
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   border-radius: 0.25rem;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 .general_box_capture{
   border: 1px #ccc solid;
@@ -166,35 +170,67 @@ input[type="text"] { font-size: 12px; }
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
   background-color: rgba(255, 255, 255, 0.965);
 }
+.custom-control-input { cursor: pointer; }
+.custom-control-label { 
+  cursor: pointer;
+  padding-top: .15rem;
+}
+.scroll_thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  border-top: 1px rgba(128, 128, 128, 0.502) solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
+  background-color: rgb(235, 235, 235);
+  font-size: 11px;
+  padding-top: .3rem;
+  padding-bottom: .3rem;
+}
+.scroll_thead-dark { background-color: rgb(60, 60, 68); }
+.general_thead td{
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+  font-size: 11px;
+  background-color: rgba(128, 128, 138, 0.2);
+  border-top: 1px rgba(128, 128, 128, 0.502) solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
+}
+.general_thead_div{
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+  font-size: 11px;
+  background-color: rgba(128, 128, 138, 0.2);
+  border-top: 1px rgba(128, 128, 128, 0.502) solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
+}
+
+/* -----------------------------------
+  dark theme
+----------------------------------- */
 .form-control-dark {
   color: #ddd;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .2);
+  background-color: rgb(40, 40, 45);
 }
 .form-control-dark:focus {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-  background-color: rgba(255, 255, 255, .1);
+  background-color: rgb(40, 40, 45);
   color: #ddd;
 }
 .form-control-dark:disabled {
   cursor: not-allowed;
-  background-color: rgb(20, 20, 23);
-}
-.form-control-dark:read-only {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-.form-control-dark::placeholder {
-  color: #ccc;
-}
-.form-control-dark::-ms-input-placeholder {
-  color: #ccc;
-}
-
-.custom-select-dark {
-  color: #eee;
   background-color: rgba(255, 255, 255, .1);
-  border-color: rgba(255, 255, 255, .1);
+}
+.form-control-dark:-moz-read-only { background-color: rgba(255, 255, 255, .1) !important; }
+.form-control-dark:read-only { background-color: rgba(255, 255, 255, .1) !important; }
+.form-control-dark::placeholder { color: #ccc; }
+.form-control-dark::-ms-input-placeholder { color: #ccc; }
+.custom-select-dark {
+  color: #ccc;
+  background-color: rgb(40, 40, 45) !important;
+  border-color: rgba(255, 255, 255, .3);
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23cccccc' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
 }
 .custom-select-dark:focus {
   border-color: transparent;
@@ -208,51 +244,22 @@ input[type="text"] { font-size: 12px; }
   color: #eee;
   background-color: rgb(55, 55, 62);
 }
-
 .input-group-text-dark {
   color: #ccc;
-  background-color: rgba(255, 255, 255, .2);
+  background-color: rgba(255, 255, 255, .15);
   border-color: rgba(255, 255, 255, .2);
 }
-
 .dropdown-menu-dark {
   background-color: rgba(55, 55, 62, 0.95);
   color: #ccc;
 }
-.dropdown-header-dark {
-  color: #ccc;
-}
+.dropdown-header-dark { color: #ccc; }
+.contents-dark .text-primary { color: #20c0ff !important; }
+.modal-content-dark .text-primary { color: #20c0ff !important; }
+.modal-content-dark { background-color: rgb(45, 45, 52); }
+.modal-header { border-bottom: 1px #80808080 solid; }
+.modal-footer { border-top: 1px #80808080 solid; }
 
-.custom-control-input { cursor: pointer; }
-.custom-control-label {
-  cursor: pointer;
-  padding-top: .15rem;
-}
-
-.modal-content-dark {
-  background-color: rgb(45, 45, 52);
-}
-
-.modal-header {
-  border-bottom: 1px #80808080 solid;
-}
-.modal-footer {
-  border-top: 1px #80808080 solid;
-}
-
-.scroll_thead {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-  background-color: rgb(235, 235, 235);
-  font-size: 11px;
-  padding: .1rem;
-}
-.scroll_thead-dark {
-  background-color: rgb(60, 60, 63);
-}
 
 /* -----------------------------------
   header
@@ -345,9 +352,7 @@ input[type="text"] { font-size: 12px; }
   text-align: center;
   transition: .4s;
 }
-#btn_url_shorten:hover {
-  background-color: #000;
-}
+#btn_url_shorten:hover { background-color: #000; }
 
 /* -----------------------------------
   sideBar
@@ -430,39 +435,35 @@ input[type="text"] { font-size: 12px; }
 .nav-tabs-dark { border-color: #777 !important; }
 #main_contents a.nav-link-dark {
   color: #555 !important;
-  background-color: #2b2b33 !important;
+  background-color: transparent !important;
   border-bottom-color: #777 !important;
 }
 .modal a.nav-link-dark {
   color: #555 !important;
-  background-color: #2b2b33 !important;
+  background-color: transparent !important;
   border-bottom-color: #777 !important;
 }
 #main_contents a.nav-link-dark:hover {
-  background-color: #2b2b33 !important;
-  border-color: #777 !important;
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff80 transparent !important;
   color: #999 !important;
 }
 .modal a.nav-link-dark:hover {
-  background-color: #35353f !important;
-  border-color: #777 !important;
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff80 transparent !important;
   color: #999 !important;
 }
 #main_contents a.nav-link-dark.active {
-  border-color: #777 #777 #2b2b33 #777 !important;
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff transparent !important;
   color: #eee !important;
 }
 .modal a.nav-link-dark.active{
-  border-color: #777 #777 #2b2b33 #777 !important;
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff transparent !important;
   color: #eee !important;
 }
-
-
-
-
-#modal_smart_menu .nav-link {
-  color: #ccc;
-}
+#modal_smart_menu .nav-link { color: #ccc; }
 #modal_smart_menu .nav-link:hover {
   cursor: pointer;
   color: #00ccff;
@@ -473,27 +474,21 @@ input[type="text"] { font-size: 12px; }
   基地航空隊関連 #landBase
 ----------------------------------- */
 .lb_tab { max-width: 500px; }
-.lb_infomation {
-  font-size: 12px;
-}
+.lb_infomation { font-size: 12px; }
 /* 基地札 */
 .ohuda_select {
   font-size: 12px;
   width: 82px;
 }
 /* 制空半径簡易 */
-.lb_sammary {
-  font-size: 12px;
-}
+.lb_sammary { font-size: 12px; }
 /* 必要資材欄 */
 .resource {
   cursor: help;
   transition: 0.2s;
   width: 156px;
 }
-.resource:hover {
-  cursor: help;
-}
+.resource:hover { cursor: help; }
 .resource_img {
   width: 20px;
   height: 20px;
@@ -589,9 +584,7 @@ input[type="text"] { font-size: 12px; }
   opacity: .4;
   transition: .4s;
 }
-.plane_unlock:hover {
-  opacity: 1;
-}
+.plane_unlock:hover { opacity: 1; }
 .btn_remove_plane {
   cursor: pointer;
   transition: 0.4s;
@@ -685,7 +678,7 @@ input[type="text"] { font-size: 12px; }
 }
 /* 艦載機をドラッグした時のスタイル */
 .plane_draggable_hover {
-  background-color: rgba(0, 153, 255, 0.2) !important;
+  background-color: rgba(0, 153, 255, 0.6) !important;
   border: 2px #39b0ff solid !important;
   transition: 0.2s;
 }
@@ -730,14 +723,12 @@ input[type="text"] { font-size: 12px; }
 .enemy_ap:hover { filter: drop-shadow(0 0 3px #969696); }
 /* ドラッグ要素のホバー時 */
 .hover_enemy_content {
-  background-color: rgba(27, 164, 255, 0.4) !important;
+  background-color: rgba(0, 153, 255, 0.6) !important;
   transition: 0.2s;
 }
 #route { width: auto; }
 .formation{ width: 100%; }
-#air_raid_enemies {
-  width: 250px;
-}
+#air_raid_enemies { width: 250px; }
 
 
 /* -----------------------------------
@@ -774,7 +765,7 @@ input[type="text"] { font-size: 12px; }
 }
 .plane_tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 .plane_tr_disabled:hover { background-color: rgba(255, 58, 58, 0.2); }
-.plane_tr:active { background-color: #7ac3ff !important; }
+.plane_tr:active { background-color: rgba(0, 183, 255, 0.9) !important; }
 .plane_td_basic { 
   text-align: center;
   width: 60px;
@@ -802,7 +793,7 @@ input[type="text"] { font-size: 12px; }
   border-radius: .25rem;
 }
 .ship_tr:hover { background-color: rgba(128, 128, 128, 0.3); }
-.ship_tr:active { background-color: #7ac3ff !important; }
+.ship_tr:active { background-color: rgba(0, 183, 255, 0.9) !important; }
 .ship_td_slot {
   text-align: center;
   width: 35px;
@@ -820,7 +811,7 @@ input[type="text"] { font-size: 12px; }
   transition: .2s;
 }
 .enemy_tr:hover { background-color: rgba(128, 128, 128, 0.3); }
-.enemy_tr:active { background-color: #7ac3ff !important; }
+.enemy_tr:active { background-color: rgba(0, 183, 255, 0.9) !important; }
 .enemy_td_ap {
   text-align: center;
   width: 64px;
@@ -937,12 +928,8 @@ input[type="text"] { font-size: 12px; }
   color: #fff !important;
   background-color: rgba(0, 102, 255, 0.4) !important;
 }
-#enemy_pattern_tbody {
-  height: 244px;
-}
-.enemy_pattern_tr {
-  height: 40px;
-}
+#enemy_pattern_tbody { height: 244px; }
+.enemy_pattern_tr { height: 40px; }
 .node { cursor: pointer; }
 .enemy_img {
   height: 38px;
@@ -981,12 +968,6 @@ input[type="text"] { font-size: 12px; }
 .info_table {
   font-size: 12px;
   border-collapse: collapse;
-}
-.info_table thead td{
-  background-color: #80808033;
-  font-size: 11px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
 }
 .info_table tbody td {
   padding: .1rem;
@@ -1047,13 +1028,8 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   border-collapse: collapse;
 }
-#shoot_down_table td { padding: 0.1rem; }
-#shoot_down_table_thead td {
-  font-size: 11px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-  background-color: #80808033;
-}
+#shoot_down_table_tbody td { padding: 0.1rem; }
+#shoot_down_table_tfoot td { padding: 0.1rem; }
 #shoot_down_table .td_name {
   cursor: default;
   width: 78px;
@@ -1073,9 +1049,7 @@ input[type="text"] { font-size: 12px; }
   background-color: #80808033;
   border-bottom: 1px #80808080 solid;
 }
-#shoot_down_table .eap.battle_end {
-  border-bottom: 1px #80808080 solid;
-}
+#shoot_down_table .eap.battle_end { border-bottom: 1px #80808080 solid; }
 #shoot_down_table .tr_eap td{ border-top:1px #80808033 solid; }
 #shoot_down_table .tr_cond td{
   border-top:1px #80808080 solid;
@@ -1083,6 +1057,7 @@ input[type="text"] { font-size: 12px; }
 }
 .progress_area { cursor: pointer; }
 .progress_label {
+  opacity: 0.9;
   text-align: right;
   font-size: 12px;
   width: 90px;
@@ -1113,13 +1088,6 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   border-collapse: collapse;
 }
-#rate_table thead td {
-  cursor: default;
-  background-color: #80808033;
-  font-size: 11px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-}
 #rate_table tbody td {
   padding: .1rem;
   border-top:1px #80808033 solid;
@@ -1136,21 +1104,12 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   border-collapse: collapse;
 }
-#enemy_shoot_down_table thead td {
-  cursor: default;
-  background-color: #80808033;
-  font-size: 11px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-}
 #enemy_shoot_down_table tbody td {
   cursor: default;
   padding: .1rem;
   border-top:1px #80808033 solid;
 }
-#enemy_shoot_down_tbody .td_plane_name {
-  font-size: 11px;
-}
+#enemy_shoot_down_tbody .td_plane_name { font-size: 11px; }
 #enemy_shoot_down_tbody td{ border-top:1px #80808033 solid; }
 #enemy_shoot_down_tbody tr:last-child{ border-bottom:1px #80808080 solid; }
 #enemy_shoot_down_tbody .last_slot { border-bottom: 1px #80808080 solid; }
@@ -1163,16 +1122,12 @@ input[type="text"] { font-size: 12px; }
   text-align: left;
   border-right: 1px #80808080 solid;
 }
-.td_detail_slot {
-  cursor: pointer !important;
-}
+.td_detail_slot { cursor: pointer !important; }
 #enemy_shoot_down_tbody .td_detail_slot {
   opacity: 0.5;
   transition: .4s;
 }
-#enemy_shoot_down_tbody .td_detail_slot:hover {
-  opacity: 1;
-}
+#enemy_shoot_down_tbody .td_detail_slot:hover { opacity: 1; }
 
 /* ------------------------------
   詳細設定 #config
@@ -1198,9 +1153,7 @@ input[type="text"] { font-size: 12px; }
   border-bottom: 1px #80808033 solid;
   transition: .2s;
 }
-.stock_tr:hover {
-  background-color: rgba(128, 128, 128, 0.1);
-}
+.stock_tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 .stock_td_type { width: 10%; }
 .stock_td_name { width: 40%; }
 .stock_td_aa { width: 20%; }
@@ -1215,13 +1168,6 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   text-align: center;
 }
-.plane_status_thead {
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-  background-color: #80808033;
-  font-size: 11px;
-  padding: .1rem;
-}
 .plane_status_anti_air { width: 25%; }
 .plane_status_torpedo { width: 25%; }
 .plane_status_bomber { width: 25%; }
@@ -1230,9 +1176,7 @@ input[type="text"] { font-size: 12px; }
 .plane_status_anti_bomber { width: 33%; }
 .plane_status_avoid { width: 33%; }
 
-.remodel_label {
-  color: rgb(0, 200, 200);
-}
+.remodel_label { color: rgb(0, 200, 200); }
 .img_plane_card {
   width: 240px;
   height: 240px;
@@ -1250,24 +1194,12 @@ input[type="text"] { font-size: 12px; }
   border-collapse: collapse;
 }
 #detail_table td { padding: 0.2rem; }
-#detail_table thead td {
-  font-size: 12px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-  background-color: #80808033;
-}
 #land_base_detail_table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
 }
 #land_base_detail_table td { padding: 0.2rem; }
-#land_base_detail_table thead td {
-  font-size: 12px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-  background-color: #80808033;
-}
 #detail_calculate_count { width: 120px; }
 
 
@@ -1279,37 +1211,17 @@ input[type="text"] { font-size: 12px; }
   table-layout: fixed;
   border-collapse: collapse;
 }
-#stage2_table thead td {
-  font-size: 12px;
-  border-top: 1px #80808080 solid;
-  border-bottom: 1px #80808080 solid;
-  background-color: #80808033;
-}
 #stage2_table tbody td {
   padding: .1rem;
   border-bottom:1px #80808033 solid;
 }
-#stage2_table tbody tr:hover {
-  background-color: rgba(128, 128, 128, 0.1);
-}
-.stage2_table_death {
-  background-color: rgba(255, 10, 10, 0.1) !important;
-}
-.stage2_table_death:hover {
-  background-color: rgba(255, 10, 10, 0.2) !important;
-}
-.stage2_table_half {
-  background-color: rgba(255, 255, 10, 0.1) !important;
-}
-.stage2_table_half:hover {
-  background-color: rgba(255, 255, 10, 0.2) !important;
-}
-#stage2_detail_slot {
-  width: 120px;
-}
-#free_modify input[type="number"] {
-  width: 100px;
-}
+#stage2_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+.stage2_table_death { background-color: rgba(255, 10, 10, 0.1) !important; }
+.stage2_table_death:hover { background-color: rgba(255, 10, 10, 0.2) !important; }
+.stage2_table_half { background-color: rgba(255, 255, 10, 0.1) !important; }
+.stage2_table_half:hover { background-color: rgba(255, 255, 10, 0.2) !important; }
+#stage2_detail_slot { width: 120px; }
+#free_modify input[type="number"] { width: 100px; }
 
 /* ------------------------------
   オートモード #auto_expand
@@ -1360,13 +1272,13 @@ input[type="text"] { font-size: 12px; }
 .history_item {
   cursor: pointer;
   transition: .2s;
-  border-top: 1px solid rgba(128, 128, 128, 0.5);
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
 }
 .history_item:not(.collapsed) { background-color: rgba(128, 128, 128, 0.1) !important; }
 .history_item:hover { background-color: rgba(128, 128, 128, 0.1); }
 .history_item_no_content { cursor: default; }
 .history_content { background-color: rgba(128, 128, 128, 0.1); }
-.ver_log .history_item:last-of-type { border-bottom: 1px solid #dee2e6; }
+/* .ver_log .history_item:last-of-type { border-bottom: 1px solid rgba(128, 128, 128, 0.3); } */
 
 
 
@@ -1417,11 +1329,11 @@ input[type="text"] { font-size: 12px; }
 .airStatus2 { background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent); }
 .airStatus3 { background: linear-gradient(.25turn, transparent, rgba(255, 150, 0, .1), transparent); }
 .airStatus4 { background: linear-gradient(.25turn, transparent, rgba(255, 100, 100, .1), transparent); }
-.bar_status0 { background-color:rgba(60, 170, 30, 0.4); border:1px solid rgba(60, 170, 30, 0.8); }
-.bar_status1 { background-color:rgba(140, 205, 150, 0.4); border:1px solid rgba(140, 205, 150, 0.8); }
-.bar_status2 { background-color:rgba(255, 255, 80, 0.4); border:1px solid rgba(255, 255,  0, 0.8); }
-.bar_status3 { background-color:rgba(255, 150, 50, 0.4); border:1px solid rgba(255, 150, 50, 0.8); }
-.bar_status4 { background-color: rgba(255, 80, 80, 0.4); border:1px solid rgba(255, 80, 80, 0.8); }
+.bar_status0 { background-color:rgba(60, 170, 30, 0.45); border:1px solid rgba(60, 170, 30, 0.8); }
+.bar_status1 { background-color:rgba(140, 205, 150, 0.45); border:1px solid rgba(140, 205, 150, 0.8); }
+.bar_status2 { background-color:rgba(255, 255, 80, 0.45); border:1px solid rgba(255, 255,  0, 0.8); }
+.bar_status3 { background-color:rgba(255, 150, 50, 0.45); border:1px solid rgba(255, 150, 50, 0.8); }
+.bar_status4 { background-color: rgba(255, 80, 80, 0.45); border:1px solid rgba(255, 80, 80, 0.8); }
 .bg_status0 { background-color:rgba(60, 170, 30, 0.4); }
 .bg_status1 { background-color:rgba(140, 205, 150, 0.4); }
 .bg_status2 { background-color:rgba(255, 255, 20, 0.4); }
