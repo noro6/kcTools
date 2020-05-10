@@ -8,6 +8,10 @@ body {
   background: linear-gradient(rgb(53, 55, 68), rgb(12, 15, 25));
   background-attachment: fixed;
 }
+.body-deep-blue {
+  background: linear-gradient(rgb(10, 30, 70), rgb(5, 10, 20));
+  background-attachment: fixed;
+}
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
@@ -210,12 +214,12 @@ input[type="text"] { font-size: 12px; }
 .form-control-dark {
   color: #ddd;
   border-color: rgba(255, 255, 255, .2);
-  background-color: rgb(40, 40, 45);
+  background-color: rgb(40, 40, 45, 0.4);
 }
 .form-control-dark:focus {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-  background-color: rgb(40, 40, 45);
+  background-color: rgb(40, 40, 45, 0.4);
   color: #ddd;
 }
 .form-control-dark:disabled {
@@ -228,7 +232,7 @@ input[type="text"] { font-size: 12px; }
 .form-control-dark::-ms-input-placeholder { color: #ccc; }
 .custom-select-dark {
   color: #ccc;
-  background-color: rgb(40, 40, 45) !important;
+  background-color: rgb(40, 40, 45, 0.4) !important;
   border-color: rgba(255, 255, 255, .3);
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23cccccc' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
 }
@@ -257,8 +261,8 @@ input[type="text"] { font-size: 12px; }
 .contents-dark .text-primary { color: #20c0ff !important; }
 .modal-content-dark .text-primary { color: #20c0ff !important; }
 .modal-content-dark { background-color: rgb(45, 45, 52); }
-.modal-header { border-bottom: 1px #80808080 solid; }
-.modal-footer { border-top: 1px #80808080 solid; }
+.modal-header { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
+.modal-footer { border-top: 1px rgba(128, 128, 128, 0.502) solid; }
 
 
 /* -----------------------------------
@@ -971,47 +975,47 @@ input[type="text"] { font-size: 12px; }
 }
 .info_table tbody td {
   padding: .1rem;
-  border-top:1px #80808033 solid;
+  border-top:1px rgba(128, 128, 128, 0.2) solid;
 }
-.info_table .info_warning { border-bottom: 1px #80808080 solid; }
+.info_table .info_warning { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 .info_table .info_name {
   width: 88px;
-  border-bottom: 1px #80808080 solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .info_table .info_plane { text-align: left; }
 .info_table .info_slot {
   width: 72px;
   padding: .1rem .25rem;
-  border-left:1px #80808033 solid;
+  border-left:1px rgba(128, 128, 128, 0.2) solid;
 }
 .info_table .info_ap {
   width: 36px;
   padding: .1rem .25rem;
-  border-left:1px #80808033 solid;
+  border-left:1px rgba(128, 128, 128, 0.2) solid;
 }
 .info_table .info_sumAp {
   width: 36px;
   padding: .1rem .25rem;
-  border-left:1px #80808033 solid;
-  border-bottom: 1px #80808080 solid;
+  border-left:1px rgba(128, 128, 128, 0.2) solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .info_table .info_range {
   width: 72px;
-  border-left:1px #80808033 solid;
-  border-bottom: 1px #80808080 solid;
+  border-left:1px rgba(128, 128, 128, 0.2) solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .info_table .info_defAp {
   width: 72px;
-  border-left:1px #80808033 solid;
-  border-bottom: 1px #80808080 solid;
+  border-left:1px rgba(128, 128, 128, 0.2) solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
-.info_table tbody .last_slot { border-bottom: 1px #80808080 solid; }
+.info_table tbody .last_slot { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 .info_table tbody .info_fleetAp {
   width: 72px;
-  border-left:1px #80808033 solid;
-  border-bottom:1px #80808080 solid;
+  border-left:1px rgba(128, 128, 128, 0.2) solid;
+  border-bottom:1px rgba(128, 128, 128, 0.502) solid;
 }
-#lb_info_table tbody .slot4 td{ border-bottom: 1px #80808080 solid; }
+#lb_info_table tbody .slot4 td{ border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 #input_summary {
   height: calc( 1.4em * 15 );
   max-height: calc( 1.4em * 20 );
@@ -1039,21 +1043,21 @@ input[type="text"] { font-size: 12px; }
   font-size: 11px;
   width: 168px;
 }
-#shoot_down_table_tbody td{ border-top:1px #80808033 solid; }
+#shoot_down_table_tbody td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
 #shoot_down_table_tbody .td_plane_name { text-align: left; }
 #shoot_down_table .td_battle { max-width: 120px; }
 #shoot_down_table_tbody .td_battle { cursor: pointer; }
-#shoot_down_table .battle1 { border-left: 1px #80808080 solid; }
-#shoot_down_table .tr_fap td{ border-top:1px #80808080 solid; }
+#shoot_down_table .battle1 { border-left: 1px rgba(128, 128, 128, 0.502) solid; }
+#shoot_down_table .tr_fap td{ border-top:1px rgba(128, 128, 128, 0.502) solid; }
 #shoot_down_table .fap.battle_end {
-  background-color: #80808033;
-  border-bottom: 1px #80808080 solid;
+  background-color: rgba(128, 128, 128, 0.2);
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
-#shoot_down_table .eap.battle_end { border-bottom: 1px #80808080 solid; }
-#shoot_down_table .tr_eap td{ border-top:1px #80808033 solid; }
+#shoot_down_table .eap.battle_end { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
+#shoot_down_table .tr_eap td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
 #shoot_down_table .tr_cond td{
-  border-top:1px #80808080 solid;
-  border-bottom:1px #80808080 solid;
+  border-top:1px rgba(128, 128, 128, 0.502) solid;
+  border-bottom:1px rgba(128, 128, 128, 0.502) solid;
 }
 .progress_area { cursor: pointer; }
 .progress_label {
@@ -1090,15 +1094,15 @@ input[type="text"] { font-size: 12px; }
 }
 #rate_table tbody td {
   padding: .1rem;
-  border-top:1px #80808033 solid;
+  border-top:1px rgba(128, 128, 128, 0.2) solid;
 }
 .rate_tr { transition: .15s; }
 .rate_td_name { width: 12%; }
 .rate_td_normal { width: 10%; }
-.rate_tr_border_top > td { border-top: 1px #80808080 solid !important; }
-.rate_tr_border_bottom > td { border-top: 1px #80808080 solid !important; }
-#rate_row_7 { border-bottom: 1px #80808080 solid !important; }
-#rate_row_8 { border-bottom: 1px #80808080 solid !important; }
+.rate_tr_border_top > td { border-top: 1px rgba(128, 128, 128, 0.502) solid !important; }
+.rate_tr_border_bottom > td { border-top: 1px rgba(128, 128, 128, 0.502) solid !important; }
+#rate_row_7 { border-bottom: 1px rgba(128, 128, 128, 0.502) solid !important; }
+#rate_row_8 { border-bottom: 1px rgba(128, 128, 128, 0.502) solid !important; }
 
 #enemy_shoot_down_table {
   font-size: 12px;
@@ -1107,20 +1111,20 @@ input[type="text"] { font-size: 12px; }
 #enemy_shoot_down_table tbody td {
   cursor: default;
   padding: .1rem;
-  border-top:1px #80808033 solid;
+  border-top:1px rgba(128, 128, 128, 0.2) solid;
 }
 #enemy_shoot_down_tbody .td_plane_name { font-size: 11px; }
-#enemy_shoot_down_tbody td{ border-top:1px #80808033 solid; }
-#enemy_shoot_down_tbody tr:last-child{ border-bottom:1px #80808080 solid; }
-#enemy_shoot_down_tbody .last_slot { border-bottom: 1px #80808080 solid; }
+#enemy_shoot_down_tbody td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
+#enemy_shoot_down_tbody tr:last-child{ border-bottom:1px rgba(128, 128, 128, 0.502) solid; }
+#enemy_shoot_down_tbody .last_slot { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 #enemy_shoot_down_tbody .td_name {
   width: 160px;
-  border-bottom: 1px #80808080 solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 #enemy_shoot_down_tbody .td_plane_name {
   width: 140px;
   text-align: left;
-  border-right: 1px #80808080 solid;
+  border-right: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .td_detail_slot { cursor: pointer !important; }
 #enemy_shoot_down_tbody .td_detail_slot {
@@ -1150,7 +1154,7 @@ input[type="text"] { font-size: 12px; }
 }
 .stock_tr {
   cursor: pointer;
-  border-bottom: 1px #80808033 solid;
+  border-bottom: 1px rgba(128, 128, 128, 0.2) solid;
   transition: .2s;
 }
 .stock_tr:hover { background-color: rgba(128, 128, 128, 0.1); }
@@ -1213,7 +1217,7 @@ input[type="text"] { font-size: 12px; }
 }
 #stage2_table tbody td {
   padding: .1rem;
-  border-bottom:1px #80808033 solid;
+  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #stage2_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 .stage2_table_death { background-color: rgba(255, 10, 10, 0.1) !important; }

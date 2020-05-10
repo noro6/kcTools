@@ -1044,16 +1044,25 @@ function initialize(callback) {
     $('#normal_theme').prop('checked', false);
     $('#dark_blue_theme').prop('checked', true);
     $('#dark_blue2_theme').prop('checked', false);
+    $('#deep_blue_theme').prop('checked', false);
   }
   else if (setting.themeColor === 'dark-blue2') {
     $('#normal_theme').prop('checked', false);
     $('#dark_blue_theme').prop('checked', false);
     $('#dark_blue2_theme').prop('checked', true);
+    $('#deep_blue_theme').prop('checked', false);
+  }
+  else if (setting.themeColor === 'deep-blue') {
+    $('#normal_theme').prop('checked', false);
+    $('#dark_blue_theme').prop('checked', false);
+    $('#dark_blue2_theme').prop('checked', false);
+    $('#deep_blue_theme').prop('checked', true);
   }
   else {
     $('#normal_theme').prop('checked', true);
     $('#dark_blue_theme').prop('checked', false);
     $('#dark_blue2_theme').prop('checked', false);
+    $('#deep_blue_theme').prop('checked', false);
   }
   site_theme_Changed(false);
 
@@ -8781,20 +8790,28 @@ function btn_reset_selected_ship_history_Clicked() {
  * @param {boolean} withCalculate 計算を起こさない場合 false 計算を起こす場合は未指定でOK
  */
 function site_theme_Changed(withCalculate = true) {
+
+  // いったん解除
+  document.body.classList.remove('body-dark');
+  document.body.classList.remove('body-deep-blue');
+
   if (!$('#normal_theme').prop('checked')) {
     if ($('#dark_blue_theme').prop('checked')) {
       setting.themeColor = 'dark-blue';
-      document.body.classList.remove('body-dark');
       document.body.style.backgroundColor = "#20222d";
     }
     if ($('#dark_blue2_theme').prop('checked')) {
       setting.themeColor = 'dark-blue2';
       document.body.classList.add('body-dark');
     }
+    if ($('#deep_blue_theme').prop('checked')) {
+      setting.themeColor = 'deep-blue';
+      document.body.classList.add('body-deep-blue');
+    }
     mainColor = "#e0e0e0";
 
     for (const element of document.getElementsByClassName('contents')) {
-      element.style.backgroundColor = "#ffffff0c";
+      element.style.backgroundColor = "rgba(255, 255, 255, 0.047)";
       element.classList.add('contents-dark');
     }
     for (const element of document.getElementsByClassName('form-control')) {
@@ -8846,10 +8863,9 @@ function site_theme_Changed(withCalculate = true) {
   else {
     setting.themeColor = 'normal';
     document.body.style.backgroundColor = "#f0ebe6";
-    document.body.classList.remove('body-dark');
     mainColor = "#000000";
     for (const element of document.getElementsByClassName('contents')) {
-      element.style.backgroundColor = "#fffffff0";
+      element.style.backgroundColor = "rgba(255, 255, 255, 0.941)";
       element.classList.remove('contents-dark');
     }
     for (const element of document.getElementsByClassName('form-control')) {
