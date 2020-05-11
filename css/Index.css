@@ -183,6 +183,7 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   padding-top: .15rem;
 }
+.custom-control-label::before { background-color: rgba(255, 255, 255, 0.3); }
 .scroll_thead {
   position: -webkit-sticky;
   position: sticky;
