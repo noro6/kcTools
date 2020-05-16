@@ -78,7 +78,11 @@ let usedPlane = [];
 // Chart描画用データ
 let chartDataSet = null;
 
+// メイン文字色
 let mainColor = "#000000";
+
+// undo用
+let undoHisotry = { index: 0, histories: [] };
 
 /*
   プリセットメモ
@@ -3463,9 +3467,23 @@ function calculateInit(objectData) {
   // 敵艦情報更新
   updateEnemyFleetInfo(objectData.battleData);
 
+  // ログなど
+  const currentData = encodePreset();
+
+  // 現在のundo index 位置より若い履歴を削除
+  if (undoHisotry.index !== 0) {
+    undoHisotry.histories.splice(0, undoHisotry.index);
+  }
+  // 0番目に挿入
+  undoHisotry.histories.unshift(currentData);
+  // 20件制限
+  undoHisotry.histories = undoHisotry.histories.splice(0, 20);
+  document.getElementById('btn_undo').classList.remove('disabled');
+  document.getElementById('btn_redo').classList.add('disabled');
+  undoHisotry.index = 0;
+
   // 自動保存する場合
   if (document.getElementById('auto_save')['checked']) {
-    const currentData = encodePreset();
     saveLocalStorage('autoSaveData', currentData);
 
     setting.autoSave = true;
@@ -3492,7 +3510,7 @@ function calculateInit(objectData) {
         0,
         `backup-${nowDate.join("")}${nowTime.join("")}`,
         currentData,
-        `${nowDate.join("/")} ${nowTime.join(":")}の編成\r\n\r\n${$('#input_summary').val()}`
+        `${nowDate.join("/")} ${nowTime.join(":")}の編成`
       ];
 
       // 同じデータ削除
@@ -7409,10 +7427,12 @@ function plane_unlock_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function remodelSelect_Changed($this) {
-  const remodel = Math.min(castInt($this.find('.remodel_item_selected').data('remodel')), 10);
-  $this.removeClass('remodel_item_selected');
-  $this.find('.remodel_value').text(remodel);
-  calculate();
+  if ($this.find('.remodel_item_selected').length) {
+    const remodel = Math.min(castInt($this.find('.remodel_item_selected').data('remodel')), 10);
+    $this.removeClass('remodel_item_selected');
+    $this.find('.remodel_value').text(remodel);
+    calculate();
+  }
 }
 
 /**
@@ -7747,8 +7767,10 @@ function enemy_ap_input_Changed($this) {
  * @param {JqueryDomObject} $this
  */
 function enemy_ap_select_parent_Close($this) {
-  $this.find('.enemy_ap').text($this.find('.enemy_ap_input').val());
-  calculate();
+  if (!$this.find('.enemy_ap_input').prop('disabled')) {
+    $this.find('.enemy_ap').text($this.find('.enemy_ap_input').val());
+    calculate();
+  }
 }
 
 /**
@@ -9238,6 +9260,50 @@ function btn_deckBuilder_Clicked() {
 }
 
 /**
+ * 元に戻すボタンクリック
+ */
+function btn_undo_Clicked() {
+  const nowIndex = undoHisotry.index + 1;
+  if (nowIndex >= undoHisotry.histories.length || document.getElementById('btn_undo').classList.contains('disabled')) return;
+  const tmp = undoHisotry.histories.concat();
+
+  expandMainPreset(decodePreset(undoHisotry.histories[nowIndex]));
+  calculate();
+
+  undoHisotry.index = nowIndex;
+  undoHisotry.histories = tmp;
+  // 次回できなさそうなら無効化
+  if (nowIndex + 1 === undoHisotry.histories.length) {
+    document.getElementById('btn_undo').classList.add('disabled');
+  }
+
+  document.getElementById('btn_redo').classList.remove('disabled');
+}
+
+/**
+ * やりなおすボタンクリック
+ */
+function btn_redo_Clicked() {
+  const nowIndex = undoHisotry.index - 1;
+  if (nowIndex < 0 || document.getElementById('btn_redo').classList.contains('disabled')) return;
+  const tmp = undoHisotry.histories.concat();
+
+  expandMainPreset(decodePreset(undoHisotry.histories[undoHisotry.index - 1]));
+  calculate();
+
+  undoHisotry.index = nowIndex;
+  undoHisotry.histories = tmp;
+
+  // 次回できなさそうなら無効化
+  if (nowIndex - 1 < 0) {
+    document.getElementById('btn_redo').classList.add('disabled');
+  }
+  else{
+    document.getElementById('btn_redo').classList.remove('disabled');
+  }
+}
+
+/**
  * URL短縮ボタンクリック
  */
 async function btn_url_shorten_Clicked() {
@@ -9607,11 +9673,23 @@ function scrollContent($destination) {
 ==================================*/
 $(function () {
   // 画面初期化
-  initialize(() => { calculate(); });
+  initialize(() => {
+    calculate();
+    document.getElementById('btn_undo').classList.add('disabled');
+    document.getElementById('btn_redo').classList.add('disabled');
+  });
 
   // イベント貼り付け
   $(document).keyup(function (e) { if (isCtrlPress && e.keyCode === 17) isCtrlPress = false; });
-  $(document).keydown(function (e) { if (!isCtrlPress && e.keyCode === 17) isCtrlPress = true; });
+  $(document).keydown(function (e) {
+    if (!isCtrlPress && e.keyCode === 17) isCtrlPress = true;
+    if (isCtrlPress && e.key === "z") {
+      btn_undo_Clicked();
+    }
+    else if (isCtrlPress && e.key === "y") {
+      btn_redo_Clicked();
+    }
+  });
   $('#modal_version_inform').on('hide.bs.modal', varsion_Closed);
   $('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
   $('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
@@ -9784,6 +9862,8 @@ $(function () {
   $('#btn_auto_expand').click(btn_auto_expand_Clicked);
   $('#btn_twitter').click(btn_twitter_Clicked);
   $('#btn_deckBuilder').click(btn_deckBuilder_Clicked);
+  $('#btn_undo').click(btn_undo_Clicked);
+  $('#btn_redo').click(btn_redo_Clicked);
   $('#smart_menu').click(menu_small_Clicked);
   $('#input_url').click(function () { $(this).select(); });
   $('#btn_url_shorten').click(btn_url_shorten_Clicked);
