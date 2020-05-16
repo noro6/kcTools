@@ -394,6 +394,27 @@ input[type="text"] { font-size: 12px; }
 }
 #btn_url_shorten:hover { background-color: #000; }
 
+#btn_undo {
+ cursor: pointer;
+ transition: .4s;
+ opacity: .6;
+}
+#btn_undo:hover { opacity: 1; }
+#btn_undo.disabled { 
+  cursor: default; 
+  opacity: .2; 
+}
+#btn_redo {
+  cursor: pointer;
+  transition: .4s;
+  opacity: .6;
+}
+#btn_redo:hover { opacity: 1; }
+#btn_redo.disabled {
+  cursor: default; 
+  opacity: .2; 
+}
+
 /* -----------------------------------
   sideBar
 ----------------------------------- */

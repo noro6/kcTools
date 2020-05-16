@@ -131,30 +131,38 @@
          </div>
       </div>
       <a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2" href="#">制空権シミュレータ</a>
-      <div class="mx-1 px-2 py-1" id="btn_preset_all" data-toggle="tooltip" data-html="true"
+      <div class="mx-1 px-2 py-1 my-1" id="btn_preset_all" data-toggle="tooltip" data-html="true"
          title="現在の編成を保存したり、保存した編成を展開したりできます。<br>デッキビルダー形式データの取り込みもこちらから。">
          <i class="fas fa-save"></i>
          <span class="d-none d-lg-inline  ml-1">編成保存・展開</span>
          <span class="d-lg-none ml-1">編成保存</span>
       </div>
-      <div class="mx-1 px-2 py-1" id="btn_auto_expand" data-toggle="tooltip" title="制空値を指定し、おまかせで艦載機を配備します。">
+      <div class="mx-1 px-2 py-1 my-1" id="btn_auto_expand" data-toggle="tooltip" title="制空値を指定し、おまかせで艦載機を配備します。">
          <i class="fas fa-robot"></i>
          <span class="d-none d-lg-inline ml-1">おまかせ配備</span>
          <span class="d-lg-none ml-1">おまかせ</span>
       </div>
-      <div class="mx-1 px-2 py-1" id="btn_twitter" data-toggle="tooltip" title="現在の編成をTwitterでつぶやいて共有できます。">
+      <div class="mx-1 px-2 py-1 my-1" id="btn_twitter" data-toggle="tooltip" title="現在の編成をTwitterでつぶやいて共有できます。">
          <i class="fab fa-twitter"></i>
          <span class="d-none d-lg-inline ml-1">編成をツイート</span>
          <span class="d-lg-none ml-1">ツイート</span>
       </div>
-      <div class="mx-1 px-2 py-1" id="btn_deckBuilder" data-toggle="tooltip" title="現在の編成をデッキビルダーで開きます。">
-         <i class="fas fa-share-square"></i>
+      <div class="mx-1 px-2 py-1 my-1 d-none d-sm-inline" id="btn_deckBuilder" data-toggle="tooltip" title="現在の編成をデッキビルダーで開きます。">
+         <i class="fas fa-share-alt"></i>
          <span class="d-none d-lg-inline ml-1">デッキビルダーで開く</span>
          <span class="d-lg-none ml-1">デッキビルダー</span>
       </div>
-      <div class="d-none d-md-flex mx-1 px-2 py-1 flex-grow-1" id="url_shortener">
+      <div class="d-flex font_size_20 my-1 mx-2">
+         <div id="btn_undo" data-toggle="tooltip" title="元に戻す（直前の入力をなかったことにします。）">
+            <i class="fas fa-undo-alt d-table-cell align-middle"></i>
+         </div>
+         <div class="ml-3" id="btn_redo" data-toggle="tooltip" title="やりなおす（直前の「元に戻す」操作をなかったことにします。）">
+            <i class="fas fa-redo-alt d-table-cell align-middle"></i>
+         </div>
+      </div>
+      <div class="d-none d-md-flex mx-1 px-2 py-1 my-1 flex-grow-1" id="url_shortener">
          <input class="form-control form-control-dark align-self-center" type="text" id="input_url" placeholder="">
-         <div class="ml-2 align-self-center" id="btn_url_shorten">URL短縮</div>
+         <div class="ml-2 align-self-center text-nowrap" id="btn_url_shorten">URL短縮</div>
       </div>
    </nav>
    <div class="container-fluid px-0">
