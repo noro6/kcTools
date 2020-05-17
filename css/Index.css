@@ -416,6 +416,12 @@ input[type="text"] { font-size: 12px; }
   cursor: default; 
   opacity: .2; 
 }
+#input_url {
+  font-size: 12px;
+  overflow: hidden;
+  resize: none;
+  height: 32px;
+}
 
 /* -----------------------------------
   sideBar

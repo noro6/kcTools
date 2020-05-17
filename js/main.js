@@ -9240,19 +9240,6 @@ async function btn_twitter_Clicked() {
 }
 
 /**
- * URL短縮コンソール用
- * @param {string} url 
- */
-async function getShortURL(url) {
-  await postURLData(url)
-    .then(json => {
-      if (json.error || !json.shortLink) console.log(json);
-      else console.log(json.shortLink);
-    })
-    .catch(error => console.error(error));
-}
-
-/**
  * デッキビルダーボタンクリック
  */
 function btn_deckBuilder_Clicked() {
@@ -9298,7 +9285,7 @@ function btn_redo_Clicked() {
   if (nowIndex - 1 < 0) {
     document.getElementById('btn_redo').classList.add('disabled');
   }
-  else{
+  else {
     document.getElementById('btn_redo').classList.remove('disabled');
   }
 }
@@ -9322,7 +9309,22 @@ async function btn_url_shorten_Clicked() {
   }
   else if (!url.match(/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
     textbox.value = "";
-    textbox.placeholder = "URLが不正です。";
+
+    // 隠し機能
+    // デッキビルダー形式チェック
+    const preset = readDeckBuilder(url);
+    if (preset) {
+      expandMainPreset(preset, preset[0][0].length > 0, true, false);
+      calculate();
+      textbox.placeholder = "編成の反映に成功しました。";
+    }
+    // 所持装備チェック
+    else if (readEquipmentJson(url)) {
+      setPlaneStockTable();
+      calculate();
+      textbox.placeholder = "所持装備の反映に成功しました。";
+    }
+    else textbox.placeholder = "URLが不正です。";
   }
   else if (!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
     await postURLData(url)
