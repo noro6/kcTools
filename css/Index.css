@@ -396,7 +396,8 @@ input[type="text"] { font-size: 12px; }
 
 #btn_undo {
  cursor: pointer;
- transition: .4s;
+  color: rgb(255, 255, 255);
+  transition: .3s;
  opacity: .6;
 }
 #btn_undo:hover { opacity: 1; }
@@ -406,7 +407,8 @@ input[type="text"] { font-size: 12px; }
 }
 #btn_redo {
   cursor: pointer;
-  transition: .4s;
+  color: rgb(255, 255, 255);
+  transition: .3s;
   opacity: .6;
 }
 #btn_redo:hover { opacity: 1; }
