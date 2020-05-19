@@ -580,6 +580,9 @@ function initializeSetting() {
  */
 function initialize(callback) {
 
+  console.time('vss');
+  console.time('a');
+
   let fragment = document.createDocumentFragment();
   let text = '';
 
@@ -616,11 +619,17 @@ function initialize(callback) {
     IMAGES["enemy" + id] = img;
   }
 
+  console.timeEnd('a');
+  console.time('b');
+
   // URLパラメータチェック
   const params = getUrlParams();
 
   // 設定データ読み込み
   initializeSetting();
+
+  console.timeEnd('b');
+  console.time('c');
 
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
@@ -672,6 +681,9 @@ function initialize(callback) {
     }
   }
 
+  console.timeEnd('c');
+  console.time('d');
+
   // 機体カテゴリ初期化
   setPlaneType(document.getElementById('plane_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id));
   setPlaneType(document.getElementById('stock_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id));
@@ -694,6 +706,9 @@ function initialize(callback) {
   createPlaneTable(basicSortedPlanes);
   createShipTable([0]);
   createEnemyTable([0]);
+
+  console.timeEnd('d');
+  console.time('e');
 
   // 改修値選択欄生成
   text = '';
@@ -730,6 +745,8 @@ function initialize(callback) {
     if (n.length) n[0].textContent = `第${Math.floor(i / 4) + 1}基地航空隊`;
   }
 
+  console.timeEnd('e');
+  console.time('f');
 
   // 艦娘　複製
   text = document.getElementsByClassName('ship_tab')[0].innerHTML;
@@ -752,6 +769,9 @@ function initialize(callback) {
   tempList = document.getElementsByClassName('display_ship_count');
   for (const e of tempList) e.value = 2;
 
+  console.timeEnd('f');
+  console.time('g');
+
   // 敵艦隊欄複製
   text = $('#battle_container').html();
   for (let index = 1; index < 10; index++) $('#battle_container').append(text);
@@ -762,6 +782,9 @@ function initialize(callback) {
     $(e).find('.custom-control-input').attr('id', 'grand_' + i);
     $(e).find('.custom-control-label').attr('for', 'grand_' + i);
   });
+
+  console.timeEnd('g');
+  console.time('h');
 
   // 戦闘回数初期化
   $('#battle_count').val(1);
@@ -788,6 +811,9 @@ function initialize(callback) {
     if (i === 6) $(e).find('.progress_label').text('本隊');
     if (i === 7) $(e).find('.progress_label').text('防空');
   });
+
+  console.timeEnd('h');
+  console.time('i');
 
   // 撃墜テーブルヘッダフッタ10戦分生成
   text = '';
@@ -835,6 +861,9 @@ function initialize(callback) {
     else if (i >= 6) $(e).addClass('rate_tr_border_top rate_tr_border_bottom');
   });
 
+  console.timeEnd('i');
+  console.time('j');
+
   // 詳細設定 初期熟練度欄複製
   text = $('#init_prof_parent').html();
   const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
@@ -849,6 +878,9 @@ function initialize(callback) {
   for (const v of setting.defaultProf) {
     proficiency_Changed($('.init_prof[data-typeid="' + v.id + '"').find('.prof_option[data-prof="' + v.prof + '"]').parent(), true);
   }
+
+  console.timeEnd('j');
+  console.time('k');
 
   // コンテンツ順序復帰
   if (setting.contentsOrder.length) {
@@ -871,6 +903,9 @@ function initialize(callback) {
       $sideIndex.append($li);
     }
   }
+
+  console.timeEnd('k');
+  console.time('l');
 
   // 編成プリセット欄初期化
   loadMainPreset();
@@ -905,6 +940,9 @@ function initialize(callback) {
     $(`#${key} .sort_select`).val(setting.orderBy[key][0]);
     $(`#${key} .order_` + setting.orderBy[key][1]).prop('checked', true);
   });
+
+  console.timeEnd('l');
+  console.time('m');
 
   // 自動保存
   $('#auto_save').prop('checked', setting.autoSave);
@@ -948,11 +986,17 @@ function initialize(callback) {
   $('#dest_ap').val(100);
   $('#dest_range').val(6);
 
+  console.timeEnd('m');
+  console.time('n');
+
   // 自動保存展開
   if (setting.autoSave) {
     const autoSaveData = loadLocalStorage('autoSaveData');
     expandMainPreset(decodePreset(autoSaveData));
   }
+
+  console.timeEnd('n');
+  console.time('o');
 
   // URLパラメータチェック
   const urlDeck = [null, null];
@@ -985,6 +1029,10 @@ function initialize(callback) {
     }
   }
 
+  
+  console.timeEnd('o');
+  console.time('p');
+
   // 基地欄タブ化するかどうか
   if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
     $('.lb_tab').addClass('tab-pane fade');
@@ -992,6 +1040,9 @@ function initialize(callback) {
     $('.lb_tab:first').addClass('show active');
     $('#lb_item1').addClass('active');
   }
+
+  console.timeEnd('p');
+  console.time('q');
 
   // 更新履歴
   fragment = document.createDocumentFragment();
@@ -1062,12 +1113,18 @@ function initialize(callback) {
     }
   }
 
+  console.timeEnd('q');
+  console.time('r');
+
   const $last_update = document.createElement('div');
   $last_update.className = 'mt-2 font_size_12';
   $last_update.textContent = LAST_UPDATE_DATE;
   fragment.appendChild($last_update);
 
   document.getElementById('site_history_body').appendChild(fragment);
+
+  console.timeEnd('r');
+  console.time('s');
 
   // テーマカラー変更
   if (setting.themeColor === 'dark') {
@@ -1094,17 +1151,30 @@ function initialize(callback) {
     $('#dark_gradient_theme').prop('checked', false);
     $('#deep_blue_theme').prop('checked', false);
   }
-  site_theme_Changed(false);
+  console.timeEnd('s');
+  console.time('sss');
+
+  // site_theme_Changed(false);
+
+  console.timeEnd('sss');
+  console.time('t');
 
   // サイト案内たちは閉じておく
   $('#site_information').find('.collapse_content').collapse('hide');
-
+  console.timeEnd('t');
+  console.time('ttt');
   // tooltip起動
   $('[data-toggle="tooltip"]').tooltip();
   $('[data-toggle="popover"]').popover();
 
+  
+  console.timeEnd('ttt');
+  console.time('u');
+
   $('#loading_info').text('初期計算中');
   callback();
+  console.timeEnd('u');
+  console.time('v');
 
   // さっさと明け渡す
   $('#loading_text').addClass('load_end_text');
@@ -1119,6 +1189,9 @@ function initialize(callback) {
   setTimeout(() => {
     $('#loading_back').remove();
   }, 1000);
+
+  console.timeEnd('v');
+  console.timeEnd('vss');
 }
 
 /**
