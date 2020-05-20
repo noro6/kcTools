@@ -76,6 +76,7 @@ const PLANE_DATA = [
   { id: 302, type: 2, name: "九七式艦攻(九三一空/熟練)", abbr: "九七式艦攻(931空/熟練)", antiAir: 0, torpedo: 8, bomber: 0, antiBomber: 0, interception: 0, scout: 3, canRemodel: 0, radius: 4, cost: 5, avoid: 0 },
   { id: 342, type: 2, name: "流星改(一航戦)", abbr: "", antiAir: 2, torpedo: 14, bomber: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, radius: 6, cost: 9, avoid: 0 },
   { id: 343, type: 2, name: "流星改(一航戦/熟練)", abbr: "", antiAir: 3, torpedo: 15, bomber: 0, antiBomber: 0, interception: 0, scout: 6, canRemodel: 0, radius: 6, cost: 9, avoid: 0 },
+  { id: 372, type: 2, name: "天山一二型甲", abbr: "", antiAir: 1, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, radius: 5, cost: 7, avoid: 0 },
   { id: 257, type: -2, name: "TBM-3D", abbr: "", antiAir: 1, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, radius: 6, cost: 11, avoid: 0 },
   { id: 344, type: -2, name: "九七式艦攻改試製三号戊型(空六号電探改装備機)", abbr: "97艦攻改(空六号電探)", antiAir: 0, torpedo: 7, bomber: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, radius: 4, cost: 6, avoid: 0 },
   { id: 345, type: -2, name: "九七式艦攻改(熟練)試製三号戊型(空六号電探改装備機)", abbr: "97艦攻改(熟練/空六号電探)", antiAir: 0, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, radius: 4, cost: 6, avoid: 0 },
@@ -2335,4 +2336,4 @@ let CHANGE_LOG = [
   },
 ];
 
-const LAST_UPDATE_DATE = "2020/05/10";
+const LAST_UPDATE_DATE = "2020/05/20";
