@@ -69,7 +69,7 @@ const PLANE_DATA = [
   { id: 144, type: 2, name: "天山一二型(村田隊)", abbr: "", antiAir: 1, torpedo: 15, bomber: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, radius: 5, cost: 6, avoid: 1 },
   { id: 188, type: 2, name: "Re.2001G改", abbr: "", antiAir: 4, torpedo: 4, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, radius: 3, cost: 6, avoid: 0 },
   { id: 196, type: 2, name: "TBD", abbr: "", antiAir: 0, torpedo: 5, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, radius: 4, cost: 6, avoid: 0 },
-  { id: 242, type: 2, name: "Swordfish", abbr: "", antiAir: 0, torpedo: 3, bomber: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, radius: 3, cost: 3, avoid: 0 },
+  { id: 242, type: 2, name: "Swordfish", abbr: "", antiAir: 0, torpedo: 3, bomber: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 1, radius: 3, cost: 3, avoid: 0 },
   { id: 243, type: 2, name: "SwordfishMk.II(熟練)", abbr: "", antiAir: 0, torpedo: 5, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, radius: 3, cost: 3, avoid: 0 },
   { id: 244, type: 2, name: "SwordfishMk.III(熟練)", abbr: "", antiAir: 0, torpedo: 8, bomber: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, radius: 3, cost: 4, avoid: 0 },
   { id: 256, type: 2, name: "TBF", abbr: "", antiAir: 1, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, radius: 6, cost: 10, avoid: 0 },
