@@ -102,7 +102,7 @@
    <script defer src="./js/bootstrap.bundle.min.js"></script>
    <script defer src="./js/sortable.js"></script>
    <script defer src="./js/data.js"></script>
-   <script defer src="./js/main.js"></script>
+   <script defer src="./js/main.min.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
    <script>
       window.dataLayer = window.dataLayer || [];
@@ -9981,7 +9981,7 @@
                               </div>
                            </div>
                         </div>
-                        <div class="alert alert-warning py-2 mb-1 d-none" id="lb_range_warning">
+                        <div class="alert alert-warning py-2 mb-1" id="lb_range_warning">
                            第<span id="ng_range">1</span>基地航空隊の半径が不足しています。
                            <span class="font_size_12">計算は通常通り行います。</span>
                         </div>
@@ -10047,12 +10047,291 @@
                                     </div>
                                  </div>
                                  <div class="enemyFleet_item py-1 px-1">
-                                    <div class="enemy_content py-0_5 pr-1 d-flex enemy_draggable">
-                                       <div class="enemy_index align-self-center text-primary">
-                                          1
-                                       </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                       <div class="enemy_index align-self-center text-primary">1</div>
                                        <div class="align-self-center enemy_name">
-                                          <span class="enemy_name_span px-1">敵艦を選択</span>
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                       <div class="enemy_index align-self-center text-primary">2</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                       <div class="enemy_index align-self-center text-primary">3</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                       <div class="enemy_index align-self-center text-primary">4</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                       <div class="enemy_index align-self-center text-primary">5</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                       <div class="enemy_index align-self-center text-primary">6</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-none">
+                                       <div class="enemy_index align-self-center text-success">7</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-none">
+                                       <div class="enemy_index align-self-center text-success">8</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-none">
+                                       <div class="enemy_index align-self-center text-success">9</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-none">
+                                       <div class="enemy_index align-self-center text-success">10</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-none">
+                                       <div class="enemy_index align-self-center text-success">11</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
+                                       </div>
+                                       <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                          <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                          <div class="dropdown-menu px-2">
+                                             <span class="dropdown-header py-1 px-1 font_size_12">
+                                                制空値を入力
+                                             </span>
+                                             <div class="d-flex mb-2">
+                                                <input type="number"
+                                                   class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                   value="0" min="0" max="9999">
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="enemy_content no_enemy py-0_5 pr-1 d-none">
+                                       <div class="enemy_index align-self-center text-success">12</div>
+                                       <div class="align-self-center enemy_name">
+                                          <span class="enemy_name_span px-1">
+                                             <div class="enemy_name_img_parent d-none">
+                                                <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                                <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                             </div>
+                                             <div class="enemy_name_text">敵艦を選択</div>
+                                          </span>
                                        </div>
                                        <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
                                           <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
@@ -10107,12 +10386,141 @@
                                  <input type="hidden" class="fleet_AA">
                               </div>
                               <div class="enemyFleet_item py-1 px-1">
-                                 <div class="enemy_content py-0_5 pr-1 d-flex enemy_draggable">
-                                    <div class="enemy_index align-self-center text-primary">
-                                       1
+                                 <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                    <div class="enemy_index align-self-center text-success">1</div>
+                                    <div class="align-self-center enemy_name">
+                                       <span class="enemy_name_span px-1">
+                                          <div class="enemy_name_img_parent d-none">
+                                             <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                             <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                          </div>
+                                          <div class="enemy_name_text">敵艦を選択</div>
+                                       </span>
                                     </div>
-                                    <div class="enemy_name flex-grow-1 align-self-center">
-                                       <span class="enemy_name_span px-1">敵艦を選択</span>
+                                    <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                       <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                       <div class="dropdown-menu px-2">
+                                          <span class="dropdown-header py-1 px-1 font_size_12">
+                                             制空値を入力
+                                          </span>
+                                          <div class="d-flex mb-2">
+                                             <input type="number"
+                                                class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                value="0" min="0" max="9999">
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                    <div class="enemy_index align-self-center text-success">2</div>
+                                    <div class="align-self-center enemy_name">
+                                       <span class="enemy_name_span px-1">
+                                          <div class="enemy_name_img_parent d-none">
+                                             <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                             <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                          </div>
+                                          <div class="enemy_name_text">敵艦を選択</div>
+                                       </span>
+                                    </div>
+                                    <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                       <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                       <div class="dropdown-menu px-2">
+                                          <span class="dropdown-header py-1 px-1 font_size_12">
+                                             制空値を入力
+                                          </span>
+                                          <div class="d-flex mb-2">
+                                             <input type="number"
+                                                class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                value="0" min="0" max="9999">
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                    <div class="enemy_index align-self-center text-success">3</div>
+                                    <div class="align-self-center enemy_name">
+                                       <span class="enemy_name_span px-1">
+                                          <div class="enemy_name_img_parent d-none">
+                                             <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                             <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                          </div>
+                                          <div class="enemy_name_text">敵艦を選択</div>
+                                       </span>
+                                    </div>
+                                    <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                       <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                       <div class="dropdown-menu px-2">
+                                          <span class="dropdown-header py-1 px-1 font_size_12">
+                                             制空値を入力
+                                          </span>
+                                          <div class="d-flex mb-2">
+                                             <input type="number"
+                                                class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                value="0" min="0" max="9999">
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                    <div class="enemy_index align-self-center text-success">4</div>
+                                    <div class="align-self-center enemy_name">
+                                       <span class="enemy_name_span px-1">
+                                          <div class="enemy_name_img_parent d-none">
+                                             <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                             <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                          </div>
+                                          <div class="enemy_name_text">敵艦を選択</div>
+                                       </span>
+                                    </div>
+                                    <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                       <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                       <div class="dropdown-menu px-2">
+                                          <span class="dropdown-header py-1 px-1 font_size_12">
+                                             制空値を入力
+                                          </span>
+                                          <div class="d-flex mb-2">
+                                             <input type="number"
+                                                class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                value="0" min="0" max="9999">
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                    <div class="enemy_index align-self-center text-success">5</div>
+                                    <div class="align-self-center enemy_name">
+                                       <span class="enemy_name_span px-1">
+                                          <div class="enemy_name_img_parent d-none">
+                                             <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                             <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                          </div>
+                                          <div class="enemy_name_text">敵艦を選択</div>
+                                       </span>
+                                    </div>
+                                    <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+                                       <div class="enemy_ap w-100" data-toggle="dropdown">0</div>
+                                       <div class="dropdown-menu px-2">
+                                          <span class="dropdown-header py-1 px-1 font_size_12">
+                                             制空値を入力
+                                          </span>
+                                          <div class="d-flex mb-2">
+                                             <input type="number"
+                                                class="form-control form-control-sm enemy_ap_input align-self-center mr-2"
+                                                value="0" min="0" max="9999">
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="enemy_content no_enemy py-0_5 pr-1 d-flex">
+                                    <div class="enemy_index align-self-center text-success">6</div>
+                                    <div class="align-self-center enemy_name">
+                                       <span class="enemy_name_span px-1">
+                                          <div class="enemy_name_img_parent d-none">
+                                             <img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
+                                             <span class="ml-auto align-self-center font_size_11">制空:</span>
+                                          </div>
+                                          <div class="enemy_name_text">敵艦を選択</div>
+                                       </span>
                                     </div>
                                     <div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
                                        <div class="enemy_ap w-100" data-toggle="dropdown">0</div>

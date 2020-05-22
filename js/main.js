@@ -579,10 +579,6 @@ function initializeSetting() {
  * @param {*} callback コールバック
  */
 function initialize(callback) {
-
-  console.time('vss');
-  console.time('a');
-
   let fragment = document.createDocumentFragment();
   let text = '';
 
@@ -605,14 +601,8 @@ function initialize(callback) {
     }
   }
 
-  console.timeEnd('a');
-  console.time('b');
-
   // 設定データ読み込み
   initializeSetting();
-
-  console.timeEnd('b');
-  console.time('c');
 
   // バージョンチェック
   const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
@@ -664,9 +654,6 @@ function initialize(callback) {
     }
   }
 
-  console.timeEnd('c');
-  console.time('d');
-
   // 機体カテゴリ初期化
   setPlaneType(document.getElementById('plane_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id));
   setPlaneType(document.getElementById('stock_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id));
@@ -684,10 +671,7 @@ function initialize(callback) {
 
   // 最終状態のみ表示
   document.getElementById('display_final')['checked'] = setting.visibleFinal;
-  document.getElementById('frequent_ship')['checked'] = setting.visibleFinal;
-
-  console.timeEnd('d');
-  console.time('e');
+  document.getElementById('frequent_ship')['checked'] = setting.orderByFrequency;
 
   // 基地簡易ビュー複製
   text = document.getElementById('lb_info_table').getElementsByTagName('tbody')[0].innerHTML;
@@ -700,15 +684,9 @@ function initialize(callback) {
     if (n.length) n[0].textContent = `第${Math.floor(i / 4) + 1}基地航空隊`;
   }
 
-  console.timeEnd('e');
-  console.time('f');
-
   // 表示隻数初期化
   tempList = document.getElementsByClassName('display_ship_count');
   for (const e of tempList) e.value = 2;
-
-  console.timeEnd('f');
-  console.time('g');
 
   // 敵艦隊欄複製
   text = $('#battle_container').html();
@@ -720,9 +698,6 @@ function initialize(callback) {
     $(e).find('.custom-control-input').attr('id', 'grand_' + i);
     $(e).find('.custom-control-label').attr('for', 'grand_' + i);
   });
-
-  console.timeEnd('g');
-  console.time('h');
 
   // 戦闘回数初期化
   $('#battle_count').val(1);
@@ -749,9 +724,6 @@ function initialize(callback) {
     if (i === 6) $(e).find('.progress_label').text('本隊');
     if (i === 7) $(e).find('.progress_label').text('防空');
   });
-
-  console.timeEnd('h');
-  console.time('i');
 
   // 撃墜テーブルヘッダフッタ10戦分生成
   text = '';
@@ -799,9 +771,6 @@ function initialize(callback) {
     else if (i >= 6) $(e).addClass('rate_tr_border_top rate_tr_border_bottom');
   });
 
-  console.timeEnd('i');
-  console.time('j');
-
   // 詳細設定 初期熟練度欄複製
   text = $('#init_prof_parent').html();
   const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
@@ -816,9 +785,6 @@ function initialize(callback) {
   for (const v of setting.defaultProf) {
     proficiency_Changed($('.init_prof[data-typeid="' + v.id + '"').find('.prof_option[data-prof="' + v.prof + '"]').parent(), true);
   }
-
-  console.timeEnd('j');
-  console.time('k');
 
   // コンテンツ順序復帰
   if (setting.contentsOrder.length) {
@@ -841,9 +807,6 @@ function initialize(callback) {
       $sideIndex.append($li);
     }
   }
-
-  console.timeEnd('k');
-  console.time('l');
 
   // 編成プリセット欄初期化
   loadMainPreset();
@@ -878,9 +841,6 @@ function initialize(callback) {
     $(`#${key} .sort_select`).val(setting.orderBy[key][0]);
     $(`#${key} .order_` + setting.orderBy[key][1]).prop('checked', true);
   });
-
-  console.timeEnd('l');
-  console.time('m');
 
   // 自動保存
   $('#auto_save').prop('checked', setting.autoSave);
@@ -924,9 +884,6 @@ function initialize(callback) {
   $('#dest_ap').val(100);
   $('#dest_range').val(6);
 
-  console.timeEnd('m');
-  console.time('p');
-
   // 基地欄タブ化するかどうか
   if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
     $('.lb_tab').addClass('tab-pane fade');
@@ -934,9 +891,6 @@ function initialize(callback) {
     $('.lb_tab:first').addClass('show active');
     $('#lb_item1').addClass('active');
   }
-
-  console.timeEnd('p');
-  console.time('q');
 
   // 更新履歴
   fragment = document.createDocumentFragment();
@@ -1007,9 +961,6 @@ function initialize(callback) {
     }
   }
 
-  console.timeEnd('q');
-  console.time('r');
-
   const $last_update = document.createElement('div');
   $last_update.className = 'mt-2 font_size_12';
   $last_update.textContent = LAST_UPDATE_DATE;
@@ -1017,63 +968,51 @@ function initialize(callback) {
 
   document.getElementById('site_history_body').appendChild(fragment);
 
-  console.timeEnd('r');
-  console.time('s');
-
   // テーマカラー変更
   if (setting.themeColor === 'dark') {
-    $('#normal_theme').prop('checked', false);
-    $('#dark_theme').prop('checked', true);
-    $('#dark_gradient_theme').prop('checked', false);
-    $('#deep_blue_theme').prop('checked', false);
+    document.getElementById('normal_theme')['checked'] = false;
+    document.getElementById('dark_theme')['checked'] = true;
+    document.getElementById('dark_gradient_theme')['checked'] = false;
+    document.getElementById('deep_blue_theme')['checked'] = false;
   }
   else if (setting.themeColor === 'dark-gradient') {
-    $('#normal_theme').prop('checked', false);
-    $('#dark_theme').prop('checked', false);
-    $('#dark_gradient_theme').prop('checked', true);
-    $('#deep_blue_theme').prop('checked', false);
+    document.getElementById('normal_theme')['checked'] = false;
+    document.getElementById('dark_theme')['checked'] = false;
+    document.getElementById('dark_gradient_theme')['checked'] = true;
+    document.getElementById('deep_blue_theme')['checked'] = false;
   }
   else if (setting.themeColor === 'deep-blue') {
-    $('#normal_theme').prop('checked', false);
-    $('#dark_theme').prop('checked', false);
-    $('#dark_gradient_theme').prop('checked', false);
-    $('#deep_blue_theme').prop('checked', true);
+    document.getElementById('normal_theme')['checked'] = false;
+    document.getElementById('dark_theme')['checked'] = true;
+    document.getElementById('dark_gradient_theme')['checked'] = false;
+    document.getElementById('deep_blue_theme')['checked'] = true;
   }
   else {
-    $('#normal_theme').prop('checked', true);
-    $('#dark_theme').prop('checked', false);
-    $('#dark_gradient_theme').prop('checked', false);
-    $('#deep_blue_theme').prop('checked', false);
+    document.getElementById('normal_theme')['checked'] = true;
+    document.getElementById('dark_theme')['checked'] = true;
+    document.getElementById('dark_gradient_theme')['checked'] = false;
+    document.getElementById('deep_blue_theme')['checked'] = false;
   }
-  console.timeEnd('s');
-  console.time('sss');
-
   site_theme_Changed(false);
-
-  console.timeEnd('sss');
-  console.time('ttt');
-  // tooltip起動
-  $('[data-toggle="tooltip"]').tooltip();
-  $('[data-toggle="popover"]').popover();
-
-  console.timeEnd('ttt');
 
   // さっさと明け渡す
   $('#loading_text').addClass('load_end_text');
   $('#loading_text').text('完了');
   $('#loading_line').addClass('loading_line_expand');
   $('#loading_back').addClass('load_end');
+  setTimeout(() => {
+    $('#loading_back').remove();
+  }, 1000);
+
+  // tooltip起動
+  $('[data-toggle="tooltip"]').tooltip();
 
   if ($('#modal_version_inform').find('.modal-body').html()) {
     // バージョン変更通知
     $('#modal_version_inform').modal('show');
   }
-  setTimeout(() => {
-    $('#loading_back').remove();
-  }, 1000);
 
   callback();
-  console.timeEnd('vss');
 }
 
 /**
@@ -1385,7 +1324,6 @@ function clearShipDivAll(displayCount = 2) {
  */
 function setEnemyDiv($div, id, ap = 0) {
   if (!$div) return;
-  const $parent = $div.parent();
   const enemy = createEnemyObject(id);
   const displayText = $('#enemy_fleet_display_text').prop('checked');
 
@@ -1393,20 +1331,19 @@ function setEnemyDiv($div, id, ap = 0) {
   if (enemy.id === 0) return;
 
   $div[0].dataset.enemyid = enemy.id;
-  const enemyNameText = `
-    <div class="enemy_name_img_parent ${displayText ? ' d-none' : ' d-flex'}">
-      <img src="./img/enemy/${enemy.id}.png" class="align-self-center enemy_name_img">
-      <span class="ml-auto align-self-center font_size_11">制空:</span>
-    </div>
-    <div class="enemy_name_text${displayText ? '' : ' d-none'}">${drawEnemyGradeColor(enemy.name)}</div>
-  `;
-  $div.find('.enemy_name_span').html(enemyNameText);
+  $div.removeClass('d-none no_enemy').addClass('d-flex');
+  $div.find('.enemy_name_text').html(drawEnemyGradeColor(enemy.name));
+  $div.find('.enemy_name_img').attr('src', `./img/enemy/${enemy.id}.png`);
 
   if (displayText) {
     $div.addClass('py-0_5').removeClass('pb-0_1 min-h-31px');
+    $div.find('.enemy_name_img_parent').addClass('d-none').removeClass('d-flex');
+    $div.find('.enemy_name_text').removeClass('d-none');
   }
   else {
     $div.removeClass('py-0_5').addClass('pb-0_1 min-h-31px');
+    $div.find('.enemy_name_img_parent').addClass('d-flex').removeClass('d-none');
+    $div.find('.enemy_name_text').addClass('d-none');
   }
 
   let displayAp = 0;
@@ -1414,55 +1351,6 @@ function setEnemyDiv($div, id, ap = 0) {
   else if (enemy.ap > 0) displayAp = enemy.ap;
   else if (enemy.lbAp > 0) displayAp = '(' + enemy.lbAp + ')';
   $div.find('.enemy_ap').text(displayAp);
-
-  // ドラッグ可能要素設定
-  $div.find('.enemy_index').addClass('drag_handle cur_move');
-
-  // 敵入力欄追加の必要あるかどうか (セット欄に隣接した別contentがない場合)
-  const maxEnemyInput = castInt($div.closest('.battle_content').find('.cell_type').val()) === CELL_TYPE.grand ? 12 : 6;
-  if (!$div.next().hasClass('enemy_content') && $div.parent().find('.enemy_content').length < maxEnemyInput) {
-    // 複製して追加
-    const $clone = $div.clone();
-    // 複製したやつは初期化
-    clearEnemyDiv($clone);
-    $div.parent().append($clone);
-  }
-  // インデックス振り直し
-  $parent.find('.enemy_content').each((i, e) => {
-    const idx = i + 1;
-    const $enemyIndex = $(e).find('.enemy_index');
-    $enemyIndex.text(idx);
-    if (idx > 6) {
-      $enemyIndex.removeClass('text-primary').addClass('text-success');
-    }
-    else {
-      $enemyIndex.removeClass('text-success').addClass('text-primary');
-    }
-  });
-
-  // ドラッグ設定
-  if (isDefMode) return;
-  $div.draggable({
-    delay: 100,
-    helper: 'clone',
-    handle: '.drag_handle',
-    zIndex: 1000,
-    start: (e, ui) => {
-      $(ui.helper).find('.enemy_ap_select_parent').addClass('d-none');
-      $(ui.helper).removeClass('enemy_content py-1');
-      $(ui.helper)
-        .css('backgroundColor', '#fff')
-        .css('border', '2px solid #ccc')
-        .css('border-radius', '.25rem');
-    },
-    stop: function () {
-      if (isOut || (!isCtrlPress && !$('#drag_drop_copy').prop('checked'))) {
-        clearEnemyDiv($div);
-        isOut = false;
-      }
-      calculate();
-    }
-  });
 }
 
 /**
@@ -1470,44 +1358,14 @@ function setEnemyDiv($div, id, ap = 0) {
  * @param {JqueryDomObject} $div クリアする .enemy_content
  */
 function clearEnemyDiv($div) {
-  const $parent = $div.parent();
-
-  // ドラッグハンドル除去
-  $div.find('.drag_handle').removeClass('drag_handle cur_move');
-
-  const maxEnemyInput = castInt($div.closest('.battle_content').find('.cell_type').val()) === CELL_TYPE.grand ? 12 : 6;
-
-  // クリア対象の下にまだenemy_content要素があるなら削除
-  if ($div.next().attr('class')) {
-    // 一番下の行まで埋まってた場合は、最下部に新規行を挿入
-    if ($parent.find('.enemy_content').length === maxEnemyInput && $parent.find('.enemy_content:last')[0].dataset.enemyid) {
-      // 複製して追加
-      const $clone = $div.clone();
-      // 複製したやつは初期化
-      clearEnemyDiv($clone);
-      $parent.append($clone);
-    }
-    $div.remove();
-  }
-  else {
-    // 選択状況をリセット
-    $div[0].dataset.enemyid = '';
-    $div.find('.enemy_name_span').text('敵艦を選択');
-    $div.find('.enemy_ap').text(0);
-  }
-
-  // インデックス振り直し
-  $parent.find('.enemy_content').each((i, e) => {
-    const idx = i + 1;
-    const $enemyIndex = $(e).find('.enemy_index');
-    $enemyIndex.text(idx);
-    if (idx > 6) {
-      $enemyIndex.removeClass('text-primary').addClass('text-success');
-    }
-    else {
-      $enemyIndex.removeClass('text-success').addClass('text-primary');
-    }
-  });
+  $div[0].dataset.enemyid = 0;
+  $div.addClass('no_enemy');
+  $div.addClass('py-0_5').removeClass('pb-0_1 min-h-31px');
+  $div.find('.enemy_name_img_parent').addClass('d-none').removeClass('d-flex');
+  $div.find('.enemy_name_img').attr('src', `./img/enemy/-1.png`);
+  $div.find('.enemy_name_text').removeClass('d-none');
+  $div.find('.enemy_name_text').text('敵艦を選択');
+  $div.find('.enemy_ap').text(0);
 }
 
 /**
@@ -1517,13 +1375,11 @@ function clearEnemyDiv($div) {
 function clearEnemyDivAll(count = 1) {
   $('.battle_content').each((i, e) => {
     $(e)[0].dataset.celldata = '';
-    $(e).find('.enemy_content:not(:first)').remove();
-    clearEnemyDiv($(e).find('.enemy_content'));
+    $(e).find('.enemy_content').each((i, e) => clearEnemyDiv($(e)));
   });
   $('#battle_count').val(count);
   createEnemyInput(count);
 
-  $('#air_raid_enemies').find('.enemy_content:not(:first)').remove();
   clearEnemyDiv($('#air_raid_enemies').find('.enemy_content'));
 }
 
@@ -1840,25 +1696,6 @@ function initializeShipTable() {
 
     $infoDiv.appendChild($idDiv);
     $infoDiv.appendChild($nameDiv);
-
-    // 複数表示時カテゴリ分け
-    if (prevType !== ship.type) {
-      const $typeDiv = document.createElement('div');
-      $typeDiv.className = 'w-100 d-flex mt-3 divide_line';
-
-      const $type = document.createElement('div');
-      $type.className = 'font_size_12 font_color_half align-self-center';
-      $type.textContent = SHIP_TYPE.find(v => v.id === ship.type).name;
-
-      const $typeLine = document.createElement('div');
-      $typeLine.className = 'flex-grow-1 border-bottom align-self-center mx-2';
-
-      $typeDiv.appendChild($type);
-      $typeDiv.appendChild($typeLine);
-
-      fragment.appendChild($typeDiv);
-    }
-
     $shipDiv.appendChild($iconDiv);
     $shipDiv.appendChild($infoDiv);
 
@@ -1884,17 +1721,14 @@ function initializeShipTable() {
  * @param {Array.<number>} type
  */
 function createShipTable(type) {
-
   const modal = document.getElementById('modal_ship_select').getElementsByClassName('modal-dialog')[0];
   const tbody = document.getElementById('ship_tbody');
-  let dispData = [];
   const displayMode = modal.querySelector('.toggle_display_type.selected').dataset.mode;
   const visibleFinal = document.getElementById('display_final')['checked'];
   const searchWord = document.getElementById('ship_word').value.trim();
   const isFrequent = document.getElementById('frequent_ship')['checked'];
 
   if (!tbody.childElementCount) initializeShipTable();
-
   setting.visibleFinal = visibleFinal;
   setting.orderByFrequency = isFrequent;
   saveLocalStorage('setting', setting);
@@ -1905,6 +1739,7 @@ function createShipTable(type) {
     const ship = SHIP_DATA.find(s => s.id === castInt(v.dataset.shipid));
     return { mst: ship, dom: v };
   });
+  tbody.innerHTML = '';
   // 通常ソート
   valueList.sort((a, b) => {
     if (a.mst.type !== b.mst.type) return a.mst.type - b.mst.type;
@@ -1917,7 +1752,25 @@ function createShipTable(type) {
     valueList.sort((a, b) => lst.filter(v => v === b.mst.id).length - lst.filter(v => v === a.mst.id).length);
   }
   // 反映
-  for (const e of valueList) tbody.appendChild(e.dom);
+  let prevType = -1;
+  for (const e of valueList) {
+    if(type[0] === 0 && prevType !== e.mst.type){
+      const fragment = document.createDocumentFragment();
+      const $typeDiv = document.createElement('div');
+      $typeDiv.className = 'w-100 d-flex mt-3';
+      const $type = document.createElement('div');
+      $type.className = 'font_size_12 font_color_half align-self-center';
+      $type.textContent = SHIP_TYPE.find(v => v.id === e.mst.type).name;
+      const $typeLine = document.createElement('div');
+      $typeLine.className = 'flex-grow-1 border-bottom align-self-center mx-2';
+      $typeDiv.appendChild($type);
+      $typeDiv.appendChild($typeLine);
+      fragment.appendChild($typeDiv);
+      tbody.appendChild(fragment);
+      prevType = e.mst.type;
+    }
+    tbody.appendChild(e.dom);
+  }
 
   if (displayMode === "multi") {
     modal.classList.add('modal-xl');
@@ -1939,7 +1792,7 @@ function createShipTable(type) {
     if (displayMode === "multi") tr.classList.add('tr_multi');
     else tr.classList.remove('tr_multi');
     // 検索条件
-    if ((type[0] !== 0 && !type.includes(ship.type)) || visibleFinal && !ship.final || (searchWord && !ship.name.includes(searchWord))) {
+    if ((type[0] !== 0 && !type.includes(ship.type)) || (visibleFinal && !ship.final) || (searchWord && !ship.name.includes(searchWord))) {
       tr.classList.add('d-none');
       tr.classList.remove('d-flex');
     }
@@ -1949,29 +1802,13 @@ function createShipTable(type) {
     }
   }
 
-  // 複数表示時カテゴリ分け表示
+  // 搭載数の表示
   if (displayMode === "multi") {
-    if (type[0] === 0) {
-      for (const e of tbody.getElementsByClassName('divide_line')) {
-        e.classList.add('d-flex');
-        e.classList.remove('d-none');
-      }
-    }
-    else {
-      for (const e of tbody.getElementsByClassName('divide_line')) {
-        e.classList.remove('d-flex');
-        e.classList.add('d-none');
-      }
-    }
     for (const e of tbody.getElementsByClassName('ship_td_slot')) {
       e.classList.add('d-none');
     }
   }
   else {
-    for (const e of tbody.getElementsByClassName('divide_line')) {
-      e.classList.add('d-none');
-      e.classList.remove('d-flex');
-    }
     for (const e of tbody.getElementsByClassName('ship_td_slot')) {
       e.classList.remove('d-none');
     }
@@ -2534,12 +2371,6 @@ function expandEnemy() {
     $target = $('.battle_content:first');
   }
 
-  // 元の敵編成解除
-  if ($target.find('.enemy_content:not(:first)').length) {
-    $target.find('.enemy_content:not(:first)').remove();
-  }
-  clearEnemyDiv($target.find('.enemy_content'));
-
   // 戦闘マス情報
   const cellType = isDefMode && pattern.type !== 5 ? 3 : pattern.type;
   $target.find('.cell_type').val(cellType);
@@ -2548,7 +2379,10 @@ function expandEnemy() {
   $target.find('.formation').val(pattern.form);
 
   // 敵展開
-  for (const id of pattern.enemies) setEnemyDiv($target.find('.enemy_content:last()'), id);
+  $target.find('.enemy_content').each((i, e) => {
+    if (i < pattern.enemies.length) setEnemyDiv($(e), pattern.enemies[i]);
+    else clearEnemyDiv($(e));
+  });
   // 半径
   $target.find('.enemy_range').text(pattern.radius);
 
@@ -2789,18 +2623,20 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
             const cellType = castInt(enemyFleet[3]);
             $(e).find('.cell_type').val([0, 5].includes(cellType) ? 5 : 3);
           }
-          else {
-            $(e).find('.cell_type').val(enemyFleet[3]);
-          }
+          else $(e).find('.cell_type').val(enemyFleet[3]);
         }
         else $(e).find('.cell_type').val(1);
         if (enemyFleet.length >= 5) $(e).find('.formation').val(enemyFleet[4]);
         else $(e).find('.formation').val(1);
 
+        let enemyIndex = 0;
         for (const id of enemyFleet[1]) {
-          if (id > 0) setEnemyDiv($(e).find('.enemy_content:last()'), id);
+          const $enemyContent = $(e).find('.enemy_content').eq(enemyIndex++);
+          if (id > 0) setEnemyDiv($enemyContent, id);
           // 負値の場合は直接入力の制空値
-          else if (id < 0) setEnemyDiv($(e).find('.enemy_content:last()'), -1, -(id));
+          else if (id < 0) setEnemyDiv($enemyContent, -1, -(id));
+          else clearEnemyDiv($enemyContent);
+          $enemyContent.addClass('d-flex').removeClass('d-none');
         }
       }
     });
@@ -2908,9 +2744,9 @@ function createEnemyFleetPreset() {
     $(e).find('.enemy_content').each((j, ce) => {
       const enemyId = castInt($(ce)[0].dataset.enemyid);
       const ap = castInt($(ce).find('.enemy_ap').text());
-      // id:0 の場合飛ばす
-      if (enemyId === 0) return;
-      if (enemyId > 0) enemyFleet[1].push(enemyId);
+      if (enemyFleet[3] !== CELL_TYPE.grand && j >= 6) return;
+      if (enemyId === 0) enemyFleet[1].push(0);
+      else if (enemyId > 0) enemyFleet[1].push(enemyId);
       // ※直接入力なら制空値を負値にして格納
       else if (ap > 0) enemyFleet[1].push(-ap);
     });
@@ -4619,8 +4455,10 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
       let enemyId = castInt(node_enemy_content.dataset.enemyid);
       const enm = createEnemyObject(enemyId);
 
-      // 未入力、非表示の敵なら飛ばす
-      if (enemyId === 0 || node_enemy_content.classList.contains('d-none')) continue;
+      // 非表示の敵は飛ばす
+      if (node_enemy_content.classList.contains('d-none')) continue;
+      // 連合以外で6隻埋まってたら以降は飛ばす
+      if (battleInfo.cellType !== CELL_TYPE.grand && battleInfo.enemies.length === 6) break;
       // 直接入力の制空値を代入
       if (enemyId === -1) {
         const node_enemy_ap = node_enemy_content.getElementsByClassName('enemy_ap')[0];
@@ -4665,7 +4503,6 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
     node = node_battle_content.getElementsByClassName('enemy_range')[0];
     if (!castInt(node.textContent)) node.parentNode.classList.add('d-none');
     else node.parentNode.classList.remove('d-none');
-
     node = node_battle_content.getElementsByClassName('fleet_AA')[0];
     drawChangeValue(node, node.textContent, Math.floor(aj1 * sumAntiAirBonus) * 2, true);
 
@@ -4792,6 +4629,7 @@ function createStage2Table(enemies, cellType, formationId) {
   AVOID_TYPE[5].adj[1] = castFloat($('#free_anti_air_bornus').val());
   for (let i = 0; i < enemyCount; i++) {
     const enm = enemies[i];
+    if (enm.id === 0) continue;
     // 加重対空格納
     aawList.push(enm.aaw);
     // stage2用 割合撃墜係数テーブル
@@ -4820,7 +4658,8 @@ function createStage2Table(enemies, cellType, formationId) {
   const fleetAntiAir = Math.floor((aj1 * sumAntiAirBonus));
   // stage2用 固定撃墜値テーブル
   for (let i = 0; i < enemyCount; i++) {
-    const aaw = aawList[i];
+    if (enemies[i].id === 0) continue;
+    const aaw = aawList.shift();
     for (let j = 0; j < AVOID_TYPE.length; j++) {
       // 補正後加重対空値
       const antiAirWeight = Math.floor(aaw * AVOID_TYPE[j].adj[0]);
@@ -4850,7 +4689,7 @@ function createStage2Table(enemies, cellType, formationId) {
  */
 function createEnemyObject(id) {
   const tmp = ENEMY_DATA.find(v => v.id === id);
-  const enemy = { id: 0, type: 0, name: '', slots: [], antiAir: [], eqp: [], orgSlots: [], isSpR: false, ap: 0, lbAp: 0, origAp: 0, origLbAp: 0, aaw: 0, aabo: 0 };
+  const enemy = { id: 0, type: [0], name: '', slots: [], antiAir: [], eqp: [], orgSlots: [], isSpR: false, ap: 0, lbAp: 0, origAp: 0, origLbAp: 0, aaw: 0, aabo: 0 };
 
   if (id !== 0 && tmp) {
     for (const id of tmp.eqp) {
@@ -7801,13 +7640,6 @@ function cell_type_Changed($this) {
     else $(e).removeClass('d-none').addClass('d-flex');
   });
 
-  const $lastEnemy = $parentContent.find('.enemy_content:last');
-  if ($lastEnemy.hasClass('ui-draggable')) {
-    const id = castInt($lastEnemy[0].dataset.enemyid);
-    const ap = castInt($lastEnemy.text());
-    setEnemyDiv($lastEnemy, id, ap);
-  }
-
   const $formation = $parentContent.find('.formation');
   changeFormationSelectOption($formation, cellType);
 
@@ -7830,8 +7662,8 @@ function changeFormationSelectOption($formation, cellType) {
     if (cellType === CELL_TYPE.grand) {
       if ($(e).val() < 10) $(e).addClass('d-none');
       if ($(e).val() > 10) $(e).removeClass('d-none');
-      if (prevVal === 1 || prevVal === 2 || prevVal === 3) $formation.val(prevVal + 10);
-      else if (prevVal === 4) $formation.val(14);
+      if (prevVal === 4) $formation.val(11);
+      else $formation.val(prevVal + 10);
     }
   });
 }
@@ -8062,7 +7894,7 @@ function plane_name_Clicked($this) {
   if ($target.attr('class').includes('ship_plane')) {
     // 艦娘から展開した場合、陸上機は非表示とし、選択されていたら全てにする
     selectedType = selectedType > 99 ? 0 : selectedType;
-    $modalBody.find('#optg_lb').remove();
+    $modalBody.find('.optg_lb').remove();
     if (prevTypeId > 100) prevTypeId = 0;
   }
   else {
@@ -8351,8 +8183,7 @@ function enemy_fleet_display_mode_Changed() {
 function btn_reset_battle_Clicked($this) {
   const $tmp = isDefMode ? $('#air_raid_enemies') : $this.closest('.battle_content');
   $tmp[0].dataset.celldata = '';
-  $tmp.find('.enemy_content:not(:first)').remove();
-  clearEnemyDiv($tmp.find('.enemy_content'));
+  $tmp.find('.enemy_content').each((i, e) => clearEnemyDiv($(e)));
   $this.blur();
   calculate();
 }
@@ -8491,10 +8322,12 @@ function calculateStage2Detail() {
     $('#free_anti_air_bornus').val(AVOID_TYPE[avoid].adj[1]);
   }
 
+  let idx = 0;
   for (let index = 0; index < battleData.enemies.length; index++) {
     const enemy = battleData.enemies[index];
-    const rate = Math.floor(slot * battleData.stage2[avoid][0][index]);
-    const fix = battleData.stage2[avoid][1][index];
+    if (enemy.id === 0) continue;
+    const rate = Math.floor(slot * battleData.stage2[avoid][0][idx]);
+    const fix = battleData.stage2[avoid][1][idx];
     const sum = rate + fix;
     if (cutInEnemy.includes(enemy.id)) cutInWarnning = true;
     sumAntiAirBonus += enemy.aabo;
@@ -8508,7 +8341,7 @@ function calculateStage2Detail() {
       </td>
       <td>
         <span class="text-right">
-          ${(battleData.stage2[avoid][0][index] * 100).toFixed(1)}% (${rate}機)</span>
+          ${(battleData.stage2[avoid][0][idx++] * 100).toFixed(1)}% (${rate}機)</span>
       </td>
       <td>${fix}機</td>
       <td>${sum}機</td>
@@ -8938,21 +8771,21 @@ function site_theme_Changed(withCalculate = true) {
   document.body.classList.remove('body-dark-gradient');
   document.body.classList.remove('body-deep-blue');
 
-  if (!$('#normal_theme').prop('checked')) {
+  if (!document.getElementById('normal_theme')['checked']) {
 
     mainColor = "#e0e0e0";
     document.body.classList.add('dark-theme');
 
-    if ($('#dark_theme').prop('checked')) {
+    if (document.getElementById('dark_theme')['checked']) {
       setting.themeColor = 'dark';
       document.body.style.backgroundColor = "#20222d";
     }
-    if ($('#dark_gradient_theme').prop('checked')) {
+    if (document.getElementById('dark_gradient_theme')['checked']) {
       setting.themeColor = 'dark-gradient';
       document.body.classList.add('body-dark-gradient');
     }
 
-    const isDeep = $('#deep_blue_theme').prop('checked');
+    const isDeep = document.getElementById('deep_blue_theme')['checked'];
     if (isDeep) {
       setting.themeColor = 'deep-blue';
       document.body.classList.add('body-deep-blue');
@@ -8962,27 +8795,9 @@ function site_theme_Changed(withCalculate = true) {
       element.style.backgroundColor = "rgba(255, 255, 255, 0.047)";
       element.classList.add('contents-dark');
     }
-    for (const element of document.getElementsByClassName('form-control')) {
-      element.classList.add('form-control-dark');
-    }
-    for (const element of document.getElementsByClassName('input-group-text')) {
-      element.classList.add('input-group-text-dark');
-    }
-    for (const element of document.getElementsByClassName('custom-select')) {
-      element.classList.add('custom-select-dark');
-    }
     for (const element of document.getElementsByClassName('modal-content')) {
       if (isDeep) element.classList.add('modal-content-deep');
       else element.classList.remove('modal-content-deep');
-    }
-    for (const element of document.getElementsByClassName('scroll_thead')) {
-      element.classList.add('scroll_thead-dark');
-    }
-    for (const element of document.getElementsByClassName('nav-tabs')) {
-      element.classList.add('nav-tabs-dark');
-    }
-    for (const element of document.getElementsByClassName('nav-link')) {
-      element.classList.add('nav-link-dark');
     }
     for (const element of document.getElementsByClassName('custom_table')) {
       element.classList.add('custom_table_dark');
@@ -8996,26 +8811,8 @@ function site_theme_Changed(withCalculate = true) {
       element.style.backgroundColor = "rgba(255, 255, 255, 0.941)";
       element.classList.remove('contents-dark');
     }
-    for (const element of document.getElementsByClassName('form-control')) {
-      element.classList.remove('form-control-dark');
-    }
-    for (const element of document.getElementsByClassName('input-group-text')) {
-      element.classList.remove('input-group-text-dark');
-    }
-    for (const element of document.getElementsByClassName('custom-select')) {
-      element.classList.remove('custom-select-dark');
-    }
     for (const element of document.getElementsByClassName('modal-content')) {
       element.classList.remove('modal-content-deep');
-    }
-    for (const element of document.getElementsByClassName('scroll_thead')) {
-      element.classList.remove('scroll_thead-dark');
-    }
-    for (const element of document.getElementsByClassName('nav-tabs')) {
-      element.classList.remove('nav-tabs-dark');
-    }
-    for (const element of document.getElementsByClassName('nav-link')) {
-      element.classList.remove('nav-link-dark');
     }
     for (const element of document.getElementsByClassName('custom_table')) {
       element.classList.remove('custom_table_dark');
@@ -9722,9 +9519,6 @@ function scrollContent($destination) {
 document.addEventListener('DOMContentLoaded', function () {
   // 画面初期化
   initialize(() => {
-
-    console.time('n');
-
     // URLパラメータチェック
     const params = getUrlParams();
     // 自動保存展開
@@ -9732,9 +9526,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const autoSaveData = loadLocalStorage('autoSaveData');
       expandMainPreset(decodePreset(autoSaveData));
     }
-
-    console.timeEnd('n');
-    console.time('o');
 
     // URLパラメータチェック
     const urlDeck = [null, null];
@@ -9765,8 +9556,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }
-
-    console.timeEnd('o');
     calculate();
     document.getElementById('btn_undo').classList.add('disabled');
     document.getElementById('btn_redo').classList.add('disabled');
