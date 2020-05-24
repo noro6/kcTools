@@ -989,7 +989,7 @@ function initialize(callback) {
   }
   else {
     document.getElementById('normal_theme')['checked'] = true;
-    document.getElementById('dark_theme')['checked'] = true;
+    document.getElementById('dark_theme')['checked'] = false;
     document.getElementById('dark_gradient_theme')['checked'] = false;
     document.getElementById('deep_blue_theme')['checked'] = false;
   }
