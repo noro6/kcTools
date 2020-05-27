@@ -6002,13 +6002,14 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	$slots.eq(slotNo).find('.nav-link').tab('show');
 
 	// 必要なら説明表示
-	if ($('#detail_info').data('mode') !== 'enemy_slot_detail' || $('#detail_info').data('base_no') != enemyNo) {
+	if ($('#detail_info').data('mode') !== 'enemy_slot_detail' || $('#detail_info').data('base_no') != enemyNo || $('#detail_info').data('battle_no') != mainBattle) {
 		$('#land_base_detail_table').addClass('d-none');
 		$('#detail_fire').removeClass('d-none').addClass('d-flex');
 		$('#detail_wave').addClass('d-none').removeClass('d-flex');
 		$('#detail_info').data('mode', 'enemy_slot_detail');
 		$('#detail_info').data('base_no', enemyNo);
 		$('#detail_info').data('slot_no', slotNo);
+		$('#detail_info').data('battle_no', mainBattle);
 		$('#detail_warning').text('※ 航空戦火力はキャップ前でクリティカル、触接補正なし小数切捨て');
 
 		let planeText = '';
