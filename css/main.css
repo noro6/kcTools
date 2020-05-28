@@ -1342,7 +1342,23 @@ input[type="text"] { font-size: 12px; }
 }
 #land_base_detail_table td { padding: 0.2rem; }
 #detail_calculate_count { width: 120px; }
-
+.detail_plane_row { transition: .2s; }
+.btn_show_detail {
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+  border: 1px solid rgb(128, 128, 128);
+  border-radius: .25rem;
+  transition: .2s;
+}
+.btn_show_detail:hover {
+  color: #fff;
+  background-color: rgb(108, 117, 125);
+}
+.btn_show_detail.selected  {
+  color: #fff !important;
+  background-color: rgb(108, 117, 125);
+}
 
 /* ------------------------------
   stage2詳細 #modal_stage2_detail

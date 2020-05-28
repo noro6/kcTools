@@ -5434,6 +5434,9 @@ function detailCalculate() {
 
 /**
  * 味方スロット撃墜数詳細計算
+ * @param {number} shipNo 
+ * @param {number} slotNo 
+ * @param {number} shipId 
  */
 function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	// 事前計算テーブルチェック
@@ -5559,8 +5562,6 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	// グラフ描画
 	updateDetailChart(data, '残機数 [機]', tooltips);
 
-	const $slots = $('#show_detail_slot .nav-item');
-
 	// 説明表示
 	const ship = SHIP_DATA.find(v => v.id === shipId);
 	let planeText = '';
@@ -5578,26 +5579,20 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		<div>※ 最終戦闘の航空戦終了時点での残数の分布を表示しています。</div>`;
 	$('#detail_warning').html(warningText);
 
-	$slots.find('.nav-link').addClass('disabled');
-	$slots.addClass('d-none');
-
 	for (const pl of targetShip) {
 		const p = PLANE_DATA.find(v => v.id === pl.id);
-		if (p && p.id) {
-			$slots.eq(index).find('.nav-link').removeClass('disabled');
-			$slots.eq(index).data('slot_no', index);
-		}
 		if (index === (ship ? ship.slot.length : 4)) break;
-		$slots.eq(index).removeClass('d-none');
 		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
 		planeText += `
-		<div class="row">
-			<div class="col-2 align-self-center text-right font_size_12">装備${index + 1}:</div>
-			<div class="col d-flex align-self-end font_size_12 pl-0">
-				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
-				<div class="align-self-end">${name}</div>
+		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
+			<div class="col-2 align-self-center text-right">
+				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''}" data-slot_no="${index}">表示</div>
 			</div>
-			<div class="col font_size_11 align-self-end">
+			<div class="col d-flex align-self-center font_size_12 pl-0">
+				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
+				<div class="align-self-center">${name}</div>
+			</div>
+			<div class="col font_size_11 align-self-center">
 				${p ? (`(搭載: ${targetShip[index].slot}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
 			</div>
 		</div>`;
@@ -5609,7 +5604,6 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		<span class="ml-1 align-self-center">${ship ? ship.name : '未指定'}</span>
 	`;
 
-	$slots.eq(slotNo).find('.nav-link').tab('show');
 	$('#detail_legend').html(detailLegend);
 	$('#detail_info').html(planeText);
 }
@@ -5793,10 +5787,6 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	$('#status_m').text((100 * count2 / maxCount) + ' %');
 	$('#status_l').text((100 * count3 / maxCount) + ' %');
 
-
-	const $slots = $('#show_detail_slot .nav-item');
-	$slots.eq(slotNo).find('.nav-link').tab('show');
-
 	// 説明表示
 	let planeText = '';
 	let index = 0;
@@ -5812,25 +5802,19 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 		<div>※ 対敵連合補正、陸偵補正については、該当する戦闘、装備であれば有効</div>`;
 	$('#detail_warning').html(warningText);
 
-	$slots.find('.nav-link').addClass('disabled');
-	$slots.addClass('d-none');
-
 	for (const pl of landBaseData[landBaseNo].planes) {
 		const p = PLANE_DATA.find(v => v.id === pl.id);
-		if (p && p.id) {
-			$slots.eq(index).find('.nav-link').removeClass('disabled');
-			$slots.eq(index).data('slot_no', index);
-		}
-		$slots.eq(index).removeClass('d-none');
 		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
 		planeText += `
-		<div class="row">
-			<div class="col-2 align-self-center text-right font_size_12">装備${index + 1}:</div>
-			<div class="col d-flex align-self-end font_size_12 pl-0">
-				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
-				<div class="align-self-end">${name}</div>
+		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
+			<div class="col-2 align-self-center text-right">
+				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''}" data-slot_no="${index}">表示</div>
 			</div>
-			<div class="col font_size_11 align-self-end">
+			<div class="col d-flex align-self-center font_size_12 pl-0">
+				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
+				<div class="align-self-center">${name}</div>
+			</div>
+			<div class="col font_size_11 align-self-center">
 				${p ? (`(搭載: ${pl.slot}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
 			</div>
 		</div>`;
@@ -5998,49 +5982,43 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 描画
 	updateDetailChart(data, label, tooltips);
 
-	const $slots = $('#show_detail_slot .nav-item');
-	$slots.eq(slotNo).find('.nav-link').tab('show');
-
 	// 必要なら説明表示
-	if ($('#detail_info').data('mode') !== 'enemy_slot_detail' || $('#detail_info').data('base_no') != enemyNo || $('#detail_info').data('battle_no') != mainBattle) {
-		$('#land_base_detail_table').addClass('d-none');
-		$('#detail_fire').removeClass('d-none').addClass('d-flex');
-		$('#detail_wave').addClass('d-none').removeClass('d-flex');
-		$('#detail_info').data('mode', 'enemy_slot_detail');
-		$('#detail_info').data('base_no', enemyNo);
-		$('#detail_info').data('slot_no', slotNo);
-		$('#detail_info').data('battle_no', mainBattle);
-		$('#detail_warning').text('※ 航空戦火力はキャップ前でクリティカル、触接補正なし小数切捨て');
+	$('#land_base_detail_table').addClass('d-none');
+	$('#detail_fire').removeClass('d-none').addClass('d-flex');
+	$('#detail_wave').addClass('d-none').removeClass('d-flex');
+	$('#detail_info').data('mode', 'enemy_slot_detail');
+	$('#detail_info').data('base_no', enemyNo);
+	$('#detail_info').data('slot_no', slotNo);
+	$('#detail_info').data('battle_no', mainBattle);
+	$('#detail_warning').text('※ 航空戦火力はキャップ前でクリティカル、触接補正なし小数切捨て');
 
-		let planeText = '';
-		let index = 0;
-		$slots.addClass('d-none');
-		for (const id of enemy.eqp) {
-			const p = ENEMY_PLANE_DATA.find(v => v.id === id);
-			$slots.eq(index).removeClass('d-none');
-			$slots.eq(index).data('slot_no', index);
-			planeText += `
-			<div class="row">
-				<div class="col-2 align-self-center">装備${index + 1}:</div>
-				<div class="col d-flex align-self-end">
-					<img src="./img/type/type${p.type}.png" class="plane_img_sm align-self-center">
-					<div class="align-self-end">${p.name}</div>
-				</div>
-				<div class="col font_size_12 align-self-end">
-					(搭載: ${targetEnemy.slots[index++]}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
-				</div>
-			</div>`;
-		}
-
-		const detailLegend = `
-			<img src="./img/enemy/${enemy.id}.png" class="ship_img align-self-center">
-			<span class="ml-1 text-primary font_size_11 align-self-center">ID: ${enemy.id + 1500}</span>
-			<span class="ml-1 align-self-center">${enemy.name}</span>
-		`;
-
-		$('#detail_legend').html(detailLegend);
-		$('#detail_info').html(planeText);
+	let planeText = '';
+	let index = 0;
+	for (const id of enemy.eqp) {
+		const p = ENEMY_PLANE_DATA.find(v => v.id === id);
+		planeText += `
+		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
+			<div class="col-2 align-self-center text-right">
+				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''}" data-slot_no="${index}">表示</div>
+			</div>
+			<div class="col d-flex align-self-center">
+				<img src="./img/type/type${p.type}.png" class="plane_img_sm align-self-center">
+				<div class="align-self-center">${p.name}</div>
+			</div>
+			<div class="col font_size_12 align-self-center">
+				(搭載: ${targetEnemy.slots[index++]}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
+			</div>
+		</div>`;
 	}
+
+	const detailLegend = `
+		<img src="./img/enemy/${enemy.id}.png" class="ship_img align-self-center">
+		<span class="ml-1 text-primary font_size_11 align-self-center">ID: ${enemy.id + 1500}</span>
+		<span class="ml-1 align-self-center">${enemy.name}</span>
+	`;
+
+	$('#detail_legend').html(detailLegend);
+	$('#detail_info').html(planeText);
 }
 
 
@@ -9086,6 +9064,15 @@ function detail_slot_tab_Changed($this) {
 }
 
 /**
+ * グラフ表示機体切り替え
+ * @param {JqueryDomObject} $this
+ */
+function btn_show_detail_Clicked($this) {
+	$('#detail_info').data('slot_no', castInt($this[0].dataset.slot_no));
+	detailCalculate();
+}
+
+/**
  * 確認ダイアログOKボタンクリック時
  */
 function modal_confirm_ok_Clicked() {
@@ -9797,6 +9784,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('change', '#detail_calculate_count', () => $('#btn_calculate_detail').prop('disabled', false));
 	$('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
+	$('#modal_result_detail').on('click', '.btn_show_detail', function () { btn_show_detail_Clicked($(this)); });
 	$('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
 	$('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
 	$('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });
