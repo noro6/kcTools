@@ -671,6 +671,12 @@ function initialize(callback) {
 	document.getElementById('display_final')['checked'] = setting.visibleFinal;
 	document.getElementById('frequent_ship')['checked'] = setting.orderByFrequency;
 
+	$('.lb_tab').each((i, e) => {
+		const num = i + 1;
+		$(e).attr('id', `lb_item${num}`);
+		$(e).find('.baseNo').text(`第${num}基地航空隊`);
+	});
+
 	// 基地簡易ビュー複製
 	text = document.getElementById('lb_info_table').getElementsByTagName('tbody')[0].innerHTML;
 	for (let i = 0; i < 2; i++) document.getElementById('lb_info_table').getElementsByTagName('tbody')[0].innerHTML += text;
@@ -983,7 +989,7 @@ function initialize(callback) {
 	}
 	else if (setting.themeColor === 'deep-blue') {
 		document.getElementById('normal_theme')['checked'] = false;
-		document.getElementById('dark_theme')['checked'] = true;
+		document.getElementById('dark_theme')['checked'] = false;
 		document.getElementById('dark_gradient_theme')['checked'] = false;
 		document.getElementById('deep_blue_theme')['checked'] = true;
 	}
@@ -994,15 +1000,6 @@ function initialize(callback) {
 		document.getElementById('deep_blue_theme')['checked'] = false;
 	}
 	site_theme_Changed(false);
-
-	// さっさと明け渡す
-	$('#loading_text').addClass('load_end_text');
-	$('#loading_text').text('完了');
-	$('#loading_line').addClass('loading_line_expand');
-	$('#loading_back').addClass('load_end');
-	setTimeout(() => {
-		$('#loading_back').remove();
-	}, 1000);
 
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
@@ -5586,7 +5583,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		planeText += `
 		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
 			<div class="col-2 align-self-center text-right">
-				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''}" data-slot_no="${index}">表示</div>
+				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `` : 'disabled'}" data-slot_no="${index}">表示</div>
 			</div>
 			<div class="col d-flex align-self-center font_size_12 pl-0">
 				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
@@ -5808,7 +5805,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 		planeText += `
 		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
 			<div class="col-2 align-self-center text-right">
-				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''}" data-slot_no="${index}">表示</div>
+				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `` : 'disabled'}" data-slot_no="${index}">表示</div>
 			</div>
 			<div class="col d-flex align-self-center font_size_12 pl-0">
 				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
@@ -5999,7 +5996,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 		planeText += `
 		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
 			<div class="col-2 align-self-center text-right">
-				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''}" data-slot_no="${index}">表示</div>
+				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `` : 'disabled'}" data-slot_no="${index}">表示</div>
 			</div>
 			<div class="col d-flex align-self-center">
 				<img src="./img/type/type${p.type}.png" class="plane_img_sm align-self-center">
@@ -9784,7 +9781,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('change', '#detail_calculate_count', () => $('#btn_calculate_detail').prop('disabled', false));
 	$('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
-	$('#modal_result_detail').on('click', '.btn_show_detail', function () { btn_show_detail_Clicked($(this)); });
+	$('#modal_result_detail').on('click', '.btn_show_detail:not(.disabled)', function () { btn_show_detail_Clicked($(this)); });
 	$('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
 	$('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
 	$('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });

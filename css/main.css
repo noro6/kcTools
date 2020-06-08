@@ -612,13 +612,16 @@ input[type="text"] { font-size: 12px; }
 }
 .ship_name_span {
   cursor: pointer;
-  border-bottom: 1px #777 solid;
 }
-.ship_name_span:hover {
-  transition: 0.5s;
-  background-color: rgba(128, 128, 128, 0.05);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
+.ship_name_span::after {
+  content: '';
+  display:block;
+  width:0;
+  border-bottom: 1px solid #777;
+  transition: 0.3s ease-in-out;
+}
+.ship_name_span:hover::after {
+  width: 100%;
 }
 /* 艦娘機体選択欄 */
 .ship_plane {
@@ -1351,13 +1354,17 @@ input[type="text"] { font-size: 12px; }
   border-radius: .25rem;
   transition: .2s;
 }
-.btn_show_detail:hover {
+.btn_show_detail:not(.disabled):hover {
   color: #fff;
   background-color: rgb(108, 117, 125);
 }
-.btn_show_detail.selected  {
+.btn_show_detail.selected {
   color: #fff !important;
   background-color: rgb(108, 117, 125);
+}
+.btn_show_detail.disabled {
+  cursor: default;
+  opacity: .3;
 }
 
 /* ------------------------------
@@ -1435,8 +1442,6 @@ input[type="text"] { font-size: 12px; }
 .history_item:hover { background-color: rgba(128, 128, 128, 0.1); }
 .history_item_no_content { cursor: default; }
 .history_content { background-color: rgba(128, 128, 128, 0.1); }
-/* .ver_log .history_item:last-of-type { border-bottom: 1px solid rgba(128, 128, 128, 0.3); } */
-
 
 
 /* ------------------------------
