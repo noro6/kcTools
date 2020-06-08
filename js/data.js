@@ -2346,6 +2346,18 @@ let CHANGE_LOG = [
 			},
 		],
 	},
+	{
+		id: "1.7.3.1", changes: [
+			{
+				type: 1, title: "詳細計算画面のレイアウトを微妙に変更しました。",
+				content: "そのうちまた変わります。"
+			},
+			{
+				type: 2, title: "軽微な不具合の修正を行いました。",
+				content: "基地航空隊のラベルが全て第1基地航空隊になっていた問題を修正しました。"
+			},
+		],
+	},
 ];
 
-const LAST_UPDATE_DATE = "2020/05/20";
+const LAST_UPDATE_DATE = "2020/06/09";
