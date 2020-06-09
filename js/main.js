@@ -4592,7 +4592,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 			if (!isDefMode) {
 				const node_detail = document.createElement('td');
 				node_detail.className = 'td_detail_slot align-middle' + isLastSlot;
-				node_detail.innerHTML = '<i class="fas fa-file-signature"></i>';
+				node_detail.innerHTML = '<i class="fas fa-file-text"></i>';
 				node_tr.appendChild(node_detail);
 				document.getElementsByClassName('td_detail_slot')[0].classList.remove('d-none');
 			}
@@ -7350,6 +7350,22 @@ function plane_unlock_Clicked($this) {
 }
 
 /**
+ * 改修値メニュー展開時 初回展開時メニュー生成
+ * @param {JqueryDomObject} $this
+ */
+function remodelSelect_Shown($this) {
+	if(!$this.find('.dropdown-menu').html().trim()) {
+		let menuText = '';
+		for (let i = 0; i < 10; i++) {
+			menuText += `<div class="remodel_item" data-remodel="${i}"><i class="fas fa-star"></i>+${i}</div>`;
+		}
+		menuText += '<div class="remodel_item" data-remodel="10"><i class="fas fa-star"></i>max</div>';
+		$this.find('.dropdown-menu').append(menuText);
+	}
+	else $this.find('.remodel_item_selected').removeClass('remodel_item_selected'); 
+}
+
+/**
  * 改修値変更時
  * @param {JqueryDomObject} $this
  */
@@ -7359,6 +7375,20 @@ function remodelSelect_Changed($this) {
 		$this.removeClass('remodel_item_selected');
 		$this.find('.remodel_value').text(remodel);
 		calculate();
+	}
+}
+
+/**
+ * 熟練度メニュー展開時 初回展開時メニュー生成
+ * @param {JqueryDomObject} $this
+ */
+function profSelect_Shown($this) {
+	if(!$this.find('.dropdown-menu').html().trim()) {
+		let menuText = '';
+		for (let i = 7; i >= 0; i--) {
+			menuText += `<a class="dropdown-item prof_item"><img class="prof_opt prof_yellow" alt="${getProfString(i)}" data-prof="${i}" src="./img/util/prof${i}.png"></a>`;
+		}
+		$this.find('.dropdown-menu').append(menuText);
 	}
 }
 
@@ -7413,6 +7443,25 @@ function backup_enabled_Clicked() {
  * @param {JqueryDomObject} $this
  */
 function slot_select_parent_Show($this) {
+
+	// 初回起動時メニュー生成
+	if(!$this.find('.dropdown-menu').html().trim()) {
+		$this.find('.dropdown-menu').append(`
+		<span class="dropdown-header py-1 px-1 font_size_12">搭載数を入力</span>
+			<div class="d-flex mb-2 justify-content-between">
+				<div class="align-self-center flex-grow-1">
+					<input type="number" class="form-control form-control-sm slot_input" value="0" min="0" max="99">
+				</div>
+				<div class="ml-1 align-self-center">
+					<button type="button" data-ini="0" class="btn btn-sm btn-primary slot_ini">
+						<span class="text-nowrap">初期値</span>
+					</button>
+				</div>
+			</div>
+			<input type="range" class="custom-range slot_range" value="0" min="0" max="99">
+		`);
+	}
+
 	const preSlot = castInt($this.find('.slot').text());
 	$this.find('.slot_input').val(preSlot);
 	$this.find('.slot_range').val(preSlot);
@@ -9635,7 +9684,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('.slot_select_parent').on('show.bs.dropdown', function () { slot_select_parent_Show($(this)); });
 	$('.slot_select_parent').on('hide.bs.dropdown', function () { slot_select_parent_Close($(this)); });
 	$('.remodel_select_parent').on('hide.bs.dropdown', function () { remodelSelect_Changed($(this)); });
-	$('.remodel_select_parent').on('show.bs.dropdown', function () { $(this).find('.remodel_item_selected').removeClass('remodel_item_selected'); });
+	$('.remodel_select_parent').on('show.bs.dropdown', function () { remodelSelect_Shown($(this)); });
+	$('.prof_select_parent').on('show.bs.dropdown', function () { profSelect_Shown($(this)); });
 	$('.main_preset_select').on('hidden.bs.tab', function (e) { main_preset_tab_Changed(e); });
 	$('#main').on('show.bs.dropdown', '.enemy_ap_select_parent', function () { enemy_ap_select_parent_Show($(this)); });
 	$('#main').on('hide.bs.dropdown', '.enemy_ap_select_parent', function () { enemy_ap_select_parent_Close($(this)); });
