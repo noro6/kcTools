@@ -45,7 +45,7 @@ input[type="text"] { font-size: 12px; }
 }
 .modal-backdrop.show { opacity: .75; }
 @media (min-width: 1000px) { #lb_tab_select { display: none !important; } }
-.fa-toolbox { color: #c86400; }
+.fa-archive { color: #ac5300; }
 
 
 /* -----------------------------------
@@ -260,8 +260,6 @@ input[type="text"] { font-size: 12px; }
 .dark-theme .form-control:read-only { background-color: rgba(255, 255, 255, .1) !important; }
 .dark-theme .form-control::placeholder { color: #ccc; }
 .dark-theme .form-control::-ms-input-placeholder { color: #ccc; }
-
-
 .dark-theme .custom-select {
   color: #ccc;
   background-color: rgba(40, 40, 45, 0.4) !important;
@@ -786,7 +784,7 @@ input[type="text"] { font-size: 12px; }
 }
 /* 艦載機をドラッグした時のスタイル */
 .plane_draggable_hover {
-  background-color: rgba(0, 153, 255, 0.6) !important;
+  background-color: rgba(0, 153, 255, 0.4) !important;
   border: 2px #39b0ff solid !important;
   transition: 0.2s;
 }
