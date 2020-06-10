@@ -7277,14 +7277,14 @@ function btn_fighter_prof_max_Clicked() {
 	if ($targetContent.attr('id') === 'landBase') {
 		$targetContent.find('.lb_plane').each((i, e) => {
 			if (FIGHTERS.includes(Math.abs(castInt($(e)[0].dataset.type)))) {
-				proficiency_Changed($(e).find('.prof_opt[data-prof="7"]').parent(), true);
+				setProficiency($(e).find('.prof_select'), 7);
 			}
 		});
 	}
 	else if ($targetContent.attr('id') === 'friendFleet') {
 		$targetContent.find('.ship_plane').each((i, e) => {
 			if (FIGHTERS.includes(Math.abs(castInt($(e)[0].dataset.type)))) {
-				proficiency_Changed($(e).find('.prof_opt[data-prof="7"]').parent(), true);
+				setProficiency($(e).find('.prof_select'), 7);
 			}
 		});
 	}
@@ -7299,12 +7299,12 @@ function btn_prof_Clicked($this) {
 	const prof = $this[0].dataset.prof;
 	if ($targetContent.attr('id') === 'landBase') {
 		$targetContent.find('.lb_plane').each((i, e) => {
-			proficiency_Changed($(e).find('.prof_opt[data-prof="' + prof + '"]').parent(), true);
+			setProficiency($(e).find('.prof_select'), prof);
 		});
 	}
 	else if ($targetContent.attr('id') === 'friendFleet') {
 		$targetContent.find('.ship_plane').each((i, e) => {
-			proficiency_Changed($(e).find('.prof_opt[data-prof="' + prof + '"]').parent(), true);
+			setProficiency($(e).find('.prof_select'), prof);
 		});
 	}
 }
@@ -7354,7 +7354,7 @@ function plane_unlock_Clicked($this) {
  * @param {JqueryDomObject} $this
  */
 function remodelSelect_Shown($this) {
-	if(!$this.find('.dropdown-menu').html().trim()) {
+	if (!$this.find('.dropdown-menu').html().trim()) {
 		let menuText = '';
 		for (let i = 0; i < 10; i++) {
 			menuText += `<div class="remodel_item" data-remodel="${i}"><i class="fas fa-star"></i>+${i}</div>`;
@@ -7362,7 +7362,7 @@ function remodelSelect_Shown($this) {
 		menuText += '<div class="remodel_item" data-remodel="10"><i class="fas fa-star"></i>max</div>';
 		$this.find('.dropdown-menu').append(menuText);
 	}
-	else $this.find('.remodel_item_selected').removeClass('remodel_item_selected'); 
+	else $this.find('.remodel_item_selected').removeClass('remodel_item_selected');
 }
 
 /**
@@ -7383,7 +7383,7 @@ function remodelSelect_Changed($this) {
  * @param {JqueryDomObject} $this
  */
 function profSelect_Shown($this) {
-	if(!$this.find('.dropdown-menu').html().trim()) {
+	if (!$this.find('.dropdown-menu').html().trim()) {
 		let menuText = '';
 		for (let i = 7; i >= 0; i--) {
 			menuText += `<a class="dropdown-item prof_item"><img class="prof_opt prof_yellow" alt="${getProfString(i)}" data-prof="${i}" src="./img/util/prof${i}.png"></a>`;
@@ -7411,6 +7411,22 @@ function proficiency_Changed($this, cancelCalculate = false) {
 	else $targetSelect.addClass('prof_none');
 
 	if (!cancelCalculate) calculate();
+}
+
+/**
+ * 熟練度変更
+ * @param {JqueryDomObject} $targetSelect 適用先.prof_select
+ * @param {number} prof 適用する値
+ */
+function setProficiency($targetSelect, prof) {
+	$targetSelect
+		.attr('src', `./img/util/prof${prof}.png`)
+		.attr('alt', getProfString(prof))
+		.removeClass('prof_yellow prof_blue prof_none');
+	$targetSelect[0].dataset.prof = prof;
+	if (prof > 3) $targetSelect.addClass('prof_yellow');
+	else if (prof > 0) $targetSelect.addClass('prof_blue');
+	else $targetSelect.addClass('prof_none');
 }
 
 /**
@@ -7445,7 +7461,7 @@ function backup_enabled_Clicked() {
 function slot_select_parent_Show($this) {
 
 	// 初回起動時メニュー生成
-	if(!$this.find('.dropdown-menu').html().trim()) {
+	if (!$this.find('.dropdown-menu').html().trim()) {
 		$this.find('.dropdown-menu').append(`
 		<span class="dropdown-header py-1 px-1 font_size_12">搭載数を入力</span>
 			<div class="d-flex mb-2 justify-content-between">
