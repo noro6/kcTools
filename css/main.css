@@ -451,6 +451,40 @@ input[type="text"] { font-size: 12px; }
   height: 32px;
 }
 
+.version_detail {
+  cursor: pointer;
+  font-size: 16px;
+  transition: .3s;
+  position: relative;
+  color: #888;
+}
+.version_detail:hover {
+  color: #000;
+}
+.dark-theme .version_detail:hover {
+  color: #fff;
+}
+.version_detail.unread::after {
+  position: absolute;
+  content: '';
+  right: -5px;
+  width: 9px;
+  height: 9px;
+  background-color: red;
+  border-radius: 100%;
+  animation: unread-badge 1.5s ease-in-out infinite;
+}
+@keyframes unread-badge {
+  0%, 67%, 100% { transform: scale(1.0, 1.0) translate(0%, 0%); }
+  72%  { transform: scale(1.1, 0.9) translate(0%, 5%); }
+  76%  { transform: scale(1.2, 0.8) translate(0%, 15%); }
+  80%  { transform: scale(1.0, 1.0) translate(0%, 0%); }
+  84%  { transform: scale(0.9, 1.2) translate(0%, -100%); }
+  88%  { transform: scale(0.9, 1.2) translate(0%, -20%); }
+  92%  { transform: scale(1.2, 0.8) translate(0%, 15%); }
+  96%  { transform: scale(1.0, 1.0) translate(0%, 0%); }   
+}
+
 /* -----------------------------------
   sideBar
 ----------------------------------- */
@@ -782,6 +816,7 @@ input[type="text"] { font-size: 12px; }
   width: 240px;
   box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.3)
 }
+
 /* 艦載機をドラッグした時のスタイル */
 .plane_draggable_hover {
   background-color: rgba(0, 153, 255, 0.4) !important;
