@@ -590,13 +590,6 @@ function initialize(callback) {
 		const id = PLANE_TYPE[i].id;
 		img.src = './img/type/type' + id + '.png';
 		IMAGES["type" + id] = img;
-
-		if (i === PLANE_TYPE.length - 1) {
-			// 最後の画像読み込みが終わったら所持装備欄初期表示
-			img.addEventListener('load', () => {
-				setPlaneStockTable();
-			}, false);
-		}
 	}
 
 	// 設定データ読み込み
@@ -9766,6 +9759,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#config_content').on('click', '#btn_reset_selected_plane_history', btn_reset_selected_plane_history_Clicked);
 	$('#config_content').on('click', '#btn_reset_selected_ship_history', btn_reset_selected_ship_history_Clicked);
 	$('#config_content').on('click', 'input[name="site_theme"]', function () { site_theme_Changed(); });
+	$('#plane_stock').on('show.bs.collapse', '.collapse', setPlaneStockTable);
 	$('#plane_stock').on('change', '#stock_type_select', function () { stock_type_select_Changed($(this)); });
 	$('#plane_stock').on('click', '.stock_td_fav', function (e) { stock_td_fav_Clicked($(this)); e.stopPropagation(); });
 	$('#plane_stock').on('click', '.stock_tr', function () { stock_tr_Clicked($(this)); });
