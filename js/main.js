@@ -604,40 +604,7 @@ function initialize(callback) {
 
 	// バージョンチェック
 	const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
-	document.getElementById('latest_version').textContent = serverVersion.id;
 	if (setting.version !== serverVersion.id) {
-		fragment = document.createDocumentFragment();
-		for (const v of serverVersion.changes) {
-			// 変更通知
-			const $change_wrap = document.createElement('div');
-			$change_wrap.className = 'mt-3';
-
-			const $badge_wrap = document.createElement('div');
-			const $badge = document.createElement('span');
-			$badge.className = 'mr-1 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
-			$badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
-
-			const $title_text = document.createElement('span');
-			$title_text.innerHTML = v.title;
-
-			$badge_wrap.appendChild($badge);
-			$badge_wrap.appendChild($title_text);
-			$change_wrap.appendChild($badge_wrap);
-
-			if (v.content) {
-				const $content = document.createElement('div');
-				$content.className = 'font_size_12 pl-3';
-				$content.innerHTML = v.content;
-
-				$change_wrap.appendChild($content);
-			}
-
-			fragment.appendChild($change_wrap);
-		}
-
-		document.getElementById('version').textContent = serverVersion.id;
-		document.getElementById('version_inform_body').appendChild(fragment);
-
 		// バージョン変更毎にデータ削除
 		deleteLocalStorage('version');
 		deleteLocalStorage('autoSave');
@@ -650,6 +617,7 @@ function initialize(callback) {
 		if (planeStock && planeStock.length > 0 && !planeStock[0].num.length) {
 			deleteLocalStorage('planeStock');
 		}
+		document.getElementsByClassName('version_detail')[0].classList.add('unread');
 	}
 
 	// 機体カテゴリ初期化
@@ -670,12 +638,6 @@ function initialize(callback) {
 	// 最終状態のみ表示
 	document.getElementById('display_final')['checked'] = setting.visibleFinal;
 	document.getElementById('frequent_ship')['checked'] = setting.orderByFrequency;
-
-	$('.lb_tab').each((i, e) => {
-		const num = i + 1;
-		$(e).attr('id', `lb_item${num}`);
-		$(e).find('.baseNo').text(`第${num}基地航空隊`);
-	});
 
 	// 基地簡易ビュー複製
 	text = document.getElementById('lb_info_table').getElementsByTagName('tbody')[0].innerHTML;
@@ -1003,11 +965,6 @@ function initialize(callback) {
 
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
-
-	if ($('#modal_version_inform').find('.modal-body').html()) {
-		// バージョン変更通知
-		$('#modal_version_inform').modal('show');
-	}
 
 	callback();
 }
@@ -6921,6 +6878,53 @@ function sidebar_Clicked($this) {
 }
 
 /**
+ * バージョン変更通知展開時
+ */
+function version_detail_Clicked() {
+	if (!document.getElementById('version_inform_body').innerHTML) {
+		const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
+		const fragment = document.createDocumentFragment();
+		for (const v of serverVersion.changes) {
+			// 変更通知
+			const $change_wrap = document.createElement('div');
+			$change_wrap.className = 'mt-3';
+
+			const $badge_wrap = document.createElement('div');
+			const $badge = document.createElement('span');
+			$badge.className = 'mr-1 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+			$badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
+
+			const $title_text = document.createElement('span');
+			$title_text.innerHTML = v.title;
+
+			$badge_wrap.appendChild($badge);
+			$badge_wrap.appendChild($title_text);
+			$change_wrap.appendChild($badge_wrap);
+
+			if (v.content) {
+				const $content = document.createElement('div');
+				$content.className = 'font_size_12 pl-3';
+				$content.innerHTML = v.content;
+
+				$change_wrap.appendChild($content);
+			}
+
+			fragment.appendChild($change_wrap);
+		}
+		document.getElementById('version').textContent = serverVersion.id;
+		document.getElementById('version_inform_body').appendChild(fragment);
+
+		// 既読フラグ
+		setting.version = serverVersion.id;
+		saveLocalStorage('setting', setting);
+
+		document.getElementsByClassName('version_detail')[0].classList.remove('unread');
+	}
+
+	$('#modal_version_inform').modal('show');
+}
+
+/**
  * 大コンテンツ入れ替えモード起動ボタンクリック時
  * @param {JqueryDomObject} $this
  */
@@ -9594,16 +9598,6 @@ function smart_menu_modal_link_Clicked($this) {
 }
 
 /**
- * バージョン通知閉じたとき
- */
-function varsion_Closed() {
-	if ($('#alreadyRead').prop('checked')) {
-		setting.version = $('#version').text();
-		saveLocalStorage('setting', setting);
-	}
-}
-
-/**
  * 初めての方クリック時
  */
 function first_time_Clicked() {
@@ -9691,7 +9685,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			btn_redo_Clicked();
 		}
 	});
-	$('#modal_version_inform').on('hide.bs.modal', varsion_Closed);
 	$('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
 	$('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
 	$('.modal').on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
@@ -9719,6 +9712,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
 	$('#main').on('click', '.btn_commit_trade', commit_content_order);
 	$('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
+	$('#main').on('click', '.version_detail', version_detail_Clicked);
 	$('#landBase').on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
 	$('#landBase').on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
 	$('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });

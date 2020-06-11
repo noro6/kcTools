@@ -2358,6 +2358,14 @@ let CHANGE_LOG = [
 			},
 		],
 	},
+	{
+		id: "1.7.3.2", changes: [
+			{
+				type: 1, title: "バージョン変更内容を任意で表示するようにしました。",
+				content: "この文言を表示できたということは、変更内容の表示方法の解説は不要ですね！"
+			},
+		],
+	},
 ];
 
-const LAST_UPDATE_DATE = "2020/06/09";
+const LAST_UPDATE_DATE = "2020/06/12";
