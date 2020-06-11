@@ -115,11 +115,11 @@
 							<h1 class="ml-1" id="main_title">
 								<span>制空権シミュレータ</span>
 								<span class="font_size_20 ml-2">v.1.7.3.2</span>
+								<span class="ml-2 version_detail" data-toggle="tooltip" data-placement="right"
+									data-offset="0, 5" title="変更内容を確認">
+									<i class="fas fa-file-text"></i>
+								</span>
 							</h1>
-							<div class="ml-2 align-self-center version_detail" data-toggle="tooltip" data-placement="right"
-								data-offset="0, 5" title="変更内容を確認">
-								<i class="fas fa-file-text"></i>
-							</div>
 							<div class="ml-auto align-self-center">
 								<button class="btn btn-sm btn-outline-success btn_first_time">初めての方</button>
 							</div>
@@ -3936,7 +3936,11 @@
 									</table>
 								</div>
 								<div class="mt-2">
-									<ul class="nav nav-tabs" id="display_battle_tab"></ul>
+									<ul class="nav nav-tabs" id="display_battle_tab">
+										<li class="nav-item">
+											<a class="nav-link active" data-toggle="tab" href="#">1戦目</a>
+										</li>
+									</ul>
 								</div>
 								<div class="d-flex mt-1" id="display_setting">
 									<div class="ml-auto font_size_12 align-self-center display_label_result no_capture">表示：</div>
@@ -4091,7 +4095,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr class="lb_info_tr slot1">
+													<tr class="lb_info_tr slot1 d-none">
 														<td class="info_name" rowspan="4">第1基地航空隊</td>
 														<td class="info_plane">-</td>
 														<td class="info_slot"></td>
@@ -4099,17 +4103,17 @@
 														<td class="info_sumAp" rowspan="4"></td>
 														<td class="info_range" rowspan="4"></td>
 													</tr>
-													<tr class="lb_info_tr slot2">
+													<tr class="lb_info_tr slot2 d-none">
 														<td class="info_plane">-</td>
 														<td class="info_slot"></td>
 														<td class="info_ap"></td>
 													</tr>
-													<tr class="lb_info_tr slot3">
+													<tr class="lb_info_tr slot3 d-none">
 														<td class="info_plane">-</td>
 														<td class="info_slot"></td>
 														<td class="info_ap"></td>
 													</tr>
-													<tr class="lb_info_tr slot4">
+													<tr class="lb_info_tr slot4 d-none">
 														<td class="info_plane">-</td>
 														<td class="info_slot"></td>
 														<td class="info_ap"></td>
@@ -4157,10 +4161,10 @@
 									title="順序入れ替え"><i class="fas fa-arrows-v d-table-cell align-middle"></i>
 								</div>
 								<div class="ml-2 rounded-circle round_button align-self-center d-table" data-toggle="collapse"
-									data-target="#plane_stock_content"><i class="fas fa-chevron-down d-table-cell align-middle"></i>
+									data-target="#plane_stock_content"><i class="fas fa-chevron-up d-table-cell align-middle"></i>
 								</div>
 							</div>
-							<div class="collapse collapse_content show" id="plane_stock_content">
+							<div class="collapse collapse_content" id="plane_stock_content">
 								<div class="border-top"></div>
 								<div class="mx-1 d-flex my-2 flex-wrap">
 									<div class="input-group input-group-sm" id="plane_type_select_parent">

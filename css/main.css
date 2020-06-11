@@ -468,6 +468,7 @@ input[type="text"] { font-size: 12px; }
   position: absolute;
   content: '';
   right: -5px;
+  top: -5px;
   width: 9px;
   height: 9px;
   background-color: red;
