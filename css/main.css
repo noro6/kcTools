@@ -150,6 +150,7 @@ input[type="text"] { font-size: 12px; }
 .round_button:hover { background-color: rgba(128, 128, 128, 0.3); }
 .btn_ok { width: 72px; }
 .btn_icon {
+  width: 18px;
   font-size: 18px;
   transition: 0.4s;
   opacity: 0.5;
@@ -721,6 +722,7 @@ input[type="text"] { font-size: 12px; }
 }
 .plane_unlock:hover { opacity: 1; }
 .btn_remove_plane {
+  width: 14px;
   cursor: pointer;
   transition: 0.4s;
   opacity: 0.2;
