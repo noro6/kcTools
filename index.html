@@ -114,7 +114,7 @@
 						<div class="d-flex pt-3">
 							<h1 class="ml-1" id="main_title">
 								<span>制空権シミュレータ</span>
-								<span class="font_size_20 ml-2">v.1.7.3.2</span>
+								<span class="font_size_20 ml-2">v.1.7.4</span>
 								<span class="ml-2 version_detail" data-toggle="tooltip" data-placement="right" data-offset="0, 5"
 									title="変更内容を確認">
 									<i class="fas fa-file-text"></i>
@@ -4055,6 +4055,49 @@
 											<tbody id="enemy_shoot_down_tbody"></tbody>
 										</table>
 									</div>
+									<div class="mb-2" id="enemy_ap_dist_table_parent">
+										<div class="mt-2 font_size_14">
+											<div class="drag_handle cur_move">
+												敵艦隊の制空値分布
+											</div>
+										</div>
+										<table class="text-center w-100" id="enemy_ap_dist_table">
+											<thead class="general_thead">
+												<tr class="enemy_shoot_down_tr">
+													<td></td>
+													<td>最小値</td>
+													<td>上位50%値</td>
+													<td>上位25%値</td>
+													<td>上位10%値</td>
+													<td>上位5%値</td>
+													<td>上位1%値</td>
+													<td>最大値</td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="border-bottom">
+													<td>本隊航空戦 <span class="font-weight-bold">前</span></td>
+													<td id="enemy_ap_bf_dist_min"></td>
+													<td id="enemy_ap_bf_dist_50"></td>
+													<td id="enemy_ap_bf_dist_75"></td>
+													<td id="enemy_ap_bf_dist_90"></td>
+													<td id="enemy_ap_bf_dist_95"></td>
+													<td id="enemy_ap_bf_dist_99"></td>
+													<td id="enemy_ap_bf_dist_max"></td>
+												</tr>
+												<tr class="border-bottom">
+													<td>本隊航空戦 <span class="font-weight-bold">後</span></td>
+													<td id="enemy_ap_af_dist_min"></td>
+													<td id="enemy_ap_af_dist_50"></td>
+													<td id="enemy_ap_af_dist_75"></td>
+													<td id="enemy_ap_af_dist_90"></td>
+													<td id="enemy_ap_af_dist_95"></td>
+													<td id="enemy_ap_af_dist_99"></td>
+													<td id="enemy_ap_af_dist_max"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -5713,9 +5756,9 @@
 									<td>最大</td>
 									<td>最小</td>
 									<td>上位50%</td>
-									<td>上位90%</td>
-									<td>上位95%</td>
-									<td>上位99%</td>
+									<td>上位10%</td>
+									<td>上位5%</td>
+									<td>上位1%</td>
 								</tr>
 							</thead>
 							<tbody>

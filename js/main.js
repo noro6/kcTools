@@ -3177,8 +3177,8 @@ function drawResult() {
 	$('#shoot_down_table_tbody .battle_death').tooltip();
 
 	// 敵艦搭載数推移
-	for (let i = 0; i < chartData.enSlots.length; i++) {
-		const s = chartData.enSlots[i];
+	for (let i = 0; i < chartData.enmSlots.length; i++) {
+		const s = chartData.enmSlots[i];
 		const node_tr = document.getElementsByClassName('enemy_no_' + s[0] + ' slot_' + s[1])[0];
 		const avg = (s[2] / calculateCount);
 		node_tr.getElementsByClassName('td_avg_slot')[0].textContent = (avg === 0 ? '0' : avg.toFixed(1));
@@ -3186,7 +3186,63 @@ function drawResult() {
 		node_tr.getElementsByClassName('td_min_slot')[0].textContent = s[4];
 	}
 
+	// 敵制空値関連
+	const stage1BeforAps = chartData.enmAps[0];
+	const stage1AfterAps = chartData.enmAps[1];
+	if (stage1BeforAps.length) {
+		const dist = getEnemyApDistribution(stage1BeforAps);
+		document.getElementById('enemy_ap_bf_dist_min').textContent = dist[0];
+		document.getElementById('enemy_ap_bf_dist_50').textContent = dist[1];
+		document.getElementById('enemy_ap_bf_dist_75').textContent = dist[2];
+		document.getElementById('enemy_ap_bf_dist_90').textContent = dist[3];
+		document.getElementById('enemy_ap_bf_dist_95').textContent = dist[4];
+		document.getElementById('enemy_ap_bf_dist_99').textContent = dist[5];
+		document.getElementById('enemy_ap_bf_dist_max').textContent = dist[6];
+	}
+	if (stage1AfterAps.length) {
+		const dist = getEnemyApDistribution(stage1AfterAps);
+		document.getElementById('enemy_ap_af_dist_min').textContent = dist[0];
+		document.getElementById('enemy_ap_af_dist_50').textContent = dist[1];
+		document.getElementById('enemy_ap_af_dist_75').textContent = dist[2];
+		document.getElementById('enemy_ap_af_dist_90').textContent = dist[3];
+		document.getElementById('enemy_ap_af_dist_95').textContent = dist[4];
+		document.getElementById('enemy_ap_af_dist_99').textContent = dist[5];
+		document.getElementById('enemy_ap_af_dist_max').textContent = dist[6];
+	}
+
 	display_result_Changed();
+}
+
+/**
+ * 数値配列から [min 上位50 25 10 5 1 max] 配列を返却
+ * @param {Array<number>} data
+ */
+function getEnemyApDistribution(data) {
+	// 昇順ソート
+	data.sort((a, b) => a - b);
+
+	const maxCount = data.length;
+	const min = data[0];
+	const max = data[data.length - 1];
+	let par50 = 0, par75 = 0, par90 = 0, par95 = 0, par99 = 0, sumRate = 0;
+
+	for (let i = min; i < max; i++) {
+		const num = data.filter(v => v === i).length;
+		if (!i) continue;
+		sumRate += 100 * num / maxCount;
+		if (!par50 && sumRate >= 50) par50 = i;
+		if (!par75 && sumRate >= 70) par75 = i;
+		if (!par90 && sumRate >= 90) par90 = i;
+		if (!par95 && sumRate >= 95) par95 = i;
+		if (!par99 && sumRate >= 99) par99 = i;
+	}
+	par50 = par50 ? par50 : max;
+	par75 = par75 ? par75 : max;
+	par90 = par90 ? par90 : max;
+	par95 = par95 ? par95 : max;
+	par99 = par99 ? par99 : max;
+	const array = [min, par50, par75, par90, par95, par99, max];
+	return array;
 }
 
 /*==================================
@@ -3431,7 +3487,7 @@ function calculateInit(objectData) {
 	saveLocalStorage('setting', setting);
 
 	// チャートデータ初期化
-	chartData = { own: [], enemy: [], rate: [], slots: [], enSlots: [] };
+	chartData = { own: [], enemy: [], rate: [], slots: [], enmSlots: [], enmAps: [] };
 
 	// 事前計算テーブルチェック
 	setPreCalculateTable();
@@ -4575,6 +4631,9 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 
 		shoot_fragment.appendChild(node_tr);
 	}
+	else {
+
+	}
 
 	document.getElementById('enemy_shoot_down_tbody').appendChild(shoot_fragment);
 }
@@ -5145,6 +5204,7 @@ function rateCalculate(objectData) {
 	let avgMainAps = [];
 	// 敵スロット明細 (各戦闘毎に以下データ [敵スロット番号, sum, max, min])
 	let enemySlotResult = [];
+	const enemyAps = [[], []];
 	const maxBattle = isDefMode ? 1 : battleCount;
 	const defAp = chartData.own[0];
 
@@ -5214,6 +5274,7 @@ function rateCalculate(objectData) {
 				// 本隊の分のst1起こす
 				shootDownEnemy(airIndex, enemies);
 				let index = 0;
+				let downAp = 0;
 				for (let i = 0; i < enemies.length; i++) {
 					const enemy = enemies[i];
 					if (enemy.isSpR) continue;
@@ -5227,14 +5288,16 @@ function rateCalculate(objectData) {
 						if (slotResult[3] < slotValue) slotResult[3] = slotValue;
 						// 最小値更新
 						if (slotResult[4] > slotValue) slotResult[4] = slotValue;
-						slotResult[5].push(eap);
 					}
+					downAp += enemy.ap;
 
 					// 補給
 					enemy.slots = enemy.orgSlots.concat();
 					enemy.ap = enemy.origAp;
 					enemy.lbAp = enemy.origLbAp;
 				}
+				enemyAps[0].push(eap);
+				enemyAps[1].push(downAp);
 			}
 		}
 
@@ -5314,7 +5377,8 @@ function rateCalculate(objectData) {
 	if (!isDefMode) chartData.own[chartData.own.length - 1] = Math.round(avgMainAps[mainBattle] / maxCount);
 
 	chartData.rate = rateDist.concat();
-	chartData.enSlots = enemySlotResult.concat();
+	chartData.enmSlots = enemySlotResult.concat();
+	chartData.enmAps = enemyAps.concat();
 }
 
 /**
