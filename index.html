@@ -14,7 +14,7 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="favicon.ico">
-	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb" crossorigin>
+	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb"	crossorigin>
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -114,7 +114,7 @@
 						<div class="d-flex pt-3">
 							<h1 class="ml-1" id="main_title">
 								<span>制空権シミュレータ</span>
-								<span class="font_size_20 ml-2">v.1.7.4</span>
+								<span class="font_size_20 ml-2">v.1.7.5</span>
 								<span class="ml-2 version_detail" data-toggle="tooltip" data-placement="right" data-offset="0, 5"
 									title="変更内容を確認">
 									<i class="fas fa-file-text"></i>
@@ -341,6 +341,27 @@
 													</div>
 												</div>
 											</div>
+											<div id="simple_lb_bar_1" class="d-none mt-1 simple_lb_progress">
+												<div class="d-flex">
+													<div class="simple_label mr-0_5 pt-2 align-self-center"></div>
+													<div class="flex-grow-1 align-self-center">
+														<div class="d-flex">
+															<div class="bar_ex_label" style="width:10%;">喪失</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:10%;">劣勢</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:25%;">均衡</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:45%;">優勢</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:10%;">確保</div>
+														</div>
+														<div class="mt-0_5 progress simple_bar">
+															<div class="progress-bar result_bar" style="width:0%;"></div>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 										<div class="lb_tab general_box mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1" id="lb_item2">
 											<div class="d-flex mr-1 mt-1">
@@ -509,6 +530,27 @@
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
 															<i class="fas fa-times"></i>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div id="simple_lb_bar_2" class="d-none mt-1 simple_lb_progress">
+												<div class="d-flex">
+													<div class="simple_label mr-0_5 pt-2 align-self-center"></div>
+													<div class="flex-grow-1 align-self-center">
+														<div class="d-flex">
+															<div class="bar_ex_label" style="width:10%;">喪失</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:10%;">劣勢</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:25%;">均衡</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:45%;">優勢</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:10%;">確保</div>
+														</div>
+														<div class="mt-0_5 progress simple_bar">
+															<div class="progress-bar result_bar" style="width:0%;"></div>
 														</div>
 													</div>
 												</div>
@@ -685,6 +727,27 @@
 													</div>
 												</div>
 											</div>
+											<div id="simple_lb_bar_3" class="d-none mt-1 simple_lb_progress">
+												<div class="d-flex">
+													<div class="simple_label mr-0_5 pt-2 align-self-center"></div>
+													<div class="flex-grow-1 align-self-center">
+														<div class="d-flex">
+															<div class="bar_ex_label" style="width:10%;">喪失</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:10%;">劣勢</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:25%;">均衡</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:45%;">優勢</div>
+															<div class="bar_divide align-self-end"></div>
+															<div class="bar_ex_label" style="width:10%;">確保</div>
+														</div>
+														<div class="mt-0_5 progress simple_bar">
+															<div class="progress-bar result_bar" style="width:0%;"></div>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -753,7 +816,7 @@
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_1">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_1">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -964,7 +1027,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_2">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_2">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -1175,7 +1238,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_3">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_3">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -1386,7 +1449,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_4">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_4">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -1597,7 +1660,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_5">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_5">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -1808,7 +1871,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_6">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_6">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -2035,7 +2098,7 @@
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_7">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_7">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -2246,7 +2309,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1" id="shipNo_8">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_8">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -2457,7 +2520,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_9">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_9">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -2668,7 +2731,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_10">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_10">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -2879,7 +2942,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_11">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_11">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -3090,7 +3153,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="ship_tab general_box mx-1 my-2 flex-grow-1 d-none" id="shipNo_12">
+											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_12">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
 													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
 														<div class="sortable_handle cur_move">
@@ -3300,6 +3363,27 @@
 													<div class="no_capture btn_reset_ship_plane mb-1"><i class="fas fa-times"></i>
 													</div>
 												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="fleet_simple_bar" class="d-none">
+									<div class="d-flex mb-2 mx-2">
+										<div class="simple_label mr-1 pt-3 align-self-center"></div>
+										<div class="flex-grow-1 align-self-center">
+											<div class="d-flex">
+												<div class="bar_ex_label" style="width:10%;">喪失</div>
+												<div class="bar_divide align-self-end"></div>
+												<div class="bar_ex_label" style="width:10%;">劣勢</div>
+												<div class="bar_divide align-self-end"></div>
+												<div class="bar_ex_label" style="width:25%;">均衡</div>
+												<div class="bar_divide align-self-end"></div>
+												<div class="bar_ex_label" style="width:45%;">優勢</div>
+												<div class="bar_divide align-self-end"></div>
+												<div class="bar_ex_label" style="width:10%;">確保</div>
+											</div>
+											<div class="progress mt-1 simple_bar">
+												<div class="progress-bar result_bar" style="width:0%;"></div>
 											</div>
 										</div>
 									</div>
@@ -3980,7 +4064,7 @@
 												<div class="bar_ex_label" style="width:10%;">確保</div>
 											</div>
 										</div>
-										<div class="d-flex">
+										<div class="d-flex mt-0_5">
 											<div class="progress_label"></div>
 											<div class="progress result_bar_ex flex-grow-1 align-self-center">
 												<div class="progress-bar bar_ex_status4" style="width:10%;"></div>

@@ -55,6 +55,7 @@ input[type="text"] { font-size: 12px; }
 .pt-1_5 { padding-top: .32rem !important; }
 .mt-0_5 { margin-top: .1rem !important; }
 .ml-2_5 { margin-left: 0.75rem !important; }
+.mr-0_5 { margin-right: 0.1rem !important; }
 .mr-2_5 { margin-right: 0.75rem !important; }
 .pt-3_5 { padding-top: 1.25rem !important; }
 .pb-0_1 { padding-top: 0.1rem !important; }
@@ -208,6 +209,10 @@ input[type="text"] { font-size: 12px; }
   background-color: rgba(128, 128, 138, 0.2);
   border-top: 1px rgba(128, 128, 128, 0.502) solid;
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
+}
+.progress {
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 8px;
 }
 
 /* -----------------------------------
@@ -484,7 +489,7 @@ input[type="text"] { font-size: 12px; }
   84%  { transform: scale(0.9, 1.2) translate(0%, -100%); }
   88%  { transform: scale(0.9, 1.2) translate(0%, -20%); }
   92%  { transform: scale(1.2, 0.8) translate(0%, 15%); }
-  96%  { transform: scale(1.0, 1.0) translate(0%, 0%); }   
+  96%  { transform: scale(1.0, 1.0) translate(0%, 0%); }
 }
 
 /* -----------------------------------
@@ -634,6 +639,11 @@ input[type="text"] { font-size: 12px; }
 }
 .lb_plane:hover { background-color: rgba(128, 128, 128, 0.1); }
 
+.simple_bar { height: 5px; }
+.simple_label {
+  text-align: center;
+  font-size: 11px;
+}
 
 /* -----------------------------------
   艦隊関連 #friendFleet
@@ -1211,10 +1221,6 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   width: 90px;
 }
-.progress {
-  background-color: rgba(0, 0, 0, 0.1);
-  height: 8px;
-}
 .result_bar {
   font-size: 11px;
   text-align: right;
@@ -1223,13 +1229,11 @@ input[type="text"] { font-size: 12px; }
 .bar_ex_label {
   text-align: center;
   border-bottom: 1px solid rgb(128, 128, 128);
-  margin-bottom: 2px;
   font-size: 11px;
 }
 .bar_divide {
   height: 8px;
   border-left:1px solid rgb(128, 128, 128);
-  margin-bottom: 2px;
 }
 .result_bar_ex { height: 4px; }
 /* 制空状態割合テーブル */
@@ -1539,6 +1543,6 @@ input[type="text"] { font-size: 12px; }
 .bg_status4 { background-color: rgba(255, 80, 80, 0.4); }
 .bar_ex_status0 { background-color:rgba(60, 170, 30, 0.8); }
 .bar_ex_status1 { background-color:rgba(140, 205, 150, 0.8); }
-.bar_ex_status2 { background-color:rgba(255, 255, 20, 0.8); }
+.bar_ex_status2 { background-color:rgba(255, 255, 20, 0.7); }
 .bar_ex_status3 { background-color:rgba(255, 150, 50, 0.8); }
 .bar_ex_status4 { background-color: rgba(255, 80, 80, 0.8); }
