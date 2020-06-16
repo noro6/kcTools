@@ -2336,8 +2336,8 @@ function expandEnemy() {
 	// 戦闘マス情報
 	const cellType = isDefMode && pattern.type !== 5 ? 3 : pattern.type;
 	$target.find('.cell_type').val(cellType);
+	cell_type_Changed($target.find('.cell_type'), false);
 	// 陣形
-	changeFormationSelectOption($target.find('.formation'), cellType);
 	$target.find('.formation').val(pattern.form);
 
 	// 敵展開
@@ -3060,6 +3060,8 @@ function drawResult() {
 	// 初期化
 	$('#rate_table tbody').find('.rate_tr').addClass('d-none disabled_tr');
 	$('.progress_area').addClass('d-none disabled_bar').removeClass('d-flex');
+	$('.simple_lb_progress').addClass('d-none').removeClass('d-flex');
+	$('#fleet_simple_bar').addClass('d-none');
 	const data = Object.create(chartData);
 	const len = data.own.length;
 	for (let i = 0; i < len; i++) {
@@ -3095,10 +3097,12 @@ function drawResult() {
 		}
 
 		// 結果表示バーの描画
-		const prevStatus = $target_bar.data('airstatus');
+		let prevStatus = $target_bar.data('airstatus');
+		const barColor = 'bar_status' + status;
+		const prevBarColor = 'bar_status' + prevStatus;
 		$target_bar
-			.removeClass('bar_status' + prevStatus)
-			.addClass('bar_status' + status)
+			.removeClass(prevBarColor)
+			.addClass(barColor)
 			.css({ 'width': (width > 100 ? 100 : width) + '%', })
 			.data('airstatus', status);
 
@@ -3126,6 +3130,48 @@ function drawResult() {
 		if (visible || (isDefMode && targetRowIndex === 8)) {
 			$target_tr.removeClass('d-none disabled_tr');
 			$target_bar.closest('.progress_area').addClass('d-flex').removeClass('d-none disabled_bar');
+		}
+
+		// 基地簡易バーの描画
+		const exBarColor = 'bar_ex_status' + status;
+		if (visible && (targetRowIndex % 2) && targetRowIndex < 6) {
+			const $simpleBarParent = $('#simple_lb_bar_' + (Math.floor(targetRowIndex / 2) + 1));
+			const $simpleBar = $simpleBarParent.find('.result_bar');
+			prevStatus = $simpleBar.data('airstatus');
+			$simpleBar.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
+				.addClass(`${barColor} ${exBarColor}`)
+				.css({ 'width': (width > 100 ? 100 : width) + '%', })
+				.data('airstatus', status);
+			const t = `${AIR_STATUS.find(v => v.id === status).abbr}(${Math.floor(rates[status] * 100)}%)`;
+			$simpleBarParent.find('.simple_label').text(t);
+			$simpleBarParent.removeClass('d-none');
+		}
+		// 基地簡易バー　防空時
+		if (isDefMode && targetRowIndex === 8) {
+			$('.simple_lb_progress').each((i, e) => {
+				const $e = $(e).find('.result_bar');
+				prevStatus = $e.data('airstatus');
+				$e.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
+					.addClass(`${barColor} ${exBarColor}`)
+					.css({ 'width': (width > 100 ? 100 : width) + '%', })
+					.data('airstatus', status);
+				$(e).find('.simple_label').text(AIR_STATUS.find(v => v.id === status).abbr);
+				$(e).removeClass('d-none');
+			});
+		}
+
+		// 艦隊簡易バー
+		if (targetRowIndex === 7 && visible && status > -1) {
+			const $fleetSimpleBar = $('#fleet_simple_bar');
+			const $simpleBar = $fleetSimpleBar.find('.result_bar');
+			prevStatus = $simpleBar.data('airstatus');
+			$simpleBar.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
+				.addClass(`${barColor} ${exBarColor}`)
+				.css({ 'width': (width > 100 ? 100 : width) + '%', })
+				.data('airstatus', status);
+			const t = `${AIR_STATUS.find(v => v.id === status).abbr}(${Math.floor(rates[status] * 100)}%)`;
+			$fleetSimpleBar.find('.simple_label').text(t);
+			$fleetSimpleBar.removeClass('d-none');
 		}
 	}
 
@@ -3368,6 +3414,10 @@ function calculateInit(objectData) {
 	document.getElementById('shoot_down_table').getElementsByTagName('tbody')[0].innerHTML = "";
 	document.getElementById('enemy_shoot_down_table').getElementsByTagName('tbody')[0].innerHTML = "";
 	document.getElementById('input_summary').value = '';
+	if(document.getElementsByClassName('info_defApEx')[0]) {
+		document.getElementsByClassName('info_defApEx')[0].textContent = '';
+	}
+
 	for (const node of document.getElementById('shoot_down_table').getElementsByTagName('tfoot')[0].getElementsByClassName('td_battle')) {
 		node.innerHTML = "";
 	}
