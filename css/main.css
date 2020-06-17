@@ -193,6 +193,7 @@ input[type="text"] { font-size: 12px; }
   font-size: 11px;
   padding-top: .3rem;
   padding-bottom: .3rem;
+  z-index: 1;
 }
 .general_thead td{
   padding-top: .2rem;
