@@ -7990,7 +7990,7 @@ function ship_plane_Drop($this, ui) {
 		let shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
 		if (!checkInvalidPlane(shipID, PLANE_DATA.find(v => v.id === plane.id))) return;
 
-		setLBPlaneDiv($this, plane);
+		setPlaneDiv($this, plane);
 		calculate();
 		createDraggablePlaneTable();
 		return;
