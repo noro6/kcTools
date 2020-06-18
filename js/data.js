@@ -2386,6 +2386,14 @@ let CHANGE_LOG = [
 			},
 		],
 	},
+	{
+		id: "1.7.6", changes: [
+			{
+				type: 0, title: "ドラッグ & ドロップ可能な機体一覧画面を追加しました。",
+				content: "基地航空隊欄または艦隊欄の <i class='fas fa-tools'></i> ボタンから起動します。表示されている機体をドラッグ & ドロップで装備させることができます。また、この画面自体も自由に動かせます。"
+			},
+		],
+	},
 ];
 
-const LAST_UPDATE_DATE = "2020/06/16";
+const LAST_UPDATE_DATE = "2020/06/18";

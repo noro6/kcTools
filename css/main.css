@@ -169,6 +169,10 @@ input[type="text"] { font-size: 12px; }
   border-radius: 0.25rem;
   background-color: rgba(255, 255, 255, 0.05);
 }
+.dark-theme .general_box {
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(128, 128, 128, 0.3);
+  box-shadow: 0px 1px 2px 1px rgba(128, 128, 128, 0.3);
+}
 .general_box_capture{
   border: 1px #ccc solid;
 }
@@ -305,8 +309,8 @@ input[type="text"] { font-size: 12px; }
 .modal-footer { border-top: 1px rgba(128, 128, 128, 0.502) solid; }
 
 /*Chrome*/
-::-webkit-scrollbar { width: 14px; }
-::-webkit-scrollbar:horizontal {  height: 14px; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar:horizontal {  height: 10px; }
 ::-webkit-scrollbar-track { background: rgba(128, 128, 128, 0.1) }
 ::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 10px rgba(128, 128, 128, 0.2);
@@ -1483,6 +1487,45 @@ input[type="text"] { font-size: 12px; }
 .history_item:hover { background-color: rgba(128, 128, 128, 0.1); }
 .history_item_no_content { cursor: default; }
 .history_content { background-color: rgba(128, 128, 128, 0.1); }
+
+
+/* ------------------------------
+  艦載機ボックス #draggable_plane_box
+-------------------------------- */
+#draggable_plane_box {
+  user-select: none;
+  width: 420px;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+.dark-theme #draggable_plane_box {
+  background-color: rgba(60, 65, 75, 0.95);
+}
+#btn_hide_plane_box {
+  opacity: 0.4;
+  transition: .4s;
+}
+#btn_hide_plane_box:hover {
+  opacity: 0.8;
+}
+#draggable_plane_table {
+  overflow: auto;
+}
+#draggable_plane_tbody {
+  max-height: 60vh;
+}
+.plane_tr_draggable {
+  cursor: move;
+  border-radius: .25rem;
+}
+.plane_tr_draggable:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+.plane_tr_draggable.ui-draggable-dragging {
+  background-color: rgba(245, 245, 245, 0.7);
+}
+.dark-theme .plane_tr_draggable.ui-draggable-dragging {
+  background-color: rgba(80, 85, 95, 0.5);
+}
 
 
 /* ------------------------------
