@@ -81,6 +81,7 @@ let mainColor = "#000000";
 // undo用
 let undoHisotry = { index: 0, histories: [] };
 
+// 計算結果格納オブジェクト
 let resultData = {
 	enemyMainAirPower: 0,
 	enemyAirPowers: [],
@@ -606,8 +607,7 @@ function initialize(callback) {
 	initializeSetting();
 
 	// バージョンチェック
-	const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
-	if (setting.version !== serverVersion.id) {
+	if (setting.version !== LATEST_VERSION) {
 		// バージョン変更毎にデータ削除
 		deleteLocalStorage('version');
 		deleteLocalStorage('autoSave');
@@ -863,82 +863,6 @@ function initialize(callback) {
 		$('.lb_tab:first').addClass('show active');
 		$('#lb_item1').addClass('active');
 	}
-
-	// 更新履歴
-	fragment = document.createDocumentFragment();
-	let verIndex = 0;
-	for (const ver of CHANGE_LOG) {
-		const $ver_parent = document.createElement('div');
-		$ver_parent.className = 'my-3 ver_log border-bottom';
-
-		const $ver_title = document.createElement('div');
-		$ver_title.className = 'py-2';
-		$ver_title.textContent = 'v' + ver.id;
-
-		if (serverVersion.id === ver.id) {
-			const $ver_new = document.createElement('span');
-			$ver_new.className = 'ml-2 pt-1 badge badge-pill badge-danger';
-			$ver_new.textContent = 'New';
-			$ver_title.appendChild($ver_new);
-		}
-
-		$ver_parent.appendChild($ver_title);
-
-		for (let i = 0; i < ver.changes.length; i++) {
-			const v = ver.changes[i];
-			const logId = 'log_' + verIndex++ + '_' + i;
-
-			const $history_header = document.createElement('div');
-			$history_header.className = 'py-2 px-2 d-flex collapsed history_item history_item_no_content';
-
-			const $history_badge_wrap = document.createElement('div');
-			$history_badge_wrap.className = 'd-flex flex-nowrap align-self-center';
-
-			const $history_badge_div = document.createElement('div');
-			$history_badge_div.className = 'align-self-center';
-
-			const $history_badge = document.createElement('span');
-			$history_badge.className = 'mr-2 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
-			$history_badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
-
-			const $history_title = document.createElement('div');
-			$history_title.className = 'align-self-center';
-			$history_title.innerHTML = v.title;
-
-			$history_badge_div.appendChild($history_badge);
-			$history_badge_wrap.appendChild($history_badge_div);
-			$history_badge_wrap.appendChild($history_title);
-			$history_header.appendChild($history_badge_wrap);
-			$ver_parent.appendChild($history_header);
-
-			// 更新詳細内容がある場合、クリックで出てくる感じに
-			if (v.content) {
-				$history_header.dataset.toggle = 'collapse';
-				$history_header.dataset.target = '#' + logId;
-				$history_header.classList.remove('history_item_no_content');
-
-				const $history_content_wrap = document.createElement('div');
-				$history_content_wrap.id = logId;
-				$history_content_wrap.className = 'border-top collapse history_content';
-
-				const $history_content = document.createElement('div');
-				$history_content.className = 'pl-3 py-2 font_size_12';
-				$history_content.innerHTML = v.content;
-
-				$history_content_wrap.appendChild($history_content);
-				$ver_parent.appendChild($history_content_wrap);
-			}
-
-			fragment.appendChild($ver_parent);
-		}
-	}
-
-	const $last_update = document.createElement('div');
-	$last_update.className = 'mt-2 font_size_12';
-	$last_update.textContent = LAST_UPDATE_DATE;
-	fragment.appendChild($last_update);
-
-	document.getElementById('site_history_body').appendChild(fragment);
 
 	// テーマカラー変更
 	if (document.getElementById(setting.themeColor)) document.getElementById(setting.themeColor)['checked'] = true;
@@ -2327,23 +2251,23 @@ function createNodeSelect() {
 	// マップ設定
 	$('#map_img').attr('src', './img/map/' + area + '.png');
 
-	let patterns = ENEMY_PATTERN.filter(v => v.area === area && v.lv === lv);
+	let patterns = ENEMY_PATTERN.filter(v => v.a === area && v.l === lv);
 	// 重複は切る
-	patterns = patterns.filter((x, i, self) => self.findIndex(v => v.node === x.node) === i);
+	patterns = patterns.filter((x, i, self) => self.findIndex(v => v.n === x.n) === i);
 
 	// 空襲はてっぺん
 	patterns.sort((a, b) => {
-		if (a.node == '空襲' && b.node == '空襲') return 0;
-		else if (a.node == '空襲') return -1;
-		else if (b.node == '空襲') return 1;
+		if (a.n == '空襲' && b.n == '空襲') return 0;
+		else if (a.n == '空襲') return -1;
+		else if (b.n == '空襲') return 1;
 		else return 0;
 	});
 	const len = patterns.length;
 	let text = '';
 	let text2 = '';
 	for (let index = 0; index < len; index++) {
-		const nodeName = patterns[index].node;
-		const coords = patterns[index].coords;
+		const nodeName = patterns[index].n;
+		const coords = patterns[index].c;
 		text += `
 		<div class="d-flex node_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
 			<div class="align-self-center">${nodeName}</div>
@@ -2384,9 +2308,9 @@ function createEnemyPattern(patternNo = 0) {
 	let text = '';
 	let sumAp = 0;
 	let sumFleetAntiAir = 0;
-	const patterns = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv);
+	const patterns = ENEMY_PATTERN.filter(v => v.a === area && v.n === node && v.l === lv);
 	const pattern = patterns[patternNo];
-	const enemies = pattern.enemies;
+	const enemies = pattern.e;
 	const enemiesLength = enemies.length;
 	for (let index = 0; index < enemiesLength; index++) {
 		const enemy = ENEMY_DATA.find(v => v.id === enemies[index]);
@@ -2407,7 +2331,7 @@ function createEnemyPattern(patternNo = 0) {
 	}
 
 	// 陣形補正
-	const formation = FORMATION.find(v => v.id === pattern.form);
+	const formation = FORMATION.find(v => v.id === pattern.f);
 	// 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計] * 2
 	const fleetAntiAir = Math.floor(formation.correction * sumFleetAntiAir) * 2;
 
@@ -2422,7 +2346,7 @@ function createEnemyPattern(patternNo = 0) {
 			tabText += `
 			<li class="nav-item">
 				<a class="nav-link ${mainColor === "#000000" ? '' : 'nav-link-dark'} ${i === 0 ? 'active' : ''}" data-toggle="tab" data-disp="${i}" href="#">
-					${(patterns[i].remarks ? patterns[i].remarks : '編成' + (i + 1))}
+					${(patterns[i].d ? patterns[i].d : '編成' + (i + 1))}
 					</a>
 			</li>
 			`;
@@ -2468,7 +2392,7 @@ function expandEnemy() {
 		lv = castInt($('#select_difficulty').val());
 	}
 
-	const pattern = ENEMY_PATTERN.filter(v => v.area === area && v.node === node && v.lv === lv)[patternNo];
+	const pattern = ENEMY_PATTERN.filter(v => v.a === area && v.n === node && v.l === lv)[patternNo];
 
 	// 展開対象が空襲なら防空モードに乗っ取り
 	if (!isDefMode && node === '空襲') {
@@ -2484,22 +2408,22 @@ function expandEnemy() {
 	}
 
 	// 戦闘マス情報
-	const cellType = isDefMode && pattern.type !== 5 ? 3 : pattern.type;
+	const cellType = isDefMode && pattern.t !== 5 ? 3 : pattern.t;
 	$target.find('.cell_type').val(cellType);
 	cell_type_Changed($target.find('.cell_type'), false);
 	// 陣形
-	$target.find('.formation').val(pattern.form);
+	$target.find('.formation').val(pattern.f);
 
 	// 敵展開
 	$target.find('.enemy_content').each((i, e) => {
-		if (i < pattern.enemies.length) setEnemyDiv($(e), pattern.enemies[i]);
+		if (i < pattern.e.length) setEnemyDiv($(e), pattern.e[i]);
 		else clearEnemyDiv($(e));
 	});
 	// 半径
-	$target.find('.enemy_range').text(pattern.radius);
+	$target.find('.enemy_range').text(pattern.r);
 
 	// 進行航路情報を付与
-	$target[0].dataset.celldata = area + "_" + pattern.node + (pattern.remarks ? '(' + pattern.remarks + ')' : '');
+	$target[0].dataset.celldata = area + "_" + pattern.n + (pattern.d ? '(' + pattern.d + ')' : '');
 }
 
 /**
@@ -3201,6 +3125,87 @@ function updateShipSelectedHistory(id) {
 	// 100件以降はケツから削る
 	setting.selectedHistory[1] = setting.selectedHistory[1].splice(0, 100);
 	saveLocalStorage('setting', setting);
+}
+
+/**
+ * 更新履歴作成
+ */
+function loadSiteHistory() {
+	if (document.getElementById('site_history_body').innerHTML) return;
+
+	const fragment = document.createDocumentFragment();
+	let verIndex = 0;
+	const serverVersion = LATEST_VERSION;
+	for (const ver of CHANGE_LOG) {
+		const $ver_parent = document.createElement('div');
+		$ver_parent.className = 'my-3 ver_log border-bottom';
+
+		const $ver_title = document.createElement('div');
+		$ver_title.className = 'py-2';
+		$ver_title.textContent = 'v' + ver.id;
+
+		if (serverVersion === ver.id) {
+			const $ver_new = document.createElement('span');
+			$ver_new.className = 'ml-2 pt-1 badge badge-pill badge-danger';
+			$ver_new.textContent = 'New';
+			$ver_title.appendChild($ver_new);
+		}
+
+		$ver_parent.appendChild($ver_title);
+
+		for (let i = 0; i < ver.changes.length; i++) {
+			const v = ver.changes[i];
+			const logId = 'log_' + verIndex++ + '_' + i;
+
+			const $history_header = document.createElement('div');
+			$history_header.className = 'py-2 px-2 d-flex collapsed history_item history_item_no_content';
+
+			const $history_badge_wrap = document.createElement('div');
+			$history_badge_wrap.className = 'd-flex flex-nowrap align-self-center';
+
+			const $history_badge_div = document.createElement('div');
+			$history_badge_div.className = 'align-self-center';
+
+			const $history_badge = document.createElement('span');
+			$history_badge.className = 'mr-2 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+			$history_badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
+
+			const $history_title = document.createElement('div');
+			$history_title.className = 'align-self-center';
+			$history_title.innerHTML = v.title;
+
+			$history_badge_div.appendChild($history_badge);
+			$history_badge_wrap.appendChild($history_badge_div);
+			$history_badge_wrap.appendChild($history_title);
+			$history_header.appendChild($history_badge_wrap);
+			$ver_parent.appendChild($history_header);
+
+			// 更新詳細内容がある場合、クリックで出てくる感じに
+			if (v.content) {
+				$history_header.dataset.toggle = 'collapse';
+				$history_header.dataset.target = '#' + logId;
+				$history_header.classList.remove('history_item_no_content');
+
+				const $history_content_wrap = document.createElement('div');
+				$history_content_wrap.id = logId;
+				$history_content_wrap.className = 'border-top collapse history_content';
+
+				const $history_content = document.createElement('div');
+				$history_content.className = 'pl-3 py-2 font_size_12';
+				$history_content.innerHTML = v.content;
+
+				$history_content_wrap.appendChild($history_content);
+				$ver_parent.appendChild($history_content_wrap);
+			}
+
+			fragment.appendChild($ver_parent);
+		}
+	}
+	const $last_update = document.createElement('div');
+	$last_update.className = 'mt-2 font_size_12';
+	$last_update.textContent = LAST_UPDATE_DATE;
+	fragment.appendChild($last_update);
+	document.getElementById('site_history_body').appendChild(fragment);
 }
 
 /**
@@ -7132,7 +7137,7 @@ function sidebar_Clicked($this) {
  */
 function version_detail_Clicked() {
 	if (!document.getElementById('version_inform_body').innerHTML) {
-		const serverVersion = CHANGE_LOG[CHANGE_LOG.length - 1];
+		const serverVersion = CHANGE_LOG.find(v => v.id === LATEST_VERSION);
 		const fragment = document.createDocumentFragment();
 		for (const v of serverVersion.changes) {
 			// 変更通知
@@ -10048,6 +10053,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#plane_stock').on('click', '#btn_fav_clear', btn_fav_clear_Clicked);
 	$('#plane_stock').on('click', '#btn_stock_all_clear', btn_stock_all_clear_Clicked);
 	$('#plane_stock').on('input', '#stock_word', stock_word_TextChanged);
+	$('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
 	$('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
 	$('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
 	$('#modal_plane_select').on('change', '#plane_type_select', plane_type_select_Changed);
