@@ -268,7 +268,7 @@ function getArrayMin(array) {
 
 /**
  * 短いURL取得要求
- * @param {string} url 
+ * @param {string} url
  */
 async function postURLData(url) {
 	const data = {
@@ -284,7 +284,7 @@ async function postURLData(url) {
 
 /**
  * RGBに変換
- * @param {string} hex 
+ * @param {string} hex
  */
 function hexToRGB(hex) {
 	if (hex.slice(0, 1) == "#") hex = hex.slice(1);
@@ -544,7 +544,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('backUpCount')) setting.backUpCount = 10;
 	if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
 	if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
-	if (!setting.hasOwnProperty('themeColor')) setting.themeColor = 'normal';
+	if (!setting.hasOwnProperty('themeColor')) setting.themeColor = 'normal_theme';
 	if (!setting.hasOwnProperty('contentsOrder')) setting.contentsOrder = [];
 	if (!setting.hasOwnProperty('favoriteOnly')) setting.favoriteOnly = false;
 	if (!setting.hasOwnProperty('favoritePlane')) setting.favoritePlane = [];
@@ -817,7 +817,6 @@ function initialize(callback) {
 	// バックアップ有効
 	$('#backup_enabled').prop('checked', setting.backUpEnabled);
 	$('#suspend_backup').prop('checked', false);
-
 	// バックアップ件数
 	$('#backup_count').prop('disabled', !setting.backUpEnabled);
 	$('#backup_count').val(setting.backUpCount);
@@ -942,30 +941,8 @@ function initialize(callback) {
 	document.getElementById('site_history_body').appendChild(fragment);
 
 	// テーマカラー変更
-	if (setting.themeColor === 'dark') {
-		document.getElementById('normal_theme')['checked'] = false;
-		document.getElementById('dark_theme')['checked'] = true;
-		document.getElementById('dark_gradient_theme')['checked'] = false;
-		document.getElementById('deep_blue_theme')['checked'] = false;
-	}
-	else if (setting.themeColor === 'dark-gradient') {
-		document.getElementById('normal_theme')['checked'] = false;
-		document.getElementById('dark_theme')['checked'] = false;
-		document.getElementById('dark_gradient_theme')['checked'] = true;
-		document.getElementById('deep_blue_theme')['checked'] = false;
-	}
-	else if (setting.themeColor === 'deep-blue') {
-		document.getElementById('normal_theme')['checked'] = false;
-		document.getElementById('dark_theme')['checked'] = false;
-		document.getElementById('dark_gradient_theme')['checked'] = false;
-		document.getElementById('deep_blue_theme')['checked'] = true;
-	}
-	else {
-		document.getElementById('normal_theme')['checked'] = true;
-		document.getElementById('dark_theme')['checked'] = false;
-		document.getElementById('dark_gradient_theme')['checked'] = false;
-		document.getElementById('deep_blue_theme')['checked'] = false;
-	}
+	if (document.getElementById(setting.themeColor)) document.getElementById(setting.themeColor)['checked'] = true;
+	else document.getElementById('normal_theme')['checked'] = true;
 	site_theme_Changed(false);
 
 	// tooltip起動
@@ -1073,13 +1050,12 @@ function clearPlaneDiv($div) {
 	$div.find('.cur_move').removeClass('cur_move');
 	$div.find('.drag_handle').removeClass('drag_handle');
 	$div.find('.plane_name_span').text('機体を選択');
-	$div.find('select').val('0').change();
 	$div.find('.remodel_select').prop('disabled', true).addClass('remodel_disabled');
 	$div.find('.remodel_value').text(0);
 	$div.find('.btn_remove_plane').addClass('opacity0');
 	const $profSelect = $div.find('.prof_select');
-	$profSelect.attr('src', './img/util/prof0.png').attr('alt', '').data('prof', 0);
-	$profSelect.addClass('prof_none').removeClass('prof_yellow prof_blue')
+	$profSelect.attr('src', './img/util/prof0.png').attr('alt', '');
+	$profSelect[0].dataset.prof = 0;
 }
 /**
  * 引数で渡された要素内の艦載機を全てクリアする
@@ -1145,7 +1121,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	if (!inputPlane.hasOwnProperty('remodel')) inputPlane.remodel = 0;
 	if (!inputPlane.hasOwnProperty('prof')) inputPlane.prof = -1;
 
-	if ($div.closest('.ship_tab').hasClass('ship_tab')) {
+	if ($div.closest('.ship_tab').length > 0) {
 		// 搭載先が艦娘の場合、機体が装備できるのかどうかチェック
 		let shipId = castInt($div.closest('.ship_tab')[0].dataset.shipid);
 		if (!checkInvalidPlane(shipId, plane)) {
@@ -1161,20 +1137,18 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 		}
 	}
 
-	$div
-		.removeClass(getPlaneCss($div[0].dataset.type))
-		.addClass(getPlaneCss(plane.type));
+	$div.removeClass(getPlaneCss($div[0].dataset.type)).addClass(getPlaneCss(plane.type));
 	$div[0].dataset.planeid = plane.id;
 	$div[0].dataset.type = plane.type;
 	$div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
-	$div.find('.plane_img').attr('src', './img/type/type' + plane.type + '.png').attr('alt', plane.type);
+	$div.find('.plane_img').attr('src', `./img/type/type${plane.type}.png`);
 	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
 	$div.find('.plane_name').addClass('drag_handle');
 	$div.find('.btn_remove_plane').removeClass('opacity0');
 
 	// 改修の有効無効設定
 	const $remodelInput = $div.find('.remodel_select');
-	$remodelInput.prop('disabled', !plane.canRemodel).removeClass('remodel_disabled');
+	$remodelInput.prop('disabled', !plane.canRemodel)
 	if (!plane.canRemodel) {
 		// 改修無効の機体
 		$remodelInput.addClass('remodel_disabled');
@@ -1182,6 +1156,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	}
 	else {
 		// 改修値セット 基本は0
+		$remodelInput.removeClass('remodel_disabled');
 		$remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel, 10));
 	}
 
@@ -1194,13 +1169,8 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	// 特定熟練度を保持していた場合
 	if (inputPlane.prof >= 0) prof = inputPlane.prof;
 	const $prof_select = $div.find('.prof_select');
-	$prof_select
-		.attr('src', './img/util/prof' + prof + '.png')
-		.removeClass('prof_yellow prof_blue prof_none');
+	$prof_select.attr('src', `./img/util/prof${prof}.png`);
 	$prof_select[0].dataset.prof = prof;
-	if (prof > 3) $div.find('.prof_select').addClass('prof_yellow');
-	else if (prof > 0) $div.find('.prof_select').addClass('prof_blue');
-	else $div.find('.prof_select').addClass('prof_none');
 
 	// 搭載数を変更する
 	if (canEditSlot) {
@@ -1221,7 +1191,7 @@ function setShipDiv($div, id) {
 	const ship = SHIP_DATA.find(v => v.id === id);
 	if (!ship) return;
 	$div[0].dataset.shipid = ship.id;
-	$div.find('.ship_img').attr('src', './img/ship/' + id + '.png');
+	$div.find('.ship_img').attr('src', `./img/ship/${id}.png`);
 	$div.find('.ship_img').removeClass('d-none');
 	$div.find('.ship_name_span').text(ship.name);
 	$div.find('.ship_plane').each((i, e) => {
@@ -1234,16 +1204,16 @@ function setShipDiv($div, id) {
 		// 既に装備されている装備を装備しなおそうとする -> 不適切なら自動的にはずれる
 		if ($div[0].dataset.shipid) setPlaneDiv($this, plane);
 
-		$this.find('.slot').text(0);
-		$this.find('.slot_ini').data('ini', 0);
 		if (i < ship.slot.length) {
 			$this.removeClass('d-none').addClass('d-flex');
 			$this.find('.slot').text(ship.slot[i]);
-			$this.find('.slot_ini').data('ini', ship.slot[i]);
+			$this.find('.slot_select_parent').data('ini', ship.slot[i]);
 		}
 		else {
 			clearPlaneDiv($this);
 			$this.removeClass('d-flex').addClass('d-none');
+			$this.find('.slot').text(0);
+			$this.find('.slot_select_parent').data('ini', 0);
 		}
 	});
 }
@@ -1314,7 +1284,7 @@ function setEnemyDiv($div, id, ap = 0) {
 	let displayAp = 0;
 	if (id === -1 && ap > 0) displayAp = ap;
 	else if (enemy.ap > 0) displayAp = enemy.ap;
-	else if (enemy.lbAp > 0) displayAp = '(' + enemy.lbAp + ')';
+	else if (enemy.lbAp > 0) displayAp = `(${enemy.lbAp})`;
 	$div.find('.enemy_ap').text(displayAp);
 }
 
@@ -5436,7 +5406,6 @@ function rateCalculate(objectData) {
 	const landBaseAps = [];
 	const landBaseModes = [];
 	const landBaseASDist = [];
-	let rateDist = [];
 	let slotResults = [];
 	let avgMainAps = [];
 	// 敵スロット明細 (各戦闘毎に以下データ [敵スロット番号, sum, max, min])
@@ -7519,7 +7488,7 @@ function btn_slot_default_Clicked($this) {
 	const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
 	if ($targetContent.attr('id') === 'friendFleet') {
 		$targetContent.find('.ship_plane').each((i, e) => {
-			$(e).find('.slot').text($(e).find('.slot_ini').data('ini'));
+			$(e).find('.slot').text($(e).find('.slot_select_parent').data('ini'));
 		});
 	}
 }
@@ -7695,7 +7664,7 @@ function profSelect_Shown($this) {
 	if (!$this.find('.dropdown-menu').html().trim()) {
 		let menuText = '';
 		for (let i = 7; i >= 0; i--) {
-			menuText += `<a class="dropdown-item prof_item"><img class="prof_opt prof_yellow" alt="${getProfString(i)}" data-prof="${i}" src="./img/util/prof${i}.png"></a>`;
+			menuText += `<a class="dropdown-item prof_item"><img class="prof_opt" alt="${getProfString(i)}" data-prof="${i}" src="./img/util/prof${i}.png"></a>`;
 		}
 		$this.find('.dropdown-menu').append(menuText);
 	}
@@ -7710,14 +7679,8 @@ function proficiency_Changed($this, cancelCalculate = false) {
 	const $orig = $this.find('.prof_opt');
 	const $targetSelect = $this.parent().prev();
 	const prof = $orig[0].dataset.prof;
-	$targetSelect
-		.attr('src', $orig.attr('src'))
-		.attr('alt', $orig.attr('alt'))
-		.removeClass('prof_yellow prof_blue prof_none');
+	$targetSelect.attr('src', $orig.attr('src')).attr('alt', $orig.attr('alt'));
 	$targetSelect[0].dataset.prof = prof;
-	if (prof > 3) $targetSelect.addClass('prof_yellow');
-	else if (prof > 0) $targetSelect.addClass('prof_blue');
-	else $targetSelect.addClass('prof_none');
 
 	if (!cancelCalculate) calculate();
 }
@@ -7728,14 +7691,8 @@ function proficiency_Changed($this, cancelCalculate = false) {
  * @param {number} prof 適用する値
  */
 function setProficiency($targetSelect, prof) {
-	$targetSelect
-		.attr('src', `./img/util/prof${prof}.png`)
-		.attr('alt', getProfString(prof))
-		.removeClass('prof_yellow prof_blue prof_none');
+	$targetSelect.attr('src', `./img/util/prof${prof}.png`).attr('alt', getProfString(prof));
 	$targetSelect[0].dataset.prof = prof;
-	if (prof > 3) $targetSelect.addClass('prof_yellow');
-	else if (prof > 0) $targetSelect.addClass('prof_blue');
-	else $targetSelect.addClass('prof_none');
 }
 
 /**
@@ -7821,7 +7778,7 @@ function slot_input_Changed($this) {
  */
 function slot_ini_Clicked($this) {
 	const $slotArea = $this.closest('.slot_select_parent');
-	const defaultValue = $this.data('ini');
+	const defaultValue = $slotArea.data('ini');
 	$slotArea.find('.slot').text(defaultValue);
 	$slotArea.find('.slot_input').val(defaultValue);
 	$slotArea.find('.slot_range').val(defaultValue);
@@ -8984,7 +8941,7 @@ function display_battle_tab_Changed($this) {
 }
 
 /**
- * 表示物変更時
+ * 結果表示欄表示物変更時
  */
 function display_result_Changed() {
 	if ($('#display_land_base_result').prop('checked')) {
@@ -9174,62 +9131,38 @@ function btn_reset_selected_ship_history_Clicked() {
  */
 function site_theme_Changed(withCalculate = true) {
 
-	// いったん解除
-	document.body.classList.remove('dark-theme');
-	document.body.classList.remove('body-dark-gradient');
-	document.body.classList.remove('body-deep-blue');
+	// 選択されているテーマを取得
+	let theme = 'nomal_theme';
+	for (const radio of document.getElementsByClassName('theme_radio')) {
+		if (radio['checked']) {
+			theme = radio.id;
+			break;
+		}
+	}
 
-	if (!document.getElementById('normal_theme')['checked']) {
+	// 以前のクラス解除
+	document.body.classList.remove(setting.themeColor);
+	// テーマ設定
+	document.body.classList.add(theme);
 
+	if (theme === 'dark_theme' || theme === 'dark_gradient_theme' || theme === 'deep_blue_theme') {
+		// ダーク系共通
 		mainColor = "#e0e0e0";
 		document.body.classList.add('dark-theme');
-
-		if (document.getElementById('dark_theme')['checked']) {
-			setting.themeColor = 'dark';
-			document.body.style.backgroundColor = "#20222d";
-		}
-		if (document.getElementById('dark_gradient_theme')['checked']) {
-			setting.themeColor = 'dark-gradient';
-			document.body.classList.add('body-dark-gradient');
-		}
-
-		const isDeep = document.getElementById('deep_blue_theme')['checked'];
-		if (isDeep) {
-			setting.themeColor = 'deep-blue';
-			document.body.classList.add('body-deep-blue');
-		}
-
-		for (const element of document.getElementsByClassName('contents')) {
-			element.style.backgroundColor = "rgba(255, 255, 255, 0.047)";
-			element.classList.add('contents-dark');
-		}
-		for (const element of document.getElementsByClassName('modal-content')) {
-			if (isDeep) element.classList.add('modal-content-deep');
-			else element.classList.remove('modal-content-deep');
-		}
-		for (const element of document.getElementsByClassName('custom_table')) {
-			element.classList.add('custom_table_dark');
-		}
 	}
 	else {
-		setting.themeColor = 'normal';
-		document.body.style.backgroundColor = "#f0ebe6";
+		// 淡色系共通
 		mainColor = "#000000";
-		for (const element of document.getElementsByClassName('contents')) {
-			element.style.backgroundColor = "rgba(255, 255, 255, 0.941)";
-			element.classList.remove('contents-dark');
-		}
-		for (const element of document.getElementsByClassName('modal-content')) {
-			element.classList.remove('modal-content-deep');
-		}
-		for (const element of document.getElementsByClassName('custom_table')) {
-			element.classList.remove('custom_table_dark');
-		}
+		document.body.classList.remove('dark-theme');
 	}
 
+	// ヘッダーのURL欄は固定
 	document.getElementById('input_url').classList.add('form-control-dark');
+
+	setting.themeColor = theme;
 	saveLocalStorage('setting', setting);
 	document.body.style.color = mainColor;
+
 	if (withCalculate) calculate();
 }
 

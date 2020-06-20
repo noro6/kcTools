@@ -4,13 +4,42 @@ body {
   font-family: "Roboto", "Hiragino Sans W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   background-color: #f0ebe6;
 }
-.body-dark-gradient {
-  background: linear-gradient(rgb(53, 55, 68), rgb(12, 15, 25));
-  background-attachment: fixed;
+.sky_theme::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  z-index: -1;
+  background: rgb(230, 240, 255);
+  background: linear-gradient(rgb(255, 255, 255), rgb(210, 230, 255));
 }
-.body-deep-blue {
-  background: linear-gradient(rgb(10, 30, 72), rgb(5, 10, 20));
-  background-attachment: fixed;
+.sakura_theme::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  z-index: -1;
+  background: rgb(255, 245, 245);
+  background: linear-gradient(rgb(255, 250, 250), rgb(255, 220, 220));
+}
+.dark_theme { background-color: rgb(32, 34, 45); }
+.dark_gradient_theme::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  z-index: -1;
+  background: rgb(32, 34, 45);
+  background: linear-gradient(rgb(50, 55, 70), rgb(12, 15, 25));
+}
+.deep_blue_theme {
+  background: linear-gradient(rgb(10, 30, 68), rgb(5, 10, 20));
 }
 h1 { font-size: 2em; }
 input[type="radio"] { display: none; }
@@ -179,10 +208,13 @@ input[type="text"] { font-size: 12px; }
 .contents {
   border-radius: .25rem;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
-  background-color: rgba(255, 255, 255, 0.965);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.dark-theme .contents {
+  background-color: rgba(255, 255, 255, 0.047);
 }
 .custom-control-input { cursor: pointer; }
-.custom-control-label { 
+.custom-control-label {
   cursor: pointer;
   padding-top: .15rem;
 }
@@ -230,7 +262,7 @@ input[type="text"] { font-size: 12px; }
 .dark-theme .border-right { border-color: #6c757d !important; }
 
 .dark-theme .scroll_thead { background-color: rgb(60, 60, 68); }
-.body-deep-blue .scroll_thead { background-color: rgb(41, 49, 68); }
+.deep_blue_theme .scroll_thead { background-color: rgb(41, 49, 68); }
 
 .form-control-dark {
   color: #ddd;
@@ -299,11 +331,11 @@ input[type="text"] { font-size: 12px; }
   color: #ccc;
 }
 .dark-theme .dropdown-header { color: #ccc; }
-.contents-dark .text-primary { color: #20c0ff !important; }
+.dark-theme .text-primary { color: #20c0ff !important; }
 .dark-theme .modal-content .text-primary { color: #20c0ff !important; }
 .dark-theme .modal-content .close { color: #ccc !important; }
 .dark-theme .modal-content { background-color: rgb(45, 45, 52); }
-.modal-content-deep { background-color: rgb(20, 30, 52); }
+.deep_blue_theme .modal-content { background-color: rgb(15, 25, 42); }
 .modal-content-red { background-color: rgb(50, 20, 20); }
 .modal-header { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 .modal-footer { border-top: 1px rgba(128, 128, 128, 0.502) solid; }
@@ -318,27 +350,27 @@ input[type="text"] { font-size: 12px; }
   background: rgba(128, 128, 128, 0.3);
 }
 ::-webkit-scrollbar-thumb:hover { background: rgb(160, 160, 170); }
-.custom_table_dark::-webkit-scrollbar { width: 10px; }
-.custom_table_dark::-webkit-scrollbar:horizontal {  height: 10px; }
-.custom_table_dark::-webkit-scrollbar-track { background: rgb(80, 80, 90); }
-.custom_table_dark::-webkit-scrollbar-thumb {
+.dark-theme .custom_table::-webkit-scrollbar { width: 10px; }
+.dark-theme .custom_table::-webkit-scrollbar:horizontal {  height: 10px; }
+.dark-theme .custom_table::-webkit-scrollbar-track { background: rgb(80, 80, 90); }
+.dark-theme .custom_table::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   background: rgb(140, 140, 150);
 }
-.custom_table_dark::-webkit-scrollbar-thumb:hover { background: rgb(160, 160, 170); }
+.dark-theme .custom_table::-webkit-scrollbar-thumb:hover { background: rgb(160, 160, 170); }
 
-.body-deep-blue::-webkit-scrollbar-track { background: rgb(80, 80, 90); }
-.body-deep-blue::-webkit-scrollbar-thumb {
+.deep_blue_theme::-webkit-scrollbar-track { background: rgb(80, 80, 90); }
+.deep_blue_theme::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   background: rgb(140, 140, 150);
 }
-.body-deep-blue::-webkit-scrollbar-thumb:hover { background: rgb(160, 160, 170); }
+.deep_blue_theme::-webkit-scrollbar-thumb:hover { background: rgb(160, 160, 170); }
 
 /* Firefox ScrollBar */
 .custom_table { scrollbar-width: thin; }
-.custom_table_dark { scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.2); }
+.dark-theme .custom_table { scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.2); }
 
 /* -----------------------------------
   header
@@ -549,6 +581,7 @@ input[type="text"] { font-size: 12px; }
   padding-left: 10px;
   transition: .2s;
   color: #777;
+  background-color: transparent !important;
 }
 .modal a.nav-link {
   padding-right: 10px;
@@ -578,7 +611,6 @@ input[type="text"] { font-size: 12px; }
 .dark-theme .nav-tabs { border-color: #777 !important; }
 .dark-theme #main_contents a.nav-link {
   color: #555 !important;
-  background-color: transparent !important;
   border-bottom-color: #777 !important;
 }
 .dark-theme .modal a.nav-link {
@@ -1495,10 +1527,13 @@ input[type="text"] { font-size: 12px; }
 #draggable_plane_box {
   user-select: none;
   width: 420px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.96);
 }
 .dark-theme #draggable_plane_box {
-  background-color: rgba(60, 65, 75, 0.95);
+  background-color: rgba(60, 65, 75, 0.96);
+}
+.deep_blue_theme #draggable_plane_box{
+  background-color: rgba(30, 35, 60, 0.96);
 }
 #btn_hide_plane_box {
   opacity: 0.4;
@@ -1531,9 +1566,13 @@ input[type="text"] { font-size: 12px; }
 /* ------------------------------
   カラー
 -------------------------------- */
-.prof_none:hover { filter: drop-shadow(0 0 3px rgba(190, 190, 190, 0.5)); }
-.prof_yellow:hover { filter: drop-shadow(0 0 3px #fd0); }
-.prof_blue:hover { filter: drop-shadow(0 0 3px #64b4ff); }
+img[src *= "prof0"]:hover { filter: drop-shadow(0 0 3px rgba(190, 190, 190, 0.5)); }
+img[src *= "prof7"]:hover, img[src *= "prof6"]:hover, img[src *= "prof5"]:hover, img[src *= "prof4"]:hover {
+  filter: drop-shadow(0 0 3px #fd0);
+}
+img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover {
+  filter: drop-shadow(0 0 3px #64b4ff);
+}
 .css_fighter { border: 2px rgb(100, 200, 120) solid; background-color: rgba(0, 255, 100, 0.1); }
 .css_fighter:hover { background-color: rgba(0, 255, 100, 0.05); }
 .css_torpedo_bomber { border: 2px rgb(100, 190, 255) solid; background-color: rgba(0, 190, 255, 0.1); }
