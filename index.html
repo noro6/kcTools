@@ -14,7 +14,7 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="favicon.ico">
-	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb"	crossorigin>
+	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb" crossorigin>
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -113,19 +113,18 @@
 				<div id="main">
 					<div id="main_header">
 						<div class="d-flex pt-3">
-							<h1 class="ml-1" id="main_title">
-								<span>制空権シミュレータ</span>
-								<span class="font_size_20 ml-2">v.1.7.6.1</span>
-								<span class="ml-2 version_detail" data-toggle="tooltip" data-placement="right" data-offset="0, 5"
-									title="変更内容を確認">
-									<i class="fas fa-file-text"></i>
-								</span>
-							</h1>
-							<div class="ml-auto align-self-center">
-								<button class="btn btn-sm btn-outline-success btn_first_time">初めての方</button>
+							<div class="ml-1 d-flex flex-wrap">
+								<h1 id="main_title">制空権シミュレータ</h1>
+								<div class="d-flex align-self-center">
+									<div class="font_size_20 ml-2 align-self-center">v.1.7.6.1</div>
+									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
+										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
+									</div>
+								</div>
 							</div>
-							<div class="ml-1 align-self-center">
-								<button class="btn btn-sm btn-outline-info btn_site_manual">使い方</button>
+							<div class="ml-auto align-self-center d-flex">
+								<button class="btn btn-sm btn-outline-success btn_first_time text-nowrap">初めての方</button>
+								<button class="btn btn-sm btn-outline-info btn_site_manual ml-1 text-nowrap">使い方</button>
 							</div>
 						</div>
 					</div>
@@ -147,8 +146,9 @@
 								<div class="ml-2 round_button align-self-center d-table btn_ex_setting" data-toggle="tooltip"
 									title="一括設定"><i class="fas fa-wrench d-table-cell align-middle"></i>
 								</div>
-								<div class="ml-2 round_button align-self-center d-none d-lg-table btn_show_plane_box" data-toggle="tooltip"
-									title="Drag & Drop 用艦載機一覧呼び出し"><i class="fas fa-list-ul d-table-cell align-middle"></i>
+								<div class="ml-2 round_button align-self-center d-none d-lg-table btn_show_plane_box"
+									data-toggle="tooltip" title="Drag & Drop 用艦載機一覧呼び出し">
+									<i class="fas fa-list-ul d-table-cell align-middle"></i>
 								</div>
 								<div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
 									title="基地航空隊入力情報を画像で保存"><i class="fas fa-camera d-table-cell align-middle"></i>
@@ -168,10 +168,8 @@
 								<div class="my-2" id="landBase_content_main">
 									<ul class="nav nav-tabs mb-2 no_capture" id="lb_tab_select">
 										<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#lb_item1">第1基地航空隊</a></li>
-										<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lb_item2">第2基地航空隊</a>
-										</li>
-										<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lb_item3">第3基地航空隊</a>
-										</li>
+										<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lb_item2">第2基地航空隊</a></li>
+										<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lb_item3">第3基地航空隊</a></li>
 									</ul>
 									<div class="d-flex w-100 justify-content-center flex-wrap tab-content" id="lb_tab_parent">
 										<div class="lb_tab general_box mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1" id="lb_item1">
@@ -236,8 +234,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -269,8 +267,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -302,8 +300,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -335,8 +333,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -429,8 +427,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -462,8 +460,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -495,8 +493,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -528,8 +526,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -622,8 +620,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -655,8 +653,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -688,8 +686,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -721,8 +719,8 @@
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="dropdown align-self-center prof_select_parent">
-															<img class="prof_select" data-prof="0" data-toggle="dropdown"
-																src="./img/util/prof0.png" width="20" height="27">
+															<img class="prof_select" data-prof="0" data-toggle="dropdown" src="./img/util/prof0.png"
+																width="20" height="27">
 															<div class="dropdown-menu"></div>
 														</div>
 														<div class="mx-1 btn_remove_plane opacity0 align-self-center no_capture">
@@ -768,8 +766,9 @@
 								<div class="ml-2 round_button align-self-center d-table btn_ex_setting" data-toggle="tooltip"
 									title="一括設定"><i class="fas fa-wrench d-table-cell align-middle"></i>
 								</div>
-								<div class="ml-2 round_button align-self-center d-none d-lg-table btn_show_plane_box" data-toggle="tooltip"
-									title="Drag & Drop 用艦載機一覧呼び出し"><i class="fas fa-list-ul d-table-cell align-middle"></i>
+								<div class="ml-2 round_button align-self-center d-none d-lg-table btn_show_plane_box"
+									data-toggle="tooltip" title="Drag & Drop 用艦載機一覧呼び出し">
+									<i class="fas fa-list-ul d-table-cell align-middle"></i>
 								</div>
 								<div class="ml-2 round_button align-self-center d-table btn_capture" data-toggle="tooltip"
 									title="艦隊入力情報を画像で保存"><i class="fas fa-camera d-table-cell align-middle"></i>
@@ -4388,8 +4387,8 @@
 											<div class="init_prof d-flex mr-3" data-typeid="0">
 												<div class="align-self-center type_name"></div>
 												<div class="dropdown align-self-center prof_select_parent">
-													<img class="prof_select" data-toggle="dropdown" src="./img/util/prof0.png"
-														width="20" height="27">
+													<img class="prof_select" data-toggle="dropdown" src="./img/util/prof0.png" width="20"
+														height="27">
 													<div class="dropdown-menu">
 														<a class="dropdown-item">
 															<img class="prof_opt" alt=">>" data-prof="7" src="./img/util/prof7.png">
@@ -4567,7 +4566,8 @@
 										<div class="d-flex">
 											<div class="align-self-center">テーマ：</div>
 											<div class="ml-2 custom-control custom-radio align-self-center">
-												<input type="radio" id="normal_theme" name="site_theme" class="custom-control-input theme_radio" checked>
+												<input type="radio" id="normal_theme" name="site_theme" class="custom-control-input theme_radio"
+													checked>
 												<label class="custom-control-label" for="normal_theme">通常</label>
 											</div>
 											<div class="ml-3 custom-control custom-radio align-self-center">
@@ -4575,7 +4575,8 @@
 												<label class="custom-control-label" for="sky_theme">空</label>
 											</div>
 											<div class="ml-3 custom-control custom-radio align-self-center">
-												<input type="radio" id="sakura_theme" name="site_theme" class="custom-control-input theme_radio">
+												<input type="radio" id="sakura_theme" name="site_theme"
+													class="custom-control-input theme_radio">
 												<label class="custom-control-label" for="sakura_theme">桜</label>
 											</div>
 											<div class="ml-3 custom-control custom-radio align-self-center">
@@ -4583,11 +4584,13 @@
 												<label class="custom-control-label" for="dark_theme">黒&#x2160;</label>
 											</div>
 											<div class="ml-3 custom-control custom-radio align-self-center">
-												<input type="radio" id="dark_gradient_theme" name="site_theme" class="custom-control-input theme_radio">
+												<input type="radio" id="dark_gradient_theme" name="site_theme"
+													class="custom-control-input theme_radio">
 												<label class="custom-control-label" for="dark_gradient_theme">黒&#x2161;</label>
 											</div>
 											<div class="ml-3 custom-control custom-radio align-self-center">
-												<input type="radio" id="deep_blue_theme" name="site_theme" class="custom-control-input theme_radio">
+												<input type="radio" id="deep_blue_theme" name="site_theme"
+													class="custom-control-input theme_radio">
 												<label class="custom-control-label" for="deep_blue_theme">深海</label>
 											</div>
 										</div>
@@ -5458,7 +5461,7 @@
 								<div class="col pl-0">
 									<div class="custom_table preset_table">
 										<div class="preset_thead border-bottom pb-2 mb-2 w-100">
-											<div class="preset_tr py-2 text-center btn_create_preset border" data-presetid="-1">
+											<div class="preset_tr py-2 text-center btn_create_preset" data-presetid="-1">
 												<div>現在の編成で新規登録</div>
 											</div>
 										</div>
