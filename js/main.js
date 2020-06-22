@@ -79,7 +79,7 @@ let chartDataSet = null;
 let mainColor = "#000000";
 
 // undo用
-let undoHisotry = { index: 0, histories: [] };
+let undoHistory = { index: 0, histories: [] };
 
 // 計算結果格納オブジェクト
 let resultData = {
@@ -592,7 +592,6 @@ function initializeSetting() {
  * @param {*} callback コールバック
  */
 function initialize(callback) {
-	let fragment = document.createDocumentFragment();
 	let text = '';
 
 	// カテゴリのプリロード
@@ -677,7 +676,7 @@ function initialize(callback) {
 	createMapSelect();
 	createNodeSelect();
 
-	// 結果欄欄チェック初期化
+	// 結果欄チェック初期化
 	$('#display_bar').prop('checked', true);
 	$('#display_land_base_result').prop('checked', true);
 	$('#display_fleet_result').prop('checked', true);
@@ -1354,12 +1353,12 @@ function createPlaneTable(planes) {
 
 		// ラップ
 		const $planeDiv = document.createElement('div');
-		$planeDiv.className = `plane plane_tr d-flex py-2 py-lg-1${displayMode === "multi" ? ' tr_multi' : ''}`;
+		$planeDiv.className = `plane plane_tr general_tr d-flex py-2 py-lg-1${displayMode === "multi" ? ' tr_multi' : ''}`;
 		$planeDiv.dataset.planeid = plane.id;
 		$planeDiv.dataset.type = plane.type;
 		$planeDiv.dataset.remodel = maxRemodelLevel;
 		if (dispInStock && dispEquiped && enabledCount <= 0) {
-			$planeDiv.classList.remove('plane_tr', 'plane');
+			$planeDiv.classList.remove('plane_tr', 'plane', 'general_tr');
 			$planeDiv.classList.add('plane_tr_disabled');
 		}
 
@@ -1632,7 +1631,7 @@ function setPlaneStockTable() {
 
 		// ラップ
 		const $planeDiv = document.createElement('div');
-		$planeDiv.className = `stock_tr py-1 d-flex type_` + Math.abs(plane.type);
+		$planeDiv.className = `stock_tr general_tr py-1 d-flex type_` + Math.abs(plane.type);
 		$planeDiv.dataset.planeid = plane.id;
 
 		// アイコン用ラッパー
@@ -1705,7 +1704,7 @@ function initializeShipTable() {
 	for (const ship of SHIP_DATA) {
 		// ラッパー
 		const $shipDiv = document.createElement('div');
-		$shipDiv.className = 'ship ship_tr d-flex ' + (displayMode === "multi" ? 'tr_multi' : 'py-1');
+		$shipDiv.className = 'ship ship_tr general_tr d-flex ' + (displayMode === "multi" ? 'tr_multi' : 'py-1');
 		$shipDiv.dataset.shipid = ship.id;
 		$shipDiv.id = 'ship_tr_' + ship.id;
 
@@ -1915,13 +1914,13 @@ function initializeEnemyTable() {
 
 		// ラッパー
 		const $enemyDiv = document.createElement('div');
-		$enemyDiv.className = 'enemy enemy_tr d-flex';
+		$enemyDiv.className = 'enemy enemy_tr general_tr d-flex';
 		$enemyDiv.dataset.enemyid = enemy.id;
 		$enemyDiv.id = 'enemy_tr_' + enemy.id;
 
 		// アイコンラッパー
 		const $iconDiv = document.createElement('div');
-		$iconDiv.className = 'ml-1 align-self-center pt-1_5';
+		$iconDiv.className = 'ml-1 align-self-center';
 		// アイコン
 		const img = document.createElement('img');
 		img.width = imgWidth;
@@ -2105,7 +2104,7 @@ function loadPlanePreset() {
 		}
 
 		presetText += `
-			<div class="preset_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset.id}">
+			<div class="preset_tr general_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset.id}">
 				<div class="preset_td text-primary">${index + 1}.</div>
 				<div class="preset_td ml-2">${preset.name}</div>
 					${infoText}
@@ -2269,7 +2268,7 @@ function createNodeSelect() {
 		const nodeName = patterns[index].n;
 		const coords = patterns[index].c;
 		text += `
-		<div class="d-flex node_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
+		<div class="d-flex node_tr general_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
 			<div class="align-self-center">${nodeName}</div>
 		</div>
 	`;
@@ -2447,7 +2446,7 @@ function loadMainPreset(forceBackUp = false) {
 	for (let index = 0; index < basePresets.length; index++) {
 		const preset = basePresets[index];
 		text += `
-			<div class="preset_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
+			<div class="preset_tr general_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
 				<div class="preset_td text-primary">${index + 1}.</div>
 				<div class="preset_td ml-2 font_size_12">${preset[1]}</div>
 			</div>
@@ -3632,72 +3631,74 @@ function calculateInit(objectData) {
 
 	// ログなど
 	const currentData = encodePreset();
+	const histories = undoHistory.histories;
+	// 現在値と違う履歴データかチェック
+	if (histories[undoHistory.index] !== currentData) {
+		// 現在のundo index 位置より若い履歴を削除
+		if (undoHistory.index !== 0) {
+			histories.splice(0, undoHistory.index);
+		}
+		// 0番目に挿入
+		histories.unshift(currentData);
+		// 20件制限
+		document.getElementById('btn_undo').classList.remove('disabled');
+		document.getElementById('btn_redo').classList.add('disabled');
+		undoHistory.histories = histories.splice(0, 20);
+		undoHistory.index = 0;
 
-	// 現在のundo index 位置より若い履歴を削除
-	if (undoHisotry.index !== 0) {
-		undoHisotry.histories.splice(0, undoHisotry.index);
-	}
-	// 0番目に挿入
-	undoHisotry.histories.unshift(currentData);
-	// 20件制限
-	undoHisotry.histories = undoHisotry.histories.splice(0, 20);
-	document.getElementById('btn_undo').classList.remove('disabled');
-	document.getElementById('btn_redo').classList.add('disabled');
-	undoHisotry.index = 0;
+		// 自動保存する場合
+		if (document.getElementById('auto_save')['checked']) {
+			saveLocalStorage('autoSaveData', currentData);
 
-	// 自動保存する場合
-	if (document.getElementById('auto_save')['checked']) {
-		saveLocalStorage('autoSaveData', currentData);
+			setting.autoSave = true;
+			saveLocalStorage('setting', setting);
 
-		setting.autoSave = true;
-		saveLocalStorage('setting', setting);
+			// バックアップ
+			if (document.getElementById('backup_enabled')['checked'] && !document.getElementById('suspend_backup')['checked']) {
+				backUpPresets = loadLocalStorage('backUpPresets');
+				if (!backUpPresets) backUpPresets = [];
 
-		// バックアップ
-		if (document.getElementById('backup_enabled')['checked'] && !document.getElementById('suspend_backup')['checked']) {
-			backUpPresets = loadLocalStorage('backUpPresets');
-			if (!backUpPresets) backUpPresets = [];
+				// 今回のバックアップデータ
+				const now = new Date();
+				const nowDate = [
+					now.getFullYear().toString(),
+					('0' + (now.getMonth() + 1)).slice(-2),
+					('0' + now.getDate()).slice(-2)
+				];
+				const nowTime = [
+					('0' + now.getHours()).slice(-2),
+					('0' + now.getMinutes()).slice(-2),
+					('0' + now.getSeconds()).slice(-2),
+				];
+				const backUpData = [
+					0,
+					`backup-${nowDate.join("")}${nowTime.join("")}`,
+					currentData,
+					`${nowDate.join("/")} ${nowTime.join(":")}の編成`
+				];
 
-			// 今回のバックアップデータ
-			const now = new Date();
-			const nowDate = [
-				now.getFullYear().toString(),
-				('0' + (now.getMonth() + 1)).slice(-2),
-				('0' + now.getDate()).slice(-2)
-			];
-			const nowTime = [
-				('0' + now.getHours()).slice(-2),
-				('0' + now.getMinutes()).slice(-2),
-				('0' + now.getSeconds()).slice(-2),
-			];
-			const backUpData = [
-				0,
-				`backup-${nowDate.join("")}${nowTime.join("")}`,
-				currentData,
-				`${nowDate.join("/")} ${nowTime.join(":")}の編成`
-			];
+				// 同じデータ削除
+				backUpPresets = backUpPresets.filter(v => v[2] !== currentData);
 
-			// 同じデータ削除
-			backUpPresets = backUpPresets.filter(v => v[2] !== currentData);
+				// 先頭に挿入
+				backUpPresets.unshift(backUpData);
 
-			// 先頭に挿入
-			backUpPresets.unshift(backUpData);
+				// 保存件数までケツから削る
+				backUpPresets = backUpPresets.splice(0, setting.backUpCount);
 
-			// 保存件数までケツから削る
-			backUpPresets = backUpPresets.splice(0, setting.backUpCount);
+				// id付与
+				for (let i = 0; i < backUpPresets.length; i++) {
+					backUpPresets[i][0] = - (i + 1);
+				}
 
-			// id付与
-			for (let i = 0; i < backUpPresets.length; i++) {
-				backUpPresets[i][0] = - (i + 1);
+				saveLocalStorage('backUpPresets', backUpPresets);
 			}
-
-			saveLocalStorage('backUpPresets', backUpPresets);
 		}
 	}
 
 	// 空スロット表示可否
 	setting.emptySlotInvisible = document.getElementById('empty_slot_invisible').checked;
 	saveLocalStorage('setting', setting);
-
 
 	// 計算結果データ初期化
 	resultData = {
@@ -4198,7 +4199,7 @@ function getRange(landBaseDatum) {
  * @returns 引数の plane オブジェクトの持つ制空値
  */
 function updateAp(plane) {
-	if (plane.id === 0 || !plane.canBattle || plane.slot === 0) return 0;
+	if (!plane.canBattle || plane.slot === 0 || plane.id === 0) return 0;
 	if (plane.slot <= 0) {
 		plane.slot = 0;
 		return 0;
@@ -4733,7 +4734,6 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 
 		battleData.push(battleInfo);
 
-
 		// 以下表示系、未処理でいいなら次のレコードへ
 		if (!updateDisplay) continue;
 
@@ -5080,7 +5080,7 @@ function doJetPhaseHalf(friendFleetData, battleInfo, index) {
 				let sumSlotResult = 0;
 				for (let count = 0; count < 1000; count++) {
 					let tmpSlot = plane.slot;
-					// 噴式強襲st1 0.6掛け 
+					// 噴式強襲st1 0.6掛け
 					tmpSlot -= Math.floor(0.6 * getShootDownSlotFF(0, Math.round(tmpSlot)));
 
 					// 噴式強襲st2
@@ -5174,7 +5174,6 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
 				}
 				sumSlotResult += tmpSlot > 0 ? tmpSlot : 0;
 			}
-
 			plane.slot = sumSlotResult / 1000;
 
 			plane.ap = updateAp(plane);
@@ -5192,24 +5191,29 @@ function shootDownHalfFriend(friendFleetData, eap, index, battleInfo) {
  * @param {number} battleInfo 戦闘情報(enemies: 敵id羅列 stage2: st2撃墜テーブル cellType: 戦闘タイプ)
  */
 function shootDownFriend(airStatusIndex, friendFleetData, battleInfo) {
-	const len = friendFleetData.length;
 	const range = battleInfo.stage2[0][0].length;
+
 	// 敵艦なしの場合スキップ
 	if (!range) return;
+
+	// 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
+	if (airStatusIndex === 5) airStatusIndex = 0;
+
+	const isNormalBattle = battleInfo.cellType <= CELL_TYPE.normal;
+	const needStage2 = battleInfo.cellType <= CELL_TYPE.grand;
+	const len = friendFleetData.length;
 	for (let i = 0; i < len; i++) {
 		const ship = friendFleetData[i];
 		const shipLen = ship.length;
 		for (let j = 0; j < shipLen; j++) {
 			const plane = ship[j];
 			// 0機スロ, 非制空争い機, 通常戦闘で味方第二艦隊の機体　のものはスキップ
-			if (plane.slot <= 0 || !plane.canBattle || (plane.fleetNo > 6 && battleInfo.cellType < CELL_TYPE.normal)) continue;
-			// 双方制空0(airStatusIndex === 5)の場合、制空権確保となるので変更
-			if (airStatusIndex === 5) airStatusIndex = 0;
+			if (plane.slot <= 0 || !plane.canBattle || (plane.fleetNo > 6 && isNormalBattle)) continue;
 			// st1撃墜 噴式の場合0.6掛け
 			const downNumber = getShootDownSlotFF(airStatusIndex, plane.slot);
 			plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
 			// st2撃墜
-			if (plane.canAttack && battleInfo.cellType <= CELL_TYPE.grand) {
+			if (plane.canAttack && needStage2) {
 				// 迎撃担当
 				const index = Math.floor(Math.random() * range);
 				// 割合撃墜
@@ -5643,9 +5647,9 @@ function detailCalculate() {
 
 /**
  * 味方スロット撃墜数詳細計算
- * @param {number} shipNo 
- * @param {number} slotNo 
- * @param {number} shipId 
+ * @param {number} shipNo
+ * @param {number} slotNo
+ * @param {number} shipId
  */
 function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	// 事前計算テーブルチェック
@@ -9492,17 +9496,17 @@ function btn_deckBuilder_Clicked() {
  * 元に戻すボタンクリック
  */
 function btn_undo_Clicked() {
-	const nowIndex = undoHisotry.index + 1;
-	if (nowIndex >= undoHisotry.histories.length || document.getElementById('btn_undo').classList.contains('disabled')) return;
-	const tmp = undoHisotry.histories.concat();
+	const nowIndex = undoHistory.index + 1;
+	if (nowIndex >= undoHistory.histories.length || document.getElementById('btn_undo').classList.contains('disabled')) return;
+	const tmp = undoHistory.histories.concat();
 
-	expandMainPreset(decodePreset(undoHisotry.histories[nowIndex]));
+	expandMainPreset(decodePreset(undoHistory.histories[nowIndex]));
 	calculate();
 
-	undoHisotry.index = nowIndex;
-	undoHisotry.histories = tmp;
+	undoHistory.index = nowIndex;
+	undoHistory.histories = tmp;
 	// 次回できなさそうなら無効化
-	if (nowIndex + 1 === undoHisotry.histories.length) {
+	if (nowIndex + 1 === undoHistory.histories.length) {
 		document.getElementById('btn_undo').classList.add('disabled');
 	}
 
@@ -9513,15 +9517,15 @@ function btn_undo_Clicked() {
  * やりなおすボタンクリック
  */
 function btn_redo_Clicked() {
-	const nowIndex = undoHisotry.index - 1;
+	const nowIndex = undoHistory.index - 1;
 	if (nowIndex < 0 || document.getElementById('btn_redo').classList.contains('disabled')) return;
-	const tmp = undoHisotry.histories.concat();
+	const tmp = undoHistory.histories.concat();
 
-	expandMainPreset(decodePreset(undoHisotry.histories[undoHisotry.index - 1]));
+	expandMainPreset(decodePreset(undoHistory.histories[undoHistory.index - 1]));
 	calculate();
 
-	undoHisotry.index = nowIndex;
-	undoHisotry.histories = tmp;
+	undoHistory.index = nowIndex;
+	undoHistory.histories = tmp;
 
 	// 次回できなさそうなら無効化
 	if (nowIndex - 1 < 0) {
