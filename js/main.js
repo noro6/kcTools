@@ -1064,7 +1064,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	$div[0].dataset.planeid = plane.id;
 	$div[0].dataset.type = plane.type;
 	$div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
-	$div.find('.plane_img').attr('src', `./img/type/type${plane.type}.png`);
+	$div.find('.plane_img').attr('src', `./img/type/type${plane.type}.png`).attr('alt', plane.type);
 	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
 	$div.find('.plane_name').addClass('drag_handle');
 	$div.find('.btn_remove_plane').removeClass('opacity0');
@@ -5797,10 +5797,8 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		if (index === (ship ? ship.slot.length : 4)) break;
 		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
 		planeText += `
-		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
-			<div class="col-2 align-self-center text-right">
-				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `` : 'disabled'}" data-slot_no="${index}">表示</div>
-			</div>
+		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
 			<div class="col d-flex align-self-center font_size_12 pl-0">
 				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${name}</div>
@@ -6019,10 +6017,8 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 		const p = PLANE_DATA.find(v => v.id === pl.id);
 		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
 		planeText += `
-		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
-			<div class="col-2 align-self-center text-right">
-				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `` : 'disabled'}" data-slot_no="${index}">表示</div>
-			</div>
+		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
 			<div class="col d-flex align-self-center font_size_12 pl-0">
 				<img src="./img/type/${p ? `type${p.type}` : 'undefined'}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${name}</div>
@@ -6210,10 +6206,8 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	for (const id of enemy.eqp) {
 		const p = ENEMY_PLANE_DATA.find(v => v.id === id);
 		planeText += `
-		<div class="row mt-0_5 ${slotNo === index ? 'text-primary' : ''}">
-			<div class="col-2 align-self-center text-right">
-				<div class="btn_show_detail py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `` : 'disabled'}" data-slot_no="${index}">表示</div>
-			</div>
+		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
 			<div class="col d-flex align-self-center">
 				<img src="./img/type/type${p.type}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${p.name}</div>
