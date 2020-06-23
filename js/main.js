@@ -2893,9 +2893,9 @@ function readDeckBuilder(deck) {
 	try {
 		deck = decodeURIComponent(deck).trim('"');
 		const obj = JSON.parse(deck);
-
 		const fleets = [];
 		const landBase = [[], [-1, -1, -1]];
+		let unmanageShip = false;
 		Object.keys(obj).forEach((key) => {
 			const value = obj[key];
 			if (key === "version" || !value) return;
@@ -2930,16 +2930,21 @@ function readDeckBuilder(deck) {
 			if (key.indexOf("f") === 0) {
 				// 艦隊番号
 				const fleetNo = castInt(key.replace('f', '')) - 1;
+				if (fleetNo > 1) return;
 
 				// 艦娘の抽出
 				const fleet = [fleetNo, []];
 				Object.keys(value).forEach((s) => {
 					const s_ = value[s];
 					if (!s_ || !s_.hasOwnProperty('items')) return;
-
+					const s_id = castInt(s_.id);
 					// マスタデータと照合
-					const shipData = SHIP_DATA.find(v => v.deckid === castInt(s_.id));
-					if (!shipData) return;
+					let shipData = SHIP_DATA.find(v => v.deckid === s_id);
+					// マスタにないものも装備は受け入れるが、注意書きは表示させる
+					if (!shipData) {
+						shipData = { id: 0, slot: [0, 0, 0, 0] };
+						unmanageShip = true;
+					}
 
 					// 装備の抽出
 					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
@@ -2970,6 +2975,9 @@ function readDeckBuilder(deck) {
 			}
 		});
 
+		// マスタ管理外艦娘チェック
+		if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
+		else document.getElementById('duck_read_warning').classList.add('d-none');
 
 		// 第1、第2艦隊のみに絞る
 		const fleet1 = fleets.find(v => v[0] === 0)[1];
@@ -2979,7 +2987,6 @@ function readDeckBuilder(deck) {
 			return [landBase, marge, []];
 		}
 		else return [landBase, fleet1, []];
-
 	} catch (error) {
 		return null;
 	}
@@ -3415,6 +3422,10 @@ function drawResult() {
 	}
 
 	display_result_Changed();
+
+	// 重い気がする奴解放
+	resultData.enemyAirPowerResults = null;
+	resultData.fleetSlots = null;
 }
 
 /**
@@ -4545,13 +4556,17 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 	// 以下表示系、未処理でいいなら終了
 	if (!updateDisplay) return;
 
+	// 触接テーブルより、制空権確保時の合計触接率を取得
+	const contactRate = createContactTable(friendFleetData)[0][4];
 	if (isUnionFleet) {
 		for (let index = 0; index < fleetAps.length; index++) {
 			document.getElementsByClassName('fleet_ap')[index].textContent = fleetAps[index];
+			document.getElementsByClassName('contact_start_rate')[index].textContent = `${contactRate.toFixed(1)}%`;
 		}
 	}
 	else {
 		$('.friendFleet_tab.show.active')[0].getElementsByClassName('fleet_ap')[0].textContent = fleetAps[0];
+		$('.friendFleet_tab.show.active')[0].getElementsByClassName('contact_start_rate')[0].textContent = `${contactRate.toFixed(2)}%`;
 	}
 
 	const ship_info_tbody = document.getElementById('ship_info_table').getElementsByTagName('tbody')[0];
@@ -4615,7 +4630,10 @@ function createFleetPlaneObject(node, shipNo, index) {
 		slot: inputSlot,
 		origSlot: inputSlot,
 		origAp: 0,
-		avoid: 0
+		avoid: 0,
+		contact: 0,
+		accuracy: 0,
+		selectRate: []
 	};
 
 	if (plane) {
@@ -4629,6 +4647,26 @@ function createFleetPlaneObject(node, shipNo, index) {
 		shipPlane.ap = updateAp(shipPlane);
 		shipPlane.origAp = shipPlane.ap;
 		shipPlane.avoid = plane.avoid;
+		shipPlane.accuracy = plane.accuracy;
+
+		if (shipPlane.slot) {
+			// 触接開始因数 canBattleが奇しくも偵察機判定になっているためこの条件で。canBattleの条件が変わった場合はここも要改修
+			shipPlane.contact = !shipPlane.canBattle ? Math.floor(plane.scout * Math.sqrt(shipPlane.slot)) : 0;
+			// 触接選択率　改式。実際はこっち [3, 2, 1].map(v => plane.scout / (20 - (2 * v)));
+			if ([2, -2, 4, 5, 8].includes(plane.type)) {
+				let scout = plane.scout;
+				const remodel = shipPlane.remodel;
+				if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
+				if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
+				if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
+				if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
+				if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
+				shipPlane.selectRate = [scout / 14, scout / 16, scout / 18];
+			}
+		}
 
 		// 機体使用数テーブル更新
 		let usedData = usedPlane.find(v => v.id === plane.id);
@@ -4659,6 +4697,79 @@ function getFriendFleetAP(friendFleetData, cellType) {
 		for (let j = 0; j < max_j; j++) sumAP += ships[j].ap;
 	}
 	return sumAP;
+}
+
+/**
+ * 味方艦隊から触接テーブル生成
+ */
+function createContactTable(friendFleet) {
+	let sumCotactValue = 0;
+	// 補正率別　触接選択率テーブル[ 0:確保時, 1:優勢時, 2:劣勢時 ]
+	const contact120 = [[], [], []];
+	const contact117 = [[], [], []];
+	const contact112 = [[], [], []];
+
+	// データ読み取り
+	for (const planes of friendFleet) {
+		for (const plane of planes) {
+			if (plane.id === 0 || !plane.selectRate.length) continue;
+
+			sumCotactValue += plane.contact;
+			for (let i = 0; i < 3; i++) {
+				if (plane.accuracy >= 3) contact120[i].push(plane.selectRate[i]);
+				else if (plane.accuracy === 2) contact117[i].push(plane.selectRate[i]);
+				else contact112[i].push(plane.selectRate[i]);
+			}
+		}
+	}
+
+	// 開始触接率ズ [ 0:確保時, 1:優勢時, 2:劣勢時 ]
+	const contactStartRate = [3, 2, 1].map(v => Math.min((Math.floor(sumCotactValue) + 1) / (70 - 15 * v), 1));
+
+	// 実触接率actualContactRate = [ 0:確保, 1:優勢, 2:劣勢 ] それぞれの要素内に [ 120%, 117%, 112% ]が入る
+	const actualContactRate = [[], [], []];
+	let sum = 1;
+	for (let i = 0; i < 3; i++) {
+		let tmpRate = contactStartRate[i];
+		// 補正のデカいものから優先的に
+		if (contact120[i].length) {
+			sum = 1;
+			// 全て選択されない確率の導出
+			for (const rate of contact120[i]) sum *= (1 - rate);
+			// 選択率
+			const rate = tmpRate * (1 - sum);
+			actualContactRate[i].push(rate);
+			tmpRate -= rate;
+		}
+		else actualContactRate[i].push(0);
+
+		if (contact117[i].length) {
+			sum = 1;
+			for (const rate of contact117[i]) sum *= (1 - rate);
+			const rate = tmpRate * (1 - sum);
+			actualContactRate[i].push(rate);
+			tmpRate -= rate;
+		}
+		else actualContactRate[i].push(0);
+
+		if (contact112[i].length) {
+			sum = 1;
+			for (const rate of contact112[i]) sum *= (1 - rate);
+			const rate = tmpRate * (1 - sum);
+			actualContactRate[i].push(rate);
+			tmpRate -= rate;
+		}
+		else actualContactRate[i].push(0);
+	}
+
+	const contactTable = [[], [], []];
+	for (let i = 0; i < 3; i++) {
+		contactTable[i].push(100 * contactStartRate[i]);
+		contactTable[i] = contactTable[i].concat(actualContactRate[i].map(v => 100 * v));
+		contactTable[i].push(Math.min(100 * getArraySum(actualContactRate[i]), 100));
+	}
+	console.log(contactTable);
+	return contactTable;
 }
 
 /**
@@ -7799,6 +7910,41 @@ function slot_select_parent_Close($this) {
 }
 
 /**
+ * 触接詳細ボタンクリック
+ * @param {JqueryDomObject} $this
+ */
+function btn_show_contact_rateClicked($this) {
+	const fleet = [];
+	updateFriendFleetInfo(fleet, false);
+
+	const nomalContact = createContactTable(fleet.filter(a => !a.find(p => p.fleetNo > 6)));
+	const grandContact = createContactTable(fleet);
+
+	const $nomal = document.getElementById('grand_contact_table');
+	const $grand = document.getElementById('nomal_contact_table');
+
+	for (let i = 0; i < 3; i++) {
+		const $tr = $grand.getElementsByClassName('contact_status_' + i)[0];
+		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = nomalContact[i][0].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = nomalContact[i][1].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = nomalContact[i][2].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_112_contact_rate')[0].textContent = nomalContact[i][3].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_sum_contact_rate')[0].textContent = nomalContact[i][4].toFixed(1) + '%';
+	}
+
+	for (let i = 0; i < 3; i++) {
+		const $tr = $nomal.getElementsByClassName('contact_status_' + i)[0];
+		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = grandContact[i][0].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = grandContact[i][1].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = grandContact[i][2].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_112_contact_rate')[0].textContent = grandContact[i][3].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_sum_contact_rate')[0].textContent = grandContact[i][4].toFixed(1) + '%';
+	}
+
+	$('#modal_contact_detail').modal('show');
+}
+
+/**
  * 基地リセットボタン押下時
  * @param {JqueryDomObject} $this
  */
@@ -9994,6 +10140,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
 	$('#landBase_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
+	$('#friendFleet_content').on('click', '#read_duck_read_warning', function () { $('#duck_read_warning').addClass('d-none'); });
 	$('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
@@ -10007,6 +10154,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.plane_unlock', function () { plane_unlock_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.slot_ini', function () { slot_ini_Clicked($(this)); });
+	$('#friendFleet_content').on('click', '.btn_show_contact_rate', function () { btn_show_contact_rateClicked($(this)); });
 	$('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
 	$('#enemyFleet_content').on('change', '.formation', calculate);
 	$('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });

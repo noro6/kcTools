@@ -161,8 +161,10 @@ input[type="text"] { font-size: 12px; }
 .text_red { color: rgb(255, 0, 0); }
 .w_40 { width: 40% }
 .w_30 { width: 30% }
+.w_25 { width: 25% }
 .w_20 { width: 20% }
 .w_15 { width: 15% }
+.w_10 { width: 10% }
 .min-h-31px { height: 31px }
 
 .general_tr {
@@ -183,7 +185,9 @@ input[type="text"] { font-size: 12px; }
 }
 .general_tr:active { background-color: rgba(109, 214, 255, 0.5) !important; }
 .dark-theme .general_tr:active { background-color: rgba(230, 248, 255, 0.4) !important; }
-
+.dark-theme .alert-warning {
+  background-color: rgb(255, 243, 205, 0.8);
+}
 
 /* -----------------------------------
   カスタムコントロール
@@ -198,7 +202,7 @@ input[type="text"] { font-size: 12px; }
   transition: 0.4s;
   position: relative;
 }
-.round_button:hover { 
+.round_button:hover {
   background-color: rgba(128, 128, 128, 0.3);
   animation: round_button_hover 0.2s linear forwards;
 }
@@ -223,7 +227,7 @@ input[type="text"] { font-size: 12px; }
   0% { transform: scale(1.0, 1.0); opacity: 1; }
   100% { transform: scale(2.0, 2.0); opacity: 0;}
 }
-  
+
 .btn_ok { width: 72px; }
 .btn_icon {
   width: 18px;
@@ -515,24 +519,24 @@ input[type="text"] { font-size: 12px; }
 #btn_undo {
  cursor: pointer;
   color: rgb(255, 255, 255);
-  transition: .3s;
+  transition: .2s;
  opacity: .6;
 }
 #btn_undo:hover { opacity: 1; }
-#btn_undo.disabled { 
-  cursor: default; 
-  opacity: .2; 
+#btn_undo.disabled {
+  cursor: default;
+  opacity: .2;
 }
 #btn_redo {
   cursor: pointer;
   color: rgb(255, 255, 255);
-  transition: .3s;
+  transition: .2s;
   opacity: .6;
 }
 #btn_redo:hover { opacity: 1; }
 #btn_redo.disabled {
-  cursor: default; 
-  opacity: .2; 
+  cursor: default;
+  opacity: .2;
 }
 #input_url {
   font-size: 12px;
@@ -723,8 +727,8 @@ input[type="text"] { font-size: 12px; }
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
 }
-.dark-theme .lb_plane { 
-  text-shadow: 1px 1px 3px #000; 
+.dark-theme .lb_plane {
+  text-shadow: 1px 1px 3px #000;
   background-color: rgba(60, 65, 75, 0.5);
 }
 .lb_plane:hover { box-shadow: inset 0 0 20px rgba(128, 128, 128, 0.2); }
@@ -749,10 +753,10 @@ input[type="text"] { font-size: 12px; }
 }
 .ship_name_span::after {
   content: '';
-  display:block;
-  width:0;
+  display: block;
+  width: 0;
   border-bottom: 1px solid #777;
-  transition: 0.3s ease-in-out;
+  transition: 0.25s ease-in-out;
 }
 .ship_name_span:hover::after {
   width: 100%;
@@ -765,8 +769,8 @@ input[type="text"] { font-size: 12px; }
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
 }
-.dark-theme .ship_plane { 
-  text-shadow: 1px 1px 3px #000; 
+.dark-theme .ship_plane {
+  text-shadow: 1px 1px 3px #000;
   background-color: rgba(60, 65, 75, 0.5);
 }
 .ship_plane:hover { box-shadow: inset 0 0 20px rgba(128, 128, 128, 0.2); }
@@ -797,6 +801,12 @@ input[type="text"] { font-size: 12px; }
   border-right: 3px rgb(125, 225, 220) solid;
   filter: drop-shadow(0px 0px 1px rgb(125, 225, 220));
 }
+.btn_show_contact_rate { 
+  cursor: pointer;
+  opacity: 0.6;
+  transition: .3s;
+}
+.btn_show_contact_rate:hover { opacity: 1; }
 
 /* -----------------------------------
   機体コントロール関連
@@ -893,7 +903,7 @@ input[type="text"] { font-size: 12px; }
   height: 25px;
   transition: 0.4s;
 }
-.prof_select_parent .dropdown-menu { 
+.prof_select_parent .dropdown-menu {
   min-width: 48px;
   box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);
   padding: 0;
@@ -1515,6 +1525,22 @@ input[type="text"] { font-size: 12px; }
 #stage2_detail_slot { width: 120px; }
 #free_modify input[type="number"] { width: 100px; }
 
+
+/* ------------------------------
+  触接詳細 #modal_contact_detail
+-------------------------------- */
+.contact_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.contact_table tbody td {
+  font-size: 12px;
+  padding: .1rem;
+  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
+}
+.contact_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+
 /* ------------------------------
   オートモード #auto_expand
 -------------------------------- */
@@ -1528,11 +1554,15 @@ input[type="text"] { font-size: 12px; }
 -------------------------------- */
 .sample_plane {
   max-width: 320px;
-  border: 2px #64c878 solid;
-  background-color: #e6fff0;
+  border: 2px rgb(128, 128, 128) solid;
   border-radius: 0.25rem;
+  text-shadow: 1px 1px 3px #fff;
+  background-color: rgba(255, 255, 255, 0.8);
 }
-.sample_plane:hover { background-color: #e1faeb; }
+.dark-theme .sample_plane {
+  text-shadow: 1px 1px 3px #000;
+  background-color: rgba(60, 65, 75, 0.5);
+}
 .text_existTooltip {
   text-decoration: underline;
   -webkit-text-decoration: underline dotted;
@@ -1627,24 +1657,69 @@ img[src *= "prof7"]:hover, img[src *= "prof6"]:hover, img[src *= "prof5"]:hover,
 img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover {
   filter: drop-shadow(0 0 3px #64b4ff);
 }
-.css_fighter { border: 2px rgb(100, 200, 120) solid; box-shadow: inset 0 0 20px rgba(0, 255, 100, 0.25); }
-.css_fighter:hover { box-shadow: inset 0 0 20px rgba(0, 255, 100, 0.4); }
-.css_torpedo_bomber { border: 2px rgb(100, 190, 255) solid; box-shadow: inset 0 0 20px rgba(0, 190, 255, 0.25); }
-.css_torpedo_bomber:hover { box-shadow: inset 0 0 20px rgba(0, 190, 255, 0.4); }
-.css_dive_bomber { border: 2px rgb(247, 110, 110) solid; box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.25); }
-.css_dive_bomber:hover { box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.4); }
-.css_cb_reconnaissance { border: 2px rgb(255, 200, 10) solid; box-shadow: inset 0 0 20px rgba(255, 255, 70, 0.25); }
-.css_cb_reconnaissance:hover { box-shadow: inset 0 0 20px rgba(255, 255, 70, 0.4); }
-.css_sp { border: 2px rgb(140, 205, 150) solid; box-shadow: inset 0 0 20px rgba(86, 255, 122, 0.25); }
-.css_sp:hover { box-shadow: inset 0 0 20px rgba(86, 255, 122, 0.4); }
-.css_lb_attack_aircraft { border: 2px rgb(60, 170, 30) solid; box-shadow: inset 0 0 20px rgba(53, 199, 17, 0.25); }
-.css_lb_attack_aircraft:hover { box-shadow: inset 0 0 20px rgba(40, 200, 0, 0.4); }
-.css_lb_fighter { border: 2px rgb(150, 230, 165) solid; box-shadow: inset 0 0 20px rgba(36, 255, 91, 0.25); }
-.css_lb_fighter:hover { box-shadow: inset 0 0 20px rgba(36, 255, 91, 0.4); }
-.css_lb_asw_aircraft { border: 2px rgb(110, 135, 205) solid; box-shadow: inset 0 0 20px rgba(0, 110, 255, 0.25); }
-.css_lb_asw_aircraft:hover { box-shadow: inset 0 0 20px rgba(0, 110, 255, 0.4); }
-.css_cb_night_aircraft { border: 2px rgb(130, 130, 180) solid; box-shadow: inset 0 0 20px rgba(122, 98, 255, 0.25); }
-.css_cb_night_aircraft:hover { box-shadow: inset 0 0 20px rgba(122, 98, 255, 0.4); }
+.css_fighter {
+  border: 2px rgb(100, 200, 120) solid;
+  box-shadow: inset 0 0 20px rgba(0, 255, 100, 0.25);
+ }
+.css_fighter:hover {
+  box-shadow: inset 0 0 20px rgba(0, 255, 100, 0.5), 0 0 20px rgba(0, 255, 100, 0.2);
+}
+.css_torpedo_bomber {
+  border: 2px rgb(100, 190, 255) solid;
+  box-shadow: inset 0 0 20px rgba(0, 190, 255, 0.25);
+ }
+.css_torpedo_bomber:hover {
+  box-shadow: inset 0 0 20px rgba(0, 190, 255, 0.5), 0 0 20px rgba(0, 190, 255, 0.2);
+}
+.css_dive_bomber {
+  border: 2px rgb(247, 110, 110) solid;
+  box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.25);
+ }
+.css_dive_bomber:hover {
+  box-shadow: inset 0 0 20px rgba(255, 80, 80, 0.5), 0 0 20px rgba(255, 80, 80, 0.2);
+}
+.css_cb_reconnaissance {
+  border: 2px rgb(255, 200, 10) solid;
+  box-shadow: inset 0 0 20px rgba(255, 255, 70, 0.25);
+ }
+.css_cb_reconnaissance:hover {
+  box-shadow: inset 0 0 20px rgba(255, 255, 70, 0.5), 0 0 20px rgba(255, 255, 70, 0.2);
+}
+.css_sp {
+  border: 2px rgb(140, 205, 150) solid;
+  box-shadow: inset 0 0 20px rgba(86, 255, 122, 0.25);
+ }
+.css_sp:hover {
+  box-shadow: inset 0 0 20px rgba(86, 255, 122, 0.5), 0 0 20px rgba(86, 255, 122, 0.2);
+}
+.css_lb_attack_aircraft {
+  border: 2px rgb(60, 170, 30) solid;
+  box-shadow: inset 0 0 20px rgba(53, 199, 17, 0.25);
+ }
+.css_lb_attack_aircraft:hover {
+  box-shadow: inset 0 0 20px rgba(40, 200, 0, 0.5), 0 0 20px rgba(40, 200, 0, 0.2);
+}
+.css_lb_fighter {
+  border: 2px rgb(150, 230, 165) solid;
+  box-shadow: inset 0 0 20px rgba(36, 255, 91, 0.25);
+ }
+.css_lb_fighter:hover {
+  box-shadow: inset 0 0 20px rgba(36, 255, 91, 0.5), 0 0 20px rgba(36, 255, 91, 0.2);
+}
+.css_lb_asw_aircraft {
+  border: 2px rgb(110, 135, 205) solid;
+  box-shadow: inset 0 0 20px rgba(0, 110, 255, 0.25);
+ }
+.css_lb_asw_aircraft:hover {
+  box-shadow: inset 0 0 20px rgba(0, 110, 255, 0.5), 0 0 20px rgba(0, 110, 255, 0.2);
+}
+.css_cb_night_aircraft {
+  border: 2px rgb(130, 130, 180) solid;
+  box-shadow: inset 0 0 20px rgba(122, 98, 255, 0.25);
+ }
+.css_cb_night_aircraft:hover {
+  box-shadow: inset 0 0 20px rgba(122, 98, 255, 0.5), 0 0 20px rgba(122, 98, 255, 0.2);
+}
 .shoot_table_fighter { background-color: rgba(0, 255, 64, 0.1); }
 .shoot_table_torpedo_bomber { background-color: rgba(0, 189, 252, 0.1); }
 .shoot_table_dive_bomber { background-color: rgba(255, 0, 0, 0.1); }

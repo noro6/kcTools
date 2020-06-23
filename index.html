@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" href="./css/main.min.css">
+	<link rel="stylesheet" href="./css/main.css">
 	<script async src="./js/html2canvas.min.js"></script>
 	<script async src="./js/chart.min.js"></script>
 	<script async src="./js/changes.js"></script>
@@ -29,7 +29,7 @@
 	<script defer src="./js/lz-string.js"></script>
 	<script defer src="./js/sortable.js"></script>
 	<script defer src="./js/data.js"></script>
-	<script defer src="./js/main.min.js"></script>
+	<script defer src="./js/main.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -785,7 +785,7 @@
 							</div>
 							<div class="collapse show collapse_content" id="friendFleet_content">
 								<div class="border-top"></div>
-								<div class="my-2 d-flex">
+								<div class="my-1 d-flex">
 									<div class="ml-1 custom-control custom-checkbox">
 										<input type="checkbox" class="custom-control-input" id="union_fleet">
 										<label class="custom-control-label" for="union_fleet">連合艦隊</label>
@@ -796,7 +796,11 @@
 											title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>"></i>
 									</div>
 								</div>
-								<div class="my-2">
+								<div class="alert alert-warning px-2 py-2 d-none font_size_12 no_capture" id="duck_read_warning">
+									<span class="cur_pointer mr-2" id="read_duck_read_warning"><i class="fas fa-times"></i></span>
+									<span>本サイトで管理されていない艦娘の搭載数読み込みがスキップされました。お手数ですが、搭載数が0になった機体は手動で搭載数を変更してください。</span>
+								</div>
+								<div class="mb-2">
 									<ul class="nav nav-tabs">
 										<li class="nav-item">
 											<a class="nav-link active" data-toggle="tab" href="#friendFleet_item1">第1艦隊</a>
@@ -817,8 +821,15 @@
 											</select>
 											<div class="ml-1 mr-2 align-self-center no_capture">隻</div>
 											<div class="ml-2 align-self-center">
-												<span class="font_color_half">艦隊総制空値: </span>
+												<span class="font_color_half">艦隊制空値: </span>
 												<span class="fleet_ap">0</span>
+											</div>
+											<div class="ml-3 align-self-center">
+												<span class="font_color_half">触接率: </span>
+												<span class="contact_start_rate">0.0%</span>
+												<span class="btn_show_contact_rate">
+													<i class="fas fa-search"></i>
+												</span>
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
@@ -832,7 +843,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -1043,7 +1054,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -1254,7 +1265,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -1465,7 +1476,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -1676,7 +1687,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -1887,7 +1898,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -2092,15 +2103,23 @@
 									</div>
 									<div class="tab-pane fade friendFleet_tab container-fluid px-0" id="friendFleet_item2">
 										<div class="d-flex">
-											<div class="ml-2 mr-1 align-self-center">表示隻数：</div>
-											<select class="custom-select custom-select-sm display_ship_count">
+											<div class="ml-2 mr-1 align-self-center no_capture">表示隻数：</div>
+											<select class="custom-select custom-select-sm display_ship_count no_capture">
 												<option value="2" selected>2</option>
 												<option value="4">4</option>
 												<option value="6">6</option>
 											</select>
-											<div class="ml-1 align-self-center">隻</div>
-											<div class="ml-4 align-self-center">
-												艦隊総制空値：<span class="fleet_ap">0</span>
+											<div class="ml-1 mr-2 align-self-center no_capture">隻</div>
+											<div class="ml-2 align-self-center">
+												<span class="font_color_half">艦隊制空値: </span>
+												<span class="fleet_ap">0</span>
+											</div>
+											<div class="ml-3 align-self-center">
+												<span class="font_color_half">触接率: </span>
+												<span class="contact_start_rate">0.0%</span>
+												<span class="btn_show_contact_rate">
+													<i class="fas fa-search"></i>
+												</span>
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
@@ -2114,7 +2133,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -2325,7 +2344,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -2536,7 +2555,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -2747,7 +2766,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -2958,7 +2977,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -3169,7 +3188,7 @@
 															data-placement="right" data-html="true" title="">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
-															<span class="font_color_half">総制空: </span>
+															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
 														<div class="ml-auto align-self-center custom-control custom-checkbox">
@@ -3824,7 +3843,7 @@
 												</optgroup>
 											</select>
 											<div class="ml-auto align-self-center font_size_12 font_color_half">
-												総制空:<span class="ml-2 enemy_sum_lbap">0</span>
+												制空:<span class="ml-2 enemy_sum_lbap">0</span>
 											</div>
 											<!-- 緩衝 -->
 											<input type="hidden" class="formation">
@@ -4127,7 +4146,7 @@
 										<div class="font_size_14">
 											<div class="drag_handle cur_move">
 												敵艦隊の搭載数（本隊航空戦 stage1 後）
-												<span class="ml-1 font_size_11 no_capture">※各行クリックで詳細を表示</span>
+												<span class="ml-1 font_size_11 no_capture">※詳細行クリックで詳細を表示</span>
 											</div>
 										</div>
 										<table class="text-center w-100" id="enemy_shoot_down_table">
@@ -6043,6 +6062,105 @@
 						<div>・対空CIが発動すると、固定撃墜数が増加したり、必ず撃墜が発生するようになります。</div>
 						<div class="pl-3">該当の敵艦：砲台小鬼(機銃/対空CI)、防空棲姫、防空埋護姫、防空巡棲姫</div>
 					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_contact_detail" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">触接</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body pt-1">
+					<div>
+						<canvas id="detail_contact_chart" width="440" height="260"></canvas>
+					</div>
+					<div class="font_size_12">対敵通常艦隊</div>
+					<table class="text-center contact_table" id="nomal_contact_table">
+						<thead class="general_thead">
+							<tr>
+								<td class="w_25">制空状態</td>
+								<td class="w_15">触接開始率</td>
+								<td class="w_15">120%補正</td>
+								<td class="w_15">117%補正</td>
+								<td class="w_15">112%補正</td>
+								<td class="w_15">合計触接率</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="contact_status_0">
+								<td>制空権確保</td>
+								<td class="td_start_contact_rate"></td>
+								<td class="td_120_contact_rate"></td>
+								<td class="td_117_contact_rate"></td>
+								<td class="td_112_contact_rate"></td>
+								<td class="td_sum_contact_rate"></td>
+							</tr>
+							<tr class="contact_status_1">
+								<td>航空優勢</td>
+								<td class="td_start_contact_rate"></td>
+								<td class="td_120_contact_rate"></td>
+								<td class="td_117_contact_rate"></td>
+								<td class="td_112_contact_rate"></td>
+								<td class="td_sum_contact_rate"></td>
+							</tr>
+							<tr class="contact_status_2">
+								<td>航空劣勢</td>
+								<td class="td_start_contact_rate"></td>
+								<td class="td_120_contact_rate"></td>
+								<td class="td_117_contact_rate"></td>
+								<td class="td_112_contact_rate"></td>
+								<td class="td_sum_contact_rate"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="mt-2 font_size_12">対敵連合艦隊</div>
+					<table class="text-center contact_table" id="grand_contact_table">
+						<thead class="general_thead">
+							<tr>
+								<td class="w_25">制空状態</td>
+								<td class="w_15">触接開始率</td>
+								<td class="w_15">120%補正</td>
+								<td class="w_15">117%補正</td>
+								<td class="w_15">112%補正</td>
+								<td class="w_15">合計触接率</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="contact_status_0">
+								<td>制空権確保</td>
+								<td class="td_start_contact_rate"></td>
+								<td class="td_120_contact_rate"></td>
+								<td class="td_117_contact_rate"></td>
+								<td class="td_112_contact_rate"></td>
+								<td class="td_sum_contact_rate"></td>
+							</tr>
+							<tr class="contact_status_1">
+								<td>航空優勢</td>
+								<td class="td_start_contact_rate"></td>
+								<td class="td_120_contact_rate"></td>
+								<td class="td_117_contact_rate"></td>
+								<td class="td_112_contact_rate"></td>
+								<td class="td_sum_contact_rate"></td>
+							</tr>
+							<tr class="contact_status_2">
+								<td>航空劣勢</td>
+								<td class="td_start_contact_rate"></td>
+								<td class="td_120_contact_rate"></td>
+								<td class="td_117_contact_rate"></td>
+								<td class="td_112_contact_rate"></td>
+								<td class="td_sum_contact_rate"></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<div class="modal-footer">
 					<div class="ml-auto">
