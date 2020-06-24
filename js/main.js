@@ -73,7 +73,8 @@ let setting = null;
 let usedPlane = [];
 
 // Chart描画用データ
-let chartDataSet = null;
+let chartInstance = null;
+let subChartInstance = null;
 
 // メイン文字色
 let mainColor = "#000000";
@@ -870,6 +871,9 @@ function initialize(callback) {
 
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
+
+	// グラフグローバル解除
+	Chart.plugins.unregister(ChartDataLabels);
 
 	callback();
 }
@@ -2893,9 +2897,9 @@ function readDeckBuilder(deck) {
 	try {
 		deck = decodeURIComponent(deck).trim('"');
 		const obj = JSON.parse(deck);
-
 		const fleets = [];
 		const landBase = [[], [-1, -1, -1]];
+		let unmanageShip = false;
 		Object.keys(obj).forEach((key) => {
 			const value = obj[key];
 			if (key === "version" || !value) return;
@@ -2930,16 +2934,21 @@ function readDeckBuilder(deck) {
 			if (key.indexOf("f") === 0) {
 				// 艦隊番号
 				const fleetNo = castInt(key.replace('f', '')) - 1;
+				if (fleetNo > 1) return;
 
 				// 艦娘の抽出
 				const fleet = [fleetNo, []];
 				Object.keys(value).forEach((s) => {
 					const s_ = value[s];
 					if (!s_ || !s_.hasOwnProperty('items')) return;
-
+					const s_id = castInt(s_.id);
 					// マスタデータと照合
-					const shipData = SHIP_DATA.find(v => v.deckid === castInt(s_.id));
-					if (!shipData) return;
+					let shipData = SHIP_DATA.find(v => v.deckid === s_id);
+					// マスタにないものも装備は受け入れるが、注意書きは表示させる
+					if (!shipData) {
+						shipData = { id: 0, slot: [0, 0, 0, 0] };
+						unmanageShip = true;
+					}
 
 					// 装備の抽出
 					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
@@ -2970,6 +2979,9 @@ function readDeckBuilder(deck) {
 			}
 		});
 
+		// マスタ管理外艦娘チェック
+		if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
+		else document.getElementById('duck_read_warning').classList.add('d-none');
 
 		// 第1、第2艦隊のみに絞る
 		const fleet1 = fleets.find(v => v[0] === 0)[1];
@@ -2979,7 +2991,6 @@ function readDeckBuilder(deck) {
 			return [landBase, marge, []];
 		}
 		else return [landBase, fleet1, []];
-
 	} catch (error) {
 		return null;
 	}
@@ -3415,6 +3426,10 @@ function drawResult() {
 	}
 
 	display_result_Changed();
+
+	// 重い気がする奴解放
+	resultData.enemyAirPowerResults = null;
+	resultData.fleetSlots = null;
 }
 
 /**
@@ -4545,13 +4560,17 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 	// 以下表示系、未処理でいいなら終了
 	if (!updateDisplay) return;
 
+	// 触接テーブルより、制空権確保時の合計触接率を取得
+	const contactRate = createContactTable(friendFleetData)[0][4];
 	if (isUnionFleet) {
 		for (let index = 0; index < fleetAps.length; index++) {
 			document.getElementsByClassName('fleet_ap')[index].textContent = fleetAps[index];
+			document.getElementsByClassName('contact_start_rate')[index].textContent = `${contactRate.toFixed(1)}%`;
 		}
 	}
 	else {
 		$('.friendFleet_tab.show.active')[0].getElementsByClassName('fleet_ap')[0].textContent = fleetAps[0];
+		$('.friendFleet_tab.show.active')[0].getElementsByClassName('contact_start_rate')[0].textContent = `${contactRate.toFixed(2)}%`;
 	}
 
 	const ship_info_tbody = document.getElementById('ship_info_table').getElementsByTagName('tbody')[0];
@@ -4615,7 +4634,10 @@ function createFleetPlaneObject(node, shipNo, index) {
 		slot: inputSlot,
 		origSlot: inputSlot,
 		origAp: 0,
-		avoid: 0
+		avoid: 0,
+		contact: 0,
+		accuracy: 0,
+		selectRate: []
 	};
 
 	if (plane) {
@@ -4629,6 +4651,26 @@ function createFleetPlaneObject(node, shipNo, index) {
 		shipPlane.ap = updateAp(shipPlane);
 		shipPlane.origAp = shipPlane.ap;
 		shipPlane.avoid = plane.avoid;
+		shipPlane.accuracy = plane.accuracy;
+
+		if (shipPlane.slot) {
+			// 触接開始因数 canBattleが奇しくも偵察機判定になっているためこの条件で。canBattleの条件が変わった場合はここも要改修
+			shipPlane.contact = !shipPlane.canBattle ? Math.floor(plane.scout * Math.sqrt(shipPlane.slot)) : 0;
+			// 触接選択率　改式。実際はこっち [3, 2, 1].map(v => plane.scout / (20 - (2 * v)));
+			if ([2, -2, 4, 5, 8].includes(plane.type)) {
+				let scout = plane.scout;
+				const remodel = shipPlane.remodel;
+				if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
+				if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
+				if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
+				if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
+				if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
+				shipPlane.selectRate = [scout / 14, scout / 16, scout / 18];
+			}
+		}
 
 		// 機体使用数テーブル更新
 		let usedData = usedPlane.find(v => v.id === plane.id);
@@ -4659,6 +4701,82 @@ function getFriendFleetAP(friendFleetData, cellType) {
 		for (let j = 0; j < max_j; j++) sumAP += ships[j].ap;
 	}
 	return sumAP;
+}
+
+/**
+ * 味方艦隊から触接テーブル生成
+ */
+function createContactTable(friendFleet) {
+	let sumCotactValue = 0;
+	// 補正率別　触接選択率テーブル[ 0:確保時, 1:優勢時, 2:劣勢時 ]
+	const contact120 = [[], [], []];
+	const contact117 = [[], [], []];
+	const contact112 = [[], [], []];
+
+	// データ読み取り
+	for (const planes of friendFleet) {
+		for (const plane of planes) {
+			if (plane.id === 0 || !plane.selectRate.length) continue;
+
+			sumCotactValue += plane.contact;
+			for (let i = 0; i < 3; i++) {
+				if (plane.accuracy >= 3) contact120[i].push(plane.selectRate[i]);
+				else if (plane.accuracy === 2) contact117[i].push(plane.selectRate[i]);
+				else contact112[i].push(plane.selectRate[i]);
+			}
+		}
+	}
+
+	const a = Math.floor(sumCotactValue) + 1;
+	// 開始触接率ズ [ 0:確保時, 1:優勢時, 2:劣勢時 ] 改式: int(sum(索敵 * sqrt(搭載)) + 1) / (70 - 15 * c)
+	const contactStartRate = [
+		Math.min(a / 25, 1),
+		Math.min(a / 40, 1),
+		Math.min(a / 55, 1)
+	];
+
+	// 実触接率actualContactRate = [ 0:確保, 1:優勢, 2:劣勢 ] それぞれの要素内に [ 120%, 117%, 112% ]が入る
+	const actualContactRate = [[], [], []];
+	let sum = 1;
+	for (let i = 0; i < 3; i++) {
+		let tmpRate = contactStartRate[i];
+		// 補正のデカいものから優先的に
+		if (contact120[i].length) {
+			sum = 1;
+			// 全て選択されない確率の導出
+			for (const rate of contact120[i]) sum *= (1 - rate);
+			// 選択率
+			const rate = tmpRate * (1 - sum);
+			actualContactRate[i].push(rate);
+			tmpRate -= rate;
+		}
+		else actualContactRate[i].push(0);
+
+		if (contact117[i].length) {
+			sum = 1;
+			for (const rate of contact117[i]) sum *= (1 - rate);
+			const rate = tmpRate * (1 - sum);
+			actualContactRate[i].push(rate);
+			tmpRate -= rate;
+		}
+		else actualContactRate[i].push(0);
+
+		if (contact112[i].length) {
+			sum = 1;
+			for (const rate of contact112[i]) sum *= (1 - rate);
+			const rate = tmpRate * (1 - sum);
+			actualContactRate[i].push(rate);
+		}
+		else actualContactRate[i].push(0);
+	}
+
+	const contactTable = [[], [], []];
+	for (let i = 0; i < 3; i++) {
+		contactTable[i].push(100 * contactStartRate[i]);
+		contactTable[i] = contactTable[i].concat(actualContactRate[i].map(v => 100 * v));
+		contactTable[i].push(Math.min(100 * getArraySum(actualContactRate[i]), 100));
+	}
+	return contactTable;
 }
 
 /**
@@ -6263,12 +6381,12 @@ function updateDetailChart(data, xLabelString, tooltips) {
 	$('#detail_95').text(par95);
 	$('#detail_99').text(par99);
 
-	if (!chartDataSet) {
+	if (!chartInstance) {
 		// 初回
 		const ctx = document.getElementById("detailChart");
 
 		const textColor = "rgba(" + hexToRGB(mainColor).join(',') + ", 0.8)";
-		chartDataSet = new Chart(ctx, {
+		chartInstance = new Chart(ctx, {
 			type: "bar",
 			data: {
 				labels: xLabels,
@@ -6323,13 +6441,13 @@ function updateDetailChart(data, xLabelString, tooltips) {
 	}
 	else {
 		// グラフ更新
-		chartDataSet.data.labels = xLabels;
-		chartDataSet.data.datasets[0].data = actualData;
-		chartDataSet.data.datasets[1].data = rateData;
-		chartDataSet.options.scales.xAxes[0].scaleLabel.labelString = xLabelString;
-		chartDataSet.options.tooltips = tooltips;
+		chartInstance.data.labels = xLabels;
+		chartInstance.data.datasets[0].data = actualData;
+		chartInstance.data.datasets[1].data = rateData;
+		chartInstance.options.scales.xAxes[0].scaleLabel.labelString = xLabelString;
+		chartInstance.options.tooltips = tooltips;
 
-		chartDataSet.update();
+		chartInstance.update();
 	}
 }
 
@@ -7104,8 +7222,16 @@ function modal_Closed($this) {
 			break;
 		case "modal_result_detail":
 			setTimeout(() => {
-				chartDataSet.destroy();
-				chartDataSet = null;
+				chartInstance.destroy();
+				chartInstance = null;
+			}, 80);
+			break;
+		case "modal_contact_detail":
+			setTimeout(() => {
+				chartInstance.destroy();
+				chartInstance = null;
+				subChartInstance.destroy();
+				subChartInstance = null;
 			}, 80);
 			break;
 		default:
@@ -7349,6 +7475,7 @@ function btn_capture_Clicked($this) {
 	const $no_captures = $targetContent.find('.no_capture:not(.d-none)');
 	$no_captures.addClass('d-none');
 	$targetContent.find('.round_button').addClass('d-none').removeClass('d-table');
+	$targetContent.find('.d-lg-table').addClass('d-none_lg').removeClass('d-lg-table');
 	$targetContent.find('.custom-checkbox').addClass('d-none');
 
 	// レンダリングズレ修正
@@ -7381,6 +7508,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.css('backgroundColor', prevBack);
 			$targetContent.find('.custom-checkbox').removeClass('d-none');
 			$targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
+			$targetContent.find('.d-none_lg').addClass('d-none d-lg-table').removeClass('d-table d-none_lg');
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');
@@ -7796,6 +7924,96 @@ function slot_select_parent_Close($this) {
 	let maxSlot = castInt($this.find('.slot_input').attr('max'));
 	$this.find('.slot').text(inputSlot > maxSlot ? maxSlot : inputSlot);
 	calculate();
+}
+
+/**
+ * 触接詳細ボタンクリック
+ */
+function btn_show_contact_rateClicked() {
+	const fleet = [];
+	updateFriendFleetInfo(fleet, false);
+
+	const nomalContact = createContactTable(fleet.filter(a => !a.find(p => p.fleetNo > 6)));
+	const grandContact = createContactTable(fleet);
+
+	const $nomal = document.getElementById('grand_contact_table');
+	const $grand = document.getElementById('nomal_contact_table');
+
+	for (let i = 0; i < 3; i++) {
+		const $tr = $grand.getElementsByClassName('contact_status_' + i)[0];
+		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = nomalContact[i][0].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = nomalContact[i][1].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = nomalContact[i][2].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_112_contact_rate')[0].textContent = nomalContact[i][3].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_sum_contact_rate')[0].textContent = nomalContact[i][4].toFixed(1) + '%';
+	}
+
+	for (let i = 0; i < 3; i++) {
+		const $tr = $nomal.getElementsByClassName('contact_status_' + i)[0];
+		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = grandContact[i][0].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = grandContact[i][1].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = grandContact[i][2].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_112_contact_rate')[0].textContent = grandContact[i][3].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_sum_contact_rate')[0].textContent = grandContact[i][4].toFixed(1) + '%';
+	}
+
+	// グラフ表示
+	const index = $('#contact_detail_0').prop('checked') ? 0 : $('#contact_detail_1').prop('checked') ? 1 : 2;
+	const nomarlData = [nomalContact[index][1], nomalContact[index][2], nomalContact[index][3], 100 - nomalContact[index][4]];
+	const grandData = [grandContact[index][1], grandContact[index][2], grandContact[index][3], 100 - grandContact[index][4]];
+	const chartLabels = ["120%触接", "117%触接", "112%触接", "不発"];
+	const chartColors = ["rgb(100, 180, 255, 0.7)", "rgba(80, 220, 120, 0.7)", "rgba(255, 160, 100, 0.7)", "rgba(128, 128, 128, 0.5)"];
+	const ctx = document.getElementById("detail_contact_chart");
+	const ctx2 = document.getElementById("detail_contact_chart_2");
+	const borderColor = mainColor === '#000000' ? '#fff' : '#333';
+	const titleColor = `rgba(${hexToRGB(mainColor).join(',')}, 0.8)`;
+	// グラフ中央のアレ
+	document.getElementById('detail_contact_rate_sum').textContent = nomalContact[index][4].toFixed(1);
+	document.getElementById('detail_contact_rate_sum_2').textContent = grandContact[index][4].toFixed(1);
+
+	if (!chartInstance) {
+		chartInstance = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				labels: chartLabels,
+				datasets: [{ backgroundColor: chartColors, data: nomarlData, borderColor: borderColor }]
+			},
+			plugins: [ChartDataLabels],
+			options: {
+				legend: { display: false },
+				title: { display: true, text: '対敵通常艦隊', fontColor: titleColor },
+				tooltips: { callbacks: { label: function (i, d) { return `${d.labels[i.index]}: ${d.datasets[0].data[i.index].toFixed(1)} %`; } } },
+				plugins: { datalabels: { color: mainColor, formatter: function (v, c) { return v > 0 ? v.toFixed(1) + '%' : ''; } } }
+			}
+		});
+	}
+	else {
+		chartInstance.data.datasets[0].data = nomarlData;
+		chartInstance.update();
+	}
+
+	if (!subChartInstance) {
+		subChartInstance = new Chart(ctx2, {
+			type: 'doughnut',
+			data: {
+				labels: chartLabels,
+				datasets: [{ backgroundColor: chartColors, data: grandData, borderColor: borderColor }]
+			},
+			plugins: [ChartDataLabels],
+			options: {
+				legend: { display: false },
+				title: { display: true, text: '対敵連合艦隊', fontColor: titleColor },
+				tooltips: { callbacks: { label: function (i, d) { return `${d.labels[i.index]}: ${d.datasets[0].data[i.index].toFixed(1)} %`; } } },
+				plugins: { datalabels: { color: mainColor, formatter: function (v, c) { return v > 0 ? v.toFixed(1) + '%' : ''; } } }
+			}
+		});
+	}
+	else {
+		subChartInstance.data.datasets[0].data = grandData;
+		subChartInstance.update();
+	}
+
+	$('#modal_contact_detail').modal('show');
 }
 
 /**
@@ -9994,6 +10212,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
 	$('#landBase_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
+	$('#friendFleet_content').on('click', '#read_duck_read_warning', function () { $('#duck_read_warning').addClass('d-none'); });
 	$('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
@@ -10007,6 +10226,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.plane_unlock', function () { plane_unlock_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.slot_ini', function () { slot_ini_Clicked($(this)); });
+	$('#friendFleet_content').on('click', '.btn_show_contact_rate', function () { btn_show_contact_rateClicked($(this)); });
 	$('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
 	$('#enemyFleet_content').on('change', '.formation', calculate);
 	$('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });
@@ -10134,6 +10354,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_stage2_detail').on('change', '#stage2_detail_avoid', calculateStage2Detail);
 	$('#modal_stage2_detail').on('input', '#free_anti_air_weight', function () { free_modify_input_Changed($(this)) });
 	$('#modal_stage2_detail').on('input', '#free_anti_air_bornus', function () { free_modify_input_Changed($(this)) });
+	$('#modal_contact_detail').on('change', '.custom-radio', btn_show_contact_rateClicked);
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 	$('#btn_preset_all').click(btn_preset_all_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
