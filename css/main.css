@@ -426,6 +426,11 @@ input[type="text"] { font-size: 12px; }
 .custom_table { scrollbar-width: thin; }
 .dark-theme .custom_table { scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.2); }
 
+.capture_nomal { background-color: rgb(255, 255, 255) !important; }
+.capture_dark { background-color: rgb(43, 43, 50) !important; }
+.capture_deep_blue { background-color: rgb(10, 20, 45) !important; }
+
+
 /* -----------------------------------
   header
 ----------------------------------- */

@@ -14,7 +14,7 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="favicon.ico">
-	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb" crossorigin>
+	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb"	crossorigin>
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -828,9 +828,10 @@
 											<div class="ml-3 align-self-center">
 												<span class="font_color_half">触接率: </span>
 												<span class="contact_start_rate">0.0%</span>
-												<span class="btn_show_contact_rate no_capture data-toggle="tooltip" title="より詳細な触接率を表示">
-													<i class="fas fa-search"></i>
-												</span>
+											</div>
+											<div class="ml-2 align-self-center btn_show_contact_rate no_capture">
+												<i class="fas fa-search"></i>
+												<span class="font_size_11">触接詳細</span>
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
@@ -2118,9 +2119,10 @@
 											<div class="ml-3 align-self-center">
 												<span class="font_color_half">触接率: </span>
 												<span class="contact_start_rate">0.0%</span>
-												<span class="btn_show_contact_rate no_capture" data-toggle="tooltip" title="より詳細な触接率を表示">
-													<i class="fas fa-search"></i>
-												</span>
+											</div>
+											<div class="ml-2 align-self-center btn_show_contact_rate no_capture">
+												<i class="fas fa-search"></i>
+												<span class="font_size_11">触接詳細</span>
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
@@ -6084,18 +6086,16 @@
 					<div class="my-1 d-flex">
 						<div class="align-self-center">制空状態：</div>
 						<div class="ml-2 custom-control custom-radio align-self-center">
-							<input type="radio" id="contact_detail_0" name="contact_detail_condition"
-								class="custom-control-input" checked>
+							<input type="radio" id="contact_detail_0" name="contact_detail_condition" class="custom-control-input"
+								checked>
 							<label class="custom-control-label" for="contact_detail_0">制空権確保</label>
 						</div>
 						<div class="ml-2 custom-control custom-radio align-self-center">
-							<input type="radio" id="contact_detail_1" name="contact_detail_condition"
-								class="custom-control-input">
+							<input type="radio" id="contact_detail_1" name="contact_detail_condition" class="custom-control-input">
 							<label class="custom-control-label" for="contact_detail_1">航空優勢</label>
 						</div>
 						<div class="ml-2 custom-control custom-radio align-self-center">
-							<input type="radio" id="contact_detail_2" name="contact_detail_condition"
-								class="custom-control-input">
+							<input type="radio" id="contact_detail_2" name="contact_detail_condition" class="custom-control-input">
 							<label class="custom-control-label" for="contact_detail_2">航空劣勢</label>
 						</div>
 					</div>

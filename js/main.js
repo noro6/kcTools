@@ -7454,19 +7454,15 @@ function btn_supply_Clicked() {
  */
 function btn_capture_Clicked($this) {
 	const $targetContent = $this.closest('.contents');
-	const prevBack = $targetContent.css('backgroundColor');
-
 	$targetContent.width(1000);
 
-	if (setting.themeColor === 'dark' || setting.themeColor === 'dark-gradient') {
-		$targetContent.css('backgroundColor', 'rgb(43, 43, 50)');
+	if (document.body.classList.contains('dark-theme')) {
+		$targetContent.addClass('capture_dark');
+		if (document.body.classList.contains('deep_blue_theme')) {
+			$targetContent.addClass('capture_deep_blue');
+		}	
 	}
-	else if (setting.themeColor === 'deep-blue') {
-		$targetContent.css('backgroundColor', 'rgb(10, 20, 45)');
-	}
-	else {
-		$targetContent.css('backgroundColor', '#ffffff');
-	}
+	else $targetContent.addClass('capture_nomal');
 
 	// 基地横並びに。
 	$targetContent.find('.lb_tab').removeClass('tab-pane fade');
@@ -7505,7 +7501,7 @@ function btn_capture_Clicked($this) {
 			}
 
 			// 戻す
-			$targetContent.css('backgroundColor', prevBack);
+			$targetContent.removeClass('capture_nomal capture_dark capture_deep_blue');
 			$targetContent.find('.custom-checkbox').removeClass('d-none');
 			$targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
 			$targetContent.find('.d-none_lg').addClass('d-none d-lg-table').removeClass('d-table d-none_lg');
