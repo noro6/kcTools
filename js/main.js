@@ -73,7 +73,8 @@ let setting = null;
 let usedPlane = [];
 
 // Chart描画用データ
-let chartDataSet = null;
+let chartInstance = null;
+let subChartInstance = null;
 
 // メイン文字色
 let mainColor = "#000000";
@@ -870,6 +871,9 @@ function initialize(callback) {
 
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
+
+	// グラフグローバル解除
+	Chart.plugins.unregister(ChartDataLabels);
 
 	callback();
 }
@@ -4723,8 +4727,13 @@ function createContactTable(friendFleet) {
 		}
 	}
 
-	// 開始触接率ズ [ 0:確保時, 1:優勢時, 2:劣勢時 ]
-	const contactStartRate = [3, 2, 1].map(v => Math.min((Math.floor(sumCotactValue) + 1) / (70 - 15 * v), 1));
+	const a = Math.floor(sumCotactValue) + 1;
+	// 開始触接率ズ [ 0:確保時, 1:優勢時, 2:劣勢時 ] 改式: int(sum(索敵 * sqrt(搭載)) + 1) / (70 - 15 * c)
+	const contactStartRate = [
+		Math.min(a / 25, 1),
+		Math.min(a / 40, 1),
+		Math.min(a / 55, 1)
+	];
 
 	// 実触接率actualContactRate = [ 0:確保, 1:優勢, 2:劣勢 ] それぞれの要素内に [ 120%, 117%, 112% ]が入る
 	const actualContactRate = [[], [], []];
@@ -4757,7 +4766,6 @@ function createContactTable(friendFleet) {
 			for (const rate of contact112[i]) sum *= (1 - rate);
 			const rate = tmpRate * (1 - sum);
 			actualContactRate[i].push(rate);
-			tmpRate -= rate;
 		}
 		else actualContactRate[i].push(0);
 	}
@@ -4768,7 +4776,6 @@ function createContactTable(friendFleet) {
 		contactTable[i] = contactTable[i].concat(actualContactRate[i].map(v => 100 * v));
 		contactTable[i].push(Math.min(100 * getArraySum(actualContactRate[i]), 100));
 	}
-	console.log(contactTable);
 	return contactTable;
 }
 
@@ -6374,12 +6381,12 @@ function updateDetailChart(data, xLabelString, tooltips) {
 	$('#detail_95').text(par95);
 	$('#detail_99').text(par99);
 
-	if (!chartDataSet) {
+	if (!chartInstance) {
 		// 初回
 		const ctx = document.getElementById("detailChart");
 
 		const textColor = "rgba(" + hexToRGB(mainColor).join(',') + ", 0.8)";
-		chartDataSet = new Chart(ctx, {
+		chartInstance = new Chart(ctx, {
 			type: "bar",
 			data: {
 				labels: xLabels,
@@ -6434,13 +6441,13 @@ function updateDetailChart(data, xLabelString, tooltips) {
 	}
 	else {
 		// グラフ更新
-		chartDataSet.data.labels = xLabels;
-		chartDataSet.data.datasets[0].data = actualData;
-		chartDataSet.data.datasets[1].data = rateData;
-		chartDataSet.options.scales.xAxes[0].scaleLabel.labelString = xLabelString;
-		chartDataSet.options.tooltips = tooltips;
+		chartInstance.data.labels = xLabels;
+		chartInstance.data.datasets[0].data = actualData;
+		chartInstance.data.datasets[1].data = rateData;
+		chartInstance.options.scales.xAxes[0].scaleLabel.labelString = xLabelString;
+		chartInstance.options.tooltips = tooltips;
 
-		chartDataSet.update();
+		chartInstance.update();
 	}
 }
 
@@ -7215,8 +7222,16 @@ function modal_Closed($this) {
 			break;
 		case "modal_result_detail":
 			setTimeout(() => {
-				chartDataSet.destroy();
-				chartDataSet = null;
+				chartInstance.destroy();
+				chartInstance = null;
+			}, 80);
+			break;
+		case "modal_contact_detail":
+			setTimeout(() => {
+				chartInstance.destroy();
+				chartInstance = null;
+				subChartInstance.destroy();
+				subChartInstance = null;
 			}, 80);
 			break;
 		default:
@@ -7911,9 +7926,8 @@ function slot_select_parent_Close($this) {
 
 /**
  * 触接詳細ボタンクリック
- * @param {JqueryDomObject} $this
  */
-function btn_show_contact_rateClicked($this) {
+function btn_show_contact_rateClicked() {
 	const fleet = [];
 	updateFriendFleetInfo(fleet, false);
 
@@ -7939,6 +7953,62 @@ function btn_show_contact_rateClicked($this) {
 		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = grandContact[i][2].toFixed(1) + '%';
 		$tr.getElementsByClassName('td_112_contact_rate')[0].textContent = grandContact[i][3].toFixed(1) + '%';
 		$tr.getElementsByClassName('td_sum_contact_rate')[0].textContent = grandContact[i][4].toFixed(1) + '%';
+	}
+
+	// グラフ表示
+	const index = $('#contact_detail_0').prop('checked') ? 0 : $('#contact_detail_1').prop('checked') ? 1 : 2;
+	const nomarlData = [nomalContact[index][1], nomalContact[index][2], nomalContact[index][3], 100 - nomalContact[index][4]];
+	const grandData = [grandContact[index][1], grandContact[index][2], grandContact[index][3], 100 - grandContact[index][4]];
+	const chartLabels = ["120%触接", "117%触接", "112%触接", "不発"];
+	const chartColors = ["rgb(100, 180, 255, 0.7)", "rgba(80, 220, 120, 0.7)", "rgba(255, 160, 100, 0.7)", "rgba(128, 128, 128, 0.5)"];
+	const ctx = document.getElementById("detail_contact_chart");
+	const ctx2 = document.getElementById("detail_contact_chart_2");
+	const borderColor = mainColor === '#000000' ? '#fff' : '#333';
+	const titleColor = `rgba(${hexToRGB(mainColor).join(',')}, 0.8)`;
+	// グラフ中央のアレ
+	document.getElementById('detail_contact_rate_sum').textContent = nomalContact[index][4].toFixed(1);
+	document.getElementById('detail_contact_rate_sum_2').textContent = grandContact[index][4].toFixed(1);
+
+	if (!chartInstance) {
+		chartInstance = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				labels: chartLabels,
+				datasets: [{ backgroundColor: chartColors, data: nomarlData, borderColor: borderColor }]
+			},
+			plugins: [ChartDataLabels],
+			options: {
+				legend: { display: false },
+				title: { display: true, text: '対敵通常艦隊', fontColor: titleColor },
+				tooltips: { callbacks: { label: function (i, d) { return `${d.labels[i.index]}: ${d.datasets[0].data[i.index].toFixed(1)} %`; } } },
+				plugins: { datalabels: { color: mainColor, formatter: function (v, c) { return v > 0 ? v.toFixed(1) + '%' : ''; } } }
+			}
+		});
+	}
+	else {
+		chartInstance.data.datasets[0].data = nomarlData;
+		chartInstance.update();
+	}
+
+	if (!subChartInstance) {
+		subChartInstance = new Chart(ctx2, {
+			type: 'doughnut',
+			data: {
+				labels: chartLabels,
+				datasets: [{ backgroundColor: chartColors, data: grandData, borderColor: borderColor }]
+			},
+			plugins: [ChartDataLabels],
+			options: {
+				legend: { display: false },
+				title: { display: true, text: '対敵連合艦隊', fontColor: titleColor },
+				tooltips: { callbacks: { label: function (i, d) { return `${d.labels[i.index]}: ${d.datasets[0].data[i.index].toFixed(1)} %`; } } },
+				plugins: { datalabels: { color: mainColor, formatter: function (v, c) { return v > 0 ? v.toFixed(1) + '%' : ''; } } }
+			}
+		});
+	}
+	else {
+		subChartInstance.data.datasets[0].data = grandData;
+		subChartInstance.update();
 	}
 
 	$('#modal_contact_detail').modal('show');
@@ -10282,6 +10352,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_stage2_detail').on('change', '#stage2_detail_avoid', calculateStage2Detail);
 	$('#modal_stage2_detail').on('input', '#free_anti_air_weight', function () { free_modify_input_Changed($(this)) });
 	$('#modal_stage2_detail').on('input', '#free_anti_air_bornus', function () { free_modify_input_Changed($(this)) });
+	$('#modal_contact_detail').on('change', '.custom-radio', btn_show_contact_rateClicked);
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 	$('#btn_preset_all').click(btn_preset_all_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);

@@ -18,9 +18,8 @@
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
-	<link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./css/main.min.css">
 	<script async src="./js/html2canvas.min.js"></script>
-	<script async src="./js/chart.min.js"></script>
 	<script async src="./js/changes.js"></script>
 	<script defer src="./js/jquery-3.4.1.min.js"></script>
 	<script defer src="./js/jquery-ui.min.js"></script>
@@ -28,8 +27,10 @@
 	<script defer src="./js/bootstrap.bundle.min.js"></script>
 	<script defer src="./js/lz-string.js"></script>
 	<script defer src="./js/sortable.js"></script>
+	<script defer src="./js/chart.min.js"></script>
+	<script defer src="./js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="./js/data.js"></script>
-	<script defer src="./js/main.js"></script>
+	<script defer src="./js/main.min.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -116,7 +117,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.7.6.1</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.7.7</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -827,7 +828,7 @@
 											<div class="ml-3 align-self-center">
 												<span class="font_color_half">触接率: </span>
 												<span class="contact_start_rate">0.0%</span>
-												<span class="btn_show_contact_rate">
+												<span class="btn_show_contact_rate" data-toggle="tooltip" title="より詳細な触接率を表示">
 													<i class="fas fa-search"></i>
 												</span>
 											</div>
@@ -2117,7 +2118,7 @@
 											<div class="ml-3 align-self-center">
 												<span class="font_color_half">触接率: </span>
 												<span class="contact_start_rate">0.0%</span>
-												<span class="btn_show_contact_rate">
+												<span class="btn_show_contact_rate" data-toggle="tooltip" title="より詳細な触接率を表示">
 													<i class="fas fa-search"></i>
 												</span>
 											</div>
@@ -6076,23 +6077,80 @@
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content mt-5">
 				<div class="modal-header">
-					<h5 class="modal-title">触接</h5>
+					<h5 class="modal-title">触接率詳細</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body pt-1">
-					<div>
-						<canvas id="detail_contact_chart" width="440" height="260"></canvas>
+					<div class="my-1 d-flex">
+						<div class="align-self-center">制空状態：</div>
+						<div class="ml-2 custom-control custom-radio align-self-center">
+							<input type="radio" id="contact_detail_0" name="contact_detail_condition"
+								class="custom-control-input" checked>
+							<label class="custom-control-label" for="contact_detail_0">制空権確保</label>
+						</div>
+						<div class="ml-2 custom-control custom-radio align-self-center">
+							<input type="radio" id="contact_detail_1" name="contact_detail_condition"
+								class="custom-control-input">
+							<label class="custom-control-label" for="contact_detail_1">航空優勢</label>
+						</div>
+						<div class="ml-2 custom-control custom-radio align-self-center">
+							<input type="radio" id="contact_detail_2" name="contact_detail_condition"
+								class="custom-control-input">
+							<label class="custom-control-label" for="contact_detail_2">航空劣勢</label>
+						</div>
 					</div>
-					<div class="font_size_12">対敵通常艦隊</div>
+					<div class="border rounded">
+						<div class="d-flex">
+							<div class="detail_contact_chart_parent">
+								<canvas id="detail_contact_chart" width="230px" height="260px"></canvas>
+								<div class="detail_contact_rate">
+									<div>合計触接率</div>
+									<div>
+										<span class="font_size_16" id="detail_contact_rate_sum"></span>
+										<span class="font_size_11 ml-1">%</span>
+									</div>
+								</div>
+							</div>
+							<div class="detail_contact_chart_parent">
+								<canvas id="detail_contact_chart_2" width="230px" height="260px"></canvas>
+								<div class="detail_contact_rate">
+									<div>合計触接率</div>
+									<div>
+										<span class="font_size_16" id="detail_contact_rate_sum_2"></span>
+										<span class="font_size_11">%</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex justify-content-between font_size_11 mx-5 my-2">
+							<div class="d-flex">
+								<div id="contact_chart_120"></div>
+								<div>&times;1.2触接</div>
+							</div>
+							<div class="d-flex">
+								<div id="contact_chart_117"></div>
+								<div>&times;1.17触接</div>
+							</div>
+							<div class="d-flex">
+								<div id="contact_chart_112"></div>
+								<div>&times;1.12触接</div>
+							</div>
+							<div class="d-flex">
+								<div id="contact_chart_100"></div>
+								<div>触接不発</div>
+							</div>
+						</div>
+					</div>
+					<div class="mt-2 font_size_12">対敵通常艦隊</div>
 					<table class="text-center contact_table" id="nomal_contact_table">
 						<thead class="general_thead">
 							<tr>
-								<td class="w_25">制空状態</td>
-								<td class="w_15">触接開始率</td>
-								<td class="w_15">120%補正</td>
-								<td class="w_15">117%補正</td>
-								<td class="w_15">112%補正</td>
-								<td class="w_15">合計触接率</td>
+								<td>制空状態</td>
+								<td>触接開始率</td>
+								<td>&times;1.2触接率</td>
+								<td>&times;1.17触接率</td>
+								<td>&times;1.12触接率</td>
+								<td>合計触接率</td>
 							</tr>
 						</thead>
 						<tbody>
@@ -6126,12 +6184,12 @@
 					<table class="text-center contact_table" id="grand_contact_table">
 						<thead class="general_thead">
 							<tr>
-								<td class="w_25">制空状態</td>
-								<td class="w_15">触接開始率</td>
-								<td class="w_15">120%補正</td>
-								<td class="w_15">117%補正</td>
-								<td class="w_15">112%補正</td>
-								<td class="w_15">合計触接率</td>
+								<td>制空状態</td>
+								<td>触接開始率</td>
+								<td>&times;1.2触接率</td>
+								<td>&times;1.17触接率</td>
+								<td>&times;1.12触接率</td>
+								<td>合計触接率</td>
 							</tr>
 						</thead>
 						<tbody>
