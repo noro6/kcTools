@@ -7475,6 +7475,7 @@ function btn_capture_Clicked($this) {
 	const $no_captures = $targetContent.find('.no_capture:not(.d-none)');
 	$no_captures.addClass('d-none');
 	$targetContent.find('.round_button').addClass('d-none').removeClass('d-table');
+	$targetContent.find('.d-lg-table').addClass('d-none_lg').removeClass('d-lg-table');
 	$targetContent.find('.custom-checkbox').addClass('d-none');
 
 	// レンダリングズレ修正
@@ -7507,6 +7508,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.css('backgroundColor', prevBack);
 			$targetContent.find('.custom-checkbox').removeClass('d-none');
 			$targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
+			$targetContent.find('.d-none_lg').addClass('d-none d-lg-table').removeClass('d-table d-none_lg');
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');
