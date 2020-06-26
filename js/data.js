@@ -15,8 +15,8 @@ const PLANE_TYPE = [
 	{ id: 102, name: "陸軍戦闘機", abbr: "陸戦", css: "css_lb_fighter" },
 	{ id: 103, name: "局地戦闘機", abbr: "局戦", css: "css_lb_attack_aircraft" },
 	{ id: 104, name: "陸上偵察機", abbr: "陸偵", css: "css_cb_reconnaissance" },
-];
-const PLANE_DATA = [
+ ];
+ const PLANE_DATA = [
 	{ id: 19, type: 1, name: "九六式艦戦", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, radius: 3, cost: 3, avoid: 0 },
 	{ id: 20, type: 1, name: "零式艦戦21型", abbr: "", antiAir: 5, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, radius: 7, cost: 4, avoid: 0 },
 	{ id: 21, type: 1, name: "零式艦戦52型", abbr: "", antiAir: 6, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, radius: 6, cost: 5, avoid: 0 },
@@ -177,8 +177,8 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190D-9", abbr: "", antiAir: 12, torpedo: 0, bomber: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 0, accuracy: 3, radius: 9, cost: 7, avoid: 0 },
-];
-const SHIP_TYPE = [
+ ];
+ const SHIP_TYPE = [
 	{ id: 1, name: "正規空母" },
 	{ id: 2, name: "装甲空母" },
 	{ id: 3, name: "軽空母" },
@@ -199,8 +199,8 @@ const SHIP_TYPE = [
 	{ id: 18, name: "潜水艦" },
 	{ id: 19, name: "海防艦" },
 	{ id: 20, name: "工作艦" },
-];
-const SHIP_DATA = [
+ ];
+ const SHIP_DATA = [
 	{ id: 6, type: 1, name: "赤城", slot: [18, 18, 27, 10], final: 0, orig: 6, deckid: 83 },
 	{ id: 7, type: 1, name: "加賀", slot: [18, 18, 45, 12], final: 0, orig: 7, deckid: 84 },
 	{ id: 8, type: 1, name: "蒼龍", slot: [12, 27, 18, 7], final: 0, orig: 8, deckid: 90 },
@@ -351,8 +351,8 @@ const SHIP_DATA = [
 	{ id: 1501, type: 12, name: "伊19改", slot: [1, 1], final: 1, orig: 123, deckid: 401 },
 	{ id: 1503, type: 12, name: "伊401改", slot: [3, 3], final: 1, orig: 155, deckid: 403 },
 	{ id: 1506, type: 12, name: "伊400改", slot: [3, 3], final: 1, orig: 293, deckid: 606 },
-];
-const ENEMY_TYPE = [
+ ];
+ const ENEMY_TYPE = [
 	{ id: 11, name: "正規空母" },
 	{ id: 12, name: "軽空母" },
 	{ id: 13, name: "戦艦" },
@@ -366,8 +366,8 @@ const ENEMY_TYPE = [
 	{ id: 21, name: "浮遊/護衛 要塞" },
 	{ id: 1, name: "鬼/姫" },
 	{ id: 2, name: "地上施設" },
-];
-const ENEMY_DATA = [
+ ];
+ const ENEMY_DATA = [
 	{ id: -1, type: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 1, 2], name: "直接入力", slot: [], eqp: [], orig: -1, aaw: 0, aabo: 0 },
 	{ id: 1, type: [16], name: "駆逐イ級", slot: [], eqp: [], orig: 1, aaw: 4, aabo: 0 },
 	{ id: 2, type: [16], name: "駆逐ロ級", slot: [], eqp: [], orig: 2, aaw: 4, aabo: 0 },
@@ -645,8 +645,12 @@ const ENEMY_DATA = [
 	{ id: 424, type: [1, 2], name: "集積地棲姫Ⅱ-壊 [丙]", slot: [16, 16, 12, 12], eqp: [562, 561, 561, 561], orig: 424, aaw: 18, aabo: 2 },
 	{ id: 425, type: [1, 2], name: "集積地棲姫Ⅱ-壊 [乙]", slot: [24, 24, 16, 8], eqp: [562, 562, 561, 561], orig: 425, aaw: 18, aabo: 3 },
 	{ id: 426, type: [1, 2], name: "集積地棲姫Ⅱ-壊 [甲]", slot: [32, 32, 24, 8], eqp: [562, 562, 562, 561], orig: 426, aaw: 20, aabo: 3 },
-];
-const ENEMY_PLANE_DATA = [
+	{ id: 435, type: [1, 2], name: "集積地棲姫Ⅱ夏季上陸[甲]", slot: [88], eqp: [562], orig: 435, aaw: 18, aabo: 1 },
+	{ id: 438, type: [1, 2], name: "集積地棲姫Ⅱ夏季上陸-壊[甲]", slot: [98], eqp: [562], orig: 438, aaw: 18, aabo: 1 },
+	{ id: 441, type: [1, 18], name: "五島沖海底姫flagship[甲]", slot: [], eqp: [], orig: 441, aaw: 0, aabo: 0 },
+	{ id: 444, type: [1, 18], name: "五島沖海底姫-壊flagship[甲]", slot: [], eqp: [], orig: 444, aaw: 0, aabo: 0 },
+ ];
+ const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -684,15 +688,15 @@ const ENEMY_PLANE_DATA = [
 	{ id: 595, type: 101, name: "深海空要塞Ace(偵察型)", antiAir: 17, torpedo: 0, bomber: 7 },
 	{ id: 597, type: 101, name: "深海空要塞(重爆型)", antiAir: 9, torpedo: 0, bomber: 27 },
 	{ id: 598, type: 101, name: "深海空要塞Ace(重爆型)", antiAir: 17, torpedo: 0, bomber: 37 },
-];
-const DIFFICULTY = [
+ ];
+ const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
 	{ id: 1, name: "丙" },
 	{ id: 2, name: "乙" },
 	{ id: 3, name: "甲" },
-];
-const WORLD_DATA = [
+ ];
+ const WORLD_DATA = [
 	{ world: 2006, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
@@ -703,8 +707,8 @@ const WORLD_DATA = [
 	{ world: 6, name: "中部海域" },
 	{ world: 1911, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
 	{ world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
-];
-const MAP_DATA = [
+ ];
+ const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
 	{ area: 12, name: "南西諸島沖" },
 	{ area: 13, name: "製油所地帯沿岸" },
@@ -745,12 +749,12 @@ const MAP_DATA = [
 	{ area: 19115, name: "ダバオ沖/太平洋南西部" },
 	{ area: 19116, name: "ソロモン諸島沖" },
 	{ area: 20031, name: "期間限定海域:マニラ沖" },
-	{ area: 20061, name: "第1海域" },
-	{ area: 20062, name: "第2海域" },
-	{ area: 20063, name: "第3海域" },
+	{ area: 20061, name: "オホーツク海千島列島沖" },
+	{ area: 20062, name: "南西諸島沖" },
+	{ area: 20063, name: "四国沖/九州西方五島列島沖" },
 	{ area: 20064, name: "第4海域" },
-];
-const ENEMY_PATTERN = [
+ ];
+ const ENEMY_PATTERN = [
 	{ a: 11, n: "A", d: "", l: -1, t: 1, f: 1, r: 0, e: [1], c: "219,112,246,149" },
 	{ a: 11, n: "A", d: "", l: -1, t: 1, f: 1, r: 0, e: [2], c: "219,112,246,149" },
 	{ a: 11, n: "A", d: "", l: -1, t: 1, f: 1, r: 0, e: [3], c: "219,112,246,149" },
@@ -1621,15 +1625,39 @@ const ENEMY_PATTERN = [
 	{ a: 20061, n: "A", d: "仮置き", l: 2, t: 1, f: 1, r: 0, e: [54, 55, 76, 76, 76], c: "" },
 	{ a: 20061, n: "A", d: "仮置き", l: 1, t: 1, f: 1, r: 0, e: [54, 55, 76, 76, 76], c: "" },
 	{ a: 20061, n: "A", d: "仮置き", l: 0, t: 1, f: 1, r: 0, e: [54, 55, 76, 76, 76], c: "" },
-	{ a: 20062, n: "A", d: "仮置き", l: 3, t: 1, f: 1, r: 0, e: [27, 55, 55, 76, 76, 76], c: "" },
-	{ a: 20062, n: "A", d: "仮置き", l: 2, t: 1, f: 1, r: 0, e: [27, 55, 55, 76, 76, 76], c: "" },
-	{ a: 20062, n: "A", d: "仮置き", l: 1, t: 1, f: 1, r: 0, e: [27, 55, 55, 76, 76, 76], c: "" },
-	{ a: 20062, n: "A", d: "仮置き", l: 0, t: 1, f: 1, r: 0, e: [27, 55, 55, 76, 76, 76], c: "" },
-	{ a: 20062, n: "空襲", d: "", l: 3, t: 3, f: 3, r: 0, e: [65, 65], c: "" },
-	{ a: 20062, n: "空襲", d: "", l: 2, t: 3, f: 3, r: 0, e: [65, 65], c: "" },
-	{ a: 20062, n: "空襲", d: "", l: 1, t: 3, f: 3, r: 0, e: [65, 65], c: "" },
-	{ a: 20062, n: "空襲", d: "", l: 0, t: 3, f: 3, r: 0, e: [65, 65], c: "" },
-];
+	{ a: 20062, n: "D", d: "", l: 3, t: 1, f: 4, r: 3, e: [32, 32, 32], c: "" },
+	{ a: 20062, n: "E", d: "仮置き", l: 3, t: 3, f: 3, r: 2, e: [118, 295, 279, 92, 122, 122], c: "" },
+	{ a: 20062, n: "F", d: "", l: 3, t: 1, f: 4, r: 3, e: [32, 32, 30, 30], c: "" },
+	{ a: 20062, n: "G", d: "", l: 3, t: 3, f: 3, r: 4, e: [118, 295, 279, 92, 122, 122], c: "" },
+	{ a: 20062, n: "H", d: "", l: 3, t: 1, f: 2, r: 3, e: [55, 92, 75, 75, 75, 75], c: "" },
+	{ a: 20062, n: "J", d: "", l: 3, t: 1, f: 1, r: 6, e: [29, 29, 55, 92, 75, 75], c: "" },
+	{ a: 20062, n: "L", d: "", l: 3, t: 3, f: 3, r: 7, e: [118, 295, 264, 262, 122, 122], c: "" },
+	{ a: 20062, n: "M", d: "前哨", l: 3, t: 1, f: 1, r: 5, e: [435, 277, 95, 92, 121, 121], c: "" },
+	{ a: 20062, n: "R", d: "", l: 3, t: 1, f: 3, r: 7, e: [279, 43, 43, 92, 121, 121], c: "" },
+	{ a: 20062, n: "T", d: "前哨", l: 3, t: 1, f: 1, r: 8, e: [118, 295, 264, 92, 122, 122], c: "" },
+	{ a: 20062, n: "T", d: "最終", l: 3, t: 1, f: 1, r: 8, e: [118, 298, 279, 362, 122, 122], c: "" },
+	{ a: 20063, n: "A", d: "", l: 3, t: 1, f: 4, r: 1, e: [34, 32, 32, 32], c: "" },
+	{ a: 20063, n: "B", d: "", l: 3, t: 3, f: 3, r: 2, e: [115, 264, 264, 95, 76, 76], c: "" },
+	{ a: 20063, n: "C", d: "", l: 3, t: 3, f: 3, r: 1, e: [115, 115, 264, 95, 76, 76], c: "" },
+	{ a: 20063, n: "F", d: "", l: 3, t: 1, f: 4, r: 4, e: [34, 34, 32], c: "" },
+	{ a: 20063, n: "H", d: "", l: 3, t: 3, f: 3, r: 5, e: [264, 263, 263, 262, 76, 76], c: "" },
+	{ a: 20063, n: "H", d: "", l: 3, t: 3, f: 3, r: 5, e: [264, 263, 264, 95, 76, 76], c: "" },
+	{ a: 20063, n: "I", d: "", l: 3, t: 1, f: 2, r: 5, e: [66, 66, 55, 92, 76, 76], c: "" },
+	{ a: 20063, n: "K", d: "", l: 3, t: 3, f: 3, r: 5, e: [264, 263, 263, 262, 76, 76], c: "" },
+	{ a: 20063, n: "L", d: "", l: 3, t: 2, f: 11, r: 6, e: [264, 264, 95, 76, 76, 76, 92, 75, 75, 75, 1, 1], c: "" },
+	{ a: 20063, n: "M", d: "", l: 3, t: 1, f: 1, r: 6, e: [29, 29, 405, 92, 76, 76], c: "" },
+	{ a: 20063, n: "N", d: "", l: 3, t: 2, f: 11, r: 6, e: [264, 264, 95, 76, 76, 76, 91, 75, 75, 75, 1, 1], c: "" },
+	{ a: 20063, n: "O", d: "前哨", l: 3, t: 1, f: 3, r: 3, e: [441, 32, 32, 92, 123, 123], c: "" },
+	{ a: 20063, n: "O", d: "最終", l: 3, t: 1, f: 1, r: 3, e: [444, 35, 35, 362, 123, 123], c: "" },
+	{ a: 20063, n: "P", d: "", l: 3, t: 1, f: 4, r: 2, e: [264, 27, 55, 92, 76, 76], c: "" },
+	{ a: 20063, n: "R", d: "", l: 3, t: 2, f: 11, r: 3, e: [115, 115, 264, 95, 76, 76, 91, 76, 76, 75, 75, 75], c: "" },
+	{ a: 20063, n: "S", d: "", l: 3, t: 1, f: 4, r: 4, e: [34, 34, 58, 92, 122, 122], c: "" },
+	{ a: 20063, n: "T", d: "", l: 3, t: 1, f: 1, r: 4, e: [55, 55, 54, 122, 122, 122], c: "" },
+	{ a: 20063, n: "V", d: "", l: 3, t: 1, f: 1, r: 4, e: [34, 95, 92, 122, 122, 122], c: "" },
+	{ a: 20063, n: "空襲", d: "", l: 3, t: 3, f: 3, r: 1, e: [264, 264, 264, 262, 76, 76], c: "" },
+	{ a: 20063, n: "空襲", d: "", l: 3, t: 3, f: 3, r: 1, e: [264, 264, 264, 95, 76, 76], c: "" },
+	{ a: 20063, n: "空襲", d: "", l: 3, t: 3, f: 3, r: 1, e: [264, 264, 95, 76, 76, 76], c: "" },
+ ];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
