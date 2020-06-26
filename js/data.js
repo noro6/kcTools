@@ -1758,4 +1758,4 @@ const DEFAULT_PLANE_PRESET = [
 	{ id: 4, name: "防空セット (サンプル)", planes: [54, 175, 175, 175] },
 ];
 
-const LATEST_VERSION = '1.7.7';
+const LATEST_VERSION = '1.7.8';
