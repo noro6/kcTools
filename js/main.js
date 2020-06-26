@@ -3983,7 +3983,7 @@ function createLBPlaneObject(node) {
 		slot: inputSlot,
 		remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
 		level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
-		avoid: 0, canAttack: false, canBattle: false
+		avoid: 0, canAttack: false, canBattle: false, contact: 0, accuracy: 0, selectRate: []
 	};
 
 	if (plane) {
@@ -4004,6 +4004,26 @@ function createLBPlaneObject(node) {
 		lbPlane.ap = getAirPower_lb(lbPlane);
 		lbPlane.avoid = plane.avoid;
 		lbPlane.canAttack = ATTACKERS.includes(plane.type);
+		lbPlane.accuracy = plane.accuracy;
+
+		if (lbPlane.slot) {
+			// 触接開始因数
+			lbPlane.contact = RECONNAISSANCES.includes(lbPlane.type) ? Math.floor(lbPlane.scout * Math.sqrt(lbPlane.slot)) : 0;
+			// 触接選択率　改式。実際はこっち [3, 2, 1].map(v => plane.scout / (20 - (2 * v)));
+			if ([2, -2, 4, 5, 8, 104].includes(plane.type)) {
+				let scout = lbPlane.scout;
+				const remodel = lbPlane.remodel;
+				if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
+				if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
+				if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
+				if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
+				if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
+				if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
+				lbPlane.selectRate = [scout / 14, scout / 16, scout / 18];
+			}
+		}
 
 		// 機体使用数テーブル更新
 		let usedData = usedPlane.find(v => v.id === plane.id);
@@ -7230,8 +7250,10 @@ function modal_Closed($this) {
 			setTimeout(() => {
 				chartInstance.destroy();
 				chartInstance = null;
-				subChartInstance.destroy();
-				subChartInstance = null;
+				if (subChartInstance) {
+					subChartInstance.destroy();
+					subChartInstance = null;
+				}
 			}, 80);
 			break;
 		default:
@@ -7460,7 +7482,7 @@ function btn_capture_Clicked($this) {
 		$targetContent.addClass('capture_dark');
 		if (document.body.classList.contains('deep_blue_theme')) {
 			$targetContent.addClass('capture_deep_blue');
-		}	
+		}
 	}
 	else $targetContent.addClass('capture_nomal');
 
@@ -7923,20 +7945,94 @@ function slot_select_parent_Close($this) {
 }
 
 /**
+ * 触接詳細制空ラジオ変更
+ */
+function contact_detail_redraw() {
+	const index = castInt($('#modal_contact_detail').data('dispIndex'));
+	if (index > -1) btn_show_contact_rate_lb_Clicked(null, index);
+	else btn_show_contact_rate_Clicked();
+}
+
+/**
+ * 触接詳細ボタンクリック基地
+ * @param {JqueryDomObject} $this
+ */
+function btn_show_contact_rate_lb_Clicked($this, no = 0) {
+	const lbNo = !$this ? no : castInt($this.data('lb')) - 1;
+	const landBase = [];
+	updateLandBaseInfo(landBase, false);
+
+	const contactTable = createContactTable([landBase[lbNo].planes]);
+	const $nomal = document.getElementById('nomal_contact_table');
+	document.getElementsByClassName('detail_contact_chart_parent')[0].classList.add('w-75');
+	document.getElementsByClassName('detail_contact_chart_parent')[1].classList.add('d-none');
+	document.getElementById('grand_contact_table').classList.add('d-none');
+	document.getElementById('land_base_contact_tips').classList.remove('d-none');
+
+	for (let i = 0; i < 3; i++) {
+		const $tr = $nomal.getElementsByClassName('contact_status_' + i)[0];
+		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = contactTable[i][0].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = contactTable[i][1].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = contactTable[i][2].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_112_contact_rate')[0].textContent = contactTable[i][3].toFixed(1) + '%';
+		$tr.getElementsByClassName('td_sum_contact_rate')[0].textContent = contactTable[i][4].toFixed(1) + '%';
+	}
+
+	// グラフ表示
+	const index = $('#contact_detail_0').prop('checked') ? 0 : $('#contact_detail_1').prop('checked') ? 1 : 2;
+	const nomarlData = [contactTable[index][1], contactTable[index][2], contactTable[index][3], 100 - contactTable[index][4]];
+	const chartLabels = ["120%触接", "117%触接", "112%触接", "不発"];
+	const chartColors = ["rgb(100, 180, 255, 0.7)", "rgba(80, 220, 120, 0.7)", "rgba(255, 160, 100, 0.7)", "rgba(128, 128, 128, 0.5)"];
+	const ctx = document.getElementById("detail_contact_chart");
+	const borderColor = mainColor === '#000000' ? '#fff' : '#333';
+	const titleColor = `rgba(${hexToRGB(mainColor).join(',')}, 0.8)`;
+	// グラフ中央のアレ
+	document.getElementById('detail_contact_rate_sum').textContent = contactTable[index][4].toFixed(1);
+
+	if (!chartInstance) {
+		chartInstance = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				labels: chartLabels,
+				datasets: [{ backgroundColor: chartColors, data: nomarlData, borderColor: borderColor }]
+			},
+			plugins: [ChartDataLabels],
+			options: {
+				legend: { display: false },
+				title: { display: true, text: `第${lbNo + 1}基地航空隊 触接率`, fontColor: titleColor },
+				tooltips: { callbacks: { label: function (i, d) { return `${d.labels[i.index]}: ${d.datasets[0].data[i.index].toFixed(1)} %`; } } },
+				plugins: { datalabels: { color: mainColor, formatter: function (v, c) { return v > 0 ? v.toFixed(1) + '%' : ''; } } }
+			}
+		});
+	}
+	else {
+		chartInstance.data.datasets[0].data = nomarlData;
+		chartInstance.update();
+	}
+
+	$('#modal_contact_detail').data('dispIndex', lbNo);
+	$('#modal_contact_detail').modal('show');
+}
+
+/**
  * 触接詳細ボタンクリック
  */
-function btn_show_contact_rateClicked() {
+function btn_show_contact_rate_Clicked() {
 	const fleet = [];
 	updateFriendFleetInfo(fleet, false);
 
 	const nomalContact = createContactTable(fleet.filter(a => !a.find(p => p.fleetNo > 6)));
 	const grandContact = createContactTable(fleet);
 
-	const $nomal = document.getElementById('grand_contact_table');
-	const $grand = document.getElementById('nomal_contact_table');
+	const $nomal = document.getElementById('nomal_contact_table');
+	const $grand = document.getElementById('grand_contact_table');
+	document.getElementsByClassName('detail_contact_chart_parent')[0].classList.remove('w-75');
+	document.getElementsByClassName('detail_contact_chart_parent')[1].classList.remove('d-none');
+	document.getElementById('grand_contact_table').classList.remove('d-none');
+	document.getElementById('land_base_contact_tips').classList.add('d-none');
 
 	for (let i = 0; i < 3; i++) {
-		const $tr = $grand.getElementsByClassName('contact_status_' + i)[0];
+		const $tr = $nomal.getElementsByClassName('contact_status_' + i)[0];
 		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = nomalContact[i][0].toFixed(1) + '%';
 		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = nomalContact[i][1].toFixed(1) + '%';
 		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = nomalContact[i][2].toFixed(1) + '%';
@@ -7945,7 +8041,7 @@ function btn_show_contact_rateClicked() {
 	}
 
 	for (let i = 0; i < 3; i++) {
-		const $tr = $nomal.getElementsByClassName('contact_status_' + i)[0];
+		const $tr = $grand.getElementsByClassName('contact_status_' + i)[0];
 		$tr.getElementsByClassName('td_start_contact_rate')[0].textContent = grandContact[i][0].toFixed(1) + '%';
 		$tr.getElementsByClassName('td_120_contact_rate')[0].textContent = grandContact[i][1].toFixed(1) + '%';
 		$tr.getElementsByClassName('td_117_contact_rate')[0].textContent = grandContact[i][2].toFixed(1) + '%';
@@ -8009,6 +8105,7 @@ function btn_show_contact_rateClicked() {
 		subChartInstance.update();
 	}
 
+	$('#modal_contact_detail').data('dispIndex', -1);
 	$('#modal_contact_detail').modal('show');
 }
 
@@ -10208,6 +10305,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
 	$('#landBase_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
+	$('#landBase_content').on('click', '.btn_show_contact_rate_lb', function () { btn_show_contact_rate_lb_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '#read_duck_read_warning', function () { $('#duck_read_warning').addClass('d-none'); });
 	$('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
@@ -10222,7 +10320,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.plane_unlock', function () { plane_unlock_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.slot_ini', function () { slot_ini_Clicked($(this)); });
-	$('#friendFleet_content').on('click', '.btn_show_contact_rate', function () { btn_show_contact_rateClicked($(this)); });
+	$('#friendFleet_content').on('click', '.btn_show_contact_rate', function () { btn_show_contact_rate_Clicked(); });
 	$('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
 	$('#enemyFleet_content').on('change', '.formation', calculate);
 	$('#enemyFleet_content').on('focus', '.enemy_ap_input', function () { $(this).select(); });
@@ -10350,7 +10448,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_stage2_detail').on('change', '#stage2_detail_avoid', calculateStage2Detail);
 	$('#modal_stage2_detail').on('input', '#free_anti_air_weight', function () { free_modify_input_Changed($(this)) });
 	$('#modal_stage2_detail').on('input', '#free_anti_air_bornus', function () { free_modify_input_Changed($(this)) });
-	$('#modal_contact_detail').on('change', '.custom-radio', btn_show_contact_rateClicked);
+	$('#modal_contact_detail').on('change', '.custom-radio', contact_detail_redraw);
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 	$('#btn_preset_all').click(btn_preset_all_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
