@@ -724,8 +724,8 @@ input[type="text"] { font-size: 12px; }
 }
 .resource:hover { cursor: help; }
 .resource_img {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 /* 基地機体選択欄 */
 .lb_plane {
@@ -746,6 +746,12 @@ input[type="text"] { font-size: 12px; }
   text-align: center;
   font-size: 11px;
 }
+.btn_show_contact_rate_lb {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: .3s;
+}
+.btn_show_contact_rate_lb:hover { opacity: 1; }
 
 /* -----------------------------------
   艦隊関連 #friendFleet
@@ -809,7 +815,7 @@ input[type="text"] { font-size: 12px; }
   border-right: 3px rgb(125, 225, 220) solid;
   filter: drop-shadow(0px 0px 1px rgb(125, 225, 220));
 }
-.btn_show_contact_rate { 
+.btn_show_contact_rate {
   cursor: pointer;
   opacity: 0.6;
   transition: .3s;
