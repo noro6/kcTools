@@ -1,4 +1,4 @@
-const LAST_UPDATE_DATE = "2020/06/20";
+const LAST_UPDATE_DATE = "2020/07/02";
 
 /** 変更履歴 */
 let CHANGE_LOG = [

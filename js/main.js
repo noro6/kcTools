@@ -2451,7 +2451,7 @@ function loadMainPreset(forceBackUp = false) {
 		const preset = basePresets[index];
 		text += `
 			<div class="preset_tr general_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
-				<div class="preset_td text-primary">${index + 1}.</div>
+				<div class="preset_td text-primary ${isBackUpMode ? '' : 'sortable_handle'}">${index + 1}.</div>
 				<div class="preset_td ml-2 font_size_12">${preset[1]}</div>
 			</div>
 		`;
@@ -2469,7 +2469,37 @@ function loadMainPreset(forceBackUp = false) {
 	$modal.find('.btn_output_deck').prop('disabled', false);
 	$modal.find('#preset_remarks').prop('disabled', true).val('');
 	$modal.find('.preset_data').data('presetid', 0);
+	$modal.find('.confirm').removeClass('confirm');
 	$('#main_preset_load_tab').find('input').val('');
+
+	if (!isBackUpMode) {
+		Sortable.create($modal.find('.preset_tbody')[0], {
+			handle: '.sortable_handle',
+			animation: 200,
+			scroll: true,
+			onStart: function () {
+				$('#modal_main_preset').find('.preset_tr').each((i, e) => {
+					$(e).addClass('tran0');
+				});
+			},
+			onEnd: function () {
+				const newPresets = [];
+				$('#modal_main_preset').find('.preset_tr').each((i, e) => {
+					$(e).removeClass('tran0');
+					// id振り直しとコミット
+					const id = castInt($(e)[0].dataset.presetid, -1);
+					if (id >= 0) newPresets.push(presets.find(v => v[0] === id));
+
+					$(e).find('.text-primary').text(i + '.');
+				});
+
+				if (newPresets.length) {
+					presets = newPresets.concat();
+					saveLocalStorage('presets', presets);
+				}
+			}
+		});
+	}
 }
 
 /**
@@ -2518,7 +2548,7 @@ function drawMainPreset(preset) {
 	$modal.find('.is-valid').removeClass('is-valid');
 	$modal.find('.preset_name').prop('disabled', false);
 	$modal.find('#preset_remarks').prop('disabled', false);
-	$modal.find('.alert').addClass('hide').removeClass('show');
+	$modal.find('.alert').addClass('hide').removeClass('show confirm');
 }
 
 /**
@@ -2540,8 +2570,10 @@ function updateMainPreset() {
 	if (!isUpdate) presets.push(preset);
 	saveLocalStorage('presets', presets);
 
-	$('#modal_main_preset').find('.task').text(isUpdate ? '編成更新' : '新規登録');
-	$('#modal_main_preset').find('.alert').removeClass('hide').addClass('show');
+	$('#modal_main_preset').find('.task')
+		.removeClass('hide confirm')
+		.addClass('show')
+		.text(isUpdate ? '編成更新が完了しました。' : '新規登録が完了しました。');
 }
 
 /**
@@ -2561,7 +2593,10 @@ function updateMainPresetName() {
 	}
 	saveLocalStorage('presets', presets);
 
-	$('#modal_main_preset').find('.task').text('更新');
+	$('#modal_main_preset').find('.task')
+		.removeClass('hide confirm')
+		.addClass('show')
+		.text('更新が完了しました。');
 	$('#modal_main_preset').find('.alert').removeClass('hide').addClass('show');
 }
 
@@ -2880,9 +2915,12 @@ function deleteMainPreset(id) {
 		presets.sort((a, b) => a[0] - b[0]);
 		saveLocalStorage('presets', presets);
 	}
-	const $modal = $('#modal_main_preset');
-	$modal.find('.alert').removeClass('hide').addClass('show');
-	$modal.find('.task').text('削除');
+
+	$('#modal_main_preset').find('.task')
+		.removeClass('hide confirm')
+		.addClass('show')
+		.text('削除が完了しました。');
+
 	loadMainPreset();
 }
 
@@ -7271,7 +7309,7 @@ function sidebar_Clicked($this) {
 
 	if (href === '#first_time_content') first_time_Clicked();
 	else if (href === '#site_manual_content') site_manual_Clicked();
-	else if (href === '#site_abstract_content' || href === '#site_FAQ_content' || href === '#site_history_content') scrollContent($(href));
+	else if (href === '#site_abstract_content' || href === '#site_FAQ_content' || href === '#site_history_content' || href === '#site_board_content') scrollContent($(href));
 	else {
 		$('body,html').animate({ scrollTop: target.offset().top - 60 }, 300, 'swing');
 	}
@@ -10014,6 +10052,15 @@ function btn_commit_preset_header_Clicked() {
  */
 function btn_delete_main_preset_Clicked() {
 	const presetId = castInt($('#modal_main_preset').find('.preset_selected').data('presetid'));
+
+	if (!$('#modal_main_preset').find('.task').hasClass('confirm')) {
+		$('#modal_main_preset').find('.task')
+			.removeClass('hide')
+			.addClass('show confirm')
+			.text('削除を実行する場合はこのままもう一度削除ボタンを押してください。');
+		return;
+	}
+
 	deleteMainPreset(presetId);
 }
 
@@ -10524,6 +10571,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			$('.lb_tab').each((i, e) => {
 				$(e).attr('id', 'lb_item' + (i + 1));
 				$(e).find('.baseNo').text('第' + (i + 1) + '基地航空隊');
+				$(e).find('.simple_lb_progress').attr('id', 'simple_lb_bar_' + (i + 1));
 			});
 			calculate();
 		}
