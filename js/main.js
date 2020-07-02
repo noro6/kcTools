@@ -82,6 +82,9 @@ let mainColor = "#000000";
 // undo用
 let undoHistory = { index: 0, histories: [] };
 
+// ※
+let fb = null;
+
 // 計算結果格納オブジェクト
 let resultData = {
 	enemyMainAirPower: 0,
@@ -295,6 +298,23 @@ function hexToRGB(hex) {
 		return parseInt(str, 16);
 	});
 }
+
+/**
+ * 日付をフォーマット
+ * @param {Date} date
+ * @param {string} format
+ * @returns
+ */
+function formatDate(date, format) {
+	format = format.replace(/yyyy/g, date.getFullYear());
+	format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+	format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2));
+	format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2));
+	format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+	format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+	format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3));
+	return format;
+};
 
 /*==================================
 		値/オブジェクト 作成・操作・取得等
@@ -2586,7 +2606,7 @@ function updateMainPresetName() {
 		// 空はないが念のため空が来た場合
 		if (presetName.length === 0) {
 			const today = new Date();
-			presetName = `preset-${today.getFullYear() + '' + today.getMonth() + 1 + '' + today.getDate()}`;
+			presetName = `preset-${formatDate(today, 'yyyyMMdd')}`;
 		}
 		preset[1] = presetName;
 		preset[3] = $('#preset_remarks').val().trim();
@@ -3257,6 +3277,126 @@ function loadSiteHistory() {
 }
 
 /**
+ * コメント欄初期化
+ */
+function initializeBoard() {
+	if (!fb) {
+		firebase.initializeApp({
+			apiKey: xxx,
+			projectId: 'development-74af0'
+		});
+		fb = firebase.firestore();
+
+		fb.collection("comments").orderBy('createAt', 'desc').limit(30)
+			.onSnapshot(function (querySnapshot) {
+				const fragment = document.createDocumentFragment();
+				let i = 0;
+				querySnapshot.forEach(function (doc) {
+					const box = document.createElement('div');
+					box.className = 'general_box my-2 px-3 pt-3 pb-1 comment';
+
+					const header = document.createElement('div');
+					header.className = 'd-flex mb-1';
+
+					const index = document.createElement('div');
+					index.className = 'comment_index align-self-center text-primary';
+					index.textContent = `${++i}:`;
+
+					const author = document.createElement('div');
+					author.className = 'comment_writer ml-1 align-self-center';
+					author.textContent = doc.data().author;
+
+					const createAt = doc.data().createAt ? doc.data().createAt.toDate() : new Date();
+					const date = document.createElement('div');
+					date.className = 'comment_date ml-2 opacity6 font_size_11 align-self-end';
+					date.textContent = formatDate(createAt, 'yyyy/MM/dd HH:mm:ss');
+
+					header.appendChild(index);
+					header.appendChild(author);
+					header.appendChild(date);
+
+					const content = document.createElement('div');
+					content.className = 'comment_content align-self-center';
+					content.textContent = doc.data().content;
+
+					box.appendChild(header);
+					box.appendChild(content);
+
+					fragment.appendChild(box);
+				});
+
+				document.getElementById('coment_board').innerHTML = '';
+				document.getElementById('coment_board').appendChild(fragment);
+			});
+	}
+}
+
+function comment_text_Changed() {
+	// サーバーサイドでもチェックは行うがこっちでもやっとく
+	const content = document.getElementById('comment_text');
+	const text = content.value.trim();
+	let valid = true;
+
+	if (text.length === 0) {
+		content.classList.remove('is-invalid');
+		document.getElementById('btn_send_comment').disabled = true;
+		return;
+	}
+	if (text.length > 1000) {
+		valid = false;
+	}
+	if (document.getElementById('comment_author').value.trim() === 'noro') {
+		document.getElementById('btn_send_comment').disabled = true;
+		return;
+	}
+
+	document.getElementById('btn_send_comment').disabled = !valid;
+	if (!valid) {
+		content.classList.add('is-invalid');
+		return;
+	}
+
+	content.classList.remove('is-invalid');
+}
+
+function btn_send_comment_Clicked() {
+	const $modal = $('#modal_confirm');
+	$modal.find('.modal-body').html(`
+		<div>コメントを送信します。</div>
+		<div class="mt-3 font_size_12">・公序良俗に反する書き込みはご遠慮ください。</div>
+		<div class="font_size_12">・送信した内容は、原則あとから変更/削除はできませんので注意してください。</div>
+		<div class="font_size_12">・どうしても変更・削除したい場合はご連絡ください。</div>
+		<div class="mt-3">よろしければ、OKボタンを押してください。</div>
+	`);
+	confirmType = "sendComment";
+	$modal.modal('show');
+}
+
+function send_comment() {
+	if (fb) {
+		let author = document.getElementById('comment_author').value.trim();
+		const content = document.getElementById('comment_text').value.trim();
+		if (!author) author = '名無しさん';
+
+		fb.collection("comments").add({
+			author: author,
+			content: content,
+			createAt: firebase.firestore.FieldValue.serverTimestamp()
+		})
+			.then(function (docRef) {
+				document.getElementById('comment_author').value = '';
+				document.getElementById('comment_text').value = '';
+				document.getElementById('btn_send_comment').disabled = true;
+			})
+			.catch(function (error) {
+				console.log(error);
+				alert('サーバーサイドでエラーが発生しました。');
+			});
+	}
+	else alert('謎の理由により、コメントの投稿に失敗しました。');
+}
+
+/**
  * 結果表示を行う
  */
 function drawResult() {
@@ -3713,21 +3853,11 @@ function calculateInit(objectData) {
 
 				// 今回のバックアップデータ
 				const now = new Date();
-				const nowDate = [
-					now.getFullYear().toString(),
-					('0' + (now.getMonth() + 1)).slice(-2),
-					('0' + now.getDate()).slice(-2)
-				];
-				const nowTime = [
-					('0' + now.getHours()).slice(-2),
-					('0' + now.getMinutes()).slice(-2),
-					('0' + now.getSeconds()).slice(-2),
-				];
 				const backUpData = [
 					0,
-					`backup-${nowDate.join("")}${nowTime.join("")}`,
+					`backup-${formatDate(now, 'yyyyMMddHHmmss')}`,
 					currentData,
-					`${nowDate.join("/")} ${nowTime.join(":")}の編成`
+					`${formatDate(now, 'yyyy/MM/dd HH:mm:ss')}の編成`
 				];
 
 				// 同じデータ削除
@@ -7587,13 +7717,7 @@ function btn_capture_Clicked($this) {
  * @param {*} data
  */
 function downloadImage(data) {
-	const now = new Date();
-	const month = ('0' + (now.getMonth() + 1)).slice(-2);
-	const date = ('0' + now.getDate()).slice(-2);
-	const hours = ('0' + now.getHours()).slice(-2);
-	const minutes = ('0' + now.getMinutes()).slice(-2);
-	const sec = ('0' + now.getSeconds()).slice(-2);
-	const fname = 'screenshot_' + now.getFullYear() + month + date + hours + minutes + sec + '.jpg';
+	const fname = 'screenshot_' + formatDate(new Date(), 'yyyyMMdd_HHmmss') + '.jpg';
 
 	if (window.navigator.msSaveBlob) {
 		const encodeData = atob(data.replace(/^.*,/, ''));
@@ -9788,6 +9912,9 @@ function modal_confirm_ok_Clicked() {
 			setting.selectedHistory[1] = [];
 			saveLocalStorage('setting', setting);
 			break;
+		case "sendComment":
+			send_comment();
+			break;
 		case "Error":
 			break;
 		default:
@@ -10413,6 +10540,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#plane_stock').on('click', '#btn_stock_all_clear', btn_stock_all_clear_Clicked);
 	$('#plane_stock').on('input', '#stock_word', stock_word_TextChanged);
 	$('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
+	$('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
+	$('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
+	$('#site_board').on('input', '#comment_author', comment_text_Changed);
+	$('#site_board').on('input', '#comment_text', comment_text_Changed);
 	$('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
 	$('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
 	$('#modal_plane_select').on('change', '#plane_type_select', plane_type_select_Changed);

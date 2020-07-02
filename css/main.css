@@ -1687,6 +1687,12 @@ input[type="text"] { font-size: 12px; }
 
 
 /* ------------------------------
+  コメント欄 #site_board
+-------------------------------- */
+#comment_author { width: 180px; }
+.comment_content { white-space: pre-wrap; }
+
+/* ------------------------------
   艦載機ボックス #draggable_plane_box
 -------------------------------- */
 #draggable_plane_box {
