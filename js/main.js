@@ -2932,7 +2932,6 @@ function deleteMainPreset(id) {
 	}
 	else {
 		presets = presets.filter(v => v[0] !== id);
-		presets.sort((a, b) => a[0] - b[0]);
 		saveLocalStorage('presets', presets);
 	}
 
