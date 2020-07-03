@@ -31,6 +31,8 @@
 	<script defer src="./js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="./js/data.js"></script>
 	<script defer src="./js/main.min.js"></script>
+	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -107,6 +109,7 @@
 						</li>
 						<li class="nav-item"><a class="nav-link" href="#site_FAQ_content">よくある質問</a></li>
 						<li class="nav-item"><a class="nav-link" href="#site_history_content">更新履歴</a></li>
+						<li class="nav-item"><a class="nav-link" href="#site_board_content">コメント</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -117,7 +120,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.7.8</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.7.9</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -5040,6 +5043,49 @@
 							<div class="collapse collapse_content" id="site_history_content">
 								<div class="border-top"></div>
 								<div class="d-flex flex-column-reverse px-3" id="site_history_body"></div>
+							</div>
+						</div>
+
+						<div class="contents my-4 px-2 py-1 mx-auto mx-xl-1" id="site_board">
+							<div class="my-2 d-flex">
+								<div class="h6 mb-0 align-self-center"><span class="content_title align-middle">コメント</span>
+								</div>
+								<div class="ml-auto rounded-circle round_button align-self-center d-table" data-toggle="collapse"
+									data-target="#site_board_content">
+									<i class="fas fa-chevron-up d-table-cell align-middle"></i>
+								</div>
+							</div>
+							<div class="collapse collapse_content" id="site_board_content">
+								<div class="border-top"></div>
+								<div class="px-3 mt-3">
+									バグ報告、要望、情報提供、質問、感想など自由に書き込めるコメント欄です。レス番号をクリックすると返信できます。(最新の30件)
+								</div>
+								<div class="px-3">
+									試験運用のため、アクセス数が膨らむと一時的に利用できない状態になる可能性があります。ご了承ください。
+								</div>
+								<div class="py-2 px-3" id="coment_form">
+									<div class="align-self-center d-flex">
+										<div class="align-self-center">
+											<button class="btn btn-sm btn-primary" id="btn_send_comment" disabled>送信</button>
+										</div>
+										<div class="align-self-center ml-2 text-nowrap">名前:</div>
+										<div class="align-self-center ml-2 d-flex">
+											<input type="text" class="form-control form-control-sm align-self-center" id="comment_author" placeholder="名無しさん" maxlength="20">
+											<div class="ml-2 invalid-feedback align-self-center" id="author_validate">20文字以内で入力して下さい。</div>
+										</div>
+									</div>
+									<div class="mt-1">
+										<textarea class="form-control form-control-sm" id="comment_text" rows="3"></textarea>
+										<div class="invalid-feedback" id="comment_validate">1000文字以内で入力してください。</div>
+									</div>
+								</div>
+								<div class="px-3 mt-1 mb-3" id="coment_board">
+									<div class="w-100 text-center">
+										<div class="spinner-border m-5" role="status">
+											<span class="sr-only"></span>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
