@@ -3287,10 +3287,9 @@ function initializeBoard() {
 		});
 		fb = firebase.firestore();
 
-		fb.collection("comments").orderBy('createAt', 'desc').limit(30)
+		fb.collection("comments").orderBy('createdAt', 'desc').limit(30)
 			.onSnapshot(function (querySnapshot) {
 				const fragment = document.createDocumentFragment();
-				let i = 0;
 				querySnapshot.forEach(function (doc) {
 					const box = document.createElement('div');
 					box.className = 'general_box my-2 px-3 pt-3 pb-1 comment';
@@ -3300,20 +3299,30 @@ function initializeBoard() {
 
 					const index = document.createElement('div');
 					index.className = 'comment_index align-self-center text-primary';
-					index.textContent = `${++i}:`;
+					index.dataset.number = doc.data().number;
+					index.textContent = `${doc.data().number}:`;
 
 					const author = document.createElement('div');
-					author.className = 'comment_writer ml-1 align-self-center';
+					author.className = 'comment_writer ml-1 align-self-center mr-2';
 					author.textContent = doc.data().author;
 
-					const createAt = doc.data().createAt ? doc.data().createAt.toDate() : new Date();
+					const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
 					const date = document.createElement('div');
-					date.className = 'comment_date ml-2 opacity6 font_size_11 align-self-end';
-					date.textContent = formatDate(createAt, 'yyyy/MM/dd HH:mm:ss');
+					date.className = 'comment_date opacity6 font_size_11 align-self-center';
+					date.textContent = ' -- ' + formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss');
 
 					header.appendChild(index);
 					header.appendChild(author);
 					header.appendChild(date);
+
+					const dt = new Date();
+					dt.setDate(dt.getDate() - 7);
+					if (createdAt > dt) {
+						const badge = document.createElement('div');
+						badge.className = 'font_size_11 align-self-center text-danger ml-1';
+						badge.textContent = 'New';
+						header.appendChild(badge);
+					}
 
 					const content = document.createElement('div');
 					content.className = 'comment_content align-self-center';
@@ -3329,34 +3338,78 @@ function initializeBoard() {
 				document.getElementById('coment_board').appendChild(fragment);
 			});
 	}
+
+	// ブラウザ再読み込み時の残りカスがある場合の対処
+	comment_text_Changed();
+}
+
+
+/**
+ * レス番号クリック
+ */
+function comment_index_Clicked($this) {
+	const num = castInt($this[0].dataset.number);
+	if (document.getElementById('comment_text').value.trim().length) {
+		document.getElementById('comment_text').value += ('>>' + num + '\n');
+	}
+	else {
+		document.getElementById('comment_text').value = ('>>' + num + '\n');
+	}
+
+	// 移動
+	setTimeout(() => { $('body,html').animate({ scrollTop: $('#site_board_content').offset().top - 20 }, 20, 'swing'); }, 20);
+	document.getElementById('comment_text').focus();
 }
 
 function comment_text_Changed() {
 	// サーバーサイドでもチェックは行うがこっちでもやっとく
+	const author = document.getElementById('comment_author');
 	const content = document.getElementById('comment_text');
-	const text = content.value.trim();
+	const text = content.value;
+	// 行数チェック用
+	const nCount = text.match(/\n/g);
 	let valid = true;
 
-	if (text.length === 0) {
-		content.classList.remove('is-invalid');
-		document.getElementById('btn_send_comment').disabled = true;
-		return;
-	}
-	if (text.length > 1000) {
+	// 名前欄チェック
+	if (author.value.trim() === 'noro') {
+		document.getElementById('author_validate').textContent = '使用できない名前です。';
+		author.classList.add('is-invalid');
 		valid = false;
 	}
-	if (document.getElementById('comment_author').value.trim() === 'noro') {
-		document.getElementById('btn_send_comment').disabled = true;
-		return;
+	else if (author.value.trim().length > 20) {
+		// 名前欄文字数チェック
+		document.getElementById('author_validate').textContent = '20文字以内で入力して下さい。';
+		author.classList.add('is-invalid');
+		valid = false;
 	}
+	else author.classList.remove('is-invalid');
 
-	document.getElementById('btn_send_comment').disabled = !valid;
-	if (!valid) {
+	// 本文文字数チェック
+	if (text.trim().length === 0) {
+		document.getElementById('comment_validate').textContent = '';
+		content.classList.remove('is-invalid');
+		valid = false;
+	}
+	else if (text.length > 1000) {
+		document.getElementById('comment_validate').textContent = '1000文字以内で入力してください。';
 		content.classList.add('is-invalid');
-		return;
+		valid = false;
 	}
+	else if (nCount && nCount.length >= 15) {
+		document.getElementById('comment_validate').textContent = '規定行数を超えました。行数を減らして下さい。';
+		content.classList.add('is-invalid');
+		valid = false;
+	}
+	else content.classList.remove('is-invalid');
 
-	content.classList.remove('is-invalid');
+	// 送信ボタンの有効無効
+	document.getElementById('btn_send_comment').disabled = !valid;
+
+	// バリデーションOK!
+	if (valid) {
+		author.classList.remove('is-invalid');
+		content.classList.remove('is-invalid');
+	};
 }
 
 function btn_send_comment_Clicked() {
@@ -3378,20 +3431,39 @@ function send_comment() {
 		const content = document.getElementById('comment_text').value.trim();
 		if (!author) author = '名無しさん';
 
-		fb.collection("comments").add({
-			author: author,
-			content: content,
-			createAt: firebase.firestore.FieldValue.serverTimestamp()
-		})
-			.then(function (docRef) {
-				document.getElementById('comment_author').value = '';
-				document.getElementById('comment_text').value = '';
-				document.getElementById('btn_send_comment').disabled = true;
+		fb.runTransaction(function (transaction) {
+			const ref = fb.collection('comments');
+			const newComment = ref.doc();
+			return transaction.get(newComment).then(async () => {
+				// 最新コメを1件取得
+				const querySnapshot = await ref.orderBy("createdAt", "desc").limit(1).get()
+				if (querySnapshot) {
+					let newId = 0;
+					await Promise.all(querySnapshot.docs.map(async (doc) => {
+						const latest = await doc.data();
+						newId = await latest.number;
+					}));
+
+					if (castInt(newId, -1) >= 0) {
+						const comment = {
+							number: castInt(newId) + 1,
+							author: author,
+							content: content,
+							createdAt: firebase.firestore.FieldValue.serverTimestamp()
+						};
+						await transaction.set(newComment, comment);
+						return comment;
+					}
+					else return Promise.reject("ID採番エラー :", newId);
+				}
 			})
-			.catch(function (error) {
-				console.log(error);
-				alert('サーバーサイドでエラーが発生しました。');
-			});
+		}).then(function (comment) {
+			document.getElementById('comment_text').value = '';
+			document.getElementById('btn_send_comment').disabled = true;
+		}).catch(function (err) {
+			console.error(err);
+			alert('コメントの投稿に失敗しました。サーバーサイドでエラーが発生しました。');
+		});
 	}
 	else alert('謎の理由により、コメントの投稿に失敗しました。');
 }
@@ -10544,6 +10616,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
 	$('#site_board').on('input', '#comment_author', comment_text_Changed);
 	$('#site_board').on('input', '#comment_text', comment_text_Changed);
+	$('#site_board').on('click', '.comment_index', function () { comment_index_Clicked($(this)) });
 	$('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
 	$('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
 	$('#modal_plane_select').on('change', '#plane_type_select', plane_type_select_Changed);

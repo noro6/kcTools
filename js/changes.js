@@ -1,5 +1,3 @@
-const LAST_UPDATE_DATE = "2020/07/02";
-
 /** 変更履歴 */
 let CHANGE_LOG = [
 	{ id: "0.0.1", changes: [{ type: 0, title: "設置", content: "初版設置" }] },
@@ -699,3 +697,5 @@ let CHANGE_LOG = [
 		],
 	},
 ];
+
+const LAST_UPDATE_DATE = "2020/07/03";
