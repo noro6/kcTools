@@ -82,6 +82,9 @@ let mainColor = "#000000";
 // undo用
 let undoHistory = { index: 0, histories: [] };
 
+// ※
+let fb = null;
+
 // 計算結果格納オブジェクト
 let resultData = {
 	enemyMainAirPower: 0,
@@ -295,6 +298,23 @@ function hexToRGB(hex) {
 		return parseInt(str, 16);
 	});
 }
+
+/**
+ * 日付をフォーマット
+ * @param {Date} date
+ * @param {string} format
+ * @returns
+ */
+function formatDate(date, format) {
+	format = format.replace(/yyyy/g, date.getFullYear());
+	format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+	format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2));
+	format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2));
+	format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+	format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+	format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3));
+	return format;
+};
 
 /*==================================
 		値/オブジェクト 作成・操作・取得等
@@ -2586,7 +2606,7 @@ function updateMainPresetName() {
 		// 空はないが念のため空が来た場合
 		if (presetName.length === 0) {
 			const today = new Date();
-			presetName = `preset-${today.getFullYear() + '' + today.getMonth() + 1 + '' + today.getDate()}`;
+			presetName = `preset-${formatDate(today, 'yyyyMMdd')}`;
 		}
 		preset[1] = presetName;
 		preset[3] = $('#preset_remarks').val().trim();
@@ -3257,6 +3277,198 @@ function loadSiteHistory() {
 }
 
 /**
+ * コメント欄初期化
+ */
+function initializeBoard() {
+	if (!fb) {
+		firebase.initializeApp({
+			apiKey: xxx,
+			projectId: 'development-74af0'
+		});
+		fb = firebase.firestore();
+
+		fb.collection("comments").orderBy('createdAt', 'desc').limit(30)
+			.onSnapshot(function (querySnapshot) {
+				const fragment = document.createDocumentFragment();
+				querySnapshot.forEach(function (doc) {
+					const box = document.createElement('div');
+					box.className = 'general_box my-2 px-3 pt-3 pb-1 comment';
+
+					const header = document.createElement('div');
+					header.className = 'd-flex mb-1';
+
+					const index = document.createElement('div');
+					index.className = 'comment_index align-self-center text-primary';
+					index.dataset.number = doc.data().number;
+					index.textContent = `${doc.data().number}:`;
+
+					const author = document.createElement('div');
+					author.className = 'comment_writer ml-1 align-self-center mr-2';
+					author.textContent = doc.data().author;
+
+					const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
+					const date = document.createElement('div');
+					date.className = 'comment_date opacity6 font_size_11 align-self-center';
+					date.textContent = ' -- ' + formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss');
+
+					header.appendChild(index);
+					header.appendChild(author);
+					header.appendChild(date);
+
+					const dt = new Date();
+					dt.setDate(dt.getDate() - 7);
+					if (createdAt > dt) {
+						const badge = document.createElement('div');
+						badge.className = 'font_size_11 align-self-center text-danger ml-1';
+						badge.textContent = 'New';
+						header.appendChild(badge);
+					}
+
+					const content = document.createElement('div');
+					content.className = 'comment_content align-self-center';
+					content.textContent = doc.data().content;
+
+					box.appendChild(header);
+					box.appendChild(content);
+
+					fragment.appendChild(box);
+				});
+
+				document.getElementById('coment_board').innerHTML = '';
+				document.getElementById('coment_board').appendChild(fragment);
+			});
+	}
+
+	// ブラウザ再読み込み時の残りカスがある場合の対処
+	comment_text_Changed();
+}
+
+
+/**
+ * レス番号クリック
+ */
+function comment_index_Clicked($this) {
+	const num = castInt($this[0].dataset.number);
+	if (document.getElementById('comment_text').value.trim().length) {
+		document.getElementById('comment_text').value += ('>>' + num + '\n');
+	}
+	else {
+		document.getElementById('comment_text').value = ('>>' + num + '\n');
+	}
+
+	// 移動
+	setTimeout(() => { $('body,html').animate({ scrollTop: $('#site_board_content').offset().top - 20 }, 20, 'swing'); }, 20);
+	document.getElementById('comment_text').focus();
+}
+
+function comment_text_Changed() {
+	// サーバーサイドでもチェックは行うがこっちでもやっとく
+	const author = document.getElementById('comment_author');
+	const content = document.getElementById('comment_text');
+	const text = content.value;
+	// 行数チェック用
+	const nCount = text.match(/\n/g);
+	let valid = true;
+
+	// 名前欄チェック
+	if (author.value.trim() === 'noro') {
+		document.getElementById('author_validate').textContent = '使用できない名前です。';
+		author.classList.add('is-invalid');
+		valid = false;
+	}
+	else if (author.value.trim().length > 20) {
+		// 名前欄文字数チェック
+		document.getElementById('author_validate').textContent = '20文字以内で入力して下さい。';
+		author.classList.add('is-invalid');
+		valid = false;
+	}
+	else author.classList.remove('is-invalid');
+
+	// 本文文字数チェック
+	if (text.trim().length === 0) {
+		document.getElementById('comment_validate').textContent = '';
+		content.classList.remove('is-invalid');
+		valid = false;
+	}
+	else if (text.length > 1000) {
+		document.getElementById('comment_validate').textContent = '1000文字以内で入力してください。';
+		content.classList.add('is-invalid');
+		valid = false;
+	}
+	else if (nCount && nCount.length >= 15) {
+		document.getElementById('comment_validate').textContent = '規定行数を超えました。行数を減らして下さい。';
+		content.classList.add('is-invalid');
+		valid = false;
+	}
+	else content.classList.remove('is-invalid');
+
+	// 送信ボタンの有効無効
+	document.getElementById('btn_send_comment').disabled = !valid;
+
+	// バリデーションOK!
+	if (valid) {
+		author.classList.remove('is-invalid');
+		content.classList.remove('is-invalid');
+	};
+}
+
+function btn_send_comment_Clicked() {
+	const $modal = $('#modal_confirm');
+	$modal.find('.modal-body').html(`
+		<div>コメントを送信します。</div>
+		<div class="mt-3 font_size_12">・公序良俗に反する書き込みはご遠慮ください。</div>
+		<div class="font_size_12">・送信した内容は、原則あとから変更/削除はできませんので注意してください。</div>
+		<div class="font_size_12">・どうしても変更・削除したい場合はご連絡ください。</div>
+		<div class="mt-3">よろしければ、OKボタンを押してください。</div>
+	`);
+	confirmType = "sendComment";
+	$modal.modal('show');
+}
+
+function send_comment() {
+	if (fb) {
+		let author = document.getElementById('comment_author').value.trim();
+		const content = document.getElementById('comment_text').value.trim();
+		if (!author) author = '名無しさん';
+
+		fb.runTransaction(function (transaction) {
+			const ref = fb.collection('comments');
+			const newComment = ref.doc();
+			return transaction.get(newComment).then(async () => {
+				// 最新コメを1件取得
+				const querySnapshot = await ref.orderBy("createdAt", "desc").limit(1).get()
+				if (querySnapshot) {
+					let newId = 0;
+					await Promise.all(querySnapshot.docs.map(async (doc) => {
+						const latest = await doc.data();
+						newId = await latest.number;
+					}));
+
+					if (castInt(newId, -1) >= 0) {
+						const comment = {
+							number: castInt(newId) + 1,
+							author: author,
+							content: content,
+							createdAt: firebase.firestore.FieldValue.serverTimestamp()
+						};
+						await transaction.set(newComment, comment);
+						return comment;
+					}
+					else return Promise.reject("ID採番エラー :", newId);
+				}
+			})
+		}).then(function (comment) {
+			document.getElementById('comment_text').value = '';
+			document.getElementById('btn_send_comment').disabled = true;
+		}).catch(function (err) {
+			console.error(err);
+			alert('コメントの投稿に失敗しました。サーバーサイドでエラーが発生しました。');
+		});
+	}
+	else alert('謎の理由により、コメントの投稿に失敗しました。');
+}
+
+/**
  * 結果表示を行う
  */
 function drawResult() {
@@ -3713,21 +3925,11 @@ function calculateInit(objectData) {
 
 				// 今回のバックアップデータ
 				const now = new Date();
-				const nowDate = [
-					now.getFullYear().toString(),
-					('0' + (now.getMonth() + 1)).slice(-2),
-					('0' + now.getDate()).slice(-2)
-				];
-				const nowTime = [
-					('0' + now.getHours()).slice(-2),
-					('0' + now.getMinutes()).slice(-2),
-					('0' + now.getSeconds()).slice(-2),
-				];
 				const backUpData = [
 					0,
-					`backup-${nowDate.join("")}${nowTime.join("")}`,
+					`backup-${formatDate(now, 'yyyyMMddHHmmss')}`,
 					currentData,
-					`${nowDate.join("/")} ${nowTime.join(":")}の編成`
+					`${formatDate(now, 'yyyy/MM/dd HH:mm:ss')}の編成`
 				];
 
 				// 同じデータ削除
@@ -7587,13 +7789,7 @@ function btn_capture_Clicked($this) {
  * @param {*} data
  */
 function downloadImage(data) {
-	const now = new Date();
-	const month = ('0' + (now.getMonth() + 1)).slice(-2);
-	const date = ('0' + now.getDate()).slice(-2);
-	const hours = ('0' + now.getHours()).slice(-2);
-	const minutes = ('0' + now.getMinutes()).slice(-2);
-	const sec = ('0' + now.getSeconds()).slice(-2);
-	const fname = 'screenshot_' + now.getFullYear() + month + date + hours + minutes + sec + '.jpg';
+	const fname = 'screenshot_' + formatDate(new Date(), 'yyyyMMdd_HHmmss') + '.jpg';
 
 	if (window.navigator.msSaveBlob) {
 		const encodeData = atob(data.replace(/^.*,/, ''));
@@ -9788,6 +9984,9 @@ function modal_confirm_ok_Clicked() {
 			setting.selectedHistory[1] = [];
 			saveLocalStorage('setting', setting);
 			break;
+		case "sendComment":
+			send_comment();
+			break;
 		case "Error":
 			break;
 		default:
@@ -10413,6 +10612,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#plane_stock').on('click', '#btn_stock_all_clear', btn_stock_all_clear_Clicked);
 	$('#plane_stock').on('input', '#stock_word', stock_word_TextChanged);
 	$('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
+	$('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
+	$('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
+	$('#site_board').on('input', '#comment_author', comment_text_Changed);
+	$('#site_board').on('input', '#comment_text', comment_text_Changed);
+	$('#site_board').on('click', '.comment_index', function () { comment_index_Clicked($(this)) });
 	$('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
 	$('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
 	$('#modal_plane_select').on('change', '#plane_type_select', plane_type_select_Changed);
