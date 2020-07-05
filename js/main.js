@@ -2536,7 +2536,7 @@ function drawMainPreset(preset) {
 		$modal.find('.preset_data').data('presetid', preset[0]);
 		$modal.find('.preset_name').val(preset[1]);
 		$modal.find('#preset_remarks').val(preset[3]);
-		$modal.find('.btn_commit_preset').text('編成変更');
+		$modal.find('.btn_commit_preset').text('編成上書');
 		$modal.find('.btn_commit_preset').prop('disabled', false);
 		$modal.find('.btn_commit_preset_header').removeClass('d-none');
 		$modal.find('.btn_commit_preset_header').prop('disabled', false);
@@ -8191,7 +8191,7 @@ function contact_detail_redraw() {
  * @param {JqueryDomObject} $this
  */
 function btn_show_contact_rate_lb_Clicked($this, no = 0) {
-	const lbNo = !$this ? no : castInt($this.data('lb')) - 1;
+	const lbNo = !$this ? no : castInt($this[0].dataset.lb) - 1;
 	const landBase = [];
 	updateLandBaseInfo(landBase, false);
 
@@ -10775,6 +10775,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				$(e).attr('id', 'lb_item' + (i + 1));
 				$(e).find('.baseNo').text('第' + (i + 1) + '基地航空隊');
 				$(e).find('.simple_lb_progress').attr('id', 'simple_lb_bar_' + (i + 1));
+				$(e).find('.btn_show_contact_rate_lb')[0].dataset.lb = (i + 1);
 			});
 			calculate();
 		}
