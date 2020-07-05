@@ -59,7 +59,7 @@ const PLANE_DATA = [
 	{ id: 18, type: 2, name: "流星", abbr: "", antiAir: 1, torpedo: 10, bomber: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, radius: 6, cost: 7, avoid: 0 },
 	{ id: 52, type: 2, name: "流星改", abbr: "", antiAir: 1, torpedo: 13, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 0, radius: 6, cost: 8, avoid: 0 },
 	{ id: 82, type: 2, name: "九七式艦攻(九三一空)", abbr: "九七式艦攻(931空)", antiAir: 0, torpedo: 6, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 0, radius: 4, cost: 5, avoid: 0 },
-	{ id: 83, type: 2, name: "天山(九三一空)", abbr: "天山(931空)", antiAir: 0, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 0, radius: 5, cost: 6, avoid: 0 },
+	{ id: 83, type: 2, name: "天山(九三一空)", abbr: "天山(931空)", antiAir: 0, torpedo: 9, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 0, radius: 5, cost: 6, avoid: 0 },
 	{ id: 93, type: 2, name: "九七式艦攻(友永隊)", abbr: "", antiAir: 1, torpedo: 11, bomber: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, accuracy: 3, radius: 4, cost: 5, avoid: 1 },
 	{ id: 94, type: 2, name: "天山一二型(友永隊)", abbr: "", antiAir: 1, torpedo: 14, bomber: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 1, accuracy: 3, radius: 5, cost: 6, avoid: 1 },
 	{ id: 98, type: 2, name: "九七式艦攻(熟練)", abbr: "", antiAir: 0, torpedo: 8, bomber: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 2, radius: 4, cost: 5, avoid: 0 },
@@ -109,7 +109,7 @@ const PLANE_DATA = [
 	{ id: 61, type: 4, name: "二式艦上偵察機", abbr: "", antiAir: 1, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, accuracy: 3, radius: 5, cost: 6, avoid: 0 },
 	{ id: 151, type: 4, name: "試製景雲(艦偵型)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 11, canRemodel: 1, accuracy: 2, radius: 8, cost: 12, avoid: 0 },
 	{ id: 212, type: 4, name: "彩雲(東カロリン空)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 0, accuracy: 2, radius: 8, cost: 9, avoid: 0 },
-	{ id: 273, type: 4, name: "彩雲(偵四)", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 0, accuracy: 2, radius: 7, cost: 9, avoid: 0 },
+	{ id: 273, type: 4, name: "彩雲(偵四)", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 1, accuracy: 0, radius: 7, cost: 9, avoid: 0 },
 	{ id: 25, type: 5, name: "零式水上偵察機", abbr: "", antiAir: 1, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 1, accuracy: 1, radius: 7, cost: 5, avoid: 0 },
 	{ id: 59, type: 5, name: "零式水上観測機", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 6, canRemodel: 1, accuracy: 2, radius: 3, cost: 6, avoid: 0 },
 	{ id: 102, type: 5, name: "九八式水上偵察機(夜偵)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 1, radius: 6, cost: 8, avoid: 0 },
@@ -1989,7 +1989,7 @@ const ENEMY_PATTERN = [
 	{ a: 20064, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 1, e: [445, 28, 25, 24, 24, 94], c: "146, 185, 166, 205" },
 	{ a: 20064, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 1, e: [445, 25, 25, 24, 24, 94], c: "146, 185, 166, 205" },
 	{ a: 20064, n: "空襲", d: "最終", l: 0, t: 5, f: 3, r: 1, e: [448, 28, 25, 29, 29, 95], c: "146, 185, 166, 205" },
- ];
+];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
