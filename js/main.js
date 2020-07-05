@@ -3291,7 +3291,7 @@ function initializeBoard() {
 				const fragment = document.createDocumentFragment();
 				querySnapshot.forEach(function (doc) {
 					const box = document.createElement('div');
-					box.className = 'general_box my-2 px-3 pt-3 pb-1 comment';
+					box.className = 'general_box my-3 px-3 pt-3 pb-1 comment';
 
 					const header = document.createElement('div');
 					header.className = 'd-flex mb-1';
