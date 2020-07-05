@@ -273,6 +273,9 @@ input[type="text"] { font-size: 12px; }
 .general_box_capture{
   border: 1px #ccc solid;
 }
+.dark-theme .general_box_capture{
+  border: 1px #666 solid;
+}
 .contents {
   border-radius: .25rem;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
@@ -876,6 +879,10 @@ input[type="text"] { font-size: 12px; }
 .btn_remove_plane:hover {
   opacity: .8;
   filter: drop-shadow(0px 0px 4px #787878);
+}
+.btn_remove_plane_capture { 
+  opacity: 0 !important;
+  transition: 0s !important;
 }
 .btn_remove_plane > i { font-size: 16px; }
 /* 改修関連 */
