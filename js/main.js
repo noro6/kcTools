@@ -7731,6 +7731,7 @@ function btn_capture_Clicked($this) {
 	// レンダリングできなさそうなやつを置換 or 非表示
 	const $no_captures = $targetContent.find('.no_capture:not(.d-none)');
 	$no_captures.addClass('d-none');
+	$targetContent.find('.btn_remove_plane').addClass('btn_remove_plane_capture');
 	$targetContent.find('.round_button').addClass('d-none').removeClass('d-table');
 	$targetContent.find('.d-lg-table').addClass('d-none_lg').removeClass('d-lg-table');
 	$targetContent.find('.custom-checkbox').addClass('d-none');
@@ -7766,6 +7767,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.custom-checkbox').removeClass('d-none');
 			$targetContent.find('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
 			$targetContent.find('.d-none_lg').addClass('d-none d-lg-table').removeClass('d-table d-none_lg');
+			$targetContent.find('.btn_remove_plane').removeClass('btn_remove_plane_capture');
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');
@@ -10773,7 +10775,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			// 第何航空隊か整合性取る
 			$('.lb_tab').each((i, e) => {
 				$(e).attr('id', 'lb_item' + (i + 1));
-				$(e).find('.baseNo').text('第' + (i + 1) + '基地航空隊');
+				$(e).find('.baseNo').html('<span>第' + (i + 1) + '基地航空隊</span>');
 				$(e).find('.simple_lb_progress').attr('id', 'simple_lb_bar_' + (i + 1));
 				$(e).find('.btn_show_contact_rate_lb')[0].dataset.lb = (i + 1);
 			});
