@@ -3317,8 +3317,9 @@ function initializeBoard() {
 					const dt = new Date();
 					dt.setDate(dt.getDate() - 7);
 					if (createdAt > dt) {
+						dt.setDate(dt.getDate() + 4);
 						const badge = document.createElement('div');
-						badge.className = 'font_size_11 align-self-center text-danger ml-1';
+						badge.className = `font_size_11 align-self-center ml-1 ${createdAt > dt ? 'text-danger' : 'text-success'}`;
 						badge.textContent = 'New';
 						header.appendChild(badge);
 					}
