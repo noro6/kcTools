@@ -994,6 +994,7 @@ function clearPlaneDiv($div) {
 	$div[0].dataset.planeid = '';
 	$div[0].dataset.type = '';
 	$div.find('.plane_img').attr('src', './img/type/undefined.png').attr('alt', '');
+	$div.find('.plane_img').parent().tooltip('dispose');
 	$div.find('.cur_move').removeClass('cur_move');
 	$div.find('.drag_handle').removeClass('drag_handle');
 	$div.find('.plane_name_span').text('機体を選択');
@@ -1087,11 +1088,37 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	$div.removeClass(getPlaneCss($div[0].dataset.type)).addClass(getPlaneCss(plane.type));
 	$div[0].dataset.planeid = plane.id;
 	$div[0].dataset.type = plane.type;
+	const typeSrc = `./img/type/type${plane.type}.png`;
 	$div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
-	$div.find('.plane_img').attr('src', `./img/type/type${plane.type}.png`).attr('alt', plane.type);
-	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
+	$div.find('.plane_img').attr('src', typeSrc).attr('alt', plane.type);
 	$div.find('.plane_name').addClass('drag_handle');
 	$div.find('.btn_remove_plane').removeClass('opacity0');
+	const $imgParent = $div.find('.plane_img').parent();
+	$imgParent.addClass('cur_move drag_handle');
+	
+	// ツールチップ
+	$imgParent.tooltip('dispose');
+	const tooltip =
+		`<div class="text-left">
+		<img src="${typeSrc}" alt="${plane.type}" class="img-size-25">
+		<span>${plane.name}</span>
+		<div class="mt-1 font_size_12 d-flex flex-wrap plane_status_box">
+			${plane.antiAir ? `<div class="col_half">対空: ${plane.antiAir}</div>` : ''}
+			${plane.torpedo ? `<div class="col_half">雷装: ${plane.torpedo}</div>` : ''}
+			${plane.bomber ? `<div class="col_half">爆装: ${plane.bomber}</div>` : ''}
+			${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
+			${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
+			${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
+			${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
+			${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
+		</div>
+		${plane.avoid ? `<div class="font_size_12">射撃回避: ${AVOID_TYPE.find(v => v.id === plane.avoid).name}</div>` : ''}
+	</div>`;
+	$imgParent[0].title = tooltip;
+	$imgParent[0].dataset.html = true;
+	$imgParent[0].dataset.toggle = 'tooltip';
+	$imgParent[0].dataset.placement = 'right';
+	$imgParent.tooltip();
 
 	// 改修の有効無効設定
 	const $remodelInput = $div.find('.remodel_select');
@@ -1414,7 +1441,6 @@ function createPlaneTable(planes) {
 			$aaDiv.dataset.toggle = 'tooltip';
 			$aaDiv.title = '出撃時:' + nmAA + ' , 防空時:' + defAA;
 		}
-
 		// 対空の表示トグル
 		switch (sortKey) {
 			case 'battle_anti_air':

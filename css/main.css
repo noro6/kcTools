@@ -207,6 +207,10 @@ input[type="text"] { font-size: 12px; }
 }
 .tran0 { transition: 0s; }
 
+.col_half{
+  text-align: left;
+  width: calc(100% / 2);
+}
 /* -----------------------------------
   カスタムコントロール
 ----------------------------------- */
@@ -977,6 +981,10 @@ input[type="text"] { font-size: 12px; }
   background-color: rgba(0, 153, 255, 0.4) !important;
   border: 2px #39b0ff solid !important;
   transition: 0.2s;
+}
+
+.plane_status_box {
+  min-width: 120px;
 }
 
 
