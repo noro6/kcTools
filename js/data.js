@@ -109,7 +109,7 @@ const PLANE_DATA = [
 	{ id: 61, type: 4, name: "二式艦上偵察機", abbr: "", antiAir: 1, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, accuracy: 3, radius: 5, cost: 6, avoid: 0 },
 	{ id: 151, type: 4, name: "試製景雲(艦偵型)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 11, canRemodel: 1, accuracy: 2, radius: 8, cost: 12, avoid: 0 },
 	{ id: 212, type: 4, name: "彩雲(東カロリン空)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 0, accuracy: 2, radius: 8, cost: 9, avoid: 0 },
-	{ id: 273, type: 4, name: "彩雲(偵四)", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 1, accuracy: 0, radius: 7, cost: 9, avoid: 0 },
+	{ id: 273, type: 4, name: "彩雲(偵四)", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 1, accuracy: 2, radius: 7, cost: 9, avoid: 0 },
 	{ id: 25, type: 5, name: "零式水上偵察機", abbr: "", antiAir: 1, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 1, accuracy: 1, radius: 7, cost: 5, avoid: 0 },
 	{ id: 59, type: 5, name: "零式水上観測機", abbr: "", antiAir: 2, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 6, canRemodel: 1, accuracy: 2, radius: 3, cost: 6, avoid: 0 },
 	{ id: 102, type: 5, name: "九八式水上偵察機(夜偵)", abbr: "", antiAir: 0, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 1, radius: 6, cost: 8, avoid: 0 },
@@ -177,7 +177,7 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190D-9", abbr: "", antiAir: 12, torpedo: 0, bomber: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", antiAir: 3, torpedo: 0, bomber: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 0, accuracy: 3, radius: 9, cost: 7, avoid: 0 },
-];
+ ];
 const SHIP_TYPE = [
 	{ id: 1, name: "正規空母" },
 	{ id: 2, name: "装甲空母" },
