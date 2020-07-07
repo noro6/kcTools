@@ -1414,7 +1414,6 @@ function createPlaneTable(planes) {
 			$aaDiv.dataset.toggle = 'tooltip';
 			$aaDiv.title = '出撃時:' + nmAA + ' , 防空時:' + defAA;
 		}
-
 		// 対空の表示トグル
 		switch (sortKey) {
 			case 'battle_anti_air':
@@ -4249,20 +4248,8 @@ function createLBPlaneObject(node) {
 		if (lbPlane.slot) {
 			// 触接開始因数
 			lbPlane.contact = RECONNAISSANCES.includes(lbPlane.type) ? Math.floor(lbPlane.scout * Math.sqrt(lbPlane.slot)) : 0;
-			// 触接選択率　改式。実際はこっち [3, 2, 1].map(v => plane.scout / (20 - (2 * v)));
-			if ([2, -2, 4, 5, 8, 104].includes(plane.type)) {
-				let scout = lbPlane.scout;
-				const remodel = lbPlane.remodel;
-				if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
-				if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
-				if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
-				if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
-				if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
-				if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
-				if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
-				if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
-				lbPlane.selectRate = [scout / 14, scout / 16, scout / 18];
-			}
+			// 触接選択率
+			lbPlane.selectRate = getContactSelectRate(lbPlane);
 		}
 
 		// 機体使用数テーブル更新
@@ -4394,7 +4381,6 @@ function getAirPower_lb(lb_plane) {
 	sumPower = slot > 0 ? Math.floor(sumPower) : 0;
 	return sumPower;
 }
-
 
 /**
  * 航空隊の制空補正値を返却
@@ -4598,6 +4584,28 @@ function getBonusAp(plane) {
 			break;
 	}
 	return sumPower;
+}
+
+/**
+ * 機体オブジェクトから触接選択率を返却 [0:確保時, 1:優勢時, 2:劣勢時]
+ * @param {*} plane オブジェクト
+ */
+function getContactSelectRate(plane) {
+	// 触接選択率　改式。実際はこっち [3, 2, 1].map(v => plane.scout / (20 - (2 * v)));
+	if ([2, -2, 4, 5, 8, 104].includes(plane.type)) {
+		let scout = plane.scout;
+		const remodel = plane.remodel;
+		if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
+		if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
+		if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
+		if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
+		if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
+		if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
+		if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
+		if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
+		return [scout / 14, scout / 16, scout / 18];
+	}
+	return [];
 }
 
 /**
@@ -4896,6 +4904,7 @@ function createFleetPlaneObject(node, shipNo, index) {
 		origAp: 0,
 		avoid: 0,
 		contact: 0,
+		scout: 0,
 		accuracy: 0,
 		selectRate: []
 	};
@@ -4911,25 +4920,14 @@ function createFleetPlaneObject(node, shipNo, index) {
 		shipPlane.ap = updateAp(shipPlane);
 		shipPlane.origAp = shipPlane.ap;
 		shipPlane.avoid = plane.avoid;
+		shipPlane.scout = plane.scout;
 		shipPlane.accuracy = plane.accuracy;
 
 		if (shipPlane.slot) {
 			// 触接開始因数 canBattleが奇しくも偵察機判定になっているためこの条件で。canBattleの条件が変わった場合はここも要改修
 			shipPlane.contact = !shipPlane.canBattle ? Math.floor(plane.scout * Math.sqrt(shipPlane.slot)) : 0;
-			// 触接選択率　改式。実際はこっち [3, 2, 1].map(v => plane.scout / (20 - (2 * v)));
-			if ([2, -2, 4, 5, 8].includes(plane.type)) {
-				let scout = plane.scout;
-				const remodel = shipPlane.remodel;
-				if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
-				if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
-				if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
-				if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
-				if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
-				if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
-				if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
-				if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
-				shipPlane.selectRate = [scout / 14, scout / 16, scout / 18];
-			}
+			// 触接選択率
+			shipPlane.selectRate = getContactSelectRate(shipPlane);
 		}
 
 		// 機体使用数テーブル更新
@@ -8181,6 +8179,131 @@ function slot_select_parent_Close($this) {
 }
 
 /**
+ * 乗せられた位置に機体ツールチップ展開
+ * @param {JqueryDomObject} $this
+ * @param {boolean} isLandBase 基地かどうか 基本はfalse
+ */
+function showPlaneToolTip($this, isLandBase = false) {
+	const $parent = $this.closest(isLandBase ? '.lb_plane' : '.ship_plane');
+	if (!$parent.length || !$parent[0].dataset.planeid || $parent.hasClass('ui-draggable-dragging')) return;
+
+	// ツールチップ適用先
+	const $thisParent = $this.parent();
+	$thisParent.tooltip('dispose');
+
+	// 機体情報オブジェクト取得
+	const plane = getToolTipPlaneObject($parent[0]);
+
+	if (!plane) return;
+
+	let startRate = [];
+	if (plane.startRate.length) startRate = plane.startRate.map(v => (100 * v).toFixed(0) + '%');
+	let selectRate = [];
+	if (plane.selectRate.length) selectRate = plane.selectRate.map(v => (100 * v).toFixed(0) + '%');
+	let avoid = null
+	if (plane.avoid > 0) avoid = AVOID_TYPE.find(v => v.id === plane.avoid);
+
+	const text =
+		`<div class="text-left">
+			<div>
+				<img src="./img/type/type${plane.type}.png" alt="${plane.type}" class="img-size-25">
+				<span>${plane.name}</span>
+				${plane.remodel ? `<span class="text_remodel">★${plane.remodel}</span>` : ''}
+			</div>
+			<div class="my-1">制空値: ${plane.ap}</div>
+			<div class="font_size_12 d-flex flex-wrap plane_status_box">
+				${plane.antiAir ?
+			`<div class="col_half">
+						<span>対空: ${plane.antiAir}</span>
+						${plane.bonusAA ? `<span class="text_remodel">(+${plane.bonusAA.toFixed(1)})</span>` : ''}
+					</div>` : ''}
+				${plane.torpedo ? `<div class="col_half">雷装: ${plane.torpedo}</div>` : ''}
+				${plane.bomber ? `<div class="col_half">爆装: ${plane.bomber}</div>` : ''}
+				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
+				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
+				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
+				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
+				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
+			</div>
+			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} ( 加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)} )</div>` : ''}
+			${startRate.length ? `<div class="font_size_12">触接開始率(確保時): ${startRate[0]}</div>` : ''}
+			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
+		</div>`;
+
+	$thisParent[0].title = text;
+	$thisParent[0].dataset.html = true;
+	$thisParent[0].dataset.toggle = 'tooltip';
+	$thisParent[0].dataset.placement = 'right';
+	$thisParent[0].dataset.trigger = 'manual';
+	$thisParent.tooltip('show');
+}
+
+/**
+ * ツールチップ解除
+ * @param {JqueryDomObject} $this
+ */
+function hidePlaneToolTip($this) {
+	const $thisParent = $this.parent();
+	$thisParent.tooltip('hide');
+	$thisParent[0].removeAttribute('title');
+	delete $thisParent[0].dataset.originalTitle;
+	delete $thisParent[0].dataset.html;
+	delete $thisParent[0].dataset.toggle;
+	delete $thisParent[0].dataset.placement;
+	delete $thisParent[0].dataset.trigger;
+	$thisParent.tooltip('dispose');
+}
+
+/**
+ * ツールチップ用機体情報を取得
+ * @param {HTMLElement} node xx_plane (lbかship)
+ */
+function getToolTipPlaneObject(node) {
+	const id = castInt(node.dataset.planeid);
+	// undefined来る可能性あり
+	const plane = PLANE_DATA.find(v => v.id === id);
+	if (!plane) return null;
+
+	const obj = {
+		id: plane.id,
+		name: plane.name,
+		abbr: plane.abbr,
+		type: plane.type,
+		antiAir: plane.antiAir,
+		bonusAA: 0,
+		torpedo: plane.torpedo,
+		bomber: plane.bomber,
+		antiBomber: plane.antiBomber,
+		interception: plane.interception,
+		scout: plane.scout,
+		ap: 0, // 保留
+		radius: plane.radius,
+		avoid: plane.avoid,
+		accuracy: plane.accuracy,
+		startRate: [],
+		selectRate: [],
+		canBattle: !RECONNAISSANCES.includes(plane.type),
+		slot: castInt(node.getElementsByClassName('slot')[0].textContent),
+		remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
+		level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
+	};
+	obj.bonusAA = getBonusAA(obj, obj.antiAir) - obj.antiAir;
+
+	if (obj.slot) {
+		// 触接開始率
+		// const a = RECONNAISSANCES.includes(obj.type) ? Math.floor(obj.scout * Math.sqrt(obj.slot)) : 0;
+		// obj.startRate = [Math.min(a / 25, 1), Math.min(a / 40, 1), Math.min(a / 55, 1)];
+		// 触接選択率
+		obj.selectRate = getContactSelectRate(obj);
+	}
+
+	if (node.classList.contains('lb_plane')) obj.ap = getAirPower_lb(obj);
+	else if (obj.canBattle) obj.ap = Math.floor(getBonusAA(obj, obj.antiAir) * Math.sqrt(obj.slot) + getBonusAp(obj));
+
+	return obj;
+}
+
+/**
  * 触接詳細制空ラジオ変更
  */
 function contact_detail_redraw() {
@@ -10720,6 +10843,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#draggable_plane_box').on('click', '#btn_hide_plane_box', function () { $('#draggable_plane_box').addClass('d-none'); });
 	$('#draggable_plane_box').on('change', '#draggable_plane_type_select', createDraggablePlaneTable);
 	$('#draggable_plane_box').on('change', '#draggable_plane_sort_select', createDraggablePlaneTable);
+	$('#landBase_content').on({
+		mouseenter: function () { showPlaneToolTip($(this), true); },
+		mouseleave: function () { hidePlaneToolTip($(this)); }
+	}, '.plane_img');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showPlaneToolTip($(this)); },
+		mouseleave: function () { hidePlaneToolTip($(this)); }
+	}, '.plane_img');
 	$('#result_content').on({
 		mouseenter: function () { shoot_down_table_tbody_MouseEnter($(this)); },
 		mouseleave: function () { shoot_down_table_tbody_MouseLeave($(this)); }
