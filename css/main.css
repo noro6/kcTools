@@ -160,6 +160,7 @@ input[type="text"] { font-size: 12px; }
 .text_orange { color: rgb(255, 120, 0); }
 .text_deep_orange { color: rgb(255, 80, 0); }
 .text_red { color: rgb(255, 0, 0); }
+.text_remodel { color: rgb(0, 200, 200); }
 .w_40 { width: 40% }
 .w_30 { width: 30% }
 .w_25 { width: 25% }
@@ -207,6 +208,10 @@ input[type="text"] { font-size: 12px; }
 }
 .tran0 { transition: 0s; }
 
+.col_half{
+  text-align: left;
+  width: calc(100% / 2);
+}
 /* -----------------------------------
   カスタムコントロール
 ----------------------------------- */
@@ -978,6 +983,8 @@ input[type="text"] { font-size: 12px; }
   border: 2px #39b0ff solid !important;
   transition: 0.2s;
 }
+
+.plane_status_box { min-width: 120px; }
 
 
 /* ------------------------------
