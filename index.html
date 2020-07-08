@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 	<link rel="stylesheet" href="./css/main.min.css">
 	<script async src="./js/html2canvas.min.js"></script>
 	<script async src="./js/changes.js"></script>
@@ -177,7 +178,7 @@
 										<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lb_item3">第3基地航空隊</a>
 										</li>
 									</ul>
-									<div class="d-flex w-100 justify-content-center flex-wrap tab-content" id="lb_tab_parent">
+									<div class="d-flex w-100 justify-content-center tab-content" id="lb_tab_parent">
 										<div class="lb_tab general_box mx-1 px-2 px-lg-1 pb-2 pb-lg-1 pt-1 flex-grow-1" id="lb_item1">
 											<div class="d-flex mr-1 mt-1">
 												<div class="h6 mb-0 ml-1 baseNo align-self-center cur_move sortable_handle">
@@ -189,12 +190,10 @@
 													<option value="-1" selected>待機</option>
 													<option value="0">防空</option>
 												</select>
-												<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-													title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+												<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 													<i class="fas fa-archive"></i>
 												</div>
-												<div class="ml-2_5 btn_reset btn_reset_landBase btn_icon no_capture" data-toggle="tooltip"
-													title="リセット" data-delay='{"show": 300, "hide": 0}'>
+												<div class="ml-2_5 btn_reset btn_reset_landBase btn_icon no_capture">
 													<i class="fas fa-trash-o"></i>
 												</div>
 											</div>
@@ -385,12 +384,10 @@
 													<option value="-1" selected>待機</option>
 													<option value="0">防空</option>
 												</select>
-												<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-													title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+												<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 													<i class="fas fa-archive"></i>
 												</div>
-												<div class="ml-2_5 btn_reset btn_reset_landBase btn_icon no_capture" data-toggle="tooltip"
-													title="リセット" data-delay='{"show": 300, "hide": 0}'>
+												<div class="ml-2_5 btn_reset btn_reset_landBase btn_icon no_capture">
 													<i class="fas fa-trash-o"></i>
 												</div>
 											</div>
@@ -581,12 +578,10 @@
 													<option value="-1" selected>待機</option>
 													<option value="0">防空</option>
 												</select>
-												<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-													title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+												<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 													<i class="fas fa-archive"></i>
 												</div>
-												<div class="ml-2_5 btn_reset btn_reset_landBase btn_icon no_capture" data-toggle="tooltip"
-													title="リセット" data-delay='{"show": 300, "hide": 0}'>
+												<div class="ml-2_5 btn_reset btn_reset_landBase btn_icon no_capture">
 													<i class="fas fa-trash-o"></i>
 												</div>
 											</div>
@@ -855,8 +850,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -866,16 +860,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_1">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_1">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -890,12 +878,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -924,12 +911,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -958,12 +944,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -992,12 +977,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1026,12 +1010,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1066,8 +1049,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -1077,16 +1059,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_2">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_2">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -1101,12 +1077,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1135,12 +1110,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1169,12 +1143,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1203,12 +1176,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1237,12 +1209,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1277,8 +1248,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -1288,16 +1258,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_3">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_3">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -1312,12 +1276,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1346,12 +1309,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1380,12 +1342,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1414,12 +1375,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1448,12 +1408,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1488,8 +1447,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -1499,16 +1457,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_4">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_4">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -1523,12 +1475,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1557,12 +1508,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1591,12 +1541,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1625,12 +1574,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1659,12 +1607,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1699,8 +1646,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -1710,16 +1656,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_5">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_5">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -1734,12 +1674,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1768,12 +1707,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1802,12 +1740,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1836,12 +1773,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1870,12 +1806,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1910,8 +1845,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -1921,16 +1855,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_6">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_6">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -1945,12 +1873,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -1979,12 +1906,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2013,12 +1939,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2047,12 +1972,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2081,12 +2005,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2146,8 +2069,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -2157,16 +2079,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_7">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_7">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -2181,12 +2097,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2215,12 +2130,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2249,12 +2163,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2283,12 +2196,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2317,12 +2229,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2357,8 +2268,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -2368,16 +2278,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_8">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_8">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -2392,12 +2296,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2426,12 +2329,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2460,12 +2362,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2494,12 +2395,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2528,12 +2428,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2568,8 +2467,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -2579,16 +2477,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_9">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_9">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -2603,12 +2495,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2637,12 +2528,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2671,12 +2561,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2705,12 +2594,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2739,12 +2627,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2779,8 +2666,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -2790,16 +2676,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_10">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_10">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -2814,12 +2694,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2848,12 +2727,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2882,12 +2760,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2916,12 +2793,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2950,12 +2826,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -2990,8 +2865,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -3001,16 +2875,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_11">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_11">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -3025,12 +2893,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3059,12 +2926,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3093,12 +2959,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3127,12 +2992,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3161,12 +3025,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3201,8 +3064,7 @@
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
-														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate" data-toggle="tooltip"
-															data-placement="right" data-html="true" title="">
+														<div class="ml-1 ship_name_span align-self-center px-1 text-truncate">
 															艦娘を選択</div>
 														<div class="ml-1 align-self-center ship_sumAP font_size_12">
 															<span class="font_color_half">制空: </span>
@@ -3212,16 +3074,10 @@
 															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_12">
 															<label class="custom-control-label ship_disabled_label" for="disabled_ship_12">無効</label>
 														</div>
-														<div class="ml-1 cur_help pt-1_5 font_color_half font_size_12 no_capture"
-															data-toggle="tooltip" title="艦娘、装備は維持したまま計算対象から省きます。">
-															<i class="far fa-question-circle-o"></i>
-														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture" data-toggle="tooltip"
-															title="プリセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
-														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture" data-toggle="tooltip"
-															title="艦娘リセット" data-delay='{"show": 300, "hide": 0}'>
+														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
 															<i class="fas fa-trash-o"></i>
 														</div>
 													</div>
@@ -3236,12 +3092,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3270,12 +3125,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3304,12 +3158,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3338,12 +3191,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">
@@ -3372,12 +3224,11 @@
 																		<span class="slot" data-toggle="dropdown">0</span>
 																		<div class="dropdown-menu px-2"></div>
 																	</div>
-																	<div class="ml-1 align-self-center plane_unlock no_capture" data-toggle="tooltip"
-																		title="ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。">
+																	<div class="ml-1 align-self-center plane_unlock no_capture">
 																		<i class="fas fa-unlock"></i>
 																	</div>
-																	<div class="ml-1 align-self-center plane_lock d-none no_capture" data-toggle="tooltip"
-																		title="ロック中です。おまかせ配備使用時、このスロットは変更されません。"><i class="fas fa-lock"></i>
+																	<div class="ml-1 align-self-center plane_lock d-none no_capture">
+																		<i class="fas fa-lock"></i>
 																	</div>
 																	<div class="ml-1 align-self-center">
 																		<img src="./img/type/undefined.png" class="plane_img" alt="" width="30" height="30">

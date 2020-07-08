@@ -644,9 +644,10 @@ function initialize(callback) {
 	}
 
 	// 機体カテゴリ初期化
-	setPlaneType(document.getElementById('plane_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id));
-	setPlaneType(document.getElementById('stock_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id));
-	setPlaneType(document.getElementById('draggable_plane_type_select'), PLANE_TYPE.filter(v => v.id > 0).map(v => v.id), true);
+	const planeTypes = PLANE_TYPE.filter(v => v.id > 0).map(v => v.id);
+	setPlaneType(document.getElementById('plane_type_select'), planeTypes);
+	setPlaneType(document.getElementById('stock_type_select'), planeTypes);
+	setPlaneType(document.getElementById('draggable_plane_type_select'), planeTypes, true);
 
 	// デフォ機体群定義
 	let tempList = document.getElementById('plane_type_select').getElementsByTagName('option');
@@ -5801,7 +5802,7 @@ function rateCalculate(objectData) {
 
 	// 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
 	for (const info of battleInfo) {
-		info.enemies = info.enemies.filter(v => v.slots.length > 0);
+		info.enemies = info.enemies.filter(v => v.id === -1 || v.slots.length > 0);
 	}
 
 	mainBattle = mainBattle < battleData.length ? mainBattle : battleData.length - 1;
@@ -7570,7 +7571,7 @@ function version_detail_Clicked() {
 function btn_content_trade_Clicked($this) {
 	$('body,html').animate({ scrollTop: 0 }, 200, 'swing');
 	$('.btn_commit_trade').addClass('d-table').removeClass('d-none');
-	$('.round_button:not(.btn_commit_trade)').addClass('d-none').removeClass('d-table');
+	$('.round_button:not(.btn_commit_trade)').addClass('d-none').removeClass('d-table d-lg-table');
 	// 開始時にいったん全部最小化、handle追加
 	$('#main_contents').find('.collapse_content').each(function () {
 		$(this).parent().addClass('trade_enabled');
@@ -7619,6 +7620,7 @@ function commit_content_order() {
 	$('.trade_enabled').removeClass('trade_enabled');
 	$('.btn_commit_trade').removeClass('d-table').addClass('d-none');
 	$('.round_button:not(.btn_commit_trade)').removeClass('d-none').addClass('d-table');
+	$('.btn_show_plane_box').addClass('d-lg-table d-none').removeClass('d-table');
 }
 
 /**
@@ -8187,10 +8189,6 @@ function showPlaneToolTip($this, isLandBase = false) {
 	const $parent = $this.closest(isLandBase ? '.lb_plane' : '.ship_plane');
 	if (!$parent.length || !$parent[0].dataset.planeid || $parent.hasClass('ui-draggable-dragging')) return;
 
-	// ツールチップ適用先
-	const $thisParent = $this.parent();
-	$thisParent.tooltip('dispose');
-
 	// 機体情報オブジェクト取得
 	const plane = getToolTipPlaneObject($parent[0]);
 
@@ -8230,28 +8228,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
 		</div>`;
 
-	$thisParent[0].title = text;
-	$thisParent[0].dataset.html = true;
-	$thisParent[0].dataset.toggle = 'tooltip';
-	$thisParent[0].dataset.placement = 'right';
-	$thisParent[0].dataset.trigger = 'manual';
-	$thisParent.tooltip('show');
-}
-
-/**
- * ツールチップ解除
- * @param {JqueryDomObject} $this
- */
-function hidePlaneToolTip($this) {
-	const $thisParent = $this.parent();
-	$thisParent.tooltip('hide');
-	$thisParent[0].removeAttribute('title');
-	delete $thisParent[0].dataset.originalTitle;
-	delete $thisParent[0].dataset.html;
-	delete $thisParent[0].dataset.toggle;
-	delete $thisParent[0].dataset.placement;
-	delete $thisParent[0].dataset.trigger;
-	$thisParent.tooltip('dispose');
+	showTooltip($this[0], text, 'right');
 }
 
 /**
@@ -8301,6 +8278,37 @@ function getToolTipPlaneObject(node) {
 	else if (obj.canBattle) obj.ap = Math.floor(getBonusAA(obj, obj.antiAir) * Math.sqrt(obj.slot) + getBonusAp(obj));
 
 	return obj;
+}
+
+/**
+ * 指定ノードにツールチップを適用し、表示
+ * @param {HTMLElement} node 指定DOM
+ * @param {string} text 表示内容
+ * @param {string} place 表示方向 top|right|left|buttom
+ */
+function showTooltip(node, text, place = '') {
+	$(node).tooltip('dispose');
+	node.title = text;
+	node.dataset.toggle = 'tooltip';
+	node.dataset.html = true;
+	node.dataset.trigger = 'manual';
+	if (place) node.dataset.placement = place;
+	$(node).tooltip('show');
+}
+
+/**
+ * ツールチップ破棄
+ * @param {HTMLElement} node 指定DOM
+ */
+function hideTooltip(node) {
+	$(node).tooltip('hide');
+	node.removeAttribute('title');
+	delete node.dataset.originalTitle;
+	delete node.dataset.html;
+	delete node.dataset.toggle;
+	delete node.dataset.placement;
+	delete node.dataset.trigger;
+	$(node).tooltip('dispose');
 }
 
 /**
@@ -10844,13 +10852,37 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#draggable_plane_box').on('change', '#draggable_plane_type_select', createDraggablePlaneTable);
 	$('#draggable_plane_box').on('change', '#draggable_plane_sort_select', createDraggablePlaneTable);
 	$('#landBase_content').on({
-		mouseenter: function () { showPlaneToolTip($(this), true); },
-		mouseleave: function () { hidePlaneToolTip($(this)); }
+		mouseenter: function () { showPlaneToolTip($(this).parent(), true); },
+		mouseleave: function () { hideTooltip($(this).parent()[0]); }
 	}, '.plane_img');
 	$('#friendFleet_content').on({
-		mouseenter: function () { showPlaneToolTip($(this)); },
-		mouseleave: function () { hidePlaneToolTip($(this)); }
+		mouseenter: function () { showPlaneToolTip($(this).parent()); },
+		mouseleave: function () { hideTooltip($(this).parent()[0]); }
 	}, '.plane_img');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "ロックすると、おまかせ配備使用時にこのスロットの上書きを保護できます。"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.plane_unlock');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "ロック中です。おまかせ配備使用時、このスロットは変更されません。"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.plane_lock');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "艦娘、装備は維持したまま計算対象から省きます。"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.ship_disabled_label');
+	$('#main').on({
+		mouseenter: function () { showTooltip($(this)[0], "機体プリセット"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.btn_plane_preset');
+	$('#landBase_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "装備リセット"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.btn_reset_landBase');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "艦娘 & 装備リセット"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.btn_remove_ship');
 	$('#result_content').on({
 		mouseenter: function () { shoot_down_table_tbody_MouseEnter($(this)); },
 		mouseleave: function () { shoot_down_table_tbody_MouseLeave($(this)); }
