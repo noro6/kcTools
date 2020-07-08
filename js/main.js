@@ -8210,15 +8210,18 @@ function showPlaneToolTip($this, isLandBase = false) {
 			</div>
 			<div class="my-1">制空値: ${plane.ap}</div>
 			<div class="font_size_12 d-flex flex-wrap plane_status_box">
-				${plane.antiAir ?
-			`<div class="col_half">
-						<span>対空: ${plane.antiAir}</span>
-						${plane.bonusAA ? `<span class="text_remodel">(+${plane.bonusAA.toFixed(1)})</span>` : ''}
-					</div>` : ''}
+				${plane.antiAir ? `<div class="col_half">
+					<span>対空: ${plane.antiAir}</span>
+					${plane.bonusAA ? `<span class="text_remodel">(+${plane.bonusAA.toFixed(1)})</span>` : ''}
+				</div>` : ''}
+				${plane.fire ? `<div class="col_half">火力: ${plane.fire}</div>` : ''}
 				${plane.torpedo ? `<div class="col_half">雷装: ${plane.torpedo}</div>` : ''}
 				${plane.bomber ? `<div class="col_half">爆装: ${plane.bomber}</div>` : ''}
+				${plane.asw ? `<div class="col_half">対潜: ${plane.asw}</div>` : ''}
+				${plane.armor ? `<div class="col_half">装甲: ${plane.armor}</div>` : ''}
 				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
 				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
+				${plane.avoid2 ? `<div class="col_half">回避: ${plane.avoid2}</div>` : ''}
 				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
 				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
@@ -8257,6 +8260,10 @@ function getToolTipPlaneObject(node) {
 		radius: plane.radius,
 		avoid: plane.avoid,
 		accuracy: plane.accuracy,
+		fire: plane.fire,
+		avoid2: plane.avoid2,
+		armor: plane.armor,
+		asw: plane.asw,
 		startRate: [],
 		selectRate: [],
 		canBattle: !RECONNAISSANCES.includes(plane.type),
