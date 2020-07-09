@@ -8235,6 +8235,47 @@ function showPlaneToolTip($this, isLandBase = false) {
 }
 
 /**
+ * 機体一覧用ツールチップ展開
+ * @param {JqueryDomObject} $this
+ */
+function showPlaneBasicToolTip($this) {
+	// 機体情報オブジェクト取得
+	const plane = PLANE_DATA.find(v => v.id === castInt($this[0].dataset.planeid));
+	if (!plane) return;
+
+	const nmAA = plane.antiAir + 1.5 * plane.interception;
+	const defAA = plane.antiAir + plane.interception + 2.0 * plane.antiBomber;
+	const avoid = plane.avoid ? AVOID_TYPE.find(v => v.id === plane.avoid) : null
+
+	const text =
+		`<div class="text-left">
+			<div>
+				<img src="./img/type/type${plane.type}.png" alt="${plane.type}" class="img-size-25">
+				<span>${plane.name}</span>
+			</div>
+			<div class="font_size_12 d-flex flex-wrap plane_status_box">
+				${nmAA != plane.antiAir ? `<div class="col_half"><span>出撃対空: ${nmAA}</span></div>` : ''}
+				${defAA != plane.antiAir ? `<div class="col_half"><span>防空対空: ${defAA}</span></div>` : ''}
+				${plane.antiAir ? `<div class="col_half"><span>対空: ${plane.antiAir}</span></div>` : ''}
+				${plane.fire ? `<div class="col_half">火力: ${plane.fire}</div>` : ''}
+				${plane.torpedo ? `<div class="col_half">雷装: ${plane.torpedo}</div>` : ''}
+				${plane.bomber ? `<div class="col_half">爆装: ${plane.bomber}</div>` : ''}
+				${plane.asw ? `<div class="col_half">対潜: ${plane.asw}</div>` : ''}
+				${plane.armor ? `<div class="col_half">装甲: ${plane.armor}</div>` : ''}
+				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
+				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
+				${plane.avoid2 ? `<div class="col_half">回避: ${plane.avoid2}</div>` : ''}
+				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
+				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
+				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
+			</div>
+			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} ( 加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)} )</div>` : ''}
+			</div>`;
+
+	showTooltip($this[0], text, 'bottom', 'window');
+}
+
+/**
  * ツールチップ用機体情報を取得
  * @param {HTMLElement} node xx_plane (lbかship)
  */
@@ -8291,15 +8332,17 @@ function getToolTipPlaneObject(node) {
  * 指定ノードにツールチップを適用し、表示
  * @param {HTMLElement} node 指定DOM
  * @param {string} text 表示内容
- * @param {string} place 表示方向 top|right|left|buttom
+ * @param {string} place 表示方向 top | right | left | buttom
+ * @param {string} boundary 回り込み window | viewport
  */
-function showTooltip(node, text, place = '') {
+function showTooltip(node, text, place = '', boundary = '') {
 	$(node).tooltip('dispose');
 	node.title = text;
 	node.dataset.toggle = 'tooltip';
 	node.dataset.html = true;
 	node.dataset.trigger = 'manual';
 	if (place) node.dataset.placement = place;
+	if (boundary) node.dataset.boundary = boundary;
 	$(node).tooltip('show');
 }
 
@@ -8314,6 +8357,7 @@ function hideTooltip(node) {
 	delete node.dataset.html;
 	delete node.dataset.toggle;
 	delete node.dataset.placement;
+	delete node.dataset.boundary;
 	delete node.dataset.trigger;
 	$(node).tooltip('dispose');
 }
@@ -10858,6 +10902,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#draggable_plane_box').on('click', '#btn_hide_plane_box', function () { $('#draggable_plane_box').addClass('d-none'); });
 	$('#draggable_plane_box').on('change', '#draggable_plane_type_select', createDraggablePlaneTable);
 	$('#draggable_plane_box').on('change', '#draggable_plane_sort_select', createDraggablePlaneTable);
+	$('#modal_plane_select').on({
+		mouseenter: function () {
+			const $this = $(this);
+			timer = setTimeout(function () { showPlaneBasicToolTip($this, true); }, 500);
+		},
+		mouseleave: function () {
+			if (timer) clearTimeout(timer);
+			hideTooltip($(this)[0]);
+		}
+	}, '.plane_tr');
 	$('#landBase_content').on({
 		mouseenter: function () { showPlaneToolTip($(this).parent(), true); },
 		mouseleave: function () { hideTooltip($(this).parent()[0]); }
@@ -10909,9 +10963,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	// 画面サイズ変更
 	$(window).resize(function () {
-		if (timer !== false) {
-			clearTimeout(timer);
-		}
+		if (timer) clearTimeout(timer);
 		timer = setTimeout(function () {
 			if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
 				$('.lb_tab').addClass('tab-pane fade');
