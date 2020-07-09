@@ -986,7 +986,10 @@ input[type="text"] { font-size: 12px; }
   transition: 0.2s;
 }
 
-.plane_status_box { min-width: 120px; }
+.plane_status_box {
+  min-width: 120px;
+  max-width: 180px;
+}
 
 
 /* ------------------------------
