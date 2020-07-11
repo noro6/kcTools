@@ -704,8 +704,8 @@ const ENEMY_DATA = [
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [], eqp: [], orig: 0, aaw: 26, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
- ];
- const ENEMY_PLANE_DATA = [
+];
+const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -744,7 +744,7 @@ const ENEMY_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
- ];
+];
 const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
@@ -2172,11 +2172,11 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "O", d: "", l: 3, t: 1, f: 2, r: 5, e: [27, 27, 92, 124, 78, 78], c: "" },
 	{ a: 20067, n: "Q", d: "", l: 3, t: 3, f: 3, r: 5, e: [464, 279, 279, 198, 456, 362], c: "" },
 	{ a: 20067, n: "X", d: "前哨", l: 3, t: 2, f: 11, r: 5, e: [181, 422, 422, 422, 167, 26, 55, 92, 124, 124, 26, 26], c: "" },
-	{ a: 20067, n: "X", d: "最終", l: 3, t: 2, f: 11, r: 5, e: [181, 426, 425, 425, 167, 26, 55, 92, 124, 124, 26, 26], c: "" },
+	{ a: 20067, n: "X", d: "最終", l: 3, t: 2, f: 11, r: 5, e: [181, 426, 425, 425, 167, 26, 405, 362, 451, 451, 451, 26], c: "" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 152, 151], c: "" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 151, 151, 151], c: "" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 151], c: "" },
- ];
+];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
