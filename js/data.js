@@ -142,7 +142,7 @@ const PLANE_DATA = [
 	{ id: 215, type: 7, name: "Ro.44水上戦闘機bis", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 1, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 2, avoid2: 2, radius: 3, cost: 4, avoid: 0 },
 	{ id: 216, type: 7, name: "二式水戦改(熟練)", abbr: "", fire: 0, antiAir: 5, torpedo: 0, bomber: 0, armor: 0, asw: 1, antiBomber: 0, interception: 0, scout: 1, canRemodel: 1, accuracy: 1, avoid2: 2, radius: 4, cost: 5, avoid: 0 },
 	{ id: 217, type: 7, name: "強風改", abbr: "", fire: 0, antiAir: 5, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 3, radius: 3, cost: 6, avoid: 0 },
-	{ id: 138, type: 8, name: "二式大艇", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 1, antiBomber: 0, interception: 0, scout: 12, canRemodel: 0, accuracy: 1, avoid2: 0, radius: 20, cost: 25, avoid: 0 },
+	{ id: 138, type: 8, name: "二式大艇", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 1, antiBomber: 0, interception: 0, scout: 12, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 20, cost: 25, avoid: 0 },
 	{ id: 178, type: 8, name: "PBY-5A Catalina", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 2, antiBomber: 0, interception: 0, scout: 9, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 10, cost: 13, avoid: 0 },
 	{ id: 199, type: 9, name: "噴式景雲改", abbr: "", fire: 0, antiAir: 6, torpedo: 0, bomber: 15, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 3, canRemodel: 0, accuracy: 1, avoid2: 0, radius: 3, cost: 14, avoid: 3 },
 	{ id: 200, type: 9, name: "橘花改", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 11, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 1, radius: 2, cost: 13, avoid: 4 },
@@ -704,8 +704,8 @@ const ENEMY_DATA = [
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [], eqp: [], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
- ];
- const ENEMY_PLANE_DATA = [
+];
+const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -744,7 +744,7 @@ const ENEMY_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
- ];
+];
 const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
@@ -2192,14 +2192,16 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "W1", d: "", l: 3, t: 3, f: 3, r: 8, e: [473, 279, 279, 198, 456, 456], c: "350, 156, 370, 176" },
 	{ a: 20067, n: "W3", d: "", l: 3, t: 1, f: 2, r: 8, e: [55, 362, 452, 241, 241, 241], c: "368, 142, 388, 162" },
 	{ a: 20067, n: "W4", d: "", l: 3, t: 3, f: 3, r: 8, e: [473, 279, 279, 198, 456, 456], c: "384, 120, 404, 140" },
+	{ a: 20067, n: "W4", d: "最終", l: 3, t: 3, f: 3, r: 8, e: [-1, 464, 464, 198, 456, 456], c: "384, 120, 404, 140" },
 	{ a: 20067, n: "X", d: "前哨", l: 3, t: 2, f: 11, r: 5, e: [181, 423, 422, 422, 167, 26, 55, 92, 124, 124, 26, 26], c: "273, 171, 293, 191" },
 	{ a: 20067, n: "X", d: "最終", l: 3, t: 2, f: 11, r: 5, e: [181, 426, 425, 425, 167, 26, 405, 362, 451, 451, 451, 26], c: "273, 171, 293, 191" },
 	{ a: 20067, n: "Y", d: "前哨", l: 3, t: 2, f: 11, r: 7, e: [464, 279, 279, 198, 456, 362, 405, 92, 451, 451, 240, 240], c: "345, 125, 365, 165" },
 	{ a: 20067, n: "Y", d: "最終", l: 3, t: 2, f: 11, r: 7, e: [464, 464, 279, 198, 456, 362, 405, 92, 451, 451, 451, 451], c: "345, 125, 365, 165" },
 	{ a: 20067, n: "Z", d: "前哨", l: 3, t: 2, f: 11, r: 9, e: [473, 279, 279, 198, 456, 456, 55, 362, 452, 452, 241, 241], c: "386, 192, 406, 212" },
-	{ a: 20067, n: "Z", d: "最終", l: 3, t: 2, f: 11, r: 9, e: [473, 464, 464, 198, 456, 456, 405, 362, 362, 452, 452, 452], c: "386, 192, 406, 212" },
+	{ a: 20067, n: "Z", d: "最終", l: 3, t: 2, f: 11, r: 9, e: [-1, 464, 464, 198, 456, 456, 405, 362, 362, 452, 452, 452], c: "386, 192, 406, 212" },
 	{ a: 20067, n: "Z1", d: "", l: 3, t: 1, f: 4, r: 7, e: [478, 72, 71, 71], c: "354, 60, 374, 80" },
 	{ a: 20067, n: "Z2", d: "", l: 3, t: 1, f: 1, r: 8, e: [55, 362, 241, 241, 78, 78], c: "382, 65, 402, 85" },
+	{ a: 20067, n: "Z3", d: "", l: 3, t: 1, f: 3, r: 8, e: [266, 43, 362, 241, 78, 78], c: "402, 91, 422, 111" },
 	{ a: 20067, n: "Z3", d: "", l: 3, t: 1, f: 3, r: 8, e: [279, 43, 362, 241, 78, 78], c: "402, 91, 422, 111" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 152, 151], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 151, 151], c: "20, 83, 40, 103" },
