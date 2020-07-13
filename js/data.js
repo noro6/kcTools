@@ -704,8 +704,8 @@ const ENEMY_DATA = [
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [], eqp: [], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
- ];
- const ENEMY_PLANE_DATA = [
+];
+const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -744,7 +744,7 @@ const ENEMY_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
- ];
+];
 const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
@@ -2180,6 +2180,7 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "N", d: "", l: 3, t: 3, f: 3, r: 5, e: [183, 151, 151, 151], c: "242, 178, 262, 198" },
 	{ a: 20067, n: "O", d: "", l: 3, t: 1, f: 2, r: 5, e: [27, 27, 92, 124, 78, 78], c: "250, 152, 272, 172" },
 	{ a: 20067, n: "Q", d: "", l: 3, t: 3, f: 3, r: 5, e: [464, 279, 279, 198, 456, 362], c: "267, 122, 287, 142" },
+	{ a: 20067, n: "Q", d: "最終", l: 3, t: 3, f: 3, r: 5, e: [464, 464, 279, 279, 198, 456], c: "267, 122, 287, 142" },
 	{ a: 20067, n: "R", d: "", l: 3, t: 1, f: 1, r: 5, e: [29, 29, 266, 54, 78, 78], c: "281, 96, 301, 116" },
 	{ a: 20067, n: "V", d: "", l: 3, t: 1, f: 4, r: 3, e: [478, 72, 71, 71], c: "198, 60, 218, 80" },
 	{ a: 20067, n: "V1", d: "", l: 3, t: 3, f: 3, r: 4, e: [464, 464, 279, 279, 198, 456], c: "233, 53, 253, 73" },
@@ -2208,7 +2209,7 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 151, 151, 151], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 152], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 151], c: "20, 83, 40, 103" },
- ];
+];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
