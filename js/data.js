@@ -15,8 +15,8 @@ const PLANE_TYPE = [
 	{ id: 102, name: "陸軍戦闘機", abbr: "陸戦", css: "css_lb_fighter" },
 	{ id: 103, name: "局地戦闘機", abbr: "局戦", css: "css_lb_attack_aircraft" },
 	{ id: 104, name: "陸上偵察機", abbr: "陸偵", css: "css_cb_reconnaissance" },
-];
-const PLANE_DATA = [
+ ];
+ const PLANE_DATA = [
 	{ id: 19, type: 1, name: "九六式艦戦", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 1, radius: 3, cost: 3, avoid: 0 },
 	{ id: 20, type: 1, name: "零式艦戦21型", abbr: "", fire: 0, antiAir: 5, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0 },
 	{ id: 21, type: 1, name: "零式艦戦52型", abbr: "", fire: 0, antiAir: 6, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 6, cost: 5, avoid: 0 },
@@ -178,8 +178,8 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190 D-9", abbr: "", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0 },
-];
-const SHIP_TYPE = [
+ ];
+ const SHIP_TYPE = [
 	{ id: 1, name: "正規空母" },
 	{ id: 2, name: "装甲空母" },
 	{ id: 3, name: "軽空母" },
@@ -200,8 +200,8 @@ const SHIP_TYPE = [
 	{ id: 18, name: "潜水艦" },
 	{ id: 19, name: "海防艦" },
 	{ id: 20, name: "工作艦" },
-];
-const SHIP_DATA = [
+ ];
+ const SHIP_DATA = [
 	{ id: 6, type: 1, name: "赤城", slot: [18, 18, 27, 10], final: 0, orig: 6, deckid: 83 },
 	{ id: 7, type: 1, name: "加賀", slot: [18, 18, 45, 12], final: 0, orig: 7, deckid: 84 },
 	{ id: 8, type: 1, name: "蒼龍", slot: [12, 27, 18, 7], final: 0, orig: 8, deckid: 90 },
@@ -305,7 +305,7 @@ const SHIP_DATA = [
 	{ id: 386, type: 6, name: "日進甲", slot: [8, 8, 12, 4], final: 1, orig: 381, deckid: 586 },
 	{ id: 391, type: 8, name: "金剛改二丙", slot: [2, 2, 3, 6], final: 1, orig: 391, deckid: 591 },
 	{ id: 392, type: 8, name: "比叡改二丙", slot: [2, 2, 2, 2], final: 1, orig: 392, deckid: 592 },
-	{ id: 403, type: 1, name: "Hornet", slot: [36, 18, 18, 18], final: 0, orig: 403, deckid: 603 },
+	{ id: 403, type: 1, name: "Hornet", slot: [36, 18, 18, 15], final: 0, orig: 403, deckid: 603 },
 	{ id: 404, type: 1, name: "赤城改二", slot: [21, 21, 32, 12, 4], final: 1, orig: 6, deckid: 594 },
 	{ id: 409, type: 1, name: "赤城改二戊", slot: [16, 16, 40, 4, 2], final: 1, orig: 6, deckid: 599 },
 	{ id: 421, type: 10, name: "神州丸", slot: [2, 2, 8], final: 0, orig: 421, deckid: 621 },
@@ -356,7 +356,7 @@ const SHIP_DATA = [
 	{ id: 1506, type: 12, name: "伊400改", slot: [3, 3], final: 1, orig: 293, deckid: 606 },
 	{ id: 1704, type: 1, name: "Hornet改", slot: [36, 19, 19, 16], final: 1, orig: 403, deckid: 704 },
  ];
-const ENEMY_TYPE = [
+ const ENEMY_TYPE = [
 	{ id: 11, name: "正規空母" },
 	{ id: 12, name: "軽空母" },
 	{ id: 13, name: "戦艦" },
@@ -370,8 +370,8 @@ const ENEMY_TYPE = [
 	{ id: 21, name: "浮遊/護衛 要塞" },
 	{ id: 1, name: "鬼/姫" },
 	{ id: 2, name: "地上施設" },
-];
-const ENEMY_DATA = [
+ ];
+ const ENEMY_DATA = [
 	{ id: -1, type: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 1, 2], name: "直接入力", slot: [], eqp: [], orig: -1, aaw: 0, aabo: 0 },
 	{ id: 1, type: [16], name: "駆逐イ級", slot: [], eqp: [], orig: 1, aaw: 4, aabo: 0 },
 	{ id: 2, type: [16], name: "駆逐ロ級", slot: [], eqp: [], orig: 2, aaw: 4, aabo: 0 },
@@ -701,14 +701,14 @@ const ENEMY_DATA = [
 	{ id: 470, type: [1, 13], name: "南方戦艦新棲姫-壊 [甲]", slot: [], eqp: [], orig: 470, aaw: 159, aabo: 15 },
 	{ id: 471, type: [1, 11], name: "南太平洋空母棲姫 [丙]", slot: [], eqp: [], orig: 471, aaw: 26, aabo: 4 },
 	{ id: 472, type: [1, 11], name: "南太平洋空母棲姫 [乙]", slot: [], eqp: [], orig: 0, aaw: 26, aabo: 4 },
-	{ id: 473, type: [1, 11], name: "南太平洋空母棲姫 [甲]", slot: [25, 25, 25, 25], eqp: [581, 582, 557, 583], orig: 473, aaw: 26, aabo: 4 },
+	{ id: 473, type: [1, 11], name: "南太平洋空母棲姫 [甲] 制空暫定", slot: [38, 22, 22, 18], eqp: [581, 582, 557, 583], orig: 473, aaw: 26, aabo: 4 },
 	{ id: 474, type: [1, 11], name: "南太平洋空母棲姫-壊 [丙]", slot: [], eqp: [], orig: 0, aaw: 26, aabo: 4 },
 	{ id: 475, type: [1, 11], name: "南太平洋空母棲姫-壊 [乙]", slot: [], eqp: [], orig: 0, aaw: 26, aabo: 4 },
-	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [], eqp: [], orig: 476, aaw: 30, aabo: 4 },
+	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲] 制空暫定", slot: [57, 40, 40, 37], eqp: [581, 582, 557, 583], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
-];
-const ENEMY_PLANE_DATA = [
+ ];
+ const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -747,15 +747,15 @@ const ENEMY_PLANE_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
-];
-const DIFFICULTY = [
+ ];
+ const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
 	{ id: 1, name: "丙" },
 	{ id: 2, name: "乙" },
 	{ id: 3, name: "甲" },
-];
-const WORLD_DATA = [
+ ];
+ const WORLD_DATA = [
 	{ world: 2006, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
@@ -766,8 +766,8 @@ const WORLD_DATA = [
 	{ world: 6, name: "中部海域" },
 	{ world: 1911, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
 	{ world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
-];
-const MAP_DATA = [
+ ];
+ const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
 	{ area: 12, name: "南西諸島沖" },
 	{ area: 13, name: "製油所地帯沿岸" },
@@ -815,8 +815,8 @@ const MAP_DATA = [
 	{ area: 20065, name: "ニューブリテン島沖/ソロモン諸島西部沖" },
 	{ area: 20066, name: "ソロモン諸島沖" },
 	{ area: 20067, name: "ソロモン諸島沖/サンタ・クルーズ諸島沖" },
-];
-const ENEMY_PATTERN = [
+ ];
+ const ENEMY_PATTERN = [
 	{ a: 11, n: "A", d: "", l: -1, t: 1, f: 1, r: 0, e: [1], c: "219,112,246,149" },
 	{ a: 11, n: "A", d: "", l: -1, t: 1, f: 1, r: 0, e: [2], c: "219,112,246,149" },
 	{ a: 11, n: "A", d: "", l: -1, t: 1, f: 1, r: 0, e: [3], c: "219,112,246,149" },
@@ -2308,7 +2308,7 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 151, 151, 151], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 152], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 3, t: 5, f: 3, r: 0, e: [183, 152, 151], c: "20, 83, 40, 103" },
-];
+ ];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
