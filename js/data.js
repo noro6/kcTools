@@ -305,11 +305,13 @@ const SHIP_DATA = [
 	{ id: 386, type: 6, name: "日進甲", slot: [8, 8, 12, 4], final: 1, orig: 381, deckid: 586 },
 	{ id: 391, type: 8, name: "金剛改二丙", slot: [2, 2, 3, 6], final: 1, orig: 391, deckid: 591 },
 	{ id: 392, type: 8, name: "比叡改二丙", slot: [2, 2, 2, 2], final: 1, orig: 392, deckid: 592 },
+	{ id: 403, type: 1, name: "Hornet", slot: [36, 18, 18, 18], final: 0, orig: 403, deckid: 603 },
 	{ id: 404, type: 1, name: "赤城改二", slot: [21, 21, 32, 12, 4], final: 1, orig: 6, deckid: 594 },
 	{ id: 409, type: 1, name: "赤城改二戊", slot: [16, 16, 40, 4, 2], final: 1, orig: 6, deckid: 599 },
 	{ id: 421, type: 10, name: "神州丸", slot: [2, 2, 8], final: 0, orig: 421, deckid: 621 },
 	{ id: 426, type: 10, name: "神州丸改", slot: [2, 2, 4, 8], final: 1, orig: 421, deckid: 626 },
 	{ id: 430, type: 14, name: "Gotland andra", slot: [2, 2, 3, 7], final: 1, orig: 374, deckid: 630 },
+	{ id: 439, type: 13, name: "迅鯨改", slot: [2, 2, 2], final: 1, orig: 439, deckid: 639 },
 	{ id: 1375, type: 7, name: "長門改", slot: [3, 3, 3, 3], final: 0, orig: 1, deckid: 275 },
 	{ id: 1376, type: 7, name: "陸奥改", slot: [3, 3, 3, 3], final: 0, orig: 2, deckid: 276 },
 	{ id: 1377, type: 1, name: "赤城改", slot: [20, 20, 32, 10], final: 0, orig: 6, deckid: 277 },
@@ -352,7 +354,8 @@ const SHIP_DATA = [
 	{ id: 1501, type: 12, name: "伊19改", slot: [1, 1], final: 1, orig: 123, deckid: 401 },
 	{ id: 1503, type: 12, name: "伊401改", slot: [3, 3], final: 1, orig: 155, deckid: 403 },
 	{ id: 1506, type: 12, name: "伊400改", slot: [3, 3], final: 1, orig: 293, deckid: 606 },
-];
+	{ id: 1704, type: 1, name: "Hornet改", slot: [36, 19, 19, 16], final: 1, orig: 403, deckid: 704 },
+ ];
 const ENEMY_TYPE = [
 	{ id: 11, name: "正規空母" },
 	{ id: 12, name: "軽空母" },
@@ -2435,6 +2438,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
 	{ shipId: 421, equipmentTypes: [5, 7], equipmentIds: [] },
 	// 神州丸改に 水戦 水偵 水爆
 	{ shipId: 426, equipmentTypes: [5, 6, 7], equipmentIds: [] },
+	// 迅鯨改に 水爆
+	{ shipId: 439, equipmentTypes: [6], equipmentIds: [] },
 ];
 
 /** デフォ機体プリセット */
