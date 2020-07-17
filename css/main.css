@@ -479,62 +479,40 @@ input[type="text"] { font-size: 12px; }
 #menu-small div:nth-of-type(1) { top: 0; }
 #menu-small div:nth-of-type(2) { top: 7px; }
 #menu-small div:nth-of-type(3) { bottom: 0; }
-#btn_twitter {
-  font-size: 14px;
-  color: #fff;
-  text-align: center;
-  border-radius: 15px;
+
+.header_button {
   cursor: pointer;
-  transition: 0.4s;
-  background-color: #1da1f2;
+  transition: .4s;
+  border-radius: .2rem;
+  text-shadow: none;
+  padding: .25rem .5rem;
+  margin-left: .25rem;
+  margin-top: .25rem;
+  margin-bottom: .25rem;
   white-space: nowrap;
 }
-#btn_twitter:hover {
-  color: rgb(29, 161, 242);
-  background-color: rgb(240, 250, 255);
-}
+.header_button:hover { text-shadow: 2px 2px 3px #000; }
 #btn_preset_all {
-  font-size: 14px;
-  color: #000;
-  text-align: center;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.4s;
-  background-color: #eee;
-  white-space: nowrap;
+  color: #ddd;
+  border: 1px #ddd solid;
 }
-#btn_preset_all:hover {
-  color: #fff;
-  background-color: #888;
-}
-#btn_deckBuilder {
-  font-size: 14px;
-  color: #fff;
-  text-align: center;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.4s;
-  background-color: #00814b;
-  white-space: nowrap;
-}
-#btn_deckBuilder:hover {
-  color: #00814b;
-  background-color: rgb(240, 255, 250);
-}
+#btn_preset_all:hover { box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5), 0 0 20px rgba(221, 221, 221, 0.2); }
 #btn_auto_expand {
-  font-size: 14px;
-  color: #fff;
-  text-align: center;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.4s;
-  background-color: #ff8800;
-  white-space: nowrap;
+  color: rgb(255, 160, 50);
+  border: 1px rgb(255, 160, 50) solid;
 }
-#btn_auto_expand:hover {
-  color: #ff8800;
-  background-color: rgb(240, 255, 250);
+#btn_auto_expand:hover { box-shadow: inset 0 0 20px rgba(255, 160, 50, 0.5), 0 0 20px rgba(255, 160, 50, 0.2); }
+#btn_twitter {
+  color: rgb(94, 193, 255);
+  border: 1px rgb(94, 193, 255) solid;
 }
+#btn_twitter:hover { box-shadow: inset 0 0 20px rgba(142, 210, 252, 0.5), 0 0 20px rgba(142, 210, 252, 0.2); }
+#btn_deckBuilder {
+  color: rgb(16, 190, 118);
+  border: 1px rgb(16, 190, 118) solid;
+}
+#btn_deckBuilder:hover { box-shadow: inset 0 0 20px rgba(89, 255, 186, 0.5), 0 0 20px rgba(89, 255, 186, 0.2); }
+
 #btn_url_shorten {
   user-select: none;
   cursor: pointer;
@@ -543,11 +521,14 @@ input[type="text"] { font-size: 12px; }
   border: 1px solid #ccc;
   padding-top: .2rem;
   padding-bottom: .2rem;
-  border-radius: .25rem;
+  border-radius: .2rem;
   text-align: center;
   transition: .4s;
 }
-#btn_url_shorten:hover { background-color: #000; }
+#btn_url_shorten:hover {
+  text-shadow: 2px 2px 3px #000;
+  box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5), 0 0 20px rgba(221, 221, 221, 0.2);
+}
 
 #btn_undo {
  cursor: pointer;
@@ -631,7 +612,10 @@ input[type="text"] { font-size: 12px; }
     position: sticky;
   }
 }
-.sidebar .nav-link { color: #ccc; }
+.sidebar .nav-link {
+  padding: .25rem .5rem;
+  color: #ccc; 
+}
 .sidebar .nav-link:hover { color: #00ccff; }
 .sidebar .nav-link.active { color: #00ccff; }
 .sidebar .nav-link .feather { margin-right: 4px; color: #999; }
@@ -1110,7 +1094,23 @@ input[type="text"] { font-size: 12px; }
   text-align: center;
   width: 35px;
 }
-
+.ship_td_stock {
+  color: #ff4400;
+  font-size: 10px;
+}
+.ship_tr_disabled {
+  cursor: default;
+  color: #ff6b6b;
+  border: 1px solid transparent;
+  text-shadow: none;
+  transition: all .6s cubic-bezier(0.2, 1, 0.2, 1);
+}
+.ship_tr_disabled:hover {
+  border-color: #f66;
+  box-shadow: inset 0 0 20px rgba(255, 100, 100, 0.5), 0 0 20px rgba(255, 100, 100, 0.2);
+  text-shadow: 1px 1px 3px #fff;
+}
+.dark-theme .ship_tr_disabled:hover { text-shadow: 1px 1px 3px #000; }
 
 /* ----------------------------------
   敵艦選択モーダル #modal_enemy_select
@@ -1452,10 +1452,24 @@ input[type="text"] { font-size: 12px; }
 #init_prof_parent .prof_select { height: 24px; }
 #backup_count { width: 96px; }
 
+
 /* ------------------------------
-  所持装備 #plane_stock
+  所持管理 #stock_management
 -------------------------------- */
-.stock_word_parent { width: 270px; }
+.stock_word_parent {width: 200px;}
+#ship_type_select_parent { width: 200px; }
+#ship_stock_table {
+  font-size: 12px;
+  text-align: center;
+  height: 60vh;
+  min-height: 120px;
+  overflow-y: scroll;
+}
+#ship_stock_table .stock_td_id { width: 10%; }
+#ship_stock_table .stock_td_fav { width: 15%; }
+#ship_stock_table .stock_td_stock { width: 15%; }
+#ship_stock_table .general_tr { cursor: default; }
+
 #plane_type_select_parent { width: 200px; }
 #plane_stock_table {
   font-size: 12px;
@@ -1464,18 +1478,20 @@ input[type="text"] { font-size: 12px; }
   min-height: 120px;
   overflow-y: scroll;
 }
-.stock_td_type { width: 10%; }
-.stock_td_name { width: 36%; }
-.stock_td_aa { width: 16%; }
-.stock_td_range { width: 16%; }
-.stock_td_stock { width: 16%; }
-.stock_td_fav {
-  width: 16%;
+#plane_stock_table .stock_td_type { width: 15%; }
+#plane_stock_table .stock_td_name { width: 40%; }
+#plane_stock_table .stock_td_fav { width: 20%; }
+#plane_stock_table .stock_td_stock { width: 25%; }
+.stock_unfav {
+  cursor: pointer;
+  color: rgba(160, 160, 160, 0.5);
 }
-.plane_unfav { color: rgba(160, 160, 160, 0.5); }
-.plane_unfav:hover { color: rgba(200, 100, 100, 0.5); }
-.plane_fav { color: rgb(255, 102, 102); }
-.plane_fav:hover { color: rgb(255, 68, 68); }
+.stock_unfav:hover { color: rgba(200, 100, 100, 0.5); }
+.stock_fav {
+  cursor: pointer;
+  color: rgb(255, 102, 102);
+}
+.stock_fav:hover { color: rgb(255, 68, 68); }
 .fav_clicked {
   animation: fav 0.4s linear 0s 1;
 }
@@ -1500,7 +1516,8 @@ input[type="text"] { font-size: 12px; }
   80%  { transform: scale(1.0, 1.0) translate(0%, 0%); }
   100% { transform: scale(1.0, 1.0) translate(0%, 0%); }
 }
-
+#input_equipment_json { height: 32px; }
+#input_ship_json { height: 32px; }
 
 /* ------------------------------
   所持装備編集 #modal_plane_stock
@@ -1712,6 +1729,7 @@ input[type="text"] { font-size: 12px; }
 .comment_index { cursor: pointer; }
 .comment_index:hover { color: #f80 !important; }
 .comment_content { white-space: pre-wrap; }
+
 
 /* ------------------------------
   艦載機ボックス #draggable_plane_box
