@@ -734,8 +734,12 @@ let CHANGE_LOG = [
 				type: 1, title: "一部UIの見直しを行いました。",
 				content: ""
 			},
+			{
+				type: 2, title: "不具合の修正を行いました。",
+				content: "艦娘未指定時に、艦載機が全て選択できない場合がある現象を修正しました。"
+			},
 		],
 	},
 ];
 
-const LAST_UPDATE_DATE = "2020/07/17";
+const LAST_UPDATE_DATE = "2020/07/18";

@@ -1002,7 +1002,11 @@ function setShipType(array) {
 			opt.value = v.id;
 			opt.textContent = v.name;
 			document.getElementById('ship_type_select').appendChild(opt);
-			document.getElementById('ship_stock_type_select').appendChild(opt);
+
+			const opt2 = document.createElement('option');
+			opt2.value = v.id;
+			opt2.textContent = v.name;
+			document.getElementById('ship_stock_type_select').appendChild(opt2);
 		}
 	}
 }
