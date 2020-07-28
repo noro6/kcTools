@@ -122,7 +122,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.8.0</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.8.1</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -131,6 +131,34 @@
 							<div class="ml-auto align-self-center d-flex">
 								<button class="btn btn-sm btn-outline-success btn_first_time text-nowrap">初めての方</button>
 								<button class="btn btn-sm btn-outline-info btn_site_manual ml-1 text-nowrap">使い方</button>
+							</div>
+						</div>
+					</div>
+					<div class="mx-auto mx-xl-1 my-1">
+						<div class="alert alert-danger px-2 py-2 font_size_12 d-flex" id="site_warning">
+							<div class="cur_pointer mr-2 align-self-center"><i class="fas fa-times"></i></div>
+							<div>
+								<div>
+									現在、次の敵艦の制空値が確定していません。計算する際はご注意ください。
+									敵艦一覧から直接入力を選択し、制空値を直接入力して計算することも可能ですのでそちらも視野に入れてください。
+								</div>
+								<div class="mt-1">
+									<table>
+										<tr>
+											<td>ID: 1961 空母夏姫 [丁]</td>
+											<td>ID: 1962 空母夏姫 [丙]</td>
+											<td>ID: 1963 空母夏姫 [乙]</td>
+										</tr>
+										<tr>
+											<td>ID: 1971 南太平洋空母棲姫 [丙]</td>
+											<td>ID: 1972 南太平洋空母棲姫 [乙]</td>
+										</tr>
+										<tr>
+											<td>ID: 1974 南太平洋空母棲姫-壊 [丙]</td>
+											<td>ID: 1975 南太平洋空母棲姫-壊 [乙]</td>
+										</tr>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -205,6 +233,10 @@
 													<span class="ml-1 btn_show_contact_rate_lb no_capture" data-lb="1">
 														<i class="fas fa-search"></i><span class="font_size_11">触接</span>
 													</span>
+												</div>
+												<div class="ml-2 align-self-center def_sammary d-none">
+													<span class="font_color_half">制空: </span><span class="def_ap">0</span>
+													<span class="font_color_half rocket_label">重爆補正: &times;</span><span class="rocket_col">0</span>
 												</div>
 												<div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
 													data-html="true" data-delay='{"show": 300, "hide": 0}'
@@ -400,6 +432,10 @@
 														<i class="fas fa-search"></i><span class="font_size_11">触接</span>
 													</span>
 												</div>
+												<div class="ml-2 align-self-center def_sammary d-none">
+													<span class="font_color_half">制空: </span><span class="def_ap">0</span>
+													<span class="font_color_half rocket_label">重爆補正: &times;</span><span class="rocket_col">0</span>
+												</div>
 												<div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
 													data-html="true" data-delay='{"show": 300, "hide": 0}'
 													title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>※ 被撃墜時、母港補充時の消費量ではありません。">
@@ -593,6 +629,10 @@
 													<span class="ml-1 btn_show_contact_rate_lb no_capture" data-lb="3">
 														<i class="fas fa-search"></i><span class="font_size_11">触接</span>
 													</span>
+												</div>
+												<div class="ml-2 align-self-center def_sammary d-none">
+													<span class="font_color_half">制空: </span><span class="def_ap">0</span>
+													<span class="font_color_half rocket_label">重爆補正: &times;</span><span class="rocket_col">0</span>
 												</div>
 												<div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
 													data-html="true" data-delay='{"show": 300, "hide": 0}'
@@ -3708,7 +3748,7 @@
 											<select class="custom-select custom-select-sm align-self-center font_size_12 cell_type w-50">
 												<optgroup label="基地空襲形式">
 													<option value="3" selected>通常</option>
-													<option value="5">高高度爆撃</option>
+													<option value="5">重爆</option>
 												</optgroup>
 											</select>
 											<div class="ml-auto align-self-center font_size_12 font_color_half">
@@ -4640,9 +4680,9 @@
 											<u>味方艦隊情報、道中戦闘回数が編集できなくなります。</u>
 										</div>
 										<div class="pl-3">これを解除する場合は全ての部隊を待機にするか、いずれか1部隊を集中または単発に設定してください。</div>
-										<div class="pl-3">高高度爆撃時の計算は、防空モード時に敵艦隊欄にてプルダウンから「高高度爆撃」を選択してください。</div>
+										<div class="pl-3">対重爆時の計算は、防空モード時に敵艦隊欄にてプルダウンから「重爆」を選択してください。</div>
 										<div class="pl-3">
-											なお、<a href="#input_data">入力情報</a>には敵艦に関係なく、防空時であれば常に対高高度爆撃時の制空値が表示されます。
+											なお、<a href="#input_data">入力情報</a>には敵艦に関係なく、防空時であれば常に対重爆時の制空値が表示されます。
 										</div>
 										<div class="pl-3 mt-4">機体情報の入力は次のコントロールから行います。</div>
 										<div class="sample_plane ml-3 mt-1 d-flex css_fighter">
@@ -5672,7 +5712,7 @@
 							</div>
 							<div class="ml-3 custom-control custom-radio align-self-center">
 								<input type="radio" id="mode_3" name="auto_lb_mode" class="custom-control-input">
-								<label class="custom-control-label" for="mode_3">防空(対高高度爆撃)</label>
+								<label class="custom-control-label" for="mode_3">防空(対重爆)</label>
 							</div>
 						</div>
 					</div>

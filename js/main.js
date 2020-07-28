@@ -793,9 +793,9 @@ function initialize(callback) {
 		let appendedIds = [];
 		const contents = [];
 		const lis = [];
-		$main.find('.contents').each((i, e) => { 
+		$main.find('.contents').each((i, e) => {
 			ids.push($(e).attr('id'));
-			contents.push($(e)) 
+			contents.push($(e))
 		});
 		$main.empty();
 		$sideIndex.find('li').each((i, e) => { lis.push($(e)) });
@@ -803,25 +803,25 @@ function initialize(callback) {
 
 		// でてきたid順にアペンド
 		for (const id of setting.contentsOrder) {
-			if(ids.includes(id)) {
+			if (ids.includes(id)) {
 				const $content = contents.find($e => $e.attr('id') === id);
 				$main.append($content);
-	
+
 				const $li = lis.find($e => $e.attr('id') === 'li_' + id);
 				$sideIndex.append($li);
-	
+
 				// 挿入されたidは消化
 				appendedIds.push(id);
 			}
 		}
 
 		// 挿入されていないコンテンツを拾い、setting.contentsOrderを修正
-		if(ids.length !== appendedIds.length) {
+		if (ids.length !== appendedIds.length) {
 			for (const id of ids) {
-				if(!appendedIds.includes(id)) {
+				if (!appendedIds.includes(id)) {
 					const $content = contents.find($e => $e.attr('id') === id);
 					$main.append($content);
-		
+
 					const $li = lis.find($e => $e.attr('id') === 'li_' + id);
 					$sideIndex.append($li);
 
@@ -4311,6 +4311,8 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		drawChangeValue(node_target_td, castInt(node_target_td.textContent), tmpLandBaseDatum.ap);
 		let node_span = node_lb_tab.getElementsByClassName('ap')[0];
 		drawChangeValue(node_span, castInt(node_span.textContent), tmpLandBaseDatum.ap);
+		node_span = node_lb_tab.getElementsByClassName('def_ap')[0];
+		drawChangeValue(node_span, castInt(node_span.textContent), tmpLandBaseDatum.ap);
 
 		// 半径
 		const range = getRange(tmpLandBaseDatum);
@@ -4359,14 +4361,20 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 			let sumAp_ex = 0;
 			let rocketCount = 0;
 
-			// 対高高度爆撃機の数を取得
+			// ロケット戦闘機の数を取得
 			for (const v of landBaseData) {
 				if (v.mode === -1) continue;
 				sumAp += v.ap;
 				for (const plane of v.planes) if (ROCKETS.includes(plane.id)) rocketCount++;
 			}
 			// 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
-			sumAp_ex = (rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2) * sumAp;
+			const rocketBonus = rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2;
+			sumAp_ex = rocketBonus * sumAp;
+
+			// 基地入力欄の半径、触接表示をなしに
+			for (const e of document.getElementsByClassName('def_sammary')) {
+				e.getElementsByClassName('rocket_col')[0].textContent = rocketBonus;
+			}
 
 			// 防空時は半径の後ろの最終防空時制空値を表示　半径は非表示
 			document.getElementById('lb_info').classList.add('col-lg-8', 'col-xl-7');
@@ -4392,7 +4400,6 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 					break;
 				}
 			}
-
 		}
 		else {
 			const node_table = document.getElementById('lb_info_table');
@@ -4411,6 +4418,17 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 	else {
 		document.getElementById('lb_info_table').getElementsByClassName('info_warning')[0].classList.remove('d-none');
 		document.getElementById('lb_range_warning').classList.add('d-none');
+	}
+
+	// 基地入力欄の半径、触接表示有無
+	for (const e of document.getElementsByClassName('lb_sammary')) {
+		if (isDefMode) e.classList.add('d-none');
+		else e.classList.remove('d-none');
+	}
+	// 基地入力欄の防空時ステータス表示有無
+	for (const e of document.getElementsByClassName('def_sammary')) {
+		if (isDefMode) e.classList.remove('d-none');
+		else e.classList.add('d-none');
 	}
 }
 
@@ -4567,6 +4585,11 @@ function getAirPower_lb(lb_plane) {
 	// 陸攻
 	else if ([101].includes(type)) {
 		sumPower = 1.0 * (0.5 * Math.sqrt(remodel) + antiAir) * Math.sqrt(slot);
+	}
+	// 陸偵
+	else if ([104].includes(type)) {
+		// とりあえず★2以上を制空値+1
+		sumPower = 1.0 * antiAir * Math.sqrt(slot) + (remodel >= 2 ? 1 : 0);
 	}
 	// そのた
 	else sumPower = 1.0 * antiAir * Math.sqrt(slot);
@@ -5910,8 +5933,11 @@ function mainCalculate(objectData) {
 		let sumAP = 0;
 		for (let index = 0; index < 3; index++) if (landBaseData[index].mode !== -1) sumAP += landBaseData[index].ap;
 
-		// 高高度爆撃してくる敵艦が含まれていた場合か、マス高高度爆撃
+		// 重爆してくる敵艦が含まれていた場合か、マス重爆
 		let isChanged = false;
+		$('.rocket_label').addClass('d-none');
+		$('.rocket_col').addClass('d-none');
+
 		for (const enemyFleet of battleData) {
 			for (const enemy of enemyFleet.enemies) {
 				if (enemyFleet.cellType === CELL_TYPE.highAirRaid) {
@@ -5920,7 +5946,11 @@ function mainCalculate(objectData) {
 					break;
 				}
 			}
-			if (isChanged) break;
+			if (isChanged) {
+				$('.rocket_label').removeClass('d-none');
+				$('.rocket_col').removeClass('d-none');
+				break;
+			}
 		}
 		// ここで防空時の制空値は確定するので記録
 		resultData.defenseAirPower = sumAP;
@@ -7558,7 +7588,7 @@ function autoLandBaseExpandDef(count) {
 		}
 	}
 
-	// 高高度防空　ロケット上位3つだけ最優先 → 残りは対空ソート
+	// 重爆防空　ロケット上位3つだけ最優先 → 残りは対空ソート
 	if (isHeavyDef) {
 		// 通常の対空値ソート
 		planes.sort((a, b) => b.antiAir - a.antiAir);
@@ -11139,6 +11169,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
 	$('#main').on('click', '.btn_show_plane_box', function () { btn_show_plane_box_Clicked($(this)) });
 	$('#main').on('click', '.version_detail', version_detail_Clicked);
+	$('#site_warning').on('click', '.cur_pointer', () => { $('#site_warning').removeClass('d-flex').addClass('d-none'); });
 	$('#landBase').on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
 	$('#landBase').on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
 	$('#landBase_content').on('change', '.ohuda_select', function () { ohuda_Changed($(this)); });
@@ -11189,7 +11220,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#config_content').on('click', '#clipboard_mode', clipboard_mode_Clicked);
 	$('#config_content').on('click', '#air_raid_max', air_raid_max_Clicked);
 	$('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
-	$('#config_content').on('click', '#backup_enabled', backup_enabled_Clicked);
 	$('#config_content').on('click', '#backup_enabled', backup_enabled_Clicked);
 	$('#config_content').on('change', '#backup_count', backup_enabled_Clicked);
 	$('#config_content').on('click', '#btn_reset_selected_plane_history', btn_reset_selected_plane_history_Clicked);
