@@ -11335,8 +11335,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('click', '#disp_equipped', disp_equipped_Checked_Chenged);
 	$('#modal_plane_select').on('input', '#plane_word', plane_word_TextChanged);
 	$('#modal_plane_select').on('change', '#plane_sort_select', function () { sort_Changed($(this)); });
-	$('#modal_plane_select').on('change', '#plane_filter_key_select', plane_type_select_Changed);
-	$('#modal_plane_select').on('change', '#plane_filter_value', plane_type_select_Changed);
+	$('#modal_plane_select').on('change', '#plane_filter_key_select', function () { plane_type_select_Changed(); });
+	$('#modal_plane_select').on('change', '#plane_filter_value', function () { plane_type_select_Changed() });
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
