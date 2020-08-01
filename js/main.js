@@ -608,7 +608,7 @@ function initializeSetting() {
 	}
 	if (!setting.hasOwnProperty('orderBy')) {
 		setting.orderBy = {
-			'modal_plane_select': ['default', 'desc'],
+			'modal_plane_select': ['default'],
 		};
 	}
 
@@ -877,11 +877,10 @@ function initialize(callback) {
 	else $('.toggle_display_type[data-mode="single"]').addClass('selected');
 	// ソート
 	if (!setting.orderBy) {
-		setting.orderBy = { 'modal_plane_select': ['default', 'desc'] };
+		setting.orderBy = { 'modal_plane_select': ['default'] };
 	}
 	Object.keys(setting.orderBy).forEach((key) => {
 		$(`#${key} .sort_select`).val(setting.orderBy[key][0]);
-		$(`#${key} .order_` + setting.orderBy[key][1]).prop('checked', true);
 	});
 
 	// 自動保存
