@@ -14,7 +14,6 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="favicon.ico">
-	<link rel="preload" as="font" type="font/ttf" href="https://noro6.github.io/kcTools/fonts/fonts/icons.ttf?r111cb" crossorigin>
 	<link rel="stylesheet" href="./css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -122,7 +121,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.8.1</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.8.2</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -236,7 +235,8 @@
 												</div>
 												<div class="ml-2 align-self-center def_sammary d-none">
 													<span class="font_color_half">制空: </span><span class="def_ap">0</span>
-													<span class="font_color_half rocket_label">重爆補正: &times;</span><span class="rocket_col">0</span>
+													<span class="font_color_half rocket_label">重爆補正: &times;</span>
+													<span class="rocket_col">0</span>
 												</div>
 												<div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
 													data-html="true" data-delay='{"show": 300, "hide": 0}'
@@ -434,7 +434,8 @@
 												</div>
 												<div class="ml-2 align-self-center def_sammary d-none">
 													<span class="font_color_half">制空: </span><span class="def_ap">0</span>
-													<span class="font_color_half rocket_label">重爆補正: &times;</span><span class="rocket_col">0</span>
+													<span class="font_color_half rocket_label">重爆補正: &times;</span>
+													<span class="rocket_col">0</span>
 												</div>
 												<div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
 													data-html="true" data-delay='{"show": 300, "hide": 0}'
@@ -632,7 +633,8 @@
 												</div>
 												<div class="ml-2 align-self-center def_sammary d-none">
 													<span class="font_color_half">制空: </span><span class="def_ap">0</span>
-													<span class="font_color_half rocket_label">重爆補正: &times;</span><span class="rocket_col">0</span>
+													<span class="font_color_half rocket_label">重爆補正: &times;</span>
+													<span class="rocket_col">0</span>
 												</div>
 												<div class="ml-auto mr-1 align-self-center resource d-flex" data-toggle="tooltip"
 													data-html="true" data-delay='{"show": 300, "hide": 0}'
@@ -5080,12 +5082,25 @@
 				<div class="modal-body">
 					<div class="d-flex flex-wrap mb-1">
 						<div class="d-flex search_basic my-1">
-							<div class="input-group input-group-sm">
+							<div class="input-group input-group-sm" id="plane_sort_select_">
 								<div class="input-group-prepend">
-									<span class="input-group-text">種別</span>
+									<span class="input-group-text">ソート</span>
 								</div>
-								<select class="custom-select custom-select-sm" id="plane_type_select">
-									<option value="1">機体カテゴリ</option>
+								<select class="custom-select custom-select-sm sort_select" id="plane_sort_select">
+									<option value="default">カテゴリ</option>
+									<option value="history">よく使う</option>
+									<option value="id">図鑑No</option>
+									<option value="antiAir">装備対空</option>
+									<option value="battle_anti_air">出撃対空</option>
+									<option value="defense_anti_air">防空対空</option>
+									<option value="land_base_power">基地火力</option>
+									<option value="radius">半径</option>
+									<option value="torpedo">雷装</option>
+									<option value="bomber">爆装</option>
+									<option value="scout">索敵</option>
+									<option value="antiBomber">対爆</option>
+									<option value="interception">迎撃</option>
+									<option value="cost">コスト</option>
 								</select>
 							</div>
 							<div class="mx-2 input-group input-group-sm">
@@ -5093,40 +5108,45 @@
 								<input type="text" class="form-control form-control-sm" id="plane_word" maxlength="30">
 							</div>
 						</div>
-						<div class="d-flex my-1">
-							<div class="align-self-center">
-								<div class="input-group input-group-sm">
-									<div class="input-group-prepend">
-										<span class="input-group-text">ソート</span>
-									</div>
-									<select class="custom-select custom-select-sm sort_select" id="plane_sort_select">
-										<option value="default">カテゴリ</option>
-										<option value="history">よく使う</option>
-										<option value="id">図鑑No</option>
-										<option value="antiAir">装備対空</option>
-										<option value="battle_anti_air">出撃対空</option>
-										<option value="defense_anti_air">防空対空</option>
-										<option value="land_base_power">基地火力</option>
-										<option value="radius">半径</option>
-										<option value="torpedo">雷装</option>
-										<option value="bomber">爆装</option>
-										<option value="scout">索敵</option>
-										<option value="antiBomber">対爆</option>
-										<option value="interception">迎撃</option>
-										<option value="cost">コスト</option>
-									</select>
-								</div>
+						<div class="d-flex my-1 mr-3">
+							<div class="align-self-center input-group input-group-sm">
+								<div class="input-group-prepend"><span class="input-group-text">フィルタ</span></div>
+								<select class="custom-select custom-select-sm" id="plane_filter_key_select">
+									<option value="radius">半径</option>
+									<option value="antiAir">装備対空</option>
+									<option value="battle_anti_air">出撃対空</option>
+									<option value="defense_anti_air">防空対空</option>
+									<option value="torpedo">雷装</option>
+									<option value="bomber">爆装</option>
+									<option value="scout">索敵</option>
+									<option value="antiBomber">対爆</option>
+									<option value="interception">迎撃</option>
+								</select>
+								<select class="custom-select custom-select-sm align-self-center" id="plane_filter_value">
+									<option value="0">0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="18">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+								</select>
 							</div>
-							<div class="align-self-center ml-1">
-								<div class="custom-control custom-radio custom-control-inline">
-									<input type="radio" id="plane_asc" name="plane_sort_order" class="custom-control-input order_asc">
-									<label class="custom-control-label" for="plane_asc">昇順</label>
-								</div>
-								<div class="custom-control custom-radio custom-control-inline">
-									<input type="radio" id="plane_desc" name="plane_sort_order" class="custom-control-input order_desc">
-									<label class="custom-control-label" for="plane_desc">降順</label>
-								</div>
-							</div>
+							<div class="ml-1 align-self-center text-nowrap">以上</div>
 						</div>
 						<div class="d-flex my-1">
 							<div class="align-self-center mr-1 toggle_display_type" data-mode="single">
@@ -5150,6 +5170,9 @@
 								<label class="custom-control-label" for="disp_equipped">配備済機体も表示</label>
 							</div>
 						</div>
+					</div>
+					<div class="pb-1">
+						<ul class="nav nav-tabs" id="plane_type_select"></ul>
 					</div>
 					<div class="pb-1 custom_table" id="plane_table">
 						<div class="scroll_thead d-flex">

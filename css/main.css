@@ -712,7 +712,6 @@ input[type="text"] { font-size: 12px; }
   color: #00ccff;
 }
 
-
 #site_warning { max-width: 1200px; }
 #site_warning table td{
   padding: 0rem .5rem;
@@ -1034,6 +1033,9 @@ input[type="text"] { font-size: 12px; }
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */
 .search_basic{ width: 460px; }
+#plane_filter_key_select { width: 104px; }
+#plane_filter_value { width: 56px; }
+
 .toggle_display_type {
   padding: .25rem .5rem .25rem .5rem;
   cursor: pointer;
@@ -1058,9 +1060,9 @@ input[type="text"] { font-size: 12px; }
 .dark-theme .toggle_display_type:hover { text-shadow: 2px 2px 3px #000; }
 .dark-theme .toggle_display_type.selected { text-shadow: 2px 2px 3px #000;}
 
-#plane_status_filter { width: 80px; }
 #plane_table { overflow-y: auto; }
-#plane_tbody { max-height: 58vh; }
+#plane_tbody:not(.multi_mode) { height: 50vh; }
+#plane_tbody.multi_mode { max-height: 50vh; }
 .plane_tr_disabled {
   cursor: default;
   color: #ff6b6b;
