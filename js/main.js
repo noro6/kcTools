@@ -2802,6 +2802,7 @@ function updateMainPreset() {
 	// 更新がなかったら新規登録
 	if (!isUpdate) presets.push(preset);
 	saveLocalStorage('presets', presets);
+	setExpandedPresetName(preset[1]);
 
 	$('#modal_main_preset').find('.task')
 		.removeClass('hide confirm')
@@ -2834,6 +2835,27 @@ function updateMainPresetName() {
 }
 
 /**
+ * 画面左上部、展開されている編成名のセット処理
+ * @param {string} name 編成名
+ */
+function setExpandedPresetName(name) {
+	const a = document.getElementById('expanded_preset_name');
+	a.classList.add('initialize');
+	a.classList.remove('updated');
+	a.textContent = name.trim();
+}
+
+/**
+ * 外部編成データ読み込んだ時など
+ * @param {string} name 
+ */
+function loadOuterPresetName(name) {
+	const a = document.getElementById('expanded_preset_name');
+	a.classList.remove('initialize', 'updated');
+	a.textContent = name.trim();
+}
+
+/**
  * 指定したidのプリセットデータを展開する
  * @param {Object} preset 展開対象プリセット(デコード済)
  * @param {boolean} isResetLandBase データ未指定の際、基地航空隊をリセットする
@@ -2843,6 +2865,7 @@ function updateMainPresetName() {
 function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = true, isResetEnemyFleet = true) {
 	if (!preset) return;
 	try {
+		setExpandedPresetName('');
 		// 基地航空隊展開
 		$('.lb_plane').each((i, e) => {
 			const landBase = preset[0];
@@ -3750,6 +3773,14 @@ function drawResult() {
 	$('.progress_area').addClass('d-none disabled_bar').removeClass('d-flex');
 	$('.simple_lb_progress').addClass('d-none').removeClass('d-flex');
 	$('#fleet_simple_bar').addClass('d-none');
+
+	const expandedName = document.getElementById('expanded_preset_name');
+	if (expandedName.classList.contains('initialize')) expandedName.classList.remove('initialize');
+	else if (!expandedName.classList.contains('updated')) {
+		if (expandedName.textContent.length) expandedName.textContent += "*";
+		expandedName.classList.add('updated');
+	}
+
 	const sameBattle = displayBattle === castInt($('#landBase_target').val());
 	const loopCount = isDefMode ? 1 : 6;
 	let airPowers = [];
@@ -10799,6 +10830,7 @@ async function btn_url_shorten_Clicked() {
 		const preset = readDeckBuilder(url);
 		if (preset) {
 			expandMainPreset(preset, preset[0][0].length > 0, true, false);
+			loadOuterPresetName('外部サイト取込編成');
 			calculate();
 			textbox.placeholder = "編成の反映に成功しました。";
 		}
@@ -10974,6 +11006,7 @@ function btn_load_deck_Clicked() {
 	if (preset) {
 		expandMainPreset(preset, preset[0][0].length > 0, true, false);
 		$('#input_deck').removeClass('is-invalid').addClass('is-valid');
+		loadOuterPresetName('外部サイト取込編成');
 	}
 	else {
 		$('#input_deck').addClass('is-invalid').removeClass('is-valid');
@@ -11029,6 +11062,7 @@ function btn_expand_main_preset_Clicked() {
 	const basePreset = isBackUpMode ? backUpPresets : presets;
 	const preset = basePreset.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_selected')[0].dataset.presetid));
 	expandMainPreset(decodePreset(preset[2]));
+	setExpandedPresetName(preset[1]);
 	$('#modal_main_preset').modal('hide');
 }
 
@@ -11179,6 +11213,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			urlDeck[1] = decodePreset(params.d);
 
 			expandMainPreset(decodePreset(params.d));
+			loadOuterPresetName('URLデータ復元編成');
 		}
 		// デッキビルダーー形式読み込み
 		else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
@@ -11187,7 +11222,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				urlDeck[1] = readDeckBuilder(params.predeck);
 
 				const deck = readDeckBuilder(params.predeck);
-				if (deck) expandMainPreset(deck, deck[0][0].length > 0, true, false);
+				if (deck) {
+					expandMainPreset(deck, deck[0][0].length > 0, true, false);
+					loadOuterPresetName('外部サイト取込編成');
+				}
 			}
 			if (params.hasOwnProperty("lb")) {
 				try {
@@ -11195,6 +11233,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (lbData.length >= 2) {
 						urlDeck[0] = lbData;
 						expandMainPreset([lbData, [], []], true, false, false);
+						loadOuterPresetName('外部サイト取込編成');
 					}
 				}
 				catch (error) {

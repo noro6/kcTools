@@ -44,14 +44,17 @@
 
 <body>
 	<nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow justify-content-start">
-		<div class="d-block d-xl-none text-light px-2 pt-3 py-2 cur_pointer" id="smart_menu">
+		<div class="d-block d-lg-none text-light px-2 pt-3 py-2 cur_pointer" id="smart_menu">
 			<div id="menu-small">
 				<div></div>
 				<div></div>
 				<div></div>
 			</div>
 		</div>
-		<a class="d-none d-xl-block navbar-brand col-sm-3 col-md-2" href="#">制空権シミュレータ</a>
+		<div class="d-none d-lg-flex col-sm-3 col-md-2 flex-column justify-content-center site_title">
+			<div>制空権シミュレータ</div>
+			<div class="pl-3 font_size_12 overflow-hidden" id="expanded_preset_name"></div>
+		</div>
 		<div class="header_button" id="btn_preset_all" data-toggle="tooltip" data-html="true"
 			title="現在の編成を保存したり、保存した編成を展開したりできます。<br>デッキビルダー形式データの取り込みもこちらから。">
 			<i class="fas fa-save"></i>
@@ -121,7 +124,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.8.2</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.8.2.1</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
