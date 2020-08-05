@@ -179,7 +179,7 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190 D-9", abbr: "", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0 },
- ];
+];
 const SHIP_TYPE = [
 	{ id: 1, name: "正規空母" },
 	{ id: 2, name: "装甲空母" },
@@ -708,8 +708,8 @@ const ENEMY_DATA = [
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [72, 36, 36, 30], eqp: [581, 582, 557, 583], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
- ];
- const ENEMY_PLANE_DATA = [
+];
+const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -748,7 +748,7 @@ const ENEMY_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
- ];
+];
 const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
@@ -2448,7 +2448,7 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 0, e: [182, 151], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 0, e: [182, 150], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 0, e: [182], c: "20, 83, 40, 103" },
- ];
+];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
@@ -2494,6 +2494,49 @@ const FORMATION = [
 	{ id: 12, name: "第二警戒", correction: 1.0 },
 	{ id: 13, name: "第三警戒", correction: 1.5 },
 	{ id: 11, name: "第四警戒", correction: 1.0 },
+]
+// 対空カットイン
+const ANTIAIR_CUTIN = [
+	{ id: 1, name: "1種", adj: [1.7, 7] },
+	{ id: 2, name: "2種", adj: [1.7, 6] },
+	{ id: 3, name: "3種", adj: [1.6, 4] },
+	{ id: 4, name: "4種", adj: [1.5, 6] },
+	{ id: 5, name: "5種", adj: [1.5, 4] },
+	{ id: 6, name: "6種", adj: [1.45, 4] },
+	{ id: 7, name: "7種", adj: [1.35, 3] },
+	{ id: 8, name: "8種", adj: [1.4, 4] },
+	{ id: 9, name: "9種", adj: [1.3, 2] },
+	{ id: 10, name: "10種", adj: [1.65, 8] },
+	{ id: 11, name: "11種", adj: [1.5, 6] },
+	{ id: 12, name: "12種", adj: [1.25, 3] },
+	{ id: 14, name: "14種", adj: [1.45, 4] },
+	{ id: 15, name: "15種", adj: [1.3, 3] },
+	{ id: 16, name: "16種", adj: [1.4, 4] },
+	{ id: 17, name: "17種", adj: [1.25, 2] },
+	{ id: 18, name: "18種", adj: [1.2, 2] },
+	{ id: 19, name: "19種", adj: [1.45, 5] },
+	{ id: 20, name: "20種", adj: [1.25, 3] },
+	{ id: 21, name: "21種", adj: [1.45, 5] },
+	{ id: 22, name: "22種", adj: [1.2, 2] },
+	{ id: 23, name: "23種", adj: [1.05, 1] },
+	{ id: 24, name: "24種", adj: [1.25, 3] },
+	{ id: 24, name: "24種", adj: [1.25, 3] },
+	{ id: 25, name: "25種", adj: [1.55, 7] },
+	{ id: 26, name: "26種", adj: [1.4, 6] },
+	{ id: 28, name: "28種", adj: [1.4, 4] },
+	{ id: 29, name: "29種", adj: [1.55, 5] },
+	{ id: 30, name: "30種", adj: [1.3, 3] },
+	{ id: 30, name: "30種", adj: [1.3, 3] },
+	{ id: 31, name: "31種", adj: [1.25, 2] },
+	{ id: 32, name: "32種", adj: [1.2, 3] },
+	{ id: 33, name: "33種", adj: [1.35, 3] },
+	{ id: 34, name: "34種", adj: [1.6, 7] },
+	{ id: 35, name: "35種", adj: [1.55, 6] },
+	{ id: 36, name: "36種", adj: [1.55, 6] },
+	{ id: 37, name: "37種", adj: [1.45, 4] },
+	{ id: 39, name: "39種", adj: [1.7, 10] },
+	{ id: 40, name: "40種", adj: [1.7, 10] },
+	{ id: 41, name: "41種", adj: [1.65, 9] },
 ]
 
 
@@ -2590,4 +2633,4 @@ const DEFAULT_PLANE_PRESET = [
 	{ id: 4, name: "防空セット (サンプル)", planes: [54, 175, 175, 175] },
 ];
 
-const LATEST_VERSION = '1.8.2.1';
+const LATEST_VERSION = '1.9.0';

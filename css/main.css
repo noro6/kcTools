@@ -166,6 +166,7 @@ input[type="text"] { font-size: 12px; }
 .w_20 { width: 20% }
 .w_15 { width: 15% }
 .w_10 { width: 10% }
+.w_5 { width: 5% }
 .min-h-31px { height: 31px }
 
 .general_tr {
@@ -837,6 +838,13 @@ input[type="text"] { font-size: 12px; }
   transition: .3s;
 }
 .btn_show_contact_rate:hover { opacity: 1; }
+
+.btn_antiair_input {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: .3s;
+}
+.btn_antiair_input:hover { opacity: 1; }
 
 /* -----------------------------------
   機体コントロール関連
@@ -1670,6 +1678,25 @@ input[type="text"] { font-size: 12px; }
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 .contact_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+
+
+/* ------------------------------
+  対空砲火入力欄 #modal_fleet_antiair_input
+-------------------------------- */
+#antiair_input_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#antiair_input_table tbody td {
+  padding: .1rem;
+  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
+}
+#antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+
+#fleet_antiair { width: 100px; }
+#select_antiair_cutin { width: 200px; }
+
 
 /* ------------------------------
   オートモード #auto_expand

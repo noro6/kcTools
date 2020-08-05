@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-	<link rel="stylesheet" href="./css/main.min.css">
+	<link rel="stylesheet" href="./css/main.css">
 	<script async src="./js/html2canvas.min.js"></script>
 	<script async src="./js/changes.js"></script>
 	<script defer src="./js/jquery-3.4.1.min.js"></script>
@@ -30,7 +30,7 @@
 	<script defer src="./js/chart.min.js"></script>
 	<script defer src="./js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="./js/data.js"></script>
-	<script defer src="./js/main.min.js"></script>
+	<script defer src="./js/main.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -124,7 +124,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.8.2.1</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.9.0</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -869,7 +869,7 @@
 								<div class="tab-content my-1">
 									<div class="tab-pane fade show active friendFleet_tab container-fluid px-0" id="friendFleet_item1">
 										<div class="d-flex">
-											<div class="ml-2 mr-1 align-self-center no_capture">表示隻数：</div>
+											<div class="ml-2 mr-1 align-self-center no_capture">表示：</div>
 											<select class="custom-select custom-select-sm display_ship_count no_capture">
 												<option value="2" selected>2</option>
 												<option value="4">4</option>
@@ -877,16 +877,20 @@
 											</select>
 											<div class="ml-1 mr-2 align-self-center no_capture">隻</div>
 											<div class="ml-2 align-self-center">
-												<span class="font_color_half">艦隊制空値: </span>
+												<span class="font_color_half">総制空値: </span>
 												<span class="fleet_ap">0</span>
 											</div>
 											<div class="ml-3 align-self-center">
-												<span class="font_color_half">触接率: </span>
+												<span class="font_color_half">触接: </span>
 												<span class="contact_start_rate">0.0%</span>
 											</div>
-											<div class="ml-2 align-self-center btn_show_contact_rate no_capture">
+											<div class="ml-1 align-self-center btn_show_contact_rate no_capture">
 												<i class="fas fa-search"></i>
-												<span class="font_size_11">触接詳細</span>
+												<span class="font_size_11">詳細</span>
+											</div>
+											<div class="ml-3 align-self-center btn_antiair_input no_capture">
+												<i class="fas fa-search"></i>
+												<span class="font_size_11">対空砲火設定</span>
 											</div>
 										</div>
 										<div class="d-flex justify-content-center flex-wrap fleet_tab">
@@ -4073,6 +4077,7 @@
 													<td class="td_avg_slot">残数平均</td>
 													<td class="td_max_slot">残数最大</td>
 													<td class="td_min_slot">残数最小</td>
+													<td class="td_all_dead">棒立ち率</td>
 													<td class="td_detail_slot">詳細</td>
 												</tr>
 											</thead>
@@ -6293,6 +6298,56 @@
 				</div>
 				<div class="modal-footer">
 					<div class="ml-auto">
+						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_fleet_antiair_input" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">艦隊対空砲火設定</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body pt-1">
+					<div class="mt-2">
+						<div class="d-flex">
+							<div class="align-self-center custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="antiair_grand">
+								<label class="custom-control-label" for="antiair_grand">連合艦隊</label>
+							</div>
+							<div class="ml-3 align-self-center custom-control custom-checkbox d-none">
+								<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
+								<label class="custom-control-label" for="antiair_air_raid">空襲</label>
+							</div>
+						</div>
+						<div class="d-flex my-1">
+							<div class="align-self-center">艦隊防空：</div>
+							<input type="number" class="align-self-center form-control form-control-sm" step="0.1" id="fleet_antiair">
+							<div class="ml-3 align-self-center">対空CI：</div>
+							<select class="custom-select custom-select-sm" id="select_antiair_cutin"></select>
+						</div>
+						<div class="hidden_text mt-1 d-none">※ 第2艦隊は7番目以降から入力してください。</div>
+					</div>
+					<table class="text-center mt-1" id="antiair_input_table">
+						<thead class="general_thead">
+							<tr>
+								<td class="w_10"></td>
+								<td class="w_20">加重対空値</td>
+								<td class="w_20">割合撃墜</td>
+								<td class="w_20">固定撃墜</td>
+								<td class="w_20">最低保証</td>
+							</tr>
+						</thead>
+						<tbody id="antiair_weight_inputs"></tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" class="btn btn-sm btn-danger reset mr-2">リセット</button>
 						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
 					</div>
 				</div>
