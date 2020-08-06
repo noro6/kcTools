@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="./fonts/style.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-	<link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./css/main.min.css">
 	<script async src="./js/html2canvas.min.js"></script>
 	<script async src="./js/changes.js"></script>
 	<script defer src="./js/jquery-3.4.1.min.js"></script>
@@ -30,7 +30,7 @@
 	<script defer src="./js/chart.min.js"></script>
 	<script defer src="./js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="./js/data.js"></script>
-	<script defer src="./js/main.js"></script>
+	<script defer src="./js/main.min.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -4062,10 +4062,18 @@
 										</table>
 									</div>
 									<div class="mb-2" id="enemy_shoot_down_table_parent">
-										<div class="font_size_14">
-											<div class="drag_handle cur_move">
-												<span>敵艦隊の搭載数（本隊航空戦 stage1 後）</span>
-												<span class="ml-1 font_size_11 no_capture">※詳細行クリックで詳細を表示</span>
+										<div class="font_size_14 d-flex">
+											<div class="drag_handle cur_move align-self-center">
+												<span>敵艦隊の搭載数</span>
+												<span id="enemy_slot_result_mode">（本隊航空戦 stage1 後）</span>
+											</div>
+											<div class="ml-auto btn_antiair_input align-self-center no_capture">
+												<i class="fas fa-search"></i>
+												<span>対空砲火設定</span>
+											</div>
+											<div class="ml-3 custom-control custom-checkbox no_capture">
+												<input type="checkbox" class="custom-control-input" id="ignore_stage2">
+												<label class="custom-control-label cur_pointer" for="ignore_stage2">対空砲火無視</label>
 											</div>
 										</div>
 										<table class="text-center w-100" id="enemy_shoot_down_table">
@@ -5167,15 +5175,19 @@
 						<div class="d-flex my-1">
 							<div class="mx-2 custom-control custom-checkbox align-self-center">
 								<input type="checkbox" class="custom-control-input" id="fav_only">
-								<label class="custom-control-label" for="fav_only">お気に入りのみ</label>
+								<label class="custom-control-label" for="fav_only">お気に入り</label>
 							</div>
 							<div class="mx-2 custom-control custom-checkbox align-self-center">
 								<input type="checkbox" class="custom-control-input" id="disp_in_stock">
-								<label class="custom-control-label" for="disp_in_stock">所持装備から選択</label>
+								<label class="custom-control-label" for="disp_in_stock">所持装備のみ</label>
+							</div>
+							<div class="mx-2 custom-control custom-checkbox align-self-center">
+								<input type="checkbox" class="custom-control-input" id="divide_stock">
+								<label class="custom-control-label" for="divide_stock">個別表示</label>
 							</div>
 							<div class="custom-control custom-checkbox align-self-center">
 								<input type="checkbox" class="custom-control-input" id="disp_equipped">
-								<label class="custom-control-label" for="disp_equipped">配備済機体も表示</label>
+								<label class="custom-control-label" for="disp_equipped">配備済も表示</label>
 							</div>
 						</div>
 					</div>
@@ -6306,7 +6318,7 @@
 	</div>
 
 	<div class="modal fade" id="modal_fleet_antiair_input" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content mt-5">
 				<div class="modal-header">
 					<h5 class="modal-title">艦隊対空砲火設定</h5>
@@ -6326,7 +6338,7 @@
 						</div>
 						<div class="d-flex my-1">
 							<div class="align-self-center">艦隊防空：</div>
-							<input type="number" class="align-self-center form-control form-control-sm" step="0.1" id="fleet_antiair">
+							<input type="number" class="align-self-center form-control form-control-sm" step="0.01" id="fleet_antiair">
 							<div class="ml-3 align-self-center">対空CI：</div>
 							<select class="custom-select custom-select-sm" id="select_antiair_cutin"></select>
 						</div>
