@@ -1699,7 +1699,13 @@ input[type="text"] { font-size: 12px; }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
 #fleet_antiair { width: 100px; }
-#select_antiair_cutin { width: 200px; }
+/* #select_antiair_cutin { width: 200px; } */
+#import_antiair {
+  font-size: 12px;
+  overflow: hidden;
+  height: 31px;
+  resize: none;
+}
 
 
 /* ------------------------------
@@ -1785,6 +1791,27 @@ input[type="text"] { font-size: 12px; }
 }
 .deep_blue_theme #draggable_plane_box{
   background-color: rgba(30, 35, 60, 0.96);
+}
+#draggable_plane_box a.nav-link {
+  padding-right: 10px;
+  padding-left: 10px;
+  transition: .2s;
+  color: #777;
+}
+.dark-theme #draggable_plane_box a.nav-link {
+  color: #555 !important;
+  background-color: transparent !important;
+  border-bottom-color: #777 !important;
+}
+.dark-theme #draggable_plane_box a.nav-link:hover {
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff80 transparent !important;
+  color: #999 !important;
+}
+.dark-theme #draggable_plane_box a.nav-link.active{
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff transparent !important;
+  color: #eee !important;
 }
 #btn_hide_plane_box {
   opacity: 0.4;
