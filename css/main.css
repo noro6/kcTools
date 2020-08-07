@@ -166,6 +166,7 @@ input[type="text"] { font-size: 12px; }
 .w_20 { width: 20% }
 .w_15 { width: 15% }
 .w_10 { width: 10% }
+.w_5 { width: 5% }
 .min-h-31px { height: 31px }
 
 .general_tr {
@@ -838,6 +839,13 @@ input[type="text"] { font-size: 12px; }
 }
 .btn_show_contact_rate:hover { opacity: 1; }
 
+.btn_antiair_input {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: .3s;
+}
+.btn_antiair_input:hover { opacity: 1; }
+
 /* -----------------------------------
   機体コントロール関連
 ----------------------------------- */
@@ -1087,6 +1095,10 @@ input[type="text"] { font-size: 12px; }
 .plane_td_stock {
   color: #ff4400;
   font-size: 10px;
+}
+.plane_td_remodel {
+  color: #00c8c8;
+  font-size: 12px;
 }
 .tr_multi {
   padding-top: .15rem;
@@ -1671,6 +1683,31 @@ input[type="text"] { font-size: 12px; }
 }
 .contact_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
+
+/* ------------------------------
+  対空砲火入力欄 #modal_fleet_antiair_input
+-------------------------------- */
+#antiair_input_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#antiair_input_table tbody td {
+  padding: .1rem;
+  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
+}
+#antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+
+#fleet_antiair { width: 100px; }
+/* #select_antiair_cutin { width: 200px; } */
+#import_antiair {
+  font-size: 12px;
+  overflow: hidden;
+  height: 31px;
+  resize: none;
+}
+
+
 /* ------------------------------
   オートモード #auto_expand
 -------------------------------- */
@@ -1754,6 +1791,27 @@ input[type="text"] { font-size: 12px; }
 }
 .deep_blue_theme #draggable_plane_box{
   background-color: rgba(30, 35, 60, 0.96);
+}
+#draggable_plane_box a.nav-link {
+  padding-right: 10px;
+  padding-left: 10px;
+  transition: .2s;
+  color: #777;
+}
+.dark-theme #draggable_plane_box a.nav-link {
+  color: #555 !important;
+  background-color: transparent !important;
+  border-bottom-color: #777 !important;
+}
+.dark-theme #draggable_plane_box a.nav-link:hover {
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff80 transparent !important;
+  color: #999 !important;
+}
+.dark-theme #draggable_plane_box a.nav-link.active{
+  border-bottom: 2px solid;
+  border-color: transparent transparent #00aeff transparent !important;
+  color: #eee !important;
 }
 #btn_hide_plane_box {
   opacity: 0.4;
