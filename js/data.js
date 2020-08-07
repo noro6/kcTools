@@ -690,9 +690,9 @@ const ENEMY_DATA = [
 	{ id: 458, type: [1, 15], name: "軽巡棲姫II [丙]", slot: [], eqp: [], orig: 458, aaw: 14, aabo: 0 },
 	{ id: 459, type: [1, 15], name: "軽巡棲姫II [乙]", slot: [], eqp: [], orig: 459, aaw: 16, aabo: 0 },
 	{ id: 460, type: [1, 15], name: "軽巡棲姫II [甲]", slot: [], eqp: [], orig: 460, aaw: 16, aabo: 0 },
-	{ id: 461, type: [1, 11], name: "空母夏姫 [丁]", slot: [46, 44, 44], eqp: [581, 557, 583], orig: 461, aaw: 24, aabo: 3 },
-	{ id: 462, type: [1, 11], name: "空母夏姫 [丙]", slot: [48, 46, 46], eqp: [581, 557, 583], orig: 462, aaw: 24, aabo: 3 },
-	{ id: 463, type: [1, 11], name: "空母夏姫 [乙]", slot: [], eqp: [], orig: 463, aaw: 0, aabo: 0 },
+	{ id: 461, type: [1, 11], name: "空母夏姫 [丁]", slot: [45, 45, 44, 44], eqp: [556, 557, 557, 558], orig: 461, aaw: 24, aabo: 2 },
+	{ id: 462, type: [1, 11], name: "空母夏姫 [丙]", slot: [47, 47, 47, 47], eqp: [556, 557, 557, 558], orig: 462, aaw: 24, aabo: 2 },
+	{ id: 463, type: [1, 11], name: "空母夏姫 [乙]", slot: [60, 52, 56, 30], eqp: [556, 557, 557, 558], orig: 463, aaw: 26, aabo: 2 },
 	{ id: 464, type: [1, 11], name: "空母夏姫II", slot: [68, 66, 66], eqp: [581, 557, 583], orig: 464, aaw: 28, aabo: 3 },
 	{ id: 465, type: [1, 13], name: "南方戦艦新棲姫 [丙]", slot: [], eqp: [], orig: 465, aaw: 153, aabo: 15 },
 	{ id: 466, type: [1, 13], name: "南方戦艦新棲姫 [乙]", slot: [], eqp: [], orig: 466, aaw: 153, aabo: 15 },
@@ -700,16 +700,16 @@ const ENEMY_DATA = [
 	{ id: 468, type: [1, 13], name: "南方戦艦新棲姫-壊 [丙]", slot: [], eqp: [], orig: 468, aaw: 155, aabo: 15 },
 	{ id: 469, type: [1, 13], name: "南方戦艦新棲姫-壊 [乙]", slot: [], eqp: [], orig: 469, aaw: 155, aabo: 15 },
 	{ id: 470, type: [1, 13], name: "南方戦艦新棲姫-壊 [甲]", slot: [], eqp: [], orig: 470, aaw: 159, aabo: 15 },
-	{ id: 471, type: [1, 11], name: "南太平洋空母棲姫 [丙]", slot: [28, 12, 12, 10], eqp: [581, 582, 557, 583], orig: 471, aaw: 24, aabo: 4 },
+	{ id: 471, type: [1, 11], name: "南太平洋空母棲姫 [丙]", slot: [22, 22, 22, 11], eqp: [581, 582, 557, 583], orig: 471, aaw: 24, aabo: 4 },
 	{ id: 472, type: [1, 11], name: "南太平洋空母棲姫 [乙]", slot: [], eqp: [], orig: 0, aaw: 26, aabo: 4 },
 	{ id: 473, type: [1, 11], name: "南太平洋空母棲姫 [甲]", slot: [36, 32, 16, 16], eqp: [581, 582, 557, 583], orig: 473, aaw: 26, aabo: 4 },
-	{ id: 474, type: [1, 11], name: "南太平洋空母棲姫-壊 [丙]", slot: [38, 14, 14, 10], eqp: [581, 582, 557, 583], orig: 474, aaw: 26, aabo: 4 },
+	{ id: 474, type: [1, 11], name: "南太平洋空母棲姫-壊 [丙]", slot: [23, 23, 22, 22], eqp: [581, 582, 557, 583], orig: 474, aaw: 26, aabo: 4 },
 	{ id: 475, type: [1, 11], name: "南太平洋空母棲姫-壊 [乙]", slot: [], eqp: [], orig: 0, aaw: 26, aabo: 4 },
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [72, 36, 36, 30], eqp: [581, 582, 557, 583], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
-];
-const ENEMY_PLANE_DATA = [
+ ];
+ const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -748,7 +748,7 @@ const ENEMY_PLANE_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
-];
+ ];
 const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
