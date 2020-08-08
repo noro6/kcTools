@@ -4821,8 +4821,12 @@ function getAirPower_lb(lb_plane) {
 	}
 	// 陸偵
 	else if ([104].includes(type)) {
-		// とりあえず★2以上を制空値+1
-		sumPower = 1.0 * antiAir * Math.sqrt(slot) + (remodel >= 2 ? 1 : 0);
+		// 搭載4★2以上を制空値+1
+		sumPower = 1.0 * antiAir * Math.sqrt(slot) + (remodel >= 2 && slot === 4 ? 1 : 0);
+	}
+	else if (lb_plane.id === 138) {
+		// 二式大艇 搭載4★4で制空+1
+		sumPower = 1.0 * antiAir * Math.sqrt(slot) + (remodel >= 4 && slot === 4 ? 1 : 0);
 	}
 	// そのた
 	else sumPower = 1.0 * antiAir * Math.sqrt(slot);
