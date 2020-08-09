@@ -6330,16 +6330,39 @@
 								<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
 								<label class="custom-control-label" for="antiair_air_raid">空襲</label>
 							</div>
+							<div class="ml-4 d-flex align-self-center flex-grow-1">
+								<div class="align-self-center text-nowrap">対空CI：</div>
+								<select class="custom-select custom-select-sm" id="select_antiair_cutin"></select>
+							</div>
 						</div>
 						<div class="d-flex my-1">
-							<div class="align-self-center">艦隊防空：</div>
+							<div class="align-self-center">基準艦隊防空：</div>
 							<input type="number" class="align-self-center form-control form-control-sm" step="0.01"
-								id="fleet_antiair">
-							<div class="ml-3 d-flex align-self-center flex-grow-1">
-								<div class="align-self-center text-nowrap">対空CI：</div>
-							<select class="custom-select custom-select-sm" id="select_antiair_cutin"></select>
+								id="fleet_antiair_base">
+							<div class="ml-1 align-self-center no_capture">
+								<i class="far fa-question-circle-o cur_help" data-toggle="tooltip" data-html="true"
+									title="この値に、右の補正値を掛けた値を艦隊防空値として算出します。基本的に単縦や第四警戒時の値を入力します。"></i>
+							</div>
+							<div class="d-flex align-self-center font_size_12 flex-grow-1 ml-3">
+								<div class="align-self-center text-nowrap">補正値：</div>
+								<select class="custom-select custom-select-sm" id="fleet_antiair_formation">
+									<option value="1" selected>&times; 1.0（単縦陣)</option>
+									<option value="2">&times; 1.2（複縦陣）</option>
+									<option value="3">&times; 1.6（輪形陣）</option>
+									<option value="4">&times; 1.0（梯形陣）</option>
+									<option value="5">&times; 1.0（単横陣）</option>
+									<option value="6">&times; 1.1（警戒陣）</option>
+									<option class="d-none" value="15">&times; 1.1（第一警戒）</option>
+									<option class="d-none" value="12">&times; 1.0（第二警戒）</option>
+									<option class="d-none" value="13">&times; 1.5（第三警戒）</option>
+									<option class="d-none" value="11">&times; 1.0（第四警戒）</option>
+								</select>
+							</div>
 						</div>
-					</div>
+						<div class="border-top pt-2 d-flex">
+							<div class="align-self-center">艦隊防空値：</div>
+							<input type="number" class="align-self-center form-control form-control-sm" id="fleet_antiair">
+						</div>
 						<div class="hidden_text mt-1 font_size_11 d-none">※ 第2艦隊は7行目以降から入力してください。</div>
 					</div>
 					<table class="text-center mt-1" id="antiair_input_table">
@@ -6356,7 +6379,8 @@
 					</table>
 					<div class="mt-1 d-flex">
 						<div class="align-self-center text-nowrap">一括取込：</div>
-						<textarea class="form-control font_size_12 px-2" id="import_antiair" placeholder="99,102,105,..."></textarea>
+						<textarea class="form-control font_size_12 px-2" id="import_antiair"
+							placeholder="99,102,105,..."></textarea>
 						<button type="button" class="btn btn-sm btn-success text-nowrap ml-2" id="btn_import_antiair">読込</button>
 					</div>
 					<div class="font_size_11">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。</div>

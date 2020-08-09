@@ -1699,7 +1699,7 @@ input[type="text"] { font-size: 12px; }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
 #fleet_antiair { width: 100px; }
-/* #select_antiair_cutin { width: 200px; } */
+#fleet_antiair_base { width: 100px; }
 #import_antiair {
   font-size: 12px;
   overflow: hidden;

@@ -115,7 +115,7 @@ let inputAntiAirWeights = [];
 		艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ]
 			機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 		敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マスid]
-		対空: [0:撃墜テーブル, 1:艦隊防空, 2:対空CI種別, 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値]
+		対空: [0:撃墜テーブル, 1:基準艦隊防空, 2:対空CI種別, 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
 
 	在庫メモ
 	[0:id, 1:[0:未改修数, 1:★1数, ... 10:★MAX数]]
@@ -3078,12 +3078,13 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		if (preset.length >= 4) {
 			const antiAirPreset = preset[3];
 			antiAirTable = antiAirPreset[0];
-			document.getElementById('fleet_antiair').value = antiAirPreset[1];
+			document.getElementById('fleet_antiair_base').value = antiAirPreset[1];
 			document.getElementById('select_antiair_cutin').value = antiAirPreset[2];
 			document.getElementById('antiair_grand')['checked'] = antiAirPreset[3];
 			if (antiAirPreset[3]) document.getElementById('antiair_air_raid').parentElement.classList.remove('d-none');
 			document.getElementById('antiair_air_raid')['checked'] = antiAirPreset[4];
 			inputAntiAirWeights = antiAirPreset[5];
+			document.getElementById('fleet_antiair_formation').value = antiAirPreset[6];
 		}
 		else {
 			antiAirTable = [];
@@ -3213,11 +3214,12 @@ function createEnemyFleetPreset() {
 function createAntiAirTablePreset() {
 	return [
 		antiAirTable,
-		castFloat(document.getElementById('fleet_antiair').value),
+		castFloat(document.getElementById('fleet_antiair_base').value),
 		castInt(document.getElementById('select_antiair_cutin').value),
 		document.getElementById('antiair_grand')['checked'],
 		document.getElementById('antiair_air_raid')['checked'],
-		inputAntiAirWeights
+		inputAntiAirWeights,
+		castInt(document.getElementById('fleet_antiair_formation').value)
 	];
 }
 
@@ -9142,13 +9144,16 @@ function btn_antiair_input_Clicked() {
  * 自艦隊対空性能の計算 モーダル内
  */
 function updateFleetAntiairTable() {
-	const input = validateInputNumberFloat($('#fleet_antiair').val(), 999.9, 0);
-	if (input !== $('#fleet_antiair').val()) $('#fleet_antiair').val(input);
-
-	const fleetAntiAir = castFloat(input);
+	const formationId = castInt($('#fleet_antiair_formation').val());
+	let fleetAntiAir = castFloat($('#fleet_antiair_base').val());
 	const isGrand = $('#antiair_grand').prop('checked');
 	const isAirRaid = isGrand && $('#antiair_air_raid').prop('checked');
 	const cutIn = ANTIAIR_CUTIN.find(v => v.id === castInt($('#select_antiair_cutin').val()));
+
+	// 艦隊防空値 * 陣形補正
+	const formation = FORMATION.find(v => v.id === formationId)
+	fleetAntiAir *= formation ? formation.correction : 1.0;
+	$('#fleet_antiair').val(fleetAntiAir);
 
 	antiAirTable = [];
 	inputAntiAirWeights = [];
@@ -9185,6 +9190,35 @@ function updateFleetAntiairTable() {
 			$(e).find('.minimum_shoot_down').text(minimun + '機');
 		}
 	});
+}
+
+/**
+ * 艦隊防空値変更
+ */
+function fleet_antiair_base_TextChanged() {
+	const input = validateInputNumberFloat($('#fleet_antiair_base').val(), 999.9, 0);
+	if (input !== $('#fleet_antiair_base').val()) $('#fleet_antiair_base').val(input);
+
+	const formation = castInt($('#fleet_antiair_formation').val());
+	if (formation > 10) $('#fleet_antiair_formation').val(11);
+	else $('#fleet_antiair_formation').val(1);
+
+	updateFleetAntiairTable();
+}
+
+/**
+ * 艦隊防空値直接入力
+ */
+function fleet_antiair_TextChanged() {
+	const input = validateInputNumberFloat($('#fleet_antiair').val(), 999.9, 0);
+	if (input !== $('#fleet_antiair').val()) $('#fleet_antiair').val(input);
+
+	$('#fleet_antiair_base').val(input);
+	const formation = castInt($('#fleet_antiair_formation').val());
+	if (formation > 10) $('#fleet_antiair_formation').val(11);
+	else $('#fleet_antiair_formation').val(1);
+
+	updateFleetAntiairTable();
 }
 
 /**
@@ -9234,16 +9268,38 @@ function resetFleetAntiairInput() {
  * 対空砲火テーブル　連合トグル
  */
 function antiair_grand_Changed() {
+	const formation = castInt($('#fleet_antiair_formation').val());
 	if ($('#antiair_grand').prop('checked')) {
+		// 連合時
 		$('#modal_fleet_antiair_input').find('.escort_fleet').removeClass('d-none');
 		$('#antiair_air_raid').parent().removeClass('d-none');
 		$('.hidden_text').removeClass('d-none');
+		$('#fleet_antiair_formation').find('option').each((i, e) => {
+			if (castInt($(e).val()) > 10) $(e).removeClass('d-none');
+			else $(e).addClass('d-none');
+		});
+
+		if ([1, 2, 3, 5].includes(formation)) {
+			$('#fleet_antiair_formation').val(formation + 10);
+		}
+		else if (formation < 10) $('#fleet_antiair_formation').val(11);
 	}
 	else {
+		// 通常時
 		$('#modal_fleet_antiair_input').find('.escort_fleet').addClass('d-none');
 		$('#antiair_air_raid').parent().addClass('d-none');
 		$('.hidden_text').addClass('d-none');
+		$('#fleet_antiair_formation').find('option').each((i, e) => {
+			if (castInt($(e).val()) > 10) $(e).addClass('d-none');
+			else $(e).removeClass('d-none');
+		});
+
+		if ([11, 12, 13, 15].includes(formation)) {
+			$('#fleet_antiair_formation').val(formation - 10);
+		}
+		else if (formation > 10) $('#fleet_antiair_formation').val(11);
 	}
+
 	updateFleetAntiairTable();
 }
 
@@ -11835,13 +11891,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_stage2_detail').on('input', '#free_anti_air_weight', function () { free_modify_input_Changed($(this)) });
 	$('#modal_stage2_detail').on('input', '#free_anti_air_bornus', function () { free_modify_input_Changed($(this)) });
 	$('#modal_contact_detail').on('change', '.custom-radio', contact_detail_redraw);
-	$('#modal_fleet_antiair_input').on('focus', '#fleet_antiair', function () { $(this).select(); });
-	$('#modal_fleet_antiair_input').on('input', '#fleet_antiair', updateFleetAntiairTable);
+	$('#modal_fleet_antiair_input').on('focus', '#fleet_antiair_base', function () { $(this).select(); });
+	$('#modal_fleet_antiair_input').on('input', '#fleet_antiair_base', fleet_antiair_base_TextChanged);
+	$('#modal_fleet_antiair_input').on('input', '#fleet_antiair', fleet_antiair_TextChanged);
 	$('#modal_fleet_antiair_input').on('input', '.antiair_weight', updateFleetAntiairTable);
 	$('#modal_fleet_antiair_input').on('click', '.reset', resetFleetAntiairInput);
 	$('#modal_fleet_antiair_input').on('change', '#antiair_grand', antiair_grand_Changed);
 	$('#modal_fleet_antiair_input').on('change', '#antiair_air_raid', updateFleetAntiairTable);
 	$('#modal_fleet_antiair_input').on('change', '#select_antiair_cutin', updateFleetAntiairTable);
+	$('#modal_fleet_antiair_input').on('change', '#fleet_antiair_formation', updateFleetAntiairTable);
 	$('#modal_fleet_antiair_input').on('input', '#import_antiair', import_antiair_Changed);
 	$('#modal_fleet_antiair_input').on('click', '#btn_import_antiair', btn_import_antiair_Clicked);
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);

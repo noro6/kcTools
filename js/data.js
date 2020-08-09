@@ -2490,6 +2490,7 @@ const FORMATION = [
 	{ id: 3, name: "輪形陣", correction: 1.6 },
 	{ id: 4, name: "梯形陣", correction: 1.0 },
 	{ id: 5, name: "単横陣", correction: 1.0 },
+	{ id: 6, name: "警戒陣", correction: 1.1 },
 	{ id: 15, name: "第一警戒", correction: 1.1 },
 	{ id: 12, name: "第二警戒", correction: 1.0 },
 	{ id: 13, name: "第三警戒", correction: 1.5 },
