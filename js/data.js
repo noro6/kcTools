@@ -2454,7 +2454,7 @@ const ENEMY_PATTERN = [
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
 	{ id: 1, name: "航空優勢", abbr: "優勢", rate: 8 },
-	{ id: 2, name: "航空均衡", abbr: "均衡", rate: 6 },
+	{ id: 2, name: "制空拮抗", abbr: "拮抗", rate: 6 },
 	{ id: 3, name: "航空劣勢", abbr: "劣勢", rate: 4 },
 	{ id: 4, name: "制空権喪失", abbr: "喪失", rate: 1 },
 	{ id: -1, name: "航空戦なし", abbr: "-", rate: 0 },
