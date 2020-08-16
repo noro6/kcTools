@@ -3323,7 +3323,7 @@ function deleteMainPreset(id) {
  */
 function readDeckBuilder(deck) {
 	if (!deck) return null;
-	if (deck.indexOf('predeck') > -1) deck = deck.split('?predeck=')[1];
+	if (deck.indexOf('?predeck=') > -1) deck = deck.split('?predeck=')[1];
 	try {
 		deck = decodeURIComponent(deck).trim('"');
 		const obj = JSON.parse(deck);
