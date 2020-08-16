@@ -8532,7 +8532,9 @@ function btn_prof_Clicked($this) {
 	const prof = $this[0].dataset.prof;
 	if ($targetContent.attr('id') === 'landBase') {
 		$targetContent.find('.lb_plane').each((i, e) => {
-			setProficiency($(e).find('.prof_select'), prof);
+			// 陸偵は||まで
+			if(prof > 2 && castInt($(e)[0].dataset.type) === 104) setProficiency($(e).find('.prof_select'), 2);
+			else setProficiency($(e).find('.prof_select'), prof);
 		});
 	}
 	else if ($targetContent.attr('id') === 'friendFleet') {
