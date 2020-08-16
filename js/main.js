@@ -8533,8 +8533,8 @@ function btn_prof_Clicked($this) {
 	if ($targetContent.attr('id') === 'landBase') {
 		$targetContent.find('.lb_plane').each((i, e) => {
 			// 陸偵は||まで
-			if(prof > 2 && castInt($(e)[0].dataset.type) === 104) setProficiency($(e).find('.prof_select'), 2);
-			else setProficiency($(e).find('.prof_select'), prof);
+			if (prof > 2 && castInt($(e)[0].dataset.planeid) === 312) setProficiency($(e).find('.prof_select'), 2);
+			else if (castInt($(e)[0].dataset.planeid) !== 311) setProficiency($(e).find('.prof_select'), prof);
 		});
 	}
 	else if ($targetContent.attr('id') === 'friendFleet') {
