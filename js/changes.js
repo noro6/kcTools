@@ -802,4 +802,4 @@ let CHANGE_LOG = [
 	},
 ];
 
-const LAST_UPDATE_DATE = "2020/08/07";
+const LAST_UPDATE_DATE = "2020/08/16";

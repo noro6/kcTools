@@ -52,7 +52,7 @@ let timer = false;
 let planePreset = null;
 
 // 熟練度 >> 選択時、内部熟練度を 120 として計算するもの
-let initialProf120Plane = [1, 4, 5, 7, 8, 102, 103, 104];
+let initialProf120Plane = [];
 
 // controlキー状態
 let isCtrlPress = false;
@@ -5080,14 +5080,35 @@ function getContactSelectRate(plane) {
 	if ([2, -2, 4, 5, 8, 104].includes(plane.type)) {
 		let scout = plane.scout;
 		const remodel = plane.remodel;
-		if (plane.id === 61) scout = Math.ceil(scout + 0.25 * remodel);
-		if (plane.id === 151) scout = Math.ceil(scout + 0.4 * remodel);
-		if (plane.id === 25) scout = Math.ceil(scout + 0.14 * remodel);
-		if (plane.id === 59) scout = Math.ceil(scout + 0.2 * remodel);
-		if (plane.id === 102) scout = Math.ceil(scout + 0.1 * remodel);
-		if (plane.id === 163) scout = Math.ceil(scout + 0.14 * remodel);
-		if (plane.id === 304) scout = Math.ceil(scout + 0.14 * remodel);
-		if (plane.id === 370) scout = Math.ceil(scout + 0.14 * remodel);
+
+		switch (plane.id) {
+			case 102:
+				// 九八式水上偵察機(夜偵)
+				scout = Math.ceil(scout + 0.1 * remodel);
+				break;
+			case 25:		// 零式水上偵察機
+			case 163:	// Ro.43水偵
+			case 304:	// S9 Osprey
+			case 370:	// Swordfish Mk.II改(水偵型)
+			case 239:	// 零式水上偵察機11型乙(熟練)
+				scout = Math.ceil(scout + 0.14 * remodel);
+				break;
+			case 59:
+				// 零式水上観測機
+				scout = Math.ceil(scout + 0.2 * remodel);
+				break;
+			case 61:
+				// 二式艦上偵察機
+				scout = Math.ceil(scout + 0.25 * remodel);
+				break;
+			case 151:
+				// 試製景雲(艦偵型)
+				scout = Math.ceil(scout + 0.4 * remodel);
+				break;
+			default:
+				break;
+		}
+
 		return [scout / 14, scout / 16, scout / 18];
 	}
 	return [];
