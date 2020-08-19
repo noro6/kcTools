@@ -11132,6 +11132,34 @@ function btn_show_detail_Clicked($this) {
 	detailCalculate();
 }
 
+
+/**
+ * 搭載数分布をクリップボードに出力
+ */
+function btn_output_slot_dist_Clicked() {
+	try {
+		const labels = chartInstance.data.labels;
+		const rates = chartInstance.data.datasets[0].data;
+
+		const output = [];
+		if (labels.length > 0) {
+			for (let i = 0; i < labels.length; i++) {
+				output.push({ slot: labels[i], rate: castFloat(rates[i]) / 100 });
+			}
+		}
+
+		console.log(output);
+		console.log(JSON.stringify(output));
+
+		$('#dist_text').removeClass('d-none');
+		$('#dist_text').val(JSON.stringify(output));
+		copyInputTextToClipboard($('#dist_text'));
+		$('#dist_text').addClass('d-none');
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 /**
  * 確認ダイアログOKボタンクリック時
  */
@@ -11899,6 +11927,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
 	$('#modal_result_detail').on('click', '.btn_show_detail:not(.disabled)', function () { btn_show_detail_Clicked($(this)); });
+	$('#modal_result_detail').on('click', '#btn_output_slot_dist', btn_output_slot_dist_Clicked);
 	$('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
 	$('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
 	$('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });

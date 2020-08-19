@@ -30,7 +30,7 @@
 	<script defer src="./js/chart.min.js"></script>
 	<script defer src="./js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="./js/data.js"></script>
-	<script defer src="./js/main.min.js"></script>
+	<script defer src="./js/main.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -5986,7 +5986,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="d-flex" id="detail_wave">
+					<div class="d-flex mt-1" id="detail_wave">
 						<div class="align-self-center mx-2">
 							<div class="custom-control custom-radio custom-control-inline">
 								<input type="radio" id="detail_wave1" name="detail_wave_select" checked class="custom-control-input">
@@ -5996,6 +5996,13 @@
 								<input type="radio" id="detail_wave2" name="detail_wave_select" class="custom-control-input">
 								<label class="custom-control-label" for="detail_wave2">第2波</label>
 							</div>
+						</div>
+						<div class="ml-auto">
+							<div class="round_button align-self-center d-table" id="btn_output_slot_dist" data-toggle="tooltip"
+								title="このスロットの残機数分布データをクリップボードにコピー">
+								<i class="fas fa-file-text d-table-cell align-middle"></i>
+							</div>
+							<input type="text" class="d-none" id="dist_text">
 						</div>
 					</div>
 					<canvas id="detailChart" width="440" height="260"></canvas>
