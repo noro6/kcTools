@@ -7191,7 +7191,7 @@ function updateDetailChart(data, xLabelString, tooltips) {
 		const num = data.filter(v => v === i).length;
 		if (!num) continue;
 		xLabels.push(i);
-		actualData.push((100 * num / maxCount).toFixed(maxCount >= 100000 ? 5 : maxCount >= 10000 ? 4 : maxCount >= 1000 ? 3 : 2));
+		actualData.push(100 * num / maxCount);
 		sumRate += 100 * num / maxCount;
 		rateData.push(sumRate.toFixed(1));
 		if (!par50 && sumRate >= 50) par50 = i;
@@ -11143,13 +11143,16 @@ function btn_output_slot_dist_Clicked() {
 
 		const output = [];
 		if (labels.length > 0) {
-			for (let i = 0; i < labels.length; i++) {
-				output.push({ slot: labels[i], rate: castFloat(rates[i]) / 100 });
+			for (let i = 18; i >= 0; i--) {
+				const index = labels.indexOf(i);
+				if (index > -1) {
+					output.push({ slot: i, rate: rates[index] / 100 });
+				}
+				else {
+					output.push({ slot: i, rate: 0 });
+				}
 			}
 		}
-
-		console.log(output);
-		console.log(JSON.stringify(output));
 
 		$('#dist_text').removeClass('d-none');
 		$('#dist_text').val(JSON.stringify(output));
