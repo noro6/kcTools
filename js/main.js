@@ -11134,7 +11134,7 @@ function btn_show_detail_Clicked($this) {
 
 
 /**
- * 搭載数分布をクリップボードに出力
+ * 搭載数分布をクリップボードに出力 JSON
  */
 function btn_output_slot_dist_Clicked() {
 	try {
@@ -11156,6 +11156,33 @@ function btn_output_slot_dist_Clicked() {
 
 		$('#dist_text').removeClass('d-none');
 		$('#dist_text').val(JSON.stringify(output));
+		copyInputTextToClipboard($('#dist_text'));
+		$('#dist_text').addClass('d-none');
+	} catch (error) {
+		console.log(error);
+	}
+}
+/**
+ * 搭載数分布をクリップボードに出力 表計算ソフト系
+ */
+function btn_output_slot_dist_table_Clicked() {
+	try {
+		const labels = chartInstance.data.labels;
+		const rates = chartInstance.data.datasets[0].data;
+
+		let text = '';
+		if (labels.length > 0) {
+			for (let i = 18; i >= 0; i--) {
+				const index = labels.indexOf(i);
+				if(i !== 18) text += '\r\n';
+
+				if (index > -1)text += `${i}\t${rates[index] / 100}`;
+				else text += `${i}\t0`;
+			}
+		}
+
+		$('#dist_text').removeClass('d-none');
+		$('#dist_text').val(text);
 		copyInputTextToClipboard($('#dist_text'));
 		$('#dist_text').addClass('d-none');
 	} catch (error) {
@@ -11931,6 +11958,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
 	$('#modal_result_detail').on('click', '.btn_show_detail:not(.disabled)', function () { btn_show_detail_Clicked($(this)); });
 	$('#modal_result_detail').on('click', '#btn_output_slot_dist', btn_output_slot_dist_Clicked);
+	$('#modal_result_detail').on('click', '#btn_output_slot_dist_table', btn_output_slot_dist_table_Clicked);
 	$('#modal_collectively_setting').on('click', '.btn_remove_plane_all', function () { btn_remove_plane_all_Clicked($(this)); });
 	$('#modal_collectively_setting').on('click', '.btn_remove_ship_all', btn_remove_ship_all_Clicked);
 	$('#modal_collectively_setting').on('click', '.btn_slot_max', function () { btn_slot_max_Clicked($(this)); });

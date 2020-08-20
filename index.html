@@ -5998,12 +5998,19 @@
 							</div>
 						</div>
 						<div class="ml-auto">
-							<div class="round_button align-self-center d-table" id="btn_output_slot_dist" data-toggle="tooltip"
-								title="このスロットの残機数分布データをクリップボードにコピー">
-								<i class="fas fa-file-text d-table-cell align-middle"></i>
+							<div class="round_button align-self-center d-table" id="btn_output_slot_dist_table" data-toggle="tooltip"
+								title="このスロットの残機数分布データをクリップボードにコピー(表形式)">
+								<i class="fas fa-table d-table-cell align-middle"></i>
 							</div>
-							<input type="text" class="d-none" id="dist_text">
 						</div>
+						<div class="ml-2">
+							<div class="round_button align-self-center d-table" id="btn_output_slot_dist" data-toggle="tooltip"
+								title="このスロットの残機数分布データをクリップボードにコピー(JSON形式)">
+								<i class="fas fa-file-code-o d-table-cell align-middle"></i>
+							</div>
+							<textarea class="d-none" id="dist_text"></textarea>
+						</div>
+						<textarea class="d-none" id="dist_text"></textarea>
 					</div>
 					<canvas id="detailChart" width="440" height="260"></canvas>
 					<div>
