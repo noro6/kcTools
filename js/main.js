@@ -4827,7 +4827,7 @@ function getAirPower_lb(lb_plane) {
 		}
 	}
 	// 艦爆
-	else if ([3].includes(type) && antiAir > 0) {
+	else if ([3].includes(type) && antiAir > 2) {
 		sumPower = 1.0 * (0.25 * remodel + antiAir) * Math.sqrt(slot);
 	}
 	// 陸攻
