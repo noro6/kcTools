@@ -160,6 +160,9 @@ input[type="text"] { font-size: 12px; }
 .text_deep_orange { color: rgb(255, 80, 0); }
 .text_red { color: rgb(255, 0, 0); }
 .text_remodel { color: rgb(0, 200, 200); }
+.w_70 { width: 70% }
+.w_60 { width: 60% }
+.w_50 { width: 50% }
 .w_40 { width: 40% }
 .w_30 { width: 30% }
 .w_25 { width: 25% }
@@ -1695,6 +1698,17 @@ input[type="text"] { font-size: 12px; }
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+
+#antiair_cutin_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#antiair_cutin_table tbody td {
+  padding: .2rem;
+  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
+}
+#antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
 #fleet_antiair { width: 100px; }
 #fleet_antiair_base { width: 100px; }
