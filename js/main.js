@@ -4982,7 +4982,7 @@ function getBonusAA(plane, prevAp) {
 	// 艦戦 夜戦 水戦
 	if (FIGHTERS.includes(Math.abs(type))) aa = 0.2 * remodel + prevAp;
 	// 艦爆
-	else if (type === 3 && prevAp > 0) {
+	else if (type === 3 && prevAp > 2) {
 		aa = 0.25 * remodel + prevAp;
 	}
 	// 陸攻
