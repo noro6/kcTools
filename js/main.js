@@ -116,7 +116,7 @@ let fleetStage2Table = [];
 		艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ]
 			機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 		敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マスid]
-		対空: [0:撃墜テーブル, 1:基準艦隊防空, 2:対空CI種別, 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
+		対空: [0:対空CI毎撃墜テーブル, 1:基準艦隊防空, 2:(v1.9.1～未使用), 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
 
 	在庫メモ
 	[0:id, 1:[0:未改修数, 1:★1数, ... 10:★MAX数]]
@@ -579,6 +579,7 @@ function initializeSetting() {
 	if (!setting) setting = {};
 	// 設定ファイル内になければ初期値を設定
 	if (!setting.hasOwnProperty('version')) setting.version = '0.0.0';
+	if (!setting.hasOwnProperty('adaptedVersion')) setting.adaptedVersion = '0.0.0';
 	if (!setting.hasOwnProperty('simulateCount')) setting.simulateCount = 5000;
 	if (!setting.hasOwnProperty('autoSave')) setting.autoSave = true;
 	if (!setting.hasOwnProperty('emptySlotInvisible')) setting.emptySlotInvisible = false;
@@ -587,7 +588,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('visibleEquipped')) setting.visibleEquipped = false;
 	if (!setting.hasOwnProperty('visibleFinal')) setting.visibleFinal = true;
 	if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
-	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = false;
+	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = true;
 	if (!setting.hasOwnProperty('copyToClipboard')) setting.copyToClipboard = false;
 	if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
 	if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
@@ -624,17 +625,68 @@ function initializeSetting() {
 		};
 	}
 
-	// 過去のデータ削除 というかtypo
-	if (setting.hasOwnProperty('copyToClipbord')) {
-		setting.copyToClipboard = setting.copyToClipbord;
-		delete setting.copyToClipbord;
-	}
-	if (setting.hasOwnProperty('visibleEquiped')) {
-		setting.visibleEquipped = setting.visibleEquiped;
-		delete setting.visibleEquiped;
+	// バージョン差異による設定変更等を適用する
+	adaptUpdater();
+
+	// 初期化完了
+	saveLocalStorage('setting', setting);
+}
+
+/**
+ * 各アップデートに伴う設定の変更等
+ */
+function adaptUpdater() {
+	if (setting.version !== LATEST_VERSION) {
+		// バージョンアップ通知(赤いぴょこぴょこ)
+		document.getElementsByClassName('version_detail')[0].classList.add('unread');
 	}
 
-	saveLocalStorage('setting', setting);
+	// 適用済みversionチェック
+	if (setting.adaptedVersion === LATEST_VERSION) return;
+
+	// 頭はだいたい1なので今は略
+	const versions = setting.adaptedVersion.split('.');
+	const major = castInt(versions[1]);
+	const minor = castInt(versions[2]);
+	const patch = versions.length >= 4 ? castInt(versions[3]) : 0;
+
+	// ～ v1.8.0
+	if (major <= 8) {
+		// 所持装備機能フォーマット変更対応
+		const planeStock = loadLocalStorage('planeStock');
+		if (planeStock && planeStock.length > 0 && !planeStock[0].num.length) {
+			deleteLocalStorage('planeStock');
+		}
+
+		// typoデータの移行
+		if (setting.hasOwnProperty('copyToClipbord')) {
+			setting.copyToClipboard = setting.copyToClipbord;
+			delete setting.copyToClipbord;
+		}
+		if (setting.hasOwnProperty('visibleEquiped')) {
+			setting.visibleEquipped = setting.visibleEquiped;
+			delete setting.visibleEquiped;
+		}
+
+		// setting設置による統合
+		deleteLocalStorage('version');
+		deleteLocalStorage('autoSave');
+		deleteLocalStorage('simulateCount');
+		deleteLocalStorage('emptySlotInvisible');
+		deleteLocalStorage('modalDisplayMode');
+		deleteLocalStorage('defaultProf');
+	}
+
+	// ～ v1.9.0
+	if (major <= 9) {
+		// ～ v1.9.1
+		if (minor < 1) {
+			// 敵艦隊欄 画像表示をデフォルトに変更
+			setting.enemyFleetDisplayImage = true;
+		}
+	}
+
+	setting.adaptedVersion = LATEST_VERSION;
 }
 
 /*==================================
@@ -658,23 +710,6 @@ function initialize(callback) {
 
 	// 設定データ読み込み
 	initializeSetting();
-
-	// バージョンチェック
-	if (setting.version !== LATEST_VERSION) {
-		// バージョン変更毎にデータ削除
-		deleteLocalStorage('version');
-		deleteLocalStorage('autoSave');
-		deleteLocalStorage('simulateCount');
-		deleteLocalStorage('emptySlotInvisible');
-		deleteLocalStorage('modalDisplayMode');
-		deleteLocalStorage('defaultProf');
-
-		const planeStock = loadLocalStorage('planeStock');
-		if (planeStock && planeStock.length > 0 && !planeStock[0].num.length) {
-			deleteLocalStorage('planeStock');
-		}
-		document.getElementsByClassName('version_detail')[0].classList.add('unread');
-	}
 
 	// 機体カテゴリ初期化
 	const planeTypes = PLANE_TYPE.filter(v => v.id > 0).map(v => v.id);
@@ -3081,7 +3116,6 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		// 対空砲火情報
 		if (preset.length >= 4) {
 			const antiAirPreset = preset[3];
-			console.log(antiAirPreset[0]);
 			if (antiAirPreset[0] && antiAirPreset[0].length > 0) {
 				fleetStage2Table = antiAirPreset[0];
 			}
@@ -4096,8 +4130,8 @@ function drawResult() {
 	for (let i = 0; i < resultData.enemySlots.length; i++) {
 		const s = resultData.enemySlots[i];
 		const node_tr = document.getElementsByClassName('enemy_no_' + s[0] + ' slot_' + s[1])[0];
-		const avg = (s[2] / calculateCount);
-		node_tr.getElementsByClassName('td_avg_slot')[0].textContent = (avg === 0 ? '0' : avg.toFixed(1));
+		const avg = Math.floor(10 * (s[2] / calculateCount));
+		node_tr.getElementsByClassName('td_avg_slot')[0].textContent = (avg === 0 ? '0' : avg / 10);
 		node_tr.getElementsByClassName('td_max_slot')[0].textContent = s[3];
 		node_tr.getElementsByClassName('td_min_slot')[0].textContent = s[4];
 	}
@@ -4105,9 +4139,9 @@ function drawResult() {
 	// 棒立ち率
 	if (!isDefMode && !document.getElementById('ignore_stage2')['checked'] && fleetStage2Table.length > 0) {
 		for (let i = 0; i < resultData.enemySlotAllDead.length; i++) {
-			const rate = resultData.enemySlotAllDead[i] / calculateCount * 100;
+			const rate = Math.floor(1000 * (resultData.enemySlotAllDead[i] / calculateCount)) / 10;
 			const node_tr = document.getElementsByClassName(`enemy_no_${i} slot_0`)[0];
-			node_tr.getElementsByClassName('td_all_dead')[0].textContent = rate.toFixed(1) + '%';
+			node_tr.getElementsByClassName('td_all_dead')[0].textContent = rate + '%';
 		}
 		document.getElementById('enemy_slot_result_mode').textContent = '（航空戦 stage2 後）';
 	}
@@ -4288,8 +4322,6 @@ function calculate() {
 
 	// 結果表示
 	drawResult();
-
-	console.log(fleetStage2Table);
 }
 
 /**
@@ -9206,6 +9238,11 @@ function updateFleetStage2Table() {
 	const isGrand = $('#antiair_grand').prop('checked');
 	const isAirRaid = isGrand && $('#antiair_air_raid').prop('checked');
 
+	const maxFixedList = [];
+	const minFixedList = [];
+	let maxMinimum = 0;
+	let minMinimum = 9999;
+
 	// 艦隊防空値 * 陣形補正
 	const formation = FORMATION.find(v => v.id === formationId)
 	fleetAntiAir *= formation ? formation.correction : 1.0;
@@ -9237,10 +9274,13 @@ function updateFleetStage2Table() {
 			$(e).find('.minimum_shoot_down').text('-');
 		}
 		else {
-			$(e).find('.rate_shoot_down').text((rate * 100).toFixed((rate * 100 >= 10) ? 1 : 2) + '%');
+			$(e).find('.rate_shoot_down').text((rate * 100).toFixed(1) + '%');
 			$(e).find('.fixed_shoot_down').text(fixed + '機');
 			$(e).find('.minimum_shoot_down').text('1機');
 		}
+
+		maxFixedList.push(0);
+		minFixedList.push(9999);
 	});
 
 	// 対空カットイン選択欄読込
@@ -9266,9 +9306,34 @@ function updateFleetStage2Table() {
 			let minimun = 1 + (cutIn ? cutIn.adj[1] : 0);
 
 			stage2.push([rate, fixed, minimun]);
+
+			if (maxFixedList[i] < fixed) maxFixedList[i] = fixed;
+			if (minFixedList[i] > fixed) minFixedList[i] = fixed;
+			if (maxMinimum < minimun) maxMinimum = minimun;
+			if (minMinimum > minimun) minMinimum = minimun;
 		}
 		fleetStage2Table.push({ cutinId: cutIn ? cutIn.id : 0, rate: cutinRate, table: stage2, border: 0 });
 	});
+
+	$('#antiair_weight_inputs').find('tr:not(.d-none)').each((i, e) => {
+		if (inputAntiAirWeights[i] > 0) {
+			if (minFixedList[i] === maxFixedList[i]) {
+				$(e).find('.fixed_shoot_down').text(`${minFixedList[i]}機`);
+			}
+			else {
+				$(e).find('.fixed_shoot_down').text(`${minFixedList[i]}~${maxFixedList[i]}機`);
+			}
+
+			if (minMinimum === maxMinimum) {
+				$(e).find('.minimum_shoot_down').text(`${minMinimum}機`);
+			}
+			else {
+				$(e).find('.minimum_shoot_down').text(`${minMinimum}~${maxMinimum}機`);
+			}
+
+		}
+	});
+
 
 	// 各対空CIの発動条件の設定 [0 ~ 100) のうち発動する区間のボーダー
 	let sum = 0;
@@ -9419,7 +9484,10 @@ function btn_remove_cutin_Clicked($this) {
  */
 function resetFleetAntiairInput() {
 	$('#modal_fleet_antiair_input input').val(0);
-	$('#modal_fleet_antiair_input select').val(0);
+
+	$('#fleet_antiair_formation').val($('#antiair_grand').prop('checked') ? 11 : 1);
+	$('#antiair_cutin_inputs tr:last()').find('.cutin_rate').val(100);
+
 	updateFleetStage2Table();
 }
 
