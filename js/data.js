@@ -757,7 +757,6 @@ const DIFFICULTY = [
 	{ id: 3, name: "甲" },
 ];
 const WORLD_DATA = [
-	{ world: 2006, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -767,6 +766,7 @@ const WORLD_DATA = [
 	{ world: 6, name: "中部海域" },
 	{ world: 1911, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
 	{ world: 2003, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
+	{ world: 2006, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
 ];
 const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
