@@ -297,7 +297,7 @@ const SHIP_DATA = [
 	{ id: 349, type: 1, name: "Intrepid", slot: [37, 36, 19, 4], final: 0, orig: 349, deckid: 549 },
 	{ id: 350, type: 2, name: "Saratoga Mk.II Mod.2", slot: [37, 24, 19, 13], final: 1, orig: 233, deckid: 550 },
 	{ id: 353, type: 4, name: "伊勢改二", slot: [2, 2, 22, 22, 9], final: 1, orig: 3, deckid: 553 },
-	{ id: 354, type: 1, name: "日向改二", slot: [2, 8, 24, 12, 11], final: 1, orig: 354, deckid: 554 },
+	{ id: 354, type: 4, name: "日向改二", slot: [2, 8, 24, 12, 11], final: 1, orig: 4, deckid: 554 },
 	{ id: 355, type: 3, name: "瑞鳳改二", slot: [21, 18, 12, 6], final: 1, orig: 112, deckid: 555 },
 	{ id: 360, type: 3, name: "瑞鳳改二乙", slot: [18, 15, 15, 2], final: 1, orig: 112, deckid: 560 },
 	{ id: 373, type: 7, name: "陸奥改二", slot: [2, 3, 3, 7], final: 1, orig: 2, deckid: 573 },
