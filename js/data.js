@@ -48,7 +48,7 @@ const PLANE_DATA = [
 	{ id: 271, type: 1, name: "紫電改四", abbr: "", fire: 0, antiAir: 10, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 1, avoid2: 3, radius: 4, cost: 7, avoid: 0 },
 	{ id: 335, type: 1, name: "烈風改(試製艦載型)", abbr: "", fire: 1, antiAir: 10, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 3, radius: 4, cost: 10, avoid: 0 },
 	{ id: 336, type: 1, name: "烈風改二", abbr: "", fire: 1, antiAir: 13, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 5, cost: 10, avoid: 0 },
-	// { id: 337, type: 1, name: "烈風改二(一航戦/熟練)", abbr: "", fire: 2, antiAir: 14, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 6, cost: 10, avoid: 0 },
+	{ id: 337, type: 1, name: "烈風改二(一航戦/熟練)", abbr: "", fire: 2, antiAir: 14, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 6, cost: 10, avoid: 0 },
 	{ id: 353, type: 1, name: "Fw190 A-5改(熟練)", abbr: "", fire: 2, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 1, avoid2: 3, radius: 4, cost: 7, avoid: 0 },
 	{ id: 375, type: 1, name: "XF5U", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 2, radius: 4, cost: 12, avoid: 0 },
 	{ id: 254, type: -1, name: "F6F-3N", abbr: "", fire: 0, antiAir: 8, torpedo: 0, bomber: 0, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 2, avoid2: 3, radius: 5, cost: 9, avoid: 0 },
@@ -83,6 +83,7 @@ const PLANE_DATA = [
 	{ id: 345, type: -2, name: "九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)", abbr: "97艦攻改(熟練/空六号電探)", fire: 0, antiAir: 0, torpedo: 9, bomber: 0, armor: 0, asw: 7, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 4, cost: 6, avoid: 0 },
 	{ id: 373, type: -2, name: "天山一二型甲改(空六号電探改装備機)", abbr: "天山12型(空六号電探)", fire: 0, antiAir: 1, torpedo: 11, bomber: 0, armor: 0, asw: 6, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 1, avoid2: 0, radius: 5, cost: 8, avoid: 0 },
 	{ id: 374, type: -2, name: "天山一二型甲改(熟練/空六号電探改装備機)", abbr: "天山12型(熟練/空六号電探)", fire: 0, antiAir: 1, torpedo: 13, bomber: 0, armor: 0, asw: 7, antiBomber: 0, interception: 0, scout: 6, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 6, cost: 8, avoid: 1 },
+	{ id: 389, type: -2, name: "TBM-3W+3S", abbr: "", fire: 3, antiAir: 0, torpedo: 10, bomber: 7, armor: 0, asw: 13, antiBomber: 0, interception: 0, scout: 10, canRemodel: 0, accuracy: 3, avoid2: 0, radius: 5, cost: 12, avoid: 0 },
 	{ id: 23, type: 3, name: "九九式艦爆", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 5, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 4, cost: 4, avoid: 0 },
 	{ id: 24, type: 3, name: "彗星", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 8, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 4, cost: 5, avoid: 0 },
 	{ id: 57, type: 3, name: "彗星一二型甲", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 10, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 5, cost: 6, avoid: 0 },
@@ -179,7 +180,7 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190 D-9", abbr: "", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0 },
- ];
+];
 const SHIP_TYPE = [
 	{ id: 1, name: "正規空母" },
 	{ id: 2, name: "装甲空母" },
@@ -296,7 +297,7 @@ const SHIP_DATA = [
 	{ id: 349, type: 1, name: "Intrepid", slot: [37, 36, 19, 4], final: 0, orig: 349, deckid: 549 },
 	{ id: 350, type: 2, name: "Saratoga Mk.II Mod.2", slot: [37, 24, 19, 13], final: 1, orig: 233, deckid: 550 },
 	{ id: 353, type: 4, name: "伊勢改二", slot: [2, 2, 22, 22, 9], final: 1, orig: 3, deckid: 553 },
-	{ id: 354, type: 4, name: "日向改二", slot: [2, 4, 22, 11, 11], final: 1, orig: 4, deckid: 554 },
+	{ id: 354, type: 4, name: "日向改二", slot: [2, 8, 24, 12, 11], final: 1, orig: 4, deckid: 554 },
 	{ id: 355, type: 3, name: "瑞鳳改二", slot: [21, 18, 12, 6], final: 1, orig: 112, deckid: 555 },
 	{ id: 360, type: 3, name: "瑞鳳改二乙", slot: [18, 15, 15, 2], final: 1, orig: 112, deckid: 560 },
 	{ id: 373, type: 7, name: "陸奥改二", slot: [2, 3, 3, 7], final: 1, orig: 2, deckid: 573 },
@@ -308,15 +309,18 @@ const SHIP_DATA = [
 	{ id: 392, type: 8, name: "比叡改二丙", slot: [2, 2, 2, 2], final: 1, orig: 392, deckid: 592 },
 	{ id: 403, type: 1, name: "Hornet", slot: [36, 18, 18, 15], final: 0, orig: 403, deckid: 603 },
 	{ id: 404, type: 1, name: "赤城改二", slot: [21, 21, 32, 12, 4], final: 1, orig: 6, deckid: 594 },
+	{ id: 405, type: 1, name: "加賀改二", slot: [20, 20, 44, 12, 3], final: 1, orig: 7, deckid: 698 },
 	{ id: 409, type: 1, name: "赤城改二戊", slot: [16, 16, 40, 4, 2], final: 1, orig: 6, deckid: 599 },
+	{ id: 410, type: 1, name: "加賀改二戊", slot: [18, 18, 40, 8, 2], final: 1, orig: 7, deckid: 610 },
 	{ id: 421, type: 10, name: "神州丸", slot: [2, 2, 8], final: 0, orig: 421, deckid: 621 },
 	{ id: 426, type: 10, name: "神州丸改", slot: [2, 2, 4, 8], final: 1, orig: 421, deckid: 626 },
 	{ id: 430, type: 14, name: "Gotland andra", slot: [2, 2, 3, 7], final: 1, orig: 374, deckid: 630 },
 	{ id: 439, type: 13, name: "迅鯨改", slot: [2, 2, 2], final: 1, orig: 439, deckid: 639 },
+	{ id: 446, type: 1, name: "加賀改二護", slot: [16, 16, 18, 8, 6], final: 1, orig: 7, deckid: 646 },
 	{ id: 1375, type: 7, name: "長門改", slot: [3, 3, 3, 3], final: 0, orig: 1, deckid: 275 },
 	{ id: 1376, type: 7, name: "陸奥改", slot: [3, 3, 3, 3], final: 0, orig: 2, deckid: 276 },
 	{ id: 1377, type: 1, name: "赤城改", slot: [20, 20, 32, 10], final: 0, orig: 6, deckid: 277 },
-	{ id: 1378, type: 1, name: "加賀改", slot: [20, 20, 46, 12], final: 1, orig: 7, deckid: 278 },
+	{ id: 1378, type: 1, name: "加賀改", slot: [20, 20, 46, 12], final: 0, orig: 7, deckid: 278 },
 	{ id: 1379, type: 1, name: "蒼龍改", slot: [18, 27, 18, 10], final: 0, orig: 8, deckid: 279 },
 	{ id: 1380, type: 1, name: "飛龍改", slot: [18, 27, 18, 10], final: 0, orig: 9, deckid: 280 },
 	{ id: 1381, type: 3, name: "龍驤改", slot: [9, 24, 5, 5], final: 0, orig: 30, deckid: 281 },
@@ -356,7 +360,7 @@ const SHIP_DATA = [
 	{ id: 1503, type: 12, name: "伊401改", slot: [3, 3], final: 1, orig: 155, deckid: 403 },
 	{ id: 1506, type: 12, name: "伊400改", slot: [3, 3], final: 1, orig: 293, deckid: 606 },
 	{ id: 1704, type: 1, name: "Hornet改", slot: [36, 19, 19, 16], final: 1, orig: 403, deckid: 704 },
-];
+ ];
 const ENEMY_TYPE = [
 	{ id: 11, name: "正規空母" },
 	{ id: 12, name: "軽空母" },
@@ -708,8 +712,8 @@ const ENEMY_DATA = [
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [72, 36, 36, 30], eqp: [581, 582, 557, 583], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
- ];
- const ENEMY_PLANE_DATA = [
+];
+const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
 	{ id: 520, type: 1, name: "深海棲艦戦 Mark.II", antiAir: 5, torpedo: 0, bomber: 0 },
 	{ id: 521, type: 1, name: "深海棲艦戦 Mark.III", antiAir: 9, torpedo: 0, bomber: 0 },
@@ -748,7 +752,7 @@ const ENEMY_DATA = [
 	{ id: 555, type: 6, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13 },
 	{ id: 571, type: 6, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15 },
 	{ id: 573, type: 6, name: "深海潜水下駄履き", antiAir: 6, torpedo: 0, bomber: 18 },
- ];
+];
 const DIFFICULTY = [
 	{ id: -1, name: "-" },
 	{ id: 0, name: "丁" },
@@ -2449,7 +2453,7 @@ const ENEMY_PATTERN = [
 	{ a: 20067, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 0, e: [182, 151], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 0, e: [182, 150], c: "20, 83, 40, 103" },
 	{ a: 20067, n: "空襲", d: "", l: 0, t: 5, f: 3, r: 0, e: [182], c: "20, 83, 40, 103" },
- ];
+];
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
@@ -2579,6 +2583,8 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
 	// 翔鶴型改二甲に 噴式機
 	{ shipId: 266, equipmentTypes: [9], equipmentIds: [151] },
 	{ shipId: 267, equipmentTypes: [9], equipmentIds: [151] },
+	// 加賀改二戊に 噴式機
+	{ shipId: 446, equipmentTypes: [9], equipmentIds: [151] },
 	// 伊勢型改二に 艦戦 艦爆 艦偵
 	{ shipId: 353, equipmentTypes: [1, 3, 4], equipmentIds: [] },
 	{ shipId: 354, equipmentTypes: [1, 3, 4], equipmentIds: [] },
