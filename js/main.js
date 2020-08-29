@@ -9476,6 +9476,10 @@ function btn_remove_cutin_Clicked($this) {
 	$this.closest('tr').remove();
 	const $noCutin = $('#antiair_cutin_inputs tr:last()').find('.cutin_rate');
 	$noCutin.val(castFloat($noCutin.val()) + delValue);
+
+	if ($('#antiair_cutin_inputs tr').length === 1) {
+		$noCutin.val(100);
+	}
 	updateFleetStage2Table();
 }
 

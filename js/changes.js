@@ -840,10 +840,10 @@ let CHANGE_LOG = [
 			},
 			{
 				type: 2, title: "細かい修正を行いました。",
-				content: "SBDの改修に対応しました。また、Skuaの改修効果が間違っていたため修正しました。"
+				content: "SBD、一式陸攻 二二型甲の改修に対応しました。また、Skuaの改修効果が間違っていたため修正しました。"
 			},
 		],
 	},
 ];
 
-const LAST_UPDATE_DATE = "2020/08/28";
+const LAST_UPDATE_DATE = "2020/08/29";
