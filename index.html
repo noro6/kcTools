@@ -124,7 +124,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.9.0.3</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.9.1</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -2092,7 +2092,7 @@
 									</div>
 									<div class="tab-pane fade friendFleet_tab container-fluid px-0" id="friendFleet_item2">
 										<div class="d-flex">
-											<div class="ml-2 mr-1 align-self-center no_capture">表示隻数：</div>
+											<div class="ml-2 mr-1 align-self-center no_capture">表示：</div>
 											<select class="custom-select custom-select-sm display_ship_count no_capture">
 												<option value="2" selected>2</option>
 												<option value="4">4</option>
@@ -3397,12 +3397,12 @@
 										<div class="align-self-center font_size_12 no_capture">表示:</div>
 										<div class="ml-1 custom-control custom-radio align-self-center no_capture">
 											<input type="radio" id="enemy_fleet_display_text" name="enemy_fleet_display_mode"
-												class="custom-control-input" checked>
+												class="custom-control-input">
 											<label class="custom-control-label" for="enemy_fleet_display_text">文字</label>
 										</div>
 										<div class="ml-1 custom-control custom-radio align-self-center no_capture">
 											<input type="radio" id="enemy_fleet_display_image" name="enemy_fleet_display_mode"
-												class="custom-control-input">
+												class="custom-control-input" checked>
 											<label class="custom-control-label" for="enemy_fleet_display_image">画像</label>
 										</div>
 									</div>
@@ -5986,7 +5986,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="d-flex mt-1" id="detail_wave">
+					<div class="d-flex" id="detail_wave">
 						<div class="align-self-center mx-2">
 							<div class="custom-control custom-radio custom-control-inline">
 								<input type="radio" id="detail_wave1" name="detail_wave_select" checked class="custom-control-input">
@@ -6327,15 +6327,15 @@
 	</div>
 
 	<div class="modal fade" id="modal_fleet_antiair_input" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content mt-5">
 				<div class="modal-header">
 					<h5 class="modal-title">艦隊対空砲火設定</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
-				<div class="modal-body pt-1">
-					<div class="mt-1">
-						<div class="d-flex">
+				<div class="modal-body py-1">
+					<div class="d-flex flex-wrap mb-1">
+						<div class="d-flex ali mt-1 align-self-center mr-4">
 							<div class="align-self-center custom-control custom-checkbox">
 								<input type="checkbox" class="custom-control-input" id="antiair_grand">
 								<label class="custom-control-label" for="antiair_grand">連合艦隊</label>
@@ -6344,61 +6344,95 @@
 								<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
 								<label class="custom-control-label" for="antiair_air_raid">空襲</label>
 							</div>
-							<div class="ml-4 d-flex align-self-center flex-grow-1">
-								<div class="align-self-center text-nowrap">対空CI：</div>
-								<select class="custom-select custom-select-sm" id="select_antiair_cutin"></select>
+						</div>
+						<div class="d-flex mt-1 align-self-center">
+							<div class="align-self-center">
+								<div class="font_size_12">基準艦隊防空：</div>
+								<div>
+									<input type="number" class="form-control form-control-sm" step="0.01" id="fleet_antiair_base">
+								</div>
+							</div>
+							<div class="align-self-center mx-3 pt-3">
+								<span class="font_size_24">&times;</span>
+							</div>
+							<div class="align-self-center">
+								<div class="font_size_12">陣形補正：</div>
+								<div>
+									<select class="custom-select custom-select-sm" id="fleet_antiair_formation">
+										<option value="1" selected>1.0（単縦陣)</option>
+										<option value="2">1.2（複縦陣）</option>
+										<option value="3">1.6（輪形陣）</option>
+										<option value="4">1.0（梯形陣）</option>
+										<option value="5">1.0（単横陣）</option>
+										<option value="6">1.1（警戒陣）</option>
+										<option class="d-none" value="15">1.1（第一警戒）</option>
+										<option class="d-none" value="12">1.0（第二警戒）</option>
+										<option class="d-none" value="13">1.5（第三警戒）</option>
+										<option class="d-none" value="11">1.0（第四警戒）</option>
+									</select>
+								</div>
+							</div>
+							<div class="align-self-center mx-3 pt-3">
+								<span class="font_size_24">&#61;</span>
+							</div>
+							<div class="align-self-center">
+								<div class="font_size_12">艦隊防空値：</div>
+								<div>
+									<input type="number" class="form-control form-control-sm" step="0.01" id="fleet_antiair">
+								</div>
 							</div>
 						</div>
-						<div class="d-flex my-1">
-							<div class="align-self-center">基準艦隊防空：</div>
-							<input type="number" class="align-self-center form-control form-control-sm" step="0.01"
-								id="fleet_antiair_base">
-							<div class="ml-1 align-self-center no_capture">
-								<i class="far fa-question-circle-o cur_help" data-toggle="tooltip" data-html="true"
-									title="この値に、右の補正値を掛けた値を艦隊防空値として算出します。基本的に単縦や第四警戒時の値を入力します。"></i>
-							</div>
-							<div class="d-flex align-self-center font_size_12 flex-grow-1 ml-3">
-								<div class="align-self-center text-nowrap">補正値：</div>
-								<select class="custom-select custom-select-sm" id="fleet_antiair_formation">
-									<option value="1" selected>&times; 1.0（単縦陣)</option>
-									<option value="2">&times; 1.2（複縦陣）</option>
-									<option value="3">&times; 1.6（輪形陣）</option>
-									<option value="4">&times; 1.0（梯形陣）</option>
-									<option value="5">&times; 1.0（単横陣）</option>
-									<option value="6">&times; 1.1（警戒陣）</option>
-									<option class="d-none" value="15">&times; 1.1（第一警戒）</option>
-									<option class="d-none" value="12">&times; 1.0（第二警戒）</option>
-									<option class="d-none" value="13">&times; 1.5（第三警戒）</option>
-									<option class="d-none" value="11">&times; 1.0（第四警戒）</option>
-								</select>
-							</div>
-						</div>
-						<div class="border-top pt-2 d-flex">
-							<div class="align-self-center">艦隊防空値：</div>
-							<input type="number" class="align-self-center form-control form-control-sm" id="fleet_antiair">
-						</div>
-						<div class="mt-1 font_size_11">※ 対空CIを設定した場合、現在は100%発動するものとして計算されます。</div>
-						<div class="hidden_text mt-1 font_size_11 d-none">※ 第2艦隊は7行目以降から入力してください。</div>
 					</div>
-					<table class="text-center mt-1" id="antiair_input_table">
-						<thead class="general_thead">
-							<tr>
-								<td class="w_10"></td>
-								<td class="w_20">加重対空値</td>
-								<td class="w_20">割合撃墜</td>
-								<td class="w_20">固定撃墜</td>
-								<td class="w_20">最低保証</td>
-							</tr>
-						</thead>
-						<tbody id="antiair_weight_inputs"></tbody>
-					</table>
-					<div class="mt-1 d-flex">
-						<div class="align-self-center text-nowrap">一括取込：</div>
-						<textarea class="form-control font_size_12 px-2" id="import_antiair"
-							placeholder="99,102,105,..."></textarea>
-						<button type="button" class="btn btn-sm btn-success text-nowrap ml-2" id="btn_import_antiair">読込</button>
+					<div class="container border-top">
+						<div class="row">
+							<div class="col-12 col-lg-6 mt-1 px-1">
+								<div>加重対空値設定</div>
+								<table class="text-center mt-1" id="antiair_input_table">
+									<thead class="general_thead">
+										<tr>
+											<td class="w_10"></td>
+											<td class="w_20">加重対空値</td>
+											<td class="w_20">割合撃墜</td>
+											<td class="w_25">固定撃墜</td>
+											<td class="w_25">最低保証</td>
+										</tr>
+									</thead>
+									<tbody id="antiair_weight_inputs"></tbody>
+								</table>
+								<div class="hidden_text mt-1 font_size_11 d-none">※ 第2艦隊は7行目以降から入力してください。</div>
+								<div class="mt-1 d-flex">
+									<div class="align-self-center text-nowrap">一括取込：</div>
+									<textarea class="form-control font_size_12 px-2" id="import_antiair"
+										placeholder="99,102,105,..."></textarea>
+									<button type="button" class="btn btn-sm btn-success text-nowrap ml-2"
+										id="btn_import_antiair">読込</button>
+								</div>
+								<div class="font_size_11 mt-1">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。</div>
+							</div>
+							<div class="col-12 col-lg-6 mt-1 px-1">
+								<div>対空カットイン設定</div>
+								<table class="text-center mt-1" id="antiair_cutin_table">
+									<thead class="general_thead">
+										<tr>
+											<td class="w_60">カットイン種別</td>
+											<td class="w_30">発動率(%)</td>
+											<td class="w_10">削除</td>
+										</tr>
+									</thead>
+									<tbody id="antiair_cutin_inputs">
+										<tr>
+											<td><select class="custom-select custom-select-sm select_antiair_cutin_td"></select></td>
+											<td>
+												<input type="number" class="form-control form-control-sm cutin_rate" step="0.01" min="0"
+													max="100" value="100" readonly>
+											</td>
+											<td class="btn_remove_cutin"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
-					<div class="font_size_11">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。</div>
 				</div>
 				<div class="modal-footer">
 					<div class="ml-auto">

@@ -103,10 +103,11 @@ let resultData = {
 	defenseAirPower: 0,
 };
 
-// 味方艦隊用Stage2テーブル
-let antiAirTable = [];
+
 // 入力加重対空値
 let inputAntiAirWeights = [];
+// 味方艦隊用Stage2テーブル
+let fleetStage2Table = [];
 
 /*
 	プリセットメモ
@@ -115,7 +116,7 @@ let inputAntiAirWeights = [];
 		艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ]
 			機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 		敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マスid]
-		対空: [0:撃墜テーブル, 1:基準艦隊防空, 2:対空CI種別, 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
+		対空: [0:対空CI毎撃墜テーブル, 1:基準艦隊防空, 2:(v1.9.1～未使用), 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
 
 	在庫メモ
 	[0:id, 1:[0:未改修数, 1:★1数, ... 10:★MAX数]]
@@ -558,10 +559,13 @@ function validateInputNumberFloat(value, max, min = 0) {
 	const regex = new RegExp(/^\d+(\.\d+)?$/);
 	let ret = 0;
 
+	if (value.length > 5) value = value.slice(0, 5);
+	else if (value.length === 0) value = "0";
+
 	if (!regex.test(value)) ret = min;
 	else if (value > max) ret = max;
 	else if (value < min) ret = min;
-	else ret = value;
+	else ret = castFloat(value);
 
 	return ret;
 }
@@ -575,6 +579,7 @@ function initializeSetting() {
 	if (!setting) setting = {};
 	// 設定ファイル内になければ初期値を設定
 	if (!setting.hasOwnProperty('version')) setting.version = '0.0.0';
+	if (!setting.hasOwnProperty('adaptedVersion')) setting.adaptedVersion = '0.0.0';
 	if (!setting.hasOwnProperty('simulateCount')) setting.simulateCount = 5000;
 	if (!setting.hasOwnProperty('autoSave')) setting.autoSave = true;
 	if (!setting.hasOwnProperty('emptySlotInvisible')) setting.emptySlotInvisible = false;
@@ -583,7 +588,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('visibleEquipped')) setting.visibleEquipped = false;
 	if (!setting.hasOwnProperty('visibleFinal')) setting.visibleFinal = true;
 	if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
-	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = false;
+	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = true;
 	if (!setting.hasOwnProperty('copyToClipboard')) setting.copyToClipboard = false;
 	if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
 	if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
@@ -620,17 +625,68 @@ function initializeSetting() {
 		};
 	}
 
-	// 過去のデータ削除 というかtypo
-	if (setting.hasOwnProperty('copyToClipbord')) {
-		setting.copyToClipboard = setting.copyToClipbord;
-		delete setting.copyToClipbord;
-	}
-	if (setting.hasOwnProperty('visibleEquiped')) {
-		setting.visibleEquipped = setting.visibleEquiped;
-		delete setting.visibleEquiped;
+	// バージョン差異による設定変更等を適用する
+	adaptUpdater();
+
+	// 初期化完了
+	saveLocalStorage('setting', setting);
+}
+
+/**
+ * 各アップデートに伴う設定の変更等
+ */
+function adaptUpdater() {
+	if (setting.version !== LATEST_VERSION) {
+		// バージョンアップ通知(赤いぴょこぴょこ)
+		document.getElementsByClassName('version_detail')[0].classList.add('unread');
 	}
 
-	saveLocalStorage('setting', setting);
+	// 適用済みversionチェック
+	if (setting.adaptedVersion === LATEST_VERSION) return;
+
+	// 頭はだいたい1なので今は略
+	const versions = setting.adaptedVersion.split('.');
+	const major = castInt(versions[1]);
+	const minor = castInt(versions[2]);
+	const patch = versions.length >= 4 ? castInt(versions[3]) : 0;
+
+	// ～ v1.8.0
+	if (major <= 8) {
+		// 所持装備機能フォーマット変更対応
+		const planeStock = loadLocalStorage('planeStock');
+		if (planeStock && planeStock.length > 0 && !planeStock[0].num.length) {
+			deleteLocalStorage('planeStock');
+		}
+
+		// typoデータの移行
+		if (setting.hasOwnProperty('copyToClipbord')) {
+			setting.copyToClipboard = setting.copyToClipbord;
+			delete setting.copyToClipbord;
+		}
+		if (setting.hasOwnProperty('visibleEquiped')) {
+			setting.visibleEquipped = setting.visibleEquiped;
+			delete setting.visibleEquiped;
+		}
+
+		// setting設置による統合
+		deleteLocalStorage('version');
+		deleteLocalStorage('autoSave');
+		deleteLocalStorage('simulateCount');
+		deleteLocalStorage('emptySlotInvisible');
+		deleteLocalStorage('modalDisplayMode');
+		deleteLocalStorage('defaultProf');
+	}
+
+	// ～ v1.9.0
+	if (major <= 9) {
+		// ～ v1.9.1
+		if (minor < 1) {
+			// 敵艦隊欄 画像表示をデフォルトに変更
+			setting.enemyFleetDisplayImage = true;
+		}
+	}
+
+	setting.adaptedVersion = LATEST_VERSION;
 }
 
 /*==================================
@@ -654,23 +710,6 @@ function initialize(callback) {
 
 	// 設定データ読み込み
 	initializeSetting();
-
-	// バージョンチェック
-	if (setting.version !== LATEST_VERSION) {
-		// バージョン変更毎にデータ削除
-		deleteLocalStorage('version');
-		deleteLocalStorage('autoSave');
-		deleteLocalStorage('simulateCount');
-		deleteLocalStorage('emptySlotInvisible');
-		deleteLocalStorage('modalDisplayMode');
-		deleteLocalStorage('defaultProf');
-
-		const planeStock = loadLocalStorage('planeStock');
-		if (planeStock && planeStock.length > 0 && !planeStock[0].num.length) {
-			deleteLocalStorage('planeStock');
-		}
-		document.getElementsByClassName('version_detail')[0].classList.add('unread');
-	}
 
 	// 機体カテゴリ初期化
 	const planeTypes = PLANE_TYPE.filter(v => v.id > 0).map(v => v.id);
@@ -892,11 +931,11 @@ function initialize(callback) {
 	});
 
 	// 対空CIプルダウン初期化
-	text = '<option value="0">-</option>';
+	text = '<option value="0">不発</option>';
 	for (const s of ANTIAIR_CUTIN) {
 		text += `<option value="${s.id}">${s.name}（変動: ${s.adj[0]} 固定: ${s.adj[1]})</option>`;
 	}
-	$('#select_antiair_cutin').html(text);
+	$('.select_antiair_cutin_td').html(text);
 
 	// 自動保存
 	$('#auto_save').prop('checked', setting.autoSave);
@@ -3077,9 +3116,14 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		// 対空砲火情報
 		if (preset.length >= 4) {
 			const antiAirPreset = preset[3];
-			antiAirTable = antiAirPreset[0];
+			if (antiAirPreset[0] && antiAirPreset[0].length > 0) {
+				fleetStage2Table = antiAirPreset[0];
+			}
+			else {
+				// v1.9.1以前の過去データだった場合扱わない
+				fleetStage2Table = [];
+			}
 			document.getElementById('fleet_antiair_base').value = antiAirPreset[1];
-			document.getElementById('select_antiair_cutin').value = antiAirPreset[2];
 			document.getElementById('antiair_grand')['checked'] = antiAirPreset[3];
 			if (antiAirPreset[3]) document.getElementById('antiair_air_raid').parentElement.classList.remove('d-none');
 			document.getElementById('antiair_air_raid')['checked'] = antiAirPreset[4];
@@ -3087,7 +3131,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 			document.getElementById('fleet_antiair_formation').value = antiAirPreset[6];
 		}
 		else {
-			antiAirTable = [];
+			fleetStage2Table = [];
 			inputAntiAirWeights = [];
 		}
 
@@ -3213,9 +3257,9 @@ function createEnemyFleetPreset() {
  */
 function createAntiAirTablePreset() {
 	return [
-		antiAirTable,
+		fleetStage2Table,
 		castFloat(document.getElementById('fleet_antiair_base').value),
-		castInt(document.getElementById('select_antiair_cutin').value),
+		0,
 		document.getElementById('antiair_grand')['checked'],
 		document.getElementById('antiair_air_raid')['checked'],
 		inputAntiAirWeights,
@@ -4086,18 +4130,18 @@ function drawResult() {
 	for (let i = 0; i < resultData.enemySlots.length; i++) {
 		const s = resultData.enemySlots[i];
 		const node_tr = document.getElementsByClassName('enemy_no_' + s[0] + ' slot_' + s[1])[0];
-		const avg = (s[2] / calculateCount);
-		node_tr.getElementsByClassName('td_avg_slot')[0].textContent = (avg === 0 ? '0' : avg.toFixed(1));
+		const avg = Math.floor(10 * (s[2] / calculateCount));
+		node_tr.getElementsByClassName('td_avg_slot')[0].textContent = (avg === 0 ? '0' : avg / 10);
 		node_tr.getElementsByClassName('td_max_slot')[0].textContent = s[3];
 		node_tr.getElementsByClassName('td_min_slot')[0].textContent = s[4];
 	}
 
 	// 棒立ち率
-	if (!isDefMode && !document.getElementById('ignore_stage2')['checked'] && antiAirTable.length > 0) {
+	if (!isDefMode && !document.getElementById('ignore_stage2')['checked'] && fleetStage2Table.length > 0) {
 		for (let i = 0; i < resultData.enemySlotAllDead.length; i++) {
-			const rate = resultData.enemySlotAllDead[i] / calculateCount * 100;
+			const rate = Math.floor(1000 * (resultData.enemySlotAllDead[i] / calculateCount)) / 10;
 			const node_tr = document.getElementsByClassName(`enemy_no_${i} slot_0`)[0];
-			node_tr.getElementsByClassName('td_all_dead')[0].textContent = rate.toFixed(1) + '%';
+			node_tr.getElementsByClassName('td_all_dead')[0].textContent = rate + '%';
 		}
 		document.getElementById('enemy_slot_result_mode').textContent = '（航空戦 stage2 後）';
 	}
@@ -5753,7 +5797,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 
 	document.getElementById('enemy_shoot_down_tbody').appendChild(shoot_fragment);
 
-	if (!isDefMode && !document.getElementById('ignore_stage2')['checked'] && antiAirTable.length > 0) $('.td_all_dead').removeClass('d-none');
+	if (!isDefMode && !document.getElementById('ignore_stage2')['checked'] && fleetStage2Table.length > 0) $('.td_all_dead').removeClass('d-none');
 	else $('.td_all_dead').addClass('d-none');
 }
 
@@ -5906,9 +5950,15 @@ function shootDownHalf(airStatus, enemyFleet) {
  * @param {number} index 制空状態
  * @param {Array.<Object>} enemyFleet 撃墜対象の敵艦隊
  */
-function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2 = []) {
+function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2Tables = []) {
 	const max_i = enemyFleet.length;
+
+	// 対空CIの選択
+	const pickRate = Math.random() * 100;
+	const tableIndex = stage2Tables.findIndex(v => v.border > pickRate);
+	const stage2 = tableIndex >= 0 ? stage2Tables[tableIndex].table : [];
 	const range = stage2.length;
+
 	for (let i = 0; i < max_i; i++) {
 		const enemy = enemyFleet[i];
 		const max_j = enemy.slots.length;
@@ -6348,7 +6398,7 @@ function rateCalculate(objectData) {
 	const defAp = resultData.defenseAirPower;
 
 	// 味方stage2テーブルの生成有無
-	const stage2Table = antiAirTable.concat();
+	const stage2Table = fleetStage2Table.concat();
 	const enabledStage2 = !isDefMode && !document.getElementById('ignore_stage2')['checked'] && stage2Table.length > 0;
 	// 敵の棒立ち回数記録
 	const enemySlotAllDead = [];
@@ -7011,7 +7061,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 搭載表示 or 航空戦火力表示
 	const isSlotDetail = $('#slot_detail').prop('checked');
 
-	const st2 = antiAirTable.concat();
+	const st2 = fleetStage2Table.concat();
 	const enabledSt2 = !document.getElementById('ignore_stage2')['checked'] && st2.length > 0;
 
 	// 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
@@ -7191,7 +7241,7 @@ function updateDetailChart(data, xLabelString, tooltips) {
 		const num = data.filter(v => v === i).length;
 		if (!num) continue;
 		xLabels.push(i);
-		actualData.push(100 * num / maxCount);
+		actualData.push((100 * num / maxCount).toFixed(maxCount >= 100000 ? 5 : maxCount >= 10000 ? 4 : maxCount >= 1000 ? 3 : 2));
 		sumRate += 100 * num / maxCount;
 		rateData.push(sumRate.toFixed(1));
 		if (!par50 && sumRate >= 50) par50 = i;
@@ -9158,8 +9208,23 @@ function btn_antiair_input_Clicked() {
 	}
 	$('#antiair_input_table tbody').html(text);
 
+	// 対空CI入力欄追加
+	for (let i = 0; i < fleetStage2Table.length; i++) {
+		const data = fleetStage2Table[i];
+		if (data.rate > 0) {
+			const $tr = $(`#antiair_cutin_inputs tr:eq(${i})`);
+			$tr.find('.select_antiair_cutin_td').val(data.cutinId);
+			$tr.find('.cutin_rate').val(data.rate);
+
+			// 次の入力欄の作成
+			if (data.cutinId > 0) {
+				antiAirCutinChanged($tr.find('.cutin_rate'), false);
+			}
+		}
+	}
+
 	antiair_grand_Changed();
-	updateFleetAntiairTable();
+	updateFleetStage2Table();
 
 	$('#modal_fleet_antiair_input').modal('show');
 }
@@ -9167,19 +9232,23 @@ function btn_antiair_input_Clicked() {
 /**
  * 自艦隊対空性能の計算 モーダル内
  */
-function updateFleetAntiairTable() {
+function updateFleetStage2Table() {
 	const formationId = castInt($('#fleet_antiair_formation').val());
 	let fleetAntiAir = castFloat($('#fleet_antiair_base').val());
 	const isGrand = $('#antiair_grand').prop('checked');
 	const isAirRaid = isGrand && $('#antiair_air_raid').prop('checked');
-	const cutIn = ANTIAIR_CUTIN.find(v => v.id === castInt($('#select_antiair_cutin').val()));
+
+	const maxFixedList = [];
+	const minFixedList = [];
+	let maxMinimum = 0;
+	let minMinimum = 9999;
 
 	// 艦隊防空値 * 陣形補正
 	const formation = FORMATION.find(v => v.id === formationId)
 	fleetAntiAir *= formation ? formation.correction : 1.0;
 	$('#fleet_antiair').val(fleetAntiAir);
 
-	antiAirTable = [];
+	fleetStage2Table = [];
 	inputAntiAirWeights = [];
 	$('#antiair_weight_inputs').find('tr:not(.d-none)').each((i, e) => {
 		const input_weight = validateInputNumber($(e).find('.antiair_weight').val(), 999);
@@ -9195,11 +9264,8 @@ function updateFleetAntiairTable() {
 		}
 
 		const weight = castInt(input_weight);
-		const bonus = cutIn ? cutIn.adj[0] : 1.0;
 		const rate = weight * adj / 400;
-		const fixed = Math.floor(((weight + fleetAntiAir) * adj * bonus) / 10);
-		let minimun = 1 + (cutIn ? cutIn.adj[1] : 0);
-
+		const fixed = Math.floor(((weight + fleetAntiAir) * adj) / 10);
 		inputAntiAirWeights.push(weight);
 
 		if (weight === 0) {
@@ -9208,12 +9274,73 @@ function updateFleetAntiairTable() {
 			$(e).find('.minimum_shoot_down').text('-');
 		}
 		else {
-			antiAirTable.push([rate, fixed, minimun]);
-			$(e).find('.rate_shoot_down').text((rate * 100).toFixed((rate * 100 >= 10) ? 1 : 2) + '%');
+			$(e).find('.rate_shoot_down').text((rate * 100).toFixed(1) + '%');
 			$(e).find('.fixed_shoot_down').text(fixed + '機');
-			$(e).find('.minimum_shoot_down').text(minimun + '機');
+			$(e).find('.minimum_shoot_down').text('1機');
+		}
+
+		maxFixedList.push(0);
+		minFixedList.push(9999);
+	});
+
+	// 対空カットイン選択欄読込
+	$('#antiair_cutin_inputs').find('tr').each((i, e) => {
+		const cutinRate = castFloat($(e).find('.cutin_rate').val());
+		if (cutinRate <= 0) return;
+
+		const cutIn = ANTIAIR_CUTIN.find(v => v.id === castInt($(e).find('.select_antiair_cutin_td').val()));
+		const stage2 = [];
+		for (let i = 0; i < inputAntiAirWeights.length; i++) {
+			const weight = inputAntiAirWeights[i];
+			if (weight === 0) continue;
+
+			// 連合補正
+			let adj = 1.0;
+			if (isGrand) {
+				if (i < 6) adj = isAirRaid ? 0.78 : 0.8;
+				else adj = 0.48
+			}
+			const bonus = cutIn ? cutIn.adj[0] : 1.0;
+			const rate = weight * adj / 400;
+			const fixed = Math.floor(((weight + fleetAntiAir) * adj * bonus) / 10);
+			let minimun = 1 + (cutIn ? cutIn.adj[1] : 0);
+
+			stage2.push([rate, fixed, minimun]);
+
+			if (maxFixedList[i] < fixed) maxFixedList[i] = fixed;
+			if (minFixedList[i] > fixed) minFixedList[i] = fixed;
+			if (maxMinimum < minimun) maxMinimum = minimun;
+			if (minMinimum > minimun) minMinimum = minimun;
+		}
+		fleetStage2Table.push({ cutinId: cutIn ? cutIn.id : 0, rate: cutinRate, table: stage2, border: 0 });
+	});
+
+	$('#antiair_weight_inputs').find('tr:not(.d-none)').each((i, e) => {
+		if (inputAntiAirWeights[i] > 0) {
+			if (minFixedList[i] === maxFixedList[i]) {
+				$(e).find('.fixed_shoot_down').text(`${minFixedList[i]}機`);
+			}
+			else {
+				$(e).find('.fixed_shoot_down').text(`${minFixedList[i]}~${maxFixedList[i]}機`);
+			}
+
+			if (minMinimum === maxMinimum) {
+				$(e).find('.minimum_shoot_down').text(`${minMinimum}機`);
+			}
+			else {
+				$(e).find('.minimum_shoot_down').text(`${minMinimum}~${maxMinimum}機`);
+			}
+
 		}
 	});
+
+
+	// 各対空CIの発動条件の設定 [0 ~ 100) のうち発動する区間のボーダー
+	let sum = 0;
+	for (const data of fleetStage2Table) {
+		sum += data.rate;
+		data.border = sum;
+	}
 }
 
 /**
@@ -9227,7 +9354,7 @@ function fleet_antiair_base_TextChanged() {
 	if (formation > 10) $('#fleet_antiair_formation').val(11);
 	else $('#fleet_antiair_formation').val(1);
 
-	updateFleetAntiairTable();
+	updateFleetStage2Table();
 }
 
 /**
@@ -9242,7 +9369,7 @@ function fleet_antiair_TextChanged() {
 	if (formation > 10) $('#fleet_antiair_formation').val(11);
 	else $('#fleet_antiair_formation').val(1);
 
-	updateFleetAntiairTable();
+	updateFleetStage2Table();
 }
 
 /**
@@ -9276,7 +9403,84 @@ function btn_import_antiair_Clicked() {
 		}
 	}
 	document.getElementById('import_antiair').value = '';
-	updateFleetAntiairTable();
+	updateFleetStage2Table();
+}
+
+
+/**
+ * 対空CI種別追加
+ * @param {JqueryDomObject} $this
+ */
+function antiAirCutinChanged($this, updateTable = true) {
+	const $tr = $this.closest('tr');
+	if (!$tr.hasClass('added')) {
+		const trText = $tr.html();
+
+		const tr = document.createElement('tr');
+		tr.innerHTML = trText;
+		const td = tr.getElementsByClassName('cutin_rate')[0];
+		td.value = 0;
+		$this.closest('tbody')[0].appendChild(tr);
+
+		// 選択されたCIの発動率欄を有効化
+		$tr.find('.cutin_rate').prop('readonly', false);
+		// 削除行の追加
+		$tr.find('.btn_remove_cutin').html('<i class="fas fa-trash-o"></i>');
+		$tr.find('.btn_remove_cutin').addClass('cur_pointer');
+		$tr.addClass('added');
+	}
+
+	if (updateTable) updateFleetStage2Table();
+}
+
+/**
+ * 対空カットイン発動率変更
+ * @param {JqueryDomObject} $this
+ */
+function updateAntiAirCutinRate($this) {
+	// 0 ~ 100までの基本入力検証
+	const input = validateInputNumberFloat($this.val(), 100, 0);
+	if (input != $this.val()) $this.val(input);
+	if (input == 0) $this.val(0);
+	const inputValue = castFloat($this.val()) * 100;
+
+	// 確率の総和を取得
+	let sum = 0;
+	const cutin_rates = document.getElementsByClassName('cutin_rate');
+	// 不発の発動率を0に修正
+	document.getElementsByClassName('cutin_rate')[cutin_rates.length - 1].value = 0;
+	for (let i = 0; i < cutin_rates.length; i++) {
+		sum += Math.round(100 * cutin_rates[i].value);
+	}
+
+	// 超過
+	if (sum > 10000) {
+		// 差っ引く
+		$this.val((inputValue - (sum - 10000)) / 100);
+	}
+	else {
+		// 余り値を不発に割り当て
+		document.getElementsByClassName('cutin_rate')[cutin_rates.length - 1].value = Math.round(10000 - sum) / 100;
+	}
+
+	updateFleetStage2Table();
+}
+
+/**
+ * 対空CI削除
+ * @param {JqueryDomObject} $this
+ */
+function btn_remove_cutin_Clicked($this) {
+	// 削除する分の発動率は不発にする
+	const delValue = castFloat($this.closest('tr').find('.cutin_rate').val());
+	$this.closest('tr').remove();
+	const $noCutin = $('#antiair_cutin_inputs tr:last()').find('.cutin_rate');
+	$noCutin.val(castFloat($noCutin.val()) + delValue);
+
+	if ($('#antiair_cutin_inputs tr').length === 1) {
+		$noCutin.val(100);
+	}
+	updateFleetStage2Table();
 }
 
 /**
@@ -9284,8 +9488,11 @@ function btn_import_antiair_Clicked() {
  */
 function resetFleetAntiairInput() {
 	$('#modal_fleet_antiair_input input').val(0);
-	$('#modal_fleet_antiair_input select').val(0);
-	updateFleetAntiairTable();
+
+	$('#fleet_antiair_formation').val($('#antiair_grand').prop('checked') ? 11 : 1);
+	$('#antiair_cutin_inputs tr:last()').find('.cutin_rate').val(100);
+
+	updateFleetStage2Table();
 }
 
 /**
@@ -9324,7 +9531,7 @@ function antiair_grand_Changed() {
 		else if (formation > 10) $('#fleet_antiair_formation').val(11);
 	}
 
-	updateFleetAntiairTable();
+	updateFleetStage2Table();
 }
 
 /**
@@ -11174,9 +11381,9 @@ function btn_output_slot_dist_table_Clicked() {
 		if (labels.length > 0) {
 			for (let i = 18; i >= 0; i--) {
 				const index = labels.indexOf(i);
-				if(i !== 18) text += '\r\n';
+				if (i !== 18) text += '\r\n';
 
-				if (index > -1)text += `${i}\t${rates[index] / 100}`;
+				if (index > -1) text += `${i}\t${rates[index] / 100}`;
 				else text += `${i}\t0`;
 			}
 		}
@@ -11978,14 +12185,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_fleet_antiair_input').on('focus', '#fleet_antiair_base', function () { $(this).select(); });
 	$('#modal_fleet_antiair_input').on('input', '#fleet_antiair_base', fleet_antiair_base_TextChanged);
 	$('#modal_fleet_antiair_input').on('input', '#fleet_antiair', fleet_antiair_TextChanged);
-	$('#modal_fleet_antiair_input').on('input', '.antiair_weight', updateFleetAntiairTable);
+	$('#modal_fleet_antiair_input').on('input', '.antiair_weight', updateFleetStage2Table);
 	$('#modal_fleet_antiair_input').on('click', '.reset', resetFleetAntiairInput);
 	$('#modal_fleet_antiair_input').on('change', '#antiair_grand', antiair_grand_Changed);
-	$('#modal_fleet_antiair_input').on('change', '#antiair_air_raid', updateFleetAntiairTable);
-	$('#modal_fleet_antiair_input').on('change', '#select_antiair_cutin', updateFleetAntiairTable);
-	$('#modal_fleet_antiair_input').on('change', '#fleet_antiair_formation', updateFleetAntiairTable);
+	$('#modal_fleet_antiair_input').on('change', '#antiair_air_raid', updateFleetStage2Table);
+	$('#modal_fleet_antiair_input').on('change', '#fleet_antiair_formation', updateFleetStage2Table);
 	$('#modal_fleet_antiair_input').on('input', '#import_antiair', import_antiair_Changed);
 	$('#modal_fleet_antiair_input').on('click', '#btn_import_antiair', btn_import_antiair_Clicked);
+	$('#modal_fleet_antiair_input').on('change', '.select_antiair_cutin_td', function () { antiAirCutinChanged($(this)); });
+	$('#modal_fleet_antiair_input').on('input', '.cutin_rate', function () { updateAntiAirCutinRate($(this)); });
+	$('#modal_fleet_antiair_input').on('click', '.btn_remove_cutin.cur_pointer', function () { btn_remove_cutin_Clicked($(this)); });
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 	$('#btn_preset_all').click(btn_preset_all_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);

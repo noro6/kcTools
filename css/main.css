@@ -108,6 +108,7 @@ input[type="text"] { font-size: 12px; }
 .opacity2 { opacity: .2 !important; }
 .opacity4 { opacity: .4 !important; }
 .opacity6 { opacity: .6 !important; }
+.font_size_28 { font-size: 28px; }
 .font_size_24 { font-size: 24px; }
 .font_size_20 { font-size: 20px; }
 .font_size_18 { font-size: 18px; }
@@ -160,6 +161,9 @@ input[type="text"] { font-size: 12px; }
 .text_deep_orange { color: rgb(255, 80, 0); }
 .text_red { color: rgb(255, 0, 0); }
 .text_remodel { color: rgb(0, 200, 200); }
+.w_70 { width: 70% }
+.w_60 { width: 60% }
+.w_50 { width: 50% }
 .w_40 { width: 40% }
 .w_30 { width: 30% }
 .w_25 { width: 25% }
@@ -269,7 +273,7 @@ input[type="text"] { font-size: 12px; }
 .general_box {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
-  border-radius: 0.25rem;
+  border-radius: .15rem;
   background-color: rgba(255, 255, 255, 0.05);
 }
 .dark-theme .general_box {
@@ -283,7 +287,7 @@ input[type="text"] { font-size: 12px; }
   border: 1px #666 solid;
 }
 .contents {
-  border-radius: .25rem;
+  border-radius: .15rem;
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.4);
   background-color: rgba(255, 255, 255, 0.8);
 }
@@ -746,7 +750,7 @@ input[type="text"] { font-size: 12px; }
 .lb_plane {
   min-width: 290px;
   border: 2px rgb(128, 128, 128) solid;
-  border-radius: 0.25rem;
+  border-radius: .25rem;
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
 }
@@ -994,7 +998,7 @@ input[type="text"] { font-size: 12px; }
 -------------------------------- */
 #battle_count { width: 60px; }
 #landBase_target { width: 60px; }
-.enemy_content { border-radius: .25rem; }
+.enemy_content { border-radius: .15rem; }
 .enemy_content:hover { background-color: rgba(128, 128, 128, 0.1); }
 .no_enemy { opacity: .3; }
 .no_enemy:hover { opacity: .6; }
@@ -1695,6 +1699,17 @@ input[type="text"] { font-size: 12px; }
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+
+#antiair_cutin_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+#antiair_cutin_table tbody td {
+  padding: .2rem;
+  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
+}
+#antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
 #fleet_antiair { width: 100px; }
 #fleet_antiair_base { width: 100px; }
