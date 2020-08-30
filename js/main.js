@@ -2203,6 +2203,10 @@ function createShipTable(type) {
 					tr.classList.remove('general_tr');
 					tr.classList.add('ship_tr_disabled');
 				}
+				else{
+					tr.classList.add('general_tr');
+					tr.classList.remove('ship_tr_disabled');
+				}
 
 				td_stock.classList.remove('d-none');
 				tr.classList.add('d-flex');
