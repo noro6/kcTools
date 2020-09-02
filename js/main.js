@@ -727,7 +727,7 @@ function initialize(callback) {
 	}
 
 	// 艦種初期化
-	setShipType(SHIP_TYPE.filter(v => v.id < 15).map(v => v.id));
+	setShipType(SHIP_TYPE.map(v => v.id));
 	// 敵艦種初期化
 	setEnemyType(ENEMY_TYPE.filter(v => v.id > 0).map(v => v.id));
 
@@ -1881,7 +1881,7 @@ function setShipStockTable() {
 	const fragment = document.createDocumentFragment();
 	const imgWidth = 100;
 	const imgHeight = 25;
-	const ships = SHIP_DATA.filter(v => v.id > 0);
+	const ships = SHIP_DATA.filter(v => v.id > 0 && v.valid > 0);
 	const shipStock = loadShipStock();
 
 	const max_i = ships.length;
@@ -2021,7 +2021,8 @@ function initializeShipTable() {
 	let prevType = 0;
 	const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
 
-	for (const ship of SHIP_DATA) {
+	const ships = SHIP_DATA.filter(v => v.valid > 0);
+	for (const ship of ships) {
 		// ラッパー
 		const $shipDiv = document.createElement('div');
 		$shipDiv.className = 'ship_tr general_tr d-flex ' + (displayMode === "multi" ? 'tr_multi' : 'py-1');
@@ -2114,9 +2115,8 @@ function createShipTable(type) {
 	tbody.innerHTML = '';
 	// 通常ソート
 	valueList.sort((a, b) => {
-		if (a.mst.type !== b.mst.type) return a.mst.type - b.mst.type;
-		if (a.mst.orig !== b.mst.orig) return a.mst.orig - b.mst.orig;
-		return a.mst.id - b.mst.id;
+		if (a.mst.sort1 !== b.mst.sort1) return a.mst.sort1 - b.mst.sort1;
+		else return a.mst.sort2 - b.mst.sort2;
 	});
 	// よく使う順ソート
 	if (isFrequent && setting.selectedHistory[1]) {
@@ -2159,8 +2159,8 @@ function createShipTable(type) {
 		a.classList.add('d-flex');
 		a.classList.remove('d-none');
 	}
-
-	for (const ship of SHIP_DATA) {
+	const ships = SHIP_DATA.filter(v => v.valid > 0);
+	for (const ship of ships) {
 		const tr = document.getElementById('ship_tr_' + ship.id);
 		const td_stock = tr.getElementsByClassName('ship_td_stock')[0];
 
@@ -2203,7 +2203,7 @@ function createShipTable(type) {
 					tr.classList.remove('general_tr');
 					tr.classList.add('ship_tr_disabled');
 				}
-				else{
+				else {
 					tr.classList.add('general_tr');
 					tr.classList.remove('ship_tr_disabled');
 				}
@@ -3421,7 +3421,7 @@ function readDeckBuilder(deck) {
 					if (!s_ || !s_.hasOwnProperty('items')) return;
 					const s_id = castInt(s_.id);
 					// マスタデータと照合
-					let shipData = SHIP_DATA.find(v => v.deckid === s_id);
+					let shipData = SHIP_DATA.find(v => v.api === s_id);
 					// マスタにないものも装備は受け入れるが、注意書きは表示させる
 					if (!shipData) {
 						shipData = { id: 0, slot: [0, 0, 0, 0] };
@@ -3458,8 +3458,8 @@ function readDeckBuilder(deck) {
 		});
 
 		// マスタ管理外艦娘チェック
-		if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
-		else document.getElementById('duck_read_warning').classList.add('d-none');
+		// if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
+		// else document.getElementById('duck_read_warning').classList.add('d-none');
 
 		// 第1、第2艦隊のみに絞る
 		const fleet1 = fleets.find(v => v[0] === 0)[1];
@@ -3517,7 +3517,7 @@ function convertToDeckBuilder() {
 				planes["i" + castInt(plane[4] + 1)] = i;
 			}
 
-			const s = { id: `${shipData.deckid}`, lv: 99, luck: -1, items: planes };
+			const s = { id: `${shipData.api}`, lv: 99, luck: -1, items: planes };
 			const shipIndex = ship[2];
 			if (shipIndex < 6) obj.f1["s" + ((shipIndex % 6) + 1)] = s;
 			else obj.f2["s" + ((shipIndex % 6) + 1)] = s;
@@ -3629,10 +3629,11 @@ function loadPlaneStock() {
 function loadShipStock() {
 	let shipStock = loadLocalStorage('shipStock');
 
+	const ships = SHIP_DATA.filter(v => v.valid > 0);
 	if (!shipStock || !shipStock.length) {
 		const initStock = [];
-		for (const ship of SHIP_DATA) {
-			const stock = { id: ship.id, num: 0, deck: ship.deckid };
+		for (const ship of ships) {
+			const stock = { id: ship.id, num: 0, deck: ship.api };
 			initStock.push(stock);
 		}
 		shipStock = initStock.concat();
@@ -3640,9 +3641,9 @@ function loadShipStock() {
 	}
 	else if (shipStock.length !== SHIP_DATA.length) {
 		// 追加艦娘チェック
-		for (const ship of SHIP_DATA) {
+		for (const ship of ships) {
 			if (!shipStock.find(v => v.id === ship.id)) {
-				shipStock.push({ id: ship.id, num: 0, deck: ship.deckid });
+				shipStock.push({ id: ship.id, num: 0, deck: ship.api });
 				saveLocalStorage('shipStock', shipStock);
 			}
 		}
