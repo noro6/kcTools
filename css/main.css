@@ -1695,7 +1695,7 @@ input[type="text"] { font-size: 12px; }
   border-collapse: collapse;
 }
 #antiair_input_table tbody td {
-  padding: .1rem;
+  padding: .15rem;
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
@@ -1706,7 +1706,7 @@ input[type="text"] { font-size: 12px; }
   border-collapse: collapse;
 }
 #antiair_cutin_table tbody td {
-  padding: .2rem;
+  padding: .15rem;
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
