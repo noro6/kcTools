@@ -124,7 +124,7 @@
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.9.1.1</div>
+									<div class="font_size_20 ml-2 align-self-center">v.1.9.2</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -4766,7 +4766,7 @@
 											対空射撃回避補正に関して、97式艦攻(村田隊)の回避補正は資料がないので、いったん97式艦攻(友永隊)らと同じ弱補正としています。
 										</div>
 										<div class="pl-3 mt-2">
-											イベント時の敵艦隊編成や新装備などの更新はできる限り早めの更新を目指しますが、作者の目視による確認や手入力で更新を行うため、
+											イベント時の敵艦隊編成や新装備などの更新はできる限り早めの更新を目指しますが、開発者の目視による確認や手入力で更新を行うケースもあるため、
 											正しくないデータが登録されている可能性があります。
 										</div>
 										<div class="pl-3">
@@ -4786,6 +4786,12 @@
 										<div class="pl-3 mt-3">ブラウザの横幅1200px以上で快適です。</div>
 										<div class="pl-3">
 											Windows版 Google Chrome、FireFoxで動作確認しています。それ以外の環境においては、一部またはすべての機能が正常に動作しない可能性があります。
+										</div>
+									</div>
+									<div class="my-4">
+										<p class="h6">免責事項</p>
+										<div class="pl-3">
+											本サイトの計算結果によって受けた利益・損害その他あらゆる事象について一切の責任を負いません。
 										</div>
 									</div>
 									<div class="my-4">
@@ -5008,7 +5014,18 @@
 										<div class="border-top collapse history_content" id="faq_11">
 											<div class="pl-3 py-2 font_size_12">
 												A.
-												ゲーム同様、装備できる艦娘のスロットから機体選択ボタンをクリックしないと表示されません。具体的には翔鶴改二甲および瑞鶴改二甲の2隻のみが該当します。もし表示されていない場合は、同改二「甲」を正しく選択しているか確認してください。
+												ゲーム同様、装備できる艦娘のスロットから機体選択ボタンをクリックしないと表示されません。具体的には翔鶴改二甲、瑞鶴改二甲、加賀改二護の3隻が該当します。もし表示されていない場合は、同改二「甲」または「護」を正しく選択しているか確認してください。
+											</div>
+										</div>
+										<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_12">
+											<div class="d-flex flex-nowrap align-self-center">
+												<div class="align-self-center">Q. 他の計算サイトと全く同じ編成・装備なのに制空値が微妙にずれているのは何故</div>
+											</div>
+										</div>
+										<div class="border-top collapse history_content" id="faq_12">
+											<div class="pl-3 py-2 font_size_12">
+												A.
+												サイトごとに、艦載機の内部熟練度の処理方法が違うケースが考えられます。「詳細設定」欄から、内部熟練度の取り扱いを設定できるため、この設定を見直してみてください。
 											</div>
 										</div>
 									</div>
@@ -5974,27 +5991,25 @@
 						<legend class="font_size_14 w-auto ml-2 px-1" id="detail_legend">搭載艦情報</legend>
 						<div class="container-fluid px-2 pb-2" id="detail_info"></div>
 					</fieldset>
-					<div class="d-flex mt-1" id="detail_fire">
-						<div class="align-self-center mx-2">
-							<div class="custom-control custom-radio custom-control-inline">
-								<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
-								<label class="custom-control-label" for="slot_detail">搭載数</label>
-							</div>
-							<div class="custom-control custom-radio custom-control-inline">
-								<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
-								<label class="custom-control-label" for="fire_detail">航空戦火力</label>
-							</div>
-						</div>
-					</div>
-					<div class="d-flex" id="detail_wave">
-						<div class="align-self-center mx-2">
+					<div class="d-flex mt-1">
+						<div class="align-self-center mx-2 detail_wave">
 							<div class="custom-control custom-radio custom-control-inline">
 								<input type="radio" id="detail_wave1" name="detail_wave_select" checked class="custom-control-input">
 								<label class="custom-control-label" for="detail_wave1">第1波</label>
 							</div>
-							<div class="custom-control custom-radio custom-control-inline">
+							<div class="custom-control custom-radio custom-control-inline detail_wave">
 								<input type="radio" id="detail_wave2" name="detail_wave_select" class="custom-control-input">
 								<label class="custom-control-label" for="detail_wave2">第2波</label>
+							</div>
+						</div>
+						<div class="align-self-center mx-2 detail_fire">
+							<div class="custom-control custom-radio custom-control-inline">
+								<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
+								<label class="custom-control-label" for="slot_detail">搭載数</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline detail_fire">
+								<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
+								<label class="custom-control-label" for="fire_detail">航空戦火力</label>
 							</div>
 						</div>
 						<div class="ml-auto">
@@ -6333,8 +6348,18 @@
 					<h5 class="modal-title">艦隊対空砲火設定</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
-				<div class="modal-body py-1">
-					<div class="d-flex flex-wrap mb-1">
+				<div class="modal-body py-2">
+					<div class="font_size_12 mt-3">
+						<div>
+							<span>対空砲火情報を入力すると、敵艦載機の撃墜や、棒立ち率の計算が可能になります。</span>
+						</div>
+						<div>
+							<span>対空砲火情報の計算は</span>
+							<a href="https://kcjervis.github.io/jervis/" target="_blank">作戦室 Jervis OR</a>
+							<span>がおすすめです。</span>
+						</div>
+					</div>
+					<div class="d-flex flex-wrap my-1">
 						<div class="d-flex ali mt-1 align-self-center mr-4">
 							<div class="align-self-center custom-control custom-checkbox">
 								<input type="checkbox" class="custom-control-input" id="antiair_grand">
@@ -6385,32 +6410,26 @@
 					</div>
 					<div class="container border-top">
 						<div class="row">
-							<div class="col-12 col-lg-6 mt-1 px-1">
-								<div>加重対空値設定</div>
+							<div class="col-12 col-lg-6 order-1 mt-2 px-1">
+								<div class="h6">加重対空値設定</div>
 								<table class="text-center mt-1" id="antiair_input_table">
 									<thead class="general_thead">
 										<tr>
-											<td class="w_10"></td>
+											<td class="w_5"></td>
 											<td class="w_20">加重対空値</td>
 											<td class="w_20">割合撃墜</td>
 											<td class="w_25">固定撃墜</td>
-											<td class="w_25">最低保証</td>
+											<td class="w_30">最低保証</td>
 										</tr>
 									</thead>
 									<tbody id="antiair_weight_inputs"></tbody>
 								</table>
-								<div class="hidden_text mt-1 font_size_11 d-none">※ 第2艦隊は7行目以降から入力してください。</div>
-								<div class="mt-1 d-flex">
-									<div class="align-self-center text-nowrap">一括取込：</div>
-									<textarea class="form-control font_size_12 px-2" id="import_antiair"
-										placeholder="99,102,105,..."></textarea>
-									<button type="button" class="btn btn-sm btn-success text-nowrap ml-2"
-										id="btn_import_antiair">読込</button>
+								<div class="hidden_text mt-1 font_size_11 d-none">
+									<span>※ 第2艦隊は</span><span class="text-success font-weight-bold">7行目以降</span><span>から入力してください。</span>
 								</div>
-								<div class="font_size_11 mt-1">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。</div>
 							</div>
-							<div class="col-12 col-lg-6 mt-1 px-1">
-								<div>対空カットイン設定</div>
+							<div class="col-12 col-lg-6 order-3 order-lg-2 mt-2 px-1">
+								<div class="h6">対空カットイン設定</div>
 								<table class="text-center mt-1" id="antiair_cutin_table">
 									<thead class="general_thead">
 										<tr>
@@ -6430,6 +6449,16 @@
 										</tr>
 									</tbody>
 								</table>
+							</div>
+							<div class="col-12 order-2 order-lg-3 my-2 px-1">
+								<div class="d-flex">
+									<div class="align-self-center text-nowrap">一括取込：</div>
+									<textarea class="form-control font_size_12 px-2" id="import_antiair"
+										placeholder="99,102,105,..."></textarea>
+									<button type="button" class="btn btn-sm btn-success text-nowrap ml-2"
+										id="btn_import_antiair">読込</button>
+								</div>
+								<div class="font_size_11 mt-1">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。</div>
 							</div>
 						</div>
 					</div>

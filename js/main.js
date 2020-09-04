@@ -1881,7 +1881,7 @@ function setShipStockTable() {
 	const fragment = document.createDocumentFragment();
 	const imgWidth = 100;
 	const imgHeight = 25;
-	const ships = SHIP_DATA.filter(v => v.id > 0 && v.valid > 0);
+	const ships = SHIP_DATA.filter(v => v.id > 0);
 	const shipStock = loadShipStock();
 
 	const max_i = ships.length;
@@ -2018,11 +2018,9 @@ function initializeShipTable() {
 	const fragment = document.createDocumentFragment();
 	const imgWidth = 120;
 	const imgHeight = 30;
-	let prevType = 0;
 	const displayMode = $modal.find('.toggle_display_type.selected').data('mode');
 
-	const ships = SHIP_DATA.filter(v => v.valid > 0);
-	for (const ship of ships) {
+	for (const ship of SHIP_DATA) {
 		// ラッパー
 		const $shipDiv = document.createElement('div');
 		$shipDiv.className = 'ship_tr general_tr d-flex ' + (displayMode === "multi" ? 'tr_multi' : 'py-1');
@@ -2072,7 +2070,6 @@ function initializeShipTable() {
 		}
 
 		fragment.appendChild($shipDiv);
-		prevType = ship.type;
 	}
 
 	tbody.innerHTML = '';
@@ -2080,8 +2077,8 @@ function initializeShipTable() {
 }
 
 /**
- * 引数で渡された ship 配列から値を展開
- * @param {Array.<number>} type
+ * 引数で渡された艦種の艦娘を展開
+ * @param {number} type
  */
 function createShipTable(type) {
 	const modal = document.getElementById('modal_ship_select').getElementsByClassName('modal-dialog')[0];
@@ -2127,7 +2124,7 @@ function createShipTable(type) {
 	// 反映
 	let prevType = -1;
 	for (const e of valueList) {
-		if (type[0] === 0 && prevType !== e.mst.type) {
+		if (type === 0 && prevType !== e.mst.type && e.mst.valid > 0) {
 			const fragment = document.createDocumentFragment();
 			const $typeDiv = document.createElement('div');
 			$typeDiv.className = 'w-100 d-flex mt-3 type_line';
@@ -2159,8 +2156,7 @@ function createShipTable(type) {
 		a.classList.add('d-flex');
 		a.classList.remove('d-none');
 	}
-	const ships = SHIP_DATA.filter(v => v.valid > 0);
-	for (const ship of ships) {
+	for (const ship of SHIP_DATA) {
 		const tr = document.getElementById('ship_tr_' + ship.id);
 		const td_stock = tr.getElementsByClassName('ship_td_stock')[0];
 
@@ -2169,12 +2165,17 @@ function createShipTable(type) {
 		if (displayMode === "multi") tr.classList.add('tr_multi');
 		else tr.classList.remove('tr_multi');
 		// 検索条件
-		if ((type[0] !== 0 && !type.includes(ship.type)) || (visibleFinal && !ship.final) || (searchWord && !ship.name.includes(searchWord))) {
+		if ((type !== 0 && type !== ship.type) || (visibleFinal && !ship.final) || (searchWord && !ship.name.includes(searchWord))) {
 			tr.classList.add('d-none');
 			tr.classList.remove('d-flex');
 		}
 		else if (favOnly && !setting.favoriteShip.includes(ship.id)) {
 			// お気に入りにないものは非表示
+			tr.classList.add('d-none');
+			tr.classList.remove('d-flex');
+		}
+		else if (type === 0 && ship.valid !== 1) {
+			// 全体表示では水上偵察機のみの艦娘は非表示
 			tr.classList.add('d-none');
 			tr.classList.remove('d-flex');
 		}
@@ -3629,7 +3630,7 @@ function loadPlaneStock() {
 function loadShipStock() {
 	let shipStock = loadLocalStorage('shipStock');
 
-	const ships = SHIP_DATA.filter(v => v.valid > 0);
+	const ships = SHIP_DATA;
 	if (!shipStock || !shipStock.length) {
 		const initStock = [];
 		for (const ship of ships) {
@@ -3639,7 +3640,7 @@ function loadShipStock() {
 		shipStock = initStock.concat();
 		saveLocalStorage('shipStock', shipStock);
 	}
-	else if (shipStock.length !== SHIP_DATA.length) {
+	else if (shipStock.length !== ships.length) {
 		// 追加艦娘チェック
 		for (const ship of ships) {
 			if (!shipStock.find(v => v.id === ship.id)) {
@@ -6778,8 +6779,8 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	let index = 0;
 
 	$('#land_base_detail_table').addClass('d-none');
-	$('#detail_fire').addClass('d-none').removeClass('d-flex');
-	$('#detail_wave').addClass('d-none').removeClass('d-flex');
+	$('.detail_fire').addClass('d-none').removeClass('d-flex');
+	$('.detail_wave').addClass('d-none').removeClass('d-flex');
 	$('#detail_info').data('mode', 'fleet_slot_detail');
 	$('#detail_info').data('ship_id', shipId);
 	$('#detail_info').data('base_no', shipNo);
@@ -6809,7 +6810,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 
 	const detailLegend = `
 		<img src="./img/ship/${shipId}.png" class="ship_img align-self-center ${shipId ? '' : 'd-none'}">
-		<span class="ml-1 align-self-center">${ship ? ship.name : '未指定'}</span>
+		<span class="ml-1 align-self-center legend_name" data-shipid="${shipId}">${ship ? ship.name : '未指定'}</span>
 	`;
 
 	$('#detail_legend').html(detailLegend);
@@ -7000,8 +7001,8 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	let index = 0;
 
 	$('#land_base_detail_table').removeClass('d-none');
-	$('#detail_fire').addClass('d-none').removeClass('d-flex');
-	$('#detail_wave').removeClass('d-none').addClass('d-flex');
+	$('.detail_fire').addClass('d-none').removeClass('d-flex');
+	$('.detail_wave').removeClass('d-none').addClass('d-flex');
 	$('#detail_info').data('mode', 'land_base_detail');
 	$('#detail_info').data('base_no', landBaseNo);
 	$('#detail_info').data('slot_no', slotNo);
@@ -7193,8 +7194,8 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 
 	// 必要なら説明表示
 	$('#land_base_detail_table').addClass('d-none');
-	$('#detail_fire').removeClass('d-none').addClass('d-flex');
-	$('#detail_wave').addClass('d-none').removeClass('d-flex');
+	$('.detail_fire').removeClass('d-none').addClass('d-flex');
+	$('.detail_wave').addClass('d-none').removeClass('d-flex');
 	$('#detail_info').data('mode', 'enemy_slot_detail');
 	$('#detail_info').data('base_no', enemyNo);
 	$('#detail_info').data('slot_no', slotNo);
@@ -7221,7 +7222,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	const detailLegend = `
 		<img src="./img/enemy/${enemy.id}.png" class="ship_img align-self-center">
 		<span class="ml-1 text-primary font_size_11 align-self-center">ID: ${enemy.id + 1500}</span>
-		<span class="ml-1 align-self-center">${enemy.name}</span>
+		<span class="ml-1 align-self-center legend_name" data-enemyid="${enemy.id}">${enemy.name}</span>
 	`;
 
 	$('#detail_legend').html(detailLegend);
@@ -9204,7 +9205,7 @@ function btn_antiair_input_Clicked() {
 		const prevValue = (i < inputAntiAirWeights.length ? inputAntiAirWeights[i] : 0);
 		text += `
 			<tr class="${(i + 1) > 6 ? 'd-none escort_fleet' : 'main_fleet'}">
-				<td>${i + 1}</td>
+				<td class="font_size_11 ${(i + 1) <= 6 ? 'text-primary' : 'text-success'}">${i + 1}</td>
 				<td><input type="number" class="form-control form-control-sm antiair_weight" value="${prevValue}"></td>
 				<td class="rate_shoot_down">-</td>
 				<td class="fixed_shoot_down">-</td>
@@ -9247,6 +9248,7 @@ function updateFleetStage2Table() {
 	const minFixedList = [];
 	let maxMinimum = 0;
 	let minMinimum = 9999;
+	let sumMinimum = 0;
 
 	// 艦隊防空値 * 陣形補正
 	const formation = FORMATION.find(v => v.id === formationId)
@@ -9333,7 +9335,8 @@ function updateFleetStage2Table() {
 				$(e).find('.minimum_shoot_down').text(`${minMinimum}機`);
 			}
 			else {
-				$(e).find('.minimum_shoot_down').text(`${minMinimum}~${maxMinimum}機`);
+				const avg = getArraySum(fleetStage2Table.map(v => v.table[0][2])) / fleetStage2Table.length;
+				$(e).find('.minimum_shoot_down').text(`${minMinimum}~${maxMinimum}機(${avg.toFixed(1)}機)`);
 			}
 
 		}
@@ -10286,7 +10289,7 @@ function btn_remove_ship_Clicked($this) {
  */
 function ship_word_TextChanged() {
 	if (timer !== false) clearTimeout(timer);
-	timer = setTimeout(function () { createShipTable([castInt($('#ship_type_select').val())]); }, 250);
+	timer = setTimeout(function () { createShipTable(castInt($('#ship_type_select').val())); }, 250);
 }
 
 /**
@@ -11353,9 +11356,30 @@ function btn_output_slot_dist_Clicked() {
 		const labels = chartInstance.data.labels;
 		const rates = chartInstance.data.datasets[0].data;
 
+		// 表示するスロットの最大値 基本は取りうる値の最大値から。
+		let maxSlot = getArrayMax(labels.map(v => castInt(v)));
+		const detailMode = $('#detail_info').data('mode');
+		if (detailMode === 'land_base_detail') {
+			// 基地は18機から表示
+			maxSlot = 18;
+		}
+		else if ($('#slot_detail').prop('checked')) {
+			// 基地以外はマスタから最大搭載数を取得
+			const $id = $('#detail_legend').find('.legend_name');
+			const slotNo = castInt($('#detail_info').data('slot_no'));
+			if (detailMode === 'enemy_slot_detail') {
+				const enemy = ENEMY_DATA.find(v => v.id === castInt($id.data('enemyid')));
+				if (enemy) maxSlot = enemy.slot[slotNo];
+			}
+			else if (detailMode === 'fleet_slot_detail') {
+				const ship = SHIP_DATA.find(v => v.id === castInt($id.data('shipid')));
+				if (ship) maxSlot = ship.slot[slotNo];
+			}
+		}
+
 		const output = [];
 		if (labels.length > 0) {
-			for (let i = 18; i >= 0; i--) {
+			for (let i = maxSlot; i >= 0; i--) {
 				const index = labels.indexOf(i);
 				if (index > -1) {
 					output.push({ slot: i, rate: rates[index] / 100 });
@@ -11382,11 +11406,32 @@ function btn_output_slot_dist_table_Clicked() {
 		const labels = chartInstance.data.labels;
 		const rates = chartInstance.data.datasets[0].data;
 
+		// 表示するスロットの最大値 基本は取りうる値の最大値から。
+		let maxSlot = getArrayMax(labels.map(v => castInt(v)));
+		const detailMode = $('#detail_info').data('mode');
+		if (detailMode === 'land_base_detail') {
+			// 基地は18機から表示
+			maxSlot = 18;
+		}
+		else if ($('#slot_detail').prop('checked')) {
+			// 基地以外はマスタから最大搭載数を取得
+			const $id = $('#detail_legend').find('.legend_name');
+			const slotNo = castInt($('#detail_info').data('slot_no'));
+			if (detailMode === 'enemy_slot_detail') {
+				const enemy = ENEMY_DATA.find(v => v.id === castInt($id.data('enemyid')));
+				if (enemy) maxSlot = enemy.slot[slotNo];
+			}
+			else if (detailMode === 'fleet_slot_detail') {
+				const ship = SHIP_DATA.find(v => v.id === castInt($id.data('shipid')));
+				if (ship) maxSlot = ship.slot[slotNo];
+			}
+		}
+
 		let text = '';
 		if (labels.length > 0) {
-			for (let i = 18; i >= 0; i--) {
+			for (let i = maxSlot; i >= 0; i--) {
 				const index = labels.indexOf(i);
-				if (i !== 18) text += '\r\n';
+				if (i !== maxSlot) text += '\r\n';
 
 				if (index > -1) text += `${i}\t${rates[index] / 100}`;
 				else text += `${i}\t0`;
@@ -12113,14 +12158,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_expand_preset', btn_expand_plane_preset_Clicked);
-	$('#modal_ship_select').on('change', '#ship_type_select', function () { createShipTable([castInt($(this).val())]); });
+	$('#modal_ship_select').on('change', '#ship_type_select', function () { createShipTable(castInt($(this).val())); });
 	$('#modal_ship_select').on('click', '.ship_tr:not(.ship_tr_disabled)', function () { modal_ship_Selected($(this)); });
 	$('#modal_ship_select').on('click', '.btn_remove', function () { modal_ship_select_btn_remove_Clicked($(this)); });
-	$('#modal_ship_select').on('click', '#display_final', () => { createShipTable([castInt($('#ship_type_select').val())]); });
-	$('#modal_ship_select').on('click', '#frequent_ship', () => { createShipTable([castInt($('#ship_type_select').val())]); });
-	$('#modal_ship_select').on('click', '#fav_only_ship', () => { createShipTable([castInt($('#ship_type_select').val())]); });
-	$('#modal_ship_select').on('click', '#disp_in_stock_ship', () => { createShipTable([castInt($('#ship_type_select').val())]); });
-	$('#modal_ship_select').on('click', '#disp_equipped_ship', () => { createShipTable([castInt($('#ship_type_select').val())]); });
+	$('#modal_ship_select').on('click', '#display_final', () => { createShipTable(castInt($('#ship_type_select').val())); });
+	$('#modal_ship_select').on('click', '#frequent_ship', () => { createShipTable(castInt($('#ship_type_select').val())); });
+	$('#modal_ship_select').on('click', '#fav_only_ship', () => { createShipTable(castInt($('#ship_type_select').val())); });
+	$('#modal_ship_select').on('click', '#disp_in_stock_ship', () => { createShipTable(castInt($('#ship_type_select').val())); });
+	$('#modal_ship_select').on('click', '#disp_equipped_ship', () => { createShipTable(castInt($('#ship_type_select').val())); });
 	$('#modal_ship_select').on('input', '#ship_word', ship_word_TextChanged);
 	$('#modal_enemy_select').on('click', '.modal-body .enemy', function () { modal_enemy_Selected($(this)); });
 	$('#modal_enemy_select').on('click', '.btn_remove', function () { modal_enemy_select_btn_remove($(this)); });
