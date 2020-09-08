@@ -972,7 +972,7 @@ function initialize(callback) {
 	// 敵艦表示形式 敵艦隊欄
 	$('#enemy_fleet_display_text').prop('checked', !setting.enemyFleetDisplayImage);
 	// マップ難易度初期化
-	$('#select_difficulty').val(3);
+	$('#select_difficulty').val(4);
 	$('#plane_word').val('');
 	$('#ship_word').val('');
 	$('#enemy_word').val('');
@@ -2610,7 +2610,7 @@ function createMapSelect() {
 		text += `<optgroup label="${w.name}">`;
 		for (const m of maps) {
 			const map = m.area % 10;
-			text += `<option value="${m.area}">${world > 1000 ? 'E' : world}-${map} : ${m.name}</option>`;
+			text += `<option value="${m.area}">${world > 20 ? 'E' : world}-${map} : ${m.name}</option>`;
 		}
 	}
 	$('#map_select').html(text);
@@ -2621,8 +2621,8 @@ function createMapSelect() {
  */
 function createNodeSelect() {
 	const area = castInt($('#map_select').val());
-	let lv = -1;
-	if (area < 1000) {
+	let lv = 0;
+	if (area < 200) {
 		$('#select_difficulty_div').addClass('d-none');
 	}
 	else {
@@ -2679,8 +2679,8 @@ function createNodeSelect() {
 function createEnemyPattern(patternNo = 0) {
 	const area = castInt($('#map_select').val());
 	const node = $('.node_selected').data('node');
-	let lv = -1;
-	if (area < 1000) $('#select_difficulty_div').addClass('d-none');
+	let lv = 0;
+	if (area < 100) $('#select_difficulty_div').addClass('d-none');
 	else {
 		$('#select_difficulty_div').removeClass('d-none');
 		lv = castInt($('#select_difficulty').val());
@@ -2726,10 +2726,10 @@ function createEnemyPattern(patternNo = 0) {
 		let tabText = '';
 		for (let i = 0; i < patterns.length; i++) {
 			tabText += `
-			<li class="nav-item">
+			<li class="nav-item font_size_12">
 				<a class="nav-link ${mainColor === "#000000" ? '' : 'nav-link-dark'} ${i === 0 ? 'active' : ''}" data-toggle="tab" data-disp="${i}" href="#">
 					${(patterns[i].d ? patterns[i].d : '編成' + (i + 1))}
-					</a>
+				</a>
 			</li>
 			`;
 		}
@@ -2769,8 +2769,8 @@ function expandEnemy() {
 	const area = castInt($('#map_select').val());
 	const node = $('.node_selected').data('node');
 	const patternNo = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
-	let lv = -1;
-	if (area >= 1000) {
+	let lv = 0;
+	if (area >= 200) {
 		lv = castInt($('#select_difficulty').val());
 	}
 
@@ -5685,7 +5685,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 		// 航路情報を取得　なければ手動
 		const mapInfo = !node_battle_content.dataset.celldata ? map.replace('-', '') + "_手動" : node_battle_content.dataset.celldata;
 		let world = mapInfo.split('_')[0].slice(0, -1);
-		world = world > 1000 ? "E-" : world + "-";
+		world = world > 20 ? "E-" : world + "-";
 		const area = world + mapInfo.split('_')[0].slice(-1);
 		const cellText = mapInfo.split('_')[1];
 		if (map === "999-1") map = area;
