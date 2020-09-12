@@ -621,7 +621,14 @@ function initializeSetting() {
 	}
 	if (!setting.hasOwnProperty('orderBy')) {
 		setting.orderBy = {
-			'modal_plane_select': ['default'],
+			'landBase': 'default',
+			'friendFleet': 'default'
+		};
+	}
+	if (!setting.hasOwnProperty('planeFilter')) {
+		setting.planeFilter = {
+			'landBase': ['radius', 0],
+			'friendFleet': ['antiAir', 0]
 		};
 	}
 
@@ -683,6 +690,15 @@ function adaptUpdater() {
 		if (minor < 1) {
 			// 敵艦隊欄 画像表示をデフォルトに変更
 			setting.enemyFleetDisplayImage = true;
+		}
+
+		// ～ v1.9.2.1
+		if (minor <= 2 && patch < 1) {
+			// 機体選択欄のソート保持方法変更
+			setting.orderBy = {
+				'landBase': 'default',
+				'friendFleet': 'default'
+			};
 		}
 	}
 
@@ -922,13 +938,6 @@ function initialize(callback) {
 		});
 	}
 	else $('.toggle_display_type[data-mode="single"]').addClass('selected');
-	// ソート
-	if (!setting.orderBy) {
-		setting.orderBy = { 'modal_plane_select': ['default'] };
-	}
-	Object.keys(setting.orderBy).forEach((key) => {
-		$(`#${key} .sort_select`).val(setting.orderBy[key][0]);
-	});
 
 	// 対空CIプルダウン初期化
 	text = '<option value="0">不発</option>';
@@ -10033,10 +10042,28 @@ function toggle_display_type_Clicked($this) {
 function sort_Changed($this) {
 	const $parentModal = $this.closest('.modal');
 	const sortKey = $parentModal.find('.sort_select').val();
-	setting.orderBy[$parentModal.attr('id')] = [sortKey];
-
-	saveLocalStorage('setting', setting);
+	const sortTargetId = $target.closest('.contents').attr('id');
+	if (sortTargetId) {
+		setting.orderBy[sortTargetId] = sortKey;
+		saveLocalStorage('setting', setting);
+	}
 	if ($parentModal.attr('id') === 'modal_plane_select') plane_type_select_Changed();
+}
+
+/**
+ * 艦載機選択欄　フィルタ変更時
+ */
+function plane_filter_Changed() {
+	const filterKey = $('#plane_filter_key_select').val();
+	const filterValue = castInt($('#plane_filter_value').val());
+	const filterTargetId = $target.closest('.contents').attr('id');
+
+	if (filterTargetId) {
+		setting.planeFilter[filterTargetId] = [filterKey, filterValue];
+		saveLocalStorage('setting', setting);
+	}
+
+	plane_type_select_Changed();
 }
 
 /**
@@ -10067,6 +10094,15 @@ function plane_name_Clicked($this) {
 			if (typeId === activeTypeId) $(e).addClass('active');
 			else $(e).removeClass('active');
 		});
+	}
+
+	const selectParent = $target.closest('.contents').attr('id');
+	if (selectParent) {
+		// ソート復元
+		$('#modal_plane_select').find('.sort_select').val(setting.orderBy[selectParent]);
+		// フィルタ復元
+		$('#plane_filter_key_select').val(setting.planeFilter[selectParent][0]);
+		$('#plane_filter_value').val(setting.planeFilter[selectParent][1]);
 	}
 
 	plane_type_select_Changed();
@@ -12152,8 +12188,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('click', '#disp_equipped', disp_equipped_Checked_Chenged);
 	$('#modal_plane_select').on('input', '#plane_word', plane_word_TextChanged);
 	$('#modal_plane_select').on('change', '#plane_sort_select', function () { sort_Changed($(this)); });
-	$('#modal_plane_select').on('change', '#plane_filter_key_select', function () { plane_type_select_Changed(); });
-	$('#modal_plane_select').on('change', '#plane_filter_value', function () { plane_type_select_Changed() });
+	$('#modal_plane_select').on('change', '#plane_filter_key_select', plane_filter_Changed);
+	$('#modal_plane_select').on('change', '#plane_filter_value', plane_filter_Changed);
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
