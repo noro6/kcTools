@@ -5655,7 +5655,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 				enm.origLbAp = inputAp;
 			}
 			// 潜水以外が含まれていればAll潜水フラグを落とす
-			if (isAllSubmarine && !enm.type.includes(18)) isAllSubmarine = false;
+			if (isAllSubmarine && !enm.type.includes(18) && enm.id > 0) isAllSubmarine = false;
 
 			battleInfo.enemies.push(enm);
 			sumAp += enm.ap;
