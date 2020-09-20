@@ -40,12 +40,15 @@ body {
 .deep_blue_theme {
   background: linear-gradient(rgb(10, 30, 68), rgb(5, 10, 20));
 }
-h1 { font-size: 2em; }
+h1 { 
+  font-size: 1.65em;
+  margin-bottom: 0px;
+}
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
 #main { min-height: 100vh; }
-#main_contents > div { max-width: 1200px; }
-#site_information > div { max-width: 1200px; }
+#main.smart #main_contents > div { max-width: 1024px; }
+#main.smart #site_information > div { max-width: 1024px; }
 #modal_plane_select .modal-content { min-height: 80vh; }
 #modal_ship_select .modal-content { min-height: 80vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
@@ -61,7 +64,7 @@ input[type="text"] { font-size: 12px; }
   }
 }
 @media (max-width: 577px) {
-  #main_title { width: 280px; }
+  /* #main_title { width: 280px; } */
 }
 @media (min-width: 577px) { .modal-xl { max-width: 522px; } }
 @media (min-width: 992px) { .modal-xl { max-width: 800px; } }
@@ -72,7 +75,7 @@ input[type="text"] { font-size: 12px; }
   min-height: 960px;
 }
 .modal-backdrop.show { opacity: .75; }
-@media (min-width: 990px) { #lb_tab_select { display: none !important; } }
+@media (min-width: 994px) { #lb_tab_select { display: none !important; } }
 .fa-archive { color: #ac5300; }
 
 
@@ -604,7 +607,8 @@ input[type="text"] { font-size: 12px; }
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  width: 150px;
+  min-width: 140px;
+  margin-right: 1rem;
   padding: 60px 0 0;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -647,7 +651,7 @@ input[type="text"] { font-size: 12px; }
 /* -----------------------------------
   主画面 nav-link
 ----------------------------------- */
-#main_header { max-width: 1200px; }
+#main.smart #main_header { max-width: 1024px; }
 
 .nav-tabs { border-color: #ccc !important; }
 #main_contents a.nav-link {
@@ -718,7 +722,7 @@ input[type="text"] { font-size: 12px; }
   color: #00ccff;
 }
 
-#site_warning { max-width: 1200px; }
+#main.smart #site_warning { max-width: 1024px; }
 #site_warning table td{
   padding: 0rem .5rem;
 }
@@ -727,6 +731,17 @@ input[type="text"] { font-size: 12px; }
   基地航空隊関連 #landBase
 ----------------------------------- */
 .lb_tab { max-width: 460px; }
+@media (min-width: 1400px) {
+  #main:not(.smart) .lb_tab { max-width: 540px; }
+  #main:not(.smart) .lb_tab_main {
+    padding-right: .3rem;
+    padding-left: .3rem;
+  }
+  #main:not(.smart) .simple_lb_progress { 
+    padding-right: .25rem;
+    padding-left: .25rem;
+  }
+}
 .lb_infomation { font-size: 12px; }
 /* 基地札 */
 .ohuda_select {

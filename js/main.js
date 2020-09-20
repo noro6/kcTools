@@ -359,14 +359,15 @@ function setPreCalculateTable() {
 	// 自軍撃墜テーブル
 	if (!SHOOT_DOWN_TABLE) {
 		SHOOT_DOWN_TABLE = [];
-		const downRate = [[7, 15], [20, 45], [30, 75], [45, 105], [65, 150]];
-		const downRateLen = downRate.length;
+		const c_max = [1, 3, 5, 7, 10];
 		for (let slot = 0; slot <= MAX_SLOT; slot++) {
 			const tmpA = [];
-			for (let i = 0; i < downRateLen; i++) {
+			for (const v of c_max) {
+				const max = v / 3;
 				const tmpB = [];
-				for (let j = downRate[i][0]; j <= downRate[i][1]; j++) tmpB.push(slot * j / 256);
-
+				for (let i = 0; i <= max; i += 0.01) {
+					tmpB.push(slot * (i + v / 4) / 10);
+				}
 				shuffleArray(tmpB);
 				tmpA.push(tmpB);
 			}
@@ -8199,6 +8200,18 @@ function version_detail_Clicked() {
 }
 
 /**
+ * 縮小表示クリック時
+ */
+function display_smart_Clicked() {
+	if(document.getElementById('display_smart')['checked']) {
+		document.getElementById('main').classList.add('smart');
+	}
+	else{
+		document.getElementById('main').classList.remove('smart');
+	}
+}
+
+/**
  * 大コンテンツ入れ替えモード起動ボタンクリック時
  * @param {JqueryDomObject} $this
  */
@@ -12095,6 +12108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
 	$('#main').on('click', '.btn_show_plane_box', function () { btn_show_plane_box_Clicked($(this)) });
 	$('#main').on('click', '.version_detail', version_detail_Clicked);
+	$('#main').on('click', '#display_smart', display_smart_Clicked);
 	$('#site_warning').on('click', '.cur_pointer', () => { $('#site_warning').removeClass('d-flex').addClass('d-none'); });
 	$('#landBase').on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
 	$('#landBase').on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
