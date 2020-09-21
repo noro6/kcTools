@@ -46,9 +46,15 @@ h1 {
 }
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
+
 #main { min-height: 100vh; }
-#main.smart #main_contents > div { max-width: 1024px; }
-#main.smart #site_information > div { max-width: 1024px; }
+
+#main.reduced #main_contents > div { max-width: 1100px; }
+#main.reduced #site_information > div { max-width: 1100px; }
+#main.reduced #main_header { max-width: 1100px; }
+#main.reduced #site_warning { max-width: 1100px; }
+#site_warning table td{ padding: 0rem .5rem; }
+
 #modal_plane_select .modal-content { min-height: 80vh; }
 #modal_ship_select .modal-content { min-height: 80vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
@@ -649,9 +655,8 @@ input[type="text"] { font-size: 12px; }
 
 
 /* -----------------------------------
-  主画面 nav-link
+  主画面
 ----------------------------------- */
-#main.smart #main_header { max-width: 1024px; }
 
 .nav-tabs { border-color: #ccc !important; }
 #main_contents a.nav-link {
@@ -722,22 +727,17 @@ input[type="text"] { font-size: 12px; }
   color: #00ccff;
 }
 
-#main.smart #site_warning { max-width: 1024px; }
-#site_warning table td{
-  padding: 0rem .5rem;
-}
-
 /* -----------------------------------
   基地航空隊関連 #landBase
 ----------------------------------- */
 .lb_tab { max-width: 460px; }
 @media (min-width: 1400px) {
-  #main:not(.smart) .lb_tab { max-width: 540px; }
-  #main:not(.smart) .lb_tab_main {
+  #main:not(.reduced) .lb_tab { max-width: 540px; }
+  #main:not(.reduced) .lb_tab_main {
     padding-right: .3rem;
     padding-left: .3rem;
   }
-  #main:not(.smart) .simple_lb_progress { 
+  #main:not(.reduced) .simple_lb_progress { 
     padding-right: .25rem;
     padding-left: .25rem;
   }
@@ -791,10 +791,28 @@ input[type="text"] { font-size: 12px; }
   艦隊関連 #friendFleet
 ----------------------------------- */
 .display_ship_count { width: 60px; }
-.ship_tab {
-  min-width: 420px;
-  max-width: 600px;
-  flex: 1;
+
+.fleet_tab {
+  grid-template-columns: 1fr;
+  display: grid;
+}
+@media (min-width: 600px) {
+  .fleet_tab { margin: 0 4rem; }
+}
+@media (min-width: 740px) {
+  .fleet_tab { margin: 0 8rem; }
+}
+@media (min-width: 780px) {
+  .fleet_tab {
+    grid-template-columns: 1fr 1fr; 
+    margin: 0;
+  }
+}
+@media (min-width: 1400px) {
+  #main:not(.reduced) .fleet_tab {
+    grid-template-columns: 1fr 1fr 1fr; 
+    margin: 0;
+  }
 }
 .ship_name_span {
   cursor: pointer;
@@ -1017,26 +1035,28 @@ input[type="text"] { font-size: 12px; }
 .enemy_content:hover { background-color: rgba(128, 128, 128, 0.1); }
 .no_enemy { opacity: .3; }
 .no_enemy:hover { opacity: .6; }
-.enemy_index {
-  text-align: right;
-  width: 18px;
-  font-size: 12px;
+.enemy_index { 
+  margin-left: .25rem;
+  font-size: 12px; 
 }
 .enemy_name {
   cursor: pointer;
   display: table;
-  width: 160px;
   font-size: 12px;
-  border-radius: .25rem;
-}
-.enemy_name_img {
-  height: 30px;
-  width: 120px;
 }
 .enemy_name_span {
   display: table-cell;
   vertical-align: middle;
 }
+.enemy_name_img {
+  height: 30px;
+  width: 128px;
+}
+.enemy_name_text {
+  min-width: 128px;
+  max-width: 158px; 
+}
+
 .enemy_ap_select_parent {
   width: 24px;
   font-size: 12px;
