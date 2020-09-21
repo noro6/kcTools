@@ -40,12 +40,21 @@ body {
 .deep_blue_theme {
   background: linear-gradient(rgb(10, 30, 68), rgb(5, 10, 20));
 }
-h1 { font-size: 2em; }
+h1 { 
+  font-size: 1.65em;
+  margin-bottom: 0px;
+}
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
+
 #main { min-height: 100vh; }
-#main_contents > div { max-width: 1200px; }
-#site_information > div { max-width: 1200px; }
+
+#main.reduced #main_contents > div { max-width: 1100px; }
+#main.reduced #site_information > div { max-width: 1100px; }
+#main.reduced #main_header { max-width: 1100px; }
+#main.reduced #site_warning { max-width: 1100px; }
+#site_warning table td{ padding: 0rem .5rem; }
+
 #modal_plane_select .modal-content { min-height: 80vh; }
 #modal_ship_select .modal-content { min-height: 80vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
@@ -61,7 +70,7 @@ input[type="text"] { font-size: 12px; }
   }
 }
 @media (max-width: 577px) {
-  #main_title { width: 280px; }
+  /* #main_title { width: 280px; } */
 }
 @media (min-width: 577px) { .modal-xl { max-width: 522px; } }
 @media (min-width: 992px) { .modal-xl { max-width: 800px; } }
@@ -72,7 +81,7 @@ input[type="text"] { font-size: 12px; }
   min-height: 960px;
 }
 .modal-backdrop.show { opacity: .75; }
-@media (min-width: 990px) { #lb_tab_select { display: none !important; } }
+@media (min-width: 994px) { #lb_tab_select { display: none !important; } }
 .fa-archive { color: #ac5300; }
 
 
@@ -604,7 +613,8 @@ input[type="text"] { font-size: 12px; }
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  width: 150px;
+  min-width: 140px;
+  margin-right: 1rem;
   padding: 60px 0 0;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -645,9 +655,8 @@ input[type="text"] { font-size: 12px; }
 
 
 /* -----------------------------------
-  主画面 nav-link
+  主画面
 ----------------------------------- */
-#main_header { max-width: 1200px; }
 
 .nav-tabs { border-color: #ccc !important; }
 #main_contents a.nav-link {
@@ -718,15 +727,21 @@ input[type="text"] { font-size: 12px; }
   color: #00ccff;
 }
 
-#site_warning { max-width: 1200px; }
-#site_warning table td{
-  padding: 0rem .5rem;
-}
-
 /* -----------------------------------
   基地航空隊関連 #landBase
 ----------------------------------- */
 .lb_tab { max-width: 460px; }
+@media (min-width: 1400px) {
+  #main:not(.reduced) .lb_tab { max-width: 540px; }
+  #main:not(.reduced) .lb_tab_main {
+    padding-right: .3rem;
+    padding-left: .3rem;
+  }
+  #main:not(.reduced) .simple_lb_progress { 
+    padding-right: .25rem;
+    padding-left: .25rem;
+  }
+}
 .lb_infomation { font-size: 12px; }
 /* 基地札 */
 .ohuda_select {
@@ -776,10 +791,28 @@ input[type="text"] { font-size: 12px; }
   艦隊関連 #friendFleet
 ----------------------------------- */
 .display_ship_count { width: 60px; }
-.ship_tab {
-  min-width: 420px;
-  max-width: 600px;
-  flex: 1;
+
+.fleet_tab {
+  grid-template-columns: 1fr;
+  display: grid;
+}
+@media (min-width: 600px) {
+  .fleet_tab { margin: 0 4rem; }
+}
+@media (min-width: 740px) {
+  .fleet_tab { margin: 0 8rem; }
+}
+@media (min-width: 780px) {
+  .fleet_tab {
+    grid-template-columns: 1fr 1fr; 
+    margin: 0;
+  }
+}
+@media (min-width: 1400px) {
+  #main:not(.reduced) .fleet_tab {
+    grid-template-columns: 1fr 1fr 1fr; 
+    margin: 0;
+  }
 }
 .ship_name_span {
   cursor: pointer;
@@ -1002,26 +1035,28 @@ input[type="text"] { font-size: 12px; }
 .enemy_content:hover { background-color: rgba(128, 128, 128, 0.1); }
 .no_enemy { opacity: .3; }
 .no_enemy:hover { opacity: .6; }
-.enemy_index {
-  text-align: right;
-  width: 18px;
-  font-size: 12px;
+.enemy_index { 
+  margin-left: .25rem;
+  font-size: 12px; 
 }
 .enemy_name {
   cursor: pointer;
   display: table;
-  width: 160px;
   font-size: 12px;
-  border-radius: .25rem;
-}
-.enemy_name_img {
-  height: 30px;
-  width: 120px;
 }
 .enemy_name_span {
   display: table-cell;
   vertical-align: middle;
 }
+.enemy_name_img {
+  height: 30px;
+  width: 128px;
+}
+.enemy_name_text {
+  min-width: 128px;
+  max-width: 158px; 
+}
+
 .enemy_ap_select_parent {
   width: 24px;
   font-size: 12px;

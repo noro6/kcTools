@@ -359,14 +359,15 @@ function setPreCalculateTable() {
 	// 自軍撃墜テーブル
 	if (!SHOOT_DOWN_TABLE) {
 		SHOOT_DOWN_TABLE = [];
-		const downRate = [[7, 15], [20, 45], [30, 75], [45, 105], [65, 150]];
-		const downRateLen = downRate.length;
+		const c_max = [1, 3, 5, 7, 10];
 		for (let slot = 0; slot <= MAX_SLOT; slot++) {
 			const tmpA = [];
-			for (let i = 0; i < downRateLen; i++) {
+			for (const v of c_max) {
+				const max = v / 3;
 				const tmpB = [];
-				for (let j = downRate[i][0]; j <= downRate[i][1]; j++) tmpB.push(slot * j / 256);
-
+				for (let i = 0; i <= max; i += 0.01) {
+					tmpB.push(slot * (i + v / 4) / 10);
+				}
 				shuffleArray(tmpB);
 				tmpA.push(tmpB);
 			}
@@ -604,6 +605,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('inStockOnlyShip')) setting.inStockOnlyShip = false;
 	if (!setting.hasOwnProperty('favoriteOnlyShip')) setting.favoriteOnlyShip = false;
 	if (!setting.hasOwnProperty('favoriteShip')) setting.favoriteShip = [];
+	if (!setting.hasOwnProperty('reducedDisplay')) setting.reducedDisplay = false;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
@@ -636,7 +638,7 @@ function initializeSetting() {
 	adaptUpdater();
 
 	// 初期化完了
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -909,7 +911,7 @@ function initialize(callback) {
 				}
 			}
 			setting.contentsOrder = appendedIds.concat();
-			saveLocalStorage('setting', setting);
+			saveSetting();
 		}
 	}
 
@@ -1006,6 +1008,10 @@ function initialize(callback) {
 	if (document.getElementById(setting.themeColor)) document.getElementById(setting.themeColor)['checked'] = true;
 	else document.getElementById('normal_theme')['checked'] = true;
 	site_theme_Changed(false);
+
+	// 縮小表示
+	$('#reduced_display').prop('checked', setting.reducedDisplay);
+	reduced_display_Clicked();
 
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
@@ -1378,7 +1384,7 @@ function clearShipDivAll(displayCount = 2) {
 function setEnemyDiv($div, id, ap = 0) {
 	if (!$div) return;
 	const enemy = createEnemyObject(id);
-	const displayText = $('#enemy_fleet_display_text').prop('checked');
+	const displayText = !setting.enemyFleetDisplayImage;
 
 	// 空の敵艦が帰ってきたら中止
 	if (enemy.id === 0) return;
@@ -2107,7 +2113,7 @@ function createShipTable(type) {
 	setting.inStockOnlyShip = dispInStock;
 	setting.visibleEquippedShip = dispEquipped;
 	setting.favoriteOnlyShip = favOnly;
-	saveLocalStorage('setting', setting);
+	saveSetting();
 
 	if (dispInStock) $('#disp_equipped_ship').closest('div').removeClass('d-none');
 	else $('#disp_equipped_ship').closest('div').addClass('d-none');
@@ -3070,19 +3076,26 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 
 				// 無効化
 				if (ship.length >= 4) {
-					$ship_tab.find('.ship_disabled').prop('checked', ship[3]);
-					if (ship[3]) $ship_tab.addClass('opacity4');
-					else $ship_tab.removeClass('opacity4');
+					const $ship_disabled = $ship_tab.find('.ship_disabled');
+					if (ship[3]) {
+						$ship_disabled.addClass('disabled');
+						$ship_disabled.children().addClass('fa-eye-slash').removeClass('fa-eye no_capture');
+						$ship_tab.addClass('opacity4');
+					}
+					else {
+						$ship_disabled.removeClass('disabled');
+						$ship_disabled.children().removeClass('fa-eye-slash').addClass('fa-eye no_capture');
+						$ship_tab.removeClass('opacity4');
+					}
 				}
 
-				if (i <= 6) shipCountFleet1 = (i + 1);
-				else shipCountFleet2 = (i + 1) - 6;
+				if (i < 6) shipCountFleet1++;
+				else shipCountFleet2++;
 			});
-			shipCountFleet1 = Math.min(Math.max(shipCountFleet1, 2), 6);
-			$('#friendFleet_item1').find('.display_ship_count').val(shipCountFleet1 % 2 === 1 ? shipCountFleet1 + 1 : shipCountFleet1);
+
+			$('#friendFleet_item1').find('.display_ship_count').val(Math.max(shipCountFleet1, 1));
 			display_ship_count_Changed($('#friendFleet_item1').find('.display_ship_count'), true);
-			shipCountFleet2 = Math.min(Math.max(shipCountFleet2, 2), 6);
-			$('#friendFleet_item2').find('.display_ship_count').val(shipCountFleet2 % 2 === 1 ? shipCountFleet2 + 1 : shipCountFleet2);
+			$('#friendFleet_item2').find('.display_ship_count').val(Math.max(shipCountFleet2, 1));
 			display_ship_count_Changed($('#friendFleet_item2').find('.display_ship_count'), true);
 		}
 
@@ -3213,7 +3226,7 @@ function createFriendFleetPreset() {
 		// 非表示なら飛ばす
 		if ($(e).attr('class').includes('d-none')) return;
 
-		const ship = [castInt($(e)[0].dataset.shipid), [], shipIndex, ($(e).find('.ship_disabled').prop('checked') ? 1 : 0)];
+		const ship = [castInt($(e)[0].dataset.shipid), [], shipIndex, ($(e).find('.ship_disabled').hasClass('disabled') ? 1 : 0)];
 		$(e).find('.ship_plane:not(.ui-draggable-dragging)').each((j, ce) => {
 			const $ce = $(ce);
 			const plane = [
@@ -3564,7 +3577,7 @@ function readShipJson(input) {
 		shipStock.sort((a, b) => a.id - b.id);
 		saveLocalStorage('shipStock', shipStock);
 		setting.inStockOnlyShip = true;
-		saveLocalStorage('setting', setting);
+		saveSetting();
 	} catch (error) {
 		return false;
 	}
@@ -3598,7 +3611,7 @@ function readEquipmentJson(input) {
 		planeStock.sort((a, b) => a.id - b.id);
 		saveLocalStorage('planeStock', planeStock);
 		setting.inStockOnly = true;
-		saveLocalStorage('setting', setting);
+		saveSetting();
 	} catch (error) {
 		return false;
 	}
@@ -3671,7 +3684,7 @@ function updatePlaneSelectedHistory(id) {
 	setting.selectedHistory[0].unshift(id);
 	// 100件以降はケツから削る
 	setting.selectedHistory[0] = setting.selectedHistory[0].splice(0, 100);
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -3683,7 +3696,7 @@ function updateShipSelectedHistory(id) {
 	setting.selectedHistory[1].unshift(id);
 	// 100件以降はケツから削る
 	setting.selectedHistory[1] = setting.selectedHistory[1].splice(0, 100);
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -4269,6 +4282,13 @@ function deleteLocalStorage(key) {
 	return true;
 }
 
+/**
+ * コンフィグ更新
+ */
+function saveSetting() {
+	saveLocalStorage('setting', setting);
+}
+
 /*==================================
 		計算用処理
 ==================================*/
@@ -4432,7 +4452,7 @@ function calculateInit(objectData) {
 			saveLocalStorage('autoSaveData', currentData);
 
 			setting.autoSave = true;
-			saveLocalStorage('setting', setting);
+			saveSetting();
 
 			// バックアップ
 			if (document.getElementById('backup_enabled')['checked'] && !document.getElementById('suspend_backup')['checked']) {
@@ -4469,7 +4489,7 @@ function calculateInit(objectData) {
 
 	// 空スロット表示可否
 	setting.emptySlotInvisible = document.getElementById('empty_slot_invisible').checked;
-	saveLocalStorage('setting', setting);
+	saveSetting();
 
 	// 計算結果データ初期化
 	resultData = {
@@ -5198,7 +5218,7 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 		node_ship_tabs = $('.friendFleet_tab.show.active')[0].getElementsByClassName('ship_tab');
 	}
 	setting.isUnion = isUnionFleet;
-	saveLocalStorage('setting', setting);
+	saveSetting();
 
 	for (let index = 0; index < node_ship_tabs.length; index++) {
 		const node_ship_tab = node_ship_tabs[index];
@@ -5207,7 +5227,7 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 		const shipId = castInt(node_ship_tab.dataset.shipid);
 		if (shipId) usedShip.push(shipId);
 		// 非表示 / 無効 なら飛ばす
-		if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].checked) continue;
+		if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].classList.contains('disabled')) continue;
 		shipPlanes.length = 0;
 
 		let slotNo = 0;
@@ -5892,18 +5912,22 @@ function createEnemyObject(id) {
 	const enemy = { id: 0, type: [0], name: '', slots: [], antiAir: [], eqp: [], attackers: [], orgSlots: [], isSpR: false, ap: 0, lbAp: 0, origAp: 0, origLbAp: 0, aaw: 0, aabo: 0 };
 
 	if (id !== 0 && tmp) {
+		// 艦載機マスタから装備情報の読み込み & 反映
 		for (const id of tmp.eqp) {
 			const plane = ENEMY_PLANE_DATA.find(v => v.id === id);
 			if (plane) {
 				enemy.antiAir.push(plane.antiAir);
+				enemy.attackers.push(ATTACKERS.includes(plane.type));
 				if (plane.type === 5 && !enemy.isSpR) enemy.isSpR = true;
+			}
+			else {
+				enemy.attackers.push(false);
 			}
 		}
 		enemy.id = tmp.id;
 		enemy.type = tmp.type;
 		enemy.name = tmp.name;
 		enemy.eqp = tmp.eqp.concat();
-		enemy.attackers = enemy.eqp.map(v => ATTACKERS.includes(ENEMY_PLANE_DATA.find(x => x.id === v).type));
 		enemy.slots = tmp.slot.concat();
 		enemy.orgSlots = tmp.slot.concat();
 		enemy.aaw = tmp.aaw;
@@ -8190,12 +8214,27 @@ function version_detail_Clicked() {
 
 		// 既読フラグ
 		setting.version = serverVersion.id;
-		saveLocalStorage('setting', setting);
+		saveSetting();
 
 		document.getElementsByClassName('version_detail')[0].classList.remove('unread');
 	}
 
 	$('#modal_version_inform').modal('show');
+}
+
+/**
+ * 縮小表示クリック時
+ */
+function reduced_display_Clicked() {
+	if (document.getElementById('reduced_display')['checked']) {
+		document.getElementById('main').classList.add('reduced');
+	}
+	else {
+		document.getElementById('main').classList.remove('reduced');
+	}
+
+	setting.reducedDisplay = document.getElementById('reduced_display')['checked'];
+	saveSetting();
 }
 
 /**
@@ -8238,7 +8277,7 @@ function main_contents_Sortable_End() {
 		}
 	});
 
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -8728,7 +8767,7 @@ function init_proficiency_Changed($this) {
 	const prof = castInt($this.find('.prof_opt')[0].dataset.prof);
 	const tmp = setting.defaultProf.find(v => v.id === castInt($this.closest('.init_prof')[0].dataset.typeid));
 	tmp.prof = prof;
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -8739,7 +8778,7 @@ function backup_enabled_Clicked() {
 	setting.backUpCount = castInt(document.getElementById('backup_count').value);
 	document.getElementById('backup_count').disabled = !setting.backUpEnabled;
 
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -9976,7 +10015,7 @@ function plane_word_TextChanged() {
  */
 function fav_only_Checked_Chenged() {
 	setting.favoriteOnly = $('#fav_only').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	plane_type_select_Changed();
 }
 
@@ -9985,7 +10024,7 @@ function fav_only_Checked_Chenged() {
  */
 function disp_in_stock_Checked_Chenged() {
 	setting.inStockOnly = $('#disp_in_stock').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	plane_type_select_Changed();
 }
 
@@ -9994,7 +10033,7 @@ function disp_in_stock_Checked_Chenged() {
  */
 function divide_stock_Checked_Chenged() {
 	setting.isDivideStock = $('#divide_stock').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	plane_type_select_Changed();
 }
 
@@ -10003,7 +10042,7 @@ function divide_stock_Checked_Chenged() {
  */
 function disp_equipped_Checked_Chenged() {
 	setting.visibleEquipped = $('#disp_equipped').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	plane_type_select_Changed();
 }
 
@@ -10031,7 +10070,7 @@ function toggle_display_type_Clicked($this) {
 	$this.addClass('selected');
 
 	setting.displayMode[$parentModal.attr('id')] = $this.data('mode');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	$parentModal.find('select').change();
 }
 
@@ -10045,7 +10084,7 @@ function sort_Changed($this) {
 	const sortTargetId = $target.closest('.contents').attr('id');
 	if (sortTargetId) {
 		setting.orderBy[sortTargetId] = sortKey;
-		saveLocalStorage('setting', setting);
+		saveSetting();
 	}
 	if ($parentModal.attr('id') === 'modal_plane_select') plane_type_select_Changed();
 }
@@ -10060,7 +10099,7 @@ function plane_filter_Changed() {
 
 	if (filterTargetId) {
 		setting.planeFilter[filterTargetId] = [filterKey, filterValue];
-		saveLocalStorage('setting', setting);
+		saveSetting();
 	}
 
 	plane_type_select_Changed();
@@ -10284,11 +10323,17 @@ function fleet_select_tab_Clicked() {
  * @param {JqueryDomObject} $this
  */
 function ship_disabled_Changed($this) {
-	if ($this.prop('checked')) {
-		$this.closest('.ship_tab').addClass('opacity4');
+	if ($this.hasClass('disabled')) {
+		// 有効にする
+		$this.closest('.ship_tab').removeClass('opacity4');
+		$this.removeClass('disabled');
+		$this.children().removeClass('fa-eye-slash').addClass('fa-eye no_capture');
 	}
 	else {
-		$this.closest('.ship_tab').removeClass('opacity4');
+		// 無効にする
+		$this.closest('.ship_tab').addClass('opacity4');
+		$this.addClass('disabled');
+		$this.children().removeClass('fa-eye no_capture').addClass('fa-eye-slash');
 	}
 	calculate();
 }
@@ -10379,7 +10424,7 @@ function enemy_fleet_display_mode_Changed() {
 	});
 
 	setting.enemyFleetDisplayImage = isDisplayImage;
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -10600,7 +10645,7 @@ function pattern_Changed($this) {
  */
 function enemy_display_mode_Changed($this) {
 	setting.enemyDisplayImage = $this.attr('id').includes('enemy_display_image');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	const pattern = castInt($('#enemy_pattern_select').find('.nav-link.active').data('disp'));
 	if (pattern > 0) createEnemyPattern(pattern);
 	else createEnemyPattern();
@@ -10873,7 +10918,7 @@ function innerProfSetting_Clicked($this) {
 	}
 
 	setting.initialProf120 = initialProf120Plane.sort((a, b) => a - b);
-	saveLocalStorage('setting', setting);
+	saveSetting();
 
 	calculate();
 }
@@ -10889,7 +10934,7 @@ function calculate_count_Changed($this) {
 	$this.val(value);
 	setting.simulateCount = value;
 	// ローカルストレージへ保存
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -10897,7 +10942,7 @@ function calculate_count_Changed($this) {
  */
 function auto_save_Clicked() {
 	setting.autoSave = $('#auto_save').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	if (!setting.autoSave) deleteLocalStorage('autoSaveData');
 }
 
@@ -10912,7 +10957,7 @@ function clipboard_mode_Clicked() {
 	}
 
 	setting.copyToClipboard = $('#clipboard_mode').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -10920,7 +10965,7 @@ function clipboard_mode_Clicked() {
  */
 function air_raid_max_Clicked() {
 	setting.airRaidMax = $('#air_raid_max').prop('checked');
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -11001,7 +11046,7 @@ function site_theme_Changed(withCalculate = true) {
 	document.getElementById('input_url').classList.add('form-control-dark');
 
 	setting.themeColor = theme;
-	saveLocalStorage('setting', setting);
+	saveSetting();
 	document.body.style.color = mainColor;
 
 	if (withCalculate) calculate();
@@ -11221,7 +11266,7 @@ function stock_td_fav_Clicked($this) {
 		setTimeout(() => { $this.removeClass('fav_clicked'); }, 500);
 	}
 
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -11244,7 +11289,7 @@ function ship_stock_td_fav_Clicked($this) {
 		setTimeout(() => { $this.removeClass('fav_clicked'); }, 500);
 	}
 
-	saveLocalStorage('setting', setting);
+	saveSetting();
 }
 
 /**
@@ -11503,23 +11548,23 @@ function modal_confirm_ok_Clicked() {
 			setting.favoritePlane = [];
 			setting.favoriteOnly = false;
 			$('#fav_only').prop('checked', false);
-			saveLocalStorage('setting', setting);
+			saveSetting();
 			setPlaneStockTable();
 			break;
 		case "resetFavoriteShip":
 			setting.favoriteShip = [];
 			setting.favoriteOnlyShip = false;
 			$('#fav_only_ship').prop('checked', false);
-			saveLocalStorage('setting', setting);
+			saveSetting();
 			setShipStockTable();
 			break;
 		case "deleteSelectedPlaneHistory":
 			setting.selectedHistory[0] = [];
-			saveLocalStorage('setting', setting);
+			saveSetting();
 			break;
 		case "deleteSelectedShipHistory":
 			setting.selectedHistory[1] = [];
-			saveLocalStorage('setting', setting);
+			saveSetting();
 			break;
 		case "sendComment":
 			send_comment();
@@ -12095,6 +12140,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
 	$('#main').on('click', '.btn_show_plane_box', function () { btn_show_plane_box_Clicked($(this)) });
 	$('#main').on('click', '.version_detail', version_detail_Clicked);
+	$('#main').on('click', '#reduced_display', reduced_display_Clicked);
 	$('#site_warning').on('click', '.cur_pointer', () => { $('#site_warning').removeClass('d-flex').addClass('d-none'); });
 	$('#landBase').on('click', '.btn_air_raid', function () { btn_air_raid_Clicked($(this)); });
 	$('#landBase').on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
@@ -12328,7 +12374,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on({
 		mouseenter: function () { showTooltip($(this)[0], "艦娘、装備は維持したまま計算対象から省きます。"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
-	}, '.ship_disabled_label');
+	}, '.ship_disabled');
 	$('#main').on({
 		mouseenter: function () { showTooltip($(this)[0], "機体プリセット"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }

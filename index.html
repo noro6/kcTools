@@ -104,7 +104,7 @@
 								<li class="nav-item" id="li_config"><a class="nav-link" href="#config">詳細設定</a></li>
 							</ul>
 						</li>
-						<div class="my-2 mx-2 border-bottom border-secondary"></div>
+						<div class="my-2 ml-2 border-bottom border-secondary"></div>
 						<li class="nav-item">
 							<ul class="nav flex-column mt-1 ml-2">
 								<li class="nav-item"><a class="nav-link" href="#abstract">サイトについて</a></li>
@@ -118,13 +118,13 @@
 				</div>
 			</nav>
 			<main role="main" class="flex-grow-1 px-2">
-				<div id="main">
+				<div id="main" class="">
 					<div id="main_header">
 						<div class="d-flex pt-3">
 							<div class="ml-1 d-flex flex-wrap">
 								<h1 id="main_title">制空権シミュレータ</h1>
 								<div class="d-flex align-self-center">
-									<div class="font_size_20 ml-2 align-self-center">v.1.9.2.1</div>
+									<div class="font_size_18 ml-2 align-self-center">v.1.9.2.2</div>
 									<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 										data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 									</div>
@@ -133,6 +133,12 @@
 							<div class="ml-auto align-self-center d-flex">
 								<button class="btn btn-sm btn-outline-success btn_first_time text-nowrap">初めての方</button>
 								<button class="btn btn-sm btn-outline-info btn_site_manual ml-1 text-nowrap">使い方</button>
+								<div class="d-none d-xl-block ml-3 align-self-center">
+									<div class="ml-1 custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input" id="reduced_display">
+										<label class="custom-control-label" for="reduced_display">縮小表示</label>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -871,8 +877,11 @@
 										<div class="d-flex">
 											<div class="ml-2 mr-1 align-self-center no_capture">表示：</div>
 											<select class="custom-select custom-select-sm display_ship_count no_capture">
+												<option value="1">1</option>
 												<option value="2" selected>2</option>
+												<option value="3">3</option>
 												<option value="4">4</option>
+												<option value="5">5</option>
 												<option value="6">6</option>
 											</select>
 											<div class="ml-1 mr-2 align-self-center no_capture">隻</div>
@@ -893,10 +902,10 @@
 												<span class="font_size_11">対空砲火設定</span>
 											</div>
 										</div>
-										<div class="d-flex justify-content-center flex-wrap fleet_tab">
+										<div class="fleet_tab">
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_1">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -906,11 +915,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_1">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_1">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -1095,7 +1103,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_2">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -1105,11 +1113,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_2">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_2">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -1294,7 +1301,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_3">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -1304,11 +1311,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_3">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_3">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -1493,7 +1499,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_4">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -1503,11 +1509,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_4">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_4">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -1692,7 +1697,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_5">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -1702,11 +1707,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_5">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_5">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -1891,7 +1895,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_6">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -1901,11 +1905,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_6">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_6">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -2094,8 +2097,11 @@
 										<div class="d-flex">
 											<div class="ml-2 mr-1 align-self-center no_capture">表示：</div>
 											<select class="custom-select custom-select-sm display_ship_count no_capture">
+												<option value="1">1</option>
 												<option value="2" selected>2</option>
+												<option value="3">3</option>
 												<option value="4">4</option>
+												<option value="5">5</option>
 												<option value="6">6</option>
 											</select>
 											<div class="ml-1 mr-2 align-self-center no_capture">隻</div>
@@ -2112,10 +2118,10 @@
 												<span class="font_size_11">触接詳細</span>
 											</div>
 										</div>
-										<div class="d-flex justify-content-center flex-wrap fleet_tab">
+										<div class="fleet_tab">
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_7">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -2125,11 +2131,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_7">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_7">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -2314,7 +2319,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1" id="shipNo_8">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -2324,11 +2329,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_8">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_8">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -2513,7 +2517,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_9">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -2523,11 +2527,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_9">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_9">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -2712,7 +2715,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_10">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -2722,11 +2725,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_10">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_10">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -2911,7 +2913,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_11">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -2921,11 +2923,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_11">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_11">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -3110,7 +3111,7 @@
 											</div>
 											<div class="ship_tab general_box mx-1 mt-2 flex-grow-1 d-none" id="shipNo_12">
 												<div class="pb-1 pl-1 px-1 px-xl-2">
-													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 px-1">
+													<div class="d-flex flex-wrap flex-sm-nowrap mt-2 pl-1">
 														<div class="sortable_handle cur_move">
 															<img src="img/ship/0.png" class="ship_img d-none">
 														</div>
@@ -3120,11 +3121,10 @@
 															<span class="font_color_half">制空: </span>
 															<span class="ap">0</span>
 														</div>
-														<div class="ml-auto align-self-center custom-control custom-checkbox">
-															<input type="checkbox" class="custom-control-input ship_disabled" id="disabled_ship_12">
-															<label class="custom-control-label ship_disabled_label" for="disabled_ship_12">無効</label>
+														<div class="ml-auto ship_disabled btn_icon">
+															<i class="fas fa-eye"></i>
 														</div>
-														<div class="ml-3 btn_preset btn_plane_preset btn_icon no_capture">
+														<div class="ml-2_5 btn_preset btn_plane_preset btn_icon no_capture">
 															<i class="fas fa-archive"></i>
 														</div>
 														<div class="ml-2_5 btn_reset btn_remove_ship btn_icon no_capture">
@@ -3455,16 +3455,16 @@
 											</div>
 											<div class="border-bottom d-flex pb-2 pt-1 px-2 flex-row-reverse">
 												<div class="align-self-center font_size_12">
-													<span class="font_color_half">制空: </span>
+													<span class="font_color_half">制空:</span>
 													<span class="enemy_sum_ap">0</span>
 													<span>(</span><span class="enemy_sum_lbap">0</span><span>)</span>
 												</div>
 												<div class="mr-2 align-self-center font_size_12 d-none">
-													<span class="font_color_half">半径: </span>
+													<span class="font_color_half">半径:</span>
 													<span class="enemy_range">0</span>
 												</div>
 												<div class="mr-2 align-self-center font_size_12">
-													<span class="font_color_half">艦隊防空: </span>
+													<span class="font_color_half">艦隊防空:</span>
 													<span class="fleet_AA">0</span>
 												</div>
 											</div>
@@ -3475,12 +3475,12 @@
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3497,12 +3497,12 @@
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3519,12 +3519,12 @@
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3541,12 +3541,12 @@
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3563,12 +3563,12 @@
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3585,12 +3585,12 @@
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3602,17 +3602,17 @@
 													</div>
 												</div>
 												<div class="enemy_content no_enemy py-0_5 pr-1 d-none">
-													<div class="enemy_index align-self-center text-success">7</div>
+													<div class="enemy_index align-self-center text-success">1</div>
 													<div class="align-self-center enemy_name">
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3624,17 +3624,17 @@
 													</div>
 												</div>
 												<div class="enemy_content no_enemy py-0_5 pr-1 d-none">
-													<div class="enemy_index align-self-center text-success">8</div>
+													<div class="enemy_index align-self-center text-success">2</div>
 													<div class="align-self-center enemy_name">
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3646,17 +3646,17 @@
 													</div>
 												</div>
 												<div class="enemy_content no_enemy py-0_5 pr-1 d-none">
-													<div class="enemy_index align-self-center text-success">9</div>
+													<div class="enemy_index align-self-center text-success">3</div>
 													<div class="align-self-center enemy_name">
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3668,17 +3668,17 @@
 													</div>
 												</div>
 												<div class="enemy_content no_enemy py-0_5 pr-1 d-none">
-													<div class="enemy_index align-self-center text-success">10</div>
+													<div class="enemy_index align-self-center text-success">4</div>
 													<div class="align-self-center enemy_name">
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3690,17 +3690,17 @@
 													</div>
 												</div>
 												<div class="enemy_content no_enemy py-0_5 pr-1 d-none">
-													<div class="enemy_index align-self-center text-success">11</div>
+													<div class="enemy_index align-self-center text-success">5</div>
 													<div class="align-self-center enemy_name">
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3712,17 +3712,17 @@
 													</div>
 												</div>
 												<div class="enemy_content no_enemy py-0_5 pr-1 d-none">
-													<div class="enemy_index align-self-center text-success">12</div>
+													<div class="enemy_index align-self-center text-success">6</div>
 													<div class="align-self-center enemy_name">
 														<span class="enemy_name_span px-1">
 															<div class="enemy_name_img_parent d-none">
 																<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-																<span class="ml-auto align-self-center font_size_10">制空:</span>
 															</div>
 															<div class="enemy_name_text">敵艦を選択</div>
 														</span>
 													</div>
-													<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+													<div class="ml-auto align-self-center font_size_11">制空:</div>
+													<div class="dropdown align-self-center enemy_ap_select_parent">
 														<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 														<div class="dropdown-menu px-2">
 															<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3778,12 +3778,13 @@
 													<span class="enemy_name_span px-1">
 														<div class="enemy_name_img_parent d-none">
 															<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-															<span class="ml-auto align-self-center font_size_10">制空:</span>
+
 														</div>
 														<div class="enemy_name_text">敵艦を選択</div>
 													</span>
 												</div>
-												<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+												<div class="ml-auto align-self-center font_size_11">制空:</div>
+												<div class="dropdown align-self-center enemy_ap_select_parent">
 													<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 													<div class="dropdown-menu px-2">
 														<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3800,12 +3801,13 @@
 													<span class="enemy_name_span px-1">
 														<div class="enemy_name_img_parent d-none">
 															<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-															<span class="ml-auto align-self-center font_size_10">制空:</span>
+
 														</div>
 														<div class="enemy_name_text">敵艦を選択</div>
 													</span>
 												</div>
-												<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+												<div class="ml-auto align-self-center font_size_11">制空:</div>
+												<div class="dropdown align-self-center enemy_ap_select_parent">
 													<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 													<div class="dropdown-menu px-2">
 														<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3822,12 +3824,13 @@
 													<span class="enemy_name_span px-1">
 														<div class="enemy_name_img_parent d-none">
 															<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-															<span class="ml-auto align-self-center font_size_10">制空:</span>
+
 														</div>
 														<div class="enemy_name_text">敵艦を選択</div>
 													</span>
 												</div>
-												<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+												<div class="ml-auto align-self-center font_size_11">制空:</div>
+												<div class="dropdown align-self-center enemy_ap_select_parent">
 													<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 													<div class="dropdown-menu px-2">
 														<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3844,12 +3847,13 @@
 													<span class="enemy_name_span px-1">
 														<div class="enemy_name_img_parent d-none">
 															<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-															<span class="ml-auto align-self-center font_size_10">制空:</span>
+
 														</div>
 														<div class="enemy_name_text">敵艦を選択</div>
 													</span>
 												</div>
-												<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+												<div class="ml-auto align-self-center font_size_11">制空:</div>
+												<div class="dropdown align-self-center enemy_ap_select_parent">
 													<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 													<div class="dropdown-menu px-2">
 														<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3866,12 +3870,13 @@
 													<span class="enemy_name_span px-1">
 														<div class="enemy_name_img_parent d-none">
 															<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-															<span class="ml-auto align-self-center font_size_10">制空:</span>
+
 														</div>
 														<div class="enemy_name_text">敵艦を選択</div>
 													</span>
 												</div>
-												<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+												<div class="ml-auto align-self-center font_size_11">制空:</div>
+												<div class="dropdown align-self-center enemy_ap_select_parent">
 													<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 													<div class="dropdown-menu px-2">
 														<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3888,12 +3893,13 @@
 													<span class="enemy_name_span px-1">
 														<div class="enemy_name_img_parent d-none">
 															<img src="./img/enemy/-1.png" class="align-self-center enemy_name_img">
-															<span class="ml-auto align-self-center font_size_10">制空:</span>
+
 														</div>
 														<div class="enemy_name_text">敵艦を選択</div>
 													</span>
 												</div>
-												<div class="ml-auto dropdown align-self-center enemy_ap_select_parent">
+												<div class="ml-auto align-self-center font_size_11">制空:</div>
+												<div class="dropdown align-self-center enemy_ap_select_parent">
 													<div class="enemy_ap w-100" data-toggle="dropdown">0</div>
 													<div class="dropdown-menu px-2">
 														<span class="dropdown-header py-1 px-1 font_size_12">制空値を入力</span>
@@ -3933,7 +3939,7 @@
 							</div>
 							<div class="collapse show collapse_content" id="result_content">
 								<div class="border-top"></div>
-								<div class="my-2" id="shoot_down_table_content">
+								<div class="my-2 px-lg-2 px-xl-3" id="shoot_down_table_content">
 									<div class="d-flex mt-2">
 										<div class="pl-1 align-self-center">
 											<span>各戦闘開始時の搭載数の推移</span>
@@ -3967,14 +3973,14 @@
 										</tfoot>
 									</table>
 								</div>
-								<div class="mt-2">
+								<div class="mt-2 px-lg-2 px-xl-3">
 									<ul class="nav nav-tabs" id="display_battle_tab">
 										<li class="nav-item">
 											<a class="nav-link active" data-toggle="tab" href="#">1戦目</a>
 										</li>
 									</ul>
 								</div>
-								<div class="d-flex mt-1" id="display_setting">
+								<div class="d-flex mt-1 px-lg-2 px-xl-3" id="display_setting">
 									<div class="ml-auto font_size_12 align-self-center display_label_result no_capture">表示：</div>
 									<div class="ml-2 custom-control custom-checkbox font_size_12 align-self-center">
 										<input type="checkbox" class="custom-control-input" id="display_bar">
@@ -3993,7 +3999,7 @@
 										<label class="custom-control-label" for="display_enemy_table">敵搭載数</label>
 									</div>
 								</div>
-								<div id="battle_result">
+								<div id="battle_result" class="px-lg-2 px-xl-3 pb-lg-2 pb-xl-3">
 									<div class="mb-2 py-2 px-2 border rounded" id="result_bar_parent">
 										<div class="d-flex">
 											<div class="progress_label"></div>
@@ -4159,7 +4165,7 @@
 								</div>
 							</div>
 							<div class="collapse show collapse_content" id="input_data_content">
-								<div class="border-top container-fluid px-0 py-0">
+								<div class="border-top container-fluid px-0 py-0 px-lg-2 px-xl-3">
 									<div class="row">
 										<div class="col-12 col-lg-6 my-2 order-1 order-lg-2" id="lb_info">
 											<div class="mt-2 mb-1 pl-1 font_size_12">基地航空隊</div>
@@ -4224,7 +4230,7 @@
 											</table>
 										</div>
 									</div>
-									<div class="my-3 px-2 no_capture" id="input_summary_parent">
+									<div class="my-3 no_capture" id="input_summary_parent">
 										<div>掲示板等貼り付け用</div>
 										<div class="my-1">
 											<textarea class="form-control font_size_11" id="input_summary"></textarea>
