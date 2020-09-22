@@ -289,6 +289,21 @@ input[type="text"] { font-size: 12px; }
   -webkit-box-shadow: 0px 1px 2px 1px rgba(128, 128, 128, 0.3);
   box-shadow: 0px 1px 2px 1px rgba(128, 128, 128, 0.3);
 }
+.capturing {
+  display: inline-block;
+}
+#landBase.capturing {
+  min-width: 1200px;
+}
+#friendFleet.capturing {
+  min-width: 1000px;
+}
+#result.capturing {
+  width: 1000px;
+}
+#input_data.capturing {
+  min-width: 1000px;
+}
 .general_box_capture{
   border: 1px #ccc solid;
 }
@@ -795,6 +810,10 @@ input[type="text"] { font-size: 12px; }
 .fleet_tab {
   grid-template-columns: 1fr;
   display: grid;
+}
+.capturing .fleet_tab {
+  grid-template-columns: 1fr 1fr;
+  margin: 0 !important;
 }
 @media (min-width: 600px) {
   .fleet_tab { margin: 0 4rem; }
@@ -1356,33 +1375,33 @@ input[type="text"] { font-size: 12px; }
 }
 .info_table .info_warning { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 .info_table .info_name {
-  width: 88px;
+  width: 20%;
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .info_table .info_plane { text-align: left; }
 .info_table .info_slot {
-  width: 72px;
+  width: 10%;
   padding: .1rem .25rem;
   border-left:1px rgba(128, 128, 128, 0.2) solid;
 }
 .info_table .info_ap {
-  width: 36px;
+  width: 8%;
   padding: .1rem .25rem;
   border-left:1px rgba(128, 128, 128, 0.2) solid;
 }
 .info_table .info_sumAp {
-  width: 36px;
+  width: 8%;
   padding: .1rem .25rem;
   border-left:1px rgba(128, 128, 128, 0.2) solid;
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .info_table .info_range {
-  width: 72px;
+  width: 10%;
   border-left:1px rgba(128, 128, 128, 0.2) solid;
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 .info_table .info_defAp {
-  width: 72px;
+  width: 10%;
   border-left:1px rgba(128, 128, 128, 0.2) solid;
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
