@@ -8389,7 +8389,7 @@ function btn_supply_Clicked() {
  */
 function btn_capture_Clicked($this) {
 	const $targetContent = $this.closest('.contents');
-	$targetContent.width(1000);
+	$targetContent.addClass('capturing');
 
 	if (document.body.classList.contains('dark-theme')) {
 		$targetContent.addClass('capture_dark');
@@ -8449,7 +8449,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.form-control').removeClass('pt-0');
 			$targetContent.find('.general_box').removeClass('general_box_capture');
 
-			$targetContent.width("");
+			$targetContent.removeClass('capturing');
 			if ($('#lb_tab_select').css('display') !== 'none' && !$('#lb_item1').attr('class').includes('tab-pane')) {
 				$('.lb_tab').addClass('tab-pane fade');
 				$('.lb_tab:first').tab('show');
