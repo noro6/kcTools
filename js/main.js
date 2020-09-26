@@ -101,6 +101,7 @@ let resultData = {
 	fleetAirStatus: [],
 	fleetSlots: [],
 	defenseAirPower: 0,
+	usedSteels: 0
 };
 
 
@@ -4150,9 +4151,23 @@ function drawResult() {
 		}
 	}
 
-	// 平均ボーキ消費量
-	if (!$('.battle_end.fap').html()) $('.battle_end.fap').html('<img src="./img/util/bauxite.png" class="img-size-18" alt="ボーキサイト"> 消費');
-	$('.battle_end.eap').html(`${sumBauxiteMax} ~ ${sumBauxiteMin} ( ${sumBauxiteAvg.toFixed(1)} )`);
+	// 平均鋼材消費量(1でもあれば噴式機ありモードにする)
+	if (resultData.usedSteels) {
+		// 平均ボーキ & 鋼材 消費量
+		const avgSteel = resultData.usedSteels / calculateCount;
+		if (!$('.battle_end.fap').html()) $('.battle_end.fap').html('平均消費量');
+		$('.battle_end.eap').html(`
+		<div><img src="./img/util/bauxite.png" class="img-size-18" alt="ボーキサイト">: ${sumBauxiteAvg.toFixed(1)}</div>
+		<div><img src="./img/util/steel.png" class="img-size-18" alt="鋼材">: ${avgSteel.toFixed(1)}</div>
+		`);
+	}
+	else {
+		// 平均ボーキ消費量
+		if (!$('.battle_end.fap').html()) {
+			$('.battle_end.fap').html('<img src="./img/util/bauxite.png" class="img-size-18" alt="ボーキサイト"> 消費');
+		}
+		$('.battle_end.eap').html(`${sumBauxiteMax} ~ ${sumBauxiteMin} ( ${sumBauxiteAvg.toFixed(1)} )`);
+	}
 
 	// 敵艦搭載数推移
 	for (let i = 0; i < resultData.enemySlots.length; i++) {
@@ -4502,6 +4517,7 @@ function calculateInit(objectData) {
 		fleetAirStatus: [],
 		fleetSlots: [],
 		defenseAirPower: 0,
+		usedSteels: 0
 	};
 
 	// 事前計算テーブルチェック
@@ -5493,6 +5509,7 @@ function createFleetPlaneObject(node, shipNo, index) {
 		contact: 0,
 		scout: 0,
 		accuracy: 0,
+		cost: 0,
 		selectRate: []
 	};
 
@@ -5508,6 +5525,7 @@ function createFleetPlaneObject(node, shipNo, index) {
 		shipPlane.origAp = shipPlane.ap;
 		shipPlane.avoid = plane.avoid;
 		shipPlane.scout = plane.scout;
+		shipPlane.cost = plane.cost;
 		shipPlane.accuracy = plane.accuracy;
 
 		if (shipPlane.slot) {
@@ -6111,15 +6129,20 @@ function doJetPhaseHalf(friendFleetData, battleInfo, index) {
  * 噴式強襲
  * @param {Array.<Object>} friendFleetData 味方艦隊
  * @param {Array.<Object>} battleInfo 敵艦隊
+ * @returns 使った鋼材の量
  */
 function doJetPhase(friendFleetData, battleInfo) {
 	const range = battleInfo.stage2[0][0].length;
 	// 戦闘マスが通常/連合戦闘マスじゃないなら強襲なし　ALL潜水も除外
-	if (!range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) return;
+	if (!range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) return 0;
+	let steel = 0;
 	for (let i = 0; i < friendFleetData.length; i++) {
 		for (let j = 0; j < friendFleetData[i].length; j++) {
 			const plane = friendFleetData[i][j];
 			if (plane.type === 9) {
+				// 鋼材のお支払い
+				steel += Math.round(plane.slot * plane.cost * 0.2);
+
 				// 噴式強襲st1
 				// st1 0.6掛け
 				plane.slot -= Math.floor(0.6 * getShootDownSlotFF(0, Math.round(plane.slot)));
@@ -6136,6 +6159,8 @@ function doJetPhase(friendFleetData, battleInfo) {
 			}
 		}
 	}
+
+	return steel;
 }
 
 /**
@@ -6435,6 +6460,7 @@ function rateCalculate(objectData) {
 	const enemyAps = [[], []];
 	const maxBattle = isDefMode ? 1 : battleCount;
 	const defAp = resultData.defenseAirPower;
+	let sumUsedSteels = 0;
 
 	// 味方stage2テーブルの生成有無
 	const stage2Table = fleetStage2Table.concat();
@@ -6490,7 +6516,7 @@ function rateCalculate(objectData) {
 		for (let battle = 0; battle < maxBattle; battle++) {
 
 			// 噴式強襲フェーズ
-			doJetPhase(fleet, battleInfo[battle]);
+			sumUsedSteels += doJetPhase(fleet, battleInfo[battle]);
 
 			const enemies = battleInfo[battle].enemies;
 			const cellType = battleInfo[battle].cellType;
@@ -6612,6 +6638,7 @@ function rateCalculate(objectData) {
 	resultData.enemySlots = enemySlotResult;
 	resultData.enemyAirPowerResults = enemyAps;
 	resultData.enemySlotAllDead = enemySlotAllDead;
+	resultData.usedSteels = sumUsedSteels;
 }
 
 /**
@@ -8902,8 +8929,10 @@ function showPlaneToolTip($this, isLandBase = false) {
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
 				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
 			</div>
-			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} ( 加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)} )</div>` : ''}
+			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} (加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)})</div>` : ''}
+			${plane.steel ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${plane.steel}` : ''}
 			${startRate.length ? `<div class="font_size_12">触接開始率(確保時): ${startRate[0]}</div>` : ''}
+			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
 			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
 		</div>`;
 
@@ -8996,6 +9025,7 @@ function getToolTipPlaneObject(node) {
 		slot: castInt(node.getElementsByClassName('slot')[0].textContent),
 		remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
 		level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
+		steel: 0
 	};
 	obj.bonusAA = getBonusAA(obj, obj.antiAir) - obj.antiAir;
 
@@ -9005,6 +9035,10 @@ function getToolTipPlaneObject(node) {
 		// obj.startRate = [Math.min(a / 25, 1), Math.min(a / 40, 1), Math.min(a / 55, 1)];
 		// 触接選択率
 		obj.selectRate = getContactSelectRate(obj);
+
+		if (plane.type === 9) {
+			obj.steel = Math.round(obj.slot * plane.cost * 0.2);
+		}
 	}
 
 	if (node.classList.contains('lb_plane')) obj.ap = getAirPower_lb(obj);
