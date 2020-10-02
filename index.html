@@ -43,6 +43,18 @@
 </head>
 
 <body>
+	<script>
+		let s = JSON.parse(window.localStorage.getItem('setting'));
+		if (s && s.hasOwnProperty('themeColor')) {
+			let theme = s.themeColor;
+			if (theme === 'dark_theme' || theme === 'dark_gradient_theme' || theme === 'deep_blue_theme') {
+				mainColor = "#e0e0e0";
+				document.body.classList.add('dark-theme');
+				document.body.style.color = mainColor;
+			}
+			document.body.classList.add(theme);
+		}
+	</script>
 	<nav class="navbar navbar-dark fixed-top bg-dark1 flex-md-nowrap p-0 shadow justify-content-start">
 		<div class="d-block d-lg-none text-light px-2 pt-3 py-2 cur_pointer" id="smart_menu">
 			<div id="menu-small">
@@ -4302,8 +4314,6 @@
 													<div class="form-group mr-1 flex-grow-1">
 														<textarea class="form-control form-control-sm font_size_12" id="input_ship_json"
 															placeholder="艦娘情報を入力"></textarea>
-														<div class="invalid-feedback">艦娘一覧の反映に失敗しました。</div>
-														<div class="valid-feedback">艦娘一覧の反映に成功しました！</div>
 													</div>
 													<div class="ml-auto">
 														<button type="button" class="ml-auto btn btn-sm btn-success text-nowrap"
@@ -4355,8 +4365,6 @@
 													<div class="form-group mr-1 flex-grow-1">
 														<textarea class="form-control form-control-sm font_size_12" id="input_equipment_json"
 															placeholder="装備情報を入力"></textarea>
-														<div class="invalid-feedback">装備一覧の反映に失敗しました。</div>
-														<div class="valid-feedback">装備一覧の反映に成功しました！</div>
 													</div>
 													<div class="ml-auto">
 														<button type="button" class="ml-auto btn btn-sm btn-success text-nowrap"
@@ -5108,6 +5116,9 @@
 						</div>
 					</div>
 				</div>
+
+				<div id="custom_alert_wraper" class="d-flex justify-content-center align-items-center">
+				</div>
 			</main>
 		</div>
 	</div>
@@ -5389,8 +5400,7 @@
 					<div class="pb-1 custom_table" id="enemy_table">
 						<div class="scroll_thead d-flex">
 							<div class="ml-1 align-self-center">敵艦ID / 敵艦名</div>
-							<div class="ml-auto enemy_td_ap align-self-center">制空値</div>
-							<div class="enemy_td_lbAp align-self-center">制空値(基地)</div>
+							<div class="ml-auto enemy_td_ap align-self-center">制空値(基地)</div>
 						</div>
 						<div id="enemy_tbody"></div>
 					</div>
@@ -5629,8 +5639,6 @@
 									<div class="mt-2 d-flex">
 										<div class="form-group mr-1 flex-grow-1">
 											<input type="text" class="form-control" id="input_deck" placeholder="デッキを入力">
-											<div class="invalid-feedback">読み込みに失敗しました。</div>
-											<div class="valid-feedback">読み込みに成功しました！</div>
 										</div>
 										<div class="ml-auto">
 											<button type="button" class="ml-auto btn btn-sm btn-success btn_load_deck text-nowrap">

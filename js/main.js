@@ -1078,6 +1078,45 @@ function setPlaneType(element, array, withoutAll = false) {
 	}
 }
 
+function inform_success(content) {
+	inform_custom_alert(content, 0);
+}
+function inform_warning(content) {
+	inform_custom_alert(content, 1);
+}
+function inform_danger(content) {
+	inform_custom_alert(content, 2);
+}
+
+/**
+ * カスタムのアラートに文言を表示
+ * @param {string} content 表示する内容文言
+ */
+function inform_custom_alert(content, mode) {
+	const wraper = document.getElementById('custom_alert_wraper');
+	wraper.innerHTML = '';
+
+	const body = document.createElement('div');
+	body.id = 'custom_alert_body';
+	body.textContent = content;
+
+	switch (mode) {
+		case 0:
+			body.className = 'alert-success';
+			break;
+		case 1:
+			body.className = 'alert-warning';
+			break;
+		case 2:
+			body.className = 'alert-danger';
+			break;
+		default:
+			break;
+	}
+
+	wraper.appendChild(body);
+}
+
 /**
  * 機体カテゴリタブを生成
  * @param {HTMLElement} element 設置する対象の ul
@@ -2368,14 +2407,9 @@ function initializeEnemyTable() {
 		// 制空値
 		const $apDiv = document.createElement('div');
 		$apDiv.className = 'ml-auto align-self-center enemy_td_ap';
-		$apDiv.textContent = ap;
-
-		const $lbApDiv = document.createElement('div');
-		$lbApDiv.className = 'enemy_td_lbAp align-self-center';
-		$lbApDiv.textContent = lbAp;
+		$apDiv.textContent = lbAp > ap ? `${ap} (${lbAp})` : ap;
 
 		$enemyDiv.appendChild($apDiv);
-		$enemyDiv.appendChild($lbApDiv);
 
 		fragment.appendChild($enemyDiv);
 	}
@@ -2442,9 +2476,6 @@ function createEnemyTable(type) {
 		for (const e of tbody.getElementsByClassName('enemy_td_ap')) {
 			e.classList.add('d-none');
 		}
-		for (const e of tbody.getElementsByClassName('enemy_td_lbAp')) {
-			e.classList.add('d-none');
-		}
 	}
 	else {
 		// 制空値表示
@@ -2453,9 +2484,6 @@ function createEnemyTable(type) {
 			e.classList.remove('d-flex');
 		}
 		for (const e of tbody.getElementsByClassName('enemy_td_ap')) {
-			e.classList.remove('d-none');
-		}
-		for (const e of tbody.getElementsByClassName('enemy_td_lbAp')) {
 			e.classList.remove('d-none');
 		}
 	}
@@ -2503,7 +2531,7 @@ function loadPlanePreset() {
 		}
 
 		presetText += `
-			<div class="preset_tr general_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset.id}">
+			<div class="preset_tr general_tr d-flex px-1 py-1_5 my-1 w-100 cur_pointer" data-presetid="${preset.id}">
 				<div class="preset_td text-primary">${index + 1}.</div>
 				<div class="preset_td ml-2">${preset.name}</div>
 					${infoText}
@@ -2845,7 +2873,7 @@ function loadMainPreset(forceBackUp = false) {
 	for (let index = 0; index < basePresets.length; index++) {
 		const preset = basePresets[index];
 		text += `
-			<div class="preset_tr general_tr d-flex px-1 py-2 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
+			<div class="preset_tr general_tr d-flex px-1 py-1_5 my-1 w-100 cur_pointer" data-presetid="${preset[0]}">
 				<div class="preset_td text-primary ${isBackUpMode ? '' : 'sortable_handle'}">${index + 1}.</div>
 				<div class="preset_td ml-2 font_size_12">${preset[1]}</div>
 			</div>
@@ -2891,6 +2919,7 @@ function loadMainPreset(forceBackUp = false) {
 				if (newPresets.length) {
 					presets = newPresets.concat();
 					saveLocalStorage('presets', presets);
+					inform_success('プリセットの一覧表示順を更新しました。');
 				}
 			}
 		});
@@ -2966,10 +2995,12 @@ function updateMainPreset() {
 	saveLocalStorage('presets', presets);
 	setExpandedPresetName(preset[1]);
 
-	$('#modal_main_preset').find('.task')
-		.removeClass('hide confirm')
-		.addClass('show')
-		.text(isUpdate ? '編成更新が完了しました。' : '新規登録が完了しました。');
+	if (isUpdate) {
+		inform_success('プリセット [ ' + preset[1] + ' ] の編成データの更新が完了しました。');
+	}
+	else {
+		inform_success('プリセット [ ' + preset[1] + ' ] の新規登録が完了しました。');
+	}
 }
 
 /**
@@ -2984,16 +3015,12 @@ function updateMainPresetName() {
 			const today = new Date();
 			presetName = `preset-${formatDate(today, 'yyyyMMdd')}`;
 		}
+		prevName = preset[1];
 		preset[1] = presetName;
 		preset[3] = $('#preset_remarks').val().trim();
+		inform_success(`プリセット [ ${preset[1]} ] の編成名、および編成メモの更新が完了しました。`);
+		saveLocalStorage('presets', presets);
 	}
-	saveLocalStorage('presets', presets);
-
-	$('#modal_main_preset').find('.task')
-		.removeClass('hide confirm')
-		.addClass('show')
-		.text('更新が完了しました。');
-	$('#modal_main_preset').find('.alert').removeClass('hide').addClass('show');
 }
 
 /**
@@ -3378,11 +3405,8 @@ function deleteMainPreset(id) {
 		presets = presets.filter(v => v[0] !== id);
 		saveLocalStorage('presets', presets);
 	}
-
-	$('#modal_main_preset').find('.task')
-		.removeClass('hide confirm')
-		.addClass('show')
-		.text('削除が完了しました。');
+	$('#modal_main_preset').find('.task').removeClass('show').addClass('hide confirm');
+	inform_success('編成の削除が完了しました。');
 
 	loadMainPreset();
 }
@@ -4741,8 +4765,13 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		// 半径足りませんよ表示
 		document.getElementById('ng_range').textContent = ng_range_text;
 		document.getElementById('lb_info_table').getElementsByClassName('info_warning')[0].classList.add('d-none');
-		if (ng_range_text.length) document.getElementById('lb_range_warning').classList.remove('d-none');
-		else document.getElementById('lb_range_warning').classList.add('d-none');
+		if (ng_range_text.length) {
+			document.getElementById('lb_range_warning').classList.remove('d-none');
+			inform_warning(`第${ng_range_text}基地航空隊の半径が不足しています。`);
+		}
+		else {
+			document.getElementById('lb_range_warning').classList.add('d-none');
+		}
 
 		document.getElementById('input_summary').value += '\n';
 	}
@@ -8161,8 +8190,11 @@ function modal_Closed($this) {
 			calculate();
 			break;
 		case "modal_main_preset":
+			calculate();
+			break;
 		case "modal_fleet_antiair_input":
 			calculate();
+			inform_success('対空砲火設定を更新しました。');
 			break;
 		case "modal_result_detail":
 			setTimeout(() => {
@@ -8932,7 +8964,6 @@ function showPlaneToolTip($this, isLandBase = false) {
 			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} (加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)})</div>` : ''}
 			${plane.steel ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${plane.steel}` : ''}
 			${startRate.length ? `<div class="font_size_12">触接開始率(確保時): ${startRate[0]}</div>` : ''}
-			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
 			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
 		</div>`;
 
@@ -11146,10 +11177,11 @@ function btn_load_equipment_json_Clicked() {
 		setPlaneStockTable();
 		$('#input_equipment_json').val('');
 		$('#input_equipment_json').removeClass('is-invalid').addClass('is-valid');
+		inform_success('所持装備情報を更新しました。');
 	}
 	else {
 		$('#input_equipment_json').addClass('is-invalid').removeClass('is-valid');
-		$('#input_equipment_json').nextAll('.invalid-feedback').text('装備情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります。');
+		inform_danger('装備情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります。');
 	}
 }
 
@@ -11163,10 +11195,11 @@ function btn_load_ship_json_Clicked() {
 		setShipStockTable();
 		$('#input_ship_json').val('');
 		$('#input_ship_json').removeClass('is-invalid').addClass('is-valid');
+		inform_success('所持艦娘情報を更新しました。');
 	}
 	else {
 		$('#input_ship_json').addClass('is-invalid').removeClass('is-valid');
-		$('#input_ship_json').nextAll('.invalid-feedback').text('艦娘情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります。');
+		inform_danger('艦娘情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります。');
 	}
 }
 
@@ -11401,6 +11434,7 @@ function btn_save_stock_Clicked() {
 
 	planeStock.find(v => v.id === planeId).num = numArray;
 	saveLocalStorage('planeStock', planeStock);
+	inform_success('所持数を更新しました。');
 
 	$('#modal_plane_stock').modal('hide');
 	setPlaneStockTable();
@@ -11427,6 +11461,7 @@ function stock_td_stock_Changed($this) {
 	const shipStock = loadShipStock();
 	shipStock.find(v => v.id === id).num = input;
 	saveLocalStorage('shipStock', shipStock);
+	inform_success('艦娘保有数を更新しました。');
 }
 
 /**
@@ -11709,7 +11744,7 @@ async function btn_url_shorten_Clicked() {
 	// urlチェック
 	if (!url) {
 		textbox.value = "";
-		textbox.placeholder = "URLを入力してください。";
+		inform_warning('URLを入力してください。');
 	}
 	else if (!url.match(/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
 		textbox.value = "";
@@ -11721,36 +11756,36 @@ async function btn_url_shorten_Clicked() {
 			expandMainPreset(preset, preset[0][0].length > 0, true, false);
 			loadOuterPresetName('外部サイト取込編成');
 			calculate();
-			textbox.placeholder = "編成の反映に成功しました。";
+			inform_success('編成の反映に成功しました。');
 		}
 		// 所持装備チェック
 		else if (readEquipmentJson(url)) {
 			setPlaneStockTable();
-			calculate();
-			textbox.placeholder = "所持装備の反映に成功しました。";
+			inform_success('所持装備の反映に成功しました。');
 		}
 		else if (readShipJson(url)) {
 			setShipStockTable();
-			calculate();
-			textbox.placeholder = "所持艦娘の反映に成功しました。";
+			inform_success('所持艦娘の反映に成功しました。');
 		}
-		else textbox.placeholder = "URLが不正です。";
+		else {
+			inform_danger('入力されたURLの短縮に失敗しました。');
+		}
 	}
 	else if (!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
 		await postURLData(url)
 			.then(json => {
 				if (json.error || !json.shortLink) {
 					textbox.value = "";
-					textbox.placeholder = "短縮に失敗しました";
+					inform_danger('入力されたURLの短縮に失敗しました。');
 				}
 				else {
 					textbox.value = json.shortLink;
-					textbox.placeholder = "";
+					inform_success('URLの短縮に成功しました。');
 				}
 			})
 			.catch(error => {
 				textbox.value = "";
-				textbox.placeholder = "短縮に失敗しました";
+				inform_danger('入力されたURLの短縮に失敗しました。');
 			});
 	}
 
@@ -11837,7 +11872,9 @@ function input_deck_Changed($this) {
  */
 function output_data_Clicked($this) {
 	if (!$this.hasClass('is-valid')) return;
-	if (copyInputTextToClipboard($this)) $this.nextAll('.valid-feedback').text('クリップボードにコピーしました。');
+	if (copyInputTextToClipboard($this)) {
+		inform_success('クリップボードにコピーしました。')
+	}
 }
 
 /**
@@ -11896,10 +11933,11 @@ function btn_load_deck_Clicked() {
 		expandMainPreset(preset, preset[0][0].length > 0, true, false);
 		$('#input_deck').removeClass('is-invalid').addClass('is-valid');
 		loadOuterPresetName('外部サイト取込編成');
+		inform_success('編成の読み込みに成功しました。');
 	}
 	else {
 		$('#input_deck').addClass('is-invalid').removeClass('is-valid');
-		$('#input_deck').nextAll('.invalid-feedback').text('編成の読み込みに失敗しました。入力されたデータの形式が正しくない可能性があります。');
+		inform_danger('編成の読み込みに失敗しました。入力されたデータの形式が正しくない可能性があります。');
 	}
 }
 
@@ -11952,6 +11990,7 @@ function btn_expand_main_preset_Clicked() {
 	const preset = basePreset.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_selected')[0].dataset.presetid));
 	expandMainPreset(decodePreset(preset[2]));
 	setExpandedPresetName(preset[1]);
+	inform_success(`編成 [ ${preset[1]} ] が読み込まれました。`);
 	$('#modal_main_preset').modal('hide');
 }
 
@@ -12373,9 +12412,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#btn_url_shorten').click(btn_url_shorten_Clicked);
 	$('#main').on('click', '.btn_first_time', first_time_Clicked);
 	$('#main').on('click', '.btn_site_manual', site_manual_Clicked);
-	$('#Navbar').on('click', 'a[href^="#"]', function () { return sidebar_Clicked($(this)); });
-	$('#site_information').on('click', 'a[href^="#"]', function () { return sidebar_Clicked($(this)); });
-	$('#modal_smart_menu').on('click', 'a[href^="#"]', function () { return smart_menu_modal_link_Clicked($(this)); });
 	$('#draggable_plane_box').on('click', '#btn_hide_plane_box', function () { $('#draggable_plane_box').addClass('d-none'); });
 	$('#draggable_plane_box').on('click', '#draggable_plane_type_select .nav-link', function () { createDraggablePlaneTable($(this)) });
 	$('#draggable_plane_box').on('change', '#draggable_plane_sort_select', function () { createDraggablePlaneTable(); });
