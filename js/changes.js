@@ -926,4 +926,4 @@ let CHANGE_LOG = [
 	},
 ];
 
-const LAST_UPDATE_DATE = "2020/09/26";
+const LAST_UPDATE_DATE = "2020/10/2";
