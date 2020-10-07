@@ -181,33 +181,6 @@ function castFloat(input, alt = 0) {
 }
 
 /**
- * Base64 エンコード (url-safe)
- * @param {string} input
- * @returns {string}
- */
-function utf8_to_b64(input) {
-	try {
-		let output = LZString.compressToEncodedURIComponent(input);
-		return output;
-	} catch (error) {
-		return "";
-	}
-}
-
-/**
- * Base64 デコード (url-safe)
- * @param {string} input
- * @returns {string}
- */
-function b64_to_utf8(input) {
-	try {
-		return LZString.decompressFromEncodedURIComponent(input);
-	} catch (error) {
-		return "";
-	}
-}
-
-/**
  * 指定したinputのvalueをクリップボードにコピー
  * @param {JqueryDomObject} $this inputタグ id 持ち限定
  * @returns {boolean} 成功したらtrue
@@ -703,6 +676,20 @@ function adaptUpdater() {
 				'friendFleet': 'default'
 			};
 		}
+	}
+
+	if (major <= 10) {
+
+		//　～ v1.10.0
+		if (major <= 9) {
+			// プリセットのidをGUID化
+			presets = loadLocalStorage('presets');
+			for (const preset of presets) {
+				preset[0] = getUniqueId() + preset[0];
+			}
+			saveLocalStorage('presets', presets);
+		}
+
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;
@@ -2909,9 +2896,10 @@ function loadMainPreset(forceBackUp = false) {
 				const newPresets = [];
 				$('#modal_main_preset').find('.preset_tr').each((i, e) => {
 					$(e).removeClass('tran0');
-					// id振り直しとコミット
-					const id = castInt($(e)[0].dataset.presetid, -1);
-					if (id >= 0) newPresets.push(presets.find(v => v[0] === id));
+					// 順序変更
+					const id = $(e)[0].dataset.presetid;
+					const preset = presets.find(v => v[0] === id);
+					if (preset) newPresets.push(preset);
 
 					$(e).find('.text-primary').text(i + '.');
 				});
@@ -2936,7 +2924,8 @@ function drawMainPreset(preset) {
 	$modal.find('.btn_expand_preset').prop('disabled', !preset);
 	$modal.find('.btn_delete_preset').prop('disabled', !preset);
 
-	if (preset && preset[0] > 0) {
+	if (preset && preset[0].length > 6) {
+		// プリセットがみつかった　プリセだ
 		$modal.find('.preset_data').data('presetid', preset[0]);
 		$modal.find('.preset_name').val(preset[1]);
 		$modal.find('#preset_remarks').val(preset[3]);
@@ -2945,11 +2934,9 @@ function drawMainPreset(preset) {
 		$modal.find('.btn_commit_preset_header').removeClass('d-none');
 		$modal.find('.btn_commit_preset_header').prop('disabled', false);
 	}
-	else if (preset && preset[0] < 0) {
-		// バックアップデータ 現登録済みプリセットidの最大+1で新規登録モード開始
-		let maxId = 0;
-		for (const set of presets) if (maxId < set[0]) maxId = set[0];
-		$modal.find('.preset_data').data('presetid', castInt(maxId) + 1);
+	else if (preset && preset[0].length <= 6) {
+		// バックアップデータ GUIDを取得
+		$modal.find('.preset_data').data('presetid', getUniqueId());
 		$modal.find('.preset_name').val(preset[1]);
 		$modal.find('#preset_remarks').val(preset[3]);
 		$modal.find('.btn_commit_preset').text('プリセット保存');
@@ -2957,10 +2944,8 @@ function drawMainPreset(preset) {
 		$modal.find('.btn_commit_preset_header').addClass('d-none');
 	}
 	else {
-		// プリセットが見つからなかった
-		let maxId = 0;
-		for (const preset of presets) if (maxId < preset[0]) maxId = preset[0];
-		$modal.find('.preset_data').data('presetid', castInt(maxId) + 1);
+		// プリセットが見つからなかった GUIDを取得
+		$modal.find('.preset_data').data('presetid', getUniqueId());
 		$modal.find('.btn_commit_preset').text('新規登録');
 		$modal.find('.btn_commit_preset').prop('disabled', true);
 		$modal.find('.btn_commit_preset_header').addClass('d-none');
@@ -2984,7 +2969,7 @@ function updateMainPreset() {
 	// 同idを持つプリセットがあれば上書き
 	let isUpdate = false;
 	for (let index = 0; index < presets.length; index++) {
-		if (presets[index][0] === preset[0]) {
+		if (presets[index][0] == preset[0]) {
 			presets[index] = preset;
 			isUpdate = true;
 			break;
@@ -3028,10 +3013,10 @@ function updateMainPresetName() {
  * @param {string} name 編成名
  */
 function setExpandedPresetName(name) {
-	const a = document.getElementById('expanded_preset_name');
-	a.classList.add('initialize');
-	a.classList.remove('updated');
-	a.textContent = name.trim();
+	// const a = document.getElementById('expanded_preset_name');
+	// a.classList.add('initialize');
+	// a.classList.remove('updated');
+	// a.textContent = name.trim();
 }
 
 /**
@@ -3332,7 +3317,7 @@ function createPreset() {
 	let presetName = $('#modal_main_preset').find('.preset_name').val().trim();
 	if (presetName.length === 0) presetName = ``;
 	const preset = [
-		castInt($('#modal_main_preset').find('.preset_data').data('presetid')),
+		$('#modal_main_preset').find('.preset_data').data('presetid'),
 		presetName,
 		encodePreset(),
 		$('#preset_remarks').val().trim()
@@ -3341,50 +3326,6 @@ function createPreset() {
 	return preset;
 }
 
-
-/**
- * 現在の入力状況からbase64エンコード済みプリセットデータを生成、返却する
- * @returns {string} エンコード済プリセットデータ
- */
-function encodePreset() {
-	try {
-		// 現在のプリセットを取得し、オブジェクトを文字列化
-		const preset = [
-			createLandBasePreset(),
-			createFriendFleetPreset(),
-			createEnemyFleetPreset(),
-			createAntiAirTablePreset()
-		];
-		const dataString = JSON.stringify(preset);
-		const b64 = utf8_to_b64(dataString);
-		const utf8 = b64_to_utf8(b64);
-		// 複号までチェック
-		JSON.parse(utf8);
-
-		return b64;
-	}
-	catch (error) {
-		// 失敗時は空のプリセットデータ
-		const emp = [[], [], []];
-		return utf8_to_b64(JSON.stringify(emp));
-	}
-}
-
-/**
- * 渡したinput値からプリセットデータを生成
- * @param {string} input
- * @returns {array} 基地 艦隊 敵艦プリセット 失敗時空プリセット[[],[],[]]
- */
-function decodePreset(input) {
-	try {
-		const str = b64_to_utf8(input);
-		const preset = JSON.parse(str);
-		return preset;
-	}
-	catch (error) {
-		return [[], [], []];
-	}
-}
 
 /**
  * 指定したidのプリセットデータを削除する
@@ -3402,7 +3343,7 @@ function deleteMainPreset(id) {
 		saveLocalStorage('backUpPresets', backUpPresets);
 	}
 	else {
-		presets = presets.filter(v => v[0] !== id);
+		presets = presets.filter(v => v[0] != id);
 		saveLocalStorage('presets', presets);
 	}
 	$('#modal_main_preset').find('.task').removeClass('show').addClass('hide confirm');
@@ -4008,12 +3949,12 @@ function drawResult() {
 	$('.simple_lb_progress').addClass('d-none').removeClass('d-flex');
 	$('#fleet_simple_bar').addClass('d-none');
 
-	const expandedName = document.getElementById('expanded_preset_name');
-	if (expandedName.classList.contains('initialize')) expandedName.classList.remove('initialize');
-	else if (!expandedName.classList.contains('updated')) {
-		if (expandedName.textContent.length) expandedName.textContent += "*";
-		expandedName.classList.add('updated');
-	}
+	// const expandedName = document.getElementById('expanded_preset_name');
+	// if (expandedName.classList.contains('initialize')) expandedName.classList.remove('initialize');
+	// else if (!expandedName.classList.contains('updated')) {
+	// 	if (expandedName.textContent.length) expandedName.textContent += "*";
+	// 	expandedName.classList.add('updated');
+	// }
 
 	const sameBattle = displayBattle === castInt($('#landBase_target').val());
 	const loopCount = isDefMode ? 1 : 6;
@@ -4277,55 +4218,6 @@ function getEnemyApDistribution(data) {
 	par99 = par99 ? par99 : max;
 	const array = [min, par50, par75, par90, par95, par99, max];
 	return array;
-}
-
-/*==================================
-		Web Storage
-==================================*/
-/**
- * local Storage からデータ取得(Json.parse済)
- * @param {string} key key
- * @returns データ(Json.parse済) 存在しない、または失敗したら null
- */
-function loadLocalStorage(key) {
-	if (!window.localStorage) return null;
-	try {
-		return JSON.parse(window.localStorage.getItem(key));
-	} catch (error) {
-		return null;
-	}
-}
-/**
- * local Storage にデータ格納
- * @param {string} key キー名
- * @param {Object} data 格納する生データ
- * @returns
- */
-function saveLocalStorage(key, data) {
-	if (!window.localStorage || key.length === 0) return false;
-	try {
-		window.localStorage.setItem(key, JSON.stringify(data));
-		return true;
-	} catch (error) {
-		window.localStorage.removeItem(key);
-		return false;
-	}
-}
-/**
- * local Storage 特定データ消去
- * @param {String} key 消去対象key
- */
-function deleteLocalStorage(key) {
-	if (!window.localStorage || key.length === 0) return false;
-	window.localStorage.removeItem(key);
-	return true;
-}
-
-/**
- * コンフィグ更新
- */
-function saveSetting() {
-	saveLocalStorage('setting', setting);
 }
 
 /*==================================
@@ -11822,7 +11714,7 @@ function main_preset_tr_Clicked($this) {
 	$('.preset_tr').removeClass('preset_selected');
 	$this.addClass('preset_selected');
 	const basePreset = isBackUpMode ? backUpPresets : presets;
-	drawMainPreset(basePreset.find(v => v[0] === castInt($this.data('presetid'))));
+	drawMainPreset(basePreset.find(v => v[0] == $this.data('presetid')));
 }
 
 /**
@@ -11909,7 +11801,7 @@ function btn_commit_preset_header_Clicked() {
  * 編成プリセット削除ボタンクリック
  */
 function btn_delete_main_preset_Clicked() {
-	const presetId = castInt($('#modal_main_preset').find('.preset_selected').data('presetid'));
+	const presetId = $('#modal_main_preset').find('.preset_selected').data('presetid');
 
 	if (!$('#modal_main_preset').find('.task').hasClass('confirm')) {
 		$('#modal_main_preset').find('.task')
@@ -11987,7 +11879,7 @@ function btn_expand_main_preset_Clicked() {
 	// 展開するプリセット
 	const isBackUpMode = $('#main_preset_back_up').hasClass('active');
 	const basePreset = isBackUpMode ? backUpPresets : presets;
-	const preset = basePreset.find(v => v[0] === castInt($('#modal_main_preset').find('.preset_selected')[0].dataset.presetid));
+	const preset = basePreset.find(v => v[0] == $('#modal_main_preset').find('.preset_selected')[0].dataset.presetid);
 	expandMainPreset(decodePreset(preset[2]));
 	setExpandedPresetName(preset[1]);
 	inform_success(`編成 [ ${preset[1]} ] が読み込まれました。`);
@@ -12120,6 +12012,33 @@ function scrollContent($destination) {
 	return false;
 }
 
+/**
+ * シミュ内タブクリック時
+ * @param {JqueryDomObject} $this
+ */
+function simulatorTab_Clicked($this) {
+	let isChanged = false;
+	if ($this[0].dataset.raw) {
+		expandMainPreset(decodePreset($this[0].dataset.raw));
+		isChanged = true;
+	}
+	else if ($this[0].dataset.presetid) {
+		const preset = presets.find(v => v[0] == $this[0].dataset.presetid);
+		if (preset) {
+			expandMainPreset(decodePreset(preset[2]));
+			isChanged = true;
+		}
+	}
+
+	// 正常に編成変更が行われたら履歴をきれいにして再計算
+	if (isChanged) {
+		undoHistory = { index: 0, histories: [] };
+		calculate();
+		document.getElementById('btn_undo').classList.add('disabled');
+		document.getElementById('btn_redo').classList.add('disabled');
+	}
+}
+
 /*==================================
 		イベントハンドラ
 ==================================*/
@@ -12141,7 +12060,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			urlDeck[1] = decodePreset(params.d);
 
 			expandMainPreset(decodePreset(params.d));
-			loadOuterPresetName('URLデータ復元編成');
 		}
 		// デッキビルダーー形式読み込み
 		else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
@@ -12152,7 +12070,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				const deck = readDeckBuilder(params.predeck);
 				if (deck) {
 					expandMainPreset(deck, deck[0][0].length > 0, true, false);
-					loadOuterPresetName('外部サイト取込編成');
 				}
 			}
 			if (params.hasOwnProperty("lb")) {
@@ -12161,7 +12078,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (lbData.length >= 2) {
 						urlDeck[0] = lbData;
 						expandMainPreset([lbData, [], []], true, false, false);
-						loadOuterPresetName('外部サイト取込編成');
 					}
 				}
 				catch (error) {
@@ -12184,6 +12100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			btn_redo_Clicked();
 		}
 	});
+	$('#header').on('click', '.fleet_tab', function () { simulatorTab_Clicked($(this)); });
 	$('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
 	$('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
 	$('.modal').on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
@@ -12401,7 +12318,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_fleet_antiair_input').on('input', '.cutin_rate', function () { updateAntiAirCutinRate($(this)); });
 	$('#modal_fleet_antiair_input').on('click', '.btn_remove_cutin.cur_pointer', function () { btn_remove_cutin_Clicked($(this)); });
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
-	$('#btn_preset_all').click(btn_preset_all_Clicked);
+	$('#btn_save_preset').click(btn_preset_all_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
 	$('#btn_twitter').click(btn_twitter_Clicked);
 	$('#btn_deckBuilder').click(btn_deckBuilder_Clicked);

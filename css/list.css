@@ -1,0 +1,94 @@
+
+.preset_container {
+  cursor: pointer;
+  max-width: 1000px;
+  overflow: hidden;
+  margin: 1rem auto;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: 0.2s;
+}
+.preset_container:hover { 
+  box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5), 0 0 20px rgb(221, 221, 221, 0.2); 
+}
+.preset_container.editting {
+  cursor: default;
+}
+
+.preset_color {
+  flex-shrink: 0;
+}
+.preset_name {
+  font-size: 1.1em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.r_btn {
+  cursor: pointer;
+  transition: .2s;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 100%;
+}
+.btn_edit_start, .btn_rollback {
+  color: #777;
+  border: 1px solid #777;
+}
+.btn_edit_start:hover, .btn_rollback:hover{
+  color: #fff;
+  background-color: #777;
+}
+.btn_commit {
+  color: #10be76;
+  border: 1px solid #10be76;
+}
+.btn_commit:hover{
+  color: #fff;
+  background-color: #10be76;
+}
+.btn_copy{
+  color: #777;
+  border: 1px solid #777;
+}
+.btn_copy:hover {
+  color: #fff;
+  background-color: #777;
+}
+.btn_delete {
+  color: #f00;
+  border: 1px solid #f00;
+}
+.btn_delete:hover, .btn_delete.ready {
+  color: #fff;
+  background-color: #f00;
+}
+
+.land_base_state {
+  font-size: 10px;
+  padding: 0.1rem 0.5rem;
+  background-color:rgb(50, 131, 30);
+  border-radius: 0.6em;
+  color: #fff;
+}
+.land_base_state.disabled {
+  opacity: 0.2;
+}
+
+.ship_image {
+  margin: 0.1rem 0.2rem 0 0;
+  width: 100px;
+  height: 25px;
+}
+
+.preset_memo {
+  font-size: 12px;
+  overflow: hidden;
+  resize: none;
+  height: 48px;
+}
