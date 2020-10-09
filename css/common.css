@@ -137,6 +137,7 @@ h1 {
 .font_size_8 { font-size: 8px; }
 
 
+#main.reduced > div { max-width: 1100px; }
 
 .general_box {
   -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.3);
@@ -179,22 +180,22 @@ h1 {
 #tool_bar .fa-save {
   color: rgb(255, 255, 255);
 }
+#tool_bar .fa-share-alt {
+  color: rgb(89, 255, 186);
+}
 #tool_bar .fa-twitter {
   color: rgb(94, 193, 255);
-}
-#tool_bar .fa-share-alt {
-  color: rgb(16, 190, 118);
 }
 #tool_bar .fa-bolt {
   color: rgb(255, 160, 50);
 }
-#btn_save_preset:hover, #btn_top:hover, #btn_redo:hover, #btn_undo:hover, #btn_url_shorten:hover {
+#btn_save_preset:hover, #btn_top:hover, #btn_redo:hover, #btn_undo:hover, #btn_url_shorten:hover, #reduced_display:hover, #reduced_display.checked {
   box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5);
 }
 #btn_save_preset:hover { box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5); }
 #btn_auto_expand:hover { box-shadow: inset 0 0 20px rgba(255, 160, 50, 0.5); }
 #btn_twitter:hover { box-shadow: inset 0 0 20px rgba(142, 210, 252, 0.5); }
-#btn_deckBuilder:hover { box-shadow: inset 0 0 20px rgba(89, 255, 186, 0.5); }
+#btn_share:hover { box-shadow: inset 0 0 20px rgba(89, 255, 186, 0.5); }
 
 #btn_undo, #btn_redo { opacity: .6; }
 #btn_undo:hover, #btn_redo:hover { opacity: 1; }
@@ -209,20 +210,19 @@ h1 {
 }
 
 #fleet_tab_container {
+  min-height: 30px;
   background-color: rgb(40, 40, 42);
+  border-top: 1px solid rgb(30, 30, 32);
 }
 #fleet_tab_container .fleet_tab {
-  color: #999;
+  color: #777;
   cursor: pointer;
   flex: 1 1 auto;
   overflow: hidden;
   max-width: 200px;
   min-width: 60px;
-  padding: 0.25rem;
+  padding: 0.25rem 0.25rem 0.25rem 0.5rem;
   background-color: rgb(40, 40, 42);
-  border-top: 1px solid;
-  border-bottom: 1px solid;
-  border-right: 1px solid;
   border-color: rgb(30, 30, 32);
 }
 #fleet_tab_container .fleet_tab:hover {
@@ -240,8 +240,11 @@ h1 {
   white-space: nowrap;
   transition: .2s;
 }
+#fleet_tab_container .fleet_tab.active .fleet_name {
+  text-shadow: 2px 2px 3px #000;
+}
 #fleet_tab_container .fleet_tab_icon {
-  color: #ccf;
+  font-weight: bold;
   flex-shrink: 0;
   opacity: 0.5;
 }
@@ -259,6 +262,13 @@ h1 {
   font-weight: bold;
   border-radius: 100%;
   flex-shrink: 0;
+  opacity: 0;
+}
+#fleet_tab_container .fleet_tab:hover .btn_close_tab {
+  opacity: 1;
+}
+#fleet_tab_container .fleet_tab.active .btn_close_tab {
+  opacity: 1;
 }
 #fleet_tab_container .btn_close_tab:hover {
   background-color: rgb(95, 95, 100);
@@ -277,4 +287,94 @@ h1 {
 }
 .dark-theme .contents {
   background-color: rgba(255, 255, 255, 0.047);
+}
+
+/* まるボタン汎用 */
+.r_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: .2s;
+  cursor: pointer;
+}
+.r_btn, .r_btn:hover:after {
+  width: 28px;
+  height: 28px;
+  border-radius: 100%;
+  border: 1px #ccc solid
+}
+.r_btn:hover {
+  background-color: rgba(175,175,175,.2);
+  transform: scale(.95,.95)
+}
+.dark-theme .r_btn:hover {
+  background-color: rgba(128,128,128,.2)
+}
+.r_btn:hover:after {
+  content: "";
+  position: absolute;
+  background: 0 0;
+  top: 0;
+  left: 0;
+  animation: round_button_wave .2s linear forwards
+}
+.r_btn:active {
+  transform: scale(.8,.8)
+}
+@keyframes round_button_wave {
+  0% {
+      transform: scale(1,1);
+      opacity: 1
+  }
+
+  to {
+      transform: scale(2,2);
+      opacity: 0
+  }
+}
+
+
+/* ------------------------------
+  カスタムアラート
+-------------------------------- */
+#custom_alert_wraper {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 75vh;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  z-index: 4000;
+  pointer-events: none;
+}
+
+#custom_alert_body {
+  padding: .25rem 1rem;
+  border-radius: 2em;
+  animation: inform 3.2s ease-in-out forwards;
+}
+@keyframes inform {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0;
+  }
+  8%, 92% {
+    transform: scale(1.0, 1.0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0, 1.0);
+    opacity: 0;
+  }
+}
+.dark-theme #custom_alert_body.alert-success {
+  background-color: rgba(20, 100, 40, 0.85);
+}
+.dark-theme #custom_alert_body.alert-warning {
+  background-color: rgba(128, 120, 20, 0.85);
+}
+.dark-theme #custom_alert_body.alert-danger {
+  background-color: rgba(128, 40, 40, 0.85);
 }

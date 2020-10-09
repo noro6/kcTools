@@ -1,5 +1,8 @@
 
 function initialize() {
+  // アクティブなタブはないので表示修正
+  $('.fleet_tab.active').removeClass('active');
+
   // 保存されているプリセットを展開
   setPresets();
 }
@@ -13,6 +16,19 @@ function setPresets() {
   if (!presets) presets = [];
 
   const fragment = document.createDocumentFragment();
+
+  // 新規作成用
+  const new_container = document.createElement('div');
+  new_container.className = 'general_box preset_container new';
+
+  const new_body = document.createElement('div');
+  new_body.className = 'new_body mx-auto my-2';
+  new_body.textContent = '新規作成'
+  new_container.appendChild(new_body);
+
+  fragment.appendChild(new_container);
+
+
   for (const preset of presets) {
     const container = document.createElement('div');
     container.className = 'general_box preset_container';
@@ -93,7 +109,7 @@ function setPresets() {
       status.textContent = `第${i}基地航空隊`;
       land_base.appendChild(status);
 
-      if(!exists_lb && !disabled) {
+      if (!exists_lb && !disabled) {
         exists_lb = true;
       }
     }
@@ -115,7 +131,7 @@ function setPresets() {
       ship_img.className = 'ship_image';
       ship_img.width = 100;
       ship_img.height = 25;
-      ship_img.src = `./img/ship/${ship[0]}.png`;
+      ship_img.src = `../img/ship/${ship[0]}.png`;
       fleet_container.appendChild(ship_img);
     }
     container.appendChild(fleet_container);
@@ -212,44 +228,184 @@ function btn_delete_Clicked($this, e) {
 function preset_Clicked($this) {
   const presets = loadLocalStorage('presets');
   const presetId = $this[0].dataset.presetid;
-  const preset = presets.find(v => v[0] === presetId);
 
-  // 異常事態
-  if (!preset) return;
+  const preset = presets ? presets.find(v => v[0] === presetId) : null;
 
-  const tabData = { id: preset[0], name: $this.find('.preset_name').text(), data: preset[2] };
+  // 展開タブ一覧に突っ込む新規データ
+  let tabData = {
+    id: getUniqueId(),
+    name: '無題',
+    // 全て空のデータ ↓
+    history: {
+      index: 0,
+      histories: [
+        'Noi6BpgWgRnX41BYLgAZKe-H6IBEB4cSaA3gQMYCuALgJYB2AkgCYEBcmBATgIZ0AplxjoedfgCMANiM6pwBKQHtebIb1HiAvhBwAzfjIDOQ8EdPnFZIA'
+      ]
+    }
+  };
+
+  if (preset) {
+    // プリセットが見つかった場合はそのデータ
+    tabData.id = preset[0];
+    tabData.name = $this.find('.preset_name').text();
+    tabData.history.histories[0] = preset[2];
+  }
+
   let activePresets = loadLocalStorage('activePresets');
   if (!activePresets) activePresets = { activeId: "", presets: [] };
 
   // 展開済み編成内にいまクリックされた編成がすでに展開されていないか？
-  if (activePresets.presets.findIndex(v => v.id === tabData.id) === -1) {
+  const alreadyPreset = activePresets.presets.find(v => v.id === tabData.id);
+  if (!alreadyPreset) {
     // 展開済み編成に加え入れろ～
     activePresets.presets.push(tabData);
+  }
+  else {
+    // もう展開されているならそいつに置き換え
+    tabData = alreadyPreset;
   }
 
   activePresets.activeId = tabData.id;
   saveLocalStorage('activePresets', activePresets);
 
-  window.location.href = `./simulator.html?d=${tabData.data}`;
+  window.location.href = `../simulator/index.html?p=${tabData.history.histories[tabData.history.index]}`;
 }
 
 /**
  * トップページ内タブクリック時
- * @param {JqueryDomObject} $this
  */
-function topTab_Clicked($this) {
-  let presets = loadLocalStorage('presets');
-  let d = '';
-  if ($this[0].dataset.raw) {
-    d = $this[0].dataset.raw;
+function topTab_Clicked() {
+  let tabInfo = getActivePreset();
+  window.location.href = `../simulator/index.html?p=${tabInfo.history.histories[tabInfo.history.index]}`;
+}
+
+/**
+ * バージョン変更通知展開時
+ */
+function version_detail_Clicked() {
+  if (!document.getElementById('version_inform_body').innerHTML) {
+    const serverVersion = CHANGE_LOG.find(v => v.id === LATEST_VERSION);
+    const fragment = document.createDocumentFragment();
+    for (const v of serverVersion.changes) {
+      // 変更通知
+      const $change_wrap = document.createElement('div');
+      $change_wrap.className = 'mt-3';
+
+      const $badge_wrap = document.createElement('div');
+      const $badge = document.createElement('span');
+      $badge.className = 'mr-1 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+      $badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
+
+      const $title_text = document.createElement('span');
+      $title_text.innerHTML = v.title;
+
+      $badge_wrap.appendChild($badge);
+      $badge_wrap.appendChild($title_text);
+      $change_wrap.appendChild($badge_wrap);
+
+      if (v.content) {
+        const $content = document.createElement('div');
+        $content.className = 'font_size_12 pl-3';
+        $content.innerHTML = v.content;
+
+        $change_wrap.appendChild($content);
+      }
+
+      fragment.appendChild($change_wrap);
+    }
+    document.getElementById('version').textContent = serverVersion.id;
+    document.getElementById('version_inform_body').appendChild(fragment);
+
+    // 既読フラグ
+    setting.version = serverVersion.id;
+    saveSetting();
+
+    document.getElementsByClassName('version_detail')[0].classList.remove('unread');
   }
-  else if ($this[0].dataset.presetid) {
-    const preset = presets.find(v => v[0] == $this[0].dataset.presetid);
-    if (preset) {
-      d = preset[2];
+
+  $('#modal_version_inform').modal('show');
+}
+
+
+/**
+ * 更新履歴作成
+ */
+function loadSiteHistory() {
+  if (document.getElementById('site_history_body').innerHTML) return;
+
+  const fragment = document.createDocumentFragment();
+  let verIndex = 0;
+  const serverVersion = LATEST_VERSION;
+  for (const ver of CHANGE_LOG) {
+    const $ver_parent = document.createElement('div');
+    $ver_parent.className = 'my-3 ver_log border-bottom';
+
+    const $ver_title = document.createElement('div');
+    $ver_title.className = 'py-2';
+    $ver_title.textContent = 'v' + ver.id;
+
+    if (serverVersion === ver.id) {
+      const $ver_new = document.createElement('span');
+      $ver_new.className = 'ml-2 pt-1 badge badge-pill badge-danger';
+      $ver_new.textContent = 'New';
+      $ver_title.appendChild($ver_new);
+    }
+
+    $ver_parent.appendChild($ver_title);
+
+    for (let i = 0; i < ver.changes.length; i++) {
+      const v = ver.changes[i];
+      const logId = 'log_' + verIndex++ + '_' + i;
+
+      const $history_header = document.createElement('div');
+      $history_header.className = 'py-2 px-2 d-flex collapsed history_item history_item_no_content';
+
+      const $history_badge_wrap = document.createElement('div');
+      $history_badge_wrap.className = 'd-flex flex-nowrap align-self-center';
+
+      const $history_badge_div = document.createElement('div');
+      $history_badge_div.className = 'align-self-center';
+
+      const $history_badge = document.createElement('span');
+      $history_badge.className = 'mr-2 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+      $history_badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
+
+      const $history_title = document.createElement('div');
+      $history_title.className = 'align-self-center';
+      $history_title.innerHTML = v.title;
+
+      $history_badge_div.appendChild($history_badge);
+      $history_badge_wrap.appendChild($history_badge_div);
+      $history_badge_wrap.appendChild($history_title);
+      $history_header.appendChild($history_badge_wrap);
+      $ver_parent.appendChild($history_header);
+
+      // 更新詳細内容がある場合、クリックで出てくる感じに
+      if (v.content) {
+        $history_header.dataset.toggle = 'collapse';
+        $history_header.dataset.target = '#' + logId;
+        $history_header.classList.remove('history_item_no_content');
+
+        const $history_content_wrap = document.createElement('div');
+        $history_content_wrap.id = logId;
+        $history_content_wrap.className = 'border-top collapse history_content';
+
+        const $history_content = document.createElement('div');
+        $history_content.className = 'pl-3 py-2 font_size_12';
+        $history_content.innerHTML = v.content;
+
+        $history_content_wrap.appendChild($history_content);
+        $ver_parent.appendChild($history_content_wrap);
+      }
+
+      fragment.appendChild($ver_parent);
     }
   }
-  window.location.href = `./simulator.html?d=${d}`;
+  const $last_update = document.createElement('div');
+  $last_update.className = 'mt-2 font_size_12';
+  $last_update.textContent = LAST_UPDATE_DATE;
+  fragment.appendChild($last_update);
+  document.getElementById('site_history_body').appendChild(fragment);
 }
 
 /**
@@ -259,11 +415,15 @@ document.addEventListener('DOMContentLoaded', function () {
   // 初期化
   initialize();
 
+  // トップページへ
+  document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/index.html'; });
   // イベント配置
-  $('#header').on('click', '.fleet_tab', function () { topTab_Clicked($(this)); });
+  $('#header').on('click', '.fleet_tab', topTab_Clicked);
+  $('#main').on('click', '.version_detail', version_detail_Clicked);
   $('#main').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
   $('#main').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
   $('#main').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
   $('#main').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
+  $('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
   document.body.onclick = () => { $('.btn_delete').removeClass('ready').tooltip('hide'); }
 });
