@@ -1,6 +1,9 @@
 // 設定データ
 let setting = null;
 
+// 確認モーダルのモード
+let confirmType = null;
+
 /*==================================
 		Web Storage
 ==================================*/
@@ -220,6 +223,7 @@ function saveSetting() {
  */
 function reduced_display_Clicked() {
 	const btn = document.getElementById('reduced_display');
+	if (!btn) return;
 	if (btn.classList.contains('checked')) {
 		btn.classList.remove('checked');
 		btn.textContent = '縮小表示OFF';
@@ -235,6 +239,183 @@ function reduced_display_Clicked() {
 	saveSetting();
 }
 
+
+/**
+ * デッキビルダーフォーマットデータからプリセットを生成
+ * f(leet)*は艦隊、s(hip)*は船、i(item)*は装備でixは拡張スロット、rfは改修、masは熟練度
+ * @param {string} deck [基地プリセット, 艦隊プリセット, []]
+ * @returns {object} プリセットデータとして返却 失敗時null
+ */
+function readDeckBuilder(deck) {
+	if (!deck) return null;
+	if (deck.indexOf('?predeck=') > -1) deck = deck.split('?predeck=')[1];
+	try {
+		deck = decodeURIComponent(deck).trim('"');
+		const obj = JSON.parse(deck);
+		const fleets = [];
+		const landBase = [[], [-1, -1, -1]];
+		let unmanageShip = false;
+		Object.keys(obj).forEach((key) => {
+			const value = obj[key];
+			if (key === "version" || !value) return;
+
+			// 基地データ抽出
+			if (key.indexOf("a") === 0 && value.hasOwnProperty("items")) {
+				// 航空隊番号
+				const lbIndex = castInt(key.replace('a', '')) - 1;
+				// 札設定
+				landBase[1][lbIndex] = value.hasOwnProperty("mode") ? (value.mode === 1 ? 2 : value.mode === 2 ? 0 : -1) : -1;
+
+				Object.keys(value.items).forEach((i) => {
+					const i_ = value.items[i];
+					if (!i_ || !i_.hasOwnProperty("id")) return;
+
+					// スロット番号
+					const planeIndex = castInt(i.replace('i', '')) - 1 + lbIndex * 4;
+
+					// 装備プロパティの抽出
+					const plane = [0, 0, 0, 18, planeIndex];
+					Object.keys(i_).forEach((key) => {
+						if (key === "id") plane[0] = castInt(i_[key]);
+						else if (key === "mas") plane[1] = castInt(i_[key]);
+						else if (key === "rf") plane[2] = castInt(i_[key]);
+					});
+
+					landBase[0].push(plane);
+				});
+			}
+
+			// 艦隊データ抽出
+			if (key.indexOf("f") === 0) {
+				// 艦隊番号
+				const fleetNo = castInt(key.replace('f', '')) - 1;
+				if (fleetNo > 1) return;
+
+				// 艦娘の抽出
+				const fleet = [fleetNo, []];
+				Object.keys(value).forEach((s) => {
+					const s_ = value[s];
+					if (!s_ || !s_.hasOwnProperty('items')) return;
+					const s_id = castInt(s_.id);
+					// マスタデータと照合
+					let shipData = SHIP_DATA.find(v => v.api === s_id);
+					// マスタにないものも装備は受け入れるが、注意書きは表示させる
+					if (!shipData) {
+						shipData = { id: 0, slot: [0, 0, 0, 0] };
+						unmanageShip = true;
+					}
+
+					// 装備の抽出
+					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
+					Object.keys(s_.items).forEach((i) => {
+						const i_ = s_.items[i];
+						if (!i_ || !i_.hasOwnProperty("id")) return;
+
+						// マスタデータと照合
+						if (!PLANE_DATA.find(v => v.id === castInt(i_.id))) return;
+
+						// スロット番号
+						const planeIndex = castInt(i.replace('i', '')) - 1;
+
+						// 装備プロパティの抽出
+						const plane = [0, 0, 0, shipData.slot[planeIndex], planeIndex];
+						Object.keys(i_).forEach((i_key) => {
+							if (i_key === "id") plane[0] = castInt(i_[i_key]);
+							else if (i_key === "mas") plane[1] = castInt(i_[i_key]);
+							else if (i_key === "rf") plane[2] = castInt(i_[i_key]);
+						});
+
+						ship[1].push(plane);
+					});
+
+					fleet[1].push(ship);
+				});
+				fleets.push(fleet);
+			}
+		});
+
+		// マスタ管理外艦娘チェック
+		// if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
+		// else document.getElementById('duck_read_warning').classList.add('d-none');
+
+		// 第1、第2艦隊のみに絞る
+		const fleet1 = fleets.find(v => v[0] === 0)[1];
+		if (fleets.length >= 2) {
+			const fleet2 = fleets.find(v => v[0] === 1)[1];
+			const marge = fleet1.concat(fleet2);
+			return [landBase, marge, []];
+		}
+		else return [landBase, fleet1, []];
+	} catch (error) {
+		return null;
+	}
+}
+
+/**
+ * 指定文字列を読み込み、shipStockに反映させる　失敗時false
+ * @param {string} input
+ */
+function readShipJson(input) {
+	try {
+		const jsonData = JSON.parse(input);
+		const shipStock = loadShipStock();
+		// いったん全ての艦娘を0にする
+		for (const v of shipStock) {
+			v.num = 0;
+		}
+
+		for (const obj of jsonData) {
+			// 艦娘データかチェック
+			if (!obj.hasOwnProperty('api_ship_id')) return false;
+
+			const shipId = obj.api_ship_id;
+			const stock = shipStock.find(v => v.deck === shipId);
+			if (stock) stock.num++;
+		}
+
+		shipStock.sort((a, b) => a.id - b.id);
+		saveLocalStorage('shipStock', shipStock);
+		setting.inStockOnlyShip = true;
+		saveSetting();
+	} catch (error) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * 指定文字列を読み込み、planeStockに反映させる　失敗時false
+ * @param {string} input
+ */
+function readEquipmentJson(input) {
+	try {
+		const jsonData = JSON.parse(input);
+		const planeStock = loadPlaneStock();
+		// いったん全ての装備を0にする
+		for (const v of planeStock) {
+			v.num = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		}
+
+		for (const obj of jsonData) {
+			// 装備データかチェック
+			if (!obj.hasOwnProperty('api_slotitem_id')) return false;
+			if (!obj.hasOwnProperty('api_level')) return false;
+
+			const planeId = obj.api_slotitem_id;
+			const remodel = obj.api_level;
+			const stock = planeStock.find(v => v.id === planeId);
+			if (stock) stock.num[remodel]++;
+		}
+
+		planeStock.sort((a, b) => a.id - b.id);
+		saveLocalStorage('planeStock', planeStock);
+		setting.inStockOnly = true;
+		saveSetting();
+	} catch (error) {
+		return false;
+	}
+	return true;
+}
 
 /*==================================
 		プリセット関連
@@ -387,6 +568,23 @@ function inform_custom_alert(content, mode) {
 	wraper.appendChild(body);
 }
 
+/**
+ * 日付をフォーマット
+ * @param {Date} date
+ * @param {string} format
+ * @returns
+ */
+function formatDate(date, format) {
+	format = format.replace(/yyyy/g, date.getFullYear());
+	format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+	format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2));
+	format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2));
+	format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+	format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+	format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3));
+	return format;
+};
+
 /*==================================
 		タブ操作
 ==================================*/
@@ -412,18 +610,19 @@ function setTab() {
 		icon.className = 'align-self-center fleet_tab_icon';
 		if (savedPreset) {
 			const dataString = tabData.history.histories[tabData.history.index];
+			icon.style.color = '#adf';
 			if (savedPreset[2] !== dataString) {
 				icon.innerHTML = '&#8727;';
+				// 未保存データを表す
+				tab.classList.add('unsaved');
 			}
 			else {
 				icon.innerHTML = '<i class="fas fa-file-text"></i>';
 			}
-			icon.style.color = '#adf';
 		}
 		else {
 			icon.innerHTML = '&#63;';
 			icon.style.color = '#fff';
-
 			// 未保存データを表すやつ
 			tab.classList.add('unsaved');
 		}
@@ -469,23 +668,44 @@ function activeTabChanged($this) {
  */
 function closeActiveTab($this) {
 	const container = $this.closest('.fleet_tab');
-	let activePresets = loadLocalStorage('activePresets');
 
 	// 消す対象がある場合
-	if (activePresets) {
-		activePresets.presets = activePresets.presets.filter(v => v.id !== container[0].dataset.presetid);
-		if (activePresets.activeId === container[0].dataset.presetid) {
-			activePresets.activeId = '';
-		}
-		saveLocalStorage('activePresets', activePresets);
+	if (container.hasClass('unsaved')) {
+		// ほんまに閉じてもいいの？
+		const $modal = $('#modal_confirm');
+		$modal.find('.modal-body').html(`
+			<div class="h6">未保存の変更内容がありますが、このままタブを閉じますか？</div>
+			<div class="mt-3 font_size_12"> 戻って保存するには、画面上部の「編成保存」を押してください。</div>
+			<div class="font_size_12"> 変更内容を破棄してタブを閉じる場合は、このままOKボタンを押してください。</div>
+		`);
+		$modal[0].dataset.target = container[0].dataset.presetid;
+		confirmType = 'deleteTab';
+		$modal.modal('show');
+	}
+	else {
+		closeTab(container[0].dataset.presetid);
+	}
+}
 
-		if (!activePresets.presets.length) {
-			window.location.href = '../list/index.html';
-		}
-		else {
-			inform_success('「' + container.find('.fleet_name').text() + '」を閉じました。');
-			setTab();
-		}
+/**
+ * 指定したIDのタブを消去
+ * @param {string} id プリセットID 
+ */
+function closeTab(id) {
+	let activePresets = loadLocalStorage('activePresets');
+	activePresets.presets = activePresets.presets.filter(v => v.id !== id);
+
+	// アクティブタブの解除
+	if (activePresets.activeId === id) {
+		activePresets.activeId = '';
+	}
+	saveLocalStorage('activePresets', activePresets);
+
+	if (!activePresets.presets.length) {
+		window.location.href = '../list/';
+	}
+	else {
+		setTab();
 	}
 }
 
@@ -534,6 +754,7 @@ function updateActivePreset(preset) {
 	saveLocalStorage('activePresets', activePresets);
 }
 
+const xxx = "AIzaSyC_rEnvKFFlZv54xvxP8MXPht081xYol4s";
 
 /*==================================
 		イベント
@@ -546,6 +767,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#header').on('click', '#reduced_display', reduced_display_Clicked);
 	$('#header').on('click', '.fleet_tab', function () { activeTabChanged($(this)); });
 	$('#header').on('click', '.btn_close_tab', function (e) { e.stopPropagation(); closeActiveTab($(this)); });
+	$('#modal_confirm').on('hide.bs.modal', function () { confirmType = null; });
+	$('#modal_confirm').on('click', '.btn_ok', function () {
+		const $modal = $('#modal_confirm');
+		if (confirmType === 'deleteTab') {
+			// アクティブタブ削除
+			closeTab($modal[0].dataset.target);
+			$modal.modal('hide');
+		}
+	});
 
 	Sortable.create(document.getElementById('fleet_tab_container'), {
 		animation: 200,

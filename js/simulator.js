@@ -24,9 +24,6 @@ let AIR_STATUS_TABLE;
 // 各種モーダルの値返却先
 let $target = null;
 
-// 確認モーダルのモード
-let confirmType = null;
-
 // 基本の艦載機データ群(基地用ソート済み)
 let basicSortedPlanes = [];
 
@@ -69,9 +66,6 @@ let subChartInstance = null;
 
 // メイン文字色
 let mainColor = "#000000";
-
-// ※
-let fb = null;
 
 // 計算結果格納オブジェクト
 let resultData = {
@@ -224,23 +218,6 @@ function hexToRGB(hex) {
 		return parseInt(str, 16);
 	});
 }
-
-/**
- * 日付をフォーマット
- * @param {Date} date
- * @param {string} format
- * @returns
- */
-function formatDate(date, format) {
-	format = format.replace(/yyyy/g, date.getFullYear());
-	format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
-	format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2));
-	format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2));
-	format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
-	format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
-	format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3));
-	return format;
-};
 
 /*==================================
 		値/オブジェクト 作成・操作・取得等
@@ -2579,6 +2556,11 @@ function loadMainPreset() {
 			// ローカルストレージにすでに保存済みの編成だったら
 			document.getElementById('input_preset_name').value = preset[1];
 			document.getElementById('preset_remarks').value = preset[3];
+			
+			// 編成の更新を行って終わり
+			updateMainPreset();
+			inform_success('編成の上書き更新が完了しました。');
+			return;
 		}
 		else {
 			// ローカルストレージに存在しない編成だったら
@@ -2591,21 +2573,35 @@ function loadMainPreset() {
 		document.getElementById('input_preset_name').value = '';
 		document.getElementById('preset_remarks').value = '';
 	}
+
+	$('#modal_main_preset').find('.btn_commit_preset').prop('disabled', true);
+	$('#modal_main_preset').modal('show');
 }
 
 /**
  * 編成プリセット 新規登録 / 更新処理
  */
 function updateMainPreset() {
+	// 保存する編成の内容データ
+	const presetBody = encodePreset();
+
 	// 今現在のタブ情報
 	const activePreset = getActivePreset();
+	// 何らかの原因でidがない場合
+	if(!activePreset.id) {
+		activePreset.id = getUniqueId();
+	}
+	// 何らかの原因でhistoryがない場合
+	if(!activePreset.history.histories.length) {
+		activePreset.history.histories[0] = presetBody;
+	}
 	// 名前の更新
 	activePreset.name = document.getElementById('input_preset_name').value.trim();
 	// プリセット生成
 	const preset = [
 		activePreset.id,
 		activePreset.name,
-		encodePreset(),
+		presetBody,
 		document.getElementById('input_preset_name').value.trim()
 	];
 
@@ -2947,118 +2943,6 @@ function createAntiAirTablePreset() {
 
 
 /**
- * デッキビルダーフォーマットデータからプリセットを生成
- * f(leet)*は艦隊、s(hip)*は船、i(item)*は装備でixは拡張スロット、rfは改修、masは熟練度
- * @param {string} deck [基地プリセット, 艦隊プリセット, []]
- * @returns {object} プリセットデータとして返却 失敗時null
- */
-function readDeckBuilder(deck) {
-	if (!deck) return null;
-	if (deck.indexOf('?predeck=') > -1) deck = deck.split('?predeck=')[1];
-	try {
-		deck = decodeURIComponent(deck).trim('"');
-		const obj = JSON.parse(deck);
-		const fleets = [];
-		const landBase = [[], [-1, -1, -1]];
-		let unmanageShip = false;
-		Object.keys(obj).forEach((key) => {
-			const value = obj[key];
-			if (key === "version" || !value) return;
-
-			// 基地データ抽出
-			if (key.indexOf("a") === 0 && value.hasOwnProperty("items")) {
-				// 航空隊番号
-				const lbIndex = castInt(key.replace('a', '')) - 1;
-				// 札設定
-				landBase[1][lbIndex] = value.hasOwnProperty("mode") ? (value.mode === 1 ? 2 : value.mode === 2 ? 0 : -1) : -1;
-
-				Object.keys(value.items).forEach((i) => {
-					const i_ = value.items[i];
-					if (!i_ || !i_.hasOwnProperty("id")) return;
-
-					// スロット番号
-					const planeIndex = castInt(i.replace('i', '')) - 1 + lbIndex * 4;
-
-					// 装備プロパティの抽出
-					const plane = [0, 0, 0, 18, planeIndex];
-					Object.keys(i_).forEach((key) => {
-						if (key === "id") plane[0] = castInt(i_[key]);
-						else if (key === "mas") plane[1] = castInt(i_[key]);
-						else if (key === "rf") plane[2] = castInt(i_[key]);
-					});
-
-					landBase[0].push(plane);
-				});
-			}
-
-			// 艦隊データ抽出
-			if (key.indexOf("f") === 0) {
-				// 艦隊番号
-				const fleetNo = castInt(key.replace('f', '')) - 1;
-				if (fleetNo > 1) return;
-
-				// 艦娘の抽出
-				const fleet = [fleetNo, []];
-				Object.keys(value).forEach((s) => {
-					const s_ = value[s];
-					if (!s_ || !s_.hasOwnProperty('items')) return;
-					const s_id = castInt(s_.id);
-					// マスタデータと照合
-					let shipData = SHIP_DATA.find(v => v.api === s_id);
-					// マスタにないものも装備は受け入れるが、注意書きは表示させる
-					if (!shipData) {
-						shipData = { id: 0, slot: [0, 0, 0, 0] };
-						unmanageShip = true;
-					}
-
-					// 装備の抽出
-					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
-					Object.keys(s_.items).forEach((i) => {
-						const i_ = s_.items[i];
-						if (!i_ || !i_.hasOwnProperty("id")) return;
-
-						// マスタデータと照合
-						if (!PLANE_DATA.find(v => v.id === castInt(i_.id))) return;
-
-						// スロット番号
-						const planeIndex = castInt(i.replace('i', '')) - 1;
-
-						// 装備プロパティの抽出
-						const plane = [0, 0, 0, shipData.slot[planeIndex], planeIndex];
-						Object.keys(i_).forEach((i_key) => {
-							if (i_key === "id") plane[0] = castInt(i_[i_key]);
-							else if (i_key === "mas") plane[1] = castInt(i_[i_key]);
-							else if (i_key === "rf") plane[2] = castInt(i_[i_key]);
-						});
-
-						ship[1].push(plane);
-					});
-
-					fleet[1].push(ship);
-				});
-				fleets.push(fleet);
-			}
-		});
-
-		// マスタ管理外艦娘チェック
-		// if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
-		// else document.getElementById('duck_read_warning').classList.add('d-none');
-
-		// 第1、第2艦隊のみに絞る
-		const fleet1 = fleets.find(v => v[0] === 0)[1];
-		if (fleets.length >= 2) {
-			const fleet2 = fleets.find(v => v[0] === 1)[1];
-			const marge = fleet1.concat(fleet2);
-			return [landBase, marge, []];
-		}
-		else return [landBase, fleet1, []];
-	} catch (error) {
-		return null;
-	}
-}
-
-
-/**
  * 指定プリセットをデッキビルダーフォーマットに変換
  * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
  * デッキフォーマット {version: 4.2, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
@@ -3112,71 +2996,6 @@ function convertToDeckBuilder() {
 	}
 }
 
-/**
- * 指定文字列を読み込み、shipStockに反映させる　失敗時false
- * @param {string} input
- */
-function readShipJson(input) {
-	try {
-		const jsonData = JSON.parse(input);
-		const shipStock = loadShipStock();
-		// いったん全ての艦娘を0にする
-		for (const v of shipStock) {
-			v.num = 0;
-		}
-
-		for (const obj of jsonData) {
-			// 艦娘データかチェック
-			if (!obj.hasOwnProperty('api_ship_id')) return false;
-
-			const shipId = obj.api_ship_id;
-			const stock = shipStock.find(v => v.deck === shipId);
-			if (stock) stock.num++;
-		}
-
-		shipStock.sort((a, b) => a.id - b.id);
-		saveLocalStorage('shipStock', shipStock);
-		setting.inStockOnlyShip = true;
-		saveSetting();
-	} catch (error) {
-		return false;
-	}
-	return true;
-}
-
-/**
- * 指定文字列を読み込み、planeStockに反映させる　失敗時false
- * @param {string} input
- */
-function readEquipmentJson(input) {
-	try {
-		const jsonData = JSON.parse(input);
-		const planeStock = loadPlaneStock();
-		// いったん全ての装備を0にする
-		for (const v of planeStock) {
-			v.num = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		}
-
-		for (const obj of jsonData) {
-			// 装備データかチェック
-			if (!obj.hasOwnProperty('api_slotitem_id')) return false;
-			if (!obj.hasOwnProperty('api_level')) return false;
-
-			const planeId = obj.api_slotitem_id;
-			const remodel = obj.api_level;
-			const stock = planeStock.find(v => v.id === planeId);
-			if (stock) stock.num[remodel]++;
-		}
-
-		planeStock.sort((a, b) => a.id - b.id);
-		saveLocalStorage('planeStock', planeStock);
-		setting.inStockOnly = true;
-		saveSetting();
-	} catch (error) {
-		return false;
-	}
-	return true;
-}
 
 /**
  * 機体在庫読み込み　未定義の場合は初期化したものを返却
@@ -3257,199 +3076,6 @@ function updateShipSelectedHistory(id) {
 	// 100件以降はケツから削る
 	setting.selectedHistory[1] = setting.selectedHistory[1].splice(0, 100);
 	saveSetting();
-}
-
-/**
- * コメント欄初期化
- */
-function initializeBoard() {
-	if (!fb) {
-		firebase.initializeApp({
-			apiKey: xxx,
-			projectId: 'development-74af0'
-		});
-		fb = firebase.firestore();
-
-		fb.collection("comments").orderBy('createdAt', 'desc').limit(30)
-			.onSnapshot(function (querySnapshot) {
-				const fragment = document.createDocumentFragment();
-				querySnapshot.forEach(function (doc) {
-					const box = document.createElement('div');
-					box.className = 'general_box my-3 px-3 pt-3 pb-1 comment';
-
-					const header = document.createElement('div');
-					header.className = 'd-flex mb-1';
-
-					const index = document.createElement('div');
-					index.className = 'comment_index align-self-center text-primary';
-					index.dataset.number = doc.data().number;
-					index.textContent = `${doc.data().number}:`;
-
-					const author = document.createElement('div');
-					author.className = 'comment_writer ml-1 align-self-center mr-2';
-					author.textContent = doc.data().author;
-
-					const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
-					const date = document.createElement('div');
-					date.className = 'comment_date opacity6 font_size_11 align-self-center';
-					date.textContent = ' -- ' + formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss');
-
-					header.appendChild(index);
-					header.appendChild(author);
-					header.appendChild(date);
-
-					const dt = new Date();
-					dt.setDate(dt.getDate() - 7);
-					if (createdAt > dt) {
-						dt.setDate(dt.getDate() + 4);
-						const badge = document.createElement('div');
-						badge.className = `font_size_11 align-self-center ml-1 ${createdAt > dt ? 'text-danger' : 'text-success'}`;
-						badge.textContent = 'New';
-						header.appendChild(badge);
-					}
-
-					const content = document.createElement('div');
-					content.className = 'comment_content align-self-center';
-					content.textContent = doc.data().content;
-
-					box.appendChild(header);
-					box.appendChild(content);
-
-					fragment.appendChild(box);
-				});
-
-				document.getElementById('coment_board').innerHTML = '';
-				document.getElementById('coment_board').appendChild(fragment);
-			});
-	}
-
-	// ブラウザ再読み込み時の残りカスがある場合の対処
-	comment_text_Changed();
-}
-
-
-/**
- * レス番号クリック
- */
-function comment_index_Clicked($this) {
-	const num = castInt($this[0].dataset.number);
-	if (document.getElementById('comment_text').value.trim().length) {
-		document.getElementById('comment_text').value += ('>>' + num + '\n');
-	}
-	else {
-		document.getElementById('comment_text').value = ('>>' + num + '\n');
-	}
-
-	// 移動
-	setTimeout(() => { $('body,html').animate({ scrollTop: $('#comments').offset().top - 20 }, 20, 'swing'); }, 20);
-	document.getElementById('comment_text').focus();
-}
-
-function comment_text_Changed() {
-	// サーバーサイドでもチェックは行うがこっちでもやっとく
-	const author = document.getElementById('comment_author');
-	const content = document.getElementById('comment_text');
-	const text = content.value;
-	// 行数チェック用
-	const nCount = text.match(/\n/g);
-	let valid = true;
-
-	// 名前欄チェック
-	if (author.value.trim() === 'noro') {
-		document.getElementById('author_validate').textContent = '使用できない名前です。';
-		author.classList.add('is-invalid');
-		valid = false;
-	}
-	else if (author.value.trim().length > 20) {
-		// 名前欄文字数チェック
-		document.getElementById('author_validate').textContent = '20文字以内で入力して下さい。';
-		author.classList.add('is-invalid');
-		valid = false;
-	}
-	else author.classList.remove('is-invalid');
-
-	// 本文文字数チェック
-	if (text.trim().length === 0) {
-		document.getElementById('comment_validate').textContent = '';
-		content.classList.remove('is-invalid');
-		valid = false;
-	}
-	else if (text.length > 1000) {
-		document.getElementById('comment_validate').textContent = '1000文字以内で入力してください。';
-		content.classList.add('is-invalid');
-		valid = false;
-	}
-	else if (nCount && nCount.length >= 15) {
-		document.getElementById('comment_validate').textContent = '規定行数を超えました。行数を減らして下さい。';
-		content.classList.add('is-invalid');
-		valid = false;
-	}
-	else content.classList.remove('is-invalid');
-
-	// 送信ボタンの有効無効
-	document.getElementById('btn_send_comment').disabled = !valid;
-
-	// バリデーションOK!
-	if (valid) {
-		author.classList.remove('is-invalid');
-		content.classList.remove('is-invalid');
-	};
-}
-
-function btn_send_comment_Clicked() {
-	const $modal = $('#modal_confirm');
-	$modal.find('.modal-body').html(`
-		<div>コメントを送信します。</div>
-		<div class="mt-3 font_size_12">・公序良俗に反する書き込みはご遠慮ください。</div>
-		<div class="font_size_12">・送信した内容は、原則あとから変更/削除はできませんので注意してください。</div>
-		<div class="font_size_12">・どうしても変更・削除したい場合はご連絡ください。</div>
-		<div class="mt-3">よろしければ、OKボタンを押してください。</div>
-	`);
-	confirmType = "sendComment";
-	$modal.modal('show');
-}
-
-function send_comment() {
-	if (fb) {
-		let author = document.getElementById('comment_author').value.trim();
-		const content = document.getElementById('comment_text').value.trim();
-		if (!author) author = '名無しさん';
-
-		fb.runTransaction(function (transaction) {
-			const ref = fb.collection('comments');
-			const newComment = ref.doc();
-			return transaction.get(newComment).then(async () => {
-				// 最新コメを1件取得
-				const querySnapshot = await ref.orderBy("createdAt", "desc").limit(1).get()
-				if (querySnapshot) {
-					let newId = 0;
-					await Promise.all(querySnapshot.docs.map(async (doc) => {
-						const latest = await doc.data();
-						newId = await latest.number;
-					}));
-
-					if (castInt(newId, -1) >= 0) {
-						const comment = {
-							number: castInt(newId) + 1,
-							author: author,
-							content: content,
-							createdAt: firebase.firestore.FieldValue.serverTimestamp()
-						};
-						await transaction.set(newComment, comment);
-						return comment;
-					}
-					else return Promise.reject("ID採番エラー :", newId);
-				}
-			})
-		}).then(function (comment) {
-			document.getElementById('comment_text').value = '';
-			document.getElementById('btn_send_comment').disabled = true;
-		}).catch(function (err) {
-			console.error(err);
-			alert('コメントの投稿に失敗しました。サーバーサイドでエラーが発生しました。');
-		});
-	}
-	else alert('謎の理由により、コメントの投稿に失敗しました。');
 }
 
 /**
@@ -3896,7 +3522,9 @@ function calculateInit(objectData) {
 		history.index = 0;
 
 		// タブを編集済みに書き換え
-		$('#fleet_tab_container .active:not(.unsaved)').find('.fleet_tab_icon').html('&#8727;');
+		const $tab = $('#fleet_tab_container .active:not(.unsaved)');
+		$tab.find('.fleet_tab_icon').html('&#8727;');
+		$tab.addClass('unsaved');
 
 		updateActivePreset(activePreset);
 	}
@@ -7599,26 +7227,12 @@ function modal_Closed($this) {
 				}
 			}, 80);
 			break;
+		case "modal_confirm":
+			confirmType = null;
+			break;
 		default:
 			break;
 	}
-}
-
-/**
- * サイドバークリック時
- * @param {JqueryDomObject} $this
- */
-function sidebar_Clicked($this) {
-	const href = $this.attr("href");
-	const target = $(href === "#" || href === "" ? 'html' : href);
-
-	if (href === '#first_time') first_time_Clicked();
-	else if (href === '#manual') site_manual_Clicked();
-	else if (href === '#abstract' || href === '#FAQ' || href === '#history' || href === '#comments') scrollContent($(href));
-	else {
-		$('body,html').animate({ scrollTop: target.offset().top - 60 }, 300, 'swing');
-	}
-	return false;
 }
 
 /**
@@ -9585,24 +9199,19 @@ function preset_name_Changed($this) {
 	// 入力検証　全半40文字くらいで
 	const input = $this.val().trim();
 	const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
-	const $btn2 = $this.closest('.modal-body').find('.btn_commit_preset_header');
 	if (input.length > 40) {
 		$this.addClass('is-invalid');
 		$btn.prop('disabled', true);
-		$btn2.prop('disabled', true);
 	}
 	else if (input.length === 0) {
 		$this.addClass('is-invalid');
 		$btn.prop('disabled', true);
-		$btn2.prop('disabled', true);
 	}
 	else {
 		$this.removeClass('is-invalid');
 		$this.addClass('is-valid');
 		$btn.prop('disabled', false);
-		$btn2.prop('disabled', false);
 	}
-	$('#modal_main_preset').find('.btn_commit_preset_header').tooltip('hide');
 }
 
 /**
@@ -10936,7 +10545,6 @@ function modal_confirm_ok_Clicked() {
 		default:
 			break;
 	}
-	confirmType = null;
 	$('#modal_confirm').modal('hide');
 }
 
@@ -10945,7 +10553,6 @@ function modal_confirm_ok_Clicked() {
  */
 function btn_preset_all_Clicked() {
 	loadMainPreset();
-	$('#modal_main_preset').modal('show');
 }
 
 /**
@@ -11096,7 +10703,6 @@ async function btn_url_shorten_Clicked() {
 	button.classList.remove('shortening');
 }
 
-
 /**
  * プリセットメモ変更時
  * @param {JqueryDomObject} $this
@@ -11105,17 +10711,14 @@ function preset_remarks_Changed($this) {
 	// 入力検証　全半40文字くらいで
 	const input = $this.val().trim();
 	const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
-	const $btn2 = $this.closest('.modal-body').find('.btn_commit_preset_header');
 	if (input.length > 400) {
 		$this.addClass('is-invalid');
 		$btn.prop('disabled', true);
-		$btn2.prop('disabled', true);
 	}
 	else {
 		$this.removeClass('is-invalid');
 		$this.addClass('is-valid');
 		$btn.prop('disabled', false);
-		$btn2.prop('disabled', false);
 	}
 }
 
@@ -11166,12 +10769,6 @@ function btn_commit_main_preset_Clicked() {
 }
 
 /**
- * 編成プリセット名変更ボタンクリック
- */
-function btn_commit_preset_header_Clicked() {
-}
-
-/**
  * デッキビルダーデータ読み込みクリック
  */
 function btn_load_deck_Clicked() {
@@ -11212,7 +10809,6 @@ async function btn_output_url_Clicked() {
 		return;
 	}
 }
-const xxx = "AIzaSyC_rEnvKFFlZv54xvxP8MXPht081xYol4s";
 
 /**
  * デッキビルダー形式生成ボタンクリック
@@ -11307,58 +10903,18 @@ function simple_enemy_ap_Changed($this) {
 }
 
 /**
- * 初めての方クリック時
- */
-function first_time_Clicked() {
-	$('#abstract').collapse('show');
-	setTimeout(() => { $('body,html').animate({ scrollTop: $('#first_time').offset().top - 80 }, 300, 'swing'); }, 200);
-	return false;
-}
-
-/**
- * 使い方クリック時
- */
-function site_manual_Clicked() {
-	$('#abstract').collapse('show');
-	setTimeout(() => { $('body,html').animate({ scrollTop: $('#manual').offset().top - 80 }, 300, 'swing'); }, 200);
-	return false;
-}
-
-/**
- * 指定したidを持つ要素までスクロール
- * 折り畳みなら開く
- * @param {JqueryDomObject} $destination
- */
-function scrollContent($destination) {
-	$destination.collapse('show');
-	setTimeout(() => { $('body,html').animate({ scrollTop: $destination.offset().top - 80 }, 300, 'swing'); }, 250);
-	return false;
-}
-
-/**
  * シミュ内タブクリック時
  * @param {JqueryDomObject} $this
  */
 function simulatorTab_Clicked($this) {
-	let isChanged = false;
-	// rawに設定されているデータが最優先
-	if ($this[0].dataset.raw) {
-		expandMainPreset(decodePreset($this[0].dataset.raw));
-		isChanged = true;
-	}
-	else if ($this[0].dataset.presetid) {
+	if ($this[0].dataset.presetid) {
 		const activePresets = loadLocalStorage('activePresets');
 		const preset = activePresets.presets.find(v => v.id === $this[0].dataset.presetid);
 		if (preset) {
 			const data = preset.history.histories[preset.history.index];
 			expandMainPreset(decodePreset(data));
-			isChanged = true;
+			calculate();
 		}
-	}
-
-	if (isChanged) {
-		// アクティブタブ変更
-		calculate();
 	}
 }
 
@@ -11413,13 +10969,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				} catch (error) {
 					// 謎の理由で死を遂げたらタブ一掃してトップに飛ばす
 					deleteLocalStorage('activePresets');
-					window.location.href = '../list/index.html';
+					window.location.href = '../list/';
 					return;
 				}
 			}
 		}
 
-		if (urlDeck[1]) {
+		if (urlDeck[0] || urlDeck[1]) {
 			// 外部編成データが読み込まれたため新しいタブを生成
 			let tabData = {
 				id: getUniqueId(),
@@ -11451,7 +11007,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	// トップページへ
-	document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/index.html'; });
+	document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
 	$('#header').on('click', '.fleet_tab', function () { simulatorTab_Clicked($(this)); });
 	$('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
 	$('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
@@ -11555,11 +11111,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#plane_stock').on('click', '#btn_fav_clear', btn_fav_clear_Clicked);
 	$('#plane_stock').on('click', '#btn_stock_all_clear', btn_stock_all_clear_Clicked);
 	$('#plane_stock').on('input', '#stock_word', stock_word_TextChanged);
-	$('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
-	$('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
-	$('#site_board').on('input', '#comment_author', comment_text_Changed);
-	$('#site_board').on('input', '#comment_text', comment_text_Changed);
-	$('#site_board').on('click', '.comment_index', function () { comment_index_Clicked($(this)) });
 	$('#modal_plane_select').on('click', '.plane', function () { modal_plane_Selected($(this)); });
 	$('#modal_plane_select').on('click', '.btn_remove', function () { modal_plane_select_btn_remove_Clicked($(this)); });
 	$('#modal_plane_select').on('click', '#plane_type_select .nav-link', function () { plane_type_select_Changed($(this)) });
@@ -11601,7 +11152,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_pattern').on('dblclick', '.node_tr', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '#enemy_pattern_select .nav-link.active', node_DoubleClicked);
 	$('#modal_main_preset').on('click', '.btn_commit_preset', btn_commit_main_preset_Clicked);
-	$('#modal_main_preset').on('click', '.btn_commit_preset_header', btn_commit_preset_header_Clicked);
+	$('#modal_main_preset').on('input', '#input_preset_name', function () { preset_name_Changed($(this)); });
 	$('#modal_main_preset').on('input', '#preset_remarks', function () { preset_remarks_Changed($(this)); });
 	$('#modal_share').on('click', '.btn_load_deck', btn_load_deck_Clicked);
 	$('#modal_share').on('input', '#input_deck', function () { input_deck_Changed($(this)); });
@@ -11668,8 +11219,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#btn_redo').click(btn_redo_Clicked);
 	$('#input_url').click(function () { $(this).select(); });
 	$('#btn_url_shorten').click(btn_url_shorten_Clicked);
-	$('#main').on('click', '.btn_first_time', first_time_Clicked);
-	$('#main').on('click', '.btn_site_manual', site_manual_Clicked);
+
 	$('#draggable_plane_box').on('click', '#btn_hide_plane_box', function () { $('#draggable_plane_box').addClass('d-none'); });
 	$('#draggable_plane_box').on('click', '#draggable_plane_type_select .nav-link', function () { createDraggablePlaneTable($(this)) });
 	$('#draggable_plane_box').on('change', '#draggable_plane_sort_select', function () { createDraggablePlaneTable(); });

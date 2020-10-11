@@ -28,6 +28,9 @@
 	<script defer src="../js/sortable.js"></script>
 	<script defer src="../js/data.js"></script>
 	<script defer src="../js/list.js"></script>
+	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
 </head>
 
 <body>
@@ -43,39 +46,34 @@
 			document.body.classList.add(theme);
 		}
 	</script>
+	<div id="custom_alert_wraper" class="d-flex justify-content-center align-items-center"></div>
 	<div class="fixed-top" id="header">
 		<div class="d-flex" id="tool_bar">
 			<div class="align-self-center tool_item" id="btn_top">
 				<i class="fas fa-list-ul"></i>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_save_preset" data-toggle="tooltip"
-				title="現在表示されている編成を上書き保存します。">
+			<div class="align-self-center tool_item disabled" id="btn_save_preset">
 				<i class="fas fa-save"></i>
 				<span class="ml-1">編成保存</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_share" data-toggle="tooltip"
-				title="デッキビルダー形式での入出力や、編成のURLの生成などが行えます。">
+			<div class="align-self-center tool_item disabled" id="btn_share">
 				<i class="fas fa-share-alt"></i>
 				<span class="ml-1">編成共有</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_twitter" data-toggle="tooltip"
-				title="現在表示されている編成をTwitterでつぶやいて共有できます。">
+			<div class="align-self-center tool_item disabled" id="btn_twitter">
 				<i class="fab fa-twitter"></i>
 				<span class="d-none d-lg-inline ml-1">編成をツイート</span>
 				<span class="d-lg-none ml-1">ツイート</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_auto_expand" data-toggle="tooltip"
-				title="制空値を指定し、おまかせで艦載機を配備します。">
+			<div class="align-self-center tool_item disabled" id="btn_auto_expand">
 				<i class="fas fa-bolt"></i>
 				<span class="d-none d-lg-inline ml-1">おまかせ配備</span>
 				<span class="d-lg-none ml-1">おまかせ</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_undo" data-toggle="tooltip"
-				title="元に戻す(直前の入力をなかったことにします）">
+			<div class="align-self-center tool_item disabled" id="btn_undo">
 				<i class="fas fa-undo"></i>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_redo" data-toggle="tooltip"
-				title="やり直す(直前の「元に戻す」操作をなかったことにします)">
+			<div class="align-self-center tool_item disabled" id="btn_redo">
 				<i class="fas fa-repeat"></i>
 			</div>
 			<div class="align-self-center d-none d-md-flex flex-grow-1" id="url_shortener">
@@ -84,14 +82,11 @@
 			<div class="align-self-center d-none d-md-flex ml-auto tool_item" id="btn_url_shorten">
 				<span>URL短縮</span>
 			</div>
-			<div class="align-self-center d-none d-xl-flex tool_item" id="reduced_display">
-				縮小表示OFF
-			</div>
 		</div>
 		<div class="d-flex" id="fleet_tab_container"></div>
 		<script>setTab()</script>
 	</div>
-	<div class="px-2 py-2" id="main">
+	<div class="px-2 mx-2" id="main">
 		<div class="d-flex mx-auto mt-3 pt-3">
 			<div class="d-flex flex-wrap">
 				<h1>制空権シミュレータ</h1>
@@ -109,12 +104,12 @@
 		</div>
 		<div class="contents my-4 mx-auto px-2 py-1" id="presets_contents">
 			<div class="my-2 d-flex">
-				<div class="h6 mb-0 align-self-center">
+				<div class="h5 mb-0 align-self-center">
 					<span class="align-middle">保存データ一覧</span>
 				</div>
 			</div>
 			<div class="border-top mb-2"></div>
-			<div id="presets_container"></div>
+			<div id="presets_container" class="pb-4"></div>
 		</div>
 		<div class="contents my-4 px-2 py-1 mx-auto" id="site_abstract">
 			<div class="my-2 d-flex">
@@ -130,7 +125,7 @@
 				<div class="px-3" id="site_abstract_body">
 					<div class="my-3">
 						<p class="h6">概要</p>
-						<div class="pl-3">ブラウザゲーム『艦隊これくしょん -艦これ-』の出撃時の制空に関する計算およびシミュレーションを行うサイトです。</div>
+						<div class="pl-3">このサイトは、ブラウザゲーム『艦隊これくしょん -艦これ-』の出撃時の制空に関する計算およびシミュレーションを行うサイトです。</div>
 						<div class="pl-3">
 							道中戦闘や、基地航空隊による制空削り、敵の対空砲火による撃墜をある程度考慮したシミュレーションが可能です。
 							また、基地空襲時の防空制空計算も可能です。
@@ -352,6 +347,49 @@
 				</div>
 			</div>
 		</div>
+		<div class="contents my-4 px-2 py-1 mx-auto" id="site_board">
+			<div class="my-2 d-flex">
+				<div class="h6 mb-0 align-self-center"><span class="content_title align-middle">コメント</span>
+				</div>
+				<div class="ml-auto rounded-circle r_btn" data-toggle="collapse" data-target="#comments">
+					<i class="fas fa-chevron-up"></i>
+				</div>
+			</div>
+			<div class="collapse collapse_content" id="comments">
+				<div class="border-top"></div>
+				<div class="px-3 mt-3">
+					バグ報告、要望、情報提供、質問、感想など自由に書き込めるコメント欄です。レス番号をクリックすると返信できます。(最新の30件)
+				</div>
+				<div class="px-3">
+					試験運用のため、アクセス数が膨らむと一時的に利用できない状態になる可能性があります。ご了承ください。
+				</div>
+				<div class="py-2 px-3" id="coment_form">
+					<div class="align-self-center d-flex">
+						<div class="align-self-center">
+							<button class="btn btn-sm btn-primary" id="btn_send_comment" disabled>送信</button>
+						</div>
+						<div class="align-self-center ml-2 text-nowrap">名前:</div>
+						<div class="align-self-center ml-2 d-flex">
+							<input type="text" class="form-control form-control-sm align-self-center" id="comment_author"
+								placeholder="名無しさん" maxlength="20">
+							<div class="ml-2 invalid-feedback align-self-center" id="author_validate">
+								20文字以内で入力して下さい。</div>
+						</div>
+					</div>
+					<div class="mt-1">
+						<textarea class="form-control form-control-sm" id="comment_text" rows="3"></textarea>
+						<div class="invalid-feedback" id="comment_validate">1000文字以内で入力してください。</div>
+					</div>
+				</div>
+				<div class="px-3 mt-1 mb-3" id="coment_board">
+					<div class="w-100 text-center">
+						<div class="spinner-border m-5" role="status">
+							<span class="sr-only"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="contents my-4 px-2 py-1 mx-auto" id="site_FAQ">
 			<div class="my-2 d-flex">
 				<div class="h6 mb-0 align-self-center">
@@ -524,7 +562,6 @@
 			</div>
 		</div>
 	</div>
-	<div id="custom_alert_wraper" class="d-flex justify-content-center align-items-center"></div>
 
 	<div class="modal fade" id="modal_version_inform" tabindex="-1">
 		<div class="modal-dialog modal-dialog-centered">
@@ -555,7 +592,7 @@
 						<button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">OK</button>
 					</div>
 					<div class="ml-2">
-						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
+						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
 					</div>
 				</div>
 			</div>

@@ -19,29 +19,28 @@ function setPresets() {
 
   // 新規作成用
   const new_container = document.createElement('div');
-  new_container.className = 'general_box preset_container new';
+  new_container.className = 'preset_container new d-flex';
 
   const new_body = document.createElement('div');
-  new_body.className = 'new_body mx-auto my-2';
-  new_body.textContent = '新規作成'
+  new_body.className = 'new_body mx-auto my-auto';
+  new_body.textContent = presets.length ? '新規作成' : 'まずはここをクリックして編成を新規作成'
   new_container.appendChild(new_body);
 
   fragment.appendChild(new_container);
 
-
   for (const preset of presets) {
     const container = document.createElement('div');
-    container.className = 'general_box preset_container';
+    container.className = 'd-flex preset_container';
     container.dataset.presetid = preset[0];
-
-    const abstract = document.createElement('div');
-    abstract.className = 'd-flex pb-1 preset_abstract border-bottom';
 
     // 編成アイコン
     const color = document.createElement('div');
     color.className = 'align-self-center preset_color';
     color.innerHTML = '&#9679;';
-    abstract.appendChild(color);
+    // container.appendChild(color);
+
+    const abstract = document.createElement('div');
+    abstract.className = 'ml-2 preset_abstract';
 
     // 編成名
     const name = document.createElement('div');
@@ -56,41 +55,6 @@ function setPresets() {
     name_edit.value = preset[1];
     abstract.appendChild(name_edit);
 
-    // 編成編集コミットボタン
-    const btn_commit = document.createElement('div');
-    btn_commit.className = 'align-self-center ml-auto r_btn btn_commit d-none';
-    btn_commit.innerHTML = '<i class="fas fa-save"></i>';
-    abstract.appendChild(btn_commit);
-
-    // 編成編集やめるボタン
-    const btn_rollback = document.createElement('div');
-    btn_rollback.className = 'align-self-center ml-1 r_btn btn_rollback d-none';
-    btn_rollback.innerHTML = '<i class="fas fa-undo"></i>';
-    abstract.appendChild(btn_rollback);
-
-    // 編成編集開始ボタン
-    const btn_edit = document.createElement('div');
-    btn_edit.className = 'align-self-center ml-auto r_btn btn_edit_start';
-    btn_edit.innerHTML = '<i class="fas fa-pencil"></i>';
-    abstract.appendChild(btn_edit);
-
-    // 編成コピーボタン
-    const btn_copy = document.createElement('div');
-    btn_copy.className = 'align-self-center ml-1 r_btn btn_copy';
-    btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
-    abstract.appendChild(btn_copy);
-
-    // 編成削除ボタン
-    const btn_delete = document.createElement('div');
-    btn_delete.className = 'align-self-center ml-1 r_btn btn_delete';
-    btn_delete.dataset.toggle = 'tooltip';
-    btn_delete.dataset.trigger = 'click';
-    btn_delete.title = '削除する場合は、もう一度このボタンをクリックしてください。';
-    btn_delete.innerHTML = '<i class="fas fa-trash-o"></i>';
-    abstract.appendChild(btn_delete);
-
-    container.appendChild(abstract);
-
     const preset_data = decodePreset(preset[2]);
     // 基地データ
     const lbs = preset_data[0];
@@ -98,27 +62,20 @@ function setPresets() {
     const fleets = preset_data[1];
 
     const land_base = document.createElement('div');
-    land_base.className = 'mt-1 d-flex land_base_status';
+    land_base.className = 'd-flex land_base_status';
 
-    let exists_lb = false;
     for (let i = 1; i <= 3; i++) {
       // 基地データが入っていてかつお札が出撃
-      const disabled = lbs.length >= 1 && lbs[1].length >= i && lbs[1][i - 1] > 0 ? '' : 'disabled';
+      const disabled = lbs.length >= 1 && lbs[1].length >= i && lbs[1][i - 1] >= 0 ? '' : 'disabled';
       const status = document.createElement('div');
       status.className = `land_base_state no_${i} mr-1 ${disabled}`;
       status.textContent = `第${i}基地航空隊`;
       land_base.appendChild(status);
-
-      if (!exists_lb && !disabled) {
-        exists_lb = true;
-      }
     }
-    if (exists_lb) {
-      container.appendChild(land_base);
-    }
+    abstract.appendChild(land_base);
 
     const fleet_container = document.createElement('div');
-    fleet_container.className = 'mt-1 d-flex ships flex-wrap';
+    fleet_container.className = 'd-flex ships flex-wrap';
 
     for (const ship of fleets) {
       if (fleet_container.childNodes.length > 5) {
@@ -134,22 +91,74 @@ function setPresets() {
       ship_img.src = `../img/ship/${ship[0]}.png`;
       fleet_container.appendChild(ship_img);
     }
-    container.appendChild(fleet_container);
+    abstract.appendChild(fleet_container);
 
-    if (preset[3]) {
-      const textarea = document.createElement('textarea');
-      textarea.className = 'form-control preset_memo mt-1';
-      textarea.value = preset[3];
-      textarea.disabled = true;
-      container.appendChild(textarea);
-    }
+    // if (preset[3]) {
+    //   const textarea = document.createElement('textarea');
+    //   textarea.className = 'form-control preset_memo mt-1';
+    //   textarea.value = preset[3];
+    //   textarea.disabled = true;
+    //   container.appendChild(textarea);
+    // }
+    container.appendChild(abstract);
+
+    // ボタン群ラッパー
+    const btns = document.createElement('div');
+    btns.className = 'd-flex ml-auto align-self-center';
+
+    // 編成編集コミットボタン
+    const btn_commit = document.createElement('div');
+    btn_commit.className = 'align-self-center ml-auto r_btn btn_commit d-none';
+    btn_commit.dataset.toggle = 'tooltip';
+    btn_commit.dataset.offset = '-50%';
+    btn_commit.title = '編集内容を確定します。';
+    btn_commit.innerHTML = '<i class="fas fa-save"></i>';
+    btns.appendChild(btn_commit);
+
+    // 編成編集やめるボタン
+    const btn_rollback = document.createElement('div');
+    btn_rollback.className = 'align-self-center ml-2 r_btn btn_rollback d-none';
+    btn_rollback.dataset.toggle = 'tooltip';
+    btn_rollback.dataset.offset = '-50%';
+    btn_rollback.title = '編集内容を取り消します。';
+    btn_rollback.innerHTML = '<i class="fas fa-undo"></i>';
+    btns.appendChild(btn_rollback);
+
+    // 編成編集開始ボタン
+    const btn_edit = document.createElement('div');
+    btn_edit.className = 'align-self-center ml-auto r_btn btn_edit_start';
+    btn_edit.dataset.toggle = 'tooltip';
+    btn_edit.dataset.offset = '-50%';
+    btn_edit.title = '編成名や編成メモの変更を行います。';
+    btn_edit.innerHTML = '<i class="fas fa-pencil"></i>';
+    btns.appendChild(btn_edit);
+
+    // 編成コピーボタン
+    const btn_copy = document.createElement('div');
+    btn_copy.className = 'align-self-center ml-2 r_btn btn_copy';
+    btn_copy.dataset.toggle = 'tooltip';
+    btn_copy.dataset.offset = '-50%';
+    btn_copy.title = 'この編成を複製し、新しい編成を作成します。';
+    btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
+    btns.appendChild(btn_copy);
+
+    // 編成削除ボタン
+    const btn_delete = document.createElement('div');
+    btn_delete.className = 'align-self-center ml-2 r_btn btn_delete';
+    btn_delete.dataset.toggle = 'tooltip';
+    btn_delete.dataset.offset = '-50%';
+    btn_delete.title = '編成を削除します。';
+    btn_delete.innerHTML = '<i class="fas fa-trash-o"></i>';
+    btns.appendChild(btn_delete);
+
+    container.appendChild(btns);
 
     fragment.appendChild(container);
   }
 
   document.getElementById('presets_container').innerHTML = '';
   document.getElementById('presets_container').appendChild(fragment);
-  $('.btn_delete').tooltip();
+  $('#presets_container .r_btn').tooltip();
 }
 
 /**
@@ -199,26 +208,12 @@ function btn_commit_Clicked($this, e) {
 function btn_delete_Clicked($this, e) {
   e.stopPropagation();
 
-  if ($this.hasClass('ready')) {
-    $('.btn_delete').tooltip('hide');
-    const presetId = $this.closest('.preset_container')[0].dataset.presetid;
-
-    // 保存一覧から削除
-    let presets = loadLocalStorage('presets');
-    presets = presets.filter(v => v[0] !== presetId);
-    saveLocalStorage('presets', presets);
-
-    // タブからも削除(あれば)
-    let activePresets = loadLocalStorage('activePresets');
-    activePresets.presets = activePresets.presets.filter(v => v.id !== presetId);
-    saveLocalStorage('activePresets', activePresets);
-
-    setPresets();
-    setTab();
-  }
-  else {
-    $this.addClass('ready');
-  }
+  // ほんまに閉じてもいいの？
+  const $modal = $('#modal_confirm');
+  $modal.find('.modal-body').html(`<div class="h6">編成を削除します。よろしいですか？</div>`);
+  $modal[0].dataset.target = $this.closest('.preset_container')[0].dataset.presetid;
+  confirmType = 'deletePreset';
+  $modal.modal('show');
 }
 
 /**
@@ -268,7 +263,42 @@ function preset_Clicked($this) {
   activePresets.activeId = tabData.id;
   saveLocalStorage('activePresets', activePresets);
 
-  window.location.href = `../simulator/index.html?p=${tabData.history.histories[tabData.history.index]}`;
+  window.location.href = `../simulator/?p=${tabData.history.histories[tabData.history.index]}`;
+}
+
+/**
+ * 編成複製展開
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function btn_copy_Clicked($this, e) {
+  e.stopPropagation();
+
+  const presets = loadLocalStorage('presets');
+  const presetId = $this.closest('.preset_container')[0].dataset.presetid;
+
+  const preset = presets ? presets.find(v => v[0] === presetId) : null;
+
+  if (!preset) {
+    // ないことはない
+    inform_danger('複製対象の編成データが見つかりませんでした。');
+    return;
+  }
+
+  let tabData = {
+    id: getUniqueId(),
+    name: preset[1] + '_コピー',
+    history: { index: 0, histories: [preset[2]] }
+  };
+
+  let activePresets = loadLocalStorage('activePresets');
+  if (!activePresets) activePresets = { activeId: "", presets: [] };
+
+  // 展開済み編成に加え入れろ～
+  activePresets.presets.push(tabData);
+  activePresets.activeId = tabData.id;
+  saveLocalStorage('activePresets', activePresets);
+
+  window.location.href = `../simulator/?p=${tabData.history.histories[tabData.history.index]}`;
 }
 
 /**
@@ -276,7 +306,7 @@ function preset_Clicked($this) {
  */
 function topTab_Clicked() {
   let tabInfo = getActivePreset();
-  window.location.href = `../simulator/index.html?p=${tabInfo.history.histories[tabInfo.history.index]}`;
+  window.location.href = `../simulator/?p=${tabInfo.history.histories[tabInfo.history.index]}`;
 }
 
 /**
@@ -409,6 +439,309 @@ function loadSiteHistory() {
 }
 
 /**
+ * 確認ダイアログOKボタンクリック時
+ */
+function modal_confirm_ok_Clicked() {
+
+  if (confirmType === 'deletePreset') {
+    // 保存一覧から削除
+    const $modal = $('#modal_confirm');
+    let presets = loadLocalStorage('presets');
+    presets = presets.filter(v => v[0] !== $modal[0].dataset.target);
+    saveLocalStorage('presets', presets);
+
+    // タブからも削除(あれば)
+    let activePresets = loadLocalStorage('activePresets');
+    activePresets.presets = activePresets.presets.filter(v => v.id !== $modal[0].dataset.target);
+    saveLocalStorage('activePresets', activePresets);
+
+    setPresets();
+    setTab();
+
+    $modal.modal('hide');
+  }
+}
+
+/**
+ * 初めての方クリック時
+ */
+function first_time_Clicked() {
+  $('#abstract').collapse('show');
+  setTimeout(() => { $('body,html').animate({ scrollTop: $('#first_time').offset().top - 80 }, 300, 'swing'); }, 200);
+  return false;
+}
+
+/**
+ * 使い方クリック時
+ */
+function site_manual_Clicked() {
+  $('#abstract').collapse('show');
+  setTimeout(() => { $('body,html').animate({ scrollTop: $('#manual').offset().top - 80 }, 300, 'swing'); }, 200);
+  return false;
+}
+
+/**
+ * コメント欄初期化
+ */
+function initializeBoard() {
+  if (!fb) {
+    firebase.initializeApp({
+      apiKey: xxx,
+      projectId: 'development-74af0'
+    });
+    fb = firebase.firestore();
+
+    fb.collection("comments").orderBy('createdAt', 'desc').limit(30)
+      .onSnapshot(function (querySnapshot) {
+        const fragment = document.createDocumentFragment();
+        querySnapshot.forEach(function (doc) {
+          const box = document.createElement('div');
+          box.className = 'general_box my-3 px-3 pt-3 pb-1 comment';
+
+          const header = document.createElement('div');
+          header.className = 'd-flex mb-1';
+
+          const index = document.createElement('div');
+          index.className = 'comment_index align-self-center text-primary';
+          index.dataset.number = doc.data().number;
+          index.textContent = `${doc.data().number}:`;
+
+          const author = document.createElement('div');
+          author.className = 'comment_writer ml-1 align-self-center mr-2';
+          author.textContent = doc.data().author;
+
+          const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
+          const date = document.createElement('div');
+          date.className = 'comment_date opacity6 font_size_11 align-self-center';
+          date.textContent = ' -- ' + formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss');
+
+          header.appendChild(index);
+          header.appendChild(author);
+          header.appendChild(date);
+
+          const dt = new Date();
+          dt.setDate(dt.getDate() - 7);
+          if (createdAt > dt) {
+            dt.setDate(dt.getDate() + 4);
+            const badge = document.createElement('div');
+            badge.className = `font_size_11 align-self-center ml-1 ${createdAt > dt ? 'text-danger' : 'text-success'}`;
+            badge.textContent = 'New';
+            header.appendChild(badge);
+          }
+
+          const content = document.createElement('div');
+          content.className = 'comment_content align-self-center';
+          content.textContent = doc.data().content;
+
+          box.appendChild(header);
+          box.appendChild(content);
+
+          fragment.appendChild(box);
+        });
+
+        document.getElementById('coment_board').innerHTML = '';
+        document.getElementById('coment_board').appendChild(fragment);
+      });
+  }
+
+  // ブラウザ再読み込み時の残りカスがある場合の対処
+  comment_text_Changed();
+}
+
+
+/**
+ * レス番号クリック
+ */
+function comment_index_Clicked($this) {
+  const num = castInt($this[0].dataset.number);
+  if (document.getElementById('comment_text').value.trim().length) {
+    document.getElementById('comment_text').value += ('>>' + num + '\n');
+  }
+  else {
+    document.getElementById('comment_text').value = ('>>' + num + '\n');
+  }
+
+  // 移動
+  setTimeout(() => { $('body,html').animate({ scrollTop: $('#comments').offset().top - 20 }, 20, 'swing'); }, 20);
+  document.getElementById('comment_text').focus();
+}
+
+/**
+ * comment欄変更時
+ */
+function comment_text_Changed() {
+  // サーバーサイドでもチェックは行うがこっちでもやっとく
+  const author = document.getElementById('comment_author');
+  const content = document.getElementById('comment_text');
+  const text = content.value;
+  // 行数チェック用
+  const nCount = text.match(/\n/g);
+  let valid = true;
+
+  // 名前欄チェック
+  if (author.value.trim() === 'noro') {
+    document.getElementById('author_validate').textContent = '使用できない名前です。';
+    author.classList.add('is-invalid');
+    valid = false;
+  }
+  else if (author.value.trim().length > 20) {
+    // 名前欄文字数チェック
+    document.getElementById('author_validate').textContent = '20文字以内で入力して下さい。';
+    author.classList.add('is-invalid');
+    valid = false;
+  }
+  else author.classList.remove('is-invalid');
+
+  // 本文文字数チェック
+  if (text.trim().length === 0) {
+    document.getElementById('comment_validate').textContent = '';
+    content.classList.remove('is-invalid');
+    valid = false;
+  }
+  else if (text.length > 1000) {
+    document.getElementById('comment_validate').textContent = '1000文字以内で入力してください。';
+    content.classList.add('is-invalid');
+    valid = false;
+  }
+  else if (nCount && nCount.length >= 15) {
+    document.getElementById('comment_validate').textContent = '規定行数を超えました。行数を減らして下さい。';
+    content.classList.add('is-invalid');
+    valid = false;
+  }
+  else content.classList.remove('is-invalid');
+
+  // 送信ボタンの有効無効
+  document.getElementById('btn_send_comment').disabled = !valid;
+
+  // バリデーションOK!
+  if (valid) {
+    author.classList.remove('is-invalid');
+    content.classList.remove('is-invalid');
+  };
+}
+
+/**
+ * comment送信確認
+ */
+function btn_send_comment_Clicked() {
+  const $modal = $('#modal_confirm');
+  $modal.find('.modal-body').html(`
+		<div>コメントを送信します。</div>
+		<div class="mt-3 font_size_12">・公序良俗に反する書き込みはご遠慮ください。</div>
+		<div class="font_size_12">・送信した内容は、原則あとから変更/削除はできませんので注意してください。</div>
+		<div class="font_size_12">・どうしても変更・削除したい場合はご連絡ください。</div>
+		<div class="mt-3">よろしければ、OKボタンを押してください。</div>
+	`);
+  confirmType = "sendComment";
+  $modal.modal('show');
+}
+
+function send_comment() {
+  if (fb) {
+    let author = document.getElementById('comment_author').value.trim();
+    const content = document.getElementById('comment_text').value.trim();
+    if (!author) author = '名無しさん';
+
+    fb.runTransaction(function (transaction) {
+      const ref = fb.collection('comments');
+      const newComment = ref.doc();
+      return transaction.get(newComment).then(async () => {
+        // 最新コメを1件取得
+        const querySnapshot = await ref.orderBy("createdAt", "desc").limit(1).get()
+        if (querySnapshot) {
+          let newId = 0;
+          await Promise.all(querySnapshot.docs.map(async (doc) => {
+            const latest = await doc.data();
+            newId = await latest.number;
+          }));
+
+          if (castInt(newId, -1) >= 0) {
+            const comment = {
+              number: castInt(newId) + 1,
+              author: author,
+              content: content,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            await transaction.set(newComment, comment);
+            return comment;
+          }
+          else return Promise.reject("ID採番エラー :", newId);
+        }
+      })
+    }).then(function (comment) {
+      document.getElementById('comment_text').value = '';
+      document.getElementById('btn_send_comment').disabled = true;
+    }).catch(function (err) {
+      console.error(err);
+      alert('コメントの投稿に失敗しました。サーバーサイドでエラーが発生しました。');
+    });
+  }
+  else alert('謎の理由により、コメントの投稿に失敗しました。');
+}
+
+// ※
+let fb = null;
+
+/**
+ * URL短縮ボタンクリック
+ */
+async function btn_url_shorten_Clicked() {
+  const button = document.getElementById('btn_url_shorten');
+  const textbox = document.getElementById('input_url');
+  const url = textbox.value.trim();
+
+  if (button.classList.contains('shortening')) return;
+  button.classList.add('shortening');
+  button.textContent = '短縮中';
+
+  // urlチェック
+  if (!url) {
+    textbox.value = "";
+    inform_warning('URLを入力してください。');
+  }
+  else if (!url.match(/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
+    textbox.value = "";
+
+    // 隠し機能
+    // デッキビルダー形式チェック
+    const preset = readDeckBuilder(url);
+    if (preset) {
+      window.location.href = `../simulator/?predeck=${url}`;
+    }
+    // 所持装備チェック
+    else if (readEquipmentJson(url)) {
+      inform_success('所持装備の反映に成功しました。');
+    }
+    else if (readShipJson(url)) {
+      inform_success('所持艦娘の反映に成功しました。');
+    }
+    else {
+      inform_danger('入力されたURLの短縮に失敗しました。');
+    }
+  }
+  else if (!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
+    await postURLData(url)
+      .then(json => {
+        if (json.error || !json.shortLink) {
+          textbox.value = "";
+          inform_danger('入力されたURLの短縮に失敗しました。');
+        }
+        else {
+          textbox.value = json.shortLink;
+          inform_success('URLの短縮に成功しました。');
+        }
+      })
+      .catch(error => {
+        textbox.value = "";
+        inform_danger('入力されたURLの短縮に失敗しました。');
+      });
+  }
+
+  button.textContent = 'URL短縮';
+  button.classList.remove('shortening');
+}
+
+/**
  * イベントの登録
  */
 document.addEventListener('DOMContentLoaded', function () {
@@ -416,14 +749,23 @@ document.addEventListener('DOMContentLoaded', function () {
   initialize();
 
   // トップページへ
-  document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/index.html'; });
+  document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
   // イベント配置
   $('#header').on('click', '.fleet_tab', topTab_Clicked);
   $('#main').on('click', '.version_detail', version_detail_Clicked);
+  $('#main').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
   $('#main').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
   $('#main').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
+  $('#main').on('click', '.btn_copy', function (e) { btn_copy_Clicked($(this), e); });
   $('#main').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
-  $('#main').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
+  $('#main').on('click', '.btn_first_time', first_time_Clicked);
+  $('#main').on('click', '.btn_site_manual', site_manual_Clicked);
   $('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
-  document.body.onclick = () => { $('.btn_delete').removeClass('ready').tooltip('hide'); }
+  $('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
+  $('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
+  $('#site_board').on('input', '#comment_author', comment_text_Changed);
+  $('#site_board').on('input', '#comment_text', comment_text_Changed);
+  $('#site_board').on('click', '.comment_index', function () { comment_index_Clicked($(this)) });
+  $('#btn_url_shorten').click(btn_url_shorten_Clicked);
+  $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 });
