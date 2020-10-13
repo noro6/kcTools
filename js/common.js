@@ -585,6 +585,22 @@ function formatDate(date, format) {
 	return format;
 };
 
+/**
+ * 短いURL取得要求
+ * @param {string} url
+ */
+async function postURLData(url) {
+	const data = {
+		longDynamicLink: `https://aircalc.page.link/?link=${url}`,
+		suffix: { option: "SHORT" }
+	};
+	return await fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${xxx}`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(data),
+	}).then(response => response.json());
+}
+
 /*==================================
 		タブ操作
 ==================================*/
@@ -627,10 +643,9 @@ function setTab() {
 			tab.classList.add('unsaved');
 		}
 
-
 		const name = document.createElement('div');
 		name.className = 'align-self-center fleet_name ml-2 flex-grow-1';
-		name.textContent = tabData.name;
+		name.textContent = savedPreset ? savedPreset[1] : tabData.name;
 
 		const closeButton = document.createElement('div');
 		closeButton.className = 'align-self-center btn_close_tab ml-auto';

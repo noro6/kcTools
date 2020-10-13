@@ -14,10 +14,20 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="./favicon.ico">
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-152888142-2');
+	</script>
 </head>
 
 <body>
-	<script>window.location.href = './list/'</script>
+	<script>
+		if (location.search) window.location.href = './simulator/' + location.search;
+		else window.location.href = './list/';
+	</script>
 </body>
 
 </html>

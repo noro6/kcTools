@@ -192,22 +192,6 @@ function getArrayMin(array) {
 }
 
 /**
- * 短いURL取得要求
- * @param {string} url
- */
-async function postURLData(url) {
-	const data = {
-		longDynamicLink: `https://aircalc.page.link/?link=${url}`,
-		suffix: { option: "SHORT" }
-	};
-	return await fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${xxx}`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(data),
-	}).then(response => response.json());
-}
-
-/**
  * RGBに変換
  * @param {string} hex
  */
@@ -2556,7 +2540,7 @@ function loadMainPreset() {
 			// ローカルストレージにすでに保存済みの編成だったら
 			document.getElementById('input_preset_name').value = preset[1];
 			document.getElementById('preset_remarks').value = preset[3];
-			
+
 			// 編成の更新を行って終わり
 			updateMainPreset();
 			inform_success('編成の上書き更新が完了しました。');
@@ -2588,11 +2572,11 @@ function updateMainPreset() {
 	// 今現在のタブ情報
 	const activePreset = getActivePreset();
 	// 何らかの原因でidがない場合
-	if(!activePreset.id) {
+	if (!activePreset.id) {
 		activePreset.id = getUniqueId();
 	}
 	// 何らかの原因でhistoryがない場合
-	if(!activePreset.history.histories.length) {
+	if (!activePreset.history.histories.length) {
 		activePreset.history.histories[0] = presetBody;
 	}
 	// 名前の更新
@@ -2602,7 +2586,7 @@ function updateMainPreset() {
 		activePreset.id,
 		activePreset.name,
 		presetBody,
-		document.getElementById('input_preset_name').value.trim()
+		document.getElementById('preset_remarks').value.trim()
 	];
 
 	// プリセット一覧への登録作業
@@ -2633,6 +2617,8 @@ function updateMainPreset() {
 	updateActivePreset(activePreset);
 	// タブ再構築
 	setTab();
+
+	$('#modal_main_preset').modal('hide');
 }
 
 
@@ -2996,6 +2982,82 @@ function convertToDeckBuilder() {
 	}
 }
 
+
+/**
+ * 指定プリセットをデッキビルダーフォーマットに変換 作戦室用
+ * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
+ * デッキフォーマット {version: 1, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
+ * @param {string} デッキビルダー形式データ
+ */
+function convertToDeckBuilder_j() {
+	try {
+		const fleet = createFriendFleetPreset();
+		const landBase = createLandBasePreset();
+		const obj = {
+			version: 1,
+			name: getActivePreset().name,
+			hqLevel: 120,
+			side: "Player",
+			fleetType: $('#union_fleet').prop('checked') ? "CarrierTaskForce" : "Single",
+			fleets: [
+				{ ships: [] },
+				{ ships: [] },
+			],
+			landBase: [
+				{ slots: [], equipments: [null, null, null, null] },
+				{ slots: [], equipments: [null, null, null, null] },
+				{ slots: [], equipments: [null, null, null, null] }
+			],
+		};
+
+		// 基地データ
+		for (let i = 0; i < landBase[0].length; i++) {
+			const plane = landBase[0][i];
+			const t = obj["landBase"][Math.floor(plane[4] / 4)];
+			const index = Math.floor(plane[4] % 4);
+			t['slots'][index] = plane[3];
+			t['equipments'][index] = { masterId: plane[0], improvement: plane[2], proficiency: getInnerProficiency(plane[1]) };
+		}
+
+
+		// 艦隊データ
+		for (let i = 0; i < fleet.length; i++) {
+			const ship = fleet[i];
+			const shipData = SHIP_DATA.find(v => v.id === ship[0]);
+			if (!shipData) continue;
+
+			const shipIndex = ship[2];
+			const t = obj["fleets"][shipIndex < 6 ? 0 : 1];
+
+			// 装備機体群オブジェクト生成
+			const planes = [];
+			const insData = { masterId: shipData.api, level: 99, slots: [], equipments: planes };
+
+			for (let j = 0; j < shipData.slot.length; j++) {
+				let insSlot = shipData.slot[j];
+				if (ship[1].find(v => v[4] === j)) {
+					insSlot = ship[1].find(v => v[4] === j)[3];
+				}
+				insData.slots.push(insSlot);
+
+				// 機体
+				const plane = ship[1].find(v => v[4] === j);
+				if (plane) {
+					planes.push({ masterId: plane[0], improvement: plane[2], proficiency: getInnerProficiency(plane[1]) });
+				}
+				else {
+					planes.push(null);
+				}
+			}
+
+			t['ships'].push(insData);
+		}
+
+		return JSON.stringify(obj);
+	} catch (error) {
+		return "";
+	}
+}
 
 /**
  * 機体在庫読み込み　未定義の場合は初期化したものを返却
@@ -3978,35 +4040,37 @@ function getAirPower_lb(lb_plane) {
 
 	// 内部熟練度ボーナス
 	if (slot > 0) {
-		switch (level) {
-			case 1:
-				sumPower += Math.sqrt(10 / 10);
-				break;
-			case 2:
-				sumPower += Math.sqrt(25 / 10);
-				break;
-			case 3:
-				sumPower += Math.sqrt(40 / 10);
-				break;
-			case 4:
-				sumPower += Math.sqrt(55 / 10);
-				break;
-			case 5:
-				sumPower += Math.sqrt(70 / 10);
-				break;
-			case 6:
-				sumPower += Math.sqrt(85 / 10);
-				break;
-			case 7:
-				sumPower += Math.sqrt((initialProf120Plane.includes(Math.abs(type)) ? 120 : 100) / 10);
-				break;
-			default:
-				break;
-		}
+		sumPower += Math.sqrt(getInnerProficiency(level, type) / 10);
 	}
 
 	sumPower = slot > 0 ? Math.floor(sumPower) : 0;
 	return sumPower;
+}
+
+/**
+ * 低い方の内部熟練度を返す　設定次第で最大は120になる
+ * @param {number} level 熟練度レベル
+ * @param {number} type 機体カテゴリ
+ */
+function getInnerProficiency(level, type) {
+	switch (level) {
+		case 1:
+			return 10;
+		case 2:
+			return 25;
+		case 3:
+			return 40;
+		case 4:
+			return 55;
+		case 5:
+			return 70;
+		case 6:
+			return 85;
+		case 7:
+			return initialProf120Plane.includes(Math.abs(type)) ? 120 : 100;
+		default:
+			return 0;
+	}
 }
 
 /**
@@ -4185,31 +4249,8 @@ function getBonusAp(plane) {
 	}
 
 	// 内部熟練度ボーナス
-	switch (level) {
-		case 1:
-			sumPower += Math.sqrt(10 / 10);
-			break;
-		case 2:
-			sumPower += Math.sqrt(25 / 10);
-			break;
-		case 3:
-			sumPower += Math.sqrt(40 / 10);
-			break;
-		case 4:
-			sumPower += Math.sqrt(55 / 10);
-			break;
-		case 5:
-			sumPower += Math.sqrt(70 / 10);
-			break;
-		case 6:
-			sumPower += Math.sqrt(85 / 10);
-			break;
-		case 7:
-			sumPower += Math.sqrt((initialProf120Plane.includes(Math.abs(type)) ? 120 : 100) / 10);
-			break;
-		default:
-			break;
-	}
+	sumPower += Math.sqrt(getInnerProficiency(level) / 10);
+
 	return sumPower;
 }
 
@@ -7194,8 +7235,9 @@ function autoLandBaseExpandDef(count) {
 function modal_Closed($this) {
 	// いらないオブジェクト参照をやめさせる
 	switch ($this.attr('id')) {
-		case "modal_plane_select":
+		case "modal_share":
 		case "modal_ship_select":
+		case "modal_plane_select":
 		case "modal_enemy_select":
 		case "modal_enemy_pattern":
 		case "modal_collectively_setting":
@@ -10579,15 +10621,6 @@ async function btn_twitter_Clicked() {
 }
 
 /**
- * メニュー「デッキビルダー」ボタンクリック
- */
-function btn_share_Clicked() {
-
-	$('#modal_share').modal('show');
-	//window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuilder());
-}
-
-/**
  * 元に戻すボタンクリック
  */
 function btn_undo_Clicked() {
@@ -10824,6 +10857,20 @@ function btn_output_deck_Clicked() {
 	else $output.addClass('is-invalid').removeClass('is-valid');
 }
 
+/**
+ * デッキビルダーサイト展開クリック
+ */
+function open_deckBuilder() {
+	window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuilder());
+}
+
+/**
+ * 作戦室展開クリック
+ */
+function open_Jervis() {
+	window.open('https://kcjervis.github.io/jervis/?operation-json=' + convertToDeckBuilder_j());
+}
+
 
 /**
  * オート配備開始クリック時
@@ -10963,7 +11010,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		else {
 			// URL情報に特に引っかからなければ、前回のactiveTabを読み込む（あれば）
 			const prevData = getActivePreset();
-			if (prevData) {
+			if (prevData.id) {
 				try {
 					expandMainPreset(decodePreset(prevData.history.histories[prevData.history.index]));
 				} catch (error) {
@@ -10972,6 +11019,10 @@ document.addEventListener('DOMContentLoaded', function () {
 					window.location.href = '../list/';
 					return;
 				}
+			}
+			else {
+				window.location.href = '../list/';
+				return;
 			}
 		}
 
@@ -11165,6 +11216,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_share').on('input', '#output_deck', function () { output_data_Changed($(this)); });
 	$('#modal_share').on('click', '#output_url', function () { output_data_Clicked($(this)); });
 	$('#modal_share').on('click', '#output_deck', function () { output_data_Clicked($(this)); });
+	$('#modal_share').on('click', '#open_deckBuilder', open_deckBuilder);
+	$('#modal_share').on('click', '#open_jervis', open_Jervis);
 	$('#modal_auto_expand').on('click', '#btn_start_auto_expand', btn_start_auto_expand_Clicked);
 	$('#modal_auto_expand').on('click', '#expand_target .custom-control-input', expand_target_Clicked);
 	$('#modal_auto_expand').on('click', '#auto_battle_mode .custom-control-input', battle_mode_Clicked);
@@ -11214,7 +11267,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#btn_save_preset').click(btn_preset_all_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
 	$('#btn_twitter').click(btn_twitter_Clicked);
-	$('#btn_share').click(btn_share_Clicked);
+	$('#btn_share').click(() => { $('#modal_share').modal('show'); });
 	$('#btn_undo').click(btn_undo_Clicked);
 	$('#btn_redo').click(btn_redo_Clicked);
 	$('#input_url').click(function () { $(this).select(); });

@@ -1,5 +1,11 @@
 
 function initialize() {
+  // url取得、転送
+  const params = getUrlParams();
+  if (params.hasOwnProperty("d") || params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
+    window.location.href = '../simulator/' + location.search;
+  }
+
   // アクティブなタブはないので表示修正
   $('.fleet_tab.active').removeClass('active');
 
@@ -19,18 +25,24 @@ function setPresets() {
 
   // 新規作成用
   const new_container = document.createElement('div');
-  new_container.className = 'preset_container new d-flex';
+  new_container.className = `preset_container new d-flex ${presets.length ? '' : 'border_delete'}`;
 
   const new_body = document.createElement('div');
   new_body.className = 'new_body mx-auto my-auto';
-  new_body.textContent = presets.length ? '新規作成' : 'まずはここをクリックして編成を新規作成'
+  new_body.textContent = presets.length ? '新規作成' : '編成を新規作成'
   new_container.appendChild(new_body);
 
   fragment.appendChild(new_container);
 
+  // 並び替え可能要素
+  const sortable_container = document.createElement('div');
+  sortable_container.id = 'preset_sortable_container';
+
   for (const preset of presets) {
+    const wrapper = document.createElement('div');
+
     const container = document.createElement('div');
-    container.className = 'd-flex preset_container';
+    container.className = 'd-flex preset_container sortable_handle';
     container.dataset.presetid = preset[0];
 
     // 編成アイコン
@@ -40,18 +52,18 @@ function setPresets() {
     // container.appendChild(color);
 
     const abstract = document.createElement('div');
-    abstract.className = 'ml-2 preset_abstract';
+    abstract.className = 'mx-2 preset_abstract flex-grow-1';
 
     // 編成名
     const name = document.createElement('div');
-    name.className = 'align-self-center ml-1 preset_name';
+    name.className = 'align-self-center preset_name';
     name.textContent = preset[1];
     abstract.appendChild(name);
 
     // 名前編集欄
     const name_edit = document.createElement('input');
     name_edit.type = 'text';
-    name_edit.className = 'align-self-center mx-1 form-control form-control-sm preset_name_edit d-none';
+    name_edit.className = 'align-self-center form-control form-control-sm preset_name_edit mb-1 d-none';
     name_edit.value = preset[1];
     abstract.appendChild(name_edit);
 
@@ -93,13 +105,19 @@ function setPresets() {
     }
     abstract.appendChild(fleet_container);
 
-    // if (preset[3]) {
-    //   const textarea = document.createElement('textarea');
-    //   textarea.className = 'form-control preset_memo mt-1';
-    //   textarea.value = preset[3];
-    //   textarea.disabled = true;
-    //   container.appendChild(textarea);
-    // }
+    // メモ表示用
+    const memo = document.createElement('div');
+    memo.className = `preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`;
+    memo.textContent = preset[3].replace(/\r?\n/g, ' ');
+    abstract.appendChild(memo);
+
+    // メモ編集用
+    const textarea = document.createElement('textarea');
+    textarea.className = 'form-control preset_memo mt-1 w-100 d-none';
+    textarea.value = preset[3] ? preset[3] : '';
+    const rowLength = textarea.value.match(/\n/g);
+    textarea.rows = (rowLength && rowLength.length ? rowLength.length + 2 : 2);
+    abstract.appendChild(textarea);
     container.appendChild(abstract);
 
     // ボタン群ラッパー
@@ -138,7 +156,7 @@ function setPresets() {
     btn_copy.className = 'align-self-center ml-2 r_btn btn_copy';
     btn_copy.dataset.toggle = 'tooltip';
     btn_copy.dataset.offset = '-50%';
-    btn_copy.title = 'この編成を複製し、新しい編成を作成します。';
+    btn_copy.title = 'この編成内容が複製された新しい編成タブを作成します。';
     btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
     btns.appendChild(btn_copy);
 
@@ -152,13 +170,38 @@ function setPresets() {
     btns.appendChild(btn_delete);
 
     container.appendChild(btns);
-
-    fragment.appendChild(container);
+    wrapper.appendChild(container);
+    sortable_container.appendChild(wrapper);
   }
+
+  fragment.appendChild(sortable_container);
 
   document.getElementById('presets_container').innerHTML = '';
   document.getElementById('presets_container').appendChild(fragment);
   $('#presets_container .r_btn').tooltip();
+
+  // 入れ替え設定
+  Sortable.create(document.getElementById('preset_sortable_container'), {
+    animation: 200,
+    handle: '.sortable_handle',
+    scroll: true,
+    onStart: function () {
+      $('.preset_container').addClass('no_transition');
+    },
+    onEnd: function () {
+      $('.preset_container').removeClass('no_transition');
+      const oldPresets = loadLocalStorage('presets');
+      const newPresets = [];
+      for (const c of document.getElementsByClassName('preset_container')) {
+        const preset = oldPresets.find(v => v[0] === c.dataset.presetid);
+        if (preset) newPresets.push(preset);
+      }
+      if (newPresets.length) {
+        saveLocalStorage('presets', newPresets);
+        inform_success('編成データの順序が更新されました。');
+      }
+    }
+  });
 }
 
 /**
@@ -167,38 +210,93 @@ function setPresets() {
  */
 function btn_edit_start_Clicked($this, e) {
   e.stopPropagation();
+
+  // 他の編集状態をキャンセル
+  $('.preset_container.editting').each((i, ele) => {
+    btn_rollback_Clicked($(ele).find('.btn_rollback'));
+    inform_warning($(ele).find('.preset_name').text() + 'の編集はキャンセルされました。');
+  });
+
   const p = $this.closest('.preset_container');
   p.addClass('editting');
+  p.removeClass('sortable_handle');
   // 編集領域
   p.find('.preset_name').addClass('d-none');
   p.find('.preset_name_edit').removeClass('d-none');
+  p.find('.preset_memo').removeClass('d-none');
+  p.find('.preset_memo_view').addClass('d-none');
   // ボタン
-  p.find('.btn_copy').addClass('d-none');
   p.find('.btn_commit').removeClass('d-none');
   p.find('.btn_rollback').removeClass('d-none');
-  p.find('textarea').prop('disabled', false);
-  $this.addClass('d-none');
+  p.find('.btn_copy').addClass('d-none');
+  p.find('.btn_edit_start').addClass('d-none');
 }
 
+
+/**
+ * 編成編集キャンセル
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function btn_rollback_Clicked($this, e = null) {
+  if (e) e.stopPropagation();
+
+  const p = $this.closest('.preset_container');
+  // 編集領域
+  p.find('.preset_name').removeClass('d-none');
+  p.find('.preset_name_edit').addClass('d-none');
+  p.find('.preset_memo').addClass('d-none');
+  if (p.find('.preset_memo_view').text()) {
+    p.find('.preset_memo_view').removeClass('d-none');
+  }
+  // ボタン
+  p.find('.btn_commit').addClass('d-none');
+  p.find('.btn_rollback').addClass('d-none');
+  p.find('.btn_copy').removeClass('d-none');
+  p.find('.btn_edit_start').removeClass('d-none');
+
+  p.removeClass('editting');
+  p.addClass('sortable_handle');
+}
 
 /**
  * 編成編集完了
  * @param {JqueryDomObject} $this クリック要素
  */
-function btn_commit_Clicked($this, e) {
-  e.stopPropagation();
+function btn_commit_Clicked($this, e = null) {
+  // 保存処理
   const p = $this.closest('.preset_container');
-  // 編集領域
-  p.find('.preset_name').removeClass('d-none');
-  p.find('.preset_name_edit').addClass('d-none');
-  // ボタン
-  p.find('.btn_copy').removeClass('d-none');
-  p.find('.btn_rollback').addClass('d-none');
-  p.find('.btn_edit_start').removeClass('d-none');
-  p.find('textarea').prop('disabled', true);
-  $this.addClass('d-none');
+  const presetid = p[0].dataset.presetid;
 
-  p.removeClass('editting');
+  let presets = loadLocalStorage('presets');
+  if (!presets) presets = [];
+
+  const i = presets.findIndex(v => v[0] === presetid);
+
+  if (i >= 0) {
+    // 名称　メモを設定
+    const newName = p.find('.preset_name_edit').val().trim();
+    const newMemo = p.find('.preset_memo').val().trim();
+    if (newName) {
+      presets[i][1] = newName;
+      p.find('.preset_name').text(newName);
+    }
+    presets[i][3] = newMemo;
+    const memo = newMemo.replace(/\r?\n/g, ' ');
+    p.find('.preset_memo_view').text(memo);
+
+    if (!memo.trim().length) {
+      p.find('.preset_memo_view').addClass('d-none');
+    }
+    else {
+      p.find('.preset_memo_view').removeClass('d-none');
+    }
+
+    saveLocalStorage('presets', presets);
+  }
+
+  btn_rollback_Clicked($this, e);
+  setTab();
+  inform_success('編成情報の更新が完了しました。');
 }
 
 /**
@@ -210,7 +308,9 @@ function btn_delete_Clicked($this, e) {
 
   // ほんまに閉じてもいいの？
   const $modal = $('#modal_confirm');
-  $modal.find('.modal-body').html(`<div class="h6">編成を削除します。よろしいですか？</div>`);
+  $modal.find('.modal-body').html(`
+    <div class="mt-2">編成を削除します。よろしいですか？</div>
+  `);
   $modal[0].dataset.target = $this.closest('.preset_container')[0].dataset.presetid;
   confirmType = 'deletePreset';
   $modal.modal('show');
@@ -756,6 +856,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
   $('#main').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
   $('#main').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
+  $('#main').on('click', '.btn_rollback', function (e) { btn_rollback_Clicked($(this), e); });
   $('#main').on('click', '.btn_copy', function (e) { btn_copy_Clicked($(this), e); });
   $('#main').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
   $('#main').on('click', '.btn_first_time', first_time_Clicked);

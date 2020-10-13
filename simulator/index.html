@@ -32,6 +32,7 @@
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
 	<script defer src="../js/simulator.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() { dataLayer.push(arguments); }
@@ -4479,7 +4480,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="border-secondary border-top mx-auto mt-4 font_size_12" id="main_footer">
+		<div class="border-secondary border-top mx-auto my-4 font_size_12" id="main_footer">
 			<div class="mt-3">
 				質問・要望・バグ報告・ご感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>まで
 			</div>
@@ -4967,63 +4968,69 @@
 					<p class="close cur_pointer cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body pt-2">
-					<div>
-						<div class="h6">外部編成データ取り込み</div>
-						<div class="px-2">
-							<div class="font_size_12">
-								<div>
-									<a href="http://kancolle-calc.net/deckbuilder.html"
-										target="_blank">艦隊シミュレーター＆デッキビルダー</a>フォーマットから編成を取り込みます。
+					<div class="h6">共有データ生成</div>
+					<div class="px-2 font_size_12">
+						<div>
+							現在の入力情報を共有するURLの生成や、<a href="http://kancolle-calc.net/deckbuilder.html"
+								target="_blank">艦隊シミュレーター＆デッキビルダー</a>フォーマットの文字列を生成します。
+						</div>
+						<div class="mt-1">
+							<div>共有URL :</div>
+							<div class="d-flex">
+								<div class="mr-1">
+									<button type="button" class="ml-auto btn btn-sm btn-info btn_output_url">生成</button>
 								</div>
-								<div class="mt-1">※ 艦載機以外の装備、艦載機自体を搭載できない艦娘は展開しません。</div>
-								<div>※ 対象は第1艦隊、第2艦隊の艦娘です。基地航空隊や敵艦は変更されません。</div>
+								<div class="form-group ml-auto flex-grow-1">
+									<input type="text" class="form-control" id="output_url" readonly>
+									<div class="invalid-feedback">共有URLの生成に失敗しました。</div>
+									<div class="valid-feedback">生成しました。上記URLをクリックするとクリップボードにコピーされます。</div>
+								</div>
 							</div>
-							<div class="mt-2 d-flex">
-								<div class="form-group mr-1 flex-grow-1">
-									<input type="text" class="form-control" id="input_deck" placeholder="デッキを入力">
+						</div>
+						<div>
+							<div>デッキビルダー形式 :</div>
+							<div class="d-flex">
+								<div class="mr-1">
+									<button type="button" class="ml-auto btn btn-sm btn-info btn_output_deck">生成</button>
 								</div>
-								<div class="ml-auto">
-									<button type="button" class="ml-auto btn btn-sm btn-success btn_load_deck text-nowrap">
-										読み込み
-									</button>
+								<div class="form-group ml-auto flex-grow-1">
+									<input type="text" class="form-control" id="output_deck" readonly>
+									<div class="invalid-feedback">出力に失敗しました。</div>
+									<div class="valid-feedback">生成しました。上記文字列をクリックするとクリップボードにコピーされます。</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="border-top pt-3">
-						<div class="h6">共有データ生成</div>
-						<div class="px-2 font_size_12">
+					<div class="border-top mb-3"></div>
+					<div class="h6">外部編成データ取り込み</div>
+					<div class="px-2">
+						<div class="font_size_12">
 							<div>
-								現在の入力情報を共有するURLの生成や、<a href="http://kancolle-calc.net/deckbuilder.html"
-									target="_blank">艦隊シミュレーター＆デッキビルダー</a>フォーマットの文字列を生成します。
+								<a href="http://kancolle-calc.net/deckbuilder.html" target="_blank">
+									艦隊シミュレーター＆デッキビルダー</a>フォーマットから編成を取り込みます。
 							</div>
-							<div class="mt-2">
-								<div>共有URL :</div>
-								<div class="d-flex">
-									<div class="mr-1">
-										<button type="button" class="ml-auto btn btn-sm btn-info btn_output_url">生成</button>
-									</div>
-									<div class="form-group ml-auto flex-grow-1">
-										<input type="text" class="form-control" id="output_url" readonly>
-										<div class="invalid-feedback">共有URLの生成に失敗しました。</div>
-										<div class="valid-feedback">生成しました。上記URLをクリックするとクリップボードにコピーされます。</div>
-									</div>
-								</div>
+							<div class="mt-1">※ 艦載機以外の装備、艦載機自体を搭載できない艦娘は展開しません。</div>
+							<div>※ 対象は第1艦隊、第2艦隊の艦娘です。基地航空隊や敵艦は変更されません。</div>
+						</div>
+						<div class="mt-2 d-flex">
+							<div class="form-group mr-1 flex-grow-1">
+								<input type="text" class="form-control" id="input_deck" placeholder="デッキを入力">
 							</div>
-							<div class="mt-1">
-								<div>デッキビルダー形式 :</div>
-								<div class="d-flex">
-									<div class="mr-1">
-										<button type="button" class="ml-auto btn btn-sm btn-info btn_output_deck">生成</button>
-									</div>
-									<div class="form-group ml-auto flex-grow-1">
-										<input type="text" class="form-control" id="output_deck" readonly>
-										<div class="invalid-feedback">出力に失敗しました。</div>
-										<div class="valid-feedback">生成しました。上記文字列をクリックするとクリップボードにコピーされます。</div>
-									</div>
-								</div>
+							<div class="ml-auto">
+								<button type="button" class="ml-auto btn btn-sm btn-success btn_load_deck text-nowrap">
+									読み込み
+								</button>
 							</div>
 						</div>
+					</div>
+					<div class="border-top mb-3"></div>
+					<div class="h6">外部サイトへ展開</div>
+					<div class="px-2 font_size_12">
+						下記のサイト様にて、現在の編成を開きます。
+					</div>
+					<div class="mt-1 d-flex justify-content-center">
+						<button type="button" class="btn btn-sm btn-success mx-3" id="open_deckBuilder">デッキビルダーで開く</button>
+						<button type="button" class="btn btn-sm btn-info mx-3" id="open_jervis">作戦室 Jervis orで開く</button>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -5794,7 +5801,8 @@
 									</thead>
 									<tbody id="antiair_cutin_inputs">
 										<tr>
-											<td><select class="custom-select custom-select-sm select_antiair_cutin_td"></select></td>
+											<td><select class="custom-select custom-select-sm select_antiair_cutin_td"></select>
+											</td>
 											<td>
 												<input type="number" class="form-control form-control-sm cutin_rate" step="0.01" min="0"
 													max="100" value="100" readonly>
@@ -5812,7 +5820,8 @@
 									<button type="button" class="btn btn-sm btn-success text-nowrap ml-2"
 										id="btn_import_antiair">読込</button>
 								</div>
-								<div class="font_size_11 mt-1">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。</div>
+								<div class="font_size_11 mt-1">カンマ(,)区切りで、第1艦隊旗艦から順に加重対空値を一括で反映します。Excel等の表計算ソフトからの貼り付けも可能です。
+								</div>
 							</div>
 						</div>
 					</div>
