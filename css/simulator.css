@@ -123,10 +123,10 @@ input[type="text"] { font-size: 12px; }
   display: inline-block;
 }
 #landBase.capturing {
-  min-width: 1200px;
+  min-width: 1024px;
 }
 #friendFleet.capturing {
-  min-width: 1000px;
+  min-width: 1100px;
 }
 #result.capturing {
   width: 1000px;
@@ -202,7 +202,7 @@ input[type="text"] { font-size: 12px; }
 }
 .sidebar .nav-link {
   padding: .25rem .5rem;
-  color: #ccc; 
+  color: #ccc;
 }
 .sidebar .nav-link:hover { color: #00ccff; }
 .sidebar .nav-link.active { color: #00ccff; }
@@ -307,7 +307,7 @@ input[type="text"] { font-size: 12px; }
     padding-right: .3rem;
     padding-left: .3rem;
   }
-  #main:not(.reduced) .simple_lb_progress { 
+  #main:not(.reduced) .simple_lb_progress {
     padding-right: .25rem;
     padding-left: .25rem;
   }
@@ -320,6 +320,14 @@ input[type="text"] { font-size: 12px; }
 }
 /* 制空半径簡易 */
 .lb_sammary { font-size: 12px; }
+
+.baseNo,
+.resource,
+.lb_sammary,
+.def_sammary {
+  -ms-flex-item-align: center!important;
+  align-self: center!important;
+}
 /* 必要資材欄 */
 .resource {
   cursor: help;
@@ -367,23 +375,20 @@ input[type="text"] { font-size: 12px; }
   display: grid;
 }
 #main .capturing .fleet_tab {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   margin: 0 !important;
 }
 @media (min-width: 600px) {
   #main .fleet_tab { margin: 0 4rem; }
 }
-@media (min-width: 740px) {
-  #main .fleet_tab { margin: 0 8rem; }
-}
-@media (min-width: 780px) {
+@media (min-width: 760px) {
   #main .fleet_tab {
     grid-template-columns: 1fr 1fr;
     margin: 0;
   }
 }
-@media (min-width: 1170px) {
-  #main:not(.reduced) .fleet_tab {
+@media (min-width: 1100px) {
+  #main .fleet_tab {
     grid-template-columns: 1fr 1fr 1fr;
     margin: 0;
   }
@@ -401,6 +406,14 @@ input[type="text"] { font-size: 12px; }
 .ship_name_span:hover::after {
   width: 100%;
 }
+
+.ship_header > div,
+.ship_name_span,
+.ship_sumAP {
+  -ms-flex-item-align: center!important;
+  align-self: center!important;
+}
+
 /* 艦娘機体選択欄 */
 .ship_plane {
   width: 100%;
@@ -418,29 +431,7 @@ input[type="text"] { font-size: 12px; }
   height: 25px;
   width: 100px;
 }
-.btn_reset_ship_plane {
-  margin-top: -0.5rem;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  transition: .1s;
-  opacity: .5;
-  font-size: 16px;
-}
-.btn_reset_ship_plane:hover {
-  color: rgb(60, 225, 220);
-  opacity: 1;
-  filter: drop-shadow(0px 0px 1px rgb(60, 225, 220));
-}
-.btn_reset_ship_plane > i { font-size: 16px; }
-.remove_line {
-  transition: .3s;
-  border-right: 3px rgba(128, 128, 128, 0.5) solid;
-}
-.remove_line.ready {
-  border-right: 3px rgb(125, 225, 220) solid;
-  filter: drop-shadow(0px 0px 1px rgb(125, 225, 220));
-}
+
 .btn_show_contact_rate {
   cursor: pointer;
   opacity: 0.6;
@@ -462,6 +453,12 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   border-radius: 0.2rem;
   transition: 0.5s;
+  -ms-flex-positive: 1!important;
+  flex-grow: 1!important;
+}
+.plane_name_span {
+  font-size: 12px;
+  padding-left: 0.25rem;
 }
 .plane_img_sm {
   width: 22px;
@@ -475,6 +472,7 @@ input[type="text"] { font-size: 12px; }
   width: 16px;
   cursor: pointer;
   color: #ffa600;
+  margin-left: .25rem;
 }
 .plane_unlock {
   width: 16px;
@@ -482,14 +480,30 @@ input[type="text"] { font-size: 12px; }
   color: #ffa600;
   opacity: .4;
   transition: .4s;
+  margin-left: .25rem;
 }
 .plane_unlock:hover { opacity: 1; }
+
+.lb_plane .col > div,
+.ship_plane_draggable > div {
+  -ms-flex-item-align: center!important;
+  align-self: center!important;
+}
+.ship_plane_draggable {
+  -ms-flex-wrap: nowrap!important;
+  flex-wrap: nowrap!important;
+  -ms-flex-positive: 1!important;
+  flex-grow: 1!important;
+}
+
 .btn_remove_plane {
   width: 14px;
   cursor: pointer;
   transition: 0.4s;
   opacity: 0.2;
   font-size: 16px;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 .btn_remove_plane:hover {
   opacity: .8;
@@ -504,8 +518,6 @@ input[type="text"] { font-size: 12px; }
 .remodel_select_parent {
   color: rgb(0, 200, 200);
   width: 34px;
-  -ms-flex-item-align: center !important;
-  align-self: center !important;
 }
 .remodel_select{
   cursor: pointer;
@@ -536,10 +548,6 @@ input[type="text"] { font-size: 12px; }
   filter: drop-shadow(0px 0px 6px #0ff);
 }
 /* 熟練度関連 */
-.prof_select_parent {
-  -ms-flex-item-align: center !important;
-  align-self: center !important;
-}
 .prof_select {
   cursor: pointer;
   width: 20px;
@@ -572,6 +580,7 @@ input[type="text"] { font-size: 12px; }
   display: table;
   width: 20px;
   height: 28px;
+  margin-left: 0.25rem;
 }
 .slot {
   cursor: pointer;
@@ -609,9 +618,17 @@ input[type="text"] { font-size: 12px; }
 .enemy_content:hover { background-color: rgba(128, 128, 128, 0.1); }
 .no_enemy { opacity: .3; }
 .no_enemy:hover { opacity: .6; }
-.enemy_index { 
+
+.enemy_content > div,
+.enemy_name_img,
+.enemy_ap_input {
+  -ms-flex-item-align: center !important;
+  align-self: center !important;
+}
+
+.enemy_index {
   margin-left: .25rem;
-  font-size: 12px; 
+  font-size: 12px;
 }
 .enemy_name {
   cursor: pointer;
@@ -628,7 +645,7 @@ input[type="text"] { font-size: 12px; }
 }
 .enemy_name_text {
   min-width: 128px;
-  max-width: 158px; 
+  max-width: 158px;
 }
 
 .enemy_ap_select_parent {
@@ -890,6 +907,11 @@ input[type="text"] { font-size: 12px; }
   color: #777;
 }
 
+#enemy_pattern_info .d-flex > div {
+  -ms-flex-item-align: center!important;
+  align-self: center!important;
+}
+
 /* ------------------------------
   一括変更欄 #modal_collectively_setting
 -------------------------------- */
@@ -1024,6 +1046,8 @@ input[type="text"] { font-size: 12px; }
 .bar_divide {
   height: 8px;
   border-left:1px solid rgb(128, 128, 128);
+  -ms-flex-item-align: end!important;
+  align-self: flex-end!important;
 }
 .result_bar_ex { height: 4px; }
 /* 制空状態割合テーブル */
@@ -1540,4 +1564,7 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 /* ------------------------------
   ローダー
 -------------------------------- */
-#simulator_loading { margin-top: 40vh; }
+#simulator_loading {
+  margin-top: 40vh;
+  height: 100vh;
+}

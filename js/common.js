@@ -77,7 +77,8 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('inStockOnlyShip')) setting.inStockOnlyShip = false;
 	if (!setting.hasOwnProperty('favoriteOnlyShip')) setting.favoriteOnlyShip = false;
 	if (!setting.hasOwnProperty('favoriteShip')) setting.favoriteShip = [];
-	if (!setting.hasOwnProperty('reducedDisplay')) setting.reducedDisplay = false;
+	if (!setting.hasOwnProperty('reducedDisplay')) setting.reducedDisplay = true;
+	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
@@ -601,6 +602,20 @@ async function postURLData(url) {
 	}).then(response => response.json());
 }
 
+/**
+ * div要素生成汎用
+ * @param {string} className クラス名
+ * @param {string} id id
+ * @param {string} textContent 文字列
+ */
+function createDiv(className = '', id = '', textContent = '') {
+	const div = document.createElement('div');
+	if (className) div.className = className;
+	if (id) div.id = id;
+	if (textContent) div.textContent = textContent;
+	return div;
+}
+
 /*==================================
 		タブ操作
 ==================================*/
@@ -647,12 +662,19 @@ function setTab() {
 		name.className = 'align-self-center fleet_name ml-2 flex-grow-1';
 		name.textContent = savedPreset ? savedPreset[1] : tabData.name;
 
+		const name_input = document.createElement('input');
+		name_input.type = 'text';
+		name_input.maxLength = 50;
+		name_input.className = ' ml-2 d-none fleet_name_input flex-grow-1'
+		name_input.value = name.textContent;
+
 		const closeButton = document.createElement('div');
 		closeButton.className = 'align-self-center btn_close_tab ml-auto';
 		closeButton.innerHTML = '&times;';
 
 		tab.appendChild(icon);
 		tab.appendChild(name);
+		tab.appendChild(name_input);
 		tab.appendChild(closeButton);
 
 		fragment.appendChild(tab);
@@ -685,7 +707,7 @@ function closeActiveTab($this) {
 	const container = $this.closest('.fleet_tab');
 
 	// 消す対象がある場合
-	if (container.hasClass('unsaved')) {
+	if (container.hasClass('unsaved') && setting.confirmTabClosing) {
 		// ほんまに閉じてもいいの？
 		const $modal = $('#modal_confirm');
 		$modal.find('.modal-body').html(`
@@ -704,7 +726,7 @@ function closeActiveTab($this) {
 
 /**
  * 指定したIDのタブを消去
- * @param {string} id プリセットID 
+ * @param {string} id プリセットID
  */
 function closeTab(id) {
 	let activePresets = loadLocalStorage('activePresets');
@@ -716,7 +738,7 @@ function closeTab(id) {
 	}
 	saveLocalStorage('activePresets', activePresets);
 
-	if (!activePresets.presets.length) {
+	if (!activePresets.presets.length && !window.location.href.endsWith('/list/')) {
 		window.location.href = '../list/';
 	}
 	else {
@@ -771,6 +793,22 @@ function updateActivePreset(preset) {
 
 const xxx = "AIzaSyC_rEnvKFFlZv54xvxP8MXPht081xYol4s";
 
+/**
+ * 設定削除クリック時
+ */
+function btn_reset_localStorage_Clicked() {
+	const $modal = $('#modal_confirm');
+	$modal.find('.modal-body').html(`
+		<div>ブラウザに保存された入力・設定データを削除します。</div>
+		<div class="mt-3">登録・保存されている編成データや装備プリセット、所持装備情報や各種詳細設定値など全てのデータが削除されます。</div>
+		<div>削除したデータは元に戻せませんので注意してください。</div>
+		<div class="mt-3">本サイトの利用を中止する場合、削除後にページを再読み込みしてしまうと再度設定データが生成されるため、削除後は直ちにサイトを閉じてください。</div>
+		<div class="mt-3">よろしければ、OKボタンを押してください。</div>
+	`);
+	confirmType = "deleteLocalStorageAll";
+	$modal.modal('show');
+}
+
 /*==================================
 		イベント
 ==================================*/
@@ -794,6 +832,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	Sortable.create(document.getElementById('fleet_tab_container'), {
 		animation: 200,
+		handle: '.fleet_tab:not(.editting)',
 		scroll: true,
 		onEnd: function () {
 			const temp = loadLocalStorage('activePresets');

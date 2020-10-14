@@ -34,8 +34,21 @@ h1 {
 /* -----------------------------------
   dark theme
 ----------------------------------- */
-.dark_theme { background-color: rgb(32, 34, 45); }
+.dark_theme,
+.dark_gradient_theme { background-color: rgb(32, 34, 45); }
 .deep_blue_theme { background: linear-gradient(rgb(10, 30, 68), rgb(5, 10, 20)); }
+.dark_gradient_theme::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  z-index: -1;
+  background: rgb(32, 34, 45);
+  background: linear-gradient(rgb(50, 55, 70), rgb(12, 15, 25));
+}
+
 .dark-theme .scroll_thead { background-color: rgb(60, 60, 68); }
 .deep_blue_theme .scroll_thead { background-color: rgb(41, 49, 68); }
 .dark-theme .custom-select {
@@ -75,23 +88,11 @@ h1 {
 .modal-header { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 .modal-footer { border-top: 1px rgba(128, 128, 128, 0.502) solid; }
 
-.dark_gradient_theme::after {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  content: "";
-  z-index: -1;
-  background: rgb(32, 34, 45);
-  background: linear-gradient(rgb(50, 55, 70), rgb(12, 15, 25));
-}
-
 .dark-theme .border,
 .dark-theme .border-top,
 .dark-theme .border-bottom,
 .dark-theme .border-left,
-.dark-theme .border-right { 
+.dark-theme .border-right {
   border-color: #6c757d !important;
 }
 
@@ -170,15 +171,6 @@ h1 {
 .capture_dark { background-color: rgb(43, 43, 50) !important; }
 .capture_deep_blue { background-color: rgb(10, 20, 45) !important; }
 
-.font_size_16 { font-size: 16px; }
-.font_size_14 { font-size: 14px; }
-.font_size_13 { font-size: 13px; }
-.font_size_12 { font-size: 12px; }
-.font_size_11 { font-size: 11px; }
-.font_size_10 { font-size: 10px; }
-.font_size_8 { font-size: 8px; }
-
-
 #main.reduced > div { max-width: 1100px; }
 
 .general_box {
@@ -216,6 +208,10 @@ h1 {
 ----------------------------------- */
 #header {
   background-color: rgb(45, 45, 48);
+}
+#tool_bar > div {
+  -ms-flex-item-align: center!important;
+  align-self: center!important;
 }
 #tool_bar .tool_item {
   opacity: 0.8;
@@ -297,10 +293,7 @@ h1 {
   background-color: rgb(55, 55, 58);
 }
 #fleet_tab_container .fleet_tab.active {
-  color: #fff !important;
-  background-color: rgb(75, 75, 78);
-}
-#fleet_tab_container .fleet_tab.active {
+  cursor: default;
   color: #fff !important;
   background-color: rgb(75, 75, 78);
 }
@@ -313,6 +306,12 @@ h1 {
 }
 #fleet_tab_container .fleet_tab.active .fleet_name {
   text-shadow: 2px 2px 3px #000;
+}
+#fleet_tab_container .fleet_name_input {
+  color: #fff;
+  border: none;
+  outline: none;
+  background-color: #222;
 }
 #fleet_tab_container .fleet_tab_icon {
   font-weight: bold;

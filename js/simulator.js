@@ -64,9 +64,6 @@ let usedShip = [];
 let chartInstance = null;
 let subChartInstance = null;
 
-// メイン文字色
-let mainColor = "#000000";
-
 // 計算結果格納オブジェクト
 let resultData = {
 	enemyMainAirPower: 0,
@@ -723,11 +720,6 @@ function initialize(callback) {
 		$('#lb_item1').addClass('active');
 	}
 
-	// テーマカラー変更
-	if (document.getElementById(setting.themeColor)) document.getElementById(setting.themeColor)['checked'] = true;
-	else document.getElementById('normal_theme')['checked'] = true;
-	site_theme_Changed(false);
-
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
 
@@ -1031,7 +1023,7 @@ function setShipDiv($div, id) {
 	if (!ship) return;
 	$div[0].dataset.shipid = ship.id;
 	$div.find('.ship_img').attr('src', `../img/ship/${id}.png`);
-	$div.find('.ship_img').removeClass('d-none');
+	$div.find('.sortable_handle').removeClass('d-none');
 	$div.find('.ship_name_span').text(ship.name);
 	$div.find('.ship_plane').each((i, e) => {
 		const $this = $(e);
@@ -1064,7 +1056,7 @@ function setShipDiv($div, id) {
 function clearShipDiv($div) {
 	// 選択状況をリセット
 	$div[0].dataset.shipid = '';
-	$div.find('.ship_img').addClass('d-none');
+	$div.find('.sortable_handle').addClass('d-none');
 	$div.find('.ship_img').attr('src', '../img/ship/0.png');
 	$div.find('.ship_name_span').text('艦娘を選択');
 	$div.find('.ship_plane').each((i, e) => {
@@ -3016,7 +3008,11 @@ function convertToDeckBuilder_j() {
 			const t = obj["landBase"][Math.floor(plane[4] / 4)];
 			const index = Math.floor(plane[4] % 4);
 			t['slots'][index] = plane[3];
-			t['equipments'][index] = { masterId: plane[0], improvement: plane[2], proficiency: getInnerProficiency(plane[1]) };
+			t['equipments'][index] = {
+				masterId: plane[0],
+				improvement: plane[2],
+				proficiency: getInnerProficiency(plane[1], PLANE_DATA.find(v => v.id === plane[0]).type)
+			};
 		}
 
 
@@ -3043,7 +3039,11 @@ function convertToDeckBuilder_j() {
 				// 機体
 				const plane = ship[1].find(v => v[4] === j);
 				if (plane) {
-					planes.push({ masterId: plane[0], improvement: plane[2], proficiency: getInnerProficiency(plane[1]) });
+					planes.push({
+						masterId: plane[0],
+						improvement: plane[2],
+						proficiency: getInnerProficiency(plane[1], PLANE_DATA.find(v => v.id === plane[0]).type)
+					});
 				}
 				else {
 					planes.push(null);
@@ -7437,6 +7437,7 @@ function btn_capture_Clicked($this) {
 	$targetContent.find('.r_btn').addClass('d-none');
 	$targetContent.find('.d-lg-flex').addClass('d-none_lg').removeClass('d-lg-flex');
 	$targetContent.find('.custom-checkbox').addClass('d-none');
+	$targetContent.find('.ship_header').addClass('d-flex justify-content-between');
 
 	// レンダリングズレ修正
 	$targetContent.find('.custom-select').addClass('pt-0');
@@ -7470,6 +7471,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.r_btn:not(.btn_commit_trade)').removeClass('d-none');
 			$targetContent.find('.d-none_lg').addClass('d-none d-lg-flex').removeClass('d-none_lg');
 			$targetContent.find('.btn_remove_plane').removeClass('btn_remove_plane_capture');
+			$targetContent.find('.ship_header').removeClass('d-flex justify-content-between');
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');
@@ -9241,7 +9243,7 @@ function preset_name_Changed($this) {
 	// 入力検証　全半40文字くらいで
 	const input = $this.val().trim();
 	const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
-	if (input.length > 40) {
+	if (input.length > 50) {
 		$this.addClass('is-invalid');
 		$btn.prop('disabled', true);
 	}
@@ -9978,22 +9980,6 @@ function air_raid_max_Clicked() {
 }
 
 /**
- * 設定削除クリック時
- */
-function btn_reset_localStorage_Clicked() {
-	const $modal = $('#modal_confirm');
-	$modal.find('.modal-body').html(`
-		<div>ブラウザに保存された入力・設定データを削除します。</div>
-		<div class="mt-3">登録・保存されている編成データや装備プリセット、所持装備情報や各種詳細設定値など全てのデータが削除されます。</div>
-		<div>削除したデータは元に戻せませんので注意してください。</div>
-		<div class="mt-3">本サイトの利用を中止する場合、削除後にページを再読み込みしてしまうと再度設定データが生成されるため、削除後は直ちにサイトを閉じてください。</div>
-		<div class="mt-3">よろしければ、OKボタンを押してください。</div>
-	`);
-	confirmType = "deleteLocalStorageAll";
-	$modal.modal('show');
-}
-
-/**
  * よく使う装備削除クリック時
  */
 function btn_reset_selected_plane_history_Clicked() {
@@ -10017,48 +10003,6 @@ function btn_reset_selected_ship_history_Clicked() {
 	`);
 	confirmType = "deleteSelectedShipHistory";
 	$modal.modal('show');
-}
-
-
-/**
- * サイトテーマカラー変更
- * @param {boolean} withCalculate 計算を起こさない場合 false 計算を起こす場合は未指定でOK
- */
-function site_theme_Changed(withCalculate = true) {
-
-	// 選択されているテーマを取得
-	let theme = 'nomal_theme';
-	for (const radio of document.getElementsByClassName('theme_radio')) {
-		if (radio['checked']) {
-			theme = radio.id;
-			break;
-		}
-	}
-
-	// 以前のクラス解除
-	document.body.classList.remove(setting.themeColor);
-	// テーマ設定
-	document.body.classList.add(theme);
-
-	if (theme === 'dark_theme' || theme === 'dark_gradient_theme' || theme === 'deep_blue_theme') {
-		// ダーク系共通
-		mainColor = "#e0e0e0";
-		document.body.classList.add('dark-theme');
-	}
-	else {
-		// 淡色系共通
-		mainColor = "#000000";
-		document.body.classList.remove('dark-theme');
-	}
-
-	// ヘッダーのURL欄は固定
-	document.getElementById('input_url').classList.add('form-control-dark');
-
-	setting.themeColor = theme;
-	saveSetting();
-	document.body.style.color = mainColor;
-
-	if (withCalculate) calculate();
 }
 
 /**
@@ -10741,17 +10685,14 @@ async function btn_url_shorten_Clicked() {
  * @param {JqueryDomObject} $this
  */
 function preset_remarks_Changed($this) {
-	// 入力検証　全半40文字くらいで
+	// 入力検証　全半400文字くらいで
 	const input = $this.val().trim();
-	const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
 	if (input.length > 400) {
 		$this.addClass('is-invalid');
-		$btn.prop('disabled', true);
 	}
 	else {
 		$this.removeClass('is-invalid');
 		$this.addClass('is-valid');
-		$btn.prop('disabled', false);
 	}
 }
 
@@ -10965,6 +10906,59 @@ function simulatorTab_Clicked($this) {
 	}
 }
 
+/**
+ * シミュ内アクティブなタブクリック時
+ * @param {JqueryDomObject} $this
+ */
+function simulatorActiveTab_Clicked($this) {
+	if ($this[0].dataset.presetid) {
+		const activePresets = loadLocalStorage('activePresets');
+		const preset = activePresets.presets.find(v => v.id === $this[0].dataset.presetid);
+		if (preset) {
+			// 編集開始
+			$this.addClass('editting');
+			$this.find('.fleet_name').addClass('d-none');
+			$this.find('.fleet_name_input').removeClass('d-none');
+		}
+	}
+}
+
+/**
+ * タブの入力欄からフォーカスアウトしたとき -> 編成名変更す
+ * @param {JqueryDomObject} $this
+ */
+function fleet_name_input_Changed($this) {
+	const $tab = $this.closest('.fleet_tab');
+	const presetid = $tab[0].dataset.presetid;
+	let presets = loadLocalStorage('presets');
+	if (!presets) presets = [];
+
+	$tab.removeClass('editting');
+	$tab.find('.fleet_name').removeClass('d-none');
+	$tab.find('.fleet_name_input').addClass('d-none');
+
+	const i = presets.findIndex(v => v[0] === presetid);
+	if (i >= 0) {
+		let newName = $this.val().trim();
+		if (newName && presets[i][1] !== newName) {
+
+			// 50文字超えてたら切る
+			if (newName.length > 50) {
+				newName = newName.slice(0, 50);
+				$this.val(newName);
+			}
+
+			presets[i][1] = newName;
+			$tab.find('.fleet_name').text(newName);
+			saveLocalStorage('presets', presets);
+			inform_success('編成名が更新されました。');
+		}
+	}
+	else {
+		inform_warning('保存されていないデータの名称変更はできません。');
+	}
+}
+
 /*==================================
 		イベントハンドラ
 ==================================*/
@@ -11014,7 +11008,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				try {
 					expandMainPreset(decodePreset(prevData.history.histories[prevData.history.index]));
 				} catch (error) {
-					// 謎の理由で死を遂げたらタブ一掃してトップに飛ばす
+					// 死を遂げたらタブ一掃してトップに飛ばす
 					deleteLocalStorage('activePresets');
 					window.location.href = '../list/';
 					return;
@@ -11059,7 +11053,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 	// トップページへ
 	document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
-	$('#header').on('click', '.fleet_tab', function () { simulatorTab_Clicked($(this)); });
+	$('#header').on('click', '.fleet_tab:not(.active)', function () { simulatorTab_Clicked($(this)); });
+	$('#header').on('click', '.fleet_tab.active', function () { simulatorActiveTab_Clicked($(this)); });
+	$('#header').on('blur', '.fleet_name_input', function () { fleet_name_input_Changed($(this)); });
 	$('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
 	$('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
 	$('.modal').on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
@@ -11135,14 +11131,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#result_content').on('click', '#ignore_stage2', calculate);
 	$('#config_content').on('focus', '#calculate_count', function () { $(this).select(); });
 	$('#config_content').on('input', '#calculate_count', function () { calculate_count_Changed($(this)); });
-	$('#config_content').on('click', '#btn_reset_localStorage', btn_reset_localStorage_Clicked);
 	$('#config_content').on('click', '#innerProfSetting .custom-control-input', function () { innerProfSetting_Clicked($(this)); });
 	$('#config_content').on('click', '#clipboard_mode', clipboard_mode_Clicked);
 	$('#config_content').on('click', '#air_raid_max', air_raid_max_Clicked);
 	$('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
 	$('#config_content').on('click', '#btn_reset_selected_plane_history', btn_reset_selected_plane_history_Clicked);
 	$('#config_content').on('click', '#btn_reset_selected_ship_history', btn_reset_selected_ship_history_Clicked);
-	$('#config_content').on('click', 'input[name="site_theme"]', function () { site_theme_Changed(); });
 	$('#stock_management').on('show.bs.collapse', '.collapse', function () { setPlaneStockTable(); setShipStockTable(); });
 	$('#ship_stock').on('change', '#ship_stock_type_select', ship_stock_type_select_Changed);
 	$('#ship_stock').on('input', '.stock_td_stock', function () { stock_td_stock_Changed($(this)); });
@@ -11315,7 +11309,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.btn_reset_landBase');
 	$('#friendFleet_content').on({
-		mouseenter: function () { showTooltip($(this)[0], "艦娘 & 装備リセット"); },
+		mouseenter: function () { showTooltip($(this)[0], "装備リセット"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.btn_reset_ship_plane');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "閉じる"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.btn_remove_ship');
 	$('#result_content').on({

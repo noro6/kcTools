@@ -1,10 +1,12 @@
-
+/**
+ * 初期化
+ */
 function initialize() {
   // url取得、転送
-  const params = getUrlParams();
-  if (params.hasOwnProperty("d") || params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
-    window.location.href = '../simulator/' + location.search;
-  }
+  if (location.search) window.location.href = '../simulator/' + location.search;
+
+  // 設定変更
+  document.getElementById('confirm_tab_close')['checked'] = setting.confirmTabClosing;
 
   // アクティブなタブはないので表示修正
   $('.fleet_tab.active').removeClass('active');
@@ -12,7 +14,6 @@ function initialize() {
   // 保存されているプリセットを展開
   setPresets();
 }
-
 
 /**
  * 編成一覧画面に、保存されている編成を展開
@@ -23,47 +24,31 @@ function setPresets() {
 
   const fragment = document.createDocumentFragment();
 
-  // 新規作成用
-  const new_container = document.createElement('div');
-  new_container.className = `preset_container new d-flex ${presets.length ? '' : 'border_delete'}`;
+  // 新規作成用ボタン
+  const new_container = createDiv(`preset_container new d-flex ${presets.length ? '' : 'border_delete'}`);
 
-  const new_body = document.createElement('div');
-  new_body.className = 'new_body mx-auto my-auto';
-  new_body.textContent = presets.length ? '新規作成' : '編成を新規作成'
+  const new_body = createDiv('new_body mx-auto my-auto', '', presets.length ? '新規作成' : '編成を新規作成');
   new_container.appendChild(new_body);
 
   fragment.appendChild(new_container);
 
   // 並び替え可能要素
-  const sortable_container = document.createElement('div');
-  sortable_container.id = 'preset_sortable_container';
+  const sortable_container = createDiv('', 'preset_sortable_container');
 
   for (const preset of presets) {
     const wrapper = document.createElement('div');
 
-    const container = document.createElement('div');
-    container.className = 'd-flex preset_container sortable_handle';
+    const container = createDiv('d-flex preset_container sortable_handle');
     container.dataset.presetid = preset[0];
 
-    // 編成アイコン
-    const color = document.createElement('div');
-    color.className = 'align-self-center preset_color';
-    color.innerHTML = '&#9679;';
-    // container.appendChild(color);
-
-    const abstract = document.createElement('div');
-    abstract.className = 'mx-2 preset_abstract flex-grow-1';
-
+    const abstract = createDiv('mx-2 preset_abstract flex-grow-1');
     // 編成名
-    const name = document.createElement('div');
-    name.className = 'align-self-center preset_name';
-    name.textContent = preset[1];
-    abstract.appendChild(name);
-
+    abstract.appendChild(createDiv('preset_name', '', preset[1]));
     // 名前編集欄
     const name_edit = document.createElement('input');
     name_edit.type = 'text';
-    name_edit.className = 'align-self-center form-control form-control-sm preset_name_edit mb-1 d-none';
+    name_edit.maxLength = 50;
+    name_edit.className = 'form-control form-control-sm preset_name_edit mb-1 d-none';
     name_edit.value = preset[1];
     abstract.appendChild(name_edit);
 
@@ -73,21 +58,15 @@ function setPresets() {
     // 艦娘データ
     const fleets = preset_data[1];
 
-    const land_base = document.createElement('div');
-    land_base.className = 'd-flex land_base_status';
-
+    const land_base = createDiv('d-flex land_base_status');
     for (let i = 1; i <= 3; i++) {
       // 基地データが入っていてかつお札が出撃
       const disabled = lbs.length >= 1 && lbs[1].length >= i && lbs[1][i - 1] >= 0 ? '' : 'disabled';
-      const status = document.createElement('div');
-      status.className = `land_base_state no_${i} mr-1 ${disabled}`;
-      status.textContent = `第${i}基地航空隊`;
-      land_base.appendChild(status);
+      land_base.appendChild(createDiv(`land_base_state no_${i} mr-1 ${disabled}`, '', `第${i}基地航空隊`));
     }
     abstract.appendChild(land_base);
 
-    const fleet_container = document.createElement('div');
-    fleet_container.className = 'd-flex ships flex-wrap';
+    const fleet_container = createDiv('d-flex ships flex-wrap');
 
     for (const ship of fleets) {
       if (fleet_container.childNodes.length > 5) {
@@ -106,9 +85,7 @@ function setPresets() {
     abstract.appendChild(fleet_container);
 
     // メモ表示用
-    const memo = document.createElement('div');
-    memo.className = `preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`;
-    memo.textContent = preset[3].replace(/\r?\n/g, ' ');
+    const memo = createDiv(`preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`, '', preset[3].replace(/\r?\n/g, ' '));
     abstract.appendChild(memo);
 
     // メモ編集用
@@ -121,12 +98,10 @@ function setPresets() {
     container.appendChild(abstract);
 
     // ボタン群ラッパー
-    const btns = document.createElement('div');
-    btns.className = 'd-flex ml-auto align-self-center';
+    const btns = createDiv('d-flex ml-auto btns_container');
 
     // 編成編集コミットボタン
-    const btn_commit = document.createElement('div');
-    btn_commit.className = 'align-self-center ml-auto r_btn btn_commit d-none';
+    const btn_commit = createDiv('ml-auto r_btn btn_commit d-none');
     btn_commit.dataset.toggle = 'tooltip';
     btn_commit.dataset.offset = '-50%';
     btn_commit.title = '編集内容を確定します。';
@@ -134,8 +109,7 @@ function setPresets() {
     btns.appendChild(btn_commit);
 
     // 編成編集やめるボタン
-    const btn_rollback = document.createElement('div');
-    btn_rollback.className = 'align-self-center ml-2 r_btn btn_rollback d-none';
+    const btn_rollback = createDiv('ml-2 r_btn btn_rollback d-none');
     btn_rollback.dataset.toggle = 'tooltip';
     btn_rollback.dataset.offset = '-50%';
     btn_rollback.title = '編集内容を取り消します。';
@@ -143,8 +117,7 @@ function setPresets() {
     btns.appendChild(btn_rollback);
 
     // 編成編集開始ボタン
-    const btn_edit = document.createElement('div');
-    btn_edit.className = 'align-self-center ml-auto r_btn btn_edit_start';
+    const btn_edit = createDiv('ml-auto r_btn btn_edit_start');
     btn_edit.dataset.toggle = 'tooltip';
     btn_edit.dataset.offset = '-50%';
     btn_edit.title = '編成名や編成メモの変更を行います。';
@@ -152,8 +125,7 @@ function setPresets() {
     btns.appendChild(btn_edit);
 
     // 編成コピーボタン
-    const btn_copy = document.createElement('div');
-    btn_copy.className = 'align-self-center ml-2 r_btn btn_copy';
+    const btn_copy = createDiv('ml-2 r_btn btn_copy');
     btn_copy.dataset.toggle = 'tooltip';
     btn_copy.dataset.offset = '-50%';
     btn_copy.title = 'この編成内容が複製された新しい編成タブを作成します。';
@@ -161,8 +133,7 @@ function setPresets() {
     btns.appendChild(btn_copy);
 
     // 編成削除ボタン
-    const btn_delete = document.createElement('div');
-    btn_delete.className = 'align-self-center ml-2 r_btn btn_delete';
+    const btn_delete = createDiv('ml-2 r_btn btn_delete');
     btn_delete.dataset.toggle = 'tooltip';
     btn_delete.dataset.offset = '-50%';
     btn_delete.title = '編成を削除します。';
@@ -182,14 +153,10 @@ function setPresets() {
 
   // 入れ替え設定
   Sortable.create(document.getElementById('preset_sortable_container'), {
+    delay: 50,
     animation: 200,
     handle: '.sortable_handle',
-    scroll: true,
-    onStart: function () {
-      $('.preset_container').addClass('no_transition');
-    },
     onEnd: function () {
-      $('.preset_container').removeClass('no_transition');
       const oldPresets = loadLocalStorage('presets');
       const newPresets = [];
       for (const c of document.getElementsByClassName('preset_container')) {
@@ -274,11 +241,24 @@ function btn_commit_Clicked($this, e = null) {
 
   if (i >= 0) {
     // 名称　メモを設定
-    const newName = p.find('.preset_name_edit').val().trim();
-    const newMemo = p.find('.preset_memo').val().trim();
+    let newName = p.find('.preset_name_edit').val().trim();
+    let newMemo = p.find('.preset_memo').val().trim();
     if (newName) {
+
+      // 50文字超えてたら切る
+      if (newName.length > 50) {
+        newName = newName.slice(0, 50);
+        p.find('.preset_name_edit').val(newName);
+      }
+
       presets[i][1] = newName;
       p.find('.preset_name').text(newName);
+    }
+
+    // 400文字超えてたら切る
+    if (newMemo.length > 400) {
+      newMemo = newMemo.slice(0, 400);
+      p.find('.preset_memo').val(newMemo);
     }
     presets[i][3] = newMemo;
     const memo = newMemo.replace(/\r?\n/g, ' ');
@@ -296,6 +276,8 @@ function btn_commit_Clicked($this, e = null) {
 
   btn_rollback_Clicked($this, e);
   setTab();
+  // アクティブなタブはないので表示修正
+  $('.fleet_tab.active').removeClass('active');
   inform_success('編成情報の更新が完了しました。');
 }
 
@@ -306,11 +288,9 @@ function btn_commit_Clicked($this, e = null) {
 function btn_delete_Clicked($this, e) {
   e.stopPropagation();
 
-  // ほんまに閉じてもいいの？
+  // 削除確認モーダル
   const $modal = $('#modal_confirm');
-  $modal.find('.modal-body').html(`
-    <div class="mt-2">編成を削除します。よろしいですか？</div>
-  `);
+  $modal.find('.modal-body').html(`<div class="mt-2">編成を削除します。よろしいですか？</div>`);
   $modal[0].dataset.target = $this.closest('.preset_container')[0].dataset.presetid;
   confirmType = 'deletePreset';
   $modal.modal('show');
@@ -418,12 +398,11 @@ function version_detail_Clicked() {
     const fragment = document.createDocumentFragment();
     for (const v of serverVersion.changes) {
       // 変更通知
-      const $change_wrap = document.createElement('div');
-      $change_wrap.className = 'mt-3';
+      const $change_wrap = createDiv('mt-3');
 
       const $badge_wrap = document.createElement('div');
       const $badge = document.createElement('span');
-      $badge.className = 'mr-1 pt-1 badge badge-pill badge-' + (v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger');
+      $badge.className = `mr-1 pt-1 badge badge-pill badge-${v.type === 0 ? 'success' : v.type === 1 ? 'info' : 'danger'}`;
       $badge.textContent = (v.type === 0 ? '新規' : v.type === 1 ? '変更' : '修正');
 
       const $title_text = document.createElement('span');
@@ -434,8 +413,7 @@ function version_detail_Clicked() {
       $change_wrap.appendChild($badge_wrap);
 
       if (v.content) {
-        const $content = document.createElement('div');
-        $content.className = 'font_size_12 pl-3';
+        const $content = createDiv('font_size_12 pl-3');
         $content.innerHTML = v.content;
 
         $change_wrap.appendChild($content);
@@ -467,12 +445,8 @@ function loadSiteHistory() {
   let verIndex = 0;
   const serverVersion = LATEST_VERSION;
   for (const ver of CHANGE_LOG) {
-    const $ver_parent = document.createElement('div');
-    $ver_parent.className = 'my-3 ver_log border-bottom';
-
-    const $ver_title = document.createElement('div');
-    $ver_title.className = 'py-2';
-    $ver_title.textContent = 'v' + ver.id;
+    const $ver_parent = createDiv('my-3 ver_log border-bottom');
+    const $ver_title = createDiv('py-2', '', `v${ver.id}`);
 
     if (serverVersion === ver.id) {
       const $ver_new = document.createElement('span');
@@ -543,9 +517,9 @@ function loadSiteHistory() {
  */
 function modal_confirm_ok_Clicked() {
 
+  const $modal = $('#modal_confirm');
   if (confirmType === 'deletePreset') {
     // 保存一覧から削除
-    const $modal = $('#modal_confirm');
     let presets = loadLocalStorage('presets');
     presets = presets.filter(v => v[0] !== $modal[0].dataset.target);
     saveLocalStorage('presets', presets);
@@ -560,6 +534,15 @@ function modal_confirm_ok_Clicked() {
 
     $modal.modal('hide');
   }
+  else if (confirmType === "deleteLocalStorageAll") {
+    window.localStorage.clear();
+    setPresets();
+    setTab();
+    $modal.modal('hide');
+  }
+
+  // アクティブなタブはないので表示修正
+  $('.fleet_tab.active').removeClass('active');
 }
 
 /**
@@ -602,12 +585,12 @@ function initializeBoard() {
           header.className = 'd-flex mb-1';
 
           const index = document.createElement('div');
-          index.className = 'comment_index align-self-center text-primary';
+          index.className = 'comment_index text-primary';
           index.dataset.number = doc.data().number;
           index.textContent = `${doc.data().number}:`;
 
           const author = document.createElement('div');
-          author.className = 'comment_writer ml-1 align-self-center mr-2';
+          author.className = 'comment_writer ml-1 mr-2';
           author.textContent = doc.data().author;
 
           const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
@@ -841,6 +824,47 @@ async function btn_url_shorten_Clicked() {
   button.classList.remove('shortening');
 }
 
+
+/**
+ * サイトテーマカラー変更
+ */
+function site_theme_Changed($this) {
+
+  // 選択されているテーマを取得
+  let theme = $this.attr('id');
+
+  // 以前のクラス解除
+  document.body.classList.remove(setting.themeColor);
+  // テーマ設定
+  document.body.classList.add(theme);
+
+  if (theme === 'dark_theme' || theme === 'dark_gradient_theme' || theme === 'deep_blue_theme') {
+    // ダーク系共通
+    mainColor = "#e0e0e0";
+    document.body.classList.add('dark-theme');
+  }
+  else {
+    // 淡色系共通
+    mainColor = "#000000";
+    document.body.classList.remove('dark-theme');
+  }
+
+  // ヘッダーのURL欄は固定
+  document.getElementById('input_url').classList.add('form-control-dark');
+
+  setting.themeColor = theme;
+  saveSetting();
+  document.body.style.color = mainColor;
+}
+
+/**
+ * タブ確認ダイアログ設定変更
+ */
+function confirm_tab_close_Clicked() {
+  setting.confirmTabClosing = document.getElementById('confirm_tab_close')['checked'];
+  saveSetting();
+}
+
 /**
  * イベントの登録
  */
@@ -861,12 +885,15 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
   $('#main').on('click', '.btn_first_time', first_time_Clicked);
   $('#main').on('click', '.btn_site_manual', site_manual_Clicked);
+  $('#main').on('click', '.theme_select', function () { site_theme_Changed($(this)); });
   $('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
   $('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
   $('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
   $('#site_board').on('input', '#comment_author', comment_text_Changed);
   $('#site_board').on('input', '#comment_text', comment_text_Changed);
   $('#site_board').on('click', '.comment_index', function () { comment_index_Clicked($(this)) });
+  $('#config_content').on('click', '#confirm_tab_close', confirm_tab_close_Clicked);
+  $('#config_content').on('click', '#btn_reset_localStorage', btn_reset_localStorage_Clicked);
   $('#btn_url_shorten').click(btn_url_shorten_Clicked);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 });

@@ -14,7 +14,6 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="../favicon.ico">
-	<link rel="stylesheet" href="../css/jquery-ui.min.css" media="print" onload="this.media='all'">
 	<link rel="stylesheet" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 	<link rel="stylesheet" href="../fonts/style.css">
@@ -42,6 +41,7 @@
 <body>
 	<script>
 		let s = JSON.parse(window.localStorage.getItem('setting'));
+		mainColor = "#000000";
 		if (s && s.hasOwnProperty('themeColor')) {
 			let theme = s.themeColor;
 			if (theme === 'dark_theme' || theme === 'dark_gradient_theme' || theme === 'deep_blue_theme') {
@@ -55,37 +55,37 @@
 	<div id="custom_alert_wraper" class="d-flex justify-content-center align-items-center"></div>
 	<div class="fixed-top" id="header">
 		<div class="d-flex" id="tool_bar">
-			<div class="align-self-center tool_item" id="btn_top">
+			<div class="tool_item" id="btn_top">
 				<i class="fas fa-list-ul"></i>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_save_preset">
+			<div class="tool_item disabled" id="btn_save_preset">
 				<i class="fas fa-save"></i>
 				<span class="ml-1">編成保存</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_share">
+			<div class="tool_item disabled" id="btn_share">
 				<i class="fas fa-share-alt"></i>
 				<span class="ml-1">編成共有</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_twitter">
+			<div class="tool_item disabled" id="btn_twitter">
 				<i class="fab fa-twitter"></i>
 				<span class="d-none d-lg-inline ml-1">編成をツイート</span>
 				<span class="d-lg-none ml-1">ツイート</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_auto_expand">
+			<div class="tool_item disabled" id="btn_auto_expand">
 				<i class="fas fa-bolt"></i>
 				<span class="d-none d-lg-inline ml-1">おまかせ配備</span>
 				<span class="d-lg-none ml-1">おまかせ</span>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_undo">
+			<div class="tool_item disabled" id="btn_undo">
 				<i class="fas fa-undo"></i>
 			</div>
-			<div class="align-self-center tool_item disabled" id="btn_redo">
+			<div class="tool_item disabled" id="btn_redo">
 				<i class="fas fa-repeat"></i>
 			</div>
-			<div class="align-self-center d-none d-md-flex flex-grow-1" id="url_shortener">
-				<textarea class="form-control form-control-dark align-self-center" id="input_url" placeholder=""></textarea>
+			<div class="d-none d-md-block flex-grow-1" id="url_shortener">
+				<textarea class="form-control form-control-dark" id="input_url"></textarea>
 			</div>
-			<div class="align-self-center d-none d-md-flex ml-auto tool_item" id="btn_url_shorten">
+			<div class="d-none d-md-block ml-auto tool_item" id="btn_url_shorten">
 				<span>URL短縮</span>
 			</div>
 		</div>
@@ -117,6 +117,95 @@
 			<div class="border-top mb-2"></div>
 			<div id="presets_container" class="py-2"></div>
 		</div>
+
+		<div class="contents my-4 px-2 py-1 mx-auto" id="site_board">
+			<div class="my-2 d-flex">
+				<div class="h6 mb-0 align-self-center"><span class="content_title align-middle">コメント</span>
+				</div>
+				<div class="ml-auto rounded-circle r_btn" data-toggle="collapse" data-target="#comments">
+					<i class="fas fa-chevron-up"></i>
+				</div>
+			</div>
+			<div class="collapse collapse_content" id="comments">
+				<div class="border-top"></div>
+				<div class="px-3 mt-3">
+					バグ報告、要望、情報提供、質問、感想など自由に書き込めるコメント欄です。レス番号をクリックすると返信できます。(最新の30件)
+				</div>
+				<div class="px-3">
+					試験運用のため、アクセス数が膨らむと一時的に利用できない状態になる可能性があります。ご了承ください。
+				</div>
+				<div class="py-2 px-3" id="coment_form">
+					<div class="align-self-center d-flex">
+						<div class="align-self-center">
+							<button class="btn btn-sm btn-primary" id="btn_send_comment" disabled>送信</button>
+						</div>
+						<div class="align-self-center ml-2 text-nowrap">名前:</div>
+						<div class="align-self-center ml-2 d-flex">
+							<input type="text" class="form-control form-control-sm align-self-center" id="comment_author"
+								placeholder="名無しさん" maxlength="20">
+							<div class="ml-2 invalid-feedback align-self-center" id="author_validate">
+								20文字以内で入力して下さい。</div>
+						</div>
+					</div>
+					<div class="mt-1">
+						<textarea class="form-control form-control-sm" id="comment_text" rows="3"></textarea>
+						<div class="invalid-feedback" id="comment_validate">1000文字以内で入力してください。</div>
+					</div>
+				</div>
+				<div class="px-3 mt-1 mb-3" id="coment_board">
+					<div class="w-100 text-center">
+						<div class="spinner-border m-5" role="status">
+							<span class="sr-only"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="contents my-4 px-2 py-1 mx-auto" id="config">
+			<div class="my-2 d-flex">
+				<div class="h6 mb-0 align-self-center">
+					<span class="content_title align-middle">共通設定</span>
+				</div>
+				<div class="ml-auto rounded-circle r_btn" data-toggle="collapse" data-target="#config_content"><i
+						class="fas fa-chevron-up"></i>
+				</div>
+			</div>
+			<div class="collapse collapse_content" id="config_content">
+				<div class="border-top"></div>
+
+				<div class="m-3">
+					<div>タブの挙動：</div>
+					<div class="mx-3 custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="confirm_tab_close">
+						<label class="custom-control-label" for="confirm_tab_close">
+							タブを閉じる際に確認ダイアログを表示する
+						</label>
+					</div>
+				</div>
+				<div class="m-3">
+					<div>サイトテーマ：</div>
+					<div class="mx-3 d-flex">
+						<div class="theme_select" id="normal_theme">通常</div>
+						<div class="theme_select" id="sky_theme">空</div>
+						<div class="theme_select" id="sakura_theme">桜</div>
+						<div class="theme_select" id="dark_theme">黒</div>
+						<div class="theme_select" id="dark_gradient_theme">黒&#x2161;</div>
+						<div class="theme_select" id="deep_blue_theme">深海</div>
+					</div>
+				</div>
+				<div class="m-3 border-top"></div>
+				<div class="m-3">
+					<div>データ完全削除：</div>
+					<div class="mx-3">
+						<div>本サイトにて保存されたLocalStorageのデータを全て削除します。</div>
+						<button type="button" class="btn btn-sm btn-outline-danger" id="btn_reset_localStorage">設定削除</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="contents my-4 px-2 py-1 mx-auto" id="site_abstract">
 			<div class="my-2 d-flex">
 				<div class="h6 mb-0 align-self-center">
@@ -353,49 +442,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="contents my-4 px-2 py-1 mx-auto" id="site_board">
-			<div class="my-2 d-flex">
-				<div class="h6 mb-0 align-self-center"><span class="content_title align-middle">コメント</span>
-				</div>
-				<div class="ml-auto rounded-circle r_btn" data-toggle="collapse" data-target="#comments">
-					<i class="fas fa-chevron-up"></i>
-				</div>
-			</div>
-			<div class="collapse collapse_content" id="comments">
-				<div class="border-top"></div>
-				<div class="px-3 mt-3">
-					バグ報告、要望、情報提供、質問、感想など自由に書き込めるコメント欄です。レス番号をクリックすると返信できます。(最新の30件)
-				</div>
-				<div class="px-3">
-					試験運用のため、アクセス数が膨らむと一時的に利用できない状態になる可能性があります。ご了承ください。
-				</div>
-				<div class="py-2 px-3" id="coment_form">
-					<div class="align-self-center d-flex">
-						<div class="align-self-center">
-							<button class="btn btn-sm btn-primary" id="btn_send_comment" disabled>送信</button>
-						</div>
-						<div class="align-self-center ml-2 text-nowrap">名前:</div>
-						<div class="align-self-center ml-2 d-flex">
-							<input type="text" class="form-control form-control-sm align-self-center" id="comment_author"
-								placeholder="名無しさん" maxlength="20">
-							<div class="ml-2 invalid-feedback align-self-center" id="author_validate">
-								20文字以内で入力して下さい。</div>
-						</div>
-					</div>
-					<div class="mt-1">
-						<textarea class="form-control form-control-sm" id="comment_text" rows="3"></textarea>
-						<div class="invalid-feedback" id="comment_validate">1000文字以内で入力してください。</div>
-					</div>
-				</div>
-				<div class="px-3 mt-1 mb-3" id="coment_board">
-					<div class="w-100 text-center">
-						<div class="spinner-border m-5" role="status">
-							<span class="sr-only"></span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+
 		<div class="contents my-4 px-2 py-1 mx-auto" id="site_FAQ">
 			<div class="my-2 d-flex">
 				<div class="h6 mb-0 align-self-center">
@@ -412,9 +459,7 @@
 					</div>
 					<div class="mt-1 mb-3 border-bottom">
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_1">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. なにができるの？</div>
-							</div>
+							Q. なにができるの？
 						</div>
 						<div class="border-top collapse history_content" id="faq_1">
 							<div class="pl-3 py-2 font_size_12">
@@ -424,9 +469,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_2">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. なにができないの？</div>
-							</div>
+							Q. なにができないの？
 						</div>
 						<div class="border-top collapse history_content" id="faq_2">
 							<div class="pl-3 py-2 font_size_12">
@@ -435,9 +478,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_3">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 防空の計算がしたい ／ 基地の札が防空にできない。</div>
-							</div>
+							Q. 防空の計算がしたい ／ 基地の札が防空にできない。
 						</div>
 						<div class="border-top collapse history_content" id="faq_3">
 							<div class="pl-3 py-2 font_size_12">
@@ -446,9 +487,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_4">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 出撃と防空は同時に設定できない？</div>
-							</div>
+							Q. 出撃と防空は同時に設定できない？
 						</div>
 						<div class="border-top collapse history_content" id="faq_4">
 							<div class="pl-3 py-2 font_size_12">
@@ -456,9 +495,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_5">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 味方艦隊欄が消えた</div>
-							</div>
+							Q. 味方艦隊欄が消えた
 						</div>
 						<div class="border-top collapse history_content" id="faq_5">
 							<div class="pl-3 py-2 font_size_12">
@@ -466,9 +503,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_6">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 同じ制空値の機体を入れ替えただけなのに計算結果が微妙に変わるんだけど？</div>
-							</div>
+							Q. 同じ制空値の機体を入れ替えただけなのに計算結果が微妙に変わるんだけど？
 						</div>
 						<div class="border-top collapse history_content" id="faq_6">
 							<div class="pl-3 py-2 font_size_12">
@@ -477,9 +512,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_7">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 優勢確実だったり、全滅率もかなり低いはずなのに、出撃したら優勢取れなかったり全滅した…</div>
-							</div>
+							Q. 優勢確実だったり、全滅率もかなり低いはずなのに、出撃したら優勢取れなかったり全滅した…
 						</div>
 						<div class="border-top collapse history_content" id="faq_7">
 							<div class="pl-3 py-2 font_size_12">
@@ -488,9 +521,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_8">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 計算結果の「各戦闘開始時の搭載数の推移」って何の数値？</div>
-							</div>
+							Q. 計算結果の「各戦闘開始時の搭載数の推移」って何の数値？
 						</div>
 						<div class="border-top collapse history_content" id="faq_8">
 							<div class="pl-3 py-2 font_size_12">
@@ -499,9 +530,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_9">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 機体一覧に機体が一つもない…</div>
-							</div>
+							Q. 機体一覧に機体が一つもない…
 						</div>
 						<div class="border-top collapse history_content" id="faq_9">
 							<div class="pl-3 py-2 font_size_12">
@@ -510,9 +539,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_10">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. おまかせ配備すると、伊勢型が瑞雲満載したりするしなんか変</div>
-							</div>
+							Q. おまかせ配備すると、伊勢型が瑞雲満載したりするしなんか変
 						</div>
 						<div class="border-top collapse history_content" id="faq_10">
 							<div class="pl-3 py-2 font_size_12">
@@ -521,9 +548,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_11">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 「噴式景雲改」「橘花改」が見当たらない</div>
-							</div>
+							Q. 「噴式景雲改」「橘花改」が見当たらない
 						</div>
 						<div class="border-top collapse history_content" id="faq_11">
 							<div class="pl-3 py-2 font_size_12">
@@ -532,9 +557,7 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_12">
-							<div class="d-flex flex-nowrap align-self-center">
-								<div class="align-self-center">Q. 他の計算サイトと全く同じ編成・装備なのに制空値が微妙にずれているのは何故</div>
-							</div>
+							Q. 他の計算サイトと全く同じ編成・装備なのに制空値が微妙にずれているのは何故
 						</div>
 						<div class="border-top collapse history_content" id="faq_12">
 							<div class="pl-3 py-2 font_size_12">
