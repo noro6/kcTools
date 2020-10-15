@@ -312,6 +312,7 @@ h1 {
   border: none;
   outline: none;
   background-color: #222;
+  border-radius: 0.25rem;
 }
 #fleet_tab_container .fleet_tab_icon {
   font-weight: bold;

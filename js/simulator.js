@@ -122,7 +122,7 @@ function isContain(array, diffArray) {
  */
 function shuffleArray(array) {
 	const length = array.length;
-	for (var i = length - 1; i > 0; i--) {
+	for (let i = length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		const tmp = array[i];
 		array[i] = array[j];
@@ -2412,10 +2412,10 @@ function createEnemyPattern(patternNo = 0) {
 		sumFleetAntiAir += enemyObj.aabo;
 		text += `
 		<div class="enemy_pattern_tr mx-1 d-flex border-bottom" data-enemyid="${enemy.id}">
-			<div class="mr-1 align-self-center enemy_pattern_tr_image">
+			<div class="enemy_pattern_tr_image mr-1">
 				<img src="../img/enemy/${enemy.id}.png" class="enemy_img">
 			</div>
-			<div class="align-self-center enemy_pattern_tr_text">
+			<div class="enemy_pattern_tr_text">
 				<div class="font_size_11 text-primary">ID: ${enemy.id + 1500}</div>
 				<div>${drawEnemyGradeColor(enemy.name)}</div>
 			</div>
@@ -3057,63 +3057,6 @@ function convertToDeckBuilder_j() {
 	} catch (error) {
 		return "";
 	}
-}
-
-/**
- * 機体在庫読み込み　未定義の場合は初期化したものを返却
- */
-function loadPlaneStock() {
-	let planeStock = loadLocalStorage('planeStock');
-
-	if (!planeStock || !planeStock.length) {
-		const initStock = [];
-		for (const plane of PLANE_DATA) {
-			const stock = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
-			initStock.push(stock);
-		}
-		planeStock = initStock.concat();
-		saveLocalStorage('planeStock', planeStock);
-	}
-	else {
-		// 追加装備チェック
-		for (const plane of PLANE_DATA) {
-			if (!planeStock.find(v => v.id === plane.id)) {
-				planeStock.push({ id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-				saveLocalStorage('planeStock', planeStock);
-			}
-		}
-	}
-
-	return planeStock;
-}
-
-/**
- * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
- */
-function loadShipStock() {
-	let shipStock = loadLocalStorage('shipStock');
-
-	const ships = SHIP_DATA;
-	if (!shipStock || !shipStock.length) {
-		const initStock = [];
-		for (const ship of ships) {
-			const stock = { id: ship.id, num: 0, deck: ship.api };
-			initStock.push(stock);
-		}
-		shipStock = initStock.concat();
-		saveLocalStorage('shipStock', shipStock);
-	}
-	else if (shipStock.length !== ships.length) {
-		// 追加艦娘チェック
-		for (const ship of ships) {
-			if (!shipStock.find(v => v.id === ship.id)) {
-				shipStock.push({ id: ship.id, num: 0, deck: ship.api });
-				saveLocalStorage('shipStock', shipStock);
-			}
-		}
-	}
-
-	return shipStock;
 }
 
 /**
@@ -4362,6 +4305,7 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 		// 艦娘横の制空値など反映
 		const node_ap = node_ship_tab.getElementsByClassName('ap')[0];
 		const prevAp = castInt(node_ap.textContent);
+		const apList = [];
 
 		drawChangeValue(node_ap, prevAp, sumAp);
 		fleetAps[shipNo <= 6 ? 0 : 1] += sumAp;
@@ -4385,10 +4329,13 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 			for (let i = 0; i < shipPlanes.length; i++) {
 				const plane = shipPlanes[i];
 				const planeName = plane.name;
+
 				// 艦娘未指定の場合 搭載数 0 または艦載機未装備 のスロットは表示しない
 				if (!ship && (plane.id === 0 || plane.slot === 0)) continue;
 				// 艦娘の場合 スロット以上は作らない
 				if (ship && i === ship.slot.length) break;
+				// 艦娘入力欄制空値内訳用
+				apList.push(plane.ap);
 				// 掲示板用
 				summary_text += ' ' + planeName + ' ' + getProfString(plane.level) + ',';
 				// 艦娘でも被搭載スロットを表示しない場合は抜ける
@@ -4402,6 +4349,7 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 				node_battle_tr.dataset.shipindex = friendFleetData.length - 1;
 				node_battle_tr.dataset.slotindex = i;
 				node_battle_tr.dataset.css = backCss + '_hover';
+
 				if (isFirst) {
 					const node_ship_name_td = document.createElement('td');
 					node_ship_name_td.rowSpan = planeCount;
@@ -4514,6 +4462,9 @@ function updateFriendFleetInfo(friendFleetData, updateDisplay = true) {
 
 			document.getElementById('shoot_down_table_tbody').appendChild(node_battle_tr);
 		}
+
+		if (apList.length) node_ship_tab.getElementsByClassName('ap_detail')[0].textContent = `( ${apList.join(' / ')} )`;
+		else node_ship_tab.getElementsByClassName('ap_detail')[0].textContent = '';
 	}
 
 	// 以下表示系、未処理でいいなら終了
@@ -7499,7 +7450,7 @@ function downloadImage(data) {
 	if (window.navigator.msSaveBlob) {
 		const encodeData = atob(data.replace(/^.*,/, ''));
 		const outData = new Uint8Array(encodeData.length);
-		for (var i = 0; i < encodeData.length; i++) {
+		for (let i = 0; i < encodeData.length; i++) {
 			outData[i] = encodeData.charCodeAt(i);
 		}
 		const blob = new Blob([outData], ["image/png"]);
@@ -10919,6 +10870,7 @@ function simulatorActiveTab_Clicked($this) {
 			$this.addClass('editting');
 			$this.find('.fleet_name').addClass('d-none');
 			$this.find('.fleet_name_input').removeClass('d-none');
+			$this.find('.fleet_name_input').select();
 		}
 	}
 }
@@ -10968,27 +10920,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// URLパラメータチェック
 		const params = getUrlParams();
-		const urlDeck = [null, null];
+		let existURLData = false;
 		if (params.hasOwnProperty("d")) {
-			// URLから復元した
-			urlDeck[1] = decodePreset(params.d);
-			expandMainPreset(urlDeck[1]);
+			// URLから復元した (一般)
+			expandMainPreset(decodePreset(params.d));
+			existURLData = true;
 		}
 		else if (params.hasOwnProperty("predeck") || params.hasOwnProperty("lb")) {
 			if (params.hasOwnProperty("predeck")) {
 				// デッキビルダーー形式で読み込んだ
-				urlDeck[1] = readDeckBuilder(params.predeck);
-				const deck = urlDeck[1];
+				const deck = readDeckBuilder(params.predeck);
 				if (deck) {
 					expandMainPreset(deck, deck[0][0].length > 0, true, false);
 				}
 			}
+
 			if (params.hasOwnProperty("lb")) {
 				// 基地情報も読み込んだ
 				try {
 					const lbData = JSON.parse(decodeURIComponent(params.lb));
 					if (lbData.length >= 2) {
-						urlDeck[0] = lbData;
 						expandMainPreset([lbData, [], []], true, false, false);
 					}
 				}
@@ -10996,6 +10947,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					// 基地形式データおかしい場合…読み込まずそっとしておく
 				}
 			}
+
+			existURLData = true;
 		}
 		else if (params.hasOwnProperty("p")) {
 			// リストページから遷移
@@ -11015,12 +10968,13 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			}
 			else {
+				// 特に何もタブがない場合はlistにリダイレクト
 				window.location.href = '../list/';
 				return;
 			}
 		}
 
-		if (urlDeck[0] || urlDeck[1]) {
+		if (existURLData) {
 			// 外部編成データが読み込まれたため新しいタブを生成
 			let tabData = {
 				id: getUniqueId(),
@@ -11054,7 +11008,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	// トップページへ
 	document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
 	$('#header').on('click', '.fleet_tab:not(.active)', function () { simulatorTab_Clicked($(this)); });
-	$('#header').on('click', '.fleet_tab.active', function () { simulatorActiveTab_Clicked($(this)); });
+	$('#header').on('click', '.fleet_tab.active:not(.editting)', function () { simulatorActiveTab_Clicked($(this)); });
 	$('#header').on('blur', '.fleet_name_input', function () { fleet_name_input_Changed($(this)); });
 	$('.modal').on('hide.bs.modal', function () { modal_Closed($(this)); });
 	$('.modal').on('show.bs.modal', function () { $('.btn_preset').tooltip('hide'); });
@@ -11462,30 +11416,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			// 何戦目か整合性取る
 			$('.battle_content').each((i, e) => { $(e).find('.battle_no').text(i + 1); });
 			calculate();
-		}
-	});
-
-	$('.battle_content').droppable({
-		accept: ".enemy_content",
-		hoverClass: 'hover_enemy_content',
-		tolerance: "pointer",
-		drop: function (e, ui) {
-			const id = castInt(ui.draggable[0].dataset.enemyid);
-			const ap = castInt(ui.draggable.find('.enemy_ap').text());
-			setEnemyDiv($(this).find('.enemy_content:last'), id, ap);
-		}
-	});
-
-	$('#enemyFleet_content').droppable({
-		accept: ".enemy_content",
-		tolerance: "pointer",
-		over: function (e, ui) {
-			isOut = false;
-			ui.helper.stop().animate({ 'opacity': '1.0' }, 100);
-		},
-		out: function (e, ui) {
-			isOut = true;
-			ui.helper.stop().animate({ 'opacity': '0.2' }, 100);
 		}
 	});
 

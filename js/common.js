@@ -32,7 +32,16 @@ function saveLocalStorage(key, data) {
 		window.localStorage.setItem(key, JSON.stringify(data));
 		return true;
 	} catch (error) {
-		window.localStorage.removeItem(key);
+
+		const $modal = $('#modal_confirm');
+		$modal.find('.modal-body').html(`
+			<div class="h6">データの更新に失敗しました。</div>
+			<div class="mt-3 font_size_12">Local Strageのデータ更新に失敗しました。保存領域上限に達している可能性があります。</div>
+			<div class="font_size_12">不要な編成データの削除や、展開している編成タブを閉じ、再度試してみてください。</div>
+		`);
+		$modal[0].dataset.target = container[0].dataset.presetid;
+		confirmType = 'strageOver';
+		$modal.modal('show');
 		return false;
 	}
 }
@@ -437,6 +446,64 @@ function decodePreset(input) {
 	}
 }
 
+
+/**
+ * 機体在庫読み込み　未定義の場合は初期化したものを返却
+ */
+function loadPlaneStock() {
+	let planeStock = loadLocalStorage('planeStock');
+
+	if (!planeStock || !planeStock.length) {
+		const initStock = [];
+		for (const plane of PLANE_DATA) {
+			const stock = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
+			initStock.push(stock);
+		}
+		planeStock = initStock.concat();
+		saveLocalStorage('planeStock', planeStock);
+	}
+	else {
+		// 追加装備チェック
+		for (const plane of PLANE_DATA) {
+			if (!planeStock.find(v => v.id === plane.id)) {
+				planeStock.push({ id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+				saveLocalStorage('planeStock', planeStock);
+			}
+		}
+	}
+
+	return planeStock;
+}
+
+/**
+ * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
+ */
+function loadShipStock() {
+	let shipStock = loadLocalStorage('shipStock');
+
+	const ships = SHIP_DATA;
+	if (!shipStock || !shipStock.length) {
+		const initStock = [];
+		for (const ship of ships) {
+			const stock = { id: ship.id, num: 0, deck: ship.api };
+			initStock.push(stock);
+		}
+		shipStock = initStock.concat();
+		saveLocalStorage('shipStock', shipStock);
+	}
+	else if (shipStock.length !== ships.length) {
+		// 追加艦娘チェック
+		for (const ship of ships) {
+			if (!shipStock.find(v => v.id === ship.id)) {
+				shipStock.push({ id: ship.id, num: 0, deck: ship.api });
+				saveLocalStorage('shipStock', shipStock);
+			}
+		}
+	}
+
+	return shipStock;
+}
+
 /*==================================
 		汎用
 ==================================*/
@@ -826,6 +893,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (confirmType === 'deleteTab') {
 			// アクティブタブ削除
 			closeTab($modal[0].dataset.target);
+			$modal.modal('hide');
+		}
+		else if (confirmType === 'strageOver') {
 			$modal.modal('hide');
 		}
 	});

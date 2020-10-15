@@ -321,6 +321,10 @@ input[type="text"] { font-size: 12px; }
 /* 制空半径簡易 */
 .lb_sammary { font-size: 12px; }
 
+.baseNo {
+  font-size: 16px;
+}
+
 .baseNo,
 .resource,
 .lb_sammary,
@@ -332,7 +336,6 @@ input[type="text"] { font-size: 12px; }
 .resource {
   cursor: help;
   transition: 0.2s;
-  width: 156px;
 }
 .resource:hover { cursor: help; }
 .resource_img {
@@ -412,6 +415,12 @@ input[type="text"] { font-size: 12px; }
 .ship_sumAP {
   -ms-flex-item-align: center!important;
   align-self: center!important;
+}
+
+.ap_detail {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-left: 0.25rem;
 }
 
 /* 艦娘機体選択欄 */
@@ -894,8 +903,14 @@ input[type="text"] { font-size: 12px; }
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.1);
   text-shadow: 2px 2px 3px #000;
 }
+#enemy_pattern_info .d-flex > div:not(.enemy_pattern_tr) {
+  -ms-flex-item-align: center;
+  align-self: center;
+}
 #enemy_pattern_tbody { height: 244px; }
-.enemy_pattern_tr { height: 40px; }
+.enemy_pattern_tr {
+  height: 40px;
+}
 .node { cursor: pointer; }
 .enemy_img {
   height: 38px;
@@ -905,11 +920,6 @@ input[type="text"] { font-size: 12px; }
   text-align: right;
   font-size: 12px;
   color: #777;
-}
-
-#enemy_pattern_info .d-flex > div {
-  -ms-flex-item-align: center!important;
-  align-self: center!important;
 }
 
 /* ------------------------------
