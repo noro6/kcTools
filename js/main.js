@@ -4939,7 +4939,7 @@ function getAirPower_lb(lb_plane) {
 		}
 	}
 	// 艦爆
-	else if ([3].includes(type) && antiAir >= 2) {
+	else if ([3].includes(type) && antiAir > 2) {
 		sumPower = 1.0 * (0.25 * remodel + antiAir) * Math.sqrt(slot);
 	}
 	// 陸攻
@@ -5094,7 +5094,7 @@ function getBonusAA(plane, prevAp) {
 	// 艦戦 夜戦 水戦
 	if (FIGHTERS.includes(Math.abs(type))) aa = 0.2 * remodel + prevAp;
 	// 艦爆
-	else if (type === 3 && prevAp >= 2) {
+	else if (type === 3 && prevAp > 2) {
 		aa = 0.25 * remodel + prevAp;
 	}
 	// 陸攻
