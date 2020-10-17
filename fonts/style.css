@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?ye09b') format('truetype'),
-    url('fonts/icons.woff?ye09b') format('woff'),
-    url('fonts/icons.svg?ye09b#icons') format('svg');
+    url('fonts/icons.ttf?g5s8wm') format('truetype'),
+    url('fonts/icons.woff?g5s8wm') format('woff'),
+    url('fonts/icons.svg?g5s8wm#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -63,6 +63,9 @@
 .fa-camera:before {
   content: "\f030";
 }
+.fa-pencil:before {
+  content: "\f040";
+}
 .fa-exclamation-circle:before {
   content: "\f06a";
 }
@@ -101,6 +104,12 @@
 }
 .fa-wrench:before {
   content: "\f0ad";
+}
+.fa-copy:before {
+  content: "\f0c5";
+}
+.fa-files-o:before {
+  content: "\f0c5";
 }
 .fa-floppy-o:before {
   content: "\f0c7";
