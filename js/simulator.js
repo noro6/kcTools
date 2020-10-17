@@ -608,6 +608,8 @@ function initialize(callback) {
 		let appendedIds = [];
 		const contents = [];
 		const lis = [];
+		// フッター退避
+		const footer = $('#main_footer');
 		$main.find('.contents').each((i, e) => {
 			ids.push($(e).attr('id'));
 			contents.push($(e))
@@ -620,12 +622,13 @@ function initialize(callback) {
 				const $content = contents.find($e => $e.attr('id') === id);
 				$main.append($content);
 
-				const $li = lis.find($e => $e.attr('id') === 'li_' + id);
-
 				// 挿入されたidは消化
 				appendedIds.push(id);
 			}
 		}
+
+		// フッター戻し
+		$main.append(footer);
 
 		// 挿入されていないコンテンツを拾い、setting.contentsOrderを修正
 		if (ids.length !== appendedIds.length) {
@@ -4192,7 +4195,7 @@ function getBonusAp(plane) {
 	}
 
 	// 内部熟練度ボーナス
-	sumPower += Math.sqrt(getInnerProficiency(level) / 10);
+	sumPower += Math.sqrt(getInnerProficiency(level, type) / 10);
 
 	return sumPower;
 }
@@ -7251,7 +7254,7 @@ function btn_content_trade_Clicked($this) {
  */
 function main_contents_Sortable_End() {
 	setting.contentsOrder = [];
-	$('#main > div').each((i, e) => {
+	$('#main > div:not(#main_footer)').each((i, e) => {
 		const contentId = $(e).attr('id');
 		setting.contentsOrder.push(contentId);
 	});
