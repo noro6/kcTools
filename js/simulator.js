@@ -7898,7 +7898,7 @@ function showPlaneBasicToolTip($this) {
 		const tmp = Object.assign({ remodel: castInt($this.find('.plane_td_remodel')[0].dataset.remodel) }, plane);
 		bonusAA = getBonusAA(tmp, tmp.antiAir);
 	}
-	const actualAA = plane.antiAir + bonusAA;
+	const actualAA = plane.antiAir + (bonusAA ? bonusAA - plane.antiAir : 0);
 	const nmAA = actualAA + 1.5 * plane.interception;
 	const defAA = actualAA + plane.interception + 2.0 * plane.antiBomber;
 	const avoid = plane.avoid ? AVOID_TYPE.find(v => v.id === plane.avoid) : null
