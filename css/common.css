@@ -344,6 +344,17 @@ h1 {
   color: #eee;
 }
 
+#add_new_tab {
+  font-size: 18px;
+  font-weight: bold;
+  flex: none !important;
+  min-width: 40px !important;
+  padding: 0 !important;
+}
+#add_new_tab > div {
+  margin: auto;
+}
+
 #main {
   margin-top: 3rem;
 }

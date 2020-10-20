@@ -129,6 +129,14 @@
 			</div>
 			<div class="collapse show collapse_content" id="landBase_content">
 				<div class="border-top"></div>
+				<div class="my-2 ml-1 d-flex" id="defense_summary">
+					<div>
+						<span>総制空値: </span>
+						<span id="def_sum_ap_all"></span>
+						<span class="ml-2">対重爆時: </span>
+						<span id="def_sum_ex_ap_all"></span>
+					</div>
+				</div>
 				<div class="my-2" id="landBase_content_main">
 					<ul class="nav nav-tabs mb-2 no_capture" id="lb_tab_select">
 						<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#lb_item1">第1基地航空隊</a></li>
@@ -159,17 +167,16 @@
 							<div class="d-flex m-1 lb_infomation">
 								<div class="lb_sammary">
 									<span class="font_color_half">制空: </span><span class="ap">0</span>
-									<span class="font_color_half">半径: </span><span class="range">0</span>
-									<span class="ml-1 btn_show_contact_rate_lb no_capture" data-lb="1">
+									<span class="ap_detail"></span>
+								</div>
+								<div class="ml-auto battle_only">
+									<span class="font_color_half">半径: </span>
+									<span class="range">0</span>
+									<span class="ml-2 btn_show_contact_rate_lb no_capture " data-lb="1">
 										<i class="fas fa-search"></i><span class="font_size_11">触接</span>
 									</span>
 								</div>
-								<div class="def_sammary d-none">
-									<span class="font_color_half">制空: </span><span class="def_ap">0</span>
-									<span class="font_color_half rocket_label">重爆補正: &times;</span>
-									<span class="rocket_col">0</span>
-								</div>
-								<div class="ml-auto resource d-flex" data-toggle="tooltip" data-html="true"
+								<!-- <div class="ml-auto resource d-flex" data-toggle="tooltip" data-html="true"
 									data-delay='{"show": 300, "hide": 0}'
 									title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>※ 被撃墜時、母港補充時の消費量ではありません。">
 									<img src="../img/util/fuel.png" class="resource_img ml-auto" width="18" height="18" alt="fuel">
@@ -178,7 +185,7 @@
 									<span class="ml-0_5 ammo">0</span>
 									<img src="../img/util/bauxite.png" class="resource_img ml-2" width="18" height="18" alt="bauxite">
 									<span class="ml-0_5 bauxite">0</span>
-								</div>
+								</div> -->
 							</div>
 							<div class="lb_tab_main">
 								<div class="lb_plane mt-1 d-flex">
@@ -357,17 +364,16 @@
 							<div class="d-flex m-1 lb_infomation">
 								<div class="lb_sammary">
 									<span class="font_color_half">制空: </span><span class="ap">0</span>
-									<span class="font_color_half">半径: </span><span class="range">0</span>
-									<span class="ml-1 btn_show_contact_rate_lb no_capture" data-lb="2">
+									<span class="ap_detail"></span>
+								</div>
+								<div class="ml-auto battle_only">
+									<span class="font_color_half">半径: </span>
+									<span class="range">0</span>
+									<span class="ml-2 btn_show_contact_rate_lb no_capture " data-lb="1">
 										<i class="fas fa-search"></i><span class="font_size_11">触接</span>
 									</span>
 								</div>
-								<div class="def_sammary d-none">
-									<span class="font_color_half">制空: </span><span class="def_ap">0</span>
-									<span class="font_color_half rocket_label">重爆補正: &times;</span>
-									<span class="rocket_col">0</span>
-								</div>
-								<div class="ml-auto resource d-flex" data-toggle="tooltip" data-html="true"
+								<!-- <div class="ml-auto resource d-flex" data-toggle="tooltip" data-html="true"
 									data-delay='{"show": 300, "hide": 0}'
 									title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>※ 被撃墜時、母港補充時の消費量ではありません。">
 									<img src="../img/util/fuel.png" class="resource_img ml-auto" width="18" height="18" alt="fuel">
@@ -376,7 +382,7 @@
 									<span class="ml-0_5 ammo">0</span>
 									<img src="../img/util/bauxite.png" class="resource_img ml-2" width="18" height="18" alt="bauxite">
 									<span class="ml-0_5 bauxite">0</span>
-								</div>
+								</div> -->
 							</div>
 							<div class="lb_tab_main">
 								<div class="lb_plane mt-1 d-flex">
@@ -555,17 +561,16 @@
 							<div class="d-flex m-1 lb_infomation">
 								<div class="lb_sammary">
 									<span class="font_color_half">制空: </span><span class="ap">0</span>
-									<span class="font_color_half">半径: </span><span class="range">0</span>
-									<span class="ml-1 btn_show_contact_rate_lb no_capture" data-lb="3">
+									<span class="ap_detail"></span>
+								</div>
+								<div class="ml-auto battle_only">
+									<span class="font_color_half">半径: </span>
+									<span class="range">0</span>
+									<span class="ml-2 btn_show_contact_rate_lb no_capture " data-lb="1">
 										<i class="fas fa-search"></i><span class="font_size_11">触接</span>
 									</span>
 								</div>
-								<div class="def_sammary d-none">
-									<span class="font_color_half">制空: </span><span class="def_ap">0</span>
-									<span class="font_color_half rocket_label">重爆補正: &times;</span>
-									<span class="rocket_col">0</span>
-								</div>
-								<div class="ml-auto resource d-flex" data-toggle="tooltip" data-html="true"
+								<!-- <div class="ml-auto resource d-flex" data-toggle="tooltip" data-html="true"
 									data-delay='{"show": 300, "hide": 0}'
 									title="燃料 / 弾薬：出撃時の消費量<br>ボーキサイト：配備時の消費量<br>※ 被撃墜時、母港補充時の消費量ではありません。">
 									<img src="../img/util/fuel.png" class="resource_img ml-auto" width="18" height="18" alt="fuel">
@@ -574,7 +579,7 @@
 									<span class="ml-0_5 ammo">0</span>
 									<img src="../img/util/bauxite.png" class="resource_img ml-2" width="18" height="18" alt="bauxite">
 									<span class="ml-0_5 bauxite">0</span>
-								</div>
+								</div> -->
 							</div>
 							<div class="lb_tab_main">
 								<div class="lb_plane mt-1 d-flex">
@@ -730,6 +735,27 @@
 										</div>
 									</div>
 								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="simple_lb_def_bar" class="d-none mt-1 simple_lb_progress">
+					<div class="d-flex">
+						<div class="simple_label mr-0_5 pt-2 align-self-center"></div>
+						<div class="flex-grow-1 align-self-center">
+							<div class="d-flex">
+								<div class="bar_ex_label" style="width:10%;">喪失</div>
+								<div class="bar_divide"></div>
+								<div class="bar_ex_label" style="width:10%;">劣勢</div>
+								<div class="bar_divide"></div>
+								<div class="bar_ex_label" style="width:25%;">拮抗</div>
+								<div class="bar_divide"></div>
+								<div class="bar_ex_label" style="width:45%;">優勢</div>
+								<div class="bar_divide"></div>
+								<div class="bar_ex_label" style="width:10%;">確保</div>
+							</div>
+							<div class="mt-0_5 progress simple_bar">
+								<div class="progress-bar result_bar" style="width:0%;"></div>
 							</div>
 						</div>
 					</div>

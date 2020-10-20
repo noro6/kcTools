@@ -327,8 +327,7 @@ input[type="text"] { font-size: 12px; }
 
 .baseNo,
 .resource,
-.lb_sammary,
-.def_sammary {
+.lb_infomation > div {
   -ms-flex-item-align: center!important;
   align-self: center!important;
 }
@@ -853,19 +852,12 @@ input[type="text"] { font-size: 12px; }
   機体プリセットモーダル #modal_plane_preset
 ----------------------------------------- */
 .preset_preview_tr { height: 52px; }
-.preset_preview_td_type {
-  width: 30px;
+.preset_preview_tr > div {
   -ms-flex-item-align: center;
   align-self: center;
 }
-.preset_preview_td_name {
-  -ms-flex-item-align: center;
-  align-self: center;
-}
-.preset_preview_td_info {
-  -ms-flex-item-align: center;
-  align-self: center;
-}
+.preset_preview_td_type { width: 30px; }
+.preset_preview_td_remodel { color: rgb(0, 200, 200); }
 
 
 /* ---------------------------------------
