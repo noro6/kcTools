@@ -767,6 +767,8 @@ function setTab() {
 	if (activePresets.presets.length < 20) {
 		const newTab = createDiv(`d-flex fleet_tab`, 'add_new_tab');
 		newTab.dataset.presetid = '';
+		newTab.title = '新しい編成タブを開く';
+		newTab.dataset.toggle = 'tooltip';
 		const newTabPlus = createDiv();
 		newTabPlus.innerHTML = '&#43';
 		newTab.appendChild(newTabPlus);
