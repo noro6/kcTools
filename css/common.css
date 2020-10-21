@@ -2,6 +2,7 @@ body {
   font-size: 14px;
   font-family: "Roboto", "Hiragino Sans W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   background-color: #f0ebe6;
+  min-width: 428px;
 }
 h1 {
   font-size: 1.6em;
@@ -231,6 +232,10 @@ h1 {
   color: #fff;
   text-shadow: 2px 2px 3px #000;
 }
+#tool_bar .tool_item > i {
+  font-size: 14px;
+}
+
 #btn_top {
   padding: 0.5rem 0.75rem !important;
 }
@@ -247,6 +252,7 @@ h1 {
   color: rgb(255, 160, 50);
 }
 #btn_save_preset:hover,
+#btn_save_preset_sub:hover,
 #btn_top:hover,
 #btn_redo:hover,
 #btn_undo:hover,
@@ -465,6 +471,7 @@ h1 {
 .pt-1_5 { padding-top: .32rem !important; }
 .mt-0_5 { margin-top: .1rem !important; }
 .ml-0_5 { margin-left: 0.1rem !important; }
+.ml-0_8 { margin-left: 0.15rem !important; }
 .ml-2_5 { margin-left: 0.75rem !important; }
 .mr-0_5 { margin-right: 0.1rem !important; }
 .mr-2_5 { margin-right: 0.75rem !important; }

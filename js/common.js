@@ -223,8 +223,8 @@ function adaptUpdater() {
 			if (ps) {
 				for (const p of ps) {
 					const newPlanesFormat = [];
-					for (const id of p.planes) {
-						newPlanesFormat.push({ id: id, remodel: 0 });
+					for (const v of p.planes) {
+						newPlanesFormat.push({ id: v, remodel: 0 });
 					}
 					p.planes = newPlanesFormat;
 				}
@@ -743,7 +743,7 @@ function setTab() {
 
 		const name = document.createElement('div');
 		name.className = 'align-self-center fleet_name ml-2 flex-grow-1';
-		name.textContent = savedPreset ? savedPreset[1] : tabData.name;
+		name.textContent = savedPreset ? savedPreset[1] : tabData.name ? tabData.name : '無題';
 
 		const name_input = document.createElement('input');
 		name_input.type = 'text';
@@ -768,7 +768,6 @@ function setTab() {
 		const newTab = createDiv(`d-flex fleet_tab`, 'add_new_tab');
 		newTab.dataset.presetid = '';
 		newTab.title = '新しい編成タブを開く';
-		newTab.dataset.toggle = 'tooltip';
 		const newTabPlus = createDiv();
 		newTabPlus.innerHTML = '&#43';
 		newTab.appendChild(newTabPlus);
@@ -853,8 +852,6 @@ function closeTab(id) {
 	else {
 		setTab();
 	}
-
-	console.log(activePresets)
 }
 
 /**
@@ -903,6 +900,24 @@ function updateActivePreset(preset) {
 }
 
 const xxx = "AIzaSyC_rEnvKFFlZv54xvxP8MXPht081xYol4s";
+
+/**
+ * 現在アクティブなタブ内の最大の無題を返す
+ */
+function getMaxUntitled() {
+	let activePresets = loadLocalStorage('activePresets');
+	if (!activePresets) return "無題1";
+
+	const regex = /無題\d+/;
+	let max = 0;
+	for (const preset of activePresets.presets) {
+		if (regex.test(preset.name)) {
+			const val = castInt(preset.name.replace('無題', ''));
+			if (max < val) max = val;
+		}
+	}
+	return "無題" + (max + 1);
+}
 
 /**
  * 設定削除クリック時

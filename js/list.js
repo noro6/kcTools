@@ -309,7 +309,7 @@ function preset_Clicked($this) {
   // 展開タブ一覧に突っ込む新規データ
   let tabData = {
     id: getUniqueId(),
-    name: '無題',
+    name: getMaxUntitled(),
     // 全て空のデータ ↓
     history: {
       index: 0,
