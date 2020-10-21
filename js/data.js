@@ -3536,10 +3536,38 @@ const SPECIAL_LINK_SHIP_EQUIPMENT = [
 
 /** デフォ機体プリセット */
 const DEFAULT_PLANE_PRESET = [
-	{ id: 1, name: "FBA汎用 (サンプル)", planes: [94, 100, 157, 54] },
-	{ id: 2, name: "上位艦戦セット (サンプル)", planes: [56, 336, 157, 339] },
-	{ id: 3, name: "陸戦1 陸攻3 (サンプル)", planes: [225, 186, 186, 186] },
-	{ id: 4, name: "防空セット (サンプル)", planes: [54, 175, 175, 175] },
+	{
+		id: 1, name: "FBA汎用 (サンプル)", planes: [
+			{ id: 94, remodel: 0 },
+			{ id: 100, remodel: 0 },
+			{ id: 157, remodel: 10 },
+			{ id: 54, remodel: 0 }
+		]
+	},
+	{
+		id: 2, name: "上位艦戦セット (サンプル)", planes: [
+			{ id: 56, remodel: 0 },
+			{ id: 336, remodel: 0 },
+			{ id: 157, remodel: 10 },
+			{ id: 339, remodel: 0 }
+		]
+	},
+	{
+		id: 3, name: "陸戦1 陸攻3 (サンプル)", planes: [
+			{ id: 225, remodel: 0 },
+			{ id: 186, remodel: 4 },
+			{ id: 186, remodel: 0 },
+			{ id: 186, remodel: 0 }
+		]
+	},
+	{
+		id: 4, name: "対重爆セット (サンプル)", planes: [
+			{ id: 54, remodel: 0 },
+			{ id: 352, remodel: 4 },
+			{ id: 351, remodel: 0 },
+			{ id: 350, remodel: 0 }
+		]
+	},
 ];
 
-const LATEST_VERSION = '1.10.0';
+const LATEST_VERSION = '1.10.1';

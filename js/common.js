@@ -195,8 +195,8 @@ function adaptUpdater() {
 		}
 	}
 
+	//　～ v1.10.0
 	if (major <= 10) {
-
 		//　～ v1.10.0
 		if (major <= 9) {
 			// プリセットのidをGUID化
@@ -216,6 +216,22 @@ function adaptUpdater() {
 			deleteLocalStorage('autoSaveData');
 		}
 
+		// v1.10.1
+		if (major <= 9 || minor < 1) {
+			// 機体プリセットの保存形式変更
+			const ps = loadLocalStorage('planePreset');
+			if (ps) {
+				for (const p of ps) {
+					const newPlanesFormat = [];
+					for (const v of p.planes) {
+						newPlanesFormat.push({ id: v, remodel: 0 });
+					}
+					p.planes = newPlanesFormat;
+				}
+
+				saveLocalStorage('planePreset', ps);
+			}
+		}
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;
@@ -727,7 +743,7 @@ function setTab() {
 
 		const name = document.createElement('div');
 		name.className = 'align-self-center fleet_name ml-2 flex-grow-1';
-		name.textContent = savedPreset ? savedPreset[1] : tabData.name;
+		name.textContent = savedPreset ? savedPreset[1] : tabData.name ? tabData.name : '無題';
 
 		const name_input = document.createElement('input');
 		name_input.type = 'text';
@@ -747,6 +763,17 @@ function setTab() {
 		fragment.appendChild(tab);
 	}
 
+	// タブ20個未満なら新規追加タブを追加
+	if (activePresets.presets.length < 20) {
+		const newTab = createDiv(`d-flex fleet_tab`, 'add_new_tab');
+		newTab.dataset.presetid = '';
+		newTab.title = '新しい編成タブを開く';
+		const newTabPlus = createDiv();
+		newTabPlus.innerHTML = '&#43';
+		newTab.appendChild(newTabPlus);
+		fragment.appendChild(newTab);
+	}
+
 	document.getElementById('fleet_tab_container').innerHTML = '';
 	document.getElementById('fleet_tab_container').appendChild(fragment);
 }
@@ -763,6 +790,19 @@ function activeTabChanged($this) {
 	let activePresets = loadLocalStorage('activePresets');
 	if (!activePresets) activePresets = { activeId: "", presets: [] };
 	activePresets.activeId = $this[0].dataset.presetid;
+	saveLocalStorage('activePresets', activePresets);
+}
+
+/**
+ * 新規タブクリック時処理
+ */
+function btn_add_new_tab_Clicked() {
+	$('#header .fleet_tab').removeClass('active');
+
+	// アクティブタブのリセット
+	let activePresets = loadLocalStorage('activePresets');
+	if (!activePresets) activePresets = { activeId: "", presets: [] };
+	activePresets.activeId = '';
 	saveLocalStorage('activePresets', activePresets);
 }
 
@@ -862,6 +902,24 @@ function updateActivePreset(preset) {
 const xxx = "AIzaSyC_rEnvKFFlZv54xvxP8MXPht081xYol4s";
 
 /**
+ * 現在アクティブなタブ内の最大の無題を返す
+ */
+function getMaxUntitled() {
+	let activePresets = loadLocalStorage('activePresets');
+	if (!activePresets) return "無題1";
+
+	const regex = /無題\d+/;
+	let max = 0;
+	for (const preset of activePresets.presets) {
+		if (regex.test(preset.name)) {
+			const val = castInt(preset.name.replace('無題', ''));
+			if (max < val) max = val;
+		}
+	}
+	return "無題" + (max + 1);
+}
+
+/**
  * 設定削除クリック時
  */
 function btn_reset_localStorage_Clicked() {
@@ -888,6 +946,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#header').on('click', '#reduced_display', reduced_display_Clicked);
 	$('#header').on('click', '.fleet_tab', function () { activeTabChanged($(this)); });
 	$('#header').on('click', '.btn_close_tab', function (e) { e.stopPropagation(); closeActiveTab($(this)); });
+	// マウス中ボタンクリック
+	$('#header').on({
+		mousedown: function (e) {
+			if (e.button === 1) {
+				e.stopPropagation();
+				closeActiveTab($(this));
+				return false;
+			}
+		}
+	}, '.fleet_tab');
+
 	$('#modal_confirm').on('hide.bs.modal', function () { confirmType = null; });
 	$('#modal_confirm').on('click', '.btn_ok', function () {
 		const $modal = $('#modal_confirm');
@@ -905,6 +974,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		animation: 200,
 		handle: '.fleet_tab:not(.editting)',
 		scroll: true,
+		filter: '#add_new_tab',
 		onEnd: function () {
 			const temp = loadLocalStorage('activePresets');
 			if (!temp) return;

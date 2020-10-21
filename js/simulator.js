@@ -2187,8 +2187,8 @@ function loadPlanePreset() {
 			</div>
 		`;
 		let i = 0;
-		for (const planeId of preset.planes) {
-			if (checkInvalidPlane(parentId, PLANE_DATA.find(v => v.id === planeId))) {
+		for (const plane of preset.planes) {
+			if (checkInvalidPlane(parentId, PLANE_DATA.find(v => v.id === plane.id))) {
 				infoText = `
 				<div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window"
 					title="展開できない装備が含まれています。">
@@ -2230,25 +2230,45 @@ function loadPlanePreset() {
  */
 function drawPlanePresetPreview(preset) {
 	let text = '';
-	// 展開する機体のリスト
+	// 表示用の機体のデータ
 	let planes = [];
 	const $modal = $('#modal_plane_preset');
 	const parentId = castInt($('#modal_plane_preset').data('parentid'));
 
 	// アラート非表示
 	$modal.find('.alert').addClass('d-none');
+
+	// 保存編成が見つかってる場合
 	if (preset) {
 		$modal.find('.preset_name').val(preset.name);
-		for (const id of preset.planes) planes.push(PLANE_DATA.find(v => v.id === id));
+		for (const plane of preset.planes) {
+
+			const raw = PLANE_DATA.find(v => v.id === plane.id)
+			const presetPlane = {
+				id: plane.id,
+				type: raw.type,
+				name: raw.name,
+				remodel: plane.remodel
+			};
+			planes.push(presetPlane);
+		}
 	}
 	else {
 		// プリセットが見つからなかったので新規登録画面呼び出し
 		$modal.find('.preset_name').val('');
 
 		$target.find('.' + ($target.attr('class').includes('lb_tab') ? 'lb_plane' : 'ship_plane')).each((i, e) => {
-			if ($(e).attr('class').includes('d-none')) return;
+			if ($(e).hasClass('d-none')) return;
 			const plane = PLANE_DATA.find(v => v.id === castInt($(e)[0].dataset.planeid));
-			if (plane) planes.push(plane);
+			if (plane) {
+				const presetPlane = {
+					id: plane.id,
+					type: plane.type,
+					name: plane.name,
+					remodel: castInt($(e).find('.remodel_value').text())
+				};
+				planes.push(presetPlane);
+			}
 		});
 
 		if (planes.length === 0) $modal.find('.alert').removeClass('d-none');
@@ -2262,9 +2282,10 @@ function drawPlanePresetPreview(preset) {
 	for (const plane of planes) {
 		const needWarning = !checkInvalidPlane(parentId, plane);
 		text += `
-		<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="`+ plane.id + `">
+		<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="`+ plane.id + `" data-remodel="` + plane.remodel + `">
 			<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/type`+ plane.type + `.png"></div>
 			<div class="preset_preview_td_name ml-1 py-2">`+ plane.name + `</div>
+			<div class="preset_preview_td_remodel">`+ (plane.remodel ? '★' + plane.remodel : '') + `</div>
 			` + (needWarning ? warningIcon : '') + `
 		</div>
 		`;
@@ -2284,15 +2305,18 @@ function drawPlanePresetPreview(preset) {
  */
 function updatePlanePreset() {
 	const presetId = castInt($('.preset_selected').data('presetid'));
-	const planeIds = [];
-	$('.preset_preview_tr').each((i, e) => planeIds.push(castInt($(e)[0].dataset.planeid)));
+	const planes = [];
+	$('.preset_preview_tr').each((i, e) => {
+
+		planes.push({ id: castInt($(e)[0].dataset.planeid), remodel: castInt($(e)[0].dataset.remodel) });
+	});
 
 	let max_id = 0;
 	for (const preset of planePreset) if (max_id < preset.id) max_id = preset.id;
 	const newPreset = {
 		id: (presetId === -1 ? max_id + 1 : presetId),
 		name: $('#modal_plane_preset').find('.preset_name').val().replace(/^\s+|\s+$/g, ''),
-		planes: planeIds
+		planes: planes
 	};
 
 	planePreset = planePreset.filter(v => v.id !== presetId);
@@ -2523,47 +2547,11 @@ function expandEnemy() {
 }
 
 /**
- * 編成プリセット読み込み
- */
-function loadMainPreset() {
-	// 現在のアクティブタブの情報を取得
-	const presets = loadLocalStorage('presets');
-	if (presets) {
-		const preset = presets.find(v => v[0] === getActivePreset().id);
-
-		if (preset) {
-			// ローカルストレージにすでに保存済みの編成だったら
-			document.getElementById('input_preset_name').value = preset[1];
-			document.getElementById('preset_remarks').value = preset[3];
-
-			// 編成の更新を行って終わり
-			updateMainPreset();
-			inform_success('編成の上書き更新が完了しました。');
-			return;
-		}
-		else {
-			// ローカルストレージに存在しない編成だったら
-			document.getElementById('input_preset_name').value = '';
-			document.getElementById('preset_remarks').value = '';
-		}
-	}
-	else {
-		// ローカルストレージに存在しない編成だったら
-		document.getElementById('input_preset_name').value = '';
-		document.getElementById('preset_remarks').value = '';
-	}
-
-	$('#modal_main_preset').find('.btn_commit_preset').prop('disabled', true);
-	$('#modal_main_preset').modal('show');
-}
-
-/**
  * 編成プリセット 新規登録 / 更新処理
  */
 function updateMainPreset() {
 	// 保存する編成の内容データ
 	const presetBody = encodePreset();
-
 	// 今現在のタブ情報
 	const activePreset = getActivePreset();
 	// 何らかの原因でidがない場合
@@ -2586,6 +2574,16 @@ function updateMainPreset() {
 
 	// プリセット一覧への登録作業
 	let isUpdate = false;
+	// 別名保存モードかどうか
+	if ($('#modal_main_preset').find('.btn_commit_preset').hasClass('rename')) {
+		// 更新になってしまわぬよう新しいidを付与 -> 上書きにならず追加になる
+		const newId = getUniqueId();
+		preset[0] = newId;
+
+		// ここでidも変更して、下のupdateActivePreset処理で新タブが生成されるように
+		activePreset.id = newId;
+	}
+
 	let presets = loadLocalStorage('presets');
 	if (!presets) presets = [];
 
@@ -3096,13 +3094,6 @@ function drawResult() {
 	$('.simple_lb_progress').addClass('d-none').removeClass('d-flex');
 	$('#fleet_simple_bar').addClass('d-none');
 
-	// const expandedName = document.getElementById('expanded_preset_name');
-	// if (expandedName.classList.contains('initialize')) expandedName.classList.remove('initialize');
-	// else if (!expandedName.classList.contains('updated')) {
-	// 	if (expandedName.textContent.length) expandedName.textContent += "*";
-	// 	expandedName.classList.add('updated');
-	// }
-
 	const sameBattle = displayBattle === castInt($('#landBase_target').val());
 	const loopCount = isDefMode ? 1 : 6;
 	let airPowers = [];
@@ -3205,18 +3196,22 @@ function drawResult() {
 			$simpleBarParent.find('.simple_label').text(t);
 			$simpleBarParent.removeClass('d-none');
 		}
-		// 基地簡易バー　防空時
+
+		// 基地簡易バー　防空時はでっかいやつ
+		const $bar = $('#simple_lb_def_bar');
 		if (isDefMode) {
-			$('.simple_lb_progress').each((i, e) => {
-				const $e = $(e).find('.result_bar');
-				prevStatus = $e.data('airstatus');
-				$e.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
-					.addClass(`${barColor} ${exBarColor}`)
-					.css({ 'width': (width > 100 ? 100 : width) + '%', })
-					.data('airstatus', status);
-				$(e).find('.simple_label').text(AIR_STATUS.find(v => v.id === status).abbr);
-				$(e).removeClass('d-none');
-			});
+			const $e = $bar.find('.result_bar');
+			// 前回のステータスを取得
+			prevStatus = $e.data('airstatus');
+			// 前回のクラスを消して新しくクラスを設定、長さ、設定を整える
+			$e.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
+				.addClass(`${barColor} ${exBarColor}`)
+				.css({ 'width': (width > 100 ? 100 : width) + '%', })
+				.data('airstatus', status);
+			// 制空状態を表記
+			$bar.find('.simple_label').text(AIR_STATUS.find(v => v.id === status).abbr);
+			// 表示させる
+			$bar.removeClass('d-none');
 		}
 
 		// 艦隊簡易バー
@@ -3594,6 +3589,7 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		const node_lb_tab = nodes_lb_tab[index];
 		const lbNo = index + 1;
 		let tmpLandBaseDatum = { baseNo: lbNo, planes: [], ap: 0, mode: -1 };
+		let apList = [];
 		tmpLbPlanes.length = 0;
 
 		summary_text = `第${lbNo}基地航空隊：`;
@@ -3615,7 +3611,7 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 			if (!updateDisplay) continue;
 
 			// 個別表示
-			const node = document.getElementsByClassName('lb_info_lb_' + lbNo + ' slot' + slotNo)[0];
+			const node = document.getElementsByClassName(`lb_info_lb_${lbNo} slot${slotNo}`)[0];
 			let node_td = node.getElementsByClassName('info_plane')[0];
 			let prevAp = 0;
 			// 装備名
@@ -3632,6 +3628,7 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 			node_td = node.getElementsByClassName('info_ap')[0];
 			prevAp = castInt(node_td.textContent);
 			drawChangeValue(node_td, prevAp, planeData.ap);
+			apList.push(planeData.ap);
 			if (!planeName) node_td.textContent = '';
 
 			// 出撃コスト加算
@@ -3661,8 +3658,8 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		// 出撃 or 防空
 		tmpLandBaseDatum.mode = castInt(node_lb_tab.getElementsByClassName('ohuda_select')[0].value);
 
-		// 偵察機による補正考慮
-		updateLBAirPower(tmpLandBaseDatum);
+		// 偵察機による補正適用 & 適用された補正値保持
+		let corr = updateLBAirPower(tmpLandBaseDatum);
 
 		// 生成した第X航空隊データを格納
 		landBaseData.push(tmpLandBaseDatum);
@@ -3673,8 +3670,8 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		// 出撃、配備コスト
 		const node_resource = node_lb_tab.getElementsByClassName('resource')[0];
 		const node_bauxite = node_resource.getElementsByClassName('bauxite')[0];
-		let node_fuel = node_resource.getElementsByClassName('fuel')[0];
-		let node_ammo = node_resource.getElementsByClassName('ammo')[0];
+		const node_fuel = node_resource.getElementsByClassName('fuel')[0];
+		const node_ammo = node_resource.getElementsByClassName('ammo')[0];
 		if (tmpLandBaseDatum.mode < 1) {
 			sumFuel = 0;
 			sumAmmo = 0;
@@ -3692,8 +3689,15 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		drawChangeValue(node_target_td, castInt(node_target_td.textContent), tmpLandBaseDatum.ap);
 		let node_span = node_lb_tab.getElementsByClassName('ap')[0];
 		drawChangeValue(node_span, castInt(node_span.textContent), tmpLandBaseDatum.ap);
-		node_span = node_lb_tab.getElementsByClassName('def_ap')[0];
-		drawChangeValue(node_span, castInt(node_span.textContent), tmpLandBaseDatum.ap);
+
+		// 制空値内訳
+		const sumApList = getArraySum(apList);
+		if (sumApList !== tmpLandBaseDatum.ap) {
+			node_lb_tab.getElementsByClassName('ap_detail')[0].textContent = `( ${apList.join(' / ')} ) × ${corr}`;
+		}
+		else {
+			node_lb_tab.getElementsByClassName('ap_detail')[0].textContent = `( ${apList.join(' / ')} )`;
+		}
 
 		// 半径
 		const range = getRange(tmpLandBaseDatum);
@@ -3750,12 +3754,12 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 			}
 			// 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
 			const rocketBonus = rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2;
-			sumAp_ex = rocketBonus * sumAp;
+			sumAp_ex = Math.floor(rocketBonus * sumAp);
 
-			// 基地入力欄の半径、触接表示をなしに
-			for (const e of document.getElementsByClassName('def_sammary')) {
-				e.getElementsByClassName('rocket_col')[0].textContent = rocketBonus;
-			}
+			// 重爆時の全体的な制空値と補正値
+			document.getElementById('def_sum_ap_all').textContent = sumAp;
+			document.getElementById('def_sum_ex_ap_all').textContent = sumAp_ex;
+			document.getElementById('rocket_c').textContent = rocketBonus;
 
 			// 防空時は半径の後ろの最終防空時制空値を表示　半径は非表示
 			document.getElementById('lb_info').classList.add('col-lg-8', 'col-xl-7');
@@ -3775,7 +3779,7 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 					node_td = document.createElement('td');
 					node_td.className = 'info_defAp info_defApEx';
 					node_td.rowSpan = visiblePlaneCount;
-					node_td.textContent = Math.floor(sumAp_ex);
+					node_td.textContent = sumAp_ex;
 					node_tr.appendChild(node_td);
 
 					break;
@@ -3807,14 +3811,18 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 	}
 
 	// 基地入力欄の半径、触接表示有無
-	for (const e of document.getElementsByClassName('lb_sammary')) {
+	for (const e of document.getElementsByClassName('battle_only')) {
 		if (isDefMode) e.classList.add('d-none');
 		else e.classList.remove('d-none');
 	}
 	// 基地入力欄の防空時ステータス表示有無
-	for (const e of document.getElementsByClassName('def_sammary')) {
-		if (isDefMode) e.classList.remove('d-none');
-		else e.classList.add('d-none');
+	if (isDefMode) {
+		document.getElementById('defense_summary').classList.remove('d-none');
+		document.getElementById('defense_summary').classList.add('d-flex');
+	}
+	else {
+		document.getElementById('defense_summary').classList.remove('d-flex');
+		document.getElementById('defense_summary').classList.add('d-none');
 	}
 }
 
@@ -4053,23 +4061,28 @@ function getReconnaissancesAdjust(plane, isDefence = false) {
 /**
  * 偵察機による制空値補正を行う
  * @param {Object} landBaseDatum 補正を行う landBaseDatum オブジェクト
+ * @returns {number} 適用された補正値
  */
 function updateLBAirPower(landBaseDatum) {
 	const baseAP = landBaseDatum.ap;
-	// 搭載機全ての補正パターンを比較し、最大を返す。Listにすべての補正パターンを保持
-	const apList = [landBaseDatum.ap];
 	let resultAP = landBaseDatum.ap;
+	let maxCorr = 1.0;
+	// 偵察機たち
+	const planes = landBaseDatum.planes.filter(v => v.id > 0 && !v.canAttack);
 
-	for (const plane of landBaseDatum.planes) {
-		// 補正値を乗算して格納
-		apList.push(baseAP * getReconnaissancesAdjust(plane, isDefMode));
-	}
-	// 補正が最大だったものに更新
-	for (const value of apList) {
-		resultAP = resultAP < value ? value : resultAP;
+	// 補正後の値が上回っているものに更新
+	for (const plane of planes) {
+		const corr = getReconnaissancesAdjust(plane, isDefMode);
+		const newAp = baseAP * corr;
+		if (resultAP < newAp) {
+			resultAP = newAp;
+			maxCorr = corr;
+		}
 	}
 
 	landBaseDatum.ap = Math.floor(resultAP);
+
+	return maxCorr;
 }
 
 /**
@@ -5385,9 +5398,6 @@ function mainCalculate(objectData) {
 
 		// 重爆してくる敵艦が含まれていた場合か、マス重爆
 		let isChanged = false;
-		$('.rocket_label').addClass('d-none');
-		$('.rocket_col').addClass('d-none');
-
 		for (const enemyFleet of battleData) {
 			for (const enemy of enemyFleet.enemies) {
 				if (enemyFleet.cellType === CELL_TYPE.highAirRaid) {
@@ -5397,8 +5407,6 @@ function mainCalculate(objectData) {
 				}
 			}
 			if (isChanged) {
-				$('.rocket_label').removeClass('d-none');
-				$('.rocket_col').removeClass('d-none');
 				break;
 			}
 		}
@@ -7223,6 +7231,11 @@ function modal_Closed($this) {
 				}
 			}, 80);
 			break;
+		case "modal_main_preset":
+			// ボタンモードを戻す
+			$('#modal_main_preset').find('.btn_commit_preset').text('編成保存');
+			$('#modal_main_preset').find('.btn_commit_preset').removeClass('rename');
+			break;
 		case "modal_confirm":
 			confirmType = null;
 			break;
@@ -7391,7 +7404,7 @@ function btn_capture_Clicked($this) {
 	$targetContent.find('.r_btn').addClass('d-none');
 	$targetContent.find('.d-lg-flex').addClass('d-none_lg').removeClass('d-lg-flex');
 	$targetContent.find('.custom-checkbox').addClass('d-none');
-	$targetContent.find('.ship_header').addClass('d-flex justify-content-between');
+	$targetContent.find('.battle_only').removeClass('ml-auto').addClass('ml-2');
 
 	// レンダリングズレ修正
 	$targetContent.find('.custom-select').addClass('pt-0');
@@ -7425,7 +7438,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.r_btn:not(.btn_commit_trade)').removeClass('d-none');
 			$targetContent.find('.d-none_lg').addClass('d-none d-lg-flex').removeClass('d-none_lg');
 			$targetContent.find('.btn_remove_plane').removeClass('btn_remove_plane_capture');
-			$targetContent.find('.ship_header').removeClass('d-flex justify-content-between');
+			$targetContent.find('.battle_only').addClass('ml-auto').removeClass('ml-2');
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');
@@ -7896,9 +7909,9 @@ function showPlaneBasicToolTip($this) {
 	let bonusAA = 0;
 	if ($this.find('.plane_td_remodel').length) {
 		const tmp = Object.assign({ remodel: castInt($this.find('.plane_td_remodel')[0].dataset.remodel) }, plane);
-		bonusAA = getBonusAA(tmp, tmp.antiAir);
+		bonusAA = getBonusAA(tmp, tmp.antiAir) - tmp.antiAir;
 	}
-	const actualAA = plane.antiAir + (bonusAA ? bonusAA - plane.antiAir : 0);
+	const actualAA = plane.antiAir + bonusAA;
 	const nmAA = actualAA + 1.5 * plane.interception;
 	const defAA = actualAA + plane.interception + 2.0 * plane.antiBomber;
 	const avoid = plane.avoid ? AVOID_TYPE.find(v => v.id === plane.avoid) : null
@@ -7914,7 +7927,7 @@ function showPlaneBasicToolTip($this) {
 				${defAA != actualAA ? `<div class="col_half"><span>防空対空: ${defAA}</span></div>` : ''}
 				${plane.antiAir ? `<div class="col_half">
 					<span>対空: ${plane.antiAir}</span>
-					${bonusAA ? `<span class="text_remodel">(+${(bonusAA - plane.antiAir).toFixed(1)})</span>` : ''}
+					${bonusAA ? `<span class="text_remodel">(+${bonusAA.toFixed(1)})</span>` : ''}
 				</div>` : ''}
 				${plane.fire ? `<div class="col_half">火力: ${plane.fire}</div>` : ''}
 				${plane.torpedo ? `<div class="col_half">雷装: ${plane.torpedo}</div>` : ''}
@@ -8644,6 +8657,33 @@ function lb_plane_Drop($this, ui) {
 	}
 }
 
+
+/**
+ * 三角ボタンクリック時 表示情報のトグル
+ * @param {JqueryDomObject} $this
+ */
+function btn_toggle_lb_info_Clicked($this) {
+	const $tab = $this.closest('.lb_infomation');
+
+	if ($this.hasClass('show_resource')) {
+		// 通常表示に切り替え
+		$this.removeClass('show_resource');
+		if (isDefMode) $this.addClass('ml-auto');
+		$tab.find('.battle_only').addClass('ml-auto').removeClass('ml-2');
+		$tab.find('.btn_show_contact_rate_lb').removeClass('d-none');
+		$tab.find('.ap_detail').removeClass('d-none');
+		$tab.find('.resource').addClass('d-none');
+	}
+	else {
+		// 資源の表示に切り替え
+		$this.addClass('show_resource').removeClass('ml-auto');
+		$tab.find('.battle_only').removeClass('ml-auto').addClass('ml-2');
+		$tab.find('.btn_show_contact_rate_lb').addClass('d-none');
+		$tab.find('.ap_detail').addClass('d-none');
+		$tab.find('.resource').removeClass('d-none');
+	}
+}
+
 /**
  * 艦娘装備リセットボタン押下時
  * @param {JqueryDomObject} $this
@@ -9244,8 +9284,11 @@ function btn_expand_plane_preset_Clicked() {
 		if ($target.attr('class').includes('lb_tab')) {
 			$target.find('.lb_plane').each((i, e) => {
 				const plane = new Object();
-				plane.id = preset.planes[i];
-				setLBPlaneDiv($(e), plane);
+				if (preset.planes.length > i) {
+					plane.id = preset.planes[i].id;
+					plane.remodel = preset.planes[i].remodel;
+					setLBPlaneDiv($(e), plane);
+				}
 			});
 			// お札が待機になってるなら集中または防空に変更
 			$target.find('.ohuda_select').val(isDefMode ? 0 : 2);
@@ -9253,8 +9296,11 @@ function btn_expand_plane_preset_Clicked() {
 		else {
 			$target.find('.ship_plane').each((i, e) => {
 				const plane = new Object();
-				plane.id = preset.planes[i];
-				setPlaneDiv($(e), plane);
+				if (preset.planes.length > i) {
+					plane.id = preset.planes[i].id;
+					plane.remodel = preset.planes[i].remodel;
+					setPlaneDiv($(e), plane);
+				}
 			});
 		}
 	}
@@ -10491,8 +10537,64 @@ function modal_confirm_ok_Clicked() {
 /**
  * メニュー「編成保存」ボタンクリック
  */
-function btn_preset_all_Clicked() {
-	loadMainPreset();
+function btn_save_preset_Clicked() {
+	// 現在のアクティブタブの情報を取得
+	const presets = loadLocalStorage('presets');
+	if (presets) {
+		const preset = presets.find(v => v[0] === getActivePreset().id);
+
+		if (preset) {
+			// ローカルストレージにすでに保存済みの編成だったら
+			document.getElementById('input_preset_name').value = preset[1];
+			document.getElementById('preset_remarks').value = preset[3];
+
+			// 編成の更新を行って終わり
+			updateMainPreset();
+			inform_success('編成の上書き更新が完了しました。');
+			return;
+		}
+		else {
+			// ローカルストレージに存在しない編成だったら
+			document.getElementById('input_preset_name').value = '';
+			document.getElementById('preset_remarks').value = '';
+		}
+	}
+	else {
+		// ローカルストレージ編成がそもそも存在しなかったら
+		document.getElementById('input_preset_name').value = '';
+		document.getElementById('preset_remarks').value = '';
+	}
+
+	$('#modal_main_preset').find('.btn_commit_preset').prop('disabled', true);
+	$('#modal_main_preset').modal('show');
+}
+
+/**
+ * 別名で保存ボタンクリック
+ */
+function btn_save_preset_sub_Clicked() {
+	// 現在のアクティブタブの情報を取得
+	const presets = loadLocalStorage('presets');
+	if (presets) {
+		const preset = presets.find(v => v[0] === getActivePreset().id);
+		if (preset) {
+			// ローカルストレージにすでに保存済みの編成だったら
+			document.getElementById('input_preset_name').value = preset[1];
+			document.getElementById('preset_remarks').value = preset[3];
+
+			// 新しい名前で保存しようとする　-> 別名保存ボタンにする
+			const $btn = $('#modal_main_preset').find('.btn_commit_preset');
+			$btn.text('別名で保存');
+			$btn.addClass('rename');
+			$btn.prop('disabled', true);
+			$('#modal_main_preset').modal('show');
+
+			return;
+		}
+	}
+
+	// 上記以外の場合は編成上書きクリック時と同じ挙動させる
+	btn_save_preset_Clicked();
 }
 
 /**
@@ -10858,6 +10960,29 @@ function simulatorTab_Clicked($this) {
 			calculate();
 		}
 	}
+	else {
+		// 見つからなかった場合新規タブ
+		let tabData = {
+			id: getUniqueId(),
+			name: getMaxUntitled(),
+			// 全て空のデータ ↓
+			history: {
+				index: 0,
+				histories: [
+					'Noi6BpgWgRnX41BYLgAZKe-H6IBEB4cSaA3gQMYCuALgJYB2AkgCYEBcmBATgIZ0AplxjoedfgCMANiM6pwBKQHtebIb1HiAvhBwAzfjIDOQ8EdPnFZIA'
+				]
+			}
+		};
+		let activePresets = loadLocalStorage('activePresets');
+		if (!activePresets) activePresets = { activeId: "", presets: [] };
+		activePresets.presets.push(tabData);
+		activePresets.activeId = tabData.id;
+		saveLocalStorage('activePresets', activePresets);
+
+		setTab();
+		expandMainPreset(decodePreset(tabData.history.histories[0]));
+		calculate();
+	}
 }
 
 /**
@@ -11048,6 +11173,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
 	$('#landBase_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
 	$('#landBase_content').on('click', '.btn_show_contact_rate_lb', function () { btn_show_contact_rate_lb_Clicked($(this)); });
+	$('#landBase_content').on('click', '.btn_toggle_lb_info', function () { btn_toggle_lb_info_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '#read_duck_read_warning', function () { $('#duck_read_warning').addClass('d-none'); });
 	$('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
@@ -11215,7 +11341,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_fleet_antiair_input').on('input', '.cutin_rate', function () { updateAntiAirCutinRate($(this)); });
 	$('#modal_fleet_antiair_input').on('click', '.btn_remove_cutin.cur_pointer', function () { btn_remove_cutin_Clicked($(this)); });
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
-	$('#btn_save_preset').click(btn_preset_all_Clicked);
+	$('#btn_save_preset').click(btn_save_preset_Clicked);
+	$('#btn_save_preset_sub').click(btn_save_preset_sub_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
 	$('#btn_twitter').click(btn_twitter_Clicked);
 	$('#btn_share').click(() => { $('#modal_share').modal('show'); });
