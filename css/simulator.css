@@ -312,7 +312,10 @@ input[type="text"] { font-size: 12px; }
     padding-left: .25rem;
   }
 }
-.lb_infomation { font-size: 12px; }
+.lb_infomation {
+  font-size: 12px;
+  height: 20px;
+}
 /* 基地札 */
 .ohuda_select {
   font-size: 12px;
@@ -327,8 +330,8 @@ input[type="text"] { font-size: 12px; }
 
 .baseNo,
 .resource,
-.lb_sammary,
-.def_sammary {
+.lb_infomation > div,
+#defense_summary > div {
   -ms-flex-item-align: center!important;
   align-self: center!important;
 }
@@ -367,6 +370,17 @@ input[type="text"] { font-size: 12px; }
   transition: .3s;
 }
 .btn_show_contact_rate_lb:hover { opacity: 1; }
+
+.btn_toggle_lb_info {
+  margin-left: 0.25rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: 0.2s;
+  user-select: none;
+}
+.btn_toggle_lb_info:hover {
+  opacity: 1.0;
+}
 
 /* -----------------------------------
   艦隊関連 #friendFleet
@@ -420,7 +434,6 @@ input[type="text"] { font-size: 12px; }
 .ap_detail {
   font-size: 11px;
   opacity: 0.8;
-  margin-left: 0.25rem;
 }
 
 /* 艦娘機体選択欄 */
@@ -853,19 +866,12 @@ input[type="text"] { font-size: 12px; }
   機体プリセットモーダル #modal_plane_preset
 ----------------------------------------- */
 .preset_preview_tr { height: 52px; }
-.preset_preview_td_type {
-  width: 30px;
+.preset_preview_tr > div {
   -ms-flex-item-align: center;
   align-self: center;
 }
-.preset_preview_td_name {
-  -ms-flex-item-align: center;
-  align-self: center;
-}
-.preset_preview_td_info {
-  -ms-flex-item-align: center;
-  align-self: center;
-}
+.preset_preview_td_type { width: 30px; }
+.preset_preview_td_remodel { color: rgb(0, 200, 200); }
 
 
 /* ---------------------------------------
