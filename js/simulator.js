@@ -311,6 +311,7 @@ function getPlanesForIcon(type) {
 	else if (type === 3) planes = PLANE_DATA.filter(v => v.type === 3 || v.type === 9);
 	else if (type === 4) planes = PLANE_DATA.filter(v => v.type === 4 || v.type === 104);
 	else if (type === 5) planes = PLANE_DATA.filter(v => [5, 6, 7, 8].includes(v.type));
+	else if (type === 101) planes = PLANE_DATA.filter(v => [101, -101, 105].includes(v.type));
 	else planes = PLANE_DATA.filter(v => Math.abs(castInt(v.type)) === Math.abs(castInt(type)));
 	return planes;
 }
@@ -748,7 +749,7 @@ function setPlaneType(element, array, withoutAll = false) {
 	}
 
 	// 陸上機判定
-	if (isContain(array, [100, 101, 102, 103, 104])) {
+	if (isContain(array, [100, 101, 102, 103, 104, 105])) {
 		const opt = document.createElement('optgroup');
 		opt.label = '陸上機';
 		opt.className = 'optg_lb';
@@ -804,7 +805,7 @@ function setPlaneTypeIconSelect(element, array, withoutAll = false) {
 	}
 
 	const fragment = document.createDocumentFragment();
-	const types = PLANE_TYPE.filter(v => ![6, 7, 8, 9, 104].includes(v.id));
+	const types = PLANE_TYPE.filter(v => ![6, 7, 8, 9, 104, 105].includes(v.id));
 
 	const li = document.createElement('li');
 	li.className = 'nav-item';
@@ -918,7 +919,10 @@ function setLBPlaneDiv($div, lbPlane = { id: 0, slot: 0, remodel: 0 }) {
 
 	// 搭載数最大値　基本は18
 	let maxSlot = 18;
-	if (result && plane && RECONNAISSANCES.includes(plane.type)) maxSlot = 4;
+	if (result && plane) {
+		if (RECONNAISSANCES.includes(plane.type)) maxSlot = 4;
+		else if (plane.type === 105) maxSlot = 9;
+	}
 	$div.find('.slot_input').attr('max', maxSlot);
 	$div.find('.slot_range').attr('max', maxSlot);
 
@@ -3632,8 +3636,9 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 			if (!planeName) node_td.textContent = '';
 
 			// 出撃コスト加算
-			sumFuel += planeData.id === 0 ? 0 : Math.ceil(planeData.slot * (planeData.type === 101 ? 1.5 : 1.0));
-			sumAmmo += planeData.id === 0 ? 0 : planeData.type === 101 ? Math.floor(planeData.slot * 0.7) : Math.ceil(planeData.slot * 0.6);
+			const isLbAtaccker = [101, -101, 105].includes(planeData.type);
+			sumFuel += planeData.id === 0 ? 0 : Math.ceil(planeData.slot * (isLbAtaccker ? 1.5 : 1.0));
+			sumAmmo += planeData.id === 0 ? 0 : isLbAtaccker ? Math.floor(planeData.slot * 0.7) : Math.ceil(planeData.slot * 0.6);
 			sumBauxite += planeData.cost * (RECONNAISSANCES.includes(planeData.type) ? 4 : 18);
 
 			summary_text += ' ' + (planeName ? `${planeName} ${getProfString(planeData.level)}` : '') + ',';
@@ -3867,6 +3872,10 @@ function createLBPlaneObject(node) {
 		if (RECONNAISSANCES.includes(lbPlane.type) && lbPlane.slot > 4) {
 			node_slot.textContent = 4;
 			lbPlane.slot = 4;
+		}
+		else if (lbPlane.type === 105 && lbPlane.slot > 9) {
+			node_slot.textContent = 9;
+			lbPlane.slot = 9;
 		}
 		lbPlane.antiAir = plane.antiAir;
 		lbPlane.antiBomber = plane.antiBomber;
@@ -5359,6 +5368,8 @@ function getLandBasePower(id, slot, remodel) {
 			adj = 0.7071;
 			break;
 		case 101:
+		case -101:
+		case 105:
 			fire = 0.7 * remodel + plane.torpedo;
 			adj = 0.8;
 			break;
@@ -5369,7 +5380,7 @@ function getLandBasePower(id, slot, remodel) {
 	// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
 	const p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
 	// 陸攻補正
-	if (type === 101) {
+	if (type === 101 || type === 105) {
 		return 1.8 * p;
 	}
 	else {
@@ -6518,8 +6529,8 @@ function autoExpandNormal() {
 			const plane = PLANE_DATA.find(v => v.id === stock.id);
 			// 半径足切り
 			if (plane.radius < minRange) continue;
-			// 対潜哨戒機足切り
-			if (plane.type === -101) continue;
+			// 対潜哨戒機 大型陸上機足切り
+			if (plane.type === -101 || plane.type === 105) continue;
 			// 艦戦非許容時艦戦足切り
 			if (!allowFighter && Math.abs(plane.type) === 1) continue;
 			// カテゴリ毎に分けて格納(艦戦系は合同)
@@ -6830,7 +6841,7 @@ function autoLandBaseExpand(planes) {
 	const destAp = castInt($('#dest_ap').val());
 
 	// 基地航空隊の攻撃機優先順位
-	const atackers = [101, 2, 3, 6, 9];
+	const atackers = [101, 105, 2, 3, 6, 9];
 	// スロット
 	const equipList = [
 		{ id: 0, ap: 0, remodel: 0 },
@@ -6936,6 +6947,7 @@ function getLandBasePlaneObject(plane) {
 	lbPlane.id = plane.id;
 	lbPlane.type = plane.type;
 	if (RECONNAISSANCES.includes(lbPlane.type) && lbPlane.slot > 4) lbPlane.slot = 4;
+	if (lbPlane.type === 105 && lbPlane.slot > 9) lbPlane.slot = 9;
 	lbPlane.antiAir = rawPlane.antiAir;
 	lbPlane.antiBomber = rawPlane.antiBomber;
 	lbPlane.interception = rawPlane.interception;
@@ -7763,7 +7775,13 @@ function init_proficiency_Changed($this) {
 	// localStorage更新
 	const prof = castInt($this.find('.prof_opt')[0].dataset.prof);
 	const tmp = setting.defaultProf.find(v => v.id === castInt($this.closest('.init_prof')[0].dataset.typeid));
-	tmp.prof = prof;
+	if (!tmp) {
+		// ないカテゴリなら追加
+		setting.defaultProf.push({ id: castInt($this.closest('.init_prof')[0].dataset.typeid), prof: prof });
+	}
+	else {
+		tmp.prof = prof;
+	}
 	saveSetting();
 }
 
@@ -8938,10 +8956,6 @@ function plane_type_select_Changed($this = null) {
 	else if ($target && $target.attr('class').includes('ship_plane')) {
 		// 艦娘だけど自由
 		org = org.filter(v => v.type !== 104);
-		org = org.filter(v => dispType.includes(Math.abs(v.type)));
-	}
-	else {
-		// カテゴリ一覧にないもの除外
 		org = org.filter(v => dispType.includes(Math.abs(v.type)));
 	}
 
