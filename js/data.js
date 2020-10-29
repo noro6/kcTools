@@ -15,8 +15,9 @@ const PLANE_TYPE = [
 	{ id: 102, name: "陸軍戦闘機", abbr: "陸戦", css: "css_lb_fighter" },
 	{ id: 103, name: "局地戦闘機", abbr: "局戦", css: "css_lb_attack_aircraft" },
 	{ id: 104, name: "陸上偵察機", abbr: "陸偵", css: "css_cb_reconnaissance" },
-];
-const PLANE_DATA = [
+	{ id: 105, name: "大型陸上機", abbr: "重爆", css: "css_lb_attack_aircraft" },
+ ];
+ const PLANE_DATA = [
 	{ id: 19, type: 1, name: "九六式艦戦", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 1, radius: 3, cost: 3, avoid: 0 },
 	{ id: 20, type: 1, name: "零式艦戦21型", abbr: "", fire: 0, antiAir: 5, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0 },
 	{ id: 21, type: 1, name: "零式艦戦52型", abbr: "", fire: 0, antiAir: 6, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 6, cost: 5, avoid: 0 },
@@ -182,7 +183,9 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190 D-9", abbr: "", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0 },
-];
+	{ id: 395, type: 105, name: "深山", abbr: "", fire: 0, antiAir: 1, torpedo: 16, bomber: 17, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 10, cost: 20, avoid: 0 },
+	{ id: 396, type: 105, name: "深山改", abbr: "", fire: 0, antiAir: 2, torpedo: 17, bomber: 19, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 11, cost: 21, avoid: 0 },
+ ];
 const SHIP_TYPE = [
 	{ id: 11, name: "正規空母", sort: 1 },
 	{ id: 18, name: "装甲空母", sort: 2 },
@@ -3372,7 +3375,7 @@ const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5 };
 const FIGHTERS = [1, 7, 102, 103];
 
 // 攻撃機系
-const ATTACKERS = [2, -2, 3, 6, 9, 101, -101];
+const ATTACKERS = [2, -2, 3, 6, 9, 101, -101, 105];
 
 // 偵察機
 const RECONNAISSANCES = [4, 5, 8, 104];
@@ -3570,4 +3573,4 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const LATEST_VERSION = '1.10.1';
+const LATEST_VERSION = '1.10.1.1';
