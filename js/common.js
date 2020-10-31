@@ -88,6 +88,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('favoriteShip')) setting.favoriteShip = [];
 	if (!setting.hasOwnProperty('reducedDisplay')) setting.reducedDisplay = true;
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
+	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
@@ -230,6 +231,23 @@ function adaptUpdater() {
 				}
 
 				saveLocalStorage('planePreset', ps);
+			}
+		}
+
+		// v1.10.2
+		if (major <= 9 || minor < 2) {
+			// 編成プリセットに更新日の概念を追加
+			let presets = loadLocalStorage('presets');
+			if (presets) {
+				const startDate = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss');
+				let index = 0;
+				for (const preset of presets) {
+					if (preset.length < 5) {
+						preset.push(startDate + '.' + ('000' + index++).slice(-3));
+					}
+				}
+
+				saveLocalStorage('presets', presets);
 			}
 		}
 	}
