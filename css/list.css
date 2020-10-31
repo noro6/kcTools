@@ -41,7 +41,7 @@
 .preset_container:not(.editting):active { background-color: rgba(109, 214, 255, 0.5) !important; }
 .dark-theme .preset_container:not(.editting):active { background-color: rgba(230, 248, 255, 0.4) !important; }
 .preset_container.new {
-  height: 76px;
+  height: 88px;
 }
 .preset_container .new_body {
   font-size: 1.1em;
