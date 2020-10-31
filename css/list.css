@@ -2,25 +2,30 @@
   max-width: 1100px;
 }
 
+#search_preset {
+  width: 140px;
+}
+
 #presets_container {
   overflow: auto;
 }
 
 .preset_container {
   cursor: pointer;
-  min-height: 82px;
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid #dee2e6;
-  border-left: 1px solid transparent;
+  min-height: 76px;
+  border-top: 1px solid #dee2e6;
   border-right: 1px solid transparent;
-  padding: 0.5rem;
+  border-bottom: 1px solid transparent;
+  border-left: 1px solid transparent;
   transition: 0.2s;
+  display: flex;
+  flex-direction: column;
 }
 .dark-theme .preset_container {
-  border-bottom-color: #6c757d;
+  border-top-color: #6c757d;
 }
 .preset_container:not(.editting) {
   user-select: none;
@@ -35,7 +40,9 @@
 }
 .preset_container:not(.editting):active { background-color: rgba(109, 214, 255, 0.5) !important; }
 .dark-theme .preset_container:not(.editting):active { background-color: rgba(230, 248, 255, 0.4) !important; }
-
+.preset_container.new {
+  height: 76px;
+}
 .preset_container .new_body {
   font-size: 1.1em;
   text-align: center;
@@ -55,7 +62,7 @@
 
 .land_base_state {
   font-size: 10px;
-  padding: 0.05rem 0.5rem;
+  padding: 0.03rem 0.5rem;
   background-color:rgb(28, 121, 5);
   border-radius: 0.4em;
   color: #fff;
@@ -66,8 +73,8 @@
 
 .ship_image {
   margin: 0.1rem 0.2rem 0 0;
-  width: 100px;
-  height: 25px;
+  width: 84px;
+  height: 21px;
 }
 
 .preset_memo_view {
@@ -86,6 +93,42 @@
 .btns_container > div {
   -ms-flex-item-align: center!important;
   align-self: center!important;
+}
+
+.preset_header {
+  text-align: right;
+  height: 8px;
+}
+.preset_header.sortable_handle{
+  border-top: 5px solid #dee2e6;
+  border-right: 5px solid #dee2e6;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid transparent;
+  margin-left: auto;
+  transition: 0.2s;
+  cursor: move;
+}
+.dark-theme .preset_header {
+  border-top-color: #6c757d;
+  border-right-color: #6c757d;
+}
+.preset_container:not(.editting):hover .preset_header {
+  border-top-color: rgb(98, 197, 255, 0.8);
+  border-right-color: rgb(98, 197, 255, 0.8);
+}
+.dark-theme .preset_container:not(.editting):hover .preset_header {
+  border-top-color: #ccc;
+  border-right-color:  #ccc;
+}
+
+
+.update_date {
+  position: relative;
+  bottom: 0;
+  margin-top: auto;
+  text-align: right;
+  font-size: 10px;
+  opacity: 0.8;
 }
 
 .r_btn,

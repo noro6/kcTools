@@ -7,6 +7,7 @@ function initialize() {
 
   // 設定変更
   document.getElementById('confirm_tab_close')['checked'] = setting.confirmTabClosing;
+  document.getElementById('presets_order').value = setting.presetsOrder;
 
   // アクティブなタブはないので表示修正
   $('.fleet_tab.active').removeClass('active');
@@ -22,6 +23,37 @@ function setPresets() {
   let presets = loadLocalStorage('presets');
   if (!presets) presets = [];
 
+  // ソートチェック
+  const sort = castInt(document.getElementById('presets_order').value);
+  // 検索語句
+  const keyword = document.getElementById('search_preset').value.trim();
+
+  switch (sort) {
+    case 1:
+      // 更新日時降順
+      presets.sort((a, b) => a[4] < b[4] ? 1 : -1);
+      break;
+    case 2:
+      // 更新日時昇順
+      presets.sort((a, b) => a[4] > b[4] ? 1 : -1);
+      break;
+    case 3:
+      // プリセット名降順
+      presets.sort((a, b) => a[1] < b[1] ? 1 : -1);
+      break;
+    case 4:
+      // プリセット名昇順
+      presets.sort((a, b) => a[1] > b[1] ? 1 : -1);
+      break;
+    default:
+      break;
+  }
+  setting.presetsOrder = sort;
+  saveSetting();
+
+  // 入れ替えできる条件かどうか
+  const enabledSortable = sort === 0 && !keyword;
+
   const fragment = document.createDocumentFragment();
 
   // 新規作成用ボタン
@@ -36,12 +68,22 @@ function setPresets() {
   const sortable_container = createDiv('', 'preset_sortable_container');
 
   for (const preset of presets) {
-    const wrapper = document.createElement('div');
 
-    const container = createDiv('d-flex preset_container sortable_handle');
+    // 編成名なし　キーワードが編成に一致しない場合出力しない
+    if(!preset[1] || (keyword && preset[1].indexOf(keyword) < 0)) {
+      continue;
+    }
+    // これいる（確信）...ないとsortableでanimationがバッティングする
+    const wrapper = createDiv();
+    const container = createDiv('preset_container');
     container.dataset.presetid = preset[0];
 
-    const abstract = createDiv('mx-2 preset_abstract flex-grow-1');
+    // プリセヘッダー
+    const preset_header = createDiv('preset_header ' + (enabledSortable ? 'sortable_handle' : ''));
+    container.appendChild(preset_header);
+
+    const preset_body = createDiv('preset_body d-flex mx-2');
+    const abstract = createDiv('mr-2 preset_abstract flex-grow-1');
     // 編成名
     abstract.appendChild(createDiv('preset_name', '', preset[1]));
     // 名前編集欄
@@ -95,10 +137,10 @@ function setPresets() {
     const rowLength = textarea.value.match(/\n/g);
     textarea.rows = (rowLength && rowLength.length ? rowLength.length + 2 : 2);
     abstract.appendChild(textarea);
-    container.appendChild(abstract);
+    preset_body.appendChild(abstract);
 
     // ボタン群ラッパー
-    const btns = createDiv('d-flex ml-auto btns_container');
+    const btns = createDiv('d-flex ml-auto pt-2 btns_container');
 
     // 編成編集コミットボタン
     const btn_commit = createDiv('ml-auto r_btn btn_commit d-none');
@@ -138,9 +180,15 @@ function setPresets() {
     btn_delete.dataset.offset = '-50%';
     btn_delete.title = '編成を削除します。';
     btn_delete.innerHTML = '<i class="fas fa-trash-o"></i>';
-    btns.appendChild(btn_delete);
+    btns.appendChild(btn_delete);    
 
-    container.appendChild(btns);
+    preset_body.appendChild(btns);
+    container.appendChild(preset_body);
+
+    // プリセフッター
+    const preset_footer = createDiv('update_date mr-1','', '更新日時: '+preset[4].split('.')[0]);
+    container.appendChild(preset_footer);
+
     wrapper.appendChild(container);
     sortable_container.appendChild(wrapper);
   }
@@ -152,23 +200,24 @@ function setPresets() {
   $('#presets_container .r_btn').tooltip();
 
   // 入れ替え設定
-  Sortable.create(document.getElementById('preset_sortable_container'), {
-    delay: 50,
-    animation: 200,
-    handle: '.sortable_handle',
-    onEnd: function () {
-      const oldPresets = loadLocalStorage('presets');
-      const newPresets = [];
-      for (const c of document.getElementsByClassName('preset_container')) {
-        const preset = oldPresets.find(v => v[0] === c.dataset.presetid);
-        if (preset) newPresets.push(preset);
+  if(sort === 0 && !keyword) {
+    Sortable.create(document.getElementById('preset_sortable_container'), {
+      animation: 200,
+      handle: '.sortable_handle',
+      onEnd: function () {
+        const oldPresets = loadLocalStorage('presets');
+        const newPresets = [];
+        for (const c of document.getElementsByClassName('preset_container')) {
+          const preset = oldPresets.find(v => v[0] === c.dataset.presetid);
+          if (preset) newPresets.push(preset);
+        }
+        if (newPresets.length) {
+          saveLocalStorage('presets', newPresets);
+          inform_success('編成データの順序が更新されました。');
+        }
       }
-      if (newPresets.length) {
-        saveLocalStorage('presets', newPresets);
-        inform_success('編成データの順序が更新されました。');
-      }
-    }
-  });
+    });
+  }
 }
 
 /**
@@ -893,6 +942,8 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('click', '.btn_first_time', first_time_Clicked);
   $('#main').on('click', '.btn_site_manual', site_manual_Clicked);
   $('#main').on('click', '.theme_select', function () { site_theme_Changed($(this)); });
+  $('#main').on('input', '#search_preset', setPresets);
+  $('#main').on('change', '#presets_order', setPresets);
   $('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
   $('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
   $('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);

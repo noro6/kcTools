@@ -88,7 +88,7 @@ let fleetStage2Table = [];
 
 /*
 	プリセットメモ
-	全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット], 3:メモ]
+	全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット], 3:メモ, 4:更新日時]
 		基地: [0:機体群, 1:札群]
 		艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ]
 			機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
@@ -2573,7 +2573,8 @@ function updateMainPreset() {
 		activePreset.id,
 		activePreset.name,
 		presetBody,
-		document.getElementById('preset_remarks').value.trim()
+		document.getElementById('preset_remarks').value.trim(),
+		formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss')
 	];
 
 	// プリセット一覧への登録作業
