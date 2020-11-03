@@ -839,7 +839,7 @@ function closeActiveTab($this) {
 			<div class="h6">未保存の変更内容がありますが、このままタブを閉じますか？</div>
 			<div class="mt-3 font_size_12">戻って保存するには、画面上部の「編成保存」を押してください。</div>
 			<div class="font_size_12">変更内容を破棄してタブを閉じる場合は、このままOKボタンを押してください。</div>
-			<div class="mt-3 font_size_11">このメッセージはトップページの「共通設定」欄で無効にできます。</div>
+			<div class="mt-3 font_size_11">このメッセージは編成一覧ページの「共通設定」欄で無効にできます。</div>
 		`);
 		$modal[0].dataset.target = container[0].dataset.presetid;
 		confirmType = 'deleteTab';

@@ -3516,8 +3516,10 @@ function calculateInit(objectData) {
 	const history = activePreset.history;
 	const histories = history.histories;
 
+	const enabled = activePreset.id !== '';
+
 	// 現在値と違う履歴データかチェック
-	if (histories[history.index] !== currentData) {
+	if (enabled && activePreset.id &&　histories[history.index] !== currentData) {
 		// 現在のundo index 位置より若い履歴を削除
 		if (history.index !== 0) {
 			histories.splice(0, history.index);
@@ -3537,13 +3539,13 @@ function calculateInit(objectData) {
 		updateActivePreset(activePreset);
 	}
 
-	if (history.index < history.histories.length - 1) {
+	if (enabled && history.index < history.histories.length - 1) {
 		document.getElementById('btn_undo').classList.remove('disabled');
 	}
 	else {
 		document.getElementById('btn_undo').classList.add('disabled');
 	}
-	if (history.index > 0) {
+	if (enabled && history.index > 0) {
 		document.getElementById('btn_redo').classList.remove('disabled');
 	}
 	else {

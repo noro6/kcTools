@@ -1016,6 +1016,14 @@ let CHANGE_LOG = [
 			},
 		],
 	},
+	{
+		id: "1.10.2.1", changes: [
+			{
+				type: 2, title: "不具合の修正を行いました。",
+				content: "タブを閉じた際、特定条件下で変なタブが生成される現象の修正を行いました。"
+			},
+		],
+	},
 ];
 
-const LAST_UPDATE_DATE = "2020/10/31";
+const LAST_UPDATE_DATE = "2020/11/4";
