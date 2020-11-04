@@ -1214,12 +1214,12 @@ function createPlaneTable(planes) {
 
 	if (displayMode === "multi") {
 		$modal.addClass('modal-xl');
-		$tbody.addClass('d-flex flex-wrap multi_mode');
+		$tbody.addClass('multi_mode');
 		$tbody.prev().addClass('d-none').removeClass('d-flex');
 	}
 	else {
 		$modal.removeClass('modal-xl');
-		$tbody.removeClass('d-flex flex-wrap multi_mode');
+		$tbody.removeClass('multi_mode');
 		$tbody.prev().addClass('d-flex').removeClass('d-none');
 	}
 
@@ -1254,14 +1254,8 @@ function createPlaneTable(planes) {
 			const used = usedTable.find(v => v.id === plane.id);
 
 			if (isDivideStock) {
-				// この機体を利用しているかどうか
-				if (used && plane.no < used.num[plane.remodel]) {
-					// 配備された個数以下の在庫は飛ばす
-					if (!dispEquipped) continue;
-					enabledCount = 0;
-				}
-				else enabledCount = 1;
-
+				enabledCount = plane.count - (used ? used.num[plane.remodel] : 0);
+				if (!dispEquipped && enabledCount < 1) continue;
 				// クリック時に搭載する改修値の設定
 				maxRemodelLevel = plane.remodel;
 			}
@@ -1342,7 +1336,7 @@ function createPlaneTable(planes) {
 		// 複数表示時分割
 		if (displayMode === "multi" && prevType !== plane.type && sortKey === 'default') {
 			const $typeDiv = document.createElement('div');
-			$typeDiv.className = 'd-flex w-100 mt-3 mb-1';
+			$typeDiv.className = 'type_divider mt-3 mb-1';
 
 			const $type = document.createElement('div');
 			$type.className = 'font_size_12 font_color_half align-self-center';
@@ -1360,17 +1354,21 @@ function createPlaneTable(planes) {
 		$iconDiv.appendChild(cvs);
 		$planeDiv.appendChild($iconDiv);
 		$planeDiv.appendChild($nameDiv);
-		if (enabledCount > 0 && !isDivideStock) {
-			$planeDiv.appendChild($stockDiv);
-		}
-		else if (isDivideStock && plane.remodel > 0) {
+		if (isDivideStock && plane.remodel > 0) {
 			// 改修値
 			const $remodelDiv = document.createElement('div');
 			$remodelDiv.className = 'ml-1 plane_td_remodel align-self-center';
 			$remodelDiv.dataset.remodel = plane.remodel;
 			$remodelDiv.textContent = plane.remodel < 10 ? '★+' + plane.remodel : '★MAX';
 			$planeDiv.appendChild($remodelDiv);
+			$planeDiv.appendChild($stockDiv);
 		}
+
+		// 所持数突っ込む
+		if (enabledCount > 0) {
+			$planeDiv.appendChild($stockDiv);
+		}
+
 		if (displayMode === "single") {
 			$planeDiv.appendChild($aaDiv);
 			$planeDiv.appendChild($rangeDiv);
@@ -1420,11 +1418,9 @@ function createDraggablePlaneTable($this = null) {
 			for (let i = 0; i <= 10; i++) {
 				const stockCount = x.num[i];
 				if (stockCount === 0) continue;
-				for (let j = 0; j < stockCount; j++) {
-					const plane = Object.assign({ remodel: i, no: j }, o);
-					plane.antiAir = getBonusAA(plane, plane.antiAir);
-					newPlanes.push(plane);
-				}
+				const plane = Object.assign({ remodel: i, count: stockCount }, o);
+				plane.antiAir = getBonusAA(plane, plane.antiAir);
+				newPlanes.push(plane);
 			}
 		}
 		planes = newPlanes.concat();
@@ -1473,13 +1469,8 @@ function createDraggablePlaneTable($this = null) {
 
 			if (isDivideStock) {
 				// この機体を利用しているかどうか
-				if (used && plane.no < used.num[plane.remodel]) {
-					// 配備された個数以下の在庫は飛ばす
-					if (!dispEquipped) continue;
-					enabledCount = 0;
-				}
-				else enabledCount = 1;
-
+				enabledCount = plane.count - (used ? used.num[plane.remodel] : 0);
+				if (enabledCount < 1) continue;
 				// クリック時に搭載する改修値の設定
 				maxRemodelLevel = plane.remodel;
 			}
@@ -1564,10 +1555,7 @@ function createDraggablePlaneTable($this = null) {
 		$iconDiv.appendChild(cvs);
 		$planeDiv.appendChild($iconDiv);
 		$planeDiv.appendChild($nameDiv);
-		if (enabledCount > 0 && !isDivideStock) {
-			$planeDiv.appendChild($stockDiv);
-		}
-		else if (isDivideStock && plane.remodel > 0) {
+		if (isDivideStock && plane.remodel > 0) {
 			// 改修値
 			const $remodelDiv = document.createElement('div');
 			$remodelDiv.className = 'ml-1 plane_td_remodel align-self-center';
@@ -1575,6 +1563,10 @@ function createDraggablePlaneTable($this = null) {
 			$remodelDiv.textContent = plane.remodel < 10 ? '★+' + plane.remodel : '★MAX';
 			$planeDiv.appendChild($remodelDiv);
 		}
+		if (enabledCount > 0) {
+			$planeDiv.appendChild($stockDiv);
+		}
+
 		$planeDiv.appendChild($aaDiv);
 		$planeDiv.appendChild($rangeDiv);
 
@@ -1856,7 +1848,7 @@ function createShipTable(type) {
 		if (type === 0 && prevType !== e.mst.type && e.mst.valid > 0) {
 			const fragment = document.createDocumentFragment();
 			const $typeDiv = document.createElement('div');
-			$typeDiv.className = 'w-100 d-flex mt-3 type_line';
+			$typeDiv.className = 'type_divider mt-3 type_line';
 			const $type = document.createElement('div');
 			$type.className = 'font_size_12 font_color_half align-self-center';
 			$type.textContent = SHIP_TYPE.find(v => v.id === e.mst.type).name;
@@ -1873,14 +1865,14 @@ function createShipTable(type) {
 
 	if (displayMode === "multi") {
 		modal.classList.add('modal-xl');
-		tbody.classList.add('d-flex', 'flex-wrap');
+		tbody.classList.add('multi_mode');
 		const a = modal.getElementsByClassName('scroll_thead')[0];
 		a.classList.add('d-none');
 		a.classList.remove('d-flex');
 	}
 	else {
 		modal.classList.remove('modal-xl');
-		tbody.classList.remove('d-flex', 'flex-wrap');
+		tbody.classList.remove('multi_mode');
 		const a = modal.getElementsByClassName('scroll_thead')[0];
 		a.classList.add('d-flex');
 		a.classList.remove('d-none');
@@ -3519,7 +3511,7 @@ function calculateInit(objectData) {
 	const enabled = activePreset.id !== '';
 
 	// 現在値と違う履歴データかチェック
-	if (enabled && activePreset.id &&　histories[history.index] !== currentData) {
+	if (enabled && activePreset.id && histories[history.index] !== currentData) {
 		// 現在のundo index 位置より若い履歴を削除
 		if (history.index !== 0) {
 			histories.splice(0, history.index);
@@ -8978,11 +8970,11 @@ function plane_type_select_Changed($this = null) {
 			for (let i = 0; i <= 10; i++) {
 				const stockCount = x.num[i];
 				if (stockCount === 0) continue;
-				for (let j = 0; j < stockCount; j++) {
-					const plane = Object.assign({ remodel: i, no: j }, o);
-					plane.antiAir = getBonusAA(plane, plane.antiAir);
-					newPlanes.push(plane);
-				}
+
+				// 改修値0～10で見つかったものを個数とともに格納
+				const plane = Object.assign({ remodel: i, count: stockCount }, o);
+				plane.antiAir = getBonusAA(plane, plane.antiAir);
+				newPlanes.push(plane);
 			}
 		}
 		org = newPlanes.concat();
