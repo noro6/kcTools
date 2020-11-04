@@ -724,7 +724,15 @@ input[type="text"] { font-size: 12px; }
 
 #plane_table { overflow-y: auto; }
 #plane_tbody:not(.multi_mode) { height: 50vh; }
-#plane_tbody.multi_mode { max-height: 50vh; }
+#plane_tbody.multi_mode { 
+  max-height: 50vh; 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (min-width: 992px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
+@media (min-width: 1200px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
+
 .plane_tr_disabled {
   cursor: default;
   color: #ff6b6b;
@@ -754,15 +762,24 @@ input[type="text"] { font-size: 12px; }
 .tr_multi {
   padding-top: .15rem;
   padding-bottom: .15rem;
-  width: 232px;
 }
-
+.type_divider {
+  display: flex;
+  grid-column: 1 / -1;
+}
 
 /* --------------------------------
   艦娘選択モーダル #modal_ship_select
 -------------------------------- */
 #ship_table { overflow-y: auto; }
 #ship_tbody { max-height: 58vh; }
+#ship_tbody.multi_mode { 
+  max-height: 50vh; 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (min-width: 992px) { #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
+@media (min-width: 1200px) { #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
 .ship_td_slot {
   text-align: center;
   width: 35px;
