@@ -3634,7 +3634,7 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 			const isLbAtaccker = [101, -101, 105].includes(planeData.type);
 			sumFuel += planeData.id === 0 ? 0 : Math.ceil(planeData.slot * (isLbAtaccker ? 1.5 : 1.0));
 			sumAmmo += planeData.id === 0 ? 0 : isLbAtaccker ? Math.floor(planeData.slot * 0.7) : Math.ceil(planeData.slot * 0.6);
-			sumBauxite += planeData.cost * (RECONNAISSANCES.includes(planeData.type) ? 4 : 18);
+			sumBauxite += planeData.cost * (planeData.isRecon ? 4 : planeData.type === 105 ? 9 : 18);
 
 			summary_text += ' ' + (planeName ? `${planeName} ${getProfString(planeData.level)}` : '') + ',';
 		}
@@ -3852,7 +3852,7 @@ function createLBPlaneObject(node) {
 	}
 
 	const lbPlane = {
-		id: 0, name: '', abbr: '', type: 0, antiAir: 0, antiBomber: 0, interception: 0, scout: 0, ap: 0, radius: 999, cost: 0,
+		id: 0, name: '', abbr: '', type: 0, antiAir: 0, antiBomber: 0, interception: 0, scout: 0, ap: 0, radius: 999, cost: 0, isRecon: false,
 		slot: inputSlot,
 		remodel: castInt(node.getElementsByClassName('remodel_value')[0].textContent),
 		level: castInt(node.getElementsByClassName('prof_select')[0].dataset.prof),
@@ -3864,7 +3864,8 @@ function createLBPlaneObject(node) {
 		lbPlane.name = plane.name;
 		lbPlane.abbr = plane.abbr;
 		lbPlane.type = plane.type;
-		if (RECONNAISSANCES.includes(lbPlane.type) && lbPlane.slot > 4) {
+		lbPlane.isRecon = RECONNAISSANCES.includes(lbPlane.type);
+		if (lbPlane.isRecon && lbPlane.slot > 4) {
 			node_slot.textContent = 4;
 			lbPlane.slot = 4;
 		}
@@ -3885,7 +3886,7 @@ function createLBPlaneObject(node) {
 
 		if (lbPlane.slot) {
 			// 触接開始因数
-			lbPlane.contact = RECONNAISSANCES.includes(lbPlane.type) ? Math.floor(lbPlane.scout * Math.sqrt(lbPlane.slot)) : 0;
+			lbPlane.contact = lbPlane.isRecon ? Math.floor(lbPlane.scout * Math.sqrt(lbPlane.slot)) : 0;
 			// 触接選択率
 			lbPlane.selectRate = getContactSelectRate(lbPlane);
 		}
