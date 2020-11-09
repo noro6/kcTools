@@ -86,6 +86,9 @@ let inputAntiAirWeights = [];
 // 味方艦隊用Stage2テーブル
 let fleetStage2Table = [];
 
+// 海域情報
+let WORLD_DATA, MAP_DATA, ENEMY_PATTERN = [];
+
 /*
 	プリセットメモ
 	全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット], 3:メモ, 4:更新日時]
@@ -517,10 +520,6 @@ function initialize(callback) {
 	// 戦闘回数初期化
 	$('#battle_count').val(1);
 	$('#landBase_target').val(1);
-
-	// 海域選択初期化
-	createMapSelect();
-	createNodeSelect();
 
 	// 結果欄チェック初期化
 	$('#display_bar').prop('checked', true);
@@ -2347,7 +2346,33 @@ function createMapSelect() {
 			text += `<option value="${m.area}">${world > 20 ? 'E' : world}-${map} : ${m.name}</option>`;
 		}
 	}
+
 	$('#map_select').html(text);
+}
+
+
+/**
+ * 海域情報の動的取得(初回限定)
+ */
+function modal_enemy_pattern_Shown() {
+	if ($('#map_select').html()) return;
+
+	// 初回海域データの動的取得
+	$('#map_select').html('<option value="1">海域データ読込中</option>');
+	fetch("../js/map_data.json", { method: "GET", })
+		.then(res => {
+			if (res.ok) {
+				res.json().then(v => {
+					WORLD_DATA = v["WORLD_DATA"];
+					MAP_DATA = v["MAP_DATA"];
+					ENEMY_PATTERN = v["ENEMY_PATTERN"];
+					// セレクト更新
+					createMapSelect();
+					createNodeSelect();
+				});
+			}
+			else inform_danger(res.statusText);
+		}).catch(error => inform_danger(error));
 }
 
 /**
@@ -11277,6 +11302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_select').on('click', '.btn_remove', function () { modal_enemy_select_btn_remove($(this)); });
 	$('#modal_enemy_select').on('change', '#enemy_type_select', function () { createEnemyTable([castInt($(this).val())]); });
 	$('#modal_enemy_select').on('input', '#enemy_word', enemy_word_TextChanged);
+	$('#modal_enemy_pattern').on('show.bs.modal', modal_enemy_pattern_Shown);
 	$('#modal_enemy_pattern').on('click', '.node_tr', function () { node_tr_Clicked($(this)); });
 	$('#modal_enemy_pattern').on('change', '#map_select', createNodeSelect);
 	$('#modal_enemy_pattern').on('change', '#node_select', createEnemyPattern);
