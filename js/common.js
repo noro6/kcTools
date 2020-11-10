@@ -953,6 +953,17 @@ function btn_reset_localStorage_Clicked() {
 	$modal.modal('show');
 }
 
+// ※
+let fb = null;
+
+function initializeFB() {
+	firebase.initializeApp({
+      apiKey: xxx,
+      projectId: 'development-74af0'
+    });
+    fb = firebase.firestore();
+}
+
 /*==================================
 		イベント
 ==================================*/

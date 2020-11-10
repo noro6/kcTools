@@ -596,6 +596,10 @@ function modal_confirm_ok_Clicked() {
     setTab();
     $modal.modal('hide');
   }
+  else if (confirmType === "sendComment") {
+    send_comment();
+    $modal.modal('hide');
+  }
 
   // アクティブなタブはないので表示修正
   $('.fleet_tab.active').removeClass('active');
@@ -624,11 +628,7 @@ function site_manual_Clicked() {
  */
 function initializeBoard() {
   if (!fb) {
-    firebase.initializeApp({
-      apiKey: xxx,
-      projectId: 'development-74af0'
-    });
-    fb = firebase.firestore();
+    initializeFB();
 
     fb.collection("comments").orderBy('createdAt', 'desc').limit(30)
       .onSnapshot(function (querySnapshot) {
@@ -817,9 +817,6 @@ function send_comment() {
   }
   else alert('謎の理由により、コメントの投稿に失敗しました。');
 }
-
-// ※
-let fb = null;
 
 /**
  * URL短縮ボタンクリック

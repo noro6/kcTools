@@ -2617,6 +2617,7 @@ function updateMainPreset() {
 			break;
 		}
 	}
+
 	// 更新がなかったら新規登録
 	if (!isUpdate) {
 		presets.push(preset);
@@ -2633,8 +2634,46 @@ function updateMainPreset() {
 	// タブ再構築
 	setTab();
 
+	if ($('#allow_upload_preset').prop('checked')) {
+		// 編成のアップロード
+		uploadMainPreset(preset);
+	}
+
 	$('#modal_main_preset').modal('hide');
 }
+
+/**
+ * 編成のアップロード
+ * @param {*} preset アップロード対象の編成
+ */
+function uploadMainPreset(preset) {
+	console.log('preset :>> ', preset);
+
+	if(!fb) initializeFB();
+	if (fb) {
+	  fb.runTransaction(function (tran) {
+		 const ref = fb.collection('presets');
+		 const d = ref.doc();
+		 return tran.get(d).then(async () => {
+			const newPreset = {
+			  id: preset[0],
+			  name: preset[1],
+			  data: preset[2],
+			  memo: preset[3],
+			  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+			  map: '場所'
+			};
+			await tran.set(d, newPreset);
+			return newPreset;
+		 })
+	  }).then(function (res) {
+	  }).catch(function (err) {
+		 console.error(err);
+		 inform_danger('エラーが発生しました。');
+	  });
+	}
+	else inform_danger('謎の理由により、アップロードに失敗しました。');
+ }
 
 
 /**
@@ -7268,6 +7307,8 @@ function modal_Closed($this) {
 			// ボタンモードを戻す
 			$('#modal_main_preset').find('.btn_commit_preset').text('編成保存');
 			$('#modal_main_preset').find('.btn_commit_preset').removeClass('rename');
+			// アップロード非チェック
+			$('#allow_upload_preset').prop('checked', false);
 			break;
 		case "modal_confirm":
 			confirmType = null;
@@ -9271,7 +9312,7 @@ function plane_preset_tr_Clicked($this) {
 function preset_name_Changed($this) {
 	// 入力検証　全半40文字くらいで
 	const input = $this.val().trim();
-	const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
+	const $btn = $this.closest('.modal').find('.btn_commit_preset');
 	if (input.length > 50) {
 		$this.addClass('is-invalid');
 		$btn.prop('disabled', true);
@@ -10558,9 +10599,6 @@ function modal_confirm_ok_Clicked() {
 			setting.selectedHistory[1] = [];
 			saveSetting();
 			break;
-		case "sendComment":
-			send_comment();
-			break;
 		case "Error":
 			break;
 		default:
@@ -10573,6 +10611,9 @@ function modal_confirm_ok_Clicked() {
  * メニュー「編成保存」ボタンクリック
  */
 function btn_save_preset_Clicked() {
+	// アップロード非チェック
+	$('#allow_upload_preset').prop('checked', false);
+
 	// 現在のアクティブタブの情報を取得
 	const presets = loadLocalStorage('presets');
 	if (presets) {
@@ -10608,6 +10649,8 @@ function btn_save_preset_Clicked() {
  * 別名で保存ボタンクリック
  */
 function btn_save_preset_sub_Clicked() {
+	// アップロード非チェック
+	$('#allow_upload_preset').prop('checked', false);
 	// 現在のアクティブタブの情報を取得
 	const presets = loadLocalStorage('presets');
 	if (presets) {
