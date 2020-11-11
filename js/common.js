@@ -958,10 +958,10 @@ let fb = null;
 
 function initializeFB() {
 	firebase.initializeApp({
-      apiKey: xxx,
-      projectId: 'development-74af0'
-    });
-    fb = firebase.firestore();
+		apiKey: xxx,
+		projectId: 'development-74af0'
+	});
+	fb = firebase.firestore();
 }
 
 /*==================================

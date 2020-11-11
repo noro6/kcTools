@@ -2,12 +2,22 @@
   max-width: 1100px;
 }
 
-#search_preset {
-  width: 140px;
+#presets_order,
+#search_preset_parent{
+  width: 180px;
 }
 
+#presets_content .input-group {
+  width: auto;
+}
+
+#public_presets_container,
 #presets_container {
   overflow: auto;
+}
+
+.empty_container {
+  min-height: 76px;
 }
 
 .preset_container {
