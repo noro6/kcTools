@@ -172,50 +172,58 @@ function setPresets(presets, isLocal = true) {
     // ボタン群ラッパー
     const btns = createDiv('d-flex ml-auto pt-2 btns_container');
 
-    // 編成編集コミットボタン
-    const btn_commit = createDiv('ml-auto r_btn btn_commit d-none');
-    btn_commit.dataset.toggle = 'tooltip';
-    btn_commit.dataset.offset = '-50%';
-    btn_commit.title = '編集内容を確定します。';
-    btn_commit.innerHTML = '<i class="fas fa-save"></i>';
-    btns.appendChild(btn_commit);
-
-    // 編成編集やめるボタン
-    const btn_rollback = createDiv('ml-2 r_btn btn_rollback d-none');
-    btn_rollback.dataset.toggle = 'tooltip';
-    btn_rollback.dataset.offset = '-50%';
-    btn_rollback.title = '編集内容を取り消します。';
-    btn_rollback.innerHTML = '<i class="fas fa-undo"></i>';
-    btns.appendChild(btn_rollback);
-
-    // 編成編集開始ボタン
-    const btn_edit = createDiv('ml-auto r_btn btn_edit_start');
-    btn_edit.dataset.toggle = 'tooltip';
-    btn_edit.dataset.offset = '-50%';
-    btn_edit.title = '編成名や編成メモの変更を行います。';
-    btn_edit.innerHTML = '<i class="fas fa-pencil"></i>';
-    btns.appendChild(btn_edit);
-
-    // 編成コピーボタン
-    const btn_copy = createDiv('ml-2 r_btn btn_copy');
-    btn_copy.dataset.toggle = 'tooltip';
-    btn_copy.dataset.offset = '-50%';
-    btn_copy.title = 'この編成内容が複製された新しい編成タブを作成します。';
-    btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
-    btns.appendChild(btn_copy);
-
-    // 編成削除ボタン
-    const btn_delete = createDiv('ml-2 r_btn btn_delete');
-    btn_delete.dataset.toggle = 'tooltip';
-    btn_delete.dataset.offset = '-50%';
-    btn_delete.title = '編成を削除します。';
-    btn_delete.innerHTML = '<i class="fas fa-trash-o"></i>';
-    btns.appendChild(btn_delete);
-
     if (isLocal) {
-      // ローカル編成のみボタン追加
-      preset_body.appendChild(btns);
+      // 編成編集コミットボタン
+      const btn_commit = createDiv('ml-auto r_btn btn_commit d-none');
+      btn_commit.dataset.toggle = 'tooltip';
+      btn_commit.dataset.offset = '-50%';
+      btn_commit.title = '編集内容を確定します。';
+      btn_commit.innerHTML = '<i class="fas fa-save"></i>';
+      btns.appendChild(btn_commit);
+
+      // 編成編集やめるボタン
+      const btn_rollback = createDiv('ml-2 r_btn btn_rollback d-none');
+      btn_rollback.dataset.toggle = 'tooltip';
+      btn_rollback.dataset.offset = '-50%';
+      btn_rollback.title = '編集内容を取り消します。';
+      btn_rollback.innerHTML = '<i class="fas fa-undo"></i>';
+      btns.appendChild(btn_rollback);
+
+      // 編成編集開始ボタン
+      const btn_edit = createDiv('ml-auto r_btn btn_edit_start');
+      btn_edit.dataset.toggle = 'tooltip';
+      btn_edit.dataset.offset = '-50%';
+      btn_edit.title = '編成名や編成メモの変更を行います。';
+      btn_edit.innerHTML = '<i class="fas fa-pencil"></i>';
+      btns.appendChild(btn_edit);
+
+      // 編成コピーボタン
+      const btn_copy = createDiv('ml-2 r_btn btn_copy');
+      btn_copy.dataset.toggle = 'tooltip';
+      btn_copy.dataset.offset = '-50%';
+      btn_copy.title = 'この編成内容が複製された新しい編成タブを作成します。';
+      btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
+      btns.appendChild(btn_copy);
+
+      // 編成削除ボタン
+      const btn_delete = createDiv('ml-2 r_btn btn_delete');
+      btn_delete.dataset.toggle = 'tooltip';
+      btn_delete.dataset.offset = '-50%';
+      btn_delete.title = '編成を削除します。';
+      btn_delete.innerHTML = '<i class="fas fa-trash-o"></i>';
+      btns.appendChild(btn_delete);
     }
+    else {
+      // 編成展開ボタン
+      const btn_open = createDiv('ml-2 r_btn btn_open');
+      btn_open.dataset.toggle = 'tooltip';
+      btn_open.dataset.offset = '-50%';
+      btn_open.title = '編成を展開します。';
+      btn_open.innerHTML = '<i class="fas fa-folder-open-o"></i>';
+      btns.appendChild(btn_open);
+    }
+
+    preset_body.appendChild(btns);
     container.appendChild(preset_body);
 
     // プリセフッター
@@ -625,8 +633,9 @@ function preset_Clicked($this) {
  * @param {JqueryDomObject} $this クリック要素
  */
 function public_preset_Clicked($this) {
-  const data = $this[0].dataset.presetdata;
-  const name = $this.find('.preset_name').text();
+  const $parent = $this.closest('.preset_container');
+  const data = $parent[0].dataset.presetdata;
+  const name = $parent.find('.preset_name').text();
   window.location.href = `../simulator/?d=${data}&name=${encodeURIComponent(name)}`;
 }
 
@@ -1216,7 +1225,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('click', '#btn_search_preset', searchUploadedPreset);
   $('#main').on('change', '#map_select', map_select_Changed);
   $('#main').on('change', '#select_preset_level', function () { $('#btn_search_preset').prop('disabled', false); });
-  $('#public_presets_container').on('click', '.preset_container:not(.more_load)', function () { public_preset_Clicked($(this)); });
+  $('#public_presets_container').on('click', '.preset_container .btn_open', function () { public_preset_Clicked($(this)); });
   $('#public_presets_container').on('click', '.preset_container.more_load', more_load_presets);
   $('#presets_container').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
   $('#presets_container').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });

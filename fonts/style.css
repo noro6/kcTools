@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?g5s8wm') format('truetype'),
-    url('fonts/icons.woff?g5s8wm') format('woff'),
-    url('fonts/icons.svg?g5s8wm#icons') format('svg');
+    url('fonts/icons.ttf?e7ibm2') format('truetype'),
+    url('fonts/icons.woff?e7ibm2') format('woff'),
+    url('fonts/icons.svg?e7ibm2#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -134,6 +134,9 @@
 }
 .fa-flash:before {
   content: "\f0e7";
+}
+.fa-folder-open-o:before {
+  content: "\f115";
 }
 .fa-file-text:before {
   content: "\f15c";
