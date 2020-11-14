@@ -86,6 +86,9 @@ let inputAntiAirWeights = [];
 // 味方艦隊用Stage2テーブル
 let fleetStage2Table = [];
 
+// 海域情報
+let ENEMY_PATTERN = [];
+
 /*
 	プリセットメモ
 	全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット], 3:メモ, 4:更新日時]
@@ -517,10 +520,6 @@ function initialize(callback) {
 	// 戦闘回数初期化
 	$('#battle_count').val(1);
 	$('#landBase_target').val(1);
-
-	// 海域選択初期化
-	createMapSelect();
-	createNodeSelect();
 
 	// 結果欄チェック初期化
 	$('#display_bar').prop('checked', true);
@@ -2334,6 +2333,35 @@ function deletePlanePreset() {
 }
 
 /**
+ * map_dataからマップ情報を読み込む
+ */
+function loadMapData() {
+	fetch("../js/map_data.json", { method: "GET", })
+		.then(res => {
+			if (res.ok) {
+				res.json().then(v => {
+					ENEMY_PATTERN = v['ENEMY_PATTERN'];
+					// マップ関連のセレクト更新
+					createMapSelect();
+					createNodeSelect();
+				});
+			}
+			else inform_danger(res.statusText);
+		}).catch(error => inform_danger(error));
+}
+
+/**
+ * 海域情報の動的取得(初回限定)
+ */
+function modal_enemy_pattern_Shown() {
+	if ($('#map_select').html()) return;
+
+	// 初回海域データの動的取得
+	$('#map_select').html('<option value="1">海域データ読込中</option>');
+	loadMapData();
+}
+
+/**
  * 海域選択欄生成
  */
 function createMapSelect() {
@@ -2347,7 +2375,9 @@ function createMapSelect() {
 			text += `<option value="${m.area}">${world > 20 ? 'E' : world}-${map} : ${m.name}</option>`;
 		}
 	}
+
 	$('#map_select').html(text);
+	$('#select_preset_category').html(text);
 }
 
 /**
@@ -2543,9 +2573,20 @@ function expandEnemy() {
 }
 
 /**
+ * プリセ保存画面展開時
+ */
+function modal_main_preset_Shown() {
+	if ($('#select_preset_category').html()) return;
+
+	// 初回海域データの動的取得
+	$('#select_preset_category').html('<option value="1">海域データ読込中</option>');
+	loadMapData();
+}
+
+/**
  * 編成プリセット 新規登録 / 更新処理
  */
-function updateMainPreset() {
+function updateMainPreset(isUploadOnly = false) {
 	// 保存する編成の内容データ
 	const presetBody = encodePreset();
 	// 今現在のタブ情報
@@ -2568,6 +2609,17 @@ function updateMainPreset() {
 		document.getElementById('preset_remarks').value.trim(),
 		formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss')
 	];
+
+	if ($('#allow_upload_preset').prop('checked')) {
+		// 編成のアップロード
+		uploadMainPreset(preset);
+	}
+
+	// アップロードのみモードならここで終了
+	if (isUploadOnly) {
+		$('#modal_main_preset').modal('hide');
+		return;
+	}
 
 	// プリセット一覧への登録作業
 	let isUpdate = false;
@@ -2592,6 +2644,7 @@ function updateMainPreset() {
 			break;
 		}
 	}
+
 	// 更新がなかったら新規登録
 	if (!isUpdate) {
 		presets.push(preset);
@@ -2609,6 +2662,49 @@ function updateMainPreset() {
 	setTab();
 
 	$('#modal_main_preset').modal('hide');
+}
+
+/**
+ * 編成のアップロード
+ * @param {*} preset アップロード対象の編成
+ */
+function uploadMainPreset(preset) {
+
+	const area = castInt($('#select_preset_category').val());
+	const user = $('#upload_user').val().trim();
+
+	setting.uploadUserName = user;
+	saveSetting();
+
+	const newPreset = {
+		id: preset[0],
+		name: preset[1],
+		data: preset[2],
+		memo: preset[3],
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+		map: area,
+		level: area > 400 ? castInt($('#select_preset_level').val()) : 0,
+		user: user
+	};
+
+	if (!fb) initializeFB();
+	if (fb) {
+		fb.runTransaction(function (tran) {
+			const ref = fb.collection('presets');
+			const d = ref.doc();
+			return tran.get(d).then(async () => {
+				await tran.set(d, newPreset);
+				return newPreset;
+			})
+		}).then(function (res) {
+			inform_success(`プリセット「${preset[1]}」の編成データのアップロードが完了しました。`);
+		}).catch(function (err) {
+			console.error(err);
+			console.log('post :>> ', newPreset);
+			inform_danger('エラーが発生しました。');
+		});
+	}
+	else inform_danger('謎の理由により、アップロードに失敗しました。');
 }
 
 
@@ -7243,6 +7339,9 @@ function modal_Closed($this) {
 			// ボタンモードを戻す
 			$('#modal_main_preset').find('.btn_commit_preset').text('編成保存');
 			$('#modal_main_preset').find('.btn_commit_preset').removeClass('rename');
+			// アップロード非チェック
+			$('#allow_upload_preset').prop('checked', false);
+			$('#btn_upload_preset').addClass('d-none');
 			break;
 		case "modal_confirm":
 			confirmType = null;
@@ -9246,7 +9345,7 @@ function plane_preset_tr_Clicked($this) {
 function preset_name_Changed($this) {
 	// 入力検証　全半40文字くらいで
 	const input = $this.val().trim();
-	const $btn = $this.closest('.modal-body').find('.btn_commit_preset');
+	const $btn = $this.closest('.modal').find('.btn_commit_preset');
 	if (input.length > 50) {
 		$this.addClass('is-invalid');
 		$btn.prop('disabled', true);
@@ -10533,9 +10632,6 @@ function modal_confirm_ok_Clicked() {
 			setting.selectedHistory[1] = [];
 			saveSetting();
 			break;
-		case "sendComment":
-			send_comment();
-			break;
 		case "Error":
 			break;
 		default:
@@ -10548,6 +10644,11 @@ function modal_confirm_ok_Clicked() {
  * メニュー「編成保存」ボタンクリック
  */
 function btn_save_preset_Clicked() {
+	// アップロード非チェック
+	$('#allow_upload_preset').prop('checked', false);
+	$('#upload_option').addClass('d-none');
+	$('#btn_upload_preset').addClass('d-none');
+
 	// 現在のアクティブタブの情報を取得
 	const presets = loadLocalStorage('presets');
 	if (presets) {
@@ -10583,6 +10684,11 @@ function btn_save_preset_Clicked() {
  * 別名で保存ボタンクリック
  */
 function btn_save_preset_sub_Clicked() {
+	// アップロード非チェック
+	$('#allow_upload_preset').prop('checked', false);
+	$('#upload_option').addClass('d-none');
+	$('#btn_upload_preset').addClass('d-none');
+
 	// 現在のアクティブタブの情報を取得
 	const presets = loadLocalStorage('presets');
 	if (presets) {
@@ -10804,8 +10910,75 @@ function output_data_Changed($this) {
  * 編成プリセット保存ボタンクリック
  */
 function btn_commit_main_preset_Clicked() {
+
+	const user = $('#upload_user').val().trim();
+	const name = document.getElementById('input_preset_name').value.trim();
+	if ($('#allow_upload_preset').prop('checked') && user.length > 20) {
+		inform_warning('投稿者名は20文字以内で入力してください。');
+		return;
+	}
+	if ($('#allow_upload_preset').prop('checked') && !name) {
+		inform_warning('編成名を入力してください。');
+		return;
+	}
+
 	// 新規登録 or 更新処理
 	updateMainPreset();
+}
+
+/**
+ * プリセアップロード海域選択時
+ */
+function select_preset_category_Changed() {
+	const area = castInt($('#select_preset_category').val());
+
+	if (area > 400) {
+		$('#select_preset_level').parent().removeClass('d-none');
+		$('#select_preset_level').val(4);
+	}
+	else {
+		$('#select_preset_level').parent().addClass('d-none');
+	}
+}
+
+/**
+ * アップロードする場合クリック
+ */
+function allow_upload_preset_Clicked() {
+	if ($('#allow_upload_preset').prop('checked')) {
+		$('#upload_option').removeClass('d-none');
+
+		// アップロードのみボタン出現
+		if ($('#modal_main_preset').find('.btn_commit_preset').hasClass('rename')) {
+			$('#btn_upload_preset').removeClass('d-none');
+		}
+		else {
+			$('#btn_upload_preset').addClass('d-none');
+		}
+
+		$('#upload_user').val(setting.uploadUserName);
+	}
+	else {
+		$('#upload_option').addClass('d-none');
+		$('#btn_upload_preset').addClass('d-none');
+	}
+}
+
+/**
+ * アップロードのみボタンクリック
+ */
+function btn_upload_preset_Clicked() {
+	const user = $('#upload_user').val().trim();
+	const name = document.getElementById('input_preset_name').value.trim();
+	if (user.length > 20) {
+		inform_warning('投稿者名は20文字以内で入力してください。');
+		return;
+	}
+	if (!name) {
+		inform_warning('編成名を入力してください。');
+		return;
+	}
+	updateMainPreset(true);
 }
 
 /**
@@ -11113,10 +11286,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (existURLData) {
+			let presetname = '外部データ';
+			if (params.hasOwnProperty("name")) {
+				presetname = decodeURIComponent(params.name);
+			}
 			// 外部編成データが読み込まれたため新しいタブを生成
 			let tabData = {
 				id: getUniqueId(),
-				name: '外部データ',
+				name: presetname,
 				history: { index: 0, histories: [] }
 			};
 			let activePresets = loadLocalStorage('activePresets');
@@ -11277,6 +11454,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_select').on('click', '.btn_remove', function () { modal_enemy_select_btn_remove($(this)); });
 	$('#modal_enemy_select').on('change', '#enemy_type_select', function () { createEnemyTable([castInt($(this).val())]); });
 	$('#modal_enemy_select').on('input', '#enemy_word', enemy_word_TextChanged);
+	$('#modal_enemy_pattern').on('show.bs.modal', modal_enemy_pattern_Shown);
 	$('#modal_enemy_pattern').on('click', '.node_tr', function () { node_tr_Clicked($(this)); });
 	$('#modal_enemy_pattern').on('change', '#map_select', createNodeSelect);
 	$('#modal_enemy_pattern').on('change', '#node_select', createEnemyPattern);
@@ -11289,7 +11467,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_pattern').on('dblclick', '.node', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '.node_tr', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '#enemy_pattern_select .nav-link.active', node_DoubleClicked);
+	$('#modal_main_preset').on('show.bs.modal', modal_main_preset_Shown);
+	$('#modal_main_preset').on('change', '#select_preset_category', select_preset_category_Changed);
 	$('#modal_main_preset').on('click', '.btn_commit_preset', btn_commit_main_preset_Clicked);
+	$('#modal_main_preset').on('click', '#allow_upload_preset', allow_upload_preset_Clicked);
+	$('#modal_main_preset').on('click', '#btn_upload_preset', btn_upload_preset_Clicked);
 	$('#modal_main_preset').on('input', '#input_preset_name', function () { preset_name_Changed($(this)); });
 	$('#modal_main_preset').on('input', '#preset_remarks', function () { preset_remarks_Changed($(this)); });
 	$('#modal_share').on('click', '.btn_load_deck', btn_load_deck_Clicked);

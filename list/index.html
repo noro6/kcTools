@@ -104,7 +104,7 @@
 			<div class="d-flex flex-wrap">
 				<h1>制空権シミュレータ</h1>
 				<div class="d-flex align-self-center">
-					<div class="font_size_18 ml-2 align-self-center">v1.10.2.2</div>
+					<div class="font_size_18 ml-2 align-self-center">v1.10.3</div>
 					<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 						data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 					</div>
@@ -118,12 +118,34 @@
 		<div class="contents my-4 mx-auto px-2 py-1" id="presets_content">
 			<div class="d-flex flex-wrap my-1">
 				<div class="h6 mb-0 align-self-center my-2">
-					<span class="align-middle">保存データ一覧</span>
+					<span class="align-middle">編成データ一覧</span>
 				</div>
-				<div class="ml-auto d-flex align-self-center my-2">
-					<div class="align-self-center text-nowrap">検索：</div>
-					<input type="text" class="form-control form-control-sm align-self-center" id="search_preset">
-					<select class="ml-2 custom-select custom-select-sm align-self-center" id="presets_order">
+			</div>
+			<div>
+				<ul class="nav nav-tabs">
+					<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#local">自分の編成</a></li>
+					<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#public" id="public_preset_tab">みんなの編成</a>
+					</li>
+				</ul>
+			</div>
+			<div class="d-flex justify-content-end mt-3 mb-2">
+				<div class="d-flex flex-wrap">
+					<div class="m-1" id="search_preset_parent">
+						<input type="text" class="form-control form-control-sm align-self-center" placeholder="検索語句を入力"
+							id="search_preset">
+					</div>
+					<div class="d-none m-1 input-group input-group-sm">
+						<select class="custom-select custom-select-sm" id="map_select"></select>
+						<div class="input-group-append d-none">
+							<select class="custom-select custom-select-sm" id="select_preset_level">
+								<option value="4">甲</option>
+								<option value="3">乙</option>
+								<option value="2">丙</option>
+								<option value="1">丁</option>
+							</select>
+						</div>
+					</div>
+					<select class="m-1 custom-select custom-select-sm align-self-center" id="presets_order">
 						<option value="1">更新日時が新しい順</option>
 						<option value="2">更新日時が古い順</option>
 						<option value="3">編成名称(降順)</option>
@@ -131,9 +153,19 @@
 						<option value="0">ユーザー指定</option>
 					</select>
 				</div>
+				<div class="m-1 align-self-center d-none">
+					<button class="btn btn-sm btn-success text-nowrap" id="btn_search_preset">検索</button>
+				</div>
 			</div>
-			<div id="presets_container"></div>
-			<div class="border-top mb-3"></div>
+			<div class="tab-content">
+				<div class="tab-pane fade show active" id="local">
+					<div class="" id="presets_container"></div>
+					<div class="border-top mb-3"></div>
+				</div>
+				<div class="tab-pane fade pb-3" id="public">
+					<div class="" id="public_presets_container"></div>
+				</div>
+			</div>
 		</div>
 
 		<div class="contents my-4 px-2 py-1 mx-auto" id="site_board">

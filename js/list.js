@@ -13,56 +13,83 @@ function initialize() {
   $('.fleet_tab.active').removeClass('active');
 
   // 保存されているプリセットを展開
-  setPresets();
+  setLocalPresets();
+
+  if (loadSessionStorage('display_public')) {
+    // みんなの編成を初期表示
+    $('#public_preset_tab').tab('show');
+  }
 }
 
+
 /**
- * 編成一覧画面に、保存されている編成を展開
+ * ローカルのプリセット展開
  */
-function setPresets() {
+function setLocalPresets() {
   let presets = loadLocalStorage('presets');
   if (!presets) presets = [];
 
+  $('#btn_search_preset').prop('disabled', false);
+  setPresets(presets);
+}
+
+/**
+ * 編成一覧画面に指定したプリセットを展開
+ * @param {*} presets 保存編成
+ * @param {boolean} isLocal ローカルのものかどうか　デフォルトtrue
+ */
+function setPresets(presets, isLocal = true) {
+
+  // 対象のテーブル
+  const targetContainer = isLocal ? 'presets_container' : 'public_presets_container';
   // ソートチェック
   const sort = castInt(document.getElementById('presets_order').value);
   // 検索語句
   const keyword = document.getElementById('search_preset').value.trim();
 
-  switch (sort) {
-    case 1:
-      // 更新日時降順
-      presets.sort((a, b) => a[4] < b[4] ? 1 : -1);
-      break;
-    case 2:
-      // 更新日時昇順
-      presets.sort((a, b) => a[4] > b[4] ? 1 : -1);
-      break;
-    case 3:
-      // プリセット名降順
-      presets.sort((a, b) => a[1] < b[1] ? 1 : -1);
-      break;
-    case 4:
-      // プリセット名昇順
-      presets.sort((a, b) => a[1] > b[1] ? 1 : -1);
-      break;
-    default:
-      break;
+  if (isLocal) {
+    switch (sort) {
+      case 1:
+        // 更新日時降順
+        presets.sort((a, b) => a[4] < b[4] ? 1 : -1);
+        break;
+      case 2:
+        // 更新日時昇順
+        presets.sort((a, b) => a[4] > b[4] ? 1 : -1);
+        break;
+      case 3:
+        // プリセット名降順
+        presets.sort((a, b) => a[1] < b[1] ? 1 : -1);
+        break;
+      case 4:
+        // プリセット名昇順
+        presets.sort((a, b) => a[1] > b[1] ? 1 : -1);
+        break;
+      default:
+        break;
+    }
   }
   setting.presetsOrder = sort;
   saveSetting();
 
   // 入れ替えできる条件かどうか
-  const enabledSortable = sort === 0 && !keyword;
+  const enabledSortable = sort === 0 && !keyword && isLocal;
 
   const fragment = document.createDocumentFragment();
 
-  // 新規作成用ボタン
-  const new_container = createDiv(`preset_container new d-flex ${presets.length ? '' : 'border_delete'}`);
-
-  const new_body = createDiv('new_body mx-auto my-auto', '', presets.length ? '新規作成' : '編成を新規作成');
-  new_container.appendChild(new_body);
-
-  fragment.appendChild(new_container);
+  if (isLocal) {
+    // 新規作成用ボタン
+    const new_container = createDiv(`preset_container new d-flex ${presets.length ? '' : 'border_delete'}`);
+    const new_body = createDiv('new_body mx-auto my-auto', '', presets.length ? '新規作成' : '編成を新規作成');
+    new_container.appendChild(new_body);
+    fragment.appendChild(new_container);
+  }
+  else if (!isLocal && presets.length === 0) {
+    const empty_container = createDiv(`d-flex empty_container`);
+    const di = createDiv('mx-auto my-auto', '', 'データが見つかりませんでした。');
+    empty_container.appendChild(di);
+    fragment.appendChild(empty_container);
+  }
 
   // 並び替え可能要素
   const sortable_container = createDiv('', 'preset_sortable_container');
@@ -70,13 +97,16 @@ function setPresets() {
   for (const preset of presets) {
 
     // 編成名なし　キーワードが編成に一致しない場合出力しない
-    if(!preset[1] || (keyword && preset[1].indexOf(keyword) < 0)) {
+    if (!preset[1] || (isLocal && keyword && preset[1].indexOf(keyword) < 0)) {
       continue;
     }
     // これいる（確信）...ないとsortableでanimationがバッティングする
     const wrapper = createDiv();
     const container = createDiv('preset_container');
     container.dataset.presetid = preset[0];
+    if (!isLocal) {
+      container.dataset.presetdata = preset[2];
+    }
 
     // プリセヘッダー
     const preset_header = createDiv('preset_header ' + (enabledSortable ? 'sortable_handle' : ''));
@@ -180,14 +210,23 @@ function setPresets() {
     btn_delete.dataset.offset = '-50%';
     btn_delete.title = '編成を削除します。';
     btn_delete.innerHTML = '<i class="fas fa-trash-o"></i>';
-    btns.appendChild(btn_delete);    
+    btns.appendChild(btn_delete);
 
-    preset_body.appendChild(btns);
+    if (isLocal) {
+      // ローカル編成のみボタン追加
+      preset_body.appendChild(btns);
+    }
     container.appendChild(preset_body);
 
     // プリセフッター
-    const preset_footer = createDiv('update_date mr-1','', '更新日時: '+preset[4].split('.')[0]);
-    container.appendChild(preset_footer);
+    if (!isLocal) {
+      const preset_footer = createDiv('update_date mr-3', '', `${preset[5] ? `作成者: ${preset[5]}　` : ""}作成日時: ${preset[4].split('.')[0]}`);
+      container.appendChild(preset_footer);
+    }
+    else {
+      const preset_footer = createDiv('update_date mr-1', '', `更新日時: ${preset[4].split('.')[0]}`);
+      container.appendChild(preset_footer);
+    }
 
     wrapper.appendChild(container);
     sortable_container.appendChild(wrapper);
@@ -195,12 +234,19 @@ function setPresets() {
 
   fragment.appendChild(sortable_container);
 
-  document.getElementById('presets_container').innerHTML = '';
-  document.getElementById('presets_container').appendChild(fragment);
-  $('#presets_container .r_btn').tooltip();
+  if (!isLocal && prevSnapShot) {
+    const more_container = createDiv(`d-flex preset_container more_load`);
+    const di = createDiv('mx-auto my-auto', '', 'もっと読み込む');
+    more_container.appendChild(di);
+    fragment.appendChild(more_container);
+  }
+
+  document.getElementById(targetContainer).innerHTML = '';
+  document.getElementById(targetContainer).appendChild(fragment);
+  $('#' + targetContainer + ' .r_btn').tooltip();
 
   // 入れ替え設定
-  if(sort === 0 && !keyword) {
+  if (sort === 0 && !keyword && isLocal) {
     Sortable.create(document.getElementById('preset_sortable_container'), {
       animation: 200,
       handle: '.sortable_handle',
@@ -217,6 +263,185 @@ function setPresets() {
         }
       }
     });
+  }
+}
+
+/**
+ * 海域変更時
+ */
+function map_select_Changed() {
+  const area = castInt($('#map_select').val());
+  $('#btn_search_preset').prop('disabled', false);
+
+  if (area > 400) {
+    $('#select_preset_level').parent().removeClass('d-none');
+    $('#select_preset_level').val(4);
+  }
+  else {
+    $('#select_preset_level').parent().addClass('d-none');
+    $('#select_preset_level').val(0);
+  }
+}
+
+let prevSnapShot = null;
+let STEP = 20;
+
+/**
+ * アップロードされている編成を検索
+ */
+function searchUploadedPreset() {
+  const query = getPublicPresetsQuery();
+  const presets = [];
+
+  if (!fb) initializeFB();
+  if (fb) {
+    fb.collection("presets")
+      .where("map", "==", query.map)
+      .where("level", "==", query.level)
+      .orderBy(query.sortKey, query.order)
+      .limit(STEP)
+      .get()
+      .then(function (querySnapshot) {
+        prevSnapShot = querySnapshot.docs[querySnapshot.docs.length - 1];
+        querySnapshot.forEach(function (doc) {
+          const docData = doc.data();
+          const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
+          const preset = [
+            '',
+            docData.name,
+            docData.data,
+            docData.memo,
+            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss'),
+            docData.user
+          ];
+          presets.push(preset);
+        });
+
+        if (presets.length < STEP) {
+          prevSnapShot = null;
+        }
+        setPresets(presets, false);
+
+        const result = {
+          map: query.map,
+          level: query.level,
+          sortKey: query.sortKey,
+          order: query.order,
+          presets: presets
+        }
+        saveSessionStorage('search_result', result);
+      })
+      .catch(function (error) {
+        console.error(error);
+        inform_danger('編成データの読み込みに失敗しました。');
+      });
+  }
+}
+
+/**
+ * 公開プリセ検索文字列生成
+ */
+function getPublicPresetsQuery() {
+  $('#btn_search_preset').prop('disabled', true);
+  // 海域
+  const map = castInt($('#map_select').val());
+  const level = map > 400 ? castInt($('#select_preset_level').val()) : 0;
+  let sortKey = 'createdAt';
+  let order = 'desc';
+
+  switch (castInt(document.getElementById('presets_order').value)) {
+    case 1:
+      // 更新日時降順 そのまま
+      break;
+    case 2:
+      // 更新日時昇順
+      order = 'asc';
+      break;
+    case 3:
+      // プリセット名降順
+      sortKey = 'name';
+      break;
+    case 4:
+      // プリセット名昇順
+      sortKey = 'name';
+      order = 'asc';
+      break;
+    default:
+      break;
+  }
+
+  return { map: map, level: level, sortKey: sortKey, order: order };
+}
+
+/**
+ * もっと読み込みボタン
+ */
+function more_load_presets() {
+
+  const btn_more_load = $('.more_load');
+  btn_more_load.html(`<div class="w-100 text-center py-3"><div class="spinner-border" role="status"><span class="sr-only"></span></div></div>`);
+  btn_more_load.removeClass('more_load');
+
+  const query = getPublicPresetsQuery();
+  let prevResult = loadSessionStorage('search_result');
+  // 前回検索値がない場合は通常検索
+  if (!prevResult || !prevSnapShot) {
+    searchUploadedPreset();
+    return;
+  }
+
+  // 前回検索条件と同じ条件でない場合は通常検索
+  if (prevResult.map !== query.map || prevResult.level !== query.level || prevResult.sortKey !== query.sortKey || prevResult.order !== query.order) {
+    searchUploadedPreset();
+    return;
+  }
+
+  const presets = prevResult.presets;
+
+  if (!fb) initializeFB();
+  if (fb) {
+    fb.collection("presets")
+      .where("map", "==", query.map)
+      .where("level", "==", query.level)
+      .orderBy(query.sortKey, query.order)
+      .startAfter(prevSnapShot)
+      .limit(STEP)
+      .get()
+      .then(function (querySnapshot) {
+        prevSnapShot = querySnapshot.docs[querySnapshot.docs.length - 1];
+        querySnapshot.forEach(function (doc) {
+          const docData = doc.data();
+          const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
+          const preset = [
+            '',
+            docData.name,
+            docData.data,
+            docData.memo,
+            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss'),
+            docData.user
+          ];
+          presets.push(preset);
+        });
+
+        if (querySnapshot.docs.length < STEP) {
+          prevSnapShot = null;
+        }
+
+        setPresets(presets, false);
+
+        const result = {
+          map: query.map,
+          level: query.level,
+          sortKey: query.sortKey,
+          order: query.order,
+          presets: presets
+        }
+        saveSessionStorage('search_result', result);
+      })
+      .catch(function (error) {
+        console.error(error);
+        inform_danger('編成データの読み込みに失敗しました。');
+      });
   }
 }
 
@@ -393,6 +618,16 @@ function preset_Clicked($this) {
   saveLocalStorage('activePresets', activePresets);
 
   window.location.href = `../simulator/?p=${tabData.history.histories[tabData.history.index]}`;
+}
+
+/**
+ * 外部の編成展開
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function public_preset_Clicked($this) {
+  const data = $this[0].dataset.presetdata;
+  const name = $this.find('.preset_name').text();
+  window.location.href = `../simulator/?d=${data}&name=${encodeURIComponent(name)}`;
 }
 
 /**
@@ -585,15 +820,19 @@ function modal_confirm_ok_Clicked() {
     activePresets.presets = activePresets.presets.filter(v => v.id !== $modal[0].dataset.target);
     saveLocalStorage('activePresets', activePresets);
 
-    setPresets();
+    setLocalPresets();
     setTab();
 
     $modal.modal('hide');
   }
   else if (confirmType === "deleteLocalStorageAll") {
     window.localStorage.clear();
-    setPresets();
+    setLocalPresets();
     setTab();
+    $modal.modal('hide');
+  }
+  else if (confirmType === "sendComment") {
+    send_comment();
     $modal.modal('hide');
   }
 
@@ -623,13 +862,8 @@ function site_manual_Clicked() {
  * コメント欄初期化
  */
 function initializeBoard() {
-  if (!fb) {
-    firebase.initializeApp({
-      apiKey: xxx,
-      projectId: 'development-74af0'
-    });
-    fb = firebase.firestore();
-
+  if (!fb) initializeFB();
+  if (fb) {
     fb.collection("comments").orderBy('createdAt', 'desc').limit(30)
       .onSnapshot(function (querySnapshot) {
         const fragment = document.createDocumentFragment();
@@ -818,9 +1052,6 @@ function send_comment() {
   else alert('謎の理由により、コメントの投稿に失敗しました。');
 }
 
-// ※
-let fb = null;
-
 /**
  * URL短縮ボタンクリック
  */
@@ -882,6 +1113,50 @@ async function btn_url_shorten_Clicked() {
 
 
 /**
+ * みんなの編成タブが押された
+ */
+function public_preset_tab_Shown() {
+  $('#btn_search_preset').parent().removeClass('d-none');
+  $('#map_select').parent().removeClass('d-none');
+  $('#search_preset_parent').addClass('d-none');
+
+  saveSessionStorage('display_public', true);
+
+  if (!$('#map_select').html()) {
+    let text = '';
+    for (const w of WORLD_DATA) {
+      const world = w.world;
+      const maps = MAP_DATA.filter(m => Math.floor(m.area / 10) === world);
+      text += `<optgroup label="${w.name}">`;
+      for (const m of maps) {
+        const map = m.area % 10;
+        text += `<option value="${m.area}">${world > 20 ? 'E' : world}-${map} : ${m.name}</option>`;
+      }
+    }
+    $('#map_select').html(text);
+
+    // 前回検索結果を復帰
+    const result = loadSessionStorage('search_result');
+    if (result) {
+      $('#map_select').val(result.map);
+      map_select_Changed();
+      setPresets(result.presets, false);
+    }
+  }
+}
+
+/**
+ * みんなの編成が非表示になった
+ */
+function public_preset_tab_Hidden() {
+  $('#btn_search_preset').parent().addClass('d-none');
+  $('#map_select').parent().addClass('d-none');
+  $('#search_preset_parent').removeClass('d-none');
+
+  saveSessionStorage('display_public', false);
+}
+
+/**
  * サイトテーマカラー変更
  */
 function site_theme_Changed($this) {
@@ -933,17 +1208,24 @@ document.addEventListener('DOMContentLoaded', function () {
   // イベント配置
   $('#header').on('click', '.fleet_tab', topTab_Clicked);
   $('#main').on('click', '.version_detail', version_detail_Clicked);
-  $('#main').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
-  $('#main').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
-  $('#main').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
-  $('#main').on('click', '.btn_rollback', function (e) { btn_rollback_Clicked($(this), e); });
-  $('#main').on('click', '.btn_copy', function (e) { btn_copy_Clicked($(this), e); });
-  $('#main').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
   $('#main').on('click', '.btn_first_time', first_time_Clicked);
   $('#main').on('click', '.btn_site_manual', site_manual_Clicked);
   $('#main').on('click', '.theme_select', function () { site_theme_Changed($(this)); });
-  $('#main').on('input', '#search_preset', setPresets);
-  $('#main').on('change', '#presets_order', setPresets);
+  $('#main').on('input', '#search_preset', setLocalPresets);
+  $('#main').on('change', '#presets_order', setLocalPresets);
+  $('#main').on('click', '#btn_search_preset', searchUploadedPreset);
+  $('#main').on('change', '#map_select', map_select_Changed);
+  $('#main').on('change', '#select_preset_level', function () { $('#btn_search_preset').prop('disabled', false); });
+  $('#public_presets_container').on('click', '.preset_container:not(.more_load)', function () { public_preset_Clicked($(this)); });
+  $('#public_presets_container').on('click', '.preset_container.more_load', more_load_presets);
+  $('#presets_container').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
+  $('#presets_container').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_rollback', function (e) { btn_rollback_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_copy', function (e) { btn_copy_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
+  $('#public_preset_tab').on('shown.bs.tab', public_preset_tab_Shown);
+  $('#public_preset_tab').on('hidden.bs.tab', public_preset_tab_Hidden);
   $('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
   $('#site_board').on('show.bs.collapse', '.collapse', initializeBoard);
   $('#site_board').on('click', '#btn_send_comment', btn_send_comment_Clicked);
