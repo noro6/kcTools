@@ -115,6 +115,7 @@
 
 #public_presets_container .preset_memo_view {
   cursor: text;
+  white-space: pre-wrap;
 }
 
 .preset_memo {

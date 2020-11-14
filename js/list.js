@@ -157,7 +157,7 @@ function setPresets(presets, isLocal = true) {
     abstract.appendChild(fleet_container);
 
     // メモ表示用
-    const memo = createDiv(`preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`, '', preset[3].replace(/\r?\n/g, ' '));
+    const memo = createDiv(`preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`, '', preset[3]);
     abstract.appendChild(memo);
 
     // メモ編集用
