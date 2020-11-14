@@ -1177,4 +1177,4 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const LATEST_VERSION = '1.10.2.2';
+const LATEST_VERSION = '1.10.3';

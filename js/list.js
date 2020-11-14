@@ -14,6 +14,11 @@ function initialize() {
 
   // 保存されているプリセットを展開
   setLocalPresets();
+
+  if (loadSessionStorage('display_public')) {
+    // みんなの編成を初期表示
+    $('#public_preset_tab').tab('show');
+  }
 }
 
 
@@ -79,7 +84,7 @@ function setPresets(presets, isLocal = true) {
     new_container.appendChild(new_body);
     fragment.appendChild(new_container);
   }
-  else if(!isLocal && presets.length === 0) {
+  else if (!isLocal && presets.length === 0) {
     const empty_container = createDiv(`d-flex empty_container`);
     const di = createDiv('mx-auto my-auto', '', 'データが見つかりませんでした。');
     empty_container.appendChild(di);
@@ -214,14 +219,27 @@ function setPresets(presets, isLocal = true) {
     container.appendChild(preset_body);
 
     // プリセフッター
-    const preset_footer = createDiv('update_date mr-1', '', '更新日時: ' + preset[4].split('.')[0]);
-    container.appendChild(preset_footer);
+    if (!isLocal) {
+      const preset_footer = createDiv('update_date mr-3', '', `${preset[5] ? `作成者: ${preset[5]}　` : ""}作成日時: ${preset[4].split('.')[0]}`);
+      container.appendChild(preset_footer);
+    }
+    else {
+      const preset_footer = createDiv('update_date mr-1', '', `更新日時: ${preset[4].split('.')[0]}`);
+      container.appendChild(preset_footer);
+    }
 
     wrapper.appendChild(container);
     sortable_container.appendChild(wrapper);
   }
 
   fragment.appendChild(sortable_container);
+
+  if (!isLocal && prevSnapShot) {
+    const more_container = createDiv(`d-flex preset_container more_load`);
+    const di = createDiv('mx-auto my-auto', '', 'もっと読み込む');
+    more_container.appendChild(di);
+    fragment.appendChild(more_container);
+  }
 
   document.getElementById(targetContainer).innerHTML = '';
   document.getElementById(targetContainer).appendChild(fragment);
@@ -255,20 +273,75 @@ function map_select_Changed() {
   const area = castInt($('#map_select').val());
   $('#btn_search_preset').prop('disabled', false);
 
-	if(area > 400) {
-		$('#select_preset_level').parent().removeClass('d-none');
-		$('#select_preset_level').val(4);
-	}
-	else{
-		$('#select_preset_level').parent().addClass('d-none');
-		$('#select_preset_level').val(0);
-	}
+  if (area > 400) {
+    $('#select_preset_level').parent().removeClass('d-none');
+    $('#select_preset_level').val(4);
+  }
+  else {
+    $('#select_preset_level').parent().addClass('d-none');
+    $('#select_preset_level').val(0);
+  }
 }
+
+let prevSnapShot = null;
+let STEP = 20;
 
 /**
  * アップロードされている編成を検索
  */
 function searchUploadedPreset() {
+  const query = getPublicPresetsQuery();
+  const presets = [];
+
+  if (!fb) initializeFB();
+  if (fb) {
+    fb.collection("presets")
+      .where("map", "==", query.map)
+      .where("level", "==", query.level)
+      .orderBy(query.sortKey, query.order)
+      .limit(STEP)
+      .get()
+      .then(function (querySnapshot) {
+        prevSnapShot = querySnapshot.docs[querySnapshot.docs.length - 1];
+        querySnapshot.forEach(function (doc) {
+          const docData = doc.data();
+          const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
+          const preset = [
+            '',
+            docData.name,
+            docData.data,
+            docData.memo,
+            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss'),
+            docData.user
+          ];
+          presets.push(preset);
+        });
+
+        if (presets.length < STEP) {
+          prevSnapShot = null;
+        }
+        setPresets(presets, false);
+
+        const result = {
+          map: query.map,
+          level: query.level,
+          sortKey: query.sortKey,
+          order: query.order,
+          presets: presets
+        }
+        saveSessionStorage('search_result', result);
+      })
+      .catch(function (error) {
+        console.error(error);
+        inform_danger('編成データの読み込みに失敗しました。');
+      });
+  }
+}
+
+/**
+ * 公開プリセ検索文字列生成
+ */
+function getPublicPresetsQuery() {
   $('#btn_search_preset').prop('disabled', true);
   // 海域
   const map = castInt($('#map_select').val());
@@ -297,13 +370,45 @@ function searchUploadedPreset() {
       break;
   }
 
-  const presets = [];
+  return { map: map, level: level, sortKey: sortKey, order: order };
+}
+
+/**
+ * もっと読み込みボタン
+ */
+function more_load_presets() {
+
+  const btn_more_load = $('.more_load');
+  btn_more_load.html(`<div class="w-100 text-center py-3"><div class="spinner-border" role="status"><span class="sr-only"></span></div></div>`);
+  btn_more_load.removeClass('more_load');
+
+  const query = getPublicPresetsQuery();
+  let prevResult = loadSessionStorage('search_result');
+  // 前回検索値がない場合は通常検索
+  if (!prevResult || !prevSnapShot) {
+    searchUploadedPreset();
+    return;
+  }
+
+  // 前回検索条件と同じ条件でない場合は通常検索
+  if (prevResult.map !== query.map || prevResult.level !== query.level || prevResult.sortKey !== query.sortKey || prevResult.order !== query.order) {
+    searchUploadedPreset();
+    return;
+  }
+
+  const presets = prevResult.presets;
 
   if (!fb) initializeFB();
   if (fb) {
-    fb.collection("presets").where("map", "==", map).where("level", "==", level).limit(20).orderBy(sortKey, order)
+    fb.collection("presets")
+      .where("map", "==", query.map)
+      .where("level", "==", query.level)
+      .orderBy(query.sortKey, query.order)
+      .startAfter(prevSnapShot)
+      .limit(STEP)
       .get()
       .then(function (querySnapshot) {
+        prevSnapShot = querySnapshot.docs[querySnapshot.docs.length - 1];
         querySnapshot.forEach(function (doc) {
           const docData = doc.data();
           const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
@@ -312,22 +417,30 @@ function searchUploadedPreset() {
             docData.name,
             docData.data,
             docData.memo,
-            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss')
+            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss'),
+            docData.user
           ];
           presets.push(preset);
         });
 
+        if (querySnapshot.docs.length < STEP) {
+          prevSnapShot = null;
+        }
+
         setPresets(presets, false);
 
         const result = {
-          map: map,
+          map: query.map,
+          level: query.level,
+          sortKey: query.sortKey,
+          order: query.order,
           presets: presets
         }
-        saveLocalStorage('search_result', result);
+        saveSessionStorage('search_result', result);
       })
       .catch(function (error) {
-        console.log('error :>> ', error);
-        inform_danger(error);
+        console.error(error);
+        inform_danger('編成データの読み込みに失敗しました。');
       });
   }
 }
@@ -1007,6 +1120,8 @@ function public_preset_tab_Shown() {
   $('#map_select').parent().removeClass('d-none');
   $('#search_preset_parent').addClass('d-none');
 
+  saveSessionStorage('display_public', true);
+
   if (!$('#map_select').html()) {
     let text = '';
     for (const w of WORLD_DATA) {
@@ -1021,7 +1136,7 @@ function public_preset_tab_Shown() {
     $('#map_select').html(text);
 
     // 前回検索結果を復帰
-    const result = loadLocalStorage('search_result');
+    const result = loadSessionStorage('search_result');
     if (result) {
       $('#map_select').val(result.map);
       map_select_Changed();
@@ -1037,6 +1152,8 @@ function public_preset_tab_Hidden() {
   $('#btn_search_preset').parent().addClass('d-none');
   $('#map_select').parent().addClass('d-none');
   $('#search_preset_parent').removeClass('d-none');
+
+  saveSessionStorage('display_public', false);
 }
 
 /**
@@ -1097,8 +1214,10 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('input', '#search_preset', setLocalPresets);
   $('#main').on('change', '#presets_order', setLocalPresets);
   $('#main').on('click', '#btn_search_preset', searchUploadedPreset);
-	$('#main').on('change', '#map_select', map_select_Changed);
-  $('#public_presets_container').on('click', '.preset_container', function () { public_preset_Clicked($(this)); });
+  $('#main').on('change', '#map_select', map_select_Changed);
+  $('#main').on('change', '#select_preset_level', function () { $('#btn_search_preset').prop('disabled', false); });
+  $('#public_presets_container').on('click', '.preset_container:not(.more_load)', function () { public_preset_Clicked($(this)); });
+  $('#public_presets_container').on('click', '.preset_container.more_load', more_load_presets);
   $('#presets_container').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
   $('#presets_container').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });

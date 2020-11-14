@@ -2671,6 +2671,10 @@ function updateMainPreset(isUploadOnly = false) {
 function uploadMainPreset(preset) {
 
 	const area = castInt($('#select_preset_category').val());
+	const user = $('#upload_user').val().trim();
+
+	setting.uploadUserName = user;
+	saveSetting();
 
 	const newPreset = {
 		id: preset[0],
@@ -2679,7 +2683,8 @@ function uploadMainPreset(preset) {
 		memo: preset[3],
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 		map: area,
-		level: area > 400 ? castInt($('#select_preset_level').val()) : 0
+		level: area > 400 ? castInt($('#select_preset_level').val()) : 0,
+		user: user
 	};
 
 	if (!fb) initializeFB();
@@ -10905,6 +10910,18 @@ function output_data_Changed($this) {
  * 編成プリセット保存ボタンクリック
  */
 function btn_commit_main_preset_Clicked() {
+
+	const user = $('#upload_user').val().trim();
+	const name = document.getElementById('input_preset_name').value.trim();
+	if ($('#allow_upload_preset').prop('checked') && user.length > 20) {
+		inform_warning('投稿者名は20文字以内で入力してください。');
+		return;
+	}
+	if ($('#allow_upload_preset').prop('checked') && !name) {
+		inform_warning('編成名を入力してください。');
+		return;
+	}
+
 	// 新規登録 or 更新処理
 	updateMainPreset();
 }
@@ -10938,6 +10955,8 @@ function allow_upload_preset_Clicked() {
 		else {
 			$('#btn_upload_preset').addClass('d-none');
 		}
+
+		$('#upload_user').val(setting.uploadUserName);
 	}
 	else {
 		$('#upload_option').addClass('d-none');
@@ -10949,6 +10968,16 @@ function allow_upload_preset_Clicked() {
  * アップロードのみボタンクリック
  */
 function btn_upload_preset_Clicked() {
+	const user = $('#upload_user').val().trim();
+	const name = document.getElementById('input_preset_name').value.trim();
+	if (user.length > 20) {
+		inform_warning('投稿者名は20文字以内で入力してください。');
+		return;
+	}
+	if (!name) {
+		inform_warning('編成名を入力してください。');
+		return;
+	}
 	updateMainPreset(true);
 }
 

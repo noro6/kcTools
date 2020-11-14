@@ -827,9 +827,9 @@ input[type="text"] { font-size: 12px; }
   編成プリセットモーダル #modal_main_preset
 ----------------------------------------- */
 #preset_remarks {
-  height: calc( 1.4em * 8 );
-  max-height: calc( 1.4em * 8 );
-  min-height: calc( 1.55em * 4 );
+  height: calc( 1.4em * 4 );
+  max-height: calc( 1.4em * 6 );
+  min-height: calc( 1.4em * 2 );
   line-height: 1.3;
 }
 

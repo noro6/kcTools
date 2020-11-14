@@ -54,6 +54,36 @@ function deleteLocalStorage(key) {
 	window.localStorage.removeItem(key);
 	return true;
 }
+/**
+ * session Storage からデータ取得(Json.parse済)
+ * @param {string} key key
+ * @returns データ(Json.parse済) 存在しない、または失敗したら null
+ */
+function loadSessionStorage(key) {
+	if (!window.sessionStorage) return null;
+	try {
+		return JSON.parse(window.sessionStorage.getItem(key));
+	} catch (error) {
+		return null;
+	}
+}
+/**
+ * session Storage にデータ格納
+ * @param {string} key キー名
+ * @param {Object} data 格納する生データ
+ * @returns
+ */
+function saveSessionStorage(key, data) {
+	if (!window.sessionStorage || key.length === 0) return false;
+	try {
+		window.sessionStorage.setItem(key, JSON.stringify(data));
+		return true;
+	} catch (error) {
+		inform_danger('データ保存エラー')
+		return false;
+	}
+}
+
 
 /**
  * 設定データ初期化
@@ -89,6 +119,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('reducedDisplay')) setting.reducedDisplay = true;
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
+	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
