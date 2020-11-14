@@ -157,7 +157,8 @@ function setPresets(presets, isLocal = true) {
     abstract.appendChild(fleet_container);
 
     // メモ表示用
-    const memo = createDiv(`preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`, '', preset[3]);
+    const memo = createDiv(`preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`, '');
+    memo.innerHTML = AutoLink(preset[3]);
     abstract.appendChild(memo);
 
     // メモ編集用
@@ -272,6 +273,19 @@ function setPresets(presets, isLocal = true) {
       }
     });
   }
+}
+
+/**
+ * リンクにaタグを付与
+ * @param {string} str 
+ */
+function AutoLink(str) {
+  var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
+  var regexp_makeLink = function (all, url, h, href) {
+    return '<a href="h' + href + '" target="_blank">' + url + '</a>';
+  }
+
+  return str.replace(regexp_url, regexp_makeLink);
 }
 
 /**
