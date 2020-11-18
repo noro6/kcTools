@@ -280,13 +280,14 @@ input[type="text"] { font-size: 12px; }
 /* 基地機体選択欄 */
 .lb_plane {
   min-width: 290px;
-  border: 2px rgb(128, 128, 128) solid;
+  border: 2px rgb(180, 180, 180) solid;
   border-radius: .25rem;
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
 }
 .dark-theme .lb_plane {
   text-shadow: 1px 1px 3px #000;
+  border: 2px rgb(128, 128, 128) solid;
   background-color: rgba(60, 65, 75, 0.5);
 }
 .lb_plane:hover { box-shadow: inset 0 0 20px rgba(128, 128, 128, 0.2); }
@@ -371,13 +372,14 @@ input[type="text"] { font-size: 12px; }
 /* 艦娘機体選択欄 */
 .ship_plane {
   width: 100%;
-  border: 2px rgb(128, 128, 128) solid;
+  border: 2px rgb(180, 180, 180) solid;
   border-radius: 0.25rem;
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
 }
 .dark-theme .ship_plane {
   text-shadow: 1px 1px 3px #000;
+  border: 2px rgb(128, 128, 128) solid;
   background-color: rgba(60, 65, 75, 0.5);
 }
 .ship_plane:hover { box-shadow: inset 0 0 20px rgba(128, 128, 128, 0.2); }
@@ -1418,69 +1420,106 @@ img[src *= "prof7"]:hover, img[src *= "prof6"]:hover, img[src *= "prof5"]:hover,
 img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover {
   filter: drop-shadow(0 0 3px #64b4ff);
 }
-.css_fighter {
+.css_fighter,
+.dark-theme .css_fighter {
   border: 2px rgb(100, 200, 120) solid;
   box-shadow: inset 0 0 20px rgba(0, 255, 100, 0.25);
- }
+}
 .css_fighter:hover {
   box-shadow: inset 0 0 20px rgba(0, 255, 100, 0.5), 0 0 20px rgba(0, 255, 100, 0.2);
 }
-.css_torpedo_bomber {
+.capturing .css_fighter {
+  background-color: rgba(0, 255, 100, 0.08);
+}
+.css_torpedo_bomber,
+.dark-theme .css_torpedo_bomber {
   border: 2px rgb(100, 190, 255) solid;
   box-shadow: inset 0 0 20px rgba(0, 190, 255, 0.25);
- }
+}
 .css_torpedo_bomber:hover {
   box-shadow: inset 0 0 20px rgba(0, 190, 255, 0.5), 0 0 20px rgba(0, 190, 255, 0.2);
 }
-.css_dive_bomber {
+.capturing .css_torpedo_bomber {
+  background-color: rgba(0, 190, 255, 0.08);
+}
+.css_dive_bomber,
+.dark-theme .css_dive_bomber {
   border: 2px rgb(247, 110, 110) solid;
   box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.25);
- }
+}
 .css_dive_bomber:hover {
   box-shadow: inset 0 0 20px rgba(255, 80, 80, 0.5), 0 0 20px rgba(255, 80, 80, 0.2);
 }
-.css_cb_reconnaissance {
+.capturing .css_dive_bomber {
+  background-color: rgba(255, 80, 80, 0.08);
+}
+.css_cb_reconnaissance,
+.dark-theme .css_cb_reconnaissance {
   border: 2px rgb(255, 200, 10) solid;
   box-shadow: inset 0 0 20px rgba(255, 255, 70, 0.25);
- }
+}
 .css_cb_reconnaissance:hover {
   box-shadow: inset 0 0 20px rgba(255, 255, 70, 0.5), 0 0 20px rgba(255, 255, 70, 0.2);
 }
-.css_sp {
+.capturing .css_cb_reconnaissance {
+  background-color: rgba(255, 255, 70, 0.08);
+}
+.css_sp,
+.dark-theme .css_sp {
   border: 2px rgb(140, 205, 150) solid;
   box-shadow: inset 0 0 20px rgba(86, 255, 122, 0.25);
- }
+}
 .css_sp:hover {
   box-shadow: inset 0 0 20px rgba(86, 255, 122, 0.5), 0 0 20px rgba(86, 255, 122, 0.2);
 }
-.css_lb_attack_aircraft {
+.capturing .css_sp {
+  background-color: rgba(86, 255, 122, 0.08);
+}
+.css_lb_attack_aircraft,
+.dark-theme .css_lb_attack_aircraft {
   border: 2px rgb(60, 170, 30) solid;
   box-shadow: inset 0 0 20px rgba(53, 199, 17, 0.25);
- }
+}
 .css_lb_attack_aircraft:hover {
   box-shadow: inset 0 0 20px rgba(40, 200, 0, 0.5), 0 0 20px rgba(40, 200, 0, 0.2);
 }
-.css_lb_fighter {
+.capturing .css_lb_attack_aircraft {
+  background-color: rgba(40, 200, 0, 0.08);
+}
+.css_lb_fighter,
+.dark-theme .css_lb_fighter {
   border: 2px rgb(150, 230, 165) solid;
   box-shadow: inset 0 0 20px rgba(36, 255, 91, 0.25);
- }
+}
 .css_lb_fighter:hover {
   box-shadow: inset 0 0 20px rgba(36, 255, 91, 0.5), 0 0 20px rgba(36, 255, 91, 0.2);
 }
-.css_lb_asw_aircraft {
+.capturing .css_lb_fighter {
+  background-color: rgba(36, 255, 91, 0.08);
+}
+.css_lb_asw_aircraft,
+.dark-theme .css_lb_asw_aircraft {
   border: 2px rgb(110, 135, 205) solid;
   box-shadow: inset 0 0 20px rgba(0, 110, 255, 0.25);
- }
+}
 .css_lb_asw_aircraft:hover {
   box-shadow: inset 0 0 20px rgba(0, 110, 255, 0.5), 0 0 20px rgba(0, 110, 255, 0.2);
 }
-.css_cb_night_aircraft {
+.capturing .css_lb_asw_aircraft {
+  background-color: rgba(0, 110, 255, 0.08);
+}
+.css_cb_night_aircraft,
+.dark-theme .css_cb_night_aircraft {
   border: 2px rgb(130, 130, 180) solid;
   box-shadow: inset 0 0 20px rgba(122, 98, 255, 0.25);
- }
+}
 .css_cb_night_aircraft:hover {
   box-shadow: inset 0 0 20px rgba(122, 98, 255, 0.5), 0 0 20px rgba(122, 98, 255, 0.2);
 }
+.capturing .css_cb_night_aircraft {
+  background-color: rgba(122, 98, 255, 0.08);
+}
+
 .shoot_table_fighter { background-color: rgba(0, 255, 64, 0.1); }
 .shoot_table_torpedo_bomber { background-color: rgba(0, 189, 252, 0.1); }
 .shoot_table_dive_bomber { background-color: rgba(255, 0, 0, 0.1); }
