@@ -976,7 +976,7 @@ const AIR_STATUS = [
 const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5 };
 
 // 艦戦系
-const FIGHTERS = [1, 7, 102, 103];
+const FIGHTERS = [1, -1, 7, 102, 103];
 
 // 攻撃機系
 const ATTACKERS = [2, -2, 3, 6, 9, 101, -101, 105];
