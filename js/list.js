@@ -229,7 +229,7 @@ function setPresets(presets, isLocal = true) {
 
     // プリセフッター
     if (!isLocal) {
-      const preset_footer = createDiv('update_date mr-3', '', `${preset[5] ? `作成者: ${preset[5]}　` : ""}作成日時: ${preset[4].split('.')[0]}`);
+      const preset_footer = createDiv('update_date mr-3', '', `${preset[5] ? `作成者: ${preset[5]}　` : ""} ${preset[4].split('.')[0]}`);
       container.appendChild(preset_footer);
     }
     else {
@@ -333,7 +333,7 @@ function searchUploadedPreset() {
             docData.name,
             docData.data,
             docData.memo,
-            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss'),
+            formatDate(createdAt, 'yyyy/MM/dd HH:mm'),
             docData.user
           ];
           presets.push(preset);
@@ -439,7 +439,7 @@ function more_load_presets() {
             docData.name,
             docData.data,
             docData.memo,
-            formatDate(createdAt, 'yyyy/MM/dd HH:mm:ss'),
+            formatDate(createdAt, 'yyyy/MM/dd HH:mm'),
             docData.user
           ];
           presets.push(preset);
