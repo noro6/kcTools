@@ -280,8 +280,8 @@ function setPresets(presets, isLocal = true) {
  * @param {string} str 
  */
 function AutoLink(str) {
-  var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
-  var regexp_makeLink = function (all, url, h, href) {
+  const regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
+  const regexp_makeLink = function (all, url, h, href) {
     return '<a href="h' + href + '" target="_blank">' + url + '</a>';
   }
 
@@ -294,10 +294,16 @@ function AutoLink(str) {
 function map_select_Changed() {
   const area = castInt($('#map_select').val());
   $('#btn_search_preset').prop('disabled', false);
+  $('#presets_order').removeClass('d-none');
 
   if (area > 400) {
     $('#select_preset_level').parent().removeClass('d-none');
     $('#select_preset_level').val(4);
+  }
+  else if (area === 0) {
+    $('#presets_order').val(1);
+    $('#presets_order').change();
+    $('#presets_order').addClass('d-none');
   }
   else {
     $('#select_preset_level').parent().addClass('d-none');
@@ -317,12 +323,20 @@ function searchUploadedPreset() {
 
   if (!fb) initializeFB();
   if (fb) {
-    fb.collection("presets")
-      .where("map", "==", query.map)
-      .where("level", "==", query.level)
-      .orderBy(query.sortKey, query.order)
-      .limit(STEP)
-      .get()
+    let search = null;
+    if (query.map)
+      search = fb.collection("presets")
+        .where("map", "==", query.map)
+        .where("level", "==", query.level)
+        .orderBy(query.sortKey, query.order)
+        .limit(STEP);
+    else {
+      search = fb.collection("presets")
+        .where("level", "==", query.level)
+        .orderBy(query.sortKey, query.order)
+        .limit(STEP);
+    }
+    search.get()
       .then(function (querySnapshot) {
         prevSnapShot = querySnapshot.docs[querySnapshot.docs.length - 1];
         querySnapshot.forEach(function (doc) {
@@ -339,7 +353,7 @@ function searchUploadedPreset() {
           presets.push(preset);
         });
 
-        if (presets.length < STEP) {
+        if (presets.length < STEP || !query.map) {
           prevSnapShot = null;
         }
         setPresets(presets, false);
@@ -1143,10 +1157,17 @@ function public_preset_tab_Shown() {
   $('#map_select').parent().removeClass('d-none');
   $('#search_preset_parent').addClass('d-none');
 
+  if (castInt($('#presets_order').val()) === 0) {
+    $('#presets_order').val(1);
+    $('#presets_order').change();
+    $('#presets_order').addClass('d-none');
+  }
+  $('#presets_order').find('option[value="0"]').prop('disabled', true);
+
   saveSessionStorage('display_public', true);
 
   if (!$('#map_select').html()) {
-    let text = '';
+    let text = '<option value="0">全ての海域（最新の20件）</option>';
     for (const w of WORLD_DATA) {
       const world = w.world;
       const maps = MAP_DATA.filter(m => Math.floor(m.area / 10) === world);
@@ -1162,10 +1183,10 @@ function public_preset_tab_Shown() {
     const result = loadSessionStorage('search_result');
     if (result) {
       $('#map_select').val(result.map);
-      map_select_Changed();
       setPresets(result.presets, false);
     }
   }
+  map_select_Changed();
 }
 
 /**
@@ -1175,6 +1196,8 @@ function public_preset_tab_Hidden() {
   $('#btn_search_preset').parent().addClass('d-none');
   $('#map_select').parent().addClass('d-none');
   $('#search_preset_parent').removeClass('d-none');
+  $('#presets_order').find('option[value="0"]').prop('disabled', false);
+  $('#presets_order').removeClass('d-none');
 
   saveSessionStorage('display_public', false);
 }

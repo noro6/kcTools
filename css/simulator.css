@@ -570,7 +570,10 @@ input[type="text"] { font-size: 12px; }
 -------------------------------- */
 #battle_count { width: 60px; }
 #landBase_target { width: 60px; }
-.enemy_content { border-radius: .15rem; }
+.enemy_content {
+  cursor: pointer;
+  border-radius: .15rem; 
+}
 .enemy_content:hover { background-color: rgba(128, 128, 128, 0.1); }
 .no_enemy { opacity: .3; }
 .no_enemy:hover { opacity: .6; }
@@ -587,7 +590,6 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
 }
 .enemy_name {
-  cursor: pointer;
   display: table;
   font-size: 12px;
 }
@@ -609,11 +611,7 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   text-align: right;
 }
-.enemy_ap {
-  cursor: pointer;
-  transition: .4s;
-}
-.enemy_ap:hover { filter: drop-shadow(0 0 3px #969696); }
+
 /* ドラッグ要素のホバー時 */
 .hover_enemy_content {
   background-color: rgba(0, 153, 255, 0.6) !important;
@@ -1327,21 +1325,51 @@ input[type="text"] { font-size: 12px; }
   cursor: help;
   text-decoration-skip-ink: none;
 }
-.manual_movie_wrap {
-  position: relative;
-  width: 100%;
+
+
+/* ------------------------------
+  仮想敵艦 #manage_manual_data
+-------------------------------- */
+#enemy_slot_info .d-flex > div,
+.manual_enemy_slot > div {
+  -ms-flex-item-align: center;
+  align-self: center;
 }
-.manual_movie_wrap:before {
-  content:"";
-  display: block;
-  padding-top: 56.25%;
+
+#enemy_slot_info legend {
+  font-size: 1em;
+  margin-bottom: 0;
 }
-.manual_movie {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.manual_enemy_ap { 
+  text-align: right;
+  width: 40px; 
+}
+#manual_aa_weight,
+#manual_aa_bonus,
+.enemy_slot {
+  width: 80px;
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+
+.manual_enemy_tr > div {
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+
+.manual_enemy_head { width: 40%; }
+.manual_enemy_slots { width: 50%; }
+.manual_enemy_ap_td,
+.manual_enemy_aaw_td,
+.manual_enemy_aabo_td {
+  text-align: center;
+  width: 10%; 
+}
+
+.manual_enemy_slot_count {
+  width: 24px;
+  font-size: 12px;
+  text-align: right;
 }
 
 

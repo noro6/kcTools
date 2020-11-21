@@ -1032,6 +1032,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	Sortable.create(document.getElementById('fleet_tab_container'), {
 		animation: 200,
+		delay: 100,
 		handle: '.fleet_tab:not(.editting)',
 		scroll: true,
 		filter: '#add_new_tab',

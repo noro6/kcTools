@@ -516,7 +516,6 @@ const ENEMY_TYPE = [
 	{ id: 2, name: "地上施設" },
 ];
 const ENEMY_DATA = [
-	{ id: -1, type: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 1, 2], name: "直接入力", slot: [], eqp: [], orig: -1, aaw: 0, aabo: 0 },
 	{ id: 1, type: [16], name: "駆逐イ級", slot: [], eqp: [], orig: 1, aaw: 4, aabo: 0 },
 	{ id: 2, type: [16], name: "駆逐ロ級", slot: [], eqp: [], orig: 2, aaw: 4, aabo: 0 },
 	{ id: 3, type: [16], name: "駆逐ハ級", slot: [], eqp: [], orig: 3, aaw: 4, aabo: 0 },
@@ -1177,4 +1176,6 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const LATEST_VERSION = '1.10.3';
+const UNKNOWN_ENEMY = [472, 475];
+
+const LATEST_VERSION = '1.10.4';
