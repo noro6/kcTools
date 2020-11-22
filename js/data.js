@@ -105,7 +105,7 @@ const PLANE_DATA = [
 	{ id: 292, type: 3, name: "彗星二二型(六三四空/熟練)", abbr: "彗星二二型(634空/熟練)", fire: 0, antiAir: 2, torpedo: 0, bomber: 12, armor: 0, asw: 5, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 3, avoid2: 0, radius: 6, cost: 5, avoid: 0 },
 	{ id: 305, type: 3, name: "Ju87C改二(KMX搭載機)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 9, armor: 0, asw: 9, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 2, avoid2: 1, radius: 4, cost: 8, avoid: 0 },
 	{ id: 306, type: 3, name: "Ju87C改二(KMX搭載機/熟練)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 10, armor: 0, asw: 10, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 3, avoid2: 1, radius: 4, cost: 8, avoid: 0 },
-	{ id: 316, type: 3, name: "Re.2001 CB改", abbr: "", fire: 3, antiAir: 4, torpedo: 0, bomber: 6, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 1, avoid2: 2, radius: 3, cost: 6, avoid: 0 },
+	{ id: 316, type: 3, name: "Re.2001 CB改", abbr: "", fire: 3, antiAir: 4, torpedo: 0, bomber: 6, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 1, avoid2: 2, radius: 3, cost: 6, avoid: 0 },
 	{ id: 319, type: 3, name: "彗星一二型(六三四空/三号爆弾搭載機)", abbr: "彗星12型(634空/3号爆弾)", fire: 0, antiAir: 3, torpedo: 0, bomber: 12, armor: 0, asw: 2, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 1, avoid2: 1, radius: 5, cost: 5, avoid: 1 },
 	{ id: 320, type: 3, name: "彗星一二型(三一号光電管爆弾搭載機)", abbr: "彗星12型(31号光電管爆弾)", fire: 0, antiAir: 0, torpedo: 0, bomber: 11, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 5, avoid2: 0, radius: 5, cost: 6, avoid: 1 },
 	{ id: 391, type: 3, name: "九九式艦爆二二型", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 6, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 3, cost: 4, avoid: 0 },
@@ -909,8 +909,8 @@ const WORLD_DATA = [
 	{ world: 46, name: "進撃！第二次作戦「南方作戦」(2019秋イベ)" },
 	{ world: 47, name: "桃の節句！沖に立つ波(ミニ期間限定海域)" },
 	{ world: 48, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
- ];
- const MAP_DATA = [
+];
+const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
 	{ area: 12, name: "南西諸島沖" },
 	{ area: 13, name: "製油所地帯沿岸" },
@@ -959,7 +959,7 @@ const WORLD_DATA = [
 	{ area: 485, name: "ニューブリテン島沖/ソロモン諸島西部沖" },
 	{ area: 486, name: "ソロモン諸島沖" },
 	{ area: 487, name: "ソロモン諸島沖/サンタ・クルーズ諸島沖" },
- ];
+];
 
 // 制空状態
 const AIR_STATUS = [
