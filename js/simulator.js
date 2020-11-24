@@ -240,11 +240,17 @@ function setPreCalculateTable() {
 			const tmpA = [];
 			for (const v of c_max) {
 				const max = v / 3;
-				const tmpB = [];
+				let tmpB = [];
 				for (let i = 0; i <= max; i += 0.01) {
 					tmpB.push(slot * (i + v / 4) / 10);
 				}
-				shuffleArray(tmpB);
+
+				if(tmpB.findIndex(v => v >= 1) === -1) {
+					tmpB = [0];
+				}
+				else{
+					shuffleArray(tmpB);
+				}
 				tmpA.push(tmpB);
 			}
 			SHOOT_DOWN_TABLE.push(tmpA);
@@ -266,7 +272,7 @@ function setPreCalculateTable() {
 			const tmpA = [];
 			const airLen = AIR_STATUS.length;
 			for (let i = 0; i < airLen; i++) {
-				const tmpB = [];
+				let tmpB = [];
 				const rand_max = AIR_STATUS[i].rate;
 				for (let x = rand_max; x >= 0; x--) {
 					for (let y = 0; y <= rand_max; y++) {
@@ -274,8 +280,12 @@ function setPreCalculateTable() {
 						tmpB.push(value);
 					}
 				}
-
-				shuffleArray(tmpB);
+				if(tmpB.findIndex(v => v >= 1) === -1) {
+					tmpB = [0];
+				}
+				else{
+					shuffleArray(tmpB);
+				}
 				tmpA.push(tmpB);
 			}
 			SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
@@ -3484,7 +3494,7 @@ function getAirStatusIndex(x, y) {
 	if (x <= 1000) {
 		const max = AIR_STATUS_TABLE[x].length - 1;
 		if (y < max) return AIR_STATUS_TABLE[x][y];
-		return AIR_STATUS_TABLE[x][max];
+		return 4;
 	}
 	else {
 		const border = getAirStatusBorder(y);
