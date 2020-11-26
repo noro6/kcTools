@@ -899,6 +899,7 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
+	{ world: 49, name: "護衛せよ！船団輸送作戦【欧州編】(2020秋イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -959,6 +960,9 @@ const MAP_DATA = [
 	{ area: 485, name: "ニューブリテン島沖/ソロモン諸島西部沖" },
 	{ area: 486, name: "ソロモン諸島沖" },
 	{ area: 487, name: "ソロモン諸島沖/サンタ・クルーズ諸島沖" },
+	{ area: 491, name: "地中海マルタ島沖" },
+	{ area: 492, name: "バレンツ海" },
+	{ area: 493, name: "第3海域" },
 ];
 
 // 制空状態
