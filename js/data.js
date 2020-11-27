@@ -862,6 +862,12 @@ const ENEMY_DATA = [
 	{ id: 476, type: [1, 11], name: "南太平洋空母棲姫-壊 [甲]", slot: [72, 36, 36, 30], eqp: [581, 582, 557, 583], orig: 476, aaw: 30, aabo: 4 },
 	{ id: 477, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 477, aaw: 0, aabo: 0 },
 	{ id: 478, type: [1, 18], name: "潜水夏姫IIfragship", slot: [], eqp: [], orig: 478, aaw: 0, aabo: 0 },
+	{ id: 479, type: [1, 13], name: "戦艦新棲姫 [丙]", slot: [], eqp: [], orig: 1979, aaw: 0, aabo: 0 },
+	{ id: 480, type: [1, 13], name: "戦艦新棲姫 [乙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 481, type: [1, 13], name: "戦艦新棲姫 [甲]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 482, type: [1, 13], name: "戦艦新棲姫-壊 [丙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 483, type: [1, 13], name: "戦艦新棲姫-壊 [乙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 484, type: [1, 13], name: "戦艦新棲姫-壊 [甲]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
 ];
 const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
@@ -1192,6 +1198,6 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const UNKNOWN_ENEMY = [472, 475];
+const UNKNOWN_ENEMY = [479, 480, 481, 482, 483, 484];
 
 const LATEST_VERSION = '1.10.4';
