@@ -699,6 +699,12 @@ const ENEMY_DATA = [
 	{ id: 242, type: [16], name: "駆逐ナ級後期型", slot: [], eqp: [], orig: 239, aaw: 16, aabo: 0 },
 	{ id: 243, type: [16], name: "駆逐ナ級後期型elite", slot: [], eqp: [], orig: 239, aaw: 18, aabo: 0 },
 	{ id: 244, type: [16], name: "駆逐ナ級後期型flagship", slot: [], eqp: [], orig: 239, aaw: 18, aabo: 0 },
+	{ id: 245, type: [1, 13], name: "戦艦仏棲姫 [丙]", slot: [48], eqp: [574], orig: 1745, aaw: 20, aabo: 4 },
+	{ id: 246, type: [1, 13], name: "戦艦仏棲姫 [乙]", slot: [64], eqp: [574], orig: 0, aaw: 20, aabo: 4 },
+	{ id: 247, type: [1, 13], name: "戦艦仏棲姫 [甲]", slot: [72], eqp: [574], orig: 0, aaw: 20, aabo: 4 },
+	{ id: 248, type: [1, 13], name: "戦艦仏棲姫-壊 [丙]", slot: [64], eqp: [574], orig: 0, aaw: 20, aabo: 4 },
+	{ id: 249, type: [1, 13], name: "戦艦仏棲姫-壊 [乙]", slot: [72], eqp: [574], orig: 0, aaw: 20, aabo: 4 },
+	{ id: 250, type: [1, 13], name: "戦艦仏棲姫-壊 [甲]", slot: [81], eqp: [574], orig: 0, aaw: 20, aabo: 4 },
 	{ id: 251, type: [1, 11], name: "空母夏鬼", slot: [64, 56, 54], eqp: [547, 548, 549], orig: 251, aaw: 78, aabo: 10 },
 	{ id: 252, type: [1, 11], name: "空母夏姫", slot: [72, 72, 63], eqp: [547, 548, 549], orig: 252, aaw: 80, aabo: 10 },
 	{ id: 253, type: [1, 2], name: "集積地夏姫 弱", slot: [12, 12], eqp: [562, 562], orig: 253, aaw: 18, aabo: 2 },
@@ -760,6 +766,12 @@ const ENEMY_DATA = [
 	{ id: 368, type: [1, 2], name: "北方棲妹-壊 [丙]", slot: [80], eqp: [562], orig: 368, aaw: 47, aabo: 4 },
 	{ id: 369, type: [1, 2], name: "北方棲妹-壊 [乙]", slot: [100], eqp: [562], orig: 369, aaw: 47, aabo: 4 },
 	{ id: 370, type: [1, 2], name: "北方棲妹-壊 [甲]", slot: [120], eqp: [562], orig: 370, aaw: 48, aabo: 4 },
+	{ id: 377, type: [1, 15], name: "深海地中海棲姫 [丙]", slot: [], eqp: [], orig: 0, aaw: 35, aabo: 7 },
+	{ id: 378, type: [1, 15], name: "深海地中海棲姫 [乙]", slot: [], eqp: [], orig: 1878, aaw: 35, aabo: 7 },
+	{ id: 379, type: [1, 15], name: "深海地中海棲姫 [甲]", slot: [], eqp: [], orig: 1879, aaw: 37, aabo: 7 },
+	{ id: 380, type: [1, 15], name: "深海地中海棲姫-壊 [丙]", slot: [], eqp: [], orig: 0, aaw: 35, aabo: 7 },
+	{ id: 381, type: [1, 15], name: "深海地中海棲姫-壊 [乙]", slot: [], eqp: [], orig: 0, aaw: 37, aabo: 7 },
+	{ id: 382, type: [1, 15], name: "深海地中海棲姫-壊 [甲]", slot: [], eqp: [], orig: 0, aaw: 39, aabo: 7 },
 	{ id: 389, type: [1, 2], name: "飛行場姫 偵察 弱", slot: [9, 9, 12], eqp: [594, 594, 562], orig: 389, aaw: 21, aabo: 3 },
 	{ id: 390, type: [1, 2], name: "飛行場姫 偵察 中", slot: [9, 9, 12, 12], eqp: [595, 594, 562, 561], orig: 390, aaw: 21, aabo: 3 },
 	{ id: 391, type: [1, 2], name: "飛行場姫 偵察 強", slot: [9, 9, 18, 12], eqp: [595, 595, 562, 562], orig: 391, aaw: 21, aabo: 3 },
@@ -899,7 +911,7 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
-	{ world: 49, name: "護衛せよ！船団輸送作戦【欧州編】(2020秋イベ)" },
+	{ world: 49, name: "護衛せよ！船団輸送作戦(2020秋イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -962,7 +974,7 @@ const MAP_DATA = [
 	{ area: 487, name: "ソロモン諸島沖/サンタ・クルーズ諸島沖" },
 	{ area: 491, name: "地中海マルタ島沖" },
 	{ area: 492, name: "バレンツ海" },
-	{ area: 493, name: "第3海域" },
+	{ area: 493, name: "ノルウェー北岬沖/北極海" },
 ];
 
 // 制空状態
