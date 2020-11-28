@@ -332,7 +332,6 @@ function searchUploadedPreset() {
         .limit(STEP);
     else {
       search = fb.collection("presets")
-        .where("level", "==", query.level)
         .orderBy(query.sortKey, query.order)
         .limit(STEP);
     }
@@ -344,7 +343,7 @@ function searchUploadedPreset() {
           const createdAt = doc.data().createdAt ? doc.data().createdAt.toDate() : new Date();
           const preset = [
             '',
-            docData.name,
+            docData.name + (query.map === 0 && docData.level > 0 ? '【' + DIFFICULTY.find(v => v.id === docData.level).name + '】' : ''),
             docData.data,
             docData.memo,
             formatDate(createdAt, 'yyyy/MM/dd HH:mm'),
