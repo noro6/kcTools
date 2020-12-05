@@ -245,10 +245,10 @@ function setPreCalculateTable() {
 					tmpB.push(slot * (i + v / 4) / 10);
 				}
 
-				if(tmpB.findIndex(v => v >= 1) === -1) {
+				if (tmpB.findIndex(v => v >= 1) === -1) {
 					tmpB = [0];
 				}
-				else{
+				else {
 					shuffleArray(tmpB);
 				}
 				tmpA.push(tmpB);
@@ -280,10 +280,10 @@ function setPreCalculateTable() {
 						tmpB.push(value);
 					}
 				}
-				if(tmpB.findIndex(v => v >= 1) === -1) {
+				if (tmpB.findIndex(v => v >= 1) === -1) {
 					tmpB = [0];
 				}
-				else{
+				else {
 					shuffleArray(tmpB);
 				}
 				tmpA.push(tmpB);
@@ -4888,6 +4888,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 	let cells = "";
 	let isMixed = false;
 	let isAllSubmarine = true;
+	let isAntiAirCutinEnabled = false;
 
 	for (let node_battle_content of document.getElementsByClassName('battle_content')) {
 		// 防空時は専用のフォームから。
@@ -4926,6 +4927,11 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 			}
 			// 潜水以外が含まれていればAll潜水フラグを落とす
 			if (isAllSubmarine && !enm.type.includes(18) && enm.id > 0) isAllSubmarine = false;
+
+			// 対空CI可能艦がいるかどうか
+			if (!isAntiAirCutinEnabled && ANTIAIR_CUTIN_ENEMY.includes(enm.id)) {
+				isAntiAirCutinEnabled = true;
+			}
 
 			battleInfo.enemies.push(enm);
 			sumAp += enm.ap;
@@ -4978,6 +4984,13 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 	if (!isDefMode) {
 		if (map.includes('999-')) document.getElementById('route').value = "海域未指定";
 		else document.getElementById('route').value = !isMixed ? map + "：" + cells : "別海域のセルが混在しています。";
+	}
+
+	if (isAntiAirCutinEnabled) {
+		document.getElementById('enemy_cutin_contain').classList.remove('d-none');
+	}
+	else {
+		document.getElementById('enemy_cutin_contain').classList.add('d-none');
 	}
 
 	// 敵艦載機撃墜テーブル構築
