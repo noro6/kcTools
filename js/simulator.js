@@ -95,7 +95,7 @@ let ENEMY_PATTERN = [];
 		基地: [0:機体群, 1:札群]
 		艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ]
 			機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
-		敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マス名, 3:マス種別, 4:陣形]
+		敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マス名, 3:マス種別, 4:陣形, 5:半径]
 		対空: [0:対空CI毎撃墜テーブル, 1:基準艦隊防空, 2:(v1.9.1～未使用), 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
 
 	在庫メモ
@@ -2827,9 +2827,11 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		$(isDefMode ? '#air_raid_enemies' : '.battle_content').each((i, e) => {
 			const enemyFleet = preset[2].find(v => v[0] === i);
 			if (enemyFleet) {
+				// セル名復帰
 				if (enemyFleet.length >= 3) $(e)[0].dataset.celldata = enemyFleet[2];
 				else $(e)[0].dataset.celldata = '';
 
+				// 戦闘種別復帰
 				if (enemyFleet.length >= 4) {
 					const cellType = castInt(enemyFleet[3]);
 					if (isDefMode) {
@@ -2839,8 +2841,14 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 					cell_type_Changed($(e).find('.cell_type'), false);
 				}
 				else $(e).find('.cell_type').val(1);
+
+				// 陣形復帰
 				if (enemyFleet.length >= 5) $(e).find('.formation').val(enemyFleet[4]);
 				else $(e).find('.formation').val(1);
+
+				// 半径復帰
+				if (enemyFleet.length >= 6) $(e).find('.enemy_range').text(enemyFleet[5]);
+				else $(e).find('.enemy_range').text(0);
 
 				let enemyIndex = 0;
 				for (const id of enemyFleet[1]) {
@@ -3003,7 +3011,15 @@ function createEnemyFleetPreset() {
 	$(isDefMode ? '#air_raid_enemies' : '.battle_content').each((i, e) => {
 		// 非表示なら飛ばす
 		if ($(e).attr('class').includes('d-none')) return;
-		const enemyFleet = [i, [], $(e)[0].dataset.celldata, castInt($(e).find('.cell_type').val()), castInt($(e).find('.formation').val())];
+		// [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マス名, 3:マス種別, 4:陣形, 5:半径]
+		const enemyFleet = [
+			i,
+			[],
+			$(e)[0].dataset.celldata,
+			castInt($(e).find('.cell_type').val()),
+			castInt($(e).find('.formation').val()),
+			castInt($(e).find('.enemy_range').text())
+		];
 		$(e).find('.enemy_content').each((j, ce) => {
 			const enemyId = castInt($(ce)[0].dataset.enemyid);
 			const ap = castInt($(ce).find('.enemy_ap').text());
@@ -3536,29 +3552,41 @@ function getAirStatusBorder(enemyAp) {
 function calculate() {
 	// 各種オブジェクト生成
 	const objectData = { landBaseData: [], friendFleetData: [], battleData: [] };
-	// console.time('all');
+	try {
+		// 計算前初期化
+		calculateInit(objectData);
 
-	// 計算前初期化
-	// console.time('calculateInit');
-	calculateInit(objectData);
-	// console.timeEnd('calculateInit');
+		// メイン計算
+		mainCalculate(objectData);
 
-	// メイン計算
-	// console.time('mainCalculate');
-	mainCalculate(objectData);
-	// console.timeEnd('mainCalculate');
+		// 各状態確率計算
+		rateCalculate(objectData);
 
-	// 各状態確率計算
-	// console.time('time');
-	rateCalculate(objectData);
-	// console.timeEnd('time');
-
-	// 結果表示
-	// console.time('drawResult');
-	drawResult();
-	// console.timeEnd('drawResult');
-
-	// console.timeEnd('all');
+		// 結果表示
+		drawResult();
+	} catch (error) {
+		// エラー通知
+		const $modal = $('#modal_confirm');
+		$modal.find('.modal-body').html(`
+			<div class="px-2">
+				<div>計算処理中にエラーが発生しました。</div>
+				<div class="my-1">
+					<div>
+						大変申し訳ありません。お手数ですが、下記の文字列をコピーして、
+						<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただければ幸いです。
+					</div>
+					<div>
+						報告を頂き次第、可能な限り早期の調査、修正を行います。
+					</div>
+				</div>
+				<div>
+					<input type="text" class="form-control form-control-sm" id="error_str" readonly value="${encodePreset()}">
+				</div>
+			</div>
+		`);
+		confirmType = "Error";
+		$modal.modal('show');
+	}
 }
 
 /**
@@ -7421,6 +7449,9 @@ function modal_Closed($this) {
 			$('#btn_upload_preset').addClass('d-none');
 			break;
 		case "modal_confirm":
+			if (confirmType === 'Error') {
+				window.location.href = '../list/';
+			}
 			confirmType = null;
 			break;
 		default:
@@ -11873,6 +11904,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_manual_enemy').on('click', '#commit_enemy', commit_enemy_Clicked);
 	$('#modal_manual_enemy').on('click', '#rollback_enemy', rollback_enemy_Clicked);
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
+	$('#modal_confirm').on('click', '#error_str', function () { if (copyInputTextToClipboard($(this))) inform_success('コピーしました'); });
 	$('#btn_save_preset').click(btn_save_preset_Clicked);
 	$('#btn_save_preset_sub').click(btn_save_preset_sub_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);

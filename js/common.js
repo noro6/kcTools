@@ -1017,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}, '.fleet_tab');
 
-	$('#modal_confirm').on('hide.bs.modal', function () { confirmType = null; });
+	$('#modal_confirm').on('hide.bs.modal', function () { if (confirmType !== 'Error') confirmType = null; });
 	$('#modal_confirm').on('click', '.btn_ok', function () {
 		const $modal = $('#modal_confirm');
 		if (confirmType === 'deleteTab') {
