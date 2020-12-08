@@ -10469,7 +10469,7 @@ function stock_tr_Clicked($this) {
 	$modal.find('#edit_id').text(plane.id);
 	$modal.find('.plane_status_name').text(plane.name);
 	$modal.find('#stock_sum').val(getArraySum(stockData.num));
-	$modal.find('.img_plane_card').attr('src', 'img/plane/' + plane.id + '.png');
+	$modal.find('.img_plane_card').attr('src', '../img/plane/' + plane.id + '.png');
 	$modal.modal('show');
 }
 
@@ -11914,7 +11914,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#btn_redo').click(btn_redo_Clicked);
 	$('#input_url').click(function () { $(this).select(); });
 	$('#btn_url_shorten').click(btn_url_shorten_Clicked);
-
 	$('#draggable_plane_box').on('click', '#btn_hide_plane_box', function () { $('#draggable_plane_box').addClass('d-none'); });
 	$('#draggable_plane_box').on('click', '#draggable_plane_type_select .nav-link', function () { createDraggablePlaneTable($(this)) });
 	$('#draggable_plane_box').on('change', '#draggable_plane_sort_select', function () { createDraggablePlaneTable(); });

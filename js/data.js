@@ -158,6 +158,7 @@ const PLANE_DATA = [
 	{ id: 187, type: 101, name: "銀河", abbr: "", fire: 0, antiAir: 3, torpedo: 14, bomber: 14, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 9, cost: 13, avoid: 0 },
 	{ id: 224, type: 101, name: "爆装一式戦 隼III型改(65戦隊)", abbr: "爆装一式戦(65戦隊)", fire: 3, antiAir: 6, torpedo: 0, bomber: 8, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 3, avoid2: 2, radius: 5, cost: 4, avoid: 1 },
 	{ id: 388, type: 101, name: "銀河(江草隊)", abbr: "", fire: 0, antiAir: 3, torpedo: 15, bomber: 15, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, accuracy: 3, avoid2: 0, radius: 7, cost: 13, avoid: 1 },
+	{ id: 401, type: 101, name: "Do 17 Z-2", abbr: "", fire: 0, antiAir: 2, torpedo: 0, bomber: 11, armor: 0, asw: 5, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 4, cost: 13, avoid: 0 },
 	{ id: 269, type: -101, name: "試製東海", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 2, armor: 0, asw: 10, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 8, cost: 9, avoid: 0 },
 	{ id: 270, type: -101, name: "東海(九〇一空)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 2, armor: 0, asw: 11, antiBomber: 0, interception: 0, scout: 6, canRemodel: 0, accuracy: 1, avoid2: 0, radius: 8, cost: 9, avoid: 0 },
 	{ id: 176, type: 102, name: "三式戦 飛燕", abbr: "", fire: 0, antiAir: 8, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 7, avoid: 0 },
@@ -444,6 +445,7 @@ const SHIP_DATA = [
 	{ id: 292, api: 492, type: 8, name: "Richelieu", slot: [3, 3, 3, 3], final: 0, orig: 292, valid: 0, sort1: 8, sort2: 34011 },
 	{ id: 311, api: 511, type: 8, name: "Гангут", slot: [1, 1, 1, 1], final: 0, orig: 311, valid: 0, sort1: 8, sort2: 35011 },
 	{ id: 312, api: 512, type: 8, name: "Октябрьская революция", slot: [1, 1, 1, 1], final: 0, orig: 311, valid: 0, sort1: 8, sort2: 35012 },
+	{ id: 314, api: 514, type: 3, name: "Sheffield", slot: [1, 1, 3], final: 0, orig: 314, valid: 0, sort1: 14, sort2: 33431 },
 	{ id: 316, api: 513, type: 8, name: "Гангут два", slot: [1, 1, 2, 2], final: 1, orig: 311, valid: 0, sort1: 8, sort2: 35016 },
 	{ id: 371, api: 571, type: 9, name: "Nelson", slot: [1, 1, 1, 2], final: 0, orig: 371, valid: 0, sort1: 7, sort2: 33021 },
 	{ id: 376, api: 576, type: 9, name: "Nelson改", slot: [1, 1, 2, 2], final: 1, orig: 371, valid: 0, sort1: 7, sort2: 33022 },
@@ -461,6 +463,8 @@ const SHIP_DATA = [
 	{ id: 418, api: 618, type: 3, name: "Perth改", slot: [1, 1, 1], final: 1, orig: 413, valid: 0, sort1: 14, sort2: 38412 },
 	{ id: 420, api: 620, type: 3, name: "Helena改", slot: [0, 0, 2, 4], final: 1, orig: 415, valid: 0, sort1: 14, sort2: 32432 },
 	{ id: 434, api: 634, type: 20, name: "迅鯨", slot: [1, 1], final: 0, orig: 434, valid: 0, sort1: 13, sort2: 7011 },
+	{ id: 454, api: 654, type: 8, name: "Washington", slot: [0, 0, 3, 3], final: 0, orig: 454, valid: 0, sort1: 8, sort2: 32051 },
+	{ id: 459, api: 659, type: 8, name: "Washington改", slot: [0, 2, 3, 3], final: 1, orig: 454, valid: 0, sort1: 8, sort2: 32052 },
 	{ id: 1309, api: 209, type: 8, name: "金剛改", slot: [3, 3, 3, 3], final: 0, orig: 21, valid: 0, sort1: 8, sort2: 1012 },
 	{ id: 1310, api: 210, type: 8, name: "比叡改", slot: [3, 3, 3, 3], final: 0, orig: 22, valid: 0, sort1: 8, sort2: 1022 },
 	{ id: 1311, api: 211, type: 8, name: "榛名改", slot: [3, 3, 3, 3], final: 0, orig: 23, valid: 0, sort1: 8, sort2: 1032 },
@@ -499,6 +503,7 @@ const SHIP_DATA = [
 	{ id: 1483, api: 693, type: 3, name: "L.d.S.D.d.Abruzzi改", slot: [2, 2, 2, 2], final: 1, orig: 389, valid: 0, sort1: 14, sort2: 31452 },
 	{ id: 1491, api: 691, type: 3, name: "G.Garibaldi改", slot: [2, 2, 2, 2], final: 1, orig: 390, valid: 0, sort1: 14, sort2: 31462 },
 	{ id: 1494, api: 609, type: 3, name: "De Ruyter改", slot: [1, 2, 2], final: 1, orig: 399, valid: 0, sort1: 14, sort2: 37412 },
+	{ id: 1705, api: 705, type: 3, name: "Sheffield改", slot: [1, 1, 1, 3], final: 1, orig: 314, valid: 0, sort1: 14, sort2: 33432 },
 ];
 const ENEMY_TYPE = [
 	{ id: 11, name: "正規空母" },
