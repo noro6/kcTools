@@ -873,6 +873,15 @@ const ENEMY_DATA = [
 	{ id: 482, type: [1, 13], name: "戦艦新棲姫-壊 [丁]", slot: [], eqp: [], orig: 1982, aaw: 155, aabo: 15 },
 	{ id: 483, type: [1, 13], name: "戦艦新棲姫-壊 [乙/丙]", slot: [], eqp: [], orig: 1983, aaw: 155, aabo: 15 },
 	{ id: 484, type: [1, 13], name: "戦艦新棲姫-壊 [甲]", slot: [], eqp: [], orig: 1984, aaw: 159, aabo: 15 },
+	{ id: 485, type: [1, 18], name: "潜水棲姫改IIflagship [丙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 486, type: [1, 18], name: "潜水棲姫改IIflagship [乙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 487, type: [1, 18], name: "潜水棲姫改IIflagship [甲]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
+	{ id: 488, type: [1, 16], name: "深海竹棲姫 [丙]", slot: [], eqp: [], orig: 0, aaw: 123, aabo: 11 },
+	{ id: 489, type: [1, 16], name: "深海竹棲姫 [乙]", slot: [], eqp: [], orig: 1989, aaw: 125, aabo: 11 },
+	{ id: 490, type: [1, 16], name: "深海竹棲姫 [甲]", slot: [], eqp: [], orig: 1990, aaw: 127, aabo: 11 },
+	{ id: 491, type: [1, 16], name: "深海竹棲姫-壊 [丙]", slot: [], eqp: [], orig: 0, aaw: 123, aabo: 11 },
+	{ id: 492, type: [1, 16], name: "深海竹棲姫-壊 [乙]", slot: [], eqp: [], orig: 0, aaw: 125, aabo: 11 },
+	{ id: 493, type: [1, 16], name: "深海竹棲姫-壊 [甲]", slot: [], eqp: [], orig: 0, aaw: 127, aabo: 11 },
 ];
 const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
@@ -986,8 +995,8 @@ const MAP_DATA = [
 	{ area: 491, name: "地中海マルタ島沖" },
 	{ area: 492, name: "バレンツ海" },
 	{ area: 493, name: "ノルウェー北岬沖/北極海" },
+	{ area: 494, name: "ルソン島沖/オルモック沖" },
 ];
-
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
@@ -1203,7 +1212,7 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const UNKNOWN_ENEMY = [479, 480, 481, 482, 483, 484];
+const UNKNOWN_ENEMY = [488, 489, 490, 491, 492, 493];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
 const LATEST_VERSION = '1.10.4.1';
