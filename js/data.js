@@ -876,12 +876,12 @@ const ENEMY_DATA = [
 	{ id: 485, type: [1, 18], name: "潜水棲姫改IIflagship [丙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
 	{ id: 486, type: [1, 18], name: "潜水棲姫改IIflagship [乙]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
 	{ id: 487, type: [1, 18], name: "潜水棲姫改IIflagship [甲]", slot: [], eqp: [], orig: 0, aaw: 0, aabo: 0 },
-	{ id: 488, type: [1, 16], name: "深海竹棲姫 [丙]", slot: [], eqp: [], orig: 0, aaw: 123, aabo: 11 },
-	{ id: 489, type: [1, 16], name: "深海竹棲姫 [乙]", slot: [], eqp: [], orig: 1989, aaw: 125, aabo: 11 },
-	{ id: 490, type: [1, 16], name: "深海竹棲姫 [甲]", slot: [], eqp: [], orig: 1990, aaw: 127, aabo: 11 },
-	{ id: 491, type: [1, 16], name: "深海竹棲姫-壊 [丙]", slot: [], eqp: [], orig: 0, aaw: 123, aabo: 11 },
-	{ id: 492, type: [1, 16], name: "深海竹棲姫-壊 [乙]", slot: [], eqp: [], orig: 0, aaw: 125, aabo: 11 },
-	{ id: 493, type: [1, 16], name: "深海竹棲姫-壊 [甲]", slot: [], eqp: [], orig: 0, aaw: 127, aabo: 11 },
+	{ id: 488, type: [1, 16], name: "深海竹棲姫 [丙]", slot: [], eqp: [], orig: 1988, aaw: 121, aabo: 11 },
+	{ id: 489, type: [1, 16], name: "深海竹棲姫 [乙]", slot: [], eqp: [], orig: 1989, aaw: 123, aabo: 11 },
+	{ id: 490, type: [1, 16], name: "深海竹棲姫 [甲]", slot: [], eqp: [], orig: 1990, aaw: 125, aabo: 11 },
+	{ id: 491, type: [1, 16], name: "深海竹棲姫-壊 [丙]", slot: [], eqp: [], orig: 1991, aaw: 125, aabo: 11 },
+	{ id: 492, type: [1, 16], name: "深海竹棲姫-壊 [乙]", slot: [], eqp: [], orig: 1992, aaw: 127, aabo: 11 },
+	{ id: 493, type: [1, 16], name: "深海竹棲姫-壊 [甲]", slot: [], eqp: [], orig: 1993, aaw: 127, aabo: 11 },
 ];
 const ENEMY_PLANE_DATA = [
 	{ id: 519, type: 1, name: "深海棲艦戦", antiAir: 2, torpedo: 0, bomber: 0 },
