@@ -2941,6 +2941,31 @@ function encodePreset() {
 }
 
 /**
+ * 現在の入力状況からbase64エンコード済みプリセットデータを生成、返却する
+ * @returns {string} エンコード済プリセットデータ
+ */
+function encodeError(error) {
+	try {
+		const obj = {
+			name: error.name,
+			message: error.message,
+			stack: error.stack
+		};
+		console.log(obj)
+		const dataString = JSON.stringify(obj);
+		const b64 = utf8_to_b64(dataString);
+		const utf8 = b64_to_utf8(b64);
+		// 複号までチェック
+		JSON.parse(utf8);
+
+		return b64;
+	}
+	catch (error) {
+		return "";
+	}
+}
+
+/**
  * 基地航空隊プリセットを生成し返却
  * @returns {Array} 基地プリセット
  */
@@ -3569,21 +3594,40 @@ function calculate() {
 		const $modal = $('#modal_confirm');
 		$modal.find('.modal-body').html(`
 			<div class="px-2">
-				<div>計算処理中にエラーが発生しました。</div>
+				<div class="h6">計算処理中にエラーが発生しました。</div>
 				<div class="my-1">
-					<div>
-						大変申し訳ありません。お手数ですが、下記の文字列をコピーして、
-						<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただければ幸いです。
+					<div class="pl-2">
+						　お手数ですが、直前にどのような基地や艦娘の装備などの操作をしようとしたかを
+						<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただけると幸いです。
 					</div>
-					<div>
-						報告を頂き次第、可能な限り早期の調査、修正を行います。
+					<div class="pl-2">
+						　報告を頂き次第、可能な限り早期の調査、修正を行います。ご不便をおかけして申し訳ありません。
 					</div>
-				</div>
-				<div>
-					<input type="text" class="form-control form-control-sm" id="error_str" readonly value="${encodePreset()}">
 				</div>
 			</div>
 		`);
+
+		// ログ送信
+		const log = {
+			name: error.name,
+			message: error.message,
+			stack: error.stack,
+			data: encodePreset(),
+			createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+		};
+		if (!fb) initializeFB();
+		if (fb) {
+			fb.runTransaction(function (tran) {
+				const ref = fb.collection('errors');
+				const d = ref.doc();
+				return tran.get(d).then(async () => {
+					await tran.set(d, log);
+				})
+			}).then(function (res) {
+			}).catch(function (err) {
+			});
+		}
+
 		confirmType = "Error";
 		$modal.modal('show');
 	}
