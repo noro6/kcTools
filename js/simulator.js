@@ -39,6 +39,9 @@ let battleCount = 1;
 // 結果表示戦闘
 let displayBattle = 1;
 
+// 基地標的
+let landBaseTarget = 0;
+
 // イベント発生用タイマー
 let timer = false;
 
@@ -2370,7 +2373,9 @@ function loadMapData() {
 				});
 			}
 			else inform_danger(res.statusText);
-		}).catch(error => inform_danger(error));
+		}).catch(error => {
+			sendErrorLog(error);
+		});
 }
 
 /**
@@ -2893,22 +2898,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		$('#battle_count').val(1);
 
 		// エラー通知
-		const $modal = $('#modal_confirm');
-		$modal.find('.modal-body').html(`
-			<div class="px-2">
-				<div>一度、ブラウザに保存された本サイトの設定を削除してみてください。「詳細設定」欄の最下部の設定削除ボタンから削除が可能です。</div>
-				<div class="h6 mt-4">症状が改善しない場合</div>
-				<div class="px-2">
-					申し訳ありません、お手数ですが、どのような操作を行った際にこの画面が表示されたか
-					<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただければ幸いです。
-				</div>
-				<div class="mt-2 px-2">報告を頂き次第、可能な限り早期のバグフィックスに努めます。</div>
-				<div class="mt-3 px-2 font_size_8">message : ${error.message}</div>
-				<div class="px-2 font_size_8">stack : ${error.stack}</div>
-			</div>
-		`);
-		confirmType = "Error";
-		$modal.modal('show');
+		sendErrorLog(error);
 	}
 }
 
@@ -2937,31 +2927,6 @@ function encodePreset() {
 		// 失敗時は空のプリセットデータ
 		const emp = [[], [], []];
 		return utf8_to_b64(JSON.stringify(emp));
-	}
-}
-
-/**
- * 現在の入力状況からbase64エンコード済みプリセットデータを生成、返却する
- * @returns {string} エンコード済プリセットデータ
- */
-function encodeError(error) {
-	try {
-		const obj = {
-			name: error.name,
-			message: error.message,
-			stack: error.stack
-		};
-		console.log(obj)
-		const dataString = JSON.stringify(obj);
-		const b64 = utf8_to_b64(dataString);
-		const utf8 = b64_to_utf8(b64);
-		// 複号までチェック
-		JSON.parse(utf8);
-
-		return b64;
-	}
-	catch (error) {
-		return "";
 	}
 }
 
@@ -3590,47 +3555,55 @@ function calculate() {
 		// 結果表示
 		drawResult();
 	} catch (error) {
-		// エラー通知
-		const $modal = $('#modal_confirm');
-		$modal.find('.modal-body').html(`
-			<div class="px-2">
-				<div class="h6">計算処理中にエラーが発生しました。</div>
-				<div class="my-1">
-					<div class="pl-2">
-						　お手数ですが、直前にどのような基地や艦娘の装備などの操作をしようとしたかを
-						<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただけると幸いです。
-					</div>
-					<div class="pl-2">
-						　報告を頂き次第、可能な限り早期の調査、修正を行います。ご不便をおかけして申し訳ありません。
-					</div>
+		// ログ送信
+		sendErrorLog(error);
+	}
+}
+
+/**
+ * エラーログ送信
+ * @param {Object} error エラーオブジェクト
+ */
+function sendErrorLog(error) {
+	const log = {
+		name: error.name,
+		message: error.message,
+		stack: error.stack,
+		data: encodePreset(),
+		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+	};
+	if (!fb) initializeFB();
+	if (fb) {
+		fb.runTransaction(function (tran) {
+			const ref = fb.collection('errors');
+			const d = ref.doc();
+			return tran.get(d).then(async () => {
+				await tran.set(d, log);
+			})
+		}).then(function (res) {
+		}).catch(function (err) {
+		});
+	}
+
+	const $modal = $('#modal_confirm');
+	$modal.find('.modal-body').html(`
+		<div class="px-2">
+			<div class="h6">計算処理中にエラーが発生しました。</div>
+			<div class="my-1">
+				<div class="pl-2">
+					　キャッシュが悪さをしているかもしれません。一度、このまま本計算画面にてブラウザのスーパーリロードをお試しください。
+				</div>
+				<div class="pl-2 mt-3">
+					　それでも改善しない場合、お手数ですが、直前にどのような基地や艦娘の装備などの操作をしようとしたかを
+					<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただけると幸いです。
+					報告を頂き次第、可能な限り早期の調査、修正を行います。ご不便をおかけして申し訳ありません。
 				</div>
 			</div>
-		`);
+		</div>
+	`);
 
-		// ログ送信
-		const log = {
-			name: error.name,
-			message: error.message,
-			stack: error.stack,
-			data: encodePreset(),
-			createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-		};
-		if (!fb) initializeFB();
-		if (fb) {
-			fb.runTransaction(function (tran) {
-				const ref = fb.collection('errors');
-				const d = ref.doc();
-				return tran.get(d).then(async () => {
-					await tran.set(d, log);
-				})
-			}).then(function (res) {
-			}).catch(function (err) {
-			});
-		}
-
-		confirmType = "Error";
-		$modal.modal('show');
-	}
+	confirmType = "Error";
+	$modal.modal('show');
 }
 
 /**
@@ -4961,6 +4934,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 	let isMixed = false;
 	let isAllSubmarine = true;
 	let isAntiAirCutinEnabled = false;
+	let lbAttacked = castInt($('#landBase_target').val()) - 1;
 
 	for (let node_battle_content of document.getElementsByClassName('battle_content')) {
 		// 防空時は専用のフォームから。
@@ -5048,6 +5022,17 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 		if (map === "999-1") map = area;
 		else if (!isMixed && map !== area) isMixed = true;
 		cells += (!cells ? cellText : " → " + cellText);
+	}
+
+	// 基地タゲと整合性チェック
+	if (lbAttacked < battleData.length) {
+		landBaseTarget = lbAttacked;
+	}
+	else {
+		// 何らかの影響で基地タゲがおかしかったら最終戦に修正
+		landBaseTarget = battleData.length - 1;
+		if (landBaseTarget < 0) landBaseTarget = 0;
+		$('#landBase_target').val(landBaseTarget + 1);
 	}
 
 	// 以下表示系、未処理でいいなら終了
@@ -5636,7 +5621,6 @@ function mainCalculate(objectData) {
 	const battleData = objectData.battleData;
 	// 計算する戦闘 (配列のindexとして使うので表示値 - 1)
 	let mainBattle = isDefMode ? 0 : (displayBattle - 1);
-	const lbAttackBattle = (castInt($('#landBase_target').val()) - 1);
 
 	mainBattle = mainBattle < battleData.length ? mainBattle : battleData.length - 1;
 
@@ -5673,7 +5657,7 @@ function mainCalculate(objectData) {
 		for (let battle = 0; battle < battleCount; battle++) {
 			const enemyFleet = battleData[battle].enemies;
 			// 基地航空隊を派遣した戦闘
-			if (battle === lbAttackBattle) {
+			if (battle === landBaseTarget) {
 				// 基地航空隊による制空削りを行う
 				calculateLandBasePhase(landBaseData, enemyFleet);
 			}
@@ -5739,7 +5723,7 @@ function rateCalculate(objectData) {
 	const battleData = objectData.battleData;
 	let maxCount = castInt($('#calculate_count').val());
 	$('#calculate_count').val(maxCount === 0 ? ++maxCount : maxCount);
-	const lbAttackBattle = isDefMode ? 0 : (castInt($('#landBase_target').val()) - 1);
+	const lbAttackBattle = isDefMode ? 0 : landBaseTarget;
 	const fleet = friendFleetData.concat();
 	const fleetLen = fleet.length;
 	const battleInfo = battleData.concat();
@@ -6026,7 +6010,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	// 表示戦闘
 	let mainBattle = isDefMode ? 0 : (displayBattle - 1);
 	// 基地タゲ
-	const lbAttackBattle = isDefMode ? 0 : (castInt($('#landBase_target').val()) - 1);
+	const lbAttackBattle = isDefMode ? 0 : landBaseTarget;
 	// チャート用散布
 	const data = [];
 	// 今回の記録用の味方データ
@@ -6194,7 +6178,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	// 計算回数
 	const maxCount = castInt($('#calculate_count').val());
 	// 基地タゲ
-	const lbAttackBattle = isDefMode ? 0 : (castInt($('#landBase_target').val()) - 1);
+	const lbAttackBattle = isDefMode ? 0 : landBaseTarget;
 	// チャート用散布
 	const data = [];
 	// 今回の戦闘データ
@@ -6414,7 +6398,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 例外排除
 	mainBattle = mainBattle < battleInfo.length ? mainBattle : battleInfo.length - 1;
 	// 基地タゲ
-	const lbAttackBattle = isDefMode ? 0 : (castInt($('#landBase_target').val()) - 1);
+	const lbAttackBattle = isDefMode ? 0 : landBaseTarget;
 	// チャート用散布
 	const data = [];
 	// 今回の記録用の敵データ
@@ -10954,7 +10938,7 @@ function btn_output_slot_dist_Clicked() {
 		copyInputTextToClipboard($('#dist_text'));
 		$('#dist_text').addClass('d-none');
 	} catch (error) {
-		console.log(error);
+		inform_danger('出力に失敗しました。');
 	}
 }
 /**
@@ -11002,7 +10986,7 @@ function btn_output_slot_dist_table_Clicked() {
 		copyInputTextToClipboard($('#dist_text'));
 		$('#dist_text').addClass('d-none');
 	} catch (error) {
-		console.log(error);
+		inform_danger('出力に失敗しました。');
 	}
 }
 
