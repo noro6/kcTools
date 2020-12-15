@@ -3571,6 +3571,7 @@ function sendErrorLog(error) {
 		stack: error.stack,
 		data: encodePreset(),
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+		remarks: landBaseTarget
 	};
 	if (!fb) initializeFB();
 	if (fb) {
@@ -5043,11 +5044,13 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 		else document.getElementById('route').value = !isMixed ? map + "：" + cells : "別海域のセルが混在しています。";
 	}
 
-	if (isAntiAirCutinEnabled) {
-		document.getElementById('enemy_cutin_contain').classList.remove('d-none');
-	}
-	else {
-		document.getElementById('enemy_cutin_contain').classList.add('d-none');
+	if(document.getElementById('enemy_cutin_contain')) {
+		if (isAntiAirCutinEnabled) {
+			document.getElementById('enemy_cutin_contain').classList.remove('d-none');
+		}
+		else {
+			document.getElementById('enemy_cutin_contain').classList.add('d-none');
+		}
 	}
 
 	// 敵艦載機撃墜テーブル構築
