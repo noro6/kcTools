@@ -5026,7 +5026,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 	}
 
 	// 基地タゲと整合性チェック
-	if (lbAttacked < battleData.length) {
+	if (lbAttacked >= 0 && lbAttacked < battleData.length) {
 		landBaseTarget = lbAttacked;
 	}
 	else {
