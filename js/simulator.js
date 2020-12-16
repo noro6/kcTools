@@ -3571,7 +3571,8 @@ function sendErrorLog(error) {
 		stack: error.stack,
 		data: encodePreset(),
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-		remarks: landBaseTarget
+		remarks: landBaseTarget,
+		version: "1.10.4.1.1"
 	};
 	if (!fb) initializeFB();
 	if (fb) {
@@ -5026,7 +5027,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 	}
 
 	// 基地タゲと整合性チェック
-	if (lbAttacked < battleData.length) {
+	if (lbAttacked >= 0 && lbAttacked < battleData.length) {
 		landBaseTarget = lbAttacked;
 	}
 	else {
