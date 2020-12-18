@@ -5045,7 +5045,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 		else document.getElementById('route').value = !isMixed ? map + "：" + cells : "別海域のセルが混在しています。";
 	}
 
-	if(document.getElementById('enemy_cutin_contain')) {
+	if (document.getElementById('enemy_cutin_contain')) {
 		if (isAntiAirCutinEnabled) {
 			document.getElementById('enemy_cutin_contain').classList.remove('d-none');
 		}
@@ -7598,13 +7598,24 @@ function btn_show_plane_box_Clicked($this) {
 function btn_air_raid_Clicked() {
 	$('.lb_tab').each((i, e) => {
 		let isOk = false;
+		let downCount = setting.airRaidMax ? 4 : Math.ceil(Math.random() * 4);
 		$(e).find('.lb_plane').each((i, e2) => {
-			const sub = setting.airRaidMax ? 4 : Math.ceil(Math.random() * 4);
-			const currentSlot = castInt($(e2).find('.slot').text());
-			if (!isOk && currentSlot > 1) {
-				$(e2).find('.slot').text((currentSlot - sub) < 1 ? 1 : currentSlot - sub);
-				isOk = true;
+			if (!isOk && castInt($(e2)[0].dataset.planeid) > 0) {
+				// 基地空襲を発生させる
+				const currentSlot = castInt($(e2).find('.slot').text());
+
+				// このスロットだけで受けきれる
+				if (currentSlot > downCount) {
+					$(e2).find('.slot').text(currentSlot - downCount);
+					isOk = true;
+				}
+				else {
+					// このスロットでは受けきれない場合、次のスロットに持ち越し
+					$(e2).find('.slot').text(1);
+					downCount -= (currentSlot - 1);
+				}
 			}
+
 		});
 	});
 
@@ -7617,7 +7628,9 @@ function btn_air_raid_Clicked() {
 function btn_supply_Clicked() {
 	$('.lb_tab').each((i, e) => {
 		$(e).find('.lb_plane').each((i, e2) => {
-			$(e2).find('.slot').text(18);
+			if (castInt($(e2)[0].dataset.planeid) > 0) {
+				$(e2).find('.slot').text(18);
+			}
 		});
 	});
 
