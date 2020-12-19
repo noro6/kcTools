@@ -14,7 +14,7 @@ const PLANE_TYPE = [
 	{ id: -101, name: "対潜哨戒機", abbr: "陸攻", css: "css_lb_asw_aircraft" },
 	{ id: 102, name: "陸軍戦闘機", abbr: "陸戦", css: "css_lb_fighter" },
 	{ id: 103, name: "局地戦闘機", abbr: "局戦", css: "css_lb_attack_aircraft" },
-	{ id: 104, name: "陸上偵察機", abbr: "陸偵", css: "css_cb_reconnaissance" },
+	{ id: 104, name: "陸上偵察機", abbr: "陸偵", css: "css_lb_reconnaissance" },
 	{ id: 105, name: "大型陸上機", abbr: "重爆", css: "css_lb_attack_aircraft" },
 ];
 const PLANE_DATA = [
