@@ -1492,6 +1492,17 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .capturing .css_cb_reconnaissance {
   background-color: rgba(255, 255, 70, 0.08);
 }
+.css_lb_reconnaissance,
+.dark-theme .css_lb_reconnaissance {
+  border: 2px rgb(255, 136, 0) solid;
+  box-shadow: inset 0 0 20px rgba(255, 136, 0, 0.25);
+}
+.css_lb_reconnaissance:hover {
+  box-shadow: inset 0 0 20px rgba(255, 136, 0, 0.5), 0 0 20px rgba(255, 136, 0, 0.2);
+}
+.capturing .css_lb_reconnaissance {
+  background-color: rgba(255, 136, 0, 0.08);
+}
 .css_sp,
 .dark-theme .css_sp {
   border: 2px rgb(140, 205, 150) solid;
