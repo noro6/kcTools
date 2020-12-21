@@ -3772,7 +3772,7 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 	for (let index = 0; index < nodes_lb_tab.length; index++) {
 		const node_lb_tab = nodes_lb_tab[index];
 		const lbNo = index + 1;
-		let tmpLandBaseDatum = { baseNo: lbNo, planes: [], ap: 0, mode: -1 };
+		let tmpLandBaseDatum = { baseNo: lbNo, planes: [], ap: 0, mode: -1, target: 0 };
 		let apList = [];
 		tmpLbPlanes.length = 0;
 
@@ -3837,6 +3837,15 @@ function updateLandBaseInfo(landBaseData, updateDisplay = true) {
 		}
 		// 出撃 or 防空
 		tmpLandBaseDatum.mode = castInt(node_lb_tab.getElementsByClassName('ohuda_select')[0].value);
+
+		// 派遣先
+		const targetRadios = document.getElementsByName(`lb${lbNo}_target`);
+		for (let i = 0; i < targetRadios.length; i++) {
+			const element = targetRadios[i];
+			if (element.checked) {
+				tmpLandBaseDatum.target = [0, 0];
+			}
+		}
 
 		// 偵察機による補正適用 & 適用された補正値保持
 		let corr = updateLBAirPower(tmpLandBaseDatum);
@@ -5756,6 +5765,8 @@ function rateCalculate(objectData) {
 	const enabledStage2 = !isDefMode && !document.getElementById('ignore_stage2')['checked'] && stage2Table.length > 0;
 	// 敵の棒立ち回数記録
 	const enemySlotAllDead = [];
+
+	console.log(landBaseData);
 
 	// 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
 	for (const info of battleInfo) {
@@ -9656,6 +9667,10 @@ function battle_count_Changed($this) {
 	calculate();
 }
 
+function btn_lb_target_Clicked() {
+	$('#modal_lb_target').modal('show');
+}
+
 /**
  * 敵艦隊表示形式変更
  */
@@ -11797,6 +11812,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#enemyFleet_content').on('click', '.btn_stage2', function () { btn_stage2_Clicked($(this)); });
 	$('#enemyFleet_content').on('change', '#battle_count', function () { battle_count_Changed($(this)); });
 	$('#enemyFleet_content').on('change', '#landBase_target', calculate);
+	$('#enemyFleet_content').on('click', '#btn_lb_target', btn_lb_target_Clicked);
 	$('#enemyFleet_content').on('click', 'input[name="enemy_fleet_display_mode"]', function () { enemy_fleet_display_mode_Changed($(this)); });
 	$('#result').on('click', '#btn_calculate', calculate);
 	$('#result_content').on('click', '#display_battle_tab .nav-item', function () { display_battle_tab_Changed($(this)); });
