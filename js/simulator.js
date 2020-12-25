@@ -6201,8 +6201,6 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 		suppliedSlot += plane.slot;
 	}
 
-	// 今回 stage2おきるのかどうか　
-	const enabledStage2 = battleData.cellType <= CELL_TYPE.grand;
 	const range = battleData.stage2[0][0].length;
 
 	// どっちのwaveを見るのか
@@ -6252,7 +6250,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 						const downNumber = getShootDownSlotFF(airStatusIndex, plane.slot);
 						plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
 						// st2撃墜
-						if (plane.canAttack && enabledStage2) {
+						if (plane.canAttack) {
 							// 迎撃担当
 							const shootIndex = Math.floor(Math.random() * range);
 							// 割合撃墜
