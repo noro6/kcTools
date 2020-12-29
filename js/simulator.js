@@ -3417,7 +3417,6 @@ function uploadMainPreset(preset) {
 			inform_success(`プリセット「${preset[1]}」の編成データのアップロードが完了しました。`);
 		}).catch(function (err) {
 			console.error(err);
-			console.log('post :>> ', newPreset);
 			inform_danger('エラーが発生しました。');
 		});
 	}
@@ -3671,26 +3670,11 @@ function createLandBasePreset() {
 			landBasePreset[2].push(-1);
 			continue;
 		}
+		const wave1 = castInt(document.getElementById(`lb${lbNo}_target_1`).value);
+		const wave2 = castInt(document.getElementById(`lb${lbNo}_target_2`).value);
 
-		let targetRadios = document.getElementsByName(`lb${lbNo}_target`);
-		for (let i = 0; i < targetRadios.length; i++) {
-			const element = targetRadios[i];
-			// 選択された戦闘か、おかしいなら最終戦闘でタゲ決定
-			if (element.checked || i === battleCount - 1) {
-				landBasePreset[2].push(i);
-				break;
-			}
-		}
-		// 派遣先の取得 2派目
-		targetRadios = document.getElementsByName(`lb${lbNo}_target2`);
-		for (let i = 0; i < targetRadios.length; i++) {
-			const element = targetRadios[i];
-			// 選択された戦闘か、おかしいなら最終戦闘でタゲ決定
-			if (element.checked || i === battleCount - 1) {
-				landBasePreset[2].push(i);
-				break;
-			}
-		}
+		landBasePreset[2].push(wave1);
+		landBasePreset[2].push(wave2);
 	}
 
 	return landBasePreset;
@@ -4332,10 +4316,6 @@ function calculate() {
  * @param {Object} error エラーオブジェクト
  */
 function sendErrorLog(error) {
-
-	console.error(error);
-
-	return;
 	const log = {
 		name: error.name,
 		message: error.message,
@@ -7350,8 +7330,6 @@ function autoLandBaseExpand(planes) {
 				});
 			}
 		}
-
-		console.log('owa')
 		return selectedPlanes;
 	}
 
