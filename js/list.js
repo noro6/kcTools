@@ -229,11 +229,11 @@ function setPresets(presets, isLocal = true) {
 
     // プリセフッター
     if (!isLocal) {
-      const preset_footer = createDiv('update_date mr-3', '', `${preset[5] ? `作成者: ${preset[5]}　` : ""} ${preset[4].split('.')[0]}`);
+      const preset_footer = createDiv('update_date mr-3', '', `${preset[5] ? `作成者: ${preset[5]}　` : ""} ${preset[4] ? preset[4].split('.')[0] : '-'}`);
       container.appendChild(preset_footer);
     }
     else {
-      const preset_footer = createDiv('update_date mr-1', '', `更新日時: ${preset[4].split('.')[0]}`);
+      const preset_footer = createDiv('update_date mr-1', '', `更新日時: ${preset[4] ? preset[4].split('.')[0] : '-'}`);
       container.appendChild(preset_footer);
     }
 
