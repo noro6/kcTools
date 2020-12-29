@@ -138,6 +138,10 @@
 			</div>
 			<div class="collapse show collapse_content" id="landBase_content">
 				<div class="border-top"></div>
+				<div class="my-2 ml-1 custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input" id="toggle_def_mode">
+					<label class="custom-control-label" for="toggle_def_mode">防空計算モード</label>
+				</div>
 				<div class="my-2 ml-1 d-flex" id="defense_summary">
 					<div>
 						<span>総制空値: </span>
@@ -165,8 +169,7 @@
 									<span>第1基地航空隊</span>
 								</div>
 								<select class="ml-auto custom-select custom-select-sm ohuda_select">
-									<option value="2">集中</option>
-									<option value="1">単発</option>
+									<option value="2">出撃</option>
 									<option value="-1" selected>待機</option>
 									<option value="0">防空</option>
 								</select>
@@ -363,8 +366,7 @@
 									<span>第2基地航空隊</span>
 								</div>
 								<select class="ml-auto custom-select custom-select-sm ohuda_select">
-									<option value="2">集中</option>
-									<option value="1">単発</option>
+									<option value="2">出撃</option>
 									<option value="-1" selected>待機</option>
 									<option value="0">防空</option>
 								</select>
@@ -561,8 +563,7 @@
 									<span>第3基地航空隊</span>
 								</div>
 								<select class="ml-auto custom-select custom-select-sm ohuda_select">
-									<option value="2">集中</option>
-									<option value="1">単発</option>
+									<option value="2">出撃</option>
 									<option value="-1" selected>待機</option>
 									<option value="0">防空</option>
 								</select>
@@ -5400,14 +5401,7 @@
 					</fieldset>
 					<div class="d-flex mt-1">
 						<div class="align-self-center mx-2 detail_wave">
-							<div class="custom-control custom-radio custom-control-inline">
-								<input type="radio" id="detail_wave1" name="detail_wave_select" checked class="custom-control-input">
-								<label class="custom-control-label" for="detail_wave1">第1波</label>
-							</div>
-							<div class="custom-control custom-radio custom-control-inline detail_wave">
-								<input type="radio" id="detail_wave2" name="detail_wave_select" class="custom-control-input">
-								<label class="custom-control-label" for="detail_wave2">第2波</label>
-							</div>
+							<span>※ 出撃終了後時点の残数です。</span>
 						</div>
 						<div class="align-self-center mx-2 detail_fire">
 							<div class="custom-control custom-radio custom-control-inline">
@@ -5971,121 +5965,247 @@
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body">
-					<div>基地航空隊の派遣先の戦闘が何戦目かを選択してください。</div>
-					<div class="mt-2">
-						<div class="d-flex my-2">
-							<div class="align-self-center">第1基地航空隊</div>
-							<div class="ml-auto btn-group btn-group-toggle" data-toggle="buttons">
-								<label class="btn btn-outline-info active">
-									<input type="radio" name="lb1_target" id="lb1_target1" checked>1
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb1_target" id="lb1_target2">2
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb1_target" id="lb1_target3">3
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb1_target" id="lb1_target4">4
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb1_target" id="lb1_target5">5
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb1_target" id="lb1_target6">6
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb1_target" id="lb1_target7">7
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb1_target" id="lb1_target8">8
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb1_target" id="lb1_target9">9
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb1_target" id="lb1_target10">10
-								</label>
+					<div>各基地航空隊の派遣先の戦闘が何戦目かを選択してください。</div>
+					<div class="mt-2 px-2" id="land_base_target_buttons">
+						<div class="d-flex my-3">
+							<div class="align-self-center text-nowrap">第1基地航空隊</div>
+							<div class="ml-3 align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">1派目</div>
+									<div class="ml-2 btn-group btn-group-toggle" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb1_target_1">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb1_target">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb1_target">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb1_target">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb1_target">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb1_target">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb1_target">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb1_target">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb1_target">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb1_target">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb1_target">10
+										</label>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div class="align-self-center">2派目</div>
+									<div class="ml-2 btn-group btn-group-toggle mt-1" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb1_target_2">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb1_target2">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb1_target2">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb1_target2">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb1_target2">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb1_target2">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb1_target2">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb1_target2">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb1_target2">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb1_target2">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb1_target2">10
+										</label>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="d-flex my-2">
-							<div class="align-self-center">第2基地航空隊</div>
-							<div class="ml-auto btn-group btn-group-toggle" data-toggle="buttons">
-								<label class="btn btn-outline-info active">
-									<input type="radio" name="lb2_target" id="lb2_target1" checked>1
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb2_target" id="lb2_target2">2
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb2_target" id="lb2_target3">3
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb2_target" id="lb2_target4">4
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb2_target" id="lb2_target5">5
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb2_target" id="lb2_target6">6
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb2_target" id="lb2_target7">7
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb2_target" id="lb2_target8">8
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb2_target" id="lb2_target9">9
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb2_target" id="lb2_target10">10
-								</label>
+							<div class="align-self-center text-nowrap">第2基地航空隊</div>
+							<div class="ml-3 align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">1派目</div>
+									<div class="ml-2 btn-group btn-group-toggle" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb2_target_1">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb2_target">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb2_target">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb2_target">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb2_target">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb2_target">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb2_target">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb2_target">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb2_target">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb2_target">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb2_target">10
+										</label>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div class="align-self-center">2派目</div>
+									<div class="ml-2 btn-group btn-group-toggle mt-1" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb2_target_2">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb2_target2">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb2_target2">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb2_target2">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb2_target2">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb2_target2">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb2_target2">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb2_target2">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb2_target2">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb2_target2">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb2_target2">10
+										</label>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="d-flex my-2">
-							<div class="align-self-center">第3基地航空隊</div>
-							<div class="ml-auto btn-group btn-group-toggle" data-toggle="buttons">
-								<label class="btn btn-outline-info active">
-									<input type="radio" name="lb3_target" id="lb3_target1" checked>1
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb3_target" id="lb3_target2">2
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb3_target" id="lb3_target3">3
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb3_target" id="lb3_target4">4
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb3_target" id="lb3_target5">5
-								</label>
-								<label class="btn btn-outline-info">
-									<input type="radio" name="lb3_target" id="lb3_target6">6
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb3_target" id="lb3_target7">7
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb3_target" id="lb3_target8">8
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb3_target" id="lb3_target9">9
-								</label>
-								<label class="btn btn-outline-info disabled">
-									<input type="radio" name="lb3_target" id="lb3_target10">10
-								</label>
+						<div class="d-flex my-3">
+							<div class="align-self-center text-nowrap">第3基地航空隊</div>
+							<div class="ml-3 align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">1派目</div>
+									<div class="ml-2 btn-group btn-group-toggle" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb3_target_1">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb3_target">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb3_target">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb3_target">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb3_target">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb3_target">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb3_target">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb3_target">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb3_target">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb3_target">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb3_target">10
+										</label>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div class="align-self-center">2派目</div>
+									<div class="ml-2 btn-group btn-group-toggle mt-1" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb3_target_2">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb3_target2">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb3_target2">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb3_target2">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb3_target2">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb3_target2">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb3_target2">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb3_target2">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb3_target2">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb3_target2">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb3_target2">10
+										</label>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+					<div class="my-4 border-bottom"></div>
+					<div class="font_size_12">※ 1派目、2派目両方とも同じ戦闘を選択すれば「集中」となります。</div>
+					<div class="font_size_12">※ 「待機」または「防空」が選択されている場合、派遣先は選択できません。</div>
 				</div>
 				<div class="modal-footer">
 					<div class="ml-auto">
-						<button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">OK</button>
-					</div>
-					<div class="ml-2">
-						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+						<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">閉じる</button>
 					</div>
 				</div>
 			</div>

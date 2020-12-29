@@ -582,7 +582,7 @@ function getUniqueId() {
 /**
  * 数値へキャスト(整数)
  * 失敗時は第二引数の値　未指定時は0
- * @param {String} input 入力文字
+ * @param {object} input 入力文字
  * @param {number} alt　変換失敗時代替値
  * @returns {number} 変換数値(整数)
  */
