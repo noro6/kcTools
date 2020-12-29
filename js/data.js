@@ -159,6 +159,8 @@ const PLANE_DATA = [
 	{ id: 224, type: 101, name: "爆装一式戦 隼III型改(65戦隊)", abbr: "爆装一式戦(65戦隊)", fire: 3, antiAir: 6, torpedo: 0, bomber: 8, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 3, avoid2: 2, radius: 5, cost: 4, avoid: 1 },
 	{ id: 388, type: 101, name: "銀河(江草隊)", abbr: "", fire: 0, antiAir: 3, torpedo: 15, bomber: 15, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, accuracy: 3, avoid2: 0, radius: 7, cost: 13, avoid: 1 },
 	{ id: 401, type: 101, name: "Do 17 Z-2", abbr: "", fire: 0, antiAir: 2, torpedo: 0, bomber: 11, armor: 0, asw: 5, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 4, cost: 13, avoid: 0 },
+	{ id: 403, type: 101, name: "四式重爆 飛龍", abbr: "", fire: 0, antiAir: 5, torpedo: 14, bomber: 15, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, accuracy: 1, avoid2: 0, radius: 5, cost: 14, avoid: 0 },
+	{ id: 404, type: 101, name: "四式重爆 飛龍(熟練)", abbr: "", fire: 0, antiAir: 5, torpedo: 14, bomber: 16, armor: 0, asw: 5, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 5, cost: 14, avoid: 0 },
 	{ id: 269, type: -101, name: "試製東海", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 2, armor: 0, asw: 10, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 8, cost: 9, avoid: 0 },
 	{ id: 270, type: -101, name: "東海(九〇一空)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 2, armor: 0, asw: 11, antiBomber: 0, interception: 0, scout: 6, canRemodel: 0, accuracy: 1, avoid2: 0, radius: 8, cost: 9, avoid: 0 },
 	{ id: 176, type: 102, name: "三式戦 飛燕", abbr: "", fire: 0, antiAir: 8, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 7, avoid: 0 },
@@ -184,8 +186,8 @@ const PLANE_DATA = [
 	{ id: 354, type: 103, name: "Fw190 D-9", abbr: "", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0 },
 	{ id: 311, type: 104, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0 },
 	{ id: 312, type: 104, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0 },
-	{ id: 395, type: 105, name: "深山", abbr: "", fire: 0, antiAir: 1, torpedo: 16, bomber: 17, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 10, cost: 20, avoid: 0 },
-	{ id: 396, type: 105, name: "深山改", abbr: "", fire: 0, antiAir: 2, torpedo: 17, bomber: 19, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 11, cost: 21, avoid: 0 },
+	{ id: 395, type: 105, name: "深山", abbr: "", fire: 0, antiAir: 1, torpedo: 16, bomber: 17, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 10, cost: 20, avoid: 0 },
+	{ id: 396, type: 105, name: "深山改", abbr: "", fire: 0, antiAir: 2, torpedo: 17, bomber: 19, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 11, cost: 21, avoid: 0 },
 ];
 const SHIP_TYPE = [
 	{ id: 11, name: "正規空母", sort: 1 },
