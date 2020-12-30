@@ -138,6 +138,10 @@
 			</div>
 			<div class="collapse show collapse_content" id="landBase_content">
 				<div class="border-top"></div>
+				<div class="my-2 ml-1 custom-control custom-switch no_capture">
+					<input type="checkbox" class="custom-control-input" id="toggle_def_mode">
+					<label class="custom-control-label" for="toggle_def_mode">防空計算モード</label>
+				</div>
 				<div class="my-2 ml-1 d-flex" id="defense_summary">
 					<div>
 						<span>総制空値: </span>
@@ -165,8 +169,7 @@
 									<span>第1基地航空隊</span>
 								</div>
 								<select class="ml-auto custom-select custom-select-sm ohuda_select">
-									<option value="2">集中</option>
-									<option value="1">単発</option>
+									<option value="2">出撃</option>
 									<option value="-1" selected>待機</option>
 									<option value="0">防空</option>
 								</select>
@@ -363,8 +366,7 @@
 									<span>第2基地航空隊</span>
 								</div>
 								<select class="ml-auto custom-select custom-select-sm ohuda_select">
-									<option value="2">集中</option>
-									<option value="1">単発</option>
+									<option value="2">出撃</option>
 									<option value="-1" selected>待機</option>
 									<option value="0">防空</option>
 								</select>
@@ -561,8 +563,7 @@
 									<span>第3基地航空隊</span>
 								</div>
 								<select class="ml-auto custom-select custom-select-sm ohuda_select">
-									<option value="2">集中</option>
-									<option value="1">単発</option>
+									<option value="2">出撃</option>
 									<option value="-1" selected>待機</option>
 									<option value="0">防空</option>
 								</select>
@@ -910,7 +911,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -943,7 +945,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -976,7 +979,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1009,7 +1013,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1042,7 +1047,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1107,7 +1113,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1140,7 +1147,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1173,7 +1181,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1206,7 +1215,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1239,7 +1249,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1304,7 +1315,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1337,7 +1349,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1370,7 +1383,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1403,7 +1417,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1436,7 +1451,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1501,7 +1517,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1534,7 +1551,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1567,7 +1585,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1600,7 +1619,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1633,7 +1653,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1698,7 +1719,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1731,7 +1753,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1764,7 +1787,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1797,7 +1821,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1830,7 +1855,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1895,7 +1921,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1928,7 +1955,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1961,7 +1989,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -1994,7 +2023,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2027,7 +2057,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2120,7 +2151,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2153,7 +2185,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2186,7 +2219,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2219,7 +2253,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2252,7 +2287,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2317,7 +2353,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2350,7 +2387,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2383,7 +2421,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2416,7 +2455,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2449,7 +2489,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2514,7 +2555,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2547,7 +2589,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2580,7 +2623,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2613,7 +2657,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2646,7 +2691,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2711,7 +2757,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2744,7 +2791,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2777,7 +2825,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2810,7 +2859,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2843,7 +2893,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2908,7 +2959,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2941,7 +2993,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -2974,7 +3027,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3007,7 +3061,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3040,7 +3095,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3105,7 +3161,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3138,7 +3195,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3171,7 +3229,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3204,7 +3263,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3237,7 +3297,8 @@
 											</div>
 											<div class="dropdown remodel_select_parent">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
-													<span>★<span class="remodel_value">0</span></span></div>
+													<span>★<span class="remodel_value">0</span></span>
+												</div>
 												<div class="dropdown-menu"></div>
 											</div>
 											<div class="dropdown prof_select_parent">
@@ -3322,20 +3383,13 @@
 						<option value="10">10</option>
 					</select>
 					<div class="ml-1 align-self-center">戦</div>
-					<div class="ml-2 my-1 align-self-center">基地派遣：</div>
-					<select class="custom-select custom-select-sm align-self-center" id="landBase_target">
-						<option value="1" selected>1</option>
-						<option value="2" class="d-none">2</option>
-						<option value="3" class="d-none">3</option>
-						<option value="4" class="d-none">4</option>
-						<option value="5" class="d-none">5</option>
-						<option value="6" class="d-none">6</option>
-						<option value="7" class="d-none">7</option>
-						<option value="8" class="d-none">8</option>
-						<option value="9" class="d-none">9</option>
-						<option value="10" class="d-none">10</option>
-					</select>
-					<div class="ml-1 align-self-center">戦目</div>
+					<div class="ml-3 align-self-center no_capture">
+						<button class="btn btn-sm btn-outline-success" id="btn_lb_target">基地派遣設定</button>
+					</div>
+					<div class="ml-2 align-self-center d-none no_capture" id="lb_target_alert">
+						<span class="text-danger font_size_12">基地航空隊の派遣先を確認してください。</span>
+					</div>
+
 					<div class="ml-auto d-flex" id="enemy_fleet_display">
 						<div class="align-self-center font_size_12 no_capture">表示:</div>
 						<div class="ml-1 custom-control custom-radio align-self-center no_capture">
@@ -5334,14 +5388,7 @@
 					</fieldset>
 					<div class="d-flex mt-1">
 						<div class="align-self-center mx-2 detail_wave">
-							<div class="custom-control custom-radio custom-control-inline">
-								<input type="radio" id="detail_wave1" name="detail_wave_select" checked class="custom-control-input">
-								<label class="custom-control-label" for="detail_wave1">第1波</label>
-							</div>
-							<div class="custom-control custom-radio custom-control-inline detail_wave">
-								<input type="radio" id="detail_wave2" name="detail_wave_select" class="custom-control-input">
-								<label class="custom-control-label" for="detail_wave2">第2波</label>
-							</div>
+							<span>※ 出撃終了後時点の残数です。</span>
 						</div>
 						<div class="align-self-center mx-2 detail_fire">
 							<div class="custom-control custom-radio custom-control-inline">
@@ -5886,10 +5933,266 @@
 						<button type="button" class="btn btn-sm btn-success" id="commit_enemy">敵艦更新</button>
 					</div>
 					<div class="ml-2">
-						<button type="button" class="btn btn-sm btn-danger" id="rollback_enemy" data-toggle="tooltip" title="手動で設定した値を削除します。ブラウザの再読み込みが行われます。">デフォルトに戻す</button>
+						<button type="button" class="btn btn-sm btn-danger" id="rollback_enemy" data-toggle="tooltip"
+							title="手動で設定した値を削除します。ブラウザの再読み込みが行われます。">デフォルトに戻す</button>
 					</div>
 					<div class="ml-2">
 						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_lb_target" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">基地派遣戦闘設定</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body">
+					<div>各基地航空隊の派遣先の戦闘が何戦目かを選択してください。</div>
+					<div class="mt-2 px-2" id="land_base_target_buttons">
+						<div class="d-flex my-3">
+							<div class="align-self-center text-nowrap">第1基地航空隊</div>
+							<div class="ml-3 align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">1派目</div>
+									<div class="ml-2 btn-group btn-group-toggle" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb1_target_1">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb1_target">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb1_target">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb1_target">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb1_target">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb1_target">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb1_target">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb1_target">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb1_target">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb1_target">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb1_target">10
+										</label>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div class="align-self-center">2派目</div>
+									<div class="ml-2 btn-group btn-group-toggle mt-1" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb1_target_2">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb1_target2">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb1_target2">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb1_target2">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb1_target2">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb1_target2">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb1_target2">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb1_target2">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb1_target2">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb1_target2">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb1_target2">10
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex my-2">
+							<div class="align-self-center text-nowrap">第2基地航空隊</div>
+							<div class="ml-3 align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">1派目</div>
+									<div class="ml-2 btn-group btn-group-toggle" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb2_target_1">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb2_target">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb2_target">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb2_target">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb2_target">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb2_target">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb2_target">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb2_target">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb2_target">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb2_target">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb2_target">10
+										</label>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div class="align-self-center">2派目</div>
+									<div class="ml-2 btn-group btn-group-toggle mt-1" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb2_target_2">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb2_target2">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb2_target2">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb2_target2">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb2_target2">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb2_target2">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb2_target2">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb2_target2">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb2_target2">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb2_target2">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb2_target2">10
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex my-3">
+							<div class="align-self-center text-nowrap">第3基地航空隊</div>
+							<div class="ml-3 align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">1派目</div>
+									<div class="ml-2 btn-group btn-group-toggle" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb3_target_1">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb3_target">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb3_target">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb3_target">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb3_target">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb3_target">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb3_target">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb3_target">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb3_target">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb3_target">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb3_target">10
+										</label>
+									</div>
+								</div>
+								<div class="d-flex">
+									<div class="align-self-center">2派目</div>
+									<div class="ml-2 btn-group btn-group-toggle mt-1" data-toggle="buttons">
+										<input type="hidden" value="-1" id="lb3_target_2">
+										<label class="btn btn-sm btn-outline-info" data-target="1">
+											<input type="radio" name="lb3_target2">1
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="2">
+											<input type="radio" name="lb3_target2">2
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="3">
+											<input type="radio" name="lb3_target2">3
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="4">
+											<input type="radio" name="lb3_target2">4
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="5">
+											<input type="radio" name="lb3_target2">5
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="6">
+											<input type="radio" name="lb3_target2">6
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="7">
+											<input type="radio" name="lb3_target2">7
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="8">
+											<input type="radio" name="lb3_target2">8
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="9">
+											<input type="radio" name="lb3_target2">9
+										</label>
+										<label class="btn btn-sm btn-outline-info" data-target="10">
+											<input type="radio" name="lb3_target2">10
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="my-4 border-bottom"></div>
+					<div class="font_size_12">※ 1派目、2派目両方とも同じ戦闘を選択すれば「集中」となります。</div>
+					<div class="font_size_12">※ 「待機」または「防空」が選択されている場合、派遣先は選択できません。</div>
+				</div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">閉じる</button>
 					</div>
 				</div>
 			</div>

@@ -582,7 +582,7 @@ function getUniqueId() {
 /**
  * 数値へキャスト(整数)
  * 失敗時は第二引数の値　未指定時は0
- * @param {String} input 入力文字
+ * @param {object} input 入力文字
  * @param {number} alt　変換失敗時代替値
  * @returns {number} 変換数値(整数)
  */
@@ -595,7 +595,7 @@ function castInt(input, alt = 0) {
 /**
  * 数値へキャスト(小数)
  * 失敗時は第二引数の値　未指定時は0
- * @param {string} input 入力文字
+ * @param {object} input 入力文字
  * @param {number} alt　変換失敗時代替値
  * @returns {number} 変換数値(小数)
  */
@@ -916,9 +916,38 @@ function getActivePreset() {
 		history: { index: 0, histories: [] }
 	};
 
+	// 画面上のアクティブタブと整合性をとる
+	const activtTab = $('#fleet_tab_container').find('.fleet_tab.active')[0];
+
 	if (act && act.activeId) {
-		let preset = act.presets.find(v => v.id === act.activeId);
-		if (preset) activePreset = preset;
+		if (activtTab && act.activeId === activtTab.dataset.presetid) {
+			// 画面上のアクティブタブと一致
+			let preset = act.presets.find(v => v.id === act.activeId);
+			if (preset) {
+				activePreset = preset;
+			}
+		}
+		else if (activtTab) {
+			// 複数タブなどで画面上のアクティブタブと一致してない場合
+			let preset = act.presets.find(v => v.id === activtTab.dataset.presetid);
+			if (preset) {
+				activePreset = preset;
+
+				// アクティブタブはこっちだよと書き換え
+				act.activeId = activtTab.dataset.presetid;
+				saveLocalStorage('activePresets', act);
+			}
+		}
+	}
+	else if (activtTab) {
+		let preset = act.presets.find(v => v.id === activtTab.dataset.presetid);
+		if (preset) {
+			activePreset = preset;
+
+			// アクティブタブはこっちだよと書き換え
+			act.activeId = activtTab.dataset.presetid;
+			saveLocalStorage('activePresets', act);
+		}
 	}
 
 	return activePreset;
