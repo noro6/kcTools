@@ -12293,7 +12293,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			$('.lb_tab').each((i, e) => {
 				$(e).attr('id', 'lb_item' + (i + 1));
 				$(e).find('.baseNo').html('<span>第' + (i + 1) + '基地航空隊</span>');
-				$(e).find('.simple_lb_progress').attr('id', 'simple_lb_bar_' + (i + 1));
+				$(e).find('.simple_lb_progress').each((ii, ee) => {
+					$(ee).attr('id', `simple_lb_bar_${i + 1}_${ii + 1}`);
+				});
 				$(e).find('.btn_show_contact_rate_lb')[0].dataset.lb = (i + 1);
 			});
 			calculate();
