@@ -6531,7 +6531,10 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 				plane.slot = plane.fullSlot;
 				plane.updateAirPower();
 			}
-			aliveCount.push(sumAlive);
+
+			if (landBaseNo + 1 === landBase.baseNo) {
+				aliveCount.push(sumAlive);
+			}
 			landBase.updateAirPower();
 		}
 	}
