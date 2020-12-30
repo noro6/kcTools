@@ -4164,44 +4164,46 @@ function drawResult(objectData) {
 		}
 
 		// ターゲットのうち、先に戦闘が行われる方を描画する
-		const displayWave = wave1 <= wave2 ? wave1 : wave2;
-		const resultIndex = wave1 <= wave2 ? 0 : 1;
+		const displayWave = wave1 <= wave2 ? [wave1, wave2] : [wave2, wave1];
+		const resultIndex = wave1 <= wave2 ? [0, 1] : [1, 0];
 
-		// 1派目のゲージを算出、描画
-		const asResult = landBase.results[displayWave].airStatusIndex[resultIndex];
-		const avgFap = landBase.results[displayWave].mainAirPower[resultIndex] / calculateCount;
-		const avgEap = landBase.results[displayWave].enemyAirPower[resultIndex] / calculateCount;
+		for (let j = 0; j <= 1; j++) {
+			// ゲージを算出、描画
+			const asResult = landBase.results[displayWave[j]].airStatusIndex[resultIndex[j]];
+			const avgFap = landBase.results[displayWave[j]].mainAirPower[resultIndex[j]] / calculateCount;
+			const avgEap = landBase.results[displayWave[j]].enemyAirPower[resultIndex[j]] / calculateCount;
 
-		// 最も多い制空状態
-		let status = asResult.indexOf(getArrayMax(asResult));
+			// 最も多い制空状態
+			let status = asResult.indexOf(getArrayMax(asResult));
 
-		let width = 0;
-		const border = getAirStatusBorder(avgEap);
+			let width = 0;
+			const border = getAirStatusBorder(avgEap);
 
-		// 制空状態毎に基準widthに対する比率
-		if (status === 4) width = avgFap / border[3] * 100 * 0.1;
-		else if (status === 3) width = avgFap / border[2] * 100 * 0.2;
-		else if (status === 2) width = avgFap / border[1] * 100 * 0.45;
-		else if (status <= 1) width = avgFap / border[0] * 100 * 0.9;
+			// 制空状態毎に基準widthに対する比率
+			if (status === 4) width = avgFap / border[3] * 100 * 0.1;
+			else if (status === 3) width = avgFap / border[2] * 100 * 0.2;
+			else if (status === 2) width = avgFap / border[1] * 100 * 0.45;
+			else if (status <= 1) width = avgFap / border[0] * 100 * 0.9;
 
-		// 基地(含防空) && 双方制空0の場合確保にしてバーは最大
-		if (status === 5) {
-			status = 0;
-			width = 100;
+			// 基地(含防空) && 双方制空0の場合確保にしてバーは最大
+			if (status === 5) {
+				status = 0;
+				width = 100;
+			}
+
+			const barColor = 'bar_status' + status;
+			const exBarColor = 'bar_ex_status' + status;
+			const $simpleBarParent = $(`#simple_lb_bar_${landBase.baseNo}_${j + 1}`);
+			const $simpleBar = $simpleBarParent.find('.result_bar');
+			const prevStatus = $simpleBar.data('airstatus');
+			$simpleBar.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
+				.addClass(`${barColor} ${exBarColor}`)
+				.css({ 'width': (width > 100 ? 100 : width) + '%', })
+				.data('airstatus', status);
+			const t = `${AIR_STATUS.find(v => v.id === status).abbr}(${Math.floor((getArrayMax(asResult) / calculateCount) * 100)}%)`;
+			$simpleBarParent.find('.simple_label').text(t);
+			$simpleBarParent.removeClass('d-none');
 		}
-
-		const barColor = 'bar_status' + status;
-		const exBarColor = 'bar_ex_status' + status;
-		const $simpleBarParent = $('#simple_lb_bar_' + landBase.baseNo);
-		const $simpleBar = $simpleBarParent.find('.result_bar');
-		const prevStatus = $simpleBar.data('airstatus');
-		$simpleBar.removeClass(`bar_status${prevStatus} bar_ex_status${prevStatus}`)
-			.addClass(`${barColor} ${exBarColor}`)
-			.css({ 'width': (width > 100 ? 100 : width) + '%', })
-			.data('airstatus', status);
-		const t = `${AIR_STATUS.find(v => v.id === status).abbr}(${Math.floor((getArrayMax(asResult) / calculateCount) * 100)}%)`;
-		$simpleBarParent.find('.simple_label').text(t);
-		$simpleBarParent.removeClass('d-none');
 	}
 
 
