@@ -5088,7 +5088,7 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 
 					const node_info_info_ap_td = document.createElement('td');
 					node_info_info_ap_td.className = 'info_ap';
-					node_info_info_ap_td.textContent = plane.ap;
+					node_info_info_ap_td.textContent = plane.airPower;
 					node_info_tr.appendChild(node_info_info_ap_td);
 					infoTemplate.appendChild(node_info_info_ap_td.cloneNode(false));
 
@@ -5110,7 +5110,7 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 					tdPlaneName.innerHTML = `${infoPlaneName} ${getProfString(plane.level)}`;
 
 					new_tr.getElementsByClassName('info_slot')[0].textContent = plane.slot;
-					new_tr.getElementsByClassName('info_ap')[0].textContent = plane.ap;
+					new_tr.getElementsByClassName('info_ap')[0].textContent = plane.airPower;
 
 					info_fragment.appendChild(new_tr);
 				}
