@@ -4635,8 +4635,8 @@ function updateLandBaseInfo(landBaseAll, updateDisplay = true) {
 		const node_fuel = node_resource.getElementsByClassName('fuel')[0];
 		const node_ammo = node_resource.getElementsByClassName('ammo')[0];
 		drawChangeValue(node_fuel, castInt(node_fuel.textContent), landBase.getSumFuel(), true);
-		drawChangeValue(node_ammo, castInt(node_ammo.textContent), landBase.getSumAmmo, true);
-		drawChangeValue(node_bauxite, castInt(node_bauxite.textContent), landBase.getSumBauxite, true);
+		drawChangeValue(node_ammo, castInt(node_ammo.textContent), landBase.getSumAmmo(), true);
+		drawChangeValue(node_bauxite, castInt(node_bauxite.textContent), landBase.getSumBauxite(), true);
 
 		// 総制空値 それぞれの基地のモード毎によって。
 		const sumAirPower = landBase.mode === 0 ? landBase.defenseAirPower : landBase.airPower;
