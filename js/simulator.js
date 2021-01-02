@@ -6299,7 +6299,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 
 	// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
 	const rate = Math.abs(plane.type) === 2 ? [0.8, 1.5] : ATTACKERS.includes(plane.type) ? [1] : [0];
-	const remodel = Math.abs(plane.type) === 3 ? 0 : plane.remodel;
+	const remodel = Math.abs(plane.type) === 3 ? 0 : shipInstance.planes[slotNo].remodel;
 	const fire = 0.2 * remodel + (Math.abs(plane.type) === 2 ? plane.torpedo : plane.bomber);
 
 	// 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
@@ -8536,9 +8536,15 @@ function btn_show_contact_rate_Clicked() {
 	let planes = [];
 	let unionPlanes = [];
 	for (const ship of fleet.ships) {
-		unionPlanes = planes.concat(ship.planes);
-		if (!ship.isEscort) {
-			planes = planes.concat(ship.planes);
+		for (const plane of ship.planes) {
+			if (plane.id === 0) {
+				continue;
+			}
+
+			unionPlanes.push(plane);
+			if (!ship.isEscort) {
+				planes.push(plane);
+			}
 		}
 	}
 
