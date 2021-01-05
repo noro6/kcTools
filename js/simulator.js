@@ -7849,7 +7849,7 @@ function btn_capture_Clicked($this) {
 	}
 	else $targetContent.addClass('capture_nomal');
 
-	// 基地横並びに。
+	// 基地横並びに
 	$targetContent.find('.lb_tab').removeClass('tab-pane fade');
 
 	// レンダリングできなさそうなやつを置換 or 非表示
@@ -7860,7 +7860,9 @@ function btn_capture_Clicked($this) {
 	$targetContent.find('.d-lg-flex').addClass('d-none_lg').removeClass('d-lg-flex');
 	$targetContent.find('.custom-checkbox').addClass('d-none');
 	$targetContent.find('.battle_only').removeClass('ml-auto').addClass('ml-2');
-	$targetContent.find('.plane_name_span:contains("機体を選択")').text('-');
+	$targetContent.find('.plane_name_span').each((i, e) => {
+		if ($(i).text() === '機体を選択') $(i).text('-');
+	});
 
 	// レンダリングズレ修正
 	$targetContent.find('.custom-select').addClass('pt-0');
@@ -7895,7 +7897,9 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.d-none_lg').addClass('d-none d-lg-flex').removeClass('d-none_lg');
 			$targetContent.find('.btn_remove_plane').removeClass('btn_remove_plane_capture');
 			$targetContent.find('.battle_only').addClass('ml-auto').removeClass('ml-2');
-			$targetContent.find('.plane_name_span:contains("-")').text('機体を選択');
+			$targetContent.find('.plane_name_span').each((i, e) => {
+				if ($(i).text() === '-') $(i).text('機体を選択');
+			});
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');
