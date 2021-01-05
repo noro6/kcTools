@@ -7861,7 +7861,7 @@ function btn_capture_Clicked($this) {
 	$targetContent.find('.custom-checkbox').addClass('d-none');
 	$targetContent.find('.battle_only').removeClass('ml-auto').addClass('ml-2');
 	$targetContent.find('.plane_name_span').each((i, e) => {
-		if ($(i).text() === '機体を選択') $(i).text('-');
+		if ($(e).text() === '機体を選択') $(e).text('-');
 	});
 
 	// レンダリングズレ修正
@@ -7898,7 +7898,7 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.btn_remove_plane').removeClass('btn_remove_plane_capture');
 			$targetContent.find('.battle_only').addClass('ml-auto').removeClass('ml-2');
 			$targetContent.find('.plane_name_span').each((i, e) => {
-				if ($(i).text() === '-') $(i).text('機体を選択');
+				if ($(e).text() === '-') $(e).text('機体を選択');
 			});
 			$no_captures.removeClass('d-none');
 
