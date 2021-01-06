@@ -5454,7 +5454,7 @@ function updateEnemyFleetInfo(battleData, updateDisplay = true) {
 			}
 
 			enemy_tr_text += `
-			<tr class="enemy_no_${enemyNo} slot_${j}" data-rowindex="${enemy}" data-slotindex="${j}" data-css="${backCss}_hover">
+			<tr class="enemy_no_${enemyNo} slot_${j}" data-rowindex="${enemyNo}" data-slotindex="${j}" data-css="${backCss}_hover">
 				${col_header_text}
 				<td class="pl-1 td_plane_name align-middle ${backCss + isLastSlot}">${plane.name}</td>
 				<td class="td_init_slot align-middle${isLastSlot}">${slotNum}</td>
