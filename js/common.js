@@ -104,7 +104,6 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
 	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = true;
 	if (!setting.hasOwnProperty('copyToClipboard')) setting.copyToClipboard = false;
-	if (!setting.hasOwnProperty('airRaidMax')) setting.airRaidMax = true;
 	if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
 	if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
 	if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
@@ -280,6 +279,15 @@ function adaptUpdater() {
 
 				saveLocalStorage('presets', presets);
 			}
+		}
+	}
+
+	//　～ v1.11.0
+	if (major <= 11) {
+		//　～ v1.10.1
+		if (major <= 10 || minor < 1) {
+			// 空襲被害最大プロパティを削除
+			delete setting.airRaidMax;
 		}
 	}
 

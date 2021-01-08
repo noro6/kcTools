@@ -142,6 +142,10 @@
 					<input type="checkbox" class="custom-control-input" id="toggle_def_mode">
 					<label class="custom-control-label" for="toggle_def_mode">防空計算モード</label>
 				</div>
+				<div class="alert alert-warning px-2 py-2 font_size_12 no_capture" id="air_raid_alert">
+					<span>基地への空襲が発生する海域では、編成完了後に空襲による地上撃破を考慮してください。→</span>
+					<span id="alert_air_raid_button">基地空襲を発生させる</span>
+				</div>
 				<div class="my-2 ml-1 d-flex" id="defense_summary">
 					<div>
 						<span>総制空値: </span>
@@ -918,6 +922,10 @@
 								<i class="fas fa-search"></i>
 								<span class="font_size_12">詳細</span>
 							</div>
+							<div class="ml-3 align-self-center">
+								<span class="font_color_half">夜間触接: </span>
+								<span class="night_contact_rate">0.0%</span>
+							</div>
 							<div class="ml-3 align-self-center btn_antiair_input no_capture">
 								<img src="../img/type/anti_air.png" class="img-size-20" alt="aa">
 								<span class="font_size_12">対空砲火設定</span>
@@ -930,8 +938,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -1132,8 +1143,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -1334,8 +1348,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -1536,8 +1553,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -1738,8 +1758,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -1940,8 +1963,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -2158,9 +2184,13 @@
 								<span class="font_color_half">触接率: </span>
 								<span class="contact_start_rate">0.0%</span>
 							</div>
-							<div class="ml-2 align-self-center btn_show_contact_rate no_capture">
+							<div class="ml-1 align-self-center btn_show_contact_rate no_capture">
 								<i class="fas fa-search"></i>
 								<span class="font_size_11">触接詳細</span>
+							</div>
+							<div class="ml-3 align-self-center">
+								<span class="font_color_half">夜間触接率: </span>
+								<span class="night_contact_rate">0.0%</span>
 							</div>
 						</div>
 						<div class="fleet_tab">
@@ -2170,8 +2200,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -2372,8 +2405,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -2574,8 +2610,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -2776,8 +2815,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -2978,8 +3020,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -3180,8 +3225,11 @@
 										<div class="sortable_handle cur_move mr-2 d-none">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="ship_name_span text-truncate">
-											艦娘を選択</div>
+										<div class="ship_name_span text-truncate">艦娘を選択</div>
+										<div class="form_ship_level ml-2 font_size_12" data-toggle="tooltip" title="練度を変更する">
+											<span class="font_color_half">Lv: </span>
+											<span class="ship_level">99</span>
+										</div>
 										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
 											<i class="fas fa-times"></i>
 										</div>
@@ -4436,14 +4484,6 @@
 						</div>
 						<div class="alert alert-danger px-1 py-1 mt-2 d-none font_size_12" id="cant_use_clipboard">
 							<div>申し訳ありませんが、お使いのブラウザは本サイトのクリップボードへの保存機能に対応していません。</div>
-						</div>
-					</div>
-					<div class="ml-3 my-3">
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="air_raid_max">
-							<label class="custom-control-label" for="air_raid_max">
-								基地空襲ボタンによる被撃墜数を4機に固定する
-							</label>
 						</div>
 					</div>
 					<div class="ml-3 my-3">
@@ -6256,6 +6296,38 @@
 				<div class="modal-footer">
 					<div class="ml-auto">
 						<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">閉じる</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="modal_level_input" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">艦娘練度入力</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body px-4">
+					<div>
+						練度を入力してください。
+					</div>
+					<input type="number" class="form-control form-control-sm my-3 ship_level_input" value="99" min="1" max="175">
+					<input type="range" class="custom-range ship_level_range" value="99" min="1" max="175">
+					<div class="d-flex mt-3 justify-content-between">
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="1">Lv.1</button></div>
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="50">Lv.30</button></div>
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="50">Lv.50</button></div>
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="80">Lv.80</button></div>
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="99">Lv.99</button></div>
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="140">Lv.140</button></div>
+						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="175">Lv.175</button></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" class="btn btn-primary px-3" data-dismiss="modal">OK</button>
 					</div>
 				</div>
 			</div>
