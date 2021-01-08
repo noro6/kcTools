@@ -3916,7 +3916,7 @@ function convertToDeckBuilder() {
 				planes["i" + castInt(plane[4] + 1)] = i;
 			}
 
-			const s = { id: `${shipData.api}`, lv: 99, luck: -1, items: planes };
+			const s = { id: `${shipData.api}`, lv: ship[4], luck: -1, items: planes };
 			const shipIndex = ship[2];
 			if (shipIndex < 6) obj.f1["s" + ((shipIndex % 6) + 1)] = s;
 			else obj.f2["s" + ((shipIndex % 6) + 1)] = s;
@@ -3981,7 +3981,7 @@ function convertToDeckBuilder_j() {
 
 			// 装備機体群オブジェクト生成
 			const planes = [];
-			const insData = { masterId: shipData.api, level: 99, slots: [], equipments: planes };
+			const insData = { masterId: shipData.api, level: ship[4], slots: [], equipments: planes };
 
 			for (let j = 0; j < shipData.slot.length; j++) {
 				let insSlot = shipData.slot[j];
@@ -4895,6 +4895,7 @@ function updateLandBaseInfo(landBaseAll, updateDisplay = true) {
 		for (const plane of topPlanes) {
 			if ((plane.isRecon && plane.slot === 4) || (!plane.isRecon && plane.slot === 18)) {
 				needAlert = true;
+				break;
 			}
 		}
 	}

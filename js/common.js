@@ -388,8 +388,15 @@ function readDeckBuilder(deck) {
 						unmanageShip = true;
 					}
 
+					// 練度
+					let level = 99;
+					if (s_.hasOwnProperty('lv')) {
+						level = castInt(s_.lv);
+						level = level ? level : 99;
+					}
+
 					// 装備の抽出
-					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo)];
+					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo), 0, level];
 					Object.keys(s_.items).forEach((i) => {
 						const i_ = s_.items[i];
 						if (!i_ || !i_.hasOwnProperty("id")) return;
