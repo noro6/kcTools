@@ -9540,6 +9540,9 @@ function plane_type_select_Changed($this = null) {
 				// 改修値0～10で見つかったものを個数とともに格納
 				const plane = Object.assign({ remodel: i, count: stockCount }, o);
 				plane.antiAir += Plane.getBonusAntiAir(plane.id, plane.type, plane.remodel, plane.antiAir);
+				plane.torpedo += Math.abs(plane.type) === 2 ? 0.2 * plane.remodel : 0;
+				plane.torpedo += (plane.type === 101 || plane.type === 105) ? 0.7 * Math.sqrt(plane.remodel) : 0;
+				plane.bomber += (plane.type === 3 && plane.antiAir <= 2) || plane.type === 6 ? 0.2 * plane.remodel : 0;
 				newPlanes.push(plane);
 			}
 		}
