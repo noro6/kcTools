@@ -5985,7 +5985,7 @@ function shootDownFriend(asIndex, fleet, battleInfo, battle) {
 	// 双方制空0(asIndex === 5)の場合、制空権確保となるので変更
 	if (asIndex === 5) asIndex = 0;
 	const sTable = SHOOT_DOWN_TABLE;
-	const isNormalBattle = battleInfo.cellType <= CELL_TYPE.normal;
+	const isNormalBattle = battleInfo.cellType === CELL_TYPE.normal || battleInfo.cellType === CELL_TYPE.airRaid;
 	const needStage2 = battleInfo.cellType <= CELL_TYPE.grand;
 	const len = fleet.ships.length;
 	for (let i = 0; i < len; i++) {
