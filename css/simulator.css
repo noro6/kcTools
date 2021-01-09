@@ -1576,6 +1576,7 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_torpedo_bomber { background-color: rgba(0, 189, 252, 0.1); }
 .shoot_table_dive_bomber { background-color: rgba(255, 0, 0, 0.1); }
 .shoot_table_cb_reconnaissance { background-color: rgba(255, 255, 80, 0.1); }
+.shoot_table_lb_reconnaissance { background-color: rgba(255, 255, 80, 0.1); }
 .shoot_table_sp { background-color: rgba(70, 255, 125, 0.1); }
 .shoot_table_lb_attack_aircraft { background-color: rgba(0, 190, 48, 0.1); }
 .shoot_table_lb_fighter { background-color: rgba(97, 255, 137, 0.1); }
@@ -1585,6 +1586,7 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_torpedo_bomber_hover { background-color: rgba(0, 189, 252, 0.2)!important; }
 .shoot_table_dive_bomber_hover { background-color: rgba(255, 0, 0, 0.15)!important; }
 .shoot_table_cb_reconnaissance_hover { background-color: rgba(255, 255, 80, 0.2)!important; }
+.shoot_table_lb_reconnaissance_hover { background-color: rgba(255, 255, 80, 0.2)!important; }
 .shoot_table_sp_hover { background-color: rgba(70, 255, 125, 0.2)!important; }
 .shoot_table_lb_attack_aircraft_hover { background-color: rgba(0, 190, 48, 0.2)!important; }
 .shoot_table_lb_fighter_hover { background-color: rgba(97, 255, 137, 0.2)!important; }
