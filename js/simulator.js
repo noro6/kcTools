@@ -104,6 +104,8 @@ class Fleet {
 		this.escortAirPower = 0;
 		/** @type {number} */
 		this.fullEscortAirPower = 0;
+		/** @type {boolean} */
+		this.hasJet = false;
 	}
 
 	/**
@@ -263,6 +265,8 @@ class LandBase {
 		this.defenseCorr = 1.0;
 		/** @type {Array<AirStatusResult>} */
 		this.results = [];
+		/** @type {boolean} */
+		this.hasJet = false;
 
 		for (let index = 0; index < battleCount; index++) {
 			this.results.push(new AirStatusResult());
@@ -617,10 +621,53 @@ class Plane {
 			aa = 0.25 * remodel;
 		}
 		// 陸攻
-		else if (type === 101) {
+		else if (type === 101 || type === 105) {
 			aa = 0.5 * Math.sqrt(remodel);
 		}
 		return aa;
+	}
+
+	/**
+	 * 艦載機カテゴリ、改修値からボーナス雷装値を返却
+	 * @static
+	 * @param {number} type 機体カテゴリコード
+	 * @param {number} remodel 改修値
+	 * @returns {number} ボーナス雷装値
+	 * @memberof Plane
+	 */
+	static getBonusTorpedo(type, remodel) {
+		let bonus = 0;
+		// 艦攻
+		if (type === 2 || type === -2) {
+			bonus = 0.2 * remodel;
+		}
+		// 陸攻 重爆
+		else if (type === 101 || type === 105) {
+			bonus = 0.7 * Math.sqrt(remodel);
+		}
+		return bonus;
+	}
+
+	/**
+	 * 艦載機カテゴリ、改修値からボーナス爆装値を返却
+	 * @static
+	 * @param {number} type 機体カテゴリコード
+	 * @param {number} remodel 改修値
+	 * @param {number} antiAir 対空値
+	 * @returns {number} ボーナス爆装値
+	 * @memberof Plane
+	 */
+	static getBonusBomber(type, remodel, antiAir) {
+		let bonus = 0;
+		// 艦爆
+		if (type === 3 && antiAir <= 2) {
+			bonus = 0.2 * remodel;
+		}
+		// 水爆
+		else if (type === 6) {
+			bonus = 0.2 * remodel;
+		}
+		return bonus;
 	}
 
 	/**
@@ -4646,6 +4693,11 @@ function updateLandBaseInfo(landBaseAll, updateDisplay = true) {
 			if (plane.id > 0) {
 				// 機体を追加
 				landBase.planes.push(plane);
+
+				// 噴式あれば
+				if (!landBase.hasJet && plane.type === 9) {
+					landBase.hasJet = true;
+				}
 			}
 
 			// 以下表示系、未処理でいいなら次のレコードへ
@@ -5061,6 +5113,10 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 			plane.slotNo = slotNo++;
 
 			shipInstance.planes.push(plane);
+
+			if (!fleet.hasJet && plane.type === 9) {
+				fleet.hasJet = true;
+			}
 
 			// 機体使用数テーブル更新
 			let usedData = usedPlane.find(v => v.id === plane.id);
@@ -5844,6 +5900,40 @@ function updateEnemyAp(enemy) {
 	if (!enemy.isSpR) enemy.ap = sumAp;
 }
 
+/**
+ * 噴式強襲
+ * @param {LandBase} landBase 基地
+ * @param {object} battleInfo 敵艦隊
+ */
+function doLandBaseJetPhase(landBase, battleInfo) {
+	const range = battleInfo.stage2[0][0].length;
+
+	if (!range || !landBase.hasJet) {
+		return;
+	}
+
+	for (let j = 0; j < landBase.planes.length; j++) {
+		const plane = landBase.planes[j];
+		if (plane.type !== 9) continue;
+
+		// 噴式強襲st1
+		// st1 0.6掛け
+		plane.slot -= Math.floor(0.6 * getShootDownSlotFF(0, Math.round(plane.slot)));
+
+		// 噴式強襲st2
+		// 迎撃担当インデックス
+		const index = Math.floor(Math.random() * range);
+		// 割合撃墜 50% で失敗
+		if (Math.floor(Math.random() * 2)) plane.slot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * plane.slot);
+		// 固定撃墜 50% で失敗
+		if (Math.floor(Math.random() * 2)) plane.slot -= battleInfo.stage2[plane.avoid][1][index];
+
+		plane.updateAirPower();
+	}
+
+	// この航空隊の制空値を再計算
+	landBase.updateAirPower();
+}
 
 /**
  * 噴式強襲
@@ -5854,7 +5944,7 @@ function updateEnemyAp(enemy) {
 function doJetPhase(fleet, battleInfo) {
 	const range = battleInfo.stage2[0][0].length;
 	// 戦闘マスが通常/連合戦闘マスじゃないなら強襲なし　ALL潜水も除外
-	if (!range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) return 0;
+	if (!fleet.hasJet || !range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) return 0;
 	let steel = 0;
 	for (let i = 0; i < fleet.ships.length; i++) {
 		const ship = fleet.ships[i];
@@ -6026,25 +6116,25 @@ function getLandBasePower(id, slot, remodel) {
 	let adj = 0;
 	switch (type) {
 		case 2:
-			fire = 0.2 * remodel + plane.torpedo;
+			fire = Plane.getBonusTorpedo(type, remodel) + plane.torpedo;
 			adj = 1.0;
 			break;
 		case 3:
-			fire = 0.0 * remodel + plane.bomber;
+			fire = Plane.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
 			adj = 1.0;
 			break;
 		case 6:
-			fire = 0.2 * remodel + plane.bomber;
+			fire = Plane.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
 			adj = 1.0;
 			break;
 		case 9:
-			fire = 0.0 * remodel + plane.bomber;
+			fire = Plane.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
 			adj = 0.7071;
 			break;
 		case 101:
 		case -101:
 		case 105:
-			fire = 0.7 * remodel + plane.torpedo;
+			fire = Plane.getBonusTorpedo(type, remodel) + plane.torpedo;
 			adj = 0.8;
 			break;
 		default:
@@ -6343,12 +6433,15 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 			// 1派目 2派目ともに対象でないなら飛ばす
 			continue;
 		}
-
-		const lbAp = landBase.airPower;
 		const result = landBase.results[battleIndex];
 
 		// 出撃第一波
 		if (wave1 === battleIndex) {
+			// 噴式強襲フェーズ
+			doLandBaseJetPhase(landBase, battleInfo);
+
+			let lbAp = landBase.airPower;
+
 			const eap = getEnemyFleetLBAP(enemyFleet);
 			// 双方制空値0の場合は確保扱い
 			const airStatusIndex = (lbAp === 0 && eap === 0) ? 0 : getAirStatusIndex(lbAp, eap);
@@ -6369,6 +6462,14 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 
 		// 出撃第二波
 		if (wave2 === battleIndex) {
+
+			// 派遣先が違う場合は噴式強襲フェーズ起こす
+			if (wave1 !== wave2) {
+				doLandBaseJetPhase(landBase, battleInfo);
+			}
+
+			let lbAp = landBase.airPower;
+
 			const eap = getEnemyFleetLBAP(enemyFleet);
 			const airStatusIndex = (lbAp === 0 && eap === 0) ? 0 : getAirStatusIndex(lbAp, eap);
 
@@ -6440,9 +6541,22 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 
 	// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
 	const rate = Math.abs(plane.type) === 2 ? [0.8, 1.5] : ATTACKERS.includes(plane.type) ? [1] : [0];
-	const remodel = Math.abs(plane.type) === 3 ? 0 : shipInstance.planes[slotNo].remodel;
-	const fire = 0.2 * remodel + (Math.abs(plane.type) === 2 ? plane.torpedo : plane.bomber);
+	const remodel = shipInstance.planes[slotNo].remodel;
 
+	let fire = 0;
+	switch (plane.type) {
+		case 2:
+		case -2:
+			fire = Plane.getBonusTorpedo(plane.type, remodel) + plane.torpedo;
+			break;
+		case 3:
+		case 6:
+			fire = Plane.getBonusBomber(plane.type, remodel, plane.antiAir) + plane.bomber;
+			break;
+		default:
+			break;
+
+	}
 	// 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
 	for (const info of battleInfo) {
 		info.enemies = info.enemies.filter(v => v.slots.length > 0);
@@ -6622,9 +6736,13 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 					continue;
 				}
 
-				const lbAp = landBase.airPower;
 				// 出撃第一波
 				if (wave1 === battle) {
+					// 噴式強襲フェーズ
+					doLandBaseJetPhase(landBase, thisBattleInfo);
+
+					const lbAp = landBase.airPower;
+
 					const eap = getEnemyFleetLBAP(enemies);
 					// 双方制空値0の場合は確保扱い
 					const airStatusIndex = (lbAp === 0 && eap === 0) ? 0 : getAirStatusIndex(lbAp, eap);
@@ -6640,6 +6758,14 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 
 				// 出撃第二波
 				if (wave2 === battle) {
+
+					if (wave1 !== wave2) {
+						// 噴式強襲フェーズ
+						doLandBaseJetPhase(landBase, thisBattleInfo);
+					}
+
+					const lbAp = landBase.airPower;
+
 					const eap = getEnemyFleetLBAP(enemies);
 					const airStatusIndex = (lbAp === 0 && eap === 0) ? 0 : getAirStatusIndex(lbAp, eap);
 
@@ -7933,6 +8059,20 @@ function btn_show_plane_box_Clicked($this) {
  * 基地空襲を起こす
  */
 function btn_air_raid_Clicked() {
+
+	// 誤操作があまりにもひどいので補給挟んでおく
+	$('.lb_tab').each((i, e) => {
+		$(e).find('.lb_plane').each((i, e2) => {
+			if (castInt($(e2)[0].dataset.planeid) > 0) {
+				$(e2).find('.slot').text(18);
+			}
+		});
+	});
+
+	// 搭載数のバリデーション
+	const l = new LandBaseAll();
+	updateLandBaseInfo(new LandBaseAll(), false);
+
 	$('.lb_tab').each((i, e) => {
 		let isOk = false;
 		let downCount = 4;
@@ -8483,10 +8623,17 @@ function showPlaneToolTip($this, isLandBase = false) {
 	if (!rawPlane) return;
 
 	let selectRate = [];
-	if (plane.selectRate.length) selectRate = plane.selectRate.map(v => (100 * v).toFixed(0) + '%');
-	let avoid = null
-	if (plane.avoid > 0) avoid = AVOID_TYPE.find(v => v.id === plane.avoid);
+	if (plane.selectRate.length) {
+		selectRate = plane.selectRate.map(v => (100 * v).toFixed(0) + '%');
+	}
 
+	let avoid = null;
+	if (plane.avoid > 0) {
+		avoid = AVOID_TYPE.find(v => v.id === plane.avoid);
+	}
+
+	const bonusTorpedo = Plane.getBonusTorpedo(plane.type, plane.remodel);
+	const bonusBomber = Plane.getBonusBomber(plane.type, plane.remodel, plane.antiAir - plane.bonusAntiAir);
 
 	const text =
 		`<div class="text-left">
@@ -8502,8 +8649,14 @@ function showPlaneToolTip($this, isLandBase = false) {
 					${plane.bonusAntiAir ? `<span class="text_remodel">(+${plane.bonusAntiAir.toFixed(1)})</span>` : ''}
 				</div>` : ''}
 				${rawPlane.fire ? `<div class="col_half">火力: ${rawPlane.fire}</div>` : ''}
-				${rawPlane.torpedo ? `<div class="col_half">雷装: ${rawPlane.torpedo}</div>` : ''}
-				${rawPlane.bomber ? `<div class="col_half">爆装: ${rawPlane.bomber}</div>` : ''}
+				${rawPlane.torpedo ? `<div class="col_half">
+					<span>雷装: ${rawPlane.torpedo}</span>
+					${bonusTorpedo ? `<span class="text_remodel">(+${bonusTorpedo.toFixed(2)})</span>` : ''}
+				</div>` : ''}
+				${rawPlane.bomber ? `<div class="col_half">
+					<span>爆装: ${rawPlane.bomber}</span>
+					${bonusBomber ? `<span class="text_remodel">(+${bonusBomber.toFixed(2)})</span>` : ''}
+				</div>` : ''}
 				${rawPlane.asw ? `<div class="col_half">対潜: ${rawPlane.asw}</div>` : ''}
 				${rawPlane.armor ? `<div class="col_half">装甲: ${rawPlane.armor}</div>` : ''}
 				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
@@ -8530,21 +8683,31 @@ function showPlaneBasicToolTip($this) {
 	const plane = PLANE_DATA.find(v => v.id === castInt($this[0].dataset.planeid));
 	if (!plane) return;
 
+	// 改修値
+	let remodel = 0;
+
 	let bonusAA = 0;
 	if ($this.find('.plane_td_remodel').length) {
-		const tmp = Object.assign({ remodel: castInt($this.find('.plane_td_remodel')[0].dataset.remodel) }, plane);
+		remodel = castInt($this.find('.plane_td_remodel')[0].dataset.remodel);
+
+		const tmp = Object.assign({ remodel: remodel }, plane);
 		bonusAA = Plane.getBonusAntiAir(tmp.id, tmp.type, tmp.remodel, tmp.antiAir);
+		usedRemodelValue = tmp.remodel;
 	}
 	const actualAA = plane.antiAir + bonusAA;
 	const nmAA = actualAA + 1.5 * plane.interception;
 	const defAA = actualAA + plane.interception + 2.0 * plane.antiBomber;
 	const avoid = plane.avoid ? AVOID_TYPE.find(v => v.id === plane.avoid) : null
 
+	const bonusTorpedo = Plane.getBonusTorpedo(plane.type, remodel);
+	const bonusBomber = Plane.getBonusBomber(plane.type, remodel, plane.antiAir);
+
 	const text =
 		`<div class="text-left">
 			<div>
 				<img src="../img/type/type${plane.type}.png" alt="${plane.type}" class="img-size-25">
 				<span>${plane.name}</span>
+				${remodel ? `<span class="text_remodel">★${remodel}</span>` : ''}
 			</div>
 			<div class="font_size_12 d-flex flex-wrap plane_status_box">
 				${nmAA != actualAA ? `<div class="col_half"><span>出撃対空: ${nmAA}</span></div>` : ''}
@@ -8554,8 +8717,14 @@ function showPlaneBasicToolTip($this) {
 					${bonusAA ? `<span class="text_remodel">(+${bonusAA.toFixed(1)})</span>` : ''}
 				</div>` : ''}
 				${plane.fire ? `<div class="col_half">火力: ${plane.fire}</div>` : ''}
-				${plane.torpedo ? `<div class="col_half">雷装: ${plane.torpedo}</div>` : ''}
-				${plane.bomber ? `<div class="col_half">爆装: ${plane.bomber}</div>` : ''}
+				${plane.torpedo ? `<div class="col_half">
+					<span>雷装: ${plane.torpedo}</span>
+					${bonusTorpedo ? `<span class="text_remodel">(+${bonusTorpedo.toFixed(2)})</span>` : ''}
+				</div>` : ''}
+				${plane.bomber ? `<div class="col_half">
+					<span>爆装: ${plane.bomber}</span>
+					${bonusBomber ? `<span class="text_remodel">(+${bonusBomber.toFixed(2)})</span>` : ''}
+				</div>` : ''}
 				${plane.asw ? `<div class="col_half">対潜: ${plane.asw}</div>` : ''}
 				${plane.armor ? `<div class="col_half">装甲: ${plane.armor}</div>` : ''}
 				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
@@ -9539,10 +9708,12 @@ function plane_type_select_Changed($this = null) {
 
 				// 改修値0～10で見つかったものを個数とともに格納
 				const plane = Object.assign({ remodel: i, count: stockCount }, o);
+				// ボーナス雷装
+				plane.torpedo += Plane.getBonusTorpedo(plane.type, plane.remodel);
+				// ボーナス爆装
+				plane.bomber += Plane.getBonusBomber(plane.type, plane.remodel, plane.antiAir);
+				// ボーナス対空
 				plane.antiAir += Plane.getBonusAntiAir(plane.id, plane.type, plane.remodel, plane.antiAir);
-				plane.torpedo += Math.abs(plane.type) === 2 ? 0.2 * plane.remodel : 0;
-				plane.torpedo += (plane.type === 101 || plane.type === 105) ? 0.7 * Math.sqrt(plane.remodel) : 0;
-				plane.bomber += (plane.type === 3 && plane.antiAir <= 2) || plane.type === 6 ? 0.2 * plane.remodel : 0;
 				newPlanes.push(plane);
 			}
 		}
@@ -12189,7 +12360,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#site_warning').on('click', '.cur_pointer', () => { $('#site_warning').removeClass('d-flex').addClass('d-none'); });
 	$('#landBase').on('click', '.btn_air_raid', btn_air_raid_Clicked);
 	$('#landBase').on('click', '#alert_air_raid_button', btn_air_raid_Clicked);
-	$('#landBase').on('click', '.btn_supply', function () { btn_supply_Clicked($(this)); });
+	$('#landBase').on('click', '.btn_supply', btn_supply_Clicked);
 	$('#landBase_content').on('change', '.ohuda_select', calculate);
 	$('#landBase_content').on('click', '.btn_remove_plane', function () { btn_remove_lb_plane_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_reset_landBase', function () { btn_reset_landBase_Clicked($(this)); });
