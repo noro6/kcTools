@@ -387,6 +387,15 @@ class LandBase {
 	getSumBauxite() {
 		return getArraySum(this.planes.map(v => v.bauxite));
 	}
+
+	/**
+	 * 現航空隊の噴式発生時コストを返却
+	 * @readonly
+	 * @memberof LandBase
+	 */
+	getSumSteel() {
+		return getArraySum(this.planes.map(v => v.steel));
+	}
 }
 
 /**
@@ -458,6 +467,8 @@ class Plane {
 		/** @type {number} */
 		this.bauxite = 0;
 		/** @type {number} */
+		this.steel = 0;
+		/** @type {number} */
 		this.bonusAirPower = 0;
 		/** @type {number} */
 		this.slotNo = 0;
@@ -509,6 +520,7 @@ class Plane {
 			this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : 1.0));
 			this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : Math.ceil(this.slot * 0.6);
 			this.bauxite = this.cost * (this.isRecon ? 4 : this.type === 105 ? 9 : 18);
+			this.steel = this.type === 9 ? Math.round(this.slot * this.cost * 0.2) : 0;
 
 			// 補給時制空値
 			this.fullAirPower = this.airPower;
@@ -4800,6 +4812,19 @@ function updateLandBaseInfo(landBaseAll, updateDisplay = true) {
 		drawChangeValue(node_fuel, castInt(node_fuel.textContent), landBase.getSumFuel(), true);
 		drawChangeValue(node_ammo, castInt(node_ammo.textContent), landBase.getSumAmmo(), true);
 		drawChangeValue(node_bauxite, castInt(node_bauxite.textContent), landBase.getSumBauxite(), true);
+
+		// 鋼材
+		const node_steel = node_resource.getElementsByClassName('steel')[0];
+		const sumSteel = landBase.getSumSteel();
+		if (sumSteel) {
+			drawChangeValue(node_steel, castInt(node_steel.textContent), sumSteel, true);
+			node_steel.classList.remove('d-none');
+			node_steel.previousElementSibling.classList.remove('d-none');
+		}
+		else {
+			node_steel.classList.add('d-none');
+			node_steel.previousElementSibling.classList.add('d-none');
+		}
 
 		// 総制空値 それぞれの基地のモード毎によって。
 		const sumAirPower = landBase.mode === 0 ? landBase.defenseAirPower : landBase.airPower;
