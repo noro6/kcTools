@@ -516,9 +516,9 @@ class Plane {
 			}
 
 			// 出撃コスト加算
-			const isLbAtaccker = [101, -101, 105].includes(this.type);
-			this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : 1.0));
-			this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : Math.ceil(this.slot * 0.6);
+			const isLbAtaccker = [101, -101].includes(this.type);
+			this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : this.type === 105 ? 2.0 : 1.0));
+			this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : this.type === 105 ? this.slot * 2 : Math.ceil(this.slot * 0.6);
 			this.bauxite = this.cost * (this.isRecon ? 4 : this.type === 105 ? 9 : 18);
 			this.steel = this.type === 9 ? Math.round(this.slot * this.cost * 0.2) : 0;
 
