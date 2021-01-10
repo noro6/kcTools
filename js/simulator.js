@@ -79,6 +79,7 @@ let resultData = {
 	usedSteels: 0
 };
 
+let errorInfo = null;
 
 // 入力加重対空値
 let inputAntiAirWeights = [];
@@ -4496,39 +4497,32 @@ function calculate() {
  * @param {Object} error エラーオブジェクト
  */
 function sendErrorLog(error) {
-	const log = {
+	errorInfo = {
 		name: error.name,
 		message: error.message,
 		stack: error.stack,
 		data: encodePreset(),
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 		remarks: "",
-		version: "1.11.0"
+		version: "1.11.3"
 	};
-	if (!fb) initializeFB();
-	if (fb) {
-		fb.runTransaction(function (tran) {
-			const ref = fb.collection('errors');
-			const d = ref.doc();
-			return tran.get(d).then(async () => {
-				await tran.set(d, log);
-			})
-		}).then(function (res) {
-		}).catch(function (err) {
-		});
-	}
 
 	const $modal = $('#modal_confirm');
 	$modal.find('.modal-body').html(`
-		<div class="px-2">
-			<div class="h6">計算処理中にエラーが発生しました。</div>
-			<div class="my-1">
-				<div class="pl-2">
-					　キャッシュが悪さをしているかもしれません。一度、このまま本画面にてブラウザのスーパーリロードをお試しください。
+		<div>
+			<div class="h5">計算処理中にエラーが発生しました。</div>
+			<div class="mt-3">
+				<div class="pl-3">
+					ブラウザのキャッシュの問題で、正しく計算が処理できなかった可能性があります。
 				</div>
-				<div class="pl-2 mt-3">
-					　それでも改善しない場合、お手数ですが、直前にどのような基地や艦娘の装備などの操作をしようとしたかを
-					<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>までご報告いただけると幸いです。
+				<div class="pl-3">
+					このまま本画面にてブラウザのスーパーリロードをお試しください。
+				</div>
+				<div class="pl-2 mt-4">■ スーパーリロードを行ったが改善しない場合</div>
+				<div class="pl-3 mt-1">
+					大変申し訳ありません。お手数ですが、直前にどのような基地や艦娘の装備などの操作をしようとしたかを<a href="https://odaibako.net/u/noro_006" target="_blank" id="send_error">こちら</a>までご報告ください。
+				</div>
+				<div class="pl-3 mt-1">
 					報告を頂き次第、可能な限り早期の調査、修正を行います。ご不便をおかけして申し訳ありません。
 				</div>
 			</div>
@@ -4537,6 +4531,24 @@ function sendErrorLog(error) {
 
 	confirmType = "Error";
 	$modal.modal('show');
+}
+
+/**
+ * ログを送信
+ */
+function sendError() {
+	if (!fb) initializeFB();
+	if (fb) {
+		fb.runTransaction(function (tran) {
+			const ref = fb.collection('errors');
+			const d = ref.doc();
+			return tran.get(d).then(async () => {
+				await tran.set(d, errorInfo);
+			})
+		}).then(function (res) {
+		}).catch(function (err) {
+		});
+	}
 }
 
 /**
@@ -7998,7 +8010,11 @@ function modal_Closed($this) {
 			break;
 		case "modal_confirm":
 			if (confirmType === 'Error') {
-				window.location.href = '../list/';
+				try {
+					window.location.reload(true);
+				} catch (error) {
+					window.location.href = '../list/';
+				}
 			}
 			confirmType = null;
 			break;
@@ -12639,6 +12655,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_level_input').on('click', '.btn-sm', function () { level_Clicked($(this)); });
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 	$('#modal_confirm').on('click', '#error_str', function () { if (copyInputTextToClipboard($(this))) inform_success('コピーしました'); });
+	$('#modal_confirm').on('click', '#send_error', sendError);
 	$('#btn_save_preset').click(btn_save_preset_Clicked);
 	$('#btn_save_preset_sub').click(btn_save_preset_sub_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
