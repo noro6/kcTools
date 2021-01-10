@@ -1081,7 +1081,7 @@ const ANTIAIR_CUTIN = [
 	{ id: 30, name: "30種", adj: [1.3, 3], remarks: "天龍改二" },
 	{ id: 31, name: "31種", adj: [1.25, 2], remarks: "天龍改二" },
 	{ id: 32, name: "32種", adj: [1.2, 3], remarks: "金剛型改二 / 英艦" },
-	{ id: 33, name: "33種", adj: [1.35, 3], remarks: "Gotkand" },
+	{ id: 33, name: "33種", adj: [1.35, 3], remarks: "Gotland" },
 	{ id: 34, name: "34種", adj: [1.6, 7], remarks: "Fletcher級" },
 	{ id: 35, name: "35種", adj: [1.55, 6], remarks: "Fletcher級" },
 	{ id: 36, name: "36種", adj: [1.55, 6], remarks: "Fletcher級" },
