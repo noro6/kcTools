@@ -372,6 +372,7 @@ input[type="text"] { font-size: 12px; }
 .ship_header > div,
 .ship_name_span,
 .ship_sumAP,
+.ship_range_parent,
 .form_ship_level {
   -ms-flex-item-align: center!important;
   align-self: center!important;
@@ -1310,6 +1311,18 @@ input[type="text"] { font-size: 12px; }
 }
 #antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
+#antiair_cutin_setting_table {
+  height: 460px;
+  overflow-y: scroll;
+}
+#antiair_cutin_setting_table .scroll_thead {
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+}
+.cutin_visible.disabled {
+  opacity: 0.3;
+}
+
 #fleet_antiair { width: 100px; }
 #fleet_antiair_base { width: 100px; }
 #import_antiair {
@@ -1317,6 +1330,18 @@ input[type="text"] { font-size: 12px; }
   overflow: hidden;
   height: 31px;
   resize: none;
+}
+
+#aa_ci_setting .nav-tabs,
+#aa_ci_setting .nav-link {
+  color: #888 !important;
+  border: none !important;
+}
+#aa_ci_setting .nav-link:hover {
+  color: #444 !important;
+}
+.dark-theme #aa_ci_setting .nav-link:hover {
+  color: #ccc !important;
 }
 
 

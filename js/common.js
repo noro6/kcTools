@@ -119,6 +119,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
+	if (!setting.hasOwnProperty('invisibleCutin')) setting.invisibleCutin = [];
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
