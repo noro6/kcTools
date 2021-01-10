@@ -1461,10 +1461,21 @@ function initialize(callback) {
 
 	// 対空CIプルダウン初期化
 	text = '<option value="0">不発</option>';
+	text1 = '';
 	for (const s of ANTIAIR_CUTIN) {
-		text += `<option value="${s.id}">${s.name}（変動: ${s.adj[0]} 固定: ${s.adj[1]})</option>`;
+		const none = setting.invisibleCutin && setting.invisibleCutin.includes(s.id);
+		text += `<option value="${s.id}" ${none ? 'class="d-none"' : ''}>${s.name}（変動: ${s.adj[0]} 固定: ${s.adj[1]})</option>`;
+		text1 += `
+		<div class="d-flex general_tr py-1 px-2 cutin_visible ${none ? 'disabled' : ''}" data-cutinid="${s.id}">
+			<div class="w_5 text-center"><i class="fas fa-eye${none ? '-slash' : ''}"></i></div>
+			<div class="w_10 text-center">${s.name}</div>
+			<div class="w_55">${s.remarks}</div>
+			<div class="w_15 text-center">${s.adj[0]}</div>
+			<div class="w_15 text-center">${s.adj[1]}</div>
+		</div>`;
 	}
 	$('.select_antiair_cutin_td').html(text);
+	$('#antiair_cutin_settings').html(text1);
 
 	// 連合艦隊チェック初期化
 	$('#union_fleet').prop('checked', setting.isUnion);
@@ -4363,8 +4374,12 @@ function drawResult(objectData) {
 				.addClass(`${barColor} ${exBarColor}`)
 				.css({ 'width': (width > 100 ? 100 : width) + '%', })
 				.data('airstatus', status);
-			const t = `${AIR_STATUS.find(v => v.id === status).abbr}(${Math.floor((getArrayMax(asResult) / calculateCount) * 100)}%)`;
-			$simpleBarParent.find('.simple_label').text(t);
+
+			const statusText = AIR_STATUS.find(v => v.id === status).abbr;
+			const v = Math.floor((getArrayMax(asResult) / calculateCount) * 100);
+			const vText = v === 100 ? '' : v >= 10 ? `<span class="opacity0">1</span>` : `<span class="opacity0">11</span>`;
+			const t = `${statusText}(${v}%)${vText}`;
+			$simpleBarParent.find('.simple_label').html(t);
 			$simpleBarParent.removeClass('d-none');
 		}
 	}
@@ -5122,6 +5137,8 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 
 		const shipInstance = new Ship(shipNo);
 
+		// 装備射程
+		let planeRange = 0;
 		let slotNo = 0;
 		for (const node_ship_plane of node_ship_tab.getElementsByClassName('ship_plane')) {
 			// draggable部分 非表示部分は飛ばす
@@ -5138,6 +5155,11 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 			plane.slotNo = slotNo++;
 
 			shipInstance.planes.push(plane);
+
+			// 長射程機体
+			if (!planeRange && LONGRANGES.includes(plane.id)) {
+				planeRange = 3;
+			}
 
 			if (!fleet.hasJet && plane.type === 9) {
 				fleet.hasJet = true;
@@ -5185,11 +5207,17 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 
 		drawChangeValue(node_ap, prevAp, shipInstance.airPower);
 
+		const ship = shipId ? SHIP_DATA.find(v => v.id === shipId) : null;
+
+		// 射程 装備射程 -> 艦娘射程の優先順
+		let shipRange = planeRange === 3 ? 3 : ship ? ship.range : 0;
+		const rangeText = node_ship_tab.getElementsByClassName('ship_range')[0];
+		if (rangeText) {
+			rangeText.textContent = RANGES.find(v => v.id === shipRange).name;
+		}
+
 		if (planeCount > 0) {
 			// 撃墜テーブル & 入力情報テーブル生成
-			let shipId = castInt(node_ship_tab.dataset.shipid);
-			const ship = shipId ? SHIP_DATA.find(v => v.id === shipId) : null;
-
 			const shoot_fragment = document.createDocumentFragment();
 			const info_fragment = document.createDocumentFragment();
 
@@ -8690,6 +8718,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
 				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
+				${LONGRANGES.includes(plane.id) ? `<div class="col_half">射程: 長</div>` : ''}
 			</div>
 			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} (加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)})</div>` : ''}
 			${rawPlane.type === 9 ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${Math.round(plane.slot * plane.cost * 0.2)}` : ''}
@@ -8758,6 +8787,7 @@ function showPlaneBasicToolTip($this) {
 				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
 				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
+				${LONGRANGES.includes(plane.id) ? `<div class="col_half">射程: 長</div>` : ''}
 			</div>
 			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} ( 加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)} )</div>` : ''}
 			</div>`;
@@ -9318,6 +9348,36 @@ function btn_remove_cutin_Clicked($this) {
 		$noCutin.val(100);
 	}
 	updateFleetStage2Table();
+}
+
+/**
+ * 対空CI表示絞り
+ * @param {JQuery} $this
+ */
+function cutin_visible_Clicked($this) {
+
+	const cutin = castInt($this[0].dataset.cutinid);
+	if ($this.hasClass('disabled')) {
+		// 無効化解除
+		$this.removeClass('disabled');
+		$this.find('.fa-eye-slash').removeClass('fa-eye-slash').addClass('fa-eye');
+		setting.invisibleCutin = setting.invisibleCutin.filter(v => v !== cutin);
+
+		$('.select_antiair_cutin_td').each((i, e) => {
+			$(e).find(`option[value=${cutin}]`).removeClass('d-none');
+		});
+	}
+	else {
+		// 無効化
+		$this.addClass('disabled');
+		$this.find('.fa-eye').removeClass('fa-eye').addClass('fa-eye-slash');
+		setting.invisibleCutin.push(cutin);
+
+		$('.select_antiair_cutin_td').each((i, e) => {
+			$(e).find(`option[value=${cutin}]`).addClass('d-none');
+		});
+	}
+	saveSetting();
 }
 
 /**
@@ -12563,6 +12623,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_fleet_antiair_input').on('change', '.select_antiair_cutin_td', function () { antiAirCutinChanged($(this)); });
 	$('#modal_fleet_antiair_input').on('input', '.cutin_rate', function () { updateAntiAirCutinRate($(this)); });
 	$('#modal_fleet_antiair_input').on('click', '.btn_remove_cutin.cur_pointer', function () { btn_remove_cutin_Clicked($(this)); });
+	$('#modal_fleet_antiair_input').on('click', '.cutin_visible', function () { cutin_visible_Clicked($(this)); });
+	$('#back_ci_setting').on('show.bs.tab', function () { $('#back_ci_setting').addClass('d-none'); $('#go_ci_setting').removeClass('d-none'); });
+	$('#go_ci_setting').on('show.bs.tab', function () { $('#go_ci_setting').addClass('d-none'); $('#back_ci_setting').removeClass('d-none'); });
 	$('#modal_manual_enemy').on('input', '.enemy_slot', function () { manual_enemy_input_Changed($(this)) });
 	$('#modal_manual_enemy').on('input', '#manual_aa_weight', function () { manual_enemy_input_Changed($(this)) });
 	$('#modal_manual_enemy').on('input', '#manual_aa_bonus', function () { manual_enemy_input_Changed($(this)) });

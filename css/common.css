@@ -574,9 +574,13 @@ h1 {
 .font_size_10 { font-size: 10px; }
 .font_size_8 { font-size: 8px; }
 .font_color_half { opacity: 0.8; }
+.w_90 { width: 90% }
+.w_80 { width: 80% }
 .w_70 { width: 70% }
 .w_60 { width: 60% }
+.w_55 { width: 55% }
 .w_50 { width: 50% }
+.w_45 { width: 45% }
 .w_40 { width: 40% }
 .w_30 { width: 30% }
 .w_25 { width: 25% }
