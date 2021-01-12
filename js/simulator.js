@@ -5973,7 +5973,7 @@ function updateEnemyAp(enemy) {
 function doLandBaseJetPhase(landBase, battleInfo) {
 	const range = battleInfo.stage2[0][0].length;
 
-	if (!range || !landBase.hasJet) {
+	if (!range || landBase.mode !== 2 || !landBase.hasJet) {
 		return;
 	}
 
@@ -6291,6 +6291,11 @@ function rateCalculate(objectData) {
 	const defAp = battleInfo[0].cellType === CELL_TYPE.highAirRaid ? landBaseData.defense2AirPower : landBaseData.defenseAirPower;
 	resultData.defenseAirPower = defAp;
 
+	let defEnemyAp = 0;
+	if (isDefMode || battleInfo[0]) {
+		defEnemyAp = getEnemyFleetAP(battleInfo[0].enemies);
+	}
+
 	for (let count = 0; count < maxCount; count++) {
 
 		// 道中含めてブン回し
@@ -6469,7 +6474,12 @@ function rateCalculate(objectData) {
 		resultData.enemyAirPowers.push(Math.round(landBase.results[mainBattle].enemyAirPower[1] / maxCount));
 	}
 
-	resultData.enemyAirPowers.push(Math.round(avgEnemyAps[mainBattle] / maxCount));
+	if (isDefMode) {
+		resultData.enemyAirPowers.push(defEnemyAp);
+	}
+	else {
+		resultData.enemyAirPowers.push(Math.round(avgEnemyAps[mainBattle] / maxCount));
+	}
 	resultData.landBaseAirStatus = airStatusDist;
 	resultData.fleetAirStatus = fleetASDist.map(v => v / maxCount);
 	resultData.enemySlots = enemySlotResult;
