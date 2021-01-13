@@ -1192,6 +1192,18 @@ let CHANGE_LOG = [
 			}
 		],
 	},
+	{
+		id: "1.11.3.1", changes: [
+			{
+				type: 1, title: "2020秋イベント海域終了対応",
+				content: "海域一覧の海域順を更新しました。"
+			},
+			{
+				type: 2, title: "不具合の修正を行いました。",
+				content: "防空計算モード時、敵機を撃墜した値が表示されてしまう現象を修正しました。"
+			}
+		],
+	}
 ];
 
-const LAST_UPDATE_DATE = "2021/1/10";
+const LAST_UPDATE_DATE = "2021/1/13";
