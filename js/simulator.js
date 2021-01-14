@@ -8712,7 +8712,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 	}
 
 	const bonusTorpedo = Plane.getBonusTorpedo(plane.type, plane.remodel);
-	const bonusBomber = Plane.getBonusBomber(plane.type, plane.remodel, plane.antiAir - plane.bonusAntiAir);
+	const bonusBomber = Plane.getBonusBomber(plane.type, plane.remodel, rawPlane.antiAir);
 
 	const text =
 		`<div class="text-left">
@@ -8723,9 +8723,9 @@ function showPlaneToolTip($this, isLandBase = false) {
 			</div>
 			<div class="my-1">制空値: ${plane.airPower}</div>
 			<div class="font_size_12 d-flex flex-wrap plane_status_box">
-				${plane.antiAir ? `<div class="col_half">
-					<span>対空: ${plane.antiAir - plane.bonusAntiAir}</span>
-					${plane.bonusAntiAir ? `<span class="text_remodel">(+${plane.bonusAntiAir.toFixed(1)})</span>` : ''}
+				${rawPlane.antiAir ? `<div class="col_half">
+					<span>対空: ${rawPlane.antiAir}</span>
+					${plane.bonusAntiAir ? `<span class="text_remodel">(+${plane.bonusAntiAir.toFixed(2)})</span>` : ''}
 				</div>` : ''}
 				${rawPlane.fire ? `<div class="col_half">火力: ${rawPlane.fire}</div>` : ''}
 				${rawPlane.torpedo ? `<div class="col_half">
@@ -8794,7 +8794,7 @@ function showPlaneBasicToolTip($this) {
 				${defAA != actualAA ? `<div class="col_half"><span>防空対空: ${defAA}</span></div>` : ''}
 				${plane.antiAir ? `<div class="col_half">
 					<span>対空: ${plane.antiAir}</span>
-					${bonusAA ? `<span class="text_remodel">(+${bonusAA.toFixed(1)})</span>` : ''}
+					${bonusAA ? `<span class="text_remodel">(+${bonusAA.toFixed(2)})</span>` : ''}
 				</div>` : ''}
 				${plane.fire ? `<div class="col_half">火力: ${plane.fire}</div>` : ''}
 				${plane.torpedo ? `<div class="col_half">
