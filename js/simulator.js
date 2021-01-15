@@ -5180,7 +5180,7 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 			// 対地判定
 			if (shipInstance.taichi && plane.type === 3 && !TAICHI.includes(plane.id)) {
 				// 対地不可
-				shipInstance.taichi = false;
+				shipInstance.taichi = plane.slot === 0;
 			}
 
 			// ジェット機持ちかどうか
