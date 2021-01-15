@@ -638,6 +638,7 @@ class Plane {
 		// 陸攻
 		else if (type === 101 || type === 105) {
 			aa = 0.5 * Math.sqrt(remodel);
+			aa = 1.11;
 		}
 		return aa;
 	}
@@ -5788,20 +5789,23 @@ function createStage2Table(enemies, cellType, formationId) {
 	for (let i = 0; i < enemyCount; i++) {
 		const enm = enemies[i];
 		if (enm.id === 0) continue;
+		const aaw = enm.aaw / 2;
 		// 加重対空格納
-		aawList.push(enm.aaw);
+		aawList.push(aaw);
 		// stage2用 割合撃墜係数テーブル
 		for (let j = 0; j < AVOID_TYPE.length; j++) {
 			// 補正後加重対空値
-			const antiAirWeight = Math.floor(enm.aaw * AVOID_TYPE[j].adj[0]);
+			const antiAirWeight = Math.floor(aaw * AVOID_TYPE[j].adj[0]);
+
+			// 割合撃墜 => int(0.02 * 0.25 * 機数[あとで] * 加重対空値 * 連合補正)
 			if (cellType === CELL_TYPE.grand) {
-				// 敵連合艦隊補正
-				if (i < 6) stage2[j][0].push(antiAirWeight * 0.8 / 400);
-				else stage2[j][0].push(antiAirWeight * 0.48 / 400);
+				// 敵連合艦隊補正 
+				if (i < 6) stage2[j][0].push(0.005 * antiAirWeight * 0.8);
+				else stage2[j][0].push(0.005 * antiAirWeight * 0.48);
 			}
 			else {
 				// 通常艦隊
-				stage2[j][0].push(antiAirWeight / 400);
+				stage2[j][0].push(0.005 * antiAirWeight);
 			}
 		}
 		// 艦隊防空ボーナス加算
@@ -5812,27 +5816,27 @@ function createStage2Table(enemies, cellType, formationId) {
 	const formation = FORMATION.find(v => v.id === formationId);
 	const aj1 = formation ? formation.correction : 1.0;
 
-	// 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計] * 2
-	const fleetAntiAir = Math.floor((aj1 * sumAntiAirBonus));
+	// 艦隊防空値 [陣形補正 * 各艦の艦隊対空ボーナス値の合計]
+	const fleetAntiAir = Math.floor(aj1 * sumAntiAirBonus);
 	// stage2用 固定撃墜値テーブル
 	for (let i = 0; i < enemyCount; i++) {
 		if (enemies[i].id === 0) continue;
 		const aaw = aawList.shift();
 		for (let j = 0; j < AVOID_TYPE.length; j++) {
-			// 補正後加重対空値
+			// 補正後加重対空値 => int(加重対空値 * 機体加重対空補正)
 			const antiAirWeight = Math.floor(aaw * AVOID_TYPE[j].adj[0]);
 			// 補正後艦隊防空値
-			const fleetAA = 2 * Math.floor(fleetAntiAir * AVOID_TYPE[j].adj[1]);
+			const fleetAA = Math.floor(fleetAntiAir * AVOID_TYPE[j].adj[1]);
 			if (cellType === CELL_TYPE.grand) {
 				// 敵連合艦隊補正
 				// 第1艦隊
-				if (i < 6) stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.8 * 0.09375));
+				if (i < 6) stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.8 * 0.75 * 0.25));
 				// 第2艦隊
-				else stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.48 * 0.09375));
+				else stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.48 * 0.75 * 0.25));
 			}
 			else {
 				// 通常艦隊
-				stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.09375));
+				stage2[j][1].push(Math.floor((antiAirWeight + fleetAA) * 0.75 * 0.25));
 			}
 		}
 	}
