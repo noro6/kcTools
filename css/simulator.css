@@ -373,6 +373,7 @@ input[type="text"] { font-size: 12px; }
 .ship_name_span,
 .ship_sumAP,
 .ship_range_parent,
+.can_attack_lb,
 .form_ship_level {
   -ms-flex-item-align: center!important;
   align-self: center!important;

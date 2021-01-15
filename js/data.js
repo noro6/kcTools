@@ -1028,6 +1028,9 @@ const ROCKETS = [350, 351, 352];
 // 長射程
 const LONGRANGES = [199, 200, 291, 292, 306];
 
+// 対地可能
+const TAICHI = [64, 148, 233, 277, 305, 306, 319];
+
 // 射撃回避
 const AVOID_TYPE = [
 	{ id: 0, name: "なし", adj: [1.0, 1.0] },
@@ -1228,4 +1231,4 @@ const DEFAULT_PLANE_PRESET = [
 const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
-const LATEST_VERSION = '1.11.3.1';
+const LATEST_VERSION = '1.11.3.2';
