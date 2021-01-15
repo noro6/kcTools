@@ -178,6 +178,8 @@ class Ship {
 		this.fullAirPower = 0;
 		/** @type {number} */
 		this.level = 99;
+		/** @type {boolean} */
+		this.taichi = true;
 	}
 
 	/**
@@ -4507,6 +4509,8 @@ function sendErrorLog(error) {
 		version: "1.11.3"
 	};
 
+	console.log(error);
+
 	const $modal = $('#modal_confirm');
 	$modal.find('.modal-body').html(`
 		<div>
@@ -5173,6 +5177,13 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 				planeRange = 3;
 			}
 
+			// 対地判定
+			if (shipInstance.taichi && plane.type === 3 && !TAICHI.includes(plane.id)) {
+				// 対地不可
+				shipInstance.taichi = false;
+			}
+
+			// ジェット機持ちかどうか
 			if (!fleet.hasJet && plane.type === 9) {
 				fleet.hasJet = true;
 			}
@@ -5226,6 +5237,17 @@ function updateFriendFleetInfo(fleet, updateDisplay = true) {
 		const rangeText = node_ship_tab.getElementsByClassName('ship_range')[0];
 		if (rangeText) {
 			rangeText.textContent = RANGES.find(v => v.id === shipRange).name;
+		}
+		// 対地攻撃可能？
+		const taichText = node_ship_tab.getElementsByClassName('can_attack_lb')[0];
+		if (taichText) {
+			// 空母かつ対地不可
+			if (ship && [7, 11, 18].includes(ship.type) && !shipInstance.taichi) {
+				taichText.classList.remove('d-none');
+			}
+			else {
+				taichText.classList.add('d-none');
+			}
 		}
 
 		if (planeCount > 0) {
@@ -8712,7 +8734,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 	}
 
 	const bonusTorpedo = Plane.getBonusTorpedo(plane.type, plane.remodel);
-	const bonusBomber = Plane.getBonusBomber(plane.type, plane.remodel, plane.antiAir - plane.bonusAntiAir);
+	const bonusBomber = Plane.getBonusBomber(plane.type, plane.remodel, rawPlane.antiAir);
 
 	const text =
 		`<div class="text-left">
@@ -8723,9 +8745,9 @@ function showPlaneToolTip($this, isLandBase = false) {
 			</div>
 			<div class="my-1">制空値: ${plane.airPower}</div>
 			<div class="font_size_12 d-flex flex-wrap plane_status_box">
-				${plane.antiAir ? `<div class="col_half">
-					<span>対空: ${plane.antiAir - plane.bonusAntiAir}</span>
-					${plane.bonusAntiAir ? `<span class="text_remodel">(+${plane.bonusAntiAir.toFixed(1)})</span>` : ''}
+				${rawPlane.antiAir ? `<div class="col_half">
+					<span>対空: ${rawPlane.antiAir}</span>
+					${plane.bonusAntiAir ? `<span class="text_remodel">(+${plane.bonusAntiAir.toFixed(2)})</span>` : ''}
 				</div>` : ''}
 				${rawPlane.fire ? `<div class="col_half">火力: ${rawPlane.fire}</div>` : ''}
 				${rawPlane.torpedo ? `<div class="col_half">
@@ -8745,6 +8767,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
 				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
 				${LONGRANGES.includes(plane.id) ? `<div class="col_half">射程: 長</div>` : ''}
+				${TAICHI.includes(plane.id) ? `<div class="col_half">対地: 可</div>` : ''}
 			</div>
 			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} (加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)})</div>` : ''}
 			${rawPlane.type === 9 ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${Math.round(plane.slot * plane.cost * 0.2)}` : ''}
@@ -8794,7 +8817,7 @@ function showPlaneBasicToolTip($this) {
 				${defAA != actualAA ? `<div class="col_half"><span>防空対空: ${defAA}</span></div>` : ''}
 				${plane.antiAir ? `<div class="col_half">
 					<span>対空: ${plane.antiAir}</span>
-					${bonusAA ? `<span class="text_remodel">(+${bonusAA.toFixed(1)})</span>` : ''}
+					${bonusAA ? `<span class="text_remodel">(+${bonusAA.toFixed(2)})</span>` : ''}
 				</div>` : ''}
 				${plane.fire ? `<div class="col_half">火力: ${plane.fire}</div>` : ''}
 				${plane.torpedo ? `<div class="col_half">
@@ -8814,6 +8837,7 @@ function showPlaneBasicToolTip($this) {
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
 				${plane.radius ? `<div class="col_half">半径: ${plane.radius}</div>` : ''}
 				${LONGRANGES.includes(plane.id) ? `<div class="col_half">射程: 長</div>` : ''}
+				${TAICHI.includes(plane.id) ? `<div class="col_half">対地: 可</div>` : ''}
 			</div>
 			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} ( 加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)} )</div>` : ''}
 			</div>`;
