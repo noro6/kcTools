@@ -638,7 +638,6 @@ class Plane {
 		// 陸攻
 		else if (type === 101 || type === 105) {
 			aa = 0.5 * Math.sqrt(remodel);
-			aa = 1.11;
 		}
 		return aa;
 	}
