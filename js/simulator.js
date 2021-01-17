@@ -1,5 +1,3 @@
-// @ts-check
-
 // https://closure-compiler.appspot.com/home
 /*==================================
 		定数
@@ -1001,7 +999,6 @@ class Battle {
 }
 
 class Enemy {
-
 	/**
 	 * Creates an instance of Enemy.
 	 * @param {number} id
@@ -1020,6 +1017,8 @@ class Enemy {
 		this.slots = [];
 		/** @type {Array<number>} */
 		this.fullSlots = [];
+		/** @type {Array<number>} */
+		this.rawSlots = [];
 		/** @type {number} */
 		this.airPower = 0;
 		/** @type {number} */
@@ -1048,7 +1047,7 @@ class Enemy {
 		this.isEscort = false;
 
 		const raw = ENEMY_DATA.find(v => v.id === id);
-		if (id !== 0 && raw) {
+		if (raw) {
 			for (let i = 0; i < raw.eqp.length; i++) {
 				const id = raw.eqp[i];
 				// 装備マスタから取得
@@ -1065,10 +1064,11 @@ class Enemy {
 
 				// 機体なら計算用の格納
 				if (equipment && equipment.type < 1000) {
+					const slot = raw.slot[i] > 0 ? raw.slot[i] : 0;
 					this.antiAirs.push(equipment.antiAir);
 					this.attackers.push(ATTACKERS.includes(equipment.type));
-					this.slots.push(raw.slot[i]);
-					this.fullSlots.push(raw.slot[i]);
+					this.slots.push(slot);
+					this.fullSlots.push(slot);
 
 					// いまは偵察機が1つでも含まれてたら偵察機onlyとする => 基地制空のみに加算
 					if (!this.onlyScout && equipment.type === 5) {
@@ -1083,6 +1083,7 @@ class Enemy {
 			this.antiAir = raw.aa;
 			this.airPower = 0;
 			this.landBaseAirPower = 0;
+			this.rawSlots = raw.slot.concat();
 
 			// 制空値情報の更新
 			this.updateAirPower();
@@ -1571,6 +1572,7 @@ function initialize(callback) {
 		IMAGES["type" + id] = img;
 	}
 
+	// 手動設定敵艦情報でマスタを書き換える
 	let manualEnemies = loadLocalStorage('manual_enemies');
 	if (manualEnemies) {
 		manualEnemies = manualEnemies.filter(v => UNKNOWN_ENEMY.includes(v.id));
@@ -3128,18 +3130,8 @@ function initializeEnemyTable() {
 	const princesses = ENEMY_DATA.filter(x => x.type[0] === 1);
 	dispData = dispData.concat(princesses.sort((a, b) => a.id > b.id ? 1 : -1));
 
-	for (const enemy of dispData) {
-		let ap = 0;
-		let lbAp = 0;
-		const len = enemy.slot.length;
-		for (let i = 0; i < len; i++) {
-			const plane = ENEMY_PLANE_DATA.find(v => v.id === enemy.eqp[i]);
-			if (!plane) continue;
-			if (plane.type !== 5) ap += Math.floor(plane.antiAir * Math.sqrt(enemy.slot[i]));
-			else lbAp += Math.floor(plane.antiAir * Math.sqrt(enemy.slot[i]));
-		};
-		lbAp += ap;
-
+	for (const data of dispData) {
+		const enemy = new Enemy(data.id)
 		// ラッパー
 		const $enemyDiv = document.createElement('div');
 		$enemyDiv.className = 'enemy enemy_tr general_tr d-flex';
@@ -3197,7 +3189,7 @@ function initializeEnemyTable() {
 		// 制空値
 		const $apDiv = document.createElement('div');
 		$apDiv.className = 'ml-auto align-self-center enemy_td_ap';
-		$apDiv.textContent = lbAp > ap ? `${ap} (${lbAp})` : ap;
+		$apDiv.textContent = enemy.landBaseAirPower > enemy.airPower ? `${enemy.airPower} (${enemy.landBaseAirPower})` : enemy.airPower;
 
 		$enemyDiv.appendChild($apDiv);
 
@@ -8979,7 +8971,6 @@ function showPlaneBasicToolTip($this) {
 
 		const tmp = Object.assign({ remodel: remodel }, plane);
 		bonusAA = Plane.getBonusAntiAir(tmp.id, tmp.type, tmp.remodel, tmp.antiAir);
-		usedRemodelValue = tmp.remodel;
 	}
 	const actualAA = plane.antiAir + bonusAA;
 	const nmAA = actualAA + 1.5 * plane.interception;
@@ -9339,7 +9330,6 @@ function updateFleetStage2Table() {
 	const minFixedList = [];
 	let maxMinimum = 0;
 	let minMinimum = 9999;
-	let sumMinimum = 0;
 
 	// 艦隊防空値 * 陣形補正
 	const formation = FORMATION.find(v => v.id === formationId)
@@ -11498,19 +11488,8 @@ function drawManualEnemies() {
 	const table = document.getElementById('created_manual_enemies');
 	table.innerHTML = '';
 
-	for (let i = 0; i < ENEMY_DATA.length; i++) {
-		const enemy = ENEMY_DATA[i];
-		if (!UNKNOWN_ENEMY.includes(enemy.id)) continue;
-		let ap = 0;
-		let lbAp = 0;
-		const len = enemy.slot.length;
-		for (let i = 0; i < len; i++) {
-			const plane = ENEMY_PLANE_DATA.find(v => v.id === enemy.eqp[i]);
-			if (!plane) continue;
-			if (plane.type !== 5) ap += Math.floor(plane.antiAir * Math.sqrt(enemy.slot[i]));
-			else lbAp += Math.floor(plane.antiAir * Math.sqrt(enemy.slot[i]));
-		};
-		lbAp += ap;
+	for (const i of UNKNOWN_ENEMY) {
+		const enemy = new Enemy(i);
 
 		const tr = document.createElement('div');
 		tr.className = 'manual_enemy_tr general_tr d-flex px-3 py-2';
@@ -11542,27 +11521,26 @@ function drawManualEnemies() {
 		const slots = document.createElement('div');
 		slots.className = 'manual_enemy_slots';
 
-		for (let j = 0; j < enemy.slot.length; j++) {
-			const slot = enemy.slot[j];
-			const planeId = enemy.eqp[j];
-			if (!slot || !planeId) continue;
-			const plane = ENEMY_PLANE_DATA.find(v => v.id === planeId);
-			if (!plane) continue;
+		for (let j = 0; j < enemy.equipments.length; j++) {
+			const item = enemy.equipments[j];
+			const slot = enemy.rawSlots[j];
+
+			if (item.id <= 0) continue;
 
 			const slotDiv = document.createElement('div');
 			slotDiv.className = 'manual_enemy_slot d-flex';
 
 			const slotCount = document.createElement('div');
 			slotCount.className = 'mr-2 d-none d-md-inline manual_enemy_slot_count';
-			slotCount.textContent = slot;
+			slotCount.textContent = slot < 0 ? 0 : slot;
 
 			const img = document.createElement('img');
 			img.className = 'img-size-25';
-			img.src = '../img/plane/' + plane.id + '.png';
+			img.src = '../img/plane/' + item.id + '.png';
 
 			const planeName = document.createElement('div');
 			planeName.className = 'ml-1'
-			planeName.textContent = plane.name;
+			planeName.textContent = item.name;
 
 			slotDiv.appendChild(slotCount);
 			slotDiv.appendChild(img);
@@ -11574,17 +11552,17 @@ function drawManualEnemies() {
 
 		const td_ap = document.createElement('div');
 		td_ap.className = 'manual_enemy_ap_td';
-		td_ap.textContent = (ap === 0 && lbAp ? `(${lbAp})` : ap);
+		td_ap.textContent = (enemy.airPower === 0 && enemy.landBaseAirPower ? `(${enemy.landBaseAirPower})` : enemy.airPower);
 		tr.appendChild(td_ap);
 
 		const td_aaw = document.createElement('div');
 		td_aaw.className = 'manual_enemy_aaw_td';
-		td_aaw.textContent = enemy.aaw;
+		td_aaw.textContent = enemy.antiAirWeight;
 		tr.appendChild(td_aaw);
 
 		const td_aabo = document.createElement('div');
 		td_aabo.className = 'manual_enemy_aabo_td';
-		td_aabo.textContent = enemy.aabo;
+		td_aabo.textContent = enemy.antiAirBonus;
 		tr.appendChild(td_aabo);
 
 		table.appendChild(tr);
@@ -11609,8 +11587,11 @@ function manul_enemy_Clicked($this) {
 		setEnemyPlaneCombobox(enemy);
 
 		for (let i = 0; i < enemy.slot.length; i++) {
-			document.getElementsByClassName('enemy_slot')[i].value = enemy.slot[i];
-			document.getElementsByClassName('enemy_planes')[i].value = enemy.eqp[i];
+			if (i >= 4) {
+				break;
+			}
+			document.getElementsByClassName('enemy_slot')[i].value = enemy.slot[i] < 0 ? 0 : enemy.slot[i];
+			document.getElementsByClassName('enemy_planes')[i].value = enemy.eqp[i] < 0 ? 0 : enemy.eqp[i];
 		}
 		document.getElementById('manual_aa').value = enemy.aa;
 	}
@@ -11738,9 +11719,18 @@ function commit_enemy_Clicked() {
 			const slot = castInt(parent.getElementsByClassName('enemy_slot')[i].value);
 			const planeId = castInt(parent.getElementsByClassName('enemy_planes')[i].value);
 
-			if (!slot || !planeId) continue;
-			enemy.slot.push(slot);
-			enemy.eqp.push(planeId);
+			// 装備かチェック
+			const item = ENEMY_PLANE_DATA.find(v => v.id === planeId);
+			if (item) {
+				// 装備と搭載数を格納 機体じゃないなら搭載数は0
+				enemy.slot.push(item.type < 1000 ? slot : 0);
+				enemy.eqp.push(item.id);
+			}
+			else {
+				// 不正な値
+				enemy.slot.push(-1);
+				enemy.eqp.push(-1);
+			}
 		}
 
 		let manualEnemies = loadLocalStorage('manual_enemies');
@@ -12890,7 +12880,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on({
 		mouseenter: function () {
 			const $this = $(this);
-			timer = setTimeout(function () { showPlaneBasicToolTip($this, true); }, 500);
+			timer = setTimeout(function () { showPlaneBasicToolTip($this); }, 500);
 		},
 		mouseleave: function () {
 			if (timer) clearTimeout(timer);
