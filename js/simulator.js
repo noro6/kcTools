@@ -535,10 +535,10 @@ class Plane {
 			}
 
 			// 出撃コスト加算
-			const isLbAtaccker = [101, -101].includes(this.type);
-			this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : this.type === 105 ? 2.0 : 1.0));
-			this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : this.type === 105 ? this.slot * 2 : Math.ceil(this.slot * 0.6);
-			this.bauxite = this.cost * (this.isRecon ? 4 : this.type === 105 ? 9 : 18);
+			const isLbAtaccker = LB_ATTACKERS.includes(this.type);
+			this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : this.type === 53 ? 2.0 : 1.0));
+			this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : this.type === 53 ? this.slot * 2 : Math.ceil(this.slot * 0.6);
+			this.bauxite = this.cost * (this.isRecon ? 4 : this.type === 53 ? 9 : 18);
 			this.steel = this.type === 9 ? Math.round(this.slot * this.cost * 0.2) : 0;
 
 			// 補給時制空値
@@ -648,11 +648,11 @@ class Plane {
 			aa = 0.2 * remodel;
 		}
 		// 艦爆
-		else if (type === 3 && prevAntiAir > 2 && id !== 316) {
+		else if (type === 7 && prevAntiAir > 2 && id !== 316) {
 			aa = 0.25 * remodel;
 		}
 		// 陸攻
-		else if (type === 101 || type === 105) {
+		else if (LB_ATTACKERS.includes(type)) {
 			aa = 0.5 * Math.sqrt(remodel);
 		}
 		return aa;
@@ -669,11 +669,11 @@ class Plane {
 	static getBonusTorpedo(type, remodel) {
 		let bonus = 0;
 		// 艦攻
-		if (type === 2 || type === -2) {
+		if (type === 8) {
 			bonus = 0.2 * remodel;
 		}
 		// 陸攻 重爆
-		else if (type === 101 || type === 105) {
+		else if (LB_ATTACKERS.includes(type)) {
 			bonus = 0.7 * Math.sqrt(remodel);
 		}
 		return bonus;
@@ -691,11 +691,11 @@ class Plane {
 	static getBonusBomber(type, remodel, antiAir) {
 		let bonus = 0;
 		// 艦爆
-		if (type === 3 && antiAir <= 2) {
+		if (type === 7 && antiAir <= 2) {
 			bonus = 0.2 * remodel;
 		}
 		// 水爆
-		else if (type === 6) {
+		else if (type === 11) {
 			bonus = 0.2 * remodel;
 		}
 		return bonus;
@@ -844,7 +844,7 @@ class LandBasePlane extends Plane {
 			this.slot = 4;
 			this.fullSlot = 4;
 		}
-		else if (this.type === 105 && slot > 9) {
+		else if (this.type === 53 && slot > 9) {
 			// 重爆機は9機以下
 			this.slot = 9;
 			this.fullSlot = 9;
@@ -1416,11 +1416,16 @@ function getPlanes(type) {
 function getPlanesForIcon(type) {
 	let planes = [];
 	if (type === 0) planes = basicSortedPlanes.concat();
-	else if (type === 3) planes = PLANE_DATA.filter(v => v.type === 3 || v.type === 9);
-	else if (type === 4) planes = PLANE_DATA.filter(v => v.type === 4 || v.type === 104);
-	else if (type === 5) planes = PLANE_DATA.filter(v => [5, 6, 7, 8].includes(v.type));
-	else if (type === 101) planes = PLANE_DATA.filter(v => [101, -101, 105].includes(v.type));
-	else planes = PLANE_DATA.filter(v => Math.abs(v.type) === Math.abs(castInt(type)));
+	// 艦爆 & 噴式機
+	else if (type === 7) planes = PLANE_DATA.filter(v => v.type === 7 || v.type === 57);
+	// 偵察機
+	else if (type === 9) planes = PLANE_DATA.filter(v => v.type === 9 || v.type === 49);
+	// 水上機
+	else if (type === 10) planes = PLANE_DATA.filter(v => SP_PLANE_TYPE.includes(v.type));
+	// 陸攻
+	else if (type === 47) planes = PLANE_DATA.filter(v => [47, 53].includes(v.type));
+	// その他
+	else planes = PLANE_DATA.filter(v => v.type === type);
 	return planes;
 }
 
@@ -1430,7 +1435,7 @@ function getPlanesForIcon(type) {
  * @returns {string} cssクラス名
  */
 function getPlaneCss(typeCd) {
-	const typeData = PLANE_TYPE.find(v => v.id === castInt(typeCd));
+	const typeData = ITEM_ICON_TYPE.find(v => v.id === castInt(typeCd));
 	return typeData ? typeData.css : '';
 }
 
@@ -1565,10 +1570,10 @@ function initialize(callback) {
 	let text = '';
 
 	// カテゴリのプリロード
-	for (let i = 0; i < PLANE_TYPE.length; i++) {
+	for (let i = 0; i < ITEM_ICON_TYPE.length; i++) {
+		const id = ITEM_ICON_TYPE[i].id;
 		const img = new Image();
-		const id = PLANE_TYPE[i].id;
-		img.src = '../img/type/type' + id + '.png';
+		img.src = '../img/type/itype' + id + '.png';
 		IMAGES["type" + id] = img;
 	}
 
@@ -1586,7 +1591,7 @@ function initialize(callback) {
 	}
 
 	// 機体カテゴリ初期化
-	const planeTypes = PLANE_TYPE.filter(v => v.id > 0).map(v => v.id);
+	const planeTypes = PLANE_TYPE.filter(v => v > 0);
 	setPlaneTypeIconSelect(document.getElementById('plane_type_select'), planeTypes);
 	setPlaneType(document.getElementById('stock_type_select'), planeTypes);
 	setPlaneTypeIconSelect(document.getElementById('draggable_plane_type_select'), planeTypes, true);
@@ -1704,7 +1709,7 @@ function initialize(callback) {
 
 	// 詳細設定 初期熟練度欄複製
 	text = $('#init_prof_parent').html();
-	const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
+	const types = ITEM_API_TYPE.filter(v => PLANE_TYPE.includes(v.id) && v.id !== 49);
 	for (const type of types) {
 		$('#init_prof_parent').append(text);
 		const $last = $('#init_prof_parent').find('.type_name:last');
@@ -1874,36 +1879,36 @@ function setPlaneType(element, array, withoutAll = false) {
 	}
 
 	// 陸上機判定
-	if (isContain(array, [100, 101, 102, 103, 104, 105])) {
+	if (isContain(array, LB_PLANE_TYPE)) {
 		const opt = document.createElement('optgroup');
 		opt.label = '陸上機';
 		opt.className = 'optg_lb';
 		element.appendChild(opt);
 	}
 	// 艦上機判定
-	if (isContain(array, [1, 2, 3, 4, 9])) {
+	if (isContain(array, CB_PLANE_TYPE)) {
 		const opt = document.createElement('optgroup');
 		opt.label = '艦上機';
 		opt.className = 'optg_cb';
 		element.appendChild(opt);
 	}
 	// 水上機判定
-	if (isContain(array, [5, 6, 7, 8])) {
+	if (isContain(array, SP_PLANE_TYPE)) {
 		const opt = document.createElement('optgroup');
 		opt.label = '水上機';
 		opt.className = 'optg_sp';
 		element.appendChild(opt);
 	}
-	for (const v of PLANE_TYPE) {
+	for (const v of ITEM_API_TYPE) {
 		if (array.includes(v.id)) {
 			const opt = document.createElement('option');
 			opt.value = v.id;
 			opt.textContent = v.name;
 
-			if ([1, 2, 3, 4, 9].includes(v.id)) {
+			if (CB_PLANE_TYPE.includes(v.id)) {
 				element.getElementsByClassName('optg_cb')[0].appendChild(opt);
 			}
-			else if ([5, 6, 7, 8].includes(v.id)) {
+			else if (SP_PLANE_TYPE.includes(v.id)) {
 				element.getElementsByClassName('optg_sp')[0].appendChild(opt);
 			}
 			else {
@@ -1930,7 +1935,7 @@ function setPlaneTypeIconSelect(element, array, withoutAll = false) {
 	}
 
 	const fragment = document.createDocumentFragment();
-	const types = PLANE_TYPE.filter(v => ![6, 7, 8, 9, 104, 105].includes(v.id));
+	const types = ITEM_API_TYPE.filter(v => PLANE_TYPE.includes(v.id) && ![11, 41, 45, 49, 53, 57].includes(v.id));
 
 	const li = document.createElement('li');
 	li.className = 'nav-item';
@@ -2047,7 +2052,7 @@ function setLBPlaneDiv($div, lbPlane = { id: 0, slot: 0, remodel: 0 }) {
 	let maxSlot = 18;
 	if (result && plane) {
 		if (RECONNAISSANCES.includes(plane.type)) maxSlot = 4;
-		else if (plane.type === 105) maxSlot = 9;
+		else if (plane.type === 53) maxSlot = 9;
 	}
 	$div.find('.slot_input').attr('max', maxSlot);
 	$div.find('.slot_range').attr('max', maxSlot);
@@ -2101,11 +2106,11 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 		}
 	}
 
-	$div.removeClass(getPlaneCss($div[0].dataset.type)).addClass(getPlaneCss(plane.type));
+	$div.removeClass(getPlaneCss($div[0].dataset.type)).addClass(getPlaneCss(plane.itype));
 	$div[0].dataset.planeid = plane.id;
-	$div[0].dataset.type = plane.type;
+	$div[0].dataset.type = plane.itype;
 	$div.find('.plane_name_span').text(plane.abbr ? plane.abbr : plane.name).attr('title', plane.abbr ? plane.name : '');
-	$div.find('.plane_img').attr('src', `../img/type/type${plane.type}.png`).attr('alt', plane.type);
+	$div.find('.plane_img').attr('src', `../img/type/itype${plane.itype}.png`).attr('alt', plane.type);
 	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
 	$div.find('.plane_name').addClass('drag_handle');
 	$div.find('.btn_remove_plane').removeClass('opacity0');
@@ -2425,7 +2430,7 @@ function createPlaneTable(planes) {
 		const ctx = cvs.getContext('2d');
 		cvs.width = imgWidth;
 		cvs.height = imgHeight;
-		ctx.drawImage(IMAGES['type' + plane.type], 0, 0, imgWidth, imgHeight);
+		ctx.drawImage(IMAGES['type' + plane.itype], 0, 0, imgWidth, imgHeight);
 
 		// 機体名
 		const $nameDiv = document.createElement('div');
@@ -2466,7 +2471,7 @@ function createPlaneTable(planes) {
 
 			const $type = document.createElement('div');
 			$type.className = 'font_size_12 font_color_half align-self-center';
-			$type.textContent = PLANE_TYPE.find(v => v.id === plane.type).name;
+			$type.textContent = ITEM_API_TYPE.find(v => v.id === plane.type).name;
 
 			const $typeLine = document.createElement('div');
 			$typeLine.className = 'flex-grow-1 border-bottom align-self-center mx-2';
@@ -2641,7 +2646,7 @@ function createDraggablePlaneTable($this = null) {
 		const ctx = cvs.getContext('2d');
 		cvs.width = imgWidth;
 		cvs.height = imgHeight;
-		ctx.drawImage(IMAGES['type' + plane.type], 0, 0, imgWidth, imgHeight);
+		ctx.drawImage(IMAGES['type' + plane.itype], 0, 0, imgWidth, imgHeight);
 
 		// 機体名
 		const $nameDiv = document.createElement('div');
@@ -2822,7 +2827,7 @@ function setPlaneStockTable() {
 		const ctx = cvs.getContext('2d');
 		cvs.width = imgWidth;
 		cvs.height = imgHeight;
-		ctx.drawImage(IMAGES['type' + plane.type], 0, 0, imgWidth, imgHeight);
+		ctx.drawImage(IMAGES['type' + plane.itype], 0, 0, imgWidth, imgHeight);
 
 		// 機体名
 		const $name = document.createElement('div');
@@ -5494,13 +5499,13 @@ function createFleetInstance(updateDisplay = true) {
 			}
 
 			// 対地判定
-			if (shipInstance.taichi && plane.type === 3 && !TAICHI.includes(plane.id)) {
+			if (shipInstance.taichi && plane.type === 7 && !TAICHI.includes(plane.id)) {
 				// 対地不可
 				shipInstance.taichi = plane.slot === 0;
 			}
 
 			// ジェット機持ちかどうか
-			if (!fleet.hasJet && plane.type === 9) {
+			if (!fleet.hasJet && plane.type === 57) {
 				fleet.hasJet = true;
 			}
 
@@ -6379,25 +6384,24 @@ function getLandBasePower(id, slot, remodel) {
 	// ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)　そのた0
 	let adj = 0;
 	switch (type) {
-		case 2:
+		case 8:
 			fire = Plane.getBonusTorpedo(type, remodel) + plane.torpedo;
 			adj = 1.0;
 			break;
-		case 3:
+		case 7:
 			fire = Plane.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
 			adj = 1.0;
 			break;
-		case 6:
+		case 11:
 			fire = Plane.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
 			adj = 1.0;
 			break;
-		case 9:
+		case 57:
 			fire = Plane.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
 			adj = 0.7071;
 			break;
-		case 101:
-		case -101:
-		case 105:
+		case 47:
+		case 53:
 			fire = Plane.getBonusTorpedo(type, remodel) + plane.torpedo;
 			adj = 0.8;
 			break;
@@ -6408,7 +6412,7 @@ function getLandBasePower(id, slot, remodel) {
 	// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
 	const p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
 	// 陸攻補正
-	if (type === 101 || type === 105) {
+	if (type === 47) {
 		return 1.8 * p;
 	}
 	else {
@@ -7536,11 +7540,11 @@ function autoExpandNormal() {
 			// 半径足切り
 			if (plane.radius < minRange) continue;
 			// 対潜哨戒機 大型陸上機足切り
-			if (plane.type === -101 || plane.type === 105) continue;
+			if (plane.itype === 47 || plane.type === 53) continue;
 			// 艦戦非許容時艦戦足切り
 			if (!allowFighter && Math.abs(plane.type) === 1) continue;
 			// カテゴリ毎に分けて格納(艦戦系は合同)
-			const typeName = 'type' + Math.abs(FIGHTERS.includes(plane.type) ? 1 : plane.type);
+			const typeName = 'type' + Math.abs(FIGHTERS.includes(plane.type) ? 6 : plane.type);
 			if (!planes.hasOwnProperty(typeName)) planes[typeName] = [];
 
 			// 在庫一斉追加
@@ -7562,15 +7566,15 @@ function autoExpandNormal() {
 		// 優先度ソート
 		Object.keys(planes).forEach((key) => {
 			// 艦戦系は出撃時対空値 → 半径ソート
-			if (key === 'type1') {
+			if (key === 'type6') {
 				planes[key].sort((a, b) => { return a.antiAir === b.antiAir ? b.radius - a.radius : b.antiAir - a.antiAir; });
 			}
 			// 攻撃機系は雷装　→　対空ソート
-			else if (key === 'type2') {
+			else if (key === 'type8') {
 				planes[key].sort((a, b) => { return a.torpedo === b.torpedo ? b.radius - a.radius : b.torpedo - a.torpedo; });
 			}
 			// 陸攻は34型 → 雷装 → 対空ソート
-			else if (key === 'type101') {
+			else if (key === 'type47') {
 				planes[key].sort((a, b) => {
 					if (a.id === 186 && b.id === 186) return b.antiAir - a.antiAir;
 					else if (a.id === 186) return -1;
@@ -7579,11 +7583,11 @@ function autoExpandNormal() {
 				});
 			}
 			// 爆撃機系は爆装　→　対空ソート
-			else if (['type3', 'type6'].includes(key)) {
+			else if (['type7', 'type11'].includes(key)) {
 				planes[key].sort((a, b) => { return a.bomber === b.bomber ? b.antiAir - a.antiAir : b.bomber - a.bomber; });
 			}
 			// 偵察機系は偵察　→　対空ソート
-			else if (['type4', 'type5', 'type8', 'type104'].includes(key)) {
+			else if (['type9', 'type10', 'type41', 'type49'].includes(key)) {
 				planes[key].sort((a, b) => { return a.scout === b.scout ? b.antiAir - a.antiAir : b.scout - a.scout; });
 			}
 		});
@@ -7623,9 +7627,9 @@ function autoFleetExpand(planeStock) {
 		if (getArraySum(stock.num) <= 0) continue;
 		const plane = PLANE_DATA.find(v => v.id === stock.id);
 		// 基地機体足切り
-		if (plane.type > 100) continue;
+		if (!LB_PLANE_TYPE.includes(plane.type)) continue;
 		// カテゴリ毎に分けて格納(艦戦系は合同)
-		const typeName = `type${Math.abs(FIGHTERS.includes(plane.type) ? 1 : plane.type)}`;
+		const typeName = `type${Math.abs(FIGHTERS.includes(plane.type) ? 6 : plane.type)}`;
 		if (!planes.hasOwnProperty(typeName)) planes[typeName] = [];
 
 		// 在庫一斉追加
@@ -7649,15 +7653,15 @@ function autoFleetExpand(planeStock) {
 	// 優先度ソート
 	Object.keys(planes).forEach((key) => {
 		// 艦戦系は対空値ソート
-		if (key === 'type1') {
+		if (key === 'type6') {
 			planes[key].sort((a, b) => b.antiAir - a.antiAir);
 		}
 		// 艦攻系は雷装値ソート
-		else if (key === 'type2') {
+		else if (key === 'type8') {
 			planes[key].sort((a, b) => a.torpedo === b.torpedo ? b.antiAir - a.antiAir : b.torpedo - a.torpedo);
 		}
 		// 爆装系は回避 → 爆装値ソート
-		else if (['type3', 'type6'].includes(key)) {
+		else if (['type7', 'type57'].includes(key)) {
 			planes[key].sort((a, b) => a.avoid === b.avoid ? b.bomber - a.bomber : b.avoid - a.avoid);
 		}
 	});
@@ -7847,7 +7851,7 @@ function autoLandBaseExpand(planes) {
 	const destAp = castInt($('#dest_ap').val());
 
 	// 基地航空隊の攻撃機優先順位
-	const atackers = [101, 105, 2, 3, 6, 9];
+	const atackers = [47, 53, 8, 7, 11, 57];
 	// スロット
 	const equipList = [
 		new LandBasePlane(0),
@@ -8746,6 +8750,9 @@ function profSelect_Shown($this) {
  */
 function proficiency_Changed($this, cancelCalculate = false) {
 	const $orig = $this.find('.prof_opt');
+	if (!$orig.length) {
+		return;
+	}
 	const $targetSelect = $this.parent().prev();
 	const prof = $orig[0].dataset.prof;
 	$targetSelect.attr('src', $orig.attr('src')).attr('alt', $orig.attr('alt'));
@@ -9961,9 +9968,12 @@ function plane_type_select_Changed($this = null) {
 	$('#plane_type_select').find('.nav-link:not(.disabled)').each((i, e) => {
 		const typeId = castInt($(e)[0].dataset.type);
 		dispType.push(typeId);
-		if (typeId === 3) dispType.push(9);
-		else if (typeId === 4) dispType.push(104);
-		else if (typeId === 5) dispType = dispType.concat([6, 7, 8]);
+		// 艦爆カテゴリに噴式機を追加
+		if (typeId === 7) dispType.push(57);
+		// 偵察機カテゴリに陸偵を追加
+		else if (typeId === 9) dispType.push(49);
+		// 水上機カテゴリに水上機系全て追加
+		else if (typeId === 10) dispType = SP_PLANE_TYPE.concat();
 	});
 
 	// 特定の艦娘が選ばれている場合の調整
@@ -10014,7 +10024,7 @@ function plane_type_select_Changed($this = null) {
 	}
 	else if ($target && $target.attr('class').includes('ship_plane')) {
 		// 艦娘だけど自由
-		org = org.filter(v => v.type !== 104);
+		org = org.filter(v => v.type !== 49);
 		org = org.filter(v => dispType.includes(Math.abs(v.type)));
 	}
 
@@ -11672,7 +11682,7 @@ function setEnemyPlaneCombobox(enemy) {
 			prevType = type;
 			optgroup = document.createElement('optgroup');
 
-			let typeObj = PLANE_TYPE.find(v => v.id === type);
+			let typeObj = ITEM_API_TYPE.find(v => v.id === type);
 			if (typeObj) {
 				optgroup.label = typeObj.name;
 			}
