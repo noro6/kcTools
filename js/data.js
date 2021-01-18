@@ -1184,7 +1184,7 @@ const RANGES = [
 ];
 
 // 艦種毎装備可能カテゴリ(最低限)
-const LINK_SHIP_EQUIPMENT = [
+const LINK_SHIP_ITEM = [
 	{ type: 11, e_type: [1, 2, 3, 4] },
 	{ type: 18, e_type: [1, 2, 3, 4] },
 	{ type: 7, e_type: [1, 2, 3, 4] },
@@ -1202,74 +1202,74 @@ const LINK_SHIP_EQUIPMENT = [
 ];
 
 // 特定の艦娘が特別に装備できるやつ
-const SPECIAL_LINK_SHIP_EQUIPMENT = [
+const SPECIAL_LINK_SHIP_ITEM = [
 	// 速吸改に 艦攻
-	{ shipId: 1432, equipmentTypes: [2], equipmentIds: [] },
+	{ shipId: 1432, itemTypes: [2], itemIDs: [] },
 	// 秋津洲(改)に 大型飛行艇
-	{ shipId: 245, equipmentTypes: [8], equipmentIds: [] },
-	{ shipId: 250, equipmentTypes: [8], equipmentIds: [] },
+	{ shipId: 245, itemTypes: [8], itemIDs: [] },
+	{ shipId: 250, itemTypes: [8], itemIDs: [] },
 	// 神威改母に 大型飛行艇
-	{ shipId: 300, equipmentTypes: [8], equipmentIds: [] },
+	{ shipId: 300, itemTypes: [8], itemIDs: [] },
 	// 日進改以降に 大型飛行艇
-	{ shipId: 1490, equipmentTypes: [8], equipmentIds: [] },
-	{ shipId: 386, equipmentTypes: [8], equipmentIds: [] },
+	{ shipId: 1490, itemTypes: [8], itemIDs: [] },
+	{ shipId: 386, itemTypes: [8], itemIDs: [] },
 	// 装甲空母に 試製景雲
-	{ shipId: 153, equipmentTypes: [], equipmentIds: [151] },
-	{ shipId: 156, equipmentTypes: [], equipmentIds: [151] },
-	{ shipId: 350, equipmentTypes: [], equipmentIds: [151] },
+	{ shipId: 153, itemTypes: [], itemIDs: [151] },
+	{ shipId: 156, itemTypes: [], itemIDs: [151] },
+	{ shipId: 350, itemTypes: [], itemIDs: [151] },
 	// 翔鶴型改二甲に 噴式機
-	{ shipId: 266, equipmentTypes: [9], equipmentIds: [151] },
-	{ shipId: 267, equipmentTypes: [9], equipmentIds: [151] },
+	{ shipId: 266, itemTypes: [9], itemIDs: [151] },
+	{ shipId: 267, itemTypes: [9], itemIDs: [151] },
 	// 加賀改二戊に 噴式機
-	{ shipId: 446, equipmentTypes: [9], equipmentIds: [151] },
+	{ shipId: 446, itemTypes: [9], itemIDs: [151] },
 	// 伊勢型改二に 艦戦 艦爆 艦偵
-	{ shipId: 353, equipmentTypes: [1, 3, 4], equipmentIds: [] },
-	{ shipId: 354, equipmentTypes: [1, 3, 4], equipmentIds: [] },
+	{ shipId: 353, itemTypes: [1, 3, 4], itemIDs: [] },
+	{ shipId: 354, itemTypes: [1, 3, 4], itemIDs: [] },
 	// 長門型改以降に 水戦
-	{ shipId: 341, equipmentTypes: [7], equipmentIds: [] },
-	{ shipId: 373, equipmentTypes: [7], equipmentIds: [] },
-	{ shipId: 1375, equipmentTypes: [7], equipmentIds: [] },
-	{ shipId: 1376, equipmentTypes: [7], equipmentIds: [] },
+	{ shipId: 341, itemTypes: [7], itemIDs: [] },
+	{ shipId: 373, itemTypes: [7], itemIDs: [] },
+	{ shipId: 1375, itemTypes: [7], itemIDs: [] },
+	{ shipId: 1376, itemTypes: [7], itemIDs: [] },
 	// 大和型改以降に 水戦
-	{ shipId: 136, equipmentTypes: [7], equipmentIds: [] },
-	{ shipId: 148, equipmentTypes: [7], equipmentIds: [] },
-	{ shipId: 346, equipmentTypes: [7], equipmentIds: [] },
+	{ shipId: 136, itemTypes: [7], itemIDs: [] },
+	{ shipId: 148, itemTypes: [7], itemIDs: [] },
+	{ shipId: 346, itemTypes: [7], itemIDs: [] },
 	// イタリア戦艦改に 水爆 水戦
-	{ shipId: 246, equipmentTypes: [6, 7], equipmentIds: [] },
-	{ shipId: 247, equipmentTypes: [6, 7], equipmentIds: [] },
+	{ shipId: 246, itemTypes: [6, 7], itemIDs: [] },
+	{ shipId: 247, itemTypes: [6, 7], itemIDs: [] },
 	// イタリア重巡改以降に 水爆 水戦
-	{ shipId: 1438, equipmentTypes: [6, 7], equipmentIds: [] },
-	{ shipId: 1441, equipmentTypes: [6, 7], equipmentIds: [] },
-	{ shipId: 296, equipmentTypes: [6, 7], equipmentIds: [] },
+	{ shipId: 1438, itemTypes: [6, 7], itemIDs: [] },
+	{ shipId: 1441, itemTypes: [6, 7], itemIDs: [] },
+	{ shipId: 296, itemTypes: [6, 7], itemIDs: [] },
 	// 金剛改二丙に 水爆
-	{ shipId: 391, equipmentTypes: [6], equipmentIds: [] },
+	{ shipId: 391, itemTypes: [6], itemIDs: [] },
 	// 比叡改二丙に 水戦
-	{ shipId: 392, equipmentTypes: [7], equipmentIds: [] },
+	{ shipId: 392, itemTypes: [7], itemIDs: [] },
 	// Richelieuに Late298B
-	{ shipId: 1472, equipmentTypes: [], equipmentIds: [194] },
+	{ shipId: 1472, itemTypes: [], itemIDs: [194] },
 	// 由良改二に 水爆 水戦
-	{ shipId: 288, equipmentTypes: [6, 7], equipmentIds: [] },
+	{ shipId: 288, itemTypes: [6, 7], itemIDs: [] },
 	// 多摩改二に 水爆 水戦
-	{ shipId: 347, equipmentTypes: [6, 7], equipmentIds: [] },
+	{ shipId: 347, itemTypes: [6, 7], itemIDs: [] },
 	// 球磨改二に 水爆 水戦
-	{ shipId: 452, equipmentTypes: [6, 7], equipmentIds: [] },
+	{ shipId: 452, itemTypes: [6, 7], itemIDs: [] },
 	// 阿賀野型改に 水爆
-	{ shipId: 1401, equipmentTypes: [6], equipmentIds: [] },
-	{ shipId: 1402, equipmentTypes: [6], equipmentIds: [] },
-	{ shipId: 1403, equipmentTypes: [6], equipmentIds: [] },
-	{ shipId: 1410, equipmentTypes: [6], equipmentIds: [] },
+	{ shipId: 1401, itemTypes: [6], itemIDs: [] },
+	{ shipId: 1402, itemTypes: [6], itemIDs: [] },
+	{ shipId: 1403, itemTypes: [6], itemIDs: [] },
+	{ shipId: 1410, itemTypes: [6], itemIDs: [] },
 	// Gotlandに 水爆
-	{ shipId: 374, equipmentTypes: [6], equipmentIds: [] },
-	{ shipId: 379, equipmentTypes: [6], equipmentIds: [] },
-	{ shipId: 430, equipmentTypes: [6], equipmentIds: [] },
+	{ shipId: 374, itemTypes: [6], itemIDs: [] },
+	{ shipId: 379, itemTypes: [6], itemIDs: [] },
+	{ shipId: 430, itemTypes: [6], itemIDs: [] },
 	// あきつ丸に 艦戦
-	{ shipId: 166, equipmentTypes: [1], equipmentIds: [] },
+	{ shipId: 166, itemTypes: [1], itemIDs: [] },
 	// 神州丸に 水戦 水偵
-	{ shipId: 421, equipmentTypes: [5, 7], equipmentIds: [] },
+	{ shipId: 421, itemTypes: [5, 7], itemIDs: [] },
 	// 神州丸改に 水戦 水偵 水爆
-	{ shipId: 426, equipmentTypes: [5, 6, 7], equipmentIds: [] },
+	{ shipId: 426, itemTypes: [5, 6, 7], itemIDs: [] },
 	// 迅鯨改に 水爆
-	{ shipId: 439, equipmentTypes: [6], equipmentIds: [] },
+	{ shipId: 439, itemTypes: [6], itemIDs: [] },
 ];
 
 /** デフォ機体プリセット */

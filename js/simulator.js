@@ -1489,24 +1489,24 @@ function checkInvalidPlane(shipID, plane) {
 	if (shipID === 0 && Math.abs(plane.type) > 100) return false;
 	else if (shipID === 0) return true;
 	const ship = SHIP_DATA.find(v => v.id === shipID);
-	const basicCanEquip = LINK_SHIP_EQUIPMENT.find(v => v.type === ship.type);
-	const special = SPECIAL_LINK_SHIP_EQUIPMENT.find(v => v.shipId === ship.id);
+	const basicCanEquip = LINK_SHIP_ITEM.find(v => v.type === ship.type);
+	const special = SPECIAL_LINK_SHIP_ITEM.find(v => v.shipId === ship.id);
 	let canEquip = [];
 	if (basicCanEquip) {
 		for (const v of basicCanEquip.e_type) canEquip.push(v);
-		if (special) for (const i of special.equipmentTypes) canEquip.push(i);
+		if (special) for (const i of special.itemTypes) canEquip.push(i);
 	}
 
 	// 基本装備可能リストにない場合
 	if (!canEquip.includes(Math.abs(plane.type))) {
 		// 敗者復活 (特別装備可能idに引っかかっていないか)
-		return special && special.equipmentIds.includes(plane.id);
+		return special && special.itemIDs.includes(plane.id);
 	}
 
 	// 試製景雲チェック
 	if (plane.id === 151) {
 		if (!special) return false;
-		return special.equipmentIds.includes(plane.id);
+		return special.itemIDs.includes(plane.id);
 	}
 
 	return true;
@@ -5975,7 +5975,7 @@ function updateEnemyFleetInfo(updateDisplay = true) {
 		const formation = FORMATION.find(v => v.id === formationId);
 		const aj1 = formation ? formation.correction : 1.0;
 
-		battle.formation = formation.id;
+		battle.formation = formationId;
 		battle.createStage2Table();
 		battleData.battles.push(battle);
 
@@ -6498,6 +6498,7 @@ function rateCalculate() {
 		defEnemyAp = battleInfo[0].getAirPower();
 	}
 
+	// メイン
 	for (let count = 0; count < maxCount; count++) {
 
 		// 道中含めてブン回し
@@ -6505,8 +6506,10 @@ function rateCalculate() {
 			const thisBattleInfo = battleInfo[battle];
 			const enemies = thisBattleInfo.enemies;
 
-			// 基地戦闘
-			calculateLandBase(landBaseData, thisBattleInfo, battle);
+			let needSupply = false;
+
+			// 基地戦闘 trueが帰ってきたら補給必要
+			needSupply = calculateLandBase(landBaseData, thisBattleInfo, battle);
 
 			// 噴式強襲フェーズ
 			sumUsedSteels += doJetPhase(fleet, thisBattleInfo);
@@ -6525,7 +6528,7 @@ function rateCalculate() {
 			// 味方st1 & st2
 			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
 
-			// 表示戦闘の敵搭載数記録
+			// 表示戦闘の敵機撃墜と搭載数記録　これ以外の戦闘は本隊における撃墜計算はしない
 			if (battle === mainBattle) {
 				// 敵st1 & st2
 				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
@@ -6556,16 +6559,27 @@ function rateCalculate() {
 					index2++;
 
 					downAp += enemy.airPower;
+
+					// 補給
+					enemy.slots = enemy.fullSlots.concat();
+					enemy.airPower = enemy.fullAirPower;
+					enemy.landBaseAirPower = enemy.fullLandBaseAirPower;
 				}
+
 				enemyAps[0].push(eap);
 				enemyAps[1].push(downAp);
+
+				// 搭載数記録ついでに補給も行ったので不要
+				needSupply = false;
 			}
 
-			// 敵機補給
-			for (const enemy of enemies) {
-				enemy.slots = enemy.fullSlots.concat();
-				enemy.airPower = enemy.fullAirPower;
-				enemy.landBaseAirPower = enemy.fullLandBaseAirPower;
+			if (needSupply) {
+				// 敵機補給
+				for (const enemy of enemies) {
+					enemy.slots = enemy.fullSlots.concat();
+					enemy.airPower = enemy.fullAirPower;
+					enemy.landBaseAirPower = enemy.fullLandBaseAirPower;
+				}
 			}
 		}
 
@@ -6697,9 +6711,13 @@ function rateCalculate() {
  * @param {LandBaseAll} landBaseData 基地航空隊オブジェクト
  * @param {Battle} battleInfo 被害者の会
  * @param {number} battleIndex 戦闘番号
+ * @returns {boolean} 敵機撃墜処理が発生した場合 true
  */
 function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 	const enemyFleet = battleInfo.enemies;
+
+	// 敵機撃墜が発生したかどうか
+	let enemyShootDown = false;
 
 	for (let j = 0; j < 3; j++) {
 		const landBase = landBaseData.landBases[j];
@@ -6730,6 +6748,7 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 
 			// 敵機削り
 			shootDownEnemy(airStatusIndex, enemyFleet);
+			enemyShootDown = true;
 
 			// 派遣先が違う場合は被害を起こす
 			if (wave1 !== wave2) {
@@ -6757,6 +6776,7 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 
 			// 敵機削り
 			shootDownEnemy(airStatusIndex, enemyFleet);
+			enemyShootDown = true;
 
 			// 派遣先が違う場合は被害を起こす
 			if (wave1 !== wave2) {
@@ -6764,6 +6784,8 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 			}
 		}
 	}
+
+	return enemyShootDown;
 }
 
 /**
@@ -9947,10 +9969,10 @@ function plane_type_select_Changed($this = null) {
 	// 特定の艦娘が選ばれている場合の調整
 	if ($target && $target.attr('class').includes('ship_plane') && $target.closest('.ship_tab')[0].dataset.shipid) {
 		const ship = SHIP_DATA.find(v => v.id === castInt($target.closest('.ship_tab')[0].dataset.shipid));
-		const basicCanEquip = LINK_SHIP_EQUIPMENT.find(v => v.type === ship.type);
-		const special = SPECIAL_LINK_SHIP_EQUIPMENT.find(v => v.shipId === ship.id);
+		const basicCanEquip = LINK_SHIP_ITEM.find(v => v.type === ship.type);
+		const special = SPECIAL_LINK_SHIP_ITEM.find(v => v.shipId === ship.id);
 		dispType = basicCanEquip.e_type.concat();
-		if (special) dispType = dispType.concat(special.equipmentTypes);
+		if (special) dispType = dispType.concat(special.itemTypes);
 
 		if (!dispType || !dispType.includes(selectedType)) {
 			selectedType = 0;
@@ -9961,7 +9983,7 @@ function plane_type_select_Changed($this = null) {
 		org = org.filter(v => v.id !== 151);
 
 		// 特別装備可能な装備カテゴリ対応
-		if (special && special.equipmentTypes.length > 0) dispType = dispType.concat(special.equipmentTypes);
+		if (special && special.itemTypes.length > 0) dispType = dispType.concat(special.itemTypes);
 
 		// 重複を切る
 		dispType = dispType.filter((x, i, self) => self.indexOf(x) === i);
@@ -9971,8 +9993,8 @@ function plane_type_select_Changed($this = null) {
 		org = org.filter(v => dispType.includes(Math.abs(v.type)));
 
 		// 特別装備可能な装備対応
-		if (special && special.equipmentIds.length > 0) {
-			for (const id of special.equipmentIds) {
+		if (special && special.itemIDs.length > 0) {
+			for (const id of special.itemIDs) {
 				const plane = PLANE_DATA.find(v => v.id === id);
 				dispType.push(plane.type);
 
