@@ -31,7 +31,7 @@
 	<script defer src="../js/chart.min.js"></script>
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
-	<script defer src="../js/simulator.js"></script>
+	<script defer src="../js/simulator.min.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -933,7 +933,7 @@
 								<span class="night_contact_rate">0.0%</span>
 							</div>
 							<div class="ml-3 align-self-center btn_antiair_input no_capture">
-								<img src="../img/type/anti_air.png" class="img-size-20" alt="aa">
+								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
 								<span class="font_size_12">対空砲火設定</span>
 							</div>
 						</div>
@@ -4253,7 +4253,7 @@
 								<span id="enemy_slot_result_mode">（本隊航空戦 stage1 後）</span>
 							</div>
 							<div class="ml-auto btn_antiair_input align-self-center no_capture">
-								<img src="../img/type/anti_air.png" class="img-size-20" alt="aa">
+								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
 								<span>対空砲火設定</span>
 							</div>
 							<div class="ml-3 custom-control custom-checkbox no_capture">
@@ -4681,60 +4681,52 @@
 						</div>
 						<div class="d-flex flex-wrap" id="innerProfSetting">
 							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_1">
-								<label class="custom-control-label" for="prof120_1">艦戦</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_2">
-								<label class="custom-control-label" for="prof120_2">艦攻</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_3">
-								<label class="custom-control-label" for="prof120_3">艦爆</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_4">
-								<label class="custom-control-label" for="prof120_4">艦偵</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_5">
-								<label class="custom-control-label" for="prof120_5">水偵</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
 								<input type="checkbox" class="custom-control-input" id="prof120_6">
-								<label class="custom-control-label" for="prof120_6">水爆</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_7">
-								<label class="custom-control-label" for="prof120_7">水戦</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_9">
-								<label class="custom-control-label" for="prof120_9">噴式</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_101">
-								<label class="custom-control-label" for="prof120_101">陸攻</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_102">
-								<label class="custom-control-label" for="prof120_102">陸戦</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_103">
-								<label class="custom-control-label" for="prof120_103">局戦</label>
-							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_104">
-								<label class="custom-control-label" for="prof120_104">陸偵</label>
+								<label class="custom-control-label" for="prof120_6">艦戦</label>
 							</div>
 							<div class="custom-control custom-checkbox mr-3">
 								<input type="checkbox" class="custom-control-input" id="prof120_8">
-								<label class="custom-control-label" for="prof120_8">飛行艇</label>
+								<label class="custom-control-label" for="prof120_8">艦攻</label>
 							</div>
 							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_105">
-								<label class="custom-control-label" for="prof120_105">重爆</label>
+								<input type="checkbox" class="custom-control-input" id="prof120_7">
+								<label class="custom-control-label" for="prof120_7">艦爆</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_9">
+								<label class="custom-control-label" for="prof120_9">艦偵</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_10">
+								<label class="custom-control-label" for="prof120_10">水偵</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_11">
+								<label class="custom-control-label" for="prof120_11">水爆</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_45">
+								<label class="custom-control-label" for="prof120_45">水戦</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_57">
+								<label class="custom-control-label" for="prof120_57">噴式</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_47">
+								<label class="custom-control-label" for="prof120_47">陸攻</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_48">
+								<label class="custom-control-label" for="prof120_48">局戦 / 陸戦</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_41">
+								<label class="custom-control-label" for="prof120_41">飛行艇</label>
+							</div>
+							<div class="custom-control custom-checkbox mr-3">
+								<input type="checkbox" class="custom-control-input" id="prof120_53">
+								<label class="custom-control-label" for="prof120_53">重爆</label>
 							</div>
 						</div>
 					</div>
@@ -4757,10 +4749,10 @@
 	</div>
 
 	<div class="modal fade" id="modal_plane_select" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">機体選択</h5>
+					<h5 class="modal-title">装備選択</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body">
@@ -4863,16 +4855,21 @@
 						</div>
 					</div>
 					<div class="pb-1">
-						<ul class="nav nav-tabs" id="plane_type_select"></ul>
+						<div class="d-flex flex-wrap" id="plane_type_select"></div>
 					</div>
 					<div class="pb-1 custom_table" id="plane_table">
-						<div class="scroll_thead d-flex">
+						<div class="scroll_thead d-flex px-lg-2">
 							<div class="plane_td_type align-self-center">
-								<img class="img-size-20_lock" src="../img/type/undefined.png" alt="種">
+								<img class="img-size-25" src="../img/type/undefined.png" alt="種">
 							</div>
 							<div class="pl-2 plane_td_name align-self-center">装備名</div>
 							<div class="ml-auto plane_td_basic align-self-center">対空</div>
+							<!-- <div class="plane_td_basic align-self-center d-none d-lg-block">雷装</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">爆装</div>
+							<div class="plane_td_basic align-self-center d-none d-xl-block">命中</div> -->
 							<div class="plane_td_basic align-self-center">半径</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">コスト</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">射撃回避</div>
 						</div>
 						<div id="plane_tbody"></div>
 					</div>
@@ -4915,8 +4912,7 @@
 				</select>
 			</div>
 		</div>
-		<div class="pb-1">
-			<ul class="nav nav-tabs" id="draggable_plane_type_select"></ul>
+		<div class="p-1 d-flex flex-wrap" id="draggable_plane_type_select">
 		</div>
 		<div class="custom_table" id="draggable_plane_table">
 			<div class="scroll_thead d-flex">
