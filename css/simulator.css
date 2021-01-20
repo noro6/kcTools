@@ -674,14 +674,24 @@ input[type="text"] { font-size: 12px; }
 
 #plane_table { overflow-y: auto; }
 #plane_tbody:not(.multi_mode) { height: 50vh; }
-#plane_tbody.multi_mode { 
-  max-height: 50vh; 
+#plane_tbody.multi_mode {
+  max-height: 50vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 @media (min-width: 992px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
 @media (min-width: 1200px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
 
+.item_type.active {
+  border-color: rgb(98, 197, 255);
+  box-shadow: inset 0 0 15px rgba(98, 197, 255, 0.5), 0 0 15px rgba(98, 197, 255, 0.2);
+  text-shadow: 2px 2px 3px #fff;
+}
+.dark-theme .item_type.active {
+  border-color: #aaa;
+  box-shadow: inset 0 0 15px rgba(240, 240, 240, 0.5), 0 0 15px rgba(240, 240, 240, 0.2);
+  text-shadow: 2px 2px 3px #000;
+}
 
 .plane_tr_disabled {
   cursor: default;
@@ -700,10 +710,12 @@ input[type="text"] { font-size: 12px; }
   text-align: center;
   width: 60px;
 }
-.plane_td_name { max-width: 290px; }
+.plane_td_name { 
+  /* max-width: 290px;  */
+}
 .plane_td_stock {
   color: #ff4400;
-  font-size: 10px;
+  font-size: 11px;
 }
 .plane_td_remodel {
   color: #00c8c8;
