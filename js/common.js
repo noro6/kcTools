@@ -122,11 +122,10 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('invisibleCutin')) setting.invisibleCutin = [];
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
-		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 104);
+		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
 		// 熟練を最初からMaxにする機体カテゴリ
-		const maxLevels = [1, 4, 5, 7, 8, 102, 103];
+		const maxLevels = [6, 9, 10, 41, 45, 48];
 		for (const type of types) {
-
 			const d = { id: type.id, prof: maxLevels.includes(type.id) ? 7 : 0 };
 			setting.defaultProf.push(d);
 		}
@@ -290,6 +289,22 @@ function adaptUpdater() {
 			// 空襲被害最大プロパティを削除
 			delete setting.airRaidMax;
 		}
+
+		// ~v1.11.3.3 未満
+		if (major <= 10 || minor < 3 || (minor === 3 && patch <= 3)) {
+			// デフォルトMax熟練度を初期化　すまんでち
+			setting.defaultProf = [];
+			const types = PLANE_TYPE.filter(v => v > 0 && v !== 49);
+			// 熟練を最初からMaxにする機体カテゴリ
+			const maxLevels = [6, 9, 10, 41, 45, 48];
+			for (const type of types) {
+				const d = { id: type, prof: maxLevels.includes(type) ? 7 : 0 };
+				setting.defaultProf.push(d);
+			}
+
+			// 内部熟練度120機体初期化　すまんでち
+			setting.initialProf120 = [];
+		}
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;
@@ -403,7 +418,7 @@ function readDeckBuilder(deck) {
 						if (!i_ || !i_.hasOwnProperty("id")) return;
 
 						// マスタデータと照合
-						if (!PLANE_DATA.find(v => v.id === castInt(i_.id))) return;
+						if (!ITEM_DATA.find(v => v.id === castInt(i_.id))) return;
 
 						// スロット番号
 						const planeIndex = castInt(i.replace('i', '')) - 1;
@@ -536,7 +551,7 @@ function loadPlaneStock() {
 
 	if (!planeStock || !planeStock.length) {
 		const initStock = [];
-		for (const plane of PLANE_DATA) {
+		for (const plane of ITEM_DATA) {
 			const stock = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
 			initStock.push(stock);
 		}
@@ -545,7 +560,7 @@ function loadPlaneStock() {
 	}
 	else {
 		// 追加装備チェック
-		for (const plane of PLANE_DATA) {
+		for (const plane of ITEM_DATA) {
 			if (!planeStock.find(v => v.id === plane.id)) {
 				planeStock.push({ id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
 				saveLocalStorage('planeStock', planeStock);
