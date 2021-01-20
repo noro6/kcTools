@@ -1419,18 +1419,6 @@ function setPreCalculateTable() {
 }
 
 /**
- * 艦載機カテゴリで艦載機をフィルタし返却
- * @param {number} type カテゴリ　0の場合、全艦載機
- * @returns {object} 艦載機データ
- */
-function getPlanes(type) {
-	let planes = [];
-	if (type === 0) planes = basicSortedPlanes.concat();
-	else planes = ITEM_DATA.filter(v => v.type === castInt(type));
-	return planes;
-}
-
-/**
  * 艦載機カテゴリアイコンで艦載機をフィルタし返却
  * @param {number} type カテゴリ　0の場合、全艦載機
  * @returns {object} 艦載機データ
@@ -9920,9 +9908,8 @@ function ship_plane_DragOver($this, ui) {
 	const $original = ui.draggable.hasClass('plane_tr_draggable') ? ui.draggable : ui.draggable.closest('.ship_plane');
 	const shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
 	const planeID = castInt($original[0].dataset.planeid);
-	const type = castInt($original[0].dataset.type);
 	// 挿入先が装備不可だった場合暗くする
-	if (!checkInvalidPlane(shipID, getPlanes(type).find(v => v.id === planeID))) {
+	if (!checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === planeID))) {
 		ui.helper.stop().animate({ 'opacity': '0.2' }, 100);
 		$this.removeClass('plane_draggable_hover');
 		isOut = true;
