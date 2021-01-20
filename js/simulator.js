@@ -554,7 +554,7 @@ class Plane {
 			this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : this.type === 53 ? 2.0 : 1.0));
 			this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : this.type === 53 ? this.slot * 2 : Math.ceil(this.slot * 0.6);
 			this.bauxite = this.cost * (this.isRecon ? 4 : this.type === 53 ? 9 : 18);
-			this.steel = this.type === 9 ? Math.round(this.slot * this.cost * 0.2) : 0;
+			this.steel = this.type === 57 ? Math.round(this.slot * this.cost * 0.2) : 0;
 
 			// 補給時制空値
 			this.fullAirPower = this.airPower;
@@ -615,7 +615,7 @@ class Plane {
 			}
 		}
 		// 水爆
-		else if (type === 6) {
+		else if (type === 11) {
 			switch (level) {
 				case 2:
 					sumPower += 1;
@@ -5430,7 +5430,7 @@ function getInnerProficiency(level, type) {
  * @returns 補正倍率
  */
 function getReconnaissancesAdjust(plane, isDefence = false) {
-	// 出撃時補正
+	// 出撃時補正 陸偵
 	if (!isDefence && plane.type === 49) {
 		// 陸上偵察機補正
 		return (plane.scout === 9 ? 1.18 : plane.scout === 8 ? 1.15 : 1.00);
@@ -6243,7 +6243,8 @@ function doLandBaseJetPhase(landBase, battleInfo) {
 
 	for (let j = 0; j < landBase.planes.length; j++) {
 		const plane = landBase.planes[j];
-		if (plane.type !== 9) continue;
+		// 噴式以外は飛ばす
+		if (plane.type !== 57) continue;
 
 		// 噴式強襲st1
 		// st1 0.6掛け
@@ -6279,7 +6280,8 @@ function doJetPhase(fleet, battleInfo) {
 		const ship = fleet.ships[i];
 		for (let j = 0; j < ship.planes.length; j++) {
 			const plane = ship.planes[j];
-			if (plane.type !== 9) continue;
+			// 噴式以外は飛ばす
+			if (plane.type !== 57) continue;
 			// 鋼材のお支払い
 			steel += Math.round(plane.slot * plane.cost * 0.2);
 
@@ -6337,7 +6339,7 @@ function shootDownFriend(asIndex, fleet, battleInfo, battle) {
 			// st1撃墜 噴式の場合0.6掛け
 			const table = sTable[plane.slot][asIndex];
 			const downNumber = table[Math.floor(Math.random() * table.length)];
-			plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
+			plane.slot -= Math.floor(plane.type === 57 ? 0.6 * downNumber : downNumber);
 
 			// st2撃墜 (攻撃機のみ)
 			if (plane.isAttacker && needStage2) {
@@ -6394,7 +6396,7 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 		// st1撃墜 噴式の場合0.6掛け
 		const table = sTable[plane.slot][asIndex];
 		const downNumber = table[Math.floor(Math.random() * table.length)];
-		plane.slot -= Math.floor(plane.type === 9 ? 0.6 * downNumber : downNumber);
+		plane.slot -= Math.floor(plane.type === 57 ? 0.6 * downNumber : downNumber);
 
 		// st2撃墜
 		if (plane.isAttacker) {
@@ -7602,7 +7604,7 @@ function autoExpandNormal() {
 			// 対潜哨戒機 大型陸上機足切り
 			if (plane.itype === 47 || plane.type === 53) continue;
 			// 艦戦非許容時艦戦足切り
-			if (!allowFighter && Math.abs(plane.type) === 6) continue;
+			if (!allowFighter && plane.type === 6) continue;
 			// カテゴリ毎に分けて格納(艦戦系は合同)
 			const typeName = 'type' + (FIGHTERS.includes(plane.type) ? 6 : plane.type);
 			if (!planes.hasOwnProperty(typeName)) planes[typeName] = [];
@@ -7804,7 +7806,7 @@ function autoFleetExpand(planeStock) {
 
 			// 空母の2スロ目は艦爆を試行
 			const shipType = slotData.shipType;
-			if (allowFBA && ([1, 2, 3].includes(shipType)) && slotData.slotNo === 1) type = 3;
+			if (allowFBA && ([11, 18, 7].includes(shipType)) && slotData.slotNo === 1) type = 7;
 			for (const plane of planes['type' + type]) {
 				if (plane.stock <= 0) continue;
 				if (checkInvalidPlane(slotData.shipId, ITEM_DATA.find(v => v.id === plane.id))) {
@@ -9042,7 +9044,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 				${TAICHI.includes(plane.id) ? `<div class="col_half">対地: 可</div>` : ''}
 			</div>
 			${avoid ? `<div class="font_size_12">射撃回避: ${avoid.name} (加重: ${avoid.adj[0]} 艦防: ${avoid.adj[1].toFixed(1)})</div>` : ''}
-			${rawPlane.type === 9 ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${Math.round(plane.slot * plane.cost * 0.2)}` : ''}
+			${rawPlane.type === 57 ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${Math.round(plane.slot * plane.cost * 0.2)}` : ''}
 			${selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
 		</div>`;
 
