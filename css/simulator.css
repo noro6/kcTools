@@ -430,6 +430,10 @@ input[type="text"] { font-size: 12px; }
   transition: 0.5s;
   -ms-flex-positive: 1!important;
   flex-grow: 1!important;
+  width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .plane_name_span {
   font-size: 12px;
@@ -1000,6 +1004,9 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   font-size: 11px;
   width: 168px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 #shoot_down_table_tbody td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
 #shoot_down_table_tbody .td_plane_name { text-align: left; }
