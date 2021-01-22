@@ -3638,9 +3638,10 @@
 					<div class="d-flex w-100 ml-2 mb-2">
 						<button type="button" id="btn_world_expand"
 							class="btn btn-sm btn-primary font_size_12 align-self-center no_capture">海域マップから一括入力</button>
-						<div class="ml-2 align-self-center">進行航路：</div>
-						<input type="text" class="ml-1 form-control form-control-sm align-self-center flex-grow-1" id="route"
-							readonly>
+						<div class="ml-3 align-self-center">
+							<span class="font_color_half">進行航路: </span>
+							<span class="ml-1" id="route"></span>
+						</div>
 					</div>
 					<div class="ml-2 align-self-center">戦闘数：</div>
 					<select class="custom-select custom-select-sm align-self-center" id="battle_count">
@@ -4319,98 +4320,6 @@
 								</tr>
 							</tbody>
 						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="contents my-4 px-2 py-1 mx-auto" id="input_data">
-			<div class="my-2 d-flex flex-wrap">
-				<div class="h5 mb-0 align-self-center">
-					<span class="content_title align-middle">入力情報</span>
-				</div>
-				<div class="ml-auto r_btn btn_capture" data-toggle="tooltip" title="入力一覧を画像で保存"><i class="fas fa-camera"></i>
-				</div>
-				<div class="ml-auto r_btn d-none btn_commit_trade" data-toggle="tooltip" title="入れ替え終了"><i
-						class="fas fa-check"></i>
-				</div>
-				<div class="ml-2 r_btn btn_content_trade" data-toggle="tooltip" title="順序入れ替え"><i class="fas fa-arrows-v"></i>
-				</div>
-				<div class="ml-2 rounded-circle r_btn" data-toggle="collapse" data-target="#input_data_content"><i
-						class="fas fa-chevron-down"></i>
-				</div>
-			</div>
-			<div class="collapse show collapse_content" id="input_data_content">
-				<div class="border-top container-fluid px-0 py-0 px-lg-2 px-xl-3">
-					<div class="row">
-						<div class="col-12 col-lg-6 my-2 order-1 order-lg-2" id="lb_info">
-							<div class="mt-2 mb-1 pl-1 font_size_12">基地航空隊</div>
-							<table class="text-center w-100 info_table" id="lb_info_table">
-								<thead class="general_thead">
-									<tr>
-										<td class="info_name">航空隊</td>
-										<td>装備名</td>
-										<td class="info_slot">搭載</td>
-										<td colspan="2">制空値</td>
-										<td class="info_range">半径</td>
-										<td class="info_defAp d-none">総制空値</td>
-										<td class="info_defAp d-none">対重爆</td>
-									</tr>
-									<tr class="info_warning">
-										<td colspan="6" class="px-3 bg-transparent">全ての航空隊が待機に設定されています。</td>
-									</tr>
-								</thead>
-								<tbody>
-									<tr class="lb_info_tr slot1 d-none">
-										<td class="info_name" rowspan="4">第1基地航空隊</td>
-										<td class="info_plane">-</td>
-										<td class="info_slot"></td>
-										<td class="info_ap"></td>
-										<td class="info_sumAp" rowspan="4"></td>
-										<td class="info_range" rowspan="4"></td>
-									</tr>
-									<tr class="lb_info_tr slot2 d-none">
-										<td class="info_plane">-</td>
-										<td class="info_slot"></td>
-										<td class="info_ap"></td>
-									</tr>
-									<tr class="lb_info_tr slot3 d-none">
-										<td class="info_plane">-</td>
-										<td class="info_slot"></td>
-										<td class="info_ap"></td>
-									</tr>
-									<tr class="lb_info_tr slot4 d-none">
-										<td class="info_plane">-</td>
-										<td class="info_slot"></td>
-										<td class="info_ap"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="col-12 col-lg-6 my-2 order-2 order-lg-1" id="ship_info">
-							<div class="mt-2 mb-1 pl-1 font_size_12">艦娘</div>
-							<table class="text-center w-100 info_table" id="ship_info_table">
-								<thead class="general_thead">
-									<tr>
-										<td class="ship_info_name">艦娘名</td>
-										<td>装備名</td>
-										<td class="ship_info_slot">搭載</td>
-										<td colspan="2">制空値</td>
-										<td>総制空値</td>
-									</tr>
-									<tr class="info_warning">
-										<td colspan="6" class="px-3 bg-transparent">装備、搭載数が設定されていません。</td>
-									</tr>
-								</thead>
-								<tbody></tbody>
-							</table>
-						</div>
-					</div>
-					<div class="my-3 no_capture" id="input_summary_parent">
-						<div>掲示板等貼り付け用</div>
-						<div class="my-1">
-							<textarea class="form-control font_size_11" id="input_summary"></textarea>
-						</div>
 					</div>
 				</div>
 			</div>
