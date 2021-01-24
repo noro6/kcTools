@@ -1281,8 +1281,8 @@ input[type="text"] { font-size: 12px; }
   text-align: right;
 }
 #antiair_input_table tbody td {
-  padding-top: 0.4rem;
-  padding-bottom: 0.4rem;
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
@@ -1298,31 +1298,15 @@ input[type="text"] { font-size: 12px; }
 }
 #antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
-#antiair_cutin_setting_table {
-  height: 460px;
-  overflow-y: scroll;
-}
-#antiair_cutin_setting_table .scroll_thead {
-  padding-top: .2rem;
-  padding-bottom: .2rem;
-}
-.cutin_visible.disabled {
-  opacity: 0.3;
-}
-
 #fleet_antiair { width: 100px; }
-#fleet_antiair_base { width: 100px; }
 
-#aa_ci_setting .nav-tabs,
-#aa_ci_setting .nav-link {
-  color: #888 !important;
-  border: none !important;
+#btn_reset_cutin {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.2s;
 }
-#aa_ci_setting .nav-link:hover {
-  color: #444 !important;
-}
-.dark-theme #aa_ci_setting .nav-link:hover {
-  color: #ccc !important;
+#btn_reset_cutin:hover {
+  opacity: 1.0;
 }
 
 

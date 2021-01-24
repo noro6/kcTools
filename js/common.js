@@ -119,7 +119,6 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
-	if (!setting.hasOwnProperty('invisibleCutin')) setting.invisibleCutin = [];
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -304,6 +303,13 @@ function adaptUpdater() {
 
 			// 内部熟練度120機体初期化　すまんでち
 			setting.initialProf120 = [];
+		}
+	}
+
+	if (major <= 12) {
+		if (major <= 11) {
+			// 対空CI非表示項目設定削除
+			delete setting.invisibleCutin;
 		}
 	}
 
