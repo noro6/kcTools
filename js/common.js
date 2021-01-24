@@ -420,11 +420,22 @@ function readDeckBuilder(deck) {
 						// マスタデータと照合
 						if (!ITEM_DATA.find(v => v.id === castInt(i_.id))) return;
 
-						// スロット番号
-						const planeIndex = castInt(i.replace('i', '')) - 1;
+						// スロット番号 xは補強増設
+						let planeIndex = castInt(i.replace('i', '')) - 1;
 
-						// 装備プロパティの抽出
-						const plane = [0, 0, 0, shipData.slot[planeIndex], planeIndex];
+						let slot = 0
+						// スロット番号精査
+						if (planeIndex < -1 || planeIndex >= shipData.slot.length) {
+							// スロット番号不明もしくは限界突破してたら
+							planeIndex = -1;
+						}
+						else {
+							// 正常っぽい
+							slot = castInt(shipData.slot[planeIndex]);
+						}
+
+						// 装備プロパティの抽出 id, remodel, level, slot, スロット番号
+						const plane = [0, 0, 0, slot, planeIndex];
 						Object.keys(i_).forEach((i_key) => {
 							if (i_key === "id") plane[0] = castInt(i_[i_key]);
 							else if (i_key === "mas") plane[1] = castInt(i_[i_key]);
@@ -439,10 +450,6 @@ function readDeckBuilder(deck) {
 				fleets.push(fleet);
 			}
 		});
-
-		// マスタ管理外艦娘チェック
-		// if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
-		// else document.getElementById('duck_read_warning').classList.add('d-none');
 
 		// 第1、第2艦隊のみに絞る
 		const fleet1 = fleets.find(v => v[0] === 0)[1];

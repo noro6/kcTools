@@ -8,8 +8,6 @@ input[type="text"] { font-size: 12px; }
 
 #main { min-height: 100vh; }
 
-#modal_plane_select .modal-content { min-height: 80vh; }
-#modal_ship_select .modal-content { min-height: 80vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
 @media (min-width: 577px) { .modal-xl { max-width: 522px; } }
 @media (min-width: 992px) { .modal-xl { max-width: 800px; } }
@@ -561,7 +559,8 @@ input[type="text"] { font-size: 12px; }
   height: 28px;
   margin-left: 0.25rem;
 }
-.slot {
+.slot,
+.slot_wrench {
   cursor: pointer;
   display: table-cell;
   vertical-align: middle;
@@ -648,7 +647,6 @@ input[type="text"] { font-size: 12px; }
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */
-.search_basic{ width: 460px; }
 #plane_filter_key_select { width: 104px; }
 #plane_filter_value { width: 56px; }
 
@@ -677,21 +675,29 @@ input[type="text"] { font-size: 12px; }
 .dark-theme .toggle_display_type.selected { text-shadow: 2px 2px 3px #000;}
 
 #plane_table { overflow-y: auto; }
+
+#plane_tbody_wrap,
 #plane_tbody:not(.multi_mode) { height: 50vh; }
 #plane_tbody.multi_mode {
-  max-height: 50vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 @media (min-width: 992px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
 @media (min-width: 1200px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
 
+.ship_type {
+  opacity: 0.65;
+}
+.ship_type.active,
 .item_type.active {
+  opacity: 1;
   border-color: rgb(98, 197, 255);
   box-shadow: inset 0 0 15px rgba(98, 197, 255, 0.5), 0 0 15px rgba(98, 197, 255, 0.2);
   text-shadow: 2px 2px 3px #fff;
 }
+.dark-theme .ship_type.active,
 .dark-theme .item_type.active {
+  border-bottom: none;
   border-color: #aaa;
   box-shadow: inset 0 0 15px rgba(240, 240, 240, 0.5), 0 0 15px rgba(240, 240, 240, 0.2);
   text-shadow: 2px 2px 3px #000;
@@ -738,18 +744,27 @@ input[type="text"] { font-size: 12px; }
   艦娘選択モーダル #modal_ship_select
 -------------------------------- */
 #ship_table { overflow-y: auto; }
-#ship_tbody { max-height: 58vh; }
+
+#ship_tbody_wrap,
+#ship_tbody:not(.multi_mode) { height: 54vh; }
 #ship_tbody.multi_mode { 
-  max-height: 50vh; 
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-@media (min-width: 992px) { #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
-@media (min-width: 1200px) { #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
 .ship_td_slot {
   text-align: center;
   width: 35px;
 }
+@media (min-width: 992px) { 
+  #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; }
+  .ship_td_slot { width: 64px; }
+}
+@media (min-width: 1200px) { 
+  #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } 
+}
+
+
 .ship_td_stock {
   color: #ff4400;
   font-size: 10px;
@@ -926,63 +941,6 @@ input[type="text"] { font-size: 12px; }
   padding: 7px 4px;
 }
 .btn_remodel:hover { background-color: rgba(128, 128, 128, 0.3); }
-
-
-/* ------------------------------
-  入力情報欄 #input_data
--------------------------------- */
-.info_table {
-  font-size: 12px;
-  border-collapse: collapse;
-}
-.info_table tbody td {
-  padding: .1rem;
-  border-top:1px rgba(128, 128, 128, 0.2) solid;
-}
-.info_table .info_warning { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
-.info_table .info_name {
-  width: 20%;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table .info_plane { text-align: left; }
-.info_table .info_slot {
-  width: 10%;
-  padding: .1rem .25rem;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-}
-.info_table .info_ap {
-  width: 8%;
-  padding: .1rem .25rem;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-}
-.info_table .info_sumAp {
-  width: 8%;
-  padding: .1rem .25rem;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table .info_range {
-  width: 10%;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table .info_defAp {
-  width: 10%;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table tbody .last_slot { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
-.info_table tbody .info_fleetAp {
-  width: 72px;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom:1px rgba(128, 128, 128, 0.502) solid;
-}
-#lb_info_table tbody .slot4 td{ border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
-#input_summary {
-  height: calc( 1.4em * 15 );
-  max-height: calc( 1.4em * 20 );
-  line-height: 1.3;
-}
 
 
 /* ------------------------------
@@ -1619,6 +1577,43 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
   background-color: rgba(122, 98, 255, 0.08);
 }
 
+/* 艦載機以外 */
+.css_radar,
+.dark-theme .css_radar {
+  border: 2px rgb(255, 140, 0) solid;
+  box-shadow: inset 0 0 20px rgba(255, 140, 0, 0.25);
+}
+.css_radar:hover {
+  box-shadow: inset 0 0 20px rgba(255, 140, 0, 0.5), 0 0 20px rgba(255, 140, 0, 0.2);
+}
+.capturing .css_radar {
+  background-color: rgba(255, 140, 0, 0.08);
+}
+
+.css_sonar,
+.dark-theme .css_sonar {
+  border: 2px rgb(128, 216, 255) solid;
+  box-shadow: inset 0 0 20px rgba(128, 216, 255, 0.25);
+}
+.css_sonar:hover {
+  box-shadow: inset 0 0 20px rgba(128, 216, 255, 0.5), 0 0 20px rgba(128, 216, 255, 0.2);
+}
+.capturing .css_sonar {
+  background-color: rgba(128, 216, 255, 0.08);
+}
+
+.css_recover,
+.dark-theme .css_recover {
+  border: 2px rgb(196, 196, 196) solid;
+  box-shadow: inset 0 0 20px rgba(196, 196, 196, 0.25);
+}
+.css_recover:hover {
+  box-shadow: inset 0 0 20px rgba(196, 196, 196, 0.5), 0 0 20px rgba(196, 196, 196, 0.2);
+}
+.capturing .css_recover {
+  background-color: rgba(196, 196, 196, 0.08);
+}
+
 .shoot_table_fighter { background-color: rgba(0, 255, 64, 0.1); }
 .shoot_table_torpedo_bomber { background-color: rgba(0, 189, 252, 0.1); }
 .shoot_table_dive_bomber { background-color: rgba(255, 0, 0, 0.1); }
@@ -1629,6 +1624,10 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_lb_fighter { background-color: rgba(97, 255, 137, 0.1); }
 .shoot_table_lb_asw_aircraft { background-color: rgba(34, 104, 255, 0.1); }
 .shoot_table_cb_night_aircraft { background-color: rgba(80, 67, 255, 0.1); }
+.shoot_table_radar { background-color: rgba(255, 140, 0, 0.1)!important; }
+.shoot_table_sonar { background-color: rgba(128, 216, 255, 0.1)!important; }
+.shoot_table_recover { background-color: rgba(196, 196, 196, 0.1)!important; }
+
 .shoot_table_fighter_hover { background-color: rgba(0, 255, 64, 0.2)!important; }
 .shoot_table_torpedo_bomber_hover { background-color: rgba(0, 189, 252, 0.2)!important; }
 .shoot_table_dive_bomber_hover { background-color: rgba(255, 0, 0, 0.15)!important; }
@@ -1639,6 +1638,9 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_lb_fighter_hover { background-color: rgba(97, 255, 137, 0.2)!important; }
 .shoot_table_lb_asw_aircraft_hover { background-color: rgba(34, 104, 255, 0.2)!important; }
 .shoot_table_cb_night_aircraft_hover { background-color: rgba(80, 67, 255, 0.2)!important; }
+.shoot_table_radar_hover { background-color: rgba(255, 140, 0, 0.2)!important; }
+.shoot_table_sonar_hover { background-color: rgba(128, 216, 255, 0.2)!important; }
+.shoot_table_recover_hover { background-color: rgba(196, 196, 196, 0.2)!important; }
 .airStatus0 { background: linear-gradient(.25turn, transparent, rgba(0, 255, 0, .1), transparent); }
 .airStatus1 { background: linear-gradient(.25turn, transparent, rgba(150, 255, 0, .1), transparent); }
 .airStatus2 { background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent); }
