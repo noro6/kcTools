@@ -2206,6 +2206,9 @@ function clearShipDiv($div) {
 		if (i < 4) $this.removeClass('d-none').addClass('d-flex');
 		else $this.removeClass('d-flex').addClass('d-none');
 	});
+	// スロットは全ていったんロック解除
+	$div.find('.plane_lock').addClass('d-none');
+	$div.find('.plane_unlock').removeClass('d-none');
 }
 
 /**
@@ -7142,7 +7145,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 			let sumAlive = 0;
 			for (let j = 0; j < landBase.planes.length; j++) {
 				const plane = landBase.planes[j];
-				if (landBaseNo + 1 === landBase.baseNo && slotNo + 1 === plane.slotNo) {
+				if (landBaseNo + 1 === landBase.baseNo && slotNo === j) {
 					data.push(plane.slot);
 				}
 				sumAlive += plane.slot;
