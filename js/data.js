@@ -63,7 +63,7 @@ const ITEM_ICON_TYPE = [
 	{ id: 10, name: "水上機", css: "css_sp" },
 	{ id: 11, name: "電探", css: "css_radar" },
 	{ id: 12, name: "対空強化弾", css: "css_fighter" },
-	{ id: 13, name: "対艦強化弾", css: "" },
+	{ id: 13, name: "対艦強化弾", css: "css_ammo" },
 	{ id: 14, name: "応急修理要員", css: "css_recover" },
 	{ id: 15, name: "対空機銃", css: "css_fighter" },
 	{ id: 16, name: "高角砲", css: "css_fighter" },
@@ -521,7 +521,7 @@ const SHIP_TYPE_RE = [
 	{ id: 6, name: "航空巡洋艦" },
 	{ id: 103, name: "軽巡級" },
 	{ id: 2, name: "駆逐艦" },
-	{ id: 14, name: "潜水艦" },
+	{ id: 114, name: "潜水艦" },
 	{ id: 16, name: "水上機母艦" },
 	{ id: 117, name: "補助艦艇" },
 ];

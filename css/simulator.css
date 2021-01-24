@@ -1276,8 +1276,13 @@ input[type="text"] { font-size: 12px; }
   table-layout: fixed;
   border-collapse: collapse;
 }
+#antiair_input_table td {
+  padding-right: .5rem;
+  text-align: right;
+}
 #antiair_input_table tbody td {
-  padding: .15rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
@@ -1307,12 +1312,6 @@ input[type="text"] { font-size: 12px; }
 
 #fleet_antiair { width: 100px; }
 #fleet_antiair_base { width: 100px; }
-#import_antiair {
-  font-size: 12px;
-  overflow: hidden;
-  height: 31px;
-  resize: none;
-}
 
 #aa_ci_setting .nav-tabs,
 #aa_ci_setting .nav-link {
@@ -1614,6 +1613,18 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
   background-color: rgba(196, 196, 196, 0.08);
 }
 
+.css_ammo,
+.dark-theme .css_ammo {
+  border: 2px rgb(255, 125, 125) solid;
+  box-shadow: inset 0 0 20px rgba(255, 125, 125, 0.25);
+}
+.css_ammo:hover {
+  box-shadow: inset 0 0 20px rgba(255, 125, 125, 0.5), 0 0 20px rgba(255, 125, 125, 0.2);
+}
+.capturing .css_ammo {
+  background-color: rgba(255, 125, 125, 0.08);
+}
+
 .shoot_table_fighter { background-color: rgba(0, 255, 64, 0.1); }
 .shoot_table_torpedo_bomber { background-color: rgba(0, 189, 252, 0.1); }
 .shoot_table_dive_bomber { background-color: rgba(255, 0, 0, 0.1); }
@@ -1627,6 +1638,7 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_radar { background-color: rgba(255, 140, 0, 0.1)!important; }
 .shoot_table_sonar { background-color: rgba(128, 216, 255, 0.1)!important; }
 .shoot_table_recover { background-color: rgba(196, 196, 196, 0.1)!important; }
+.shoot_table_ammo { background-color: rgba(255, 125, 125, 0.1)!important; }
 
 .shoot_table_fighter_hover { background-color: rgba(0, 255, 64, 0.2)!important; }
 .shoot_table_torpedo_bomber_hover { background-color: rgba(0, 189, 252, 0.2)!important; }
@@ -1641,6 +1653,8 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_radar_hover { background-color: rgba(255, 140, 0, 0.2)!important; }
 .shoot_table_sonar_hover { background-color: rgba(128, 216, 255, 0.2)!important; }
 .shoot_table_recover_hover { background-color: rgba(196, 196, 196, 0.2)!important; }
+.shoot_table_ammo_hover { background-color: rgba(255, 125, 125, 0.2)!important; }
+
 .airStatus0 { background: linear-gradient(.25turn, transparent, rgba(0, 255, 0, .1), transparent); }
 .airStatus1 { background: linear-gradient(.25turn, transparent, rgba(150, 255, 0, .1), transparent); }
 .airStatus2 { background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent); }
