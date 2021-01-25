@@ -1317,8 +1317,8 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	// 翔鶴型改二甲に 噴式機
 	{ shipId: 266, itemTypes: [57], itemIDs: [151] },
 	{ shipId: 267, itemTypes: [57], itemIDs: [151] },
-	// 加賀改二戊に 噴式機
-	{ shipId: 446, itemTypes: [57], itemIDs: [151] },
+	// 加賀改二護に 噴式機
+	{ shipId: 446, itemTypes: [57], itemIDs: [] },
 	// 伊勢型改二に 艦戦 艦爆 艦偵
 	{ shipId: 353, itemTypes: [6, 7, 9], itemIDs: [] },
 	{ shipId: 354, itemTypes: [6, 7, 9], itemIDs: [] },
