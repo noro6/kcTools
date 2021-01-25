@@ -6833,27 +6833,28 @@ function rateCalculate() {
 				let downAp = 0;
 				for (let i = 0; i < enemies.length; i++) {
 					const enemy = enemies[i];
-					if (enemy.onlyScout || enemy.id < 0) continue;
-					const slots = enemy.slots;
-					const attackers = enemy.attackers.concat();
-					for (let j = 0; j < slots.length; j++) {
-						const slotValue = slots[j];
-						const slotResult = enemySlotResult[index++];
-						// 合計値
-						slotResult[2] += slotValue;
-						// 最大値更新
-						if (slotResult[3] < slotValue) slotResult[3] = slotValue;
-						// 最小値更新
-						if (slotResult[4] > slotValue) slotResult[4] = slotValue;
-						// 全滅判定
-						if (slotValue === 0) attackers[j] = false;
+					if (!enemy.onlyScout && enemy.id > 0) {
+						const slots = enemy.slots;
+						const attackers = enemy.attackers.concat();
+						for (let j = 0; j < slots.length; j++) {
+							const slotValue = slots[j];
+							const slotResult = enemySlotResult[index++];
+							// 合計値
+							slotResult[2] += slotValue;
+							// 最大値更新
+							if (slotResult[3] < slotValue) slotResult[3] = slotValue;
+							// 最小値更新
+							if (slotResult[4] > slotValue) slotResult[4] = slotValue;
+							// 全滅判定
+							if (slotValue === 0) attackers[j] = false;
+						}
+
+						// 棒立ち判定
+						if (attackers.indexOf(true) < 0) enemySlotAllDead[index2]++;
+						index2++;
+
+						downAp += enemy.airPower;
 					}
-
-					// 棒立ち判定
-					if (attackers.indexOf(true) < 0) enemySlotAllDead[index2]++;
-					index2++;
-
-					downAp += enemy.airPower;
 
 					// 補給
 					enemy.slots = enemy.fullSlots.concat();
