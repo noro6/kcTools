@@ -1871,7 +1871,7 @@ const RANGES = [
 // 艦種毎装備可能カテゴリ(最低限)
 const LINK_SHIP_ITEM = [
 	// 海防艦
-	{ type: 1, e_type: [1, 14, 15, 17, 21, 23, 36, 37, 39, 43] },
+	{ type: 1, e_type: [1, 12, 14, 15, 21, 23, 36, 37, 39, 43] },
 	// 駆逐艦
 	{ type: 2, e_type: [1, 5, 12, 14, 15, 17, 21, 23, 29, 30, 33, 36, 37, 39, 43] },
 	// 軽巡洋艦
@@ -1898,11 +1898,13 @@ const LINK_SHIP_ITEM = [
 	// 水上機母艦
 	{ type: 16, e_type: [1, 4, 10, 11, 12, 13, 17, 21, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 40, 43, 45, 46] },
 	// 揚陸艦
-	{ type: 17, e_type: [17, 21, 23, 25, 29, 30, 33, 34, 36, 37, 39, 40, 43] },
+	{ type: 17, e_type: [1, 4, 12, 15, 17, 21, 23, 25, 26, 29, 30, 33, 34, 36, 37, 39, 40, 43] },
 	// 装甲空母
 	{ type: 18, e_type: [4, 6, 7, 8, 9, 12, 13, 17, 21, 23, 28, 34, 35, 36, 40, 43] },
+	// 工作艦
+	{ type: 19, e_type: [1, 4, 12, 17, 21, 23, 25, 27, 31, 33, 36, 39, 43] },
 	// 潜水母艦
-	{ type: 20, e_type: [1, 4, 10, 17, 21, 23, 25, 27, 29, 33, 34, 36, 37, 39, 40, 43, 45] },
+	{ type: 20, e_type: [1, 4, 10, 12, 17, 21, 23, 25, 27, 29, 33, 34, 36, 37, 39, 40, 43, 45] },
 	// 補給艦
 	{ type: 22, e_type: [10, 11, 17, 21, 23, 35, 36, 39, 43, 44, 45] },
 	// 練習巡洋艦
@@ -1921,9 +1923,10 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	// 日進改以降に 大型飛行艇
 	{ shipId: 1490, itemTypes: [41], itemIDs: [], exItemIDs: [] },
 	{ shipId: 386, itemTypes: [41], itemIDs: [], exItemIDs: [] },
-	// 装甲空母に 試製景雲
-	{ shipId: 153, itemTypes: [], itemIDs: [151], exItemIDs: [] },
-	{ shipId: 156, itemTypes: [], itemIDs: [151], exItemIDs: [] },
+	// 大鳳(改)に 試製景雲　補強増設に 10cm高角砲の副砲
+	{ shipId: 153, itemTypes: [], itemIDs: [151], exItemIDs: [71, 275] },
+	{ shipId: 156, itemTypes: [], itemIDs: [151], exItemIDs: [71, 275] },
+	// Saratogaに 試製景雲
 	{ shipId: 350, itemTypes: [], itemIDs: [151], exItemIDs: [] },
 	// 翔鶴型改二甲に 噴式機
 	{ shipId: 266, itemTypes: [57], itemIDs: [151], exItemIDs: [] },
@@ -1962,31 +1965,72 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ shipId: 309, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
 	// 由良改二に 水爆 水戦 特殊潜航艇 増設枠に 8cm副砲
 	{ shipId: 288, itemTypes: [11, 22, 45], itemIDs: [], exItemIDs: [66, 220] },
-	// 多摩改二に 水爆 水戦 
-	{ shipId: 347, itemTypes: [11, 45], itemIDs: [], exItemIDs: [] },
-	// 夕張改二特に 特殊潜航艇
-	{ shipId: 423, itemTypes: [22], itemIDs: [], exItemIDs: [] },
+	// 多摩改二に 水爆 水戦 バルジ
+	{ shipId: 347, itemTypes: [11, 27, 45], itemIDs: [], exItemIDs: [] },
+	{ shipId: 1316, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 木曾改 改二に　バルジ
+	{ shipId: 1317, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	{ shipId: 146, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 夕張改二特に 特殊潜航艇　バルジ
+	{ shipId: 423, itemTypes: [22, 27], itemIDs: [], exItemIDs: [] },
+	{ shipId: 422, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	{ shipId: 424, itemTypes: [27], itemIDs: [], exItemIDs: [] },
 	// 球磨改二に 水爆 水戦
 	{ shipId: 452, itemTypes: [11, 45], itemIDs: [], exItemIDs: [] },
 	// 球磨改二に 水爆 水戦
 	{ shipId: 457, itemTypes: [22], itemIDs: [], exItemIDs: [] },
-	// 阿賀野型改に 水爆 増設枠に 8cm副砲
-	{ shipId: 1401, itemTypes: [11], itemIDs: [], exItemIDs: [66, 220] },
-	{ shipId: 1402, itemTypes: [11], itemIDs: [], exItemIDs: [66, 220] },
-	{ shipId: 1403, itemTypes: [11], itemIDs: [], exItemIDs: [66, 220] },
-	{ shipId: 1410, itemTypes: [11], itemIDs: [], exItemIDs: [66, 220] },
-	// Gotlandに 水爆
+	// 阿賀野型改に 水爆 バルジ 増設枠に 8cm副砲
+	{ shipId: 1401, itemTypes: [11, 27], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 1402, itemTypes: [11, 27], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 1403, itemTypes: [11, 27], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 1410, itemTypes: [11, 27], itemIDs: [], exItemIDs: [66, 220] },
+	// 大鯨に 増設枠に 8cm副砲
+	{ shipId: 184, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	// 迅鯨に 増設枠に 8cm副砲
+	{ shipId: 434, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	// 迅鯨改に 水爆 増設枠に 8cm副砲
+	{ shipId: 439, itemTypes: [11], itemIDs: [], exItemIDs: [66, 220] },
+	// 練習巡洋艦に 増設枠に 8cm副砲
+	{ shipId: 154, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 1523, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 264, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 1436, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	// 工作艦に 増設枠に 8cm副砲
+	{ shipId: 182, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	{ shipId: 187, itemTypes: [], itemIDs: [], exItemIDs: [66, 220] },
+	// Gotlandに 水爆 改以降はバルジも
 	{ shipId: 374, itemTypes: [11], itemIDs: [], exItemIDs: [] },
-	{ shipId: 379, itemTypes: [11], itemIDs: [], exItemIDs: [] },
-	{ shipId: 430, itemTypes: [11], itemIDs: [], exItemIDs: [] },
+	{ shipId: 379, itemTypes: [11, 27], itemIDs: [], exItemIDs: [] },
+	{ shipId: 430, itemTypes: [11, 27], itemIDs: [], exItemIDs: [] },
 	// あきつ丸に 艦戦
 	{ shipId: 166, itemTypes: [6], itemIDs: [], exItemIDs: [] },
 	// 神州丸に 水戦 水偵
 	{ shipId: 421, itemTypes: [10, 27, 45], itemIDs: [], exItemIDs: [] },
 	// 神州丸改に 水偵 水爆 水戦 バルジ
 	{ shipId: 426, itemTypes: [10, 11, 27, 45], itemIDs: [], exItemIDs: [] },
-	// 迅鯨改に 水爆
-	{ shipId: 439, itemTypes: [11], itemIDs: [], exItemIDs: [] },
+	// 大淀(改)　補強増設に10cm高角砲の副砲
+	{ shipId: 183, itemTypes: [11], itemIDs: [], exItemIDs: [71, 275] },
+	{ shipId: 1414, itemTypes: [11], itemIDs: [], exItemIDs: [71, 275] },
+	// Верный バルジ
+	{ shipId: 147, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 陽炎改二 バルジ
+	{ shipId: 366, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 不知火改二 バルジ
+	{ shipId: 367, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 黒潮改二 バルジ
+	{ shipId: 368, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 沖波改二 バルジ
+	{ shipId: 369, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 夕雲改二 バルジ
+	{ shipId: 342, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 長波改二 バルジ
+	{ shipId: 343, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 巻雲改二 バルジ
+	{ shipId: 363, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 風雲改二 バルジ
+	{ shipId: 364, itemTypes: [27], itemIDs: [], exItemIDs: [] },
+	// 朝霜改二 バルジ
+	{ shipId: 378, itemTypes: [27], itemIDs: [], exItemIDs: [] },
 ];
 
 // 特定の艦娘が特定スロットに装備『できない！』やつ
