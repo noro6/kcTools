@@ -1685,6 +1685,45 @@ function getItemsForIcon(type) {
 }
 
 /**
+ * 渡されたカテゴリと同じ分類で返却されるカテゴリ ↑の処理の逆というかなんというか…
+ * @param {number} type
+ * @returns {number}
+ */
+function getTypeIcon(type) {
+	switch (type) {
+		case 10:
+		case 11:
+			return 10;
+		case 47:
+		case 53:
+			return 47;
+		case 12:
+		case 13:
+			return 12;
+		case 5:
+		case 22:
+		case 32:
+			return 5;
+		case 14:
+		case 15:
+		case 40:
+			return 5;
+		case 24:
+		case 30:
+		case 46:
+		case 50:
+			return 24;
+		default:
+			if ([17, 18, 19, 23, 25, 26, 27, 28, 29, 30, 31, 33, 34, 35, 36, 37, 39, 42, 43, 44, 51].includes(type)) {
+				return 17;
+			}
+			else {
+				return type;
+			}
+	}
+}
+
+/**
  * 機体カテゴリからcssクラスを返却
  * @param {number} typeCd カテゴリコード
  * @returns {string} cssクラス名
@@ -1741,45 +1780,55 @@ function replaceKnji(word) {
  * 第1引数のidの艦娘に対する第2引数の艦載機の適正 装備可能ならtrue
  * 基地ならtrue 艦娘未指定なら基地機体以外true
  * @param {number} shipID 艦娘id(基地航空隊:-1 艦娘未指定:0 艦娘:艦娘id)
- * @param {Object} plane 艦載機オブジェクト data.js参照
+ * @param {Object} item 装備オブジェクト data.js参照
  * @param {number} [slotIndex=0] スロット番号 未指定ならこの要素でチェックしない
  * @returns {boolean} 装備できるなら true
  */
-function checkInvalidPlane(shipID, plane, slotIndex = -1) {
+function checkInvalidPlane(shipID, item, slotIndex = -1) {
+	// なんだろうこれ
 	if (shipID === -1) return true;
-	if (shipID === 0 && LB_PLANE_TYPE.includes(plane.type)) return false;
+	// 艦娘指定なし　基地機体 => 絶対無理！
+	if (shipID === 0 && LB_PLANE_TYPE.includes(item.type)) return false;
+	// 艦娘指定なし なんでもOK！
 	else if (shipID === 0) return true;
+
+	// 装備可能カテゴリ
+	let types = [];
+
+	// マスタから艦娘取得
 	const ship = SHIP_DATA.find(v => v.id === shipID);
-	const basicCanEquip = LINK_SHIP_ITEM.find(v => v.type === ship.type);
-	const special = SPECIAL_LINK_SHIP_ITEM.find(v => v.shipId === ship.id);
-	let canEquip = [];
-	if (basicCanEquip) {
-		for (const v of basicCanEquip.e_type) canEquip.push(v);
-		if (special) for (const i of special.itemTypes) canEquip.push(i);
+
+	// 装甲空母のみ試製景雲OK
+	if (ship.type === 18 && item.id === 151) {
+		return true;
 	}
 
-	// 基本装備可能リストにない場合
-	if (!canEquip.includes(plane.type)) {
-		// 敗者復活 (特別装備可能idに引っかかっていないか)
-		return special && special.itemIDs.includes(plane.id);
+	// 特定艦娘 特殊装備カテゴリ取得
+	const special = SPECIAL_LINK_SHIP_ITEM.find(v => v.apiShip === ship.api);
+	if (special) {
+		// 特殊装備カテゴリ枠から取得
+		types = special.itemType;
+	}
+	else {
+		// 通常艦種装備可能から取得
+		types = LINK_SHIP_ITEM.find(v => v.type === ship.type);
 	}
 
-	// 試製景雲チェック
-	if (plane.id === 151) {
-		if (!special) return false;
-		return special.itemIDs.includes(plane.id);
+	// 装備可能カテゴリ内にない場合、さらに特別装備枠(試製景雲くらい？)を検索しその結果を返却
+	if (!types.includes(item.type)) {
+		return special && special.itemIDs.includes(item.id);
 	}
 
-	// スロット番号チェック
+	// スロット番号制限チェック
 	if (slotIndex >= 0) {
 		const forbiddens = FORBIDDEN_LINK_SHIP_ITEM.find(v => v.shipId === shipID && v.index.includes(slotIndex + 1));
 		if (forbiddens) {
 			// 禁止カテゴリに存在したら終わり
-			if (forbiddens.itemTypes.includes(plane.type)) {
+			if (forbiddens.itemType.includes(item.type)) {
 				return false;
 			}
 			// 禁止装備　キメ撃ち
-			if (forbiddens.itemIDs.includes(plane.id)) {
+			if (forbiddens.itemIDs.includes(item.id)) {
 				return false;
 			}
 		}
@@ -9682,7 +9731,7 @@ function updateFleetStage2Table() {
 		const stage2 = [];
 		for (let index = 0; index < fleet.ships.length; index++) {
 			const ship = fleet.ships[index];
-			if(cutinRate) {
+			if (cutinRate) {
 				minimumValues[index].push(ship.minimumDown);
 				fixValues[index].push(ship.fixDown);
 			}
@@ -10364,60 +10413,47 @@ function plane_type_select_Changed($this = null) {
 	// 特定の艦娘が選ばれている場合の調整
 	if ($target && $target.attr('class').includes('ship_plane') && $target.closest('.ship_tab')[0].dataset.shipid) {
 		const ship = SHIP_DATA.find(v => v.id === castInt($target.closest('.ship_tab')[0].dataset.shipid));
-		// この艦娘の艦種の基本装備可能カテゴリを取得
-		const basicCanEquip = LINK_SHIP_ITEM.find(v => v.type === ship.type);
 		// この艦娘の特殊装備可能装備を取得
-		const special = SPECIAL_LINK_SHIP_ITEM.find(v => v.shipId === ship.id);
+		const special = SPECIAL_LINK_SHIP_ITEM.find(v => v.apiShip === ship.api);
+		if (special) {
+			dispType = special.itemType.concat();
+		}
+		else {
+			// この艦娘の艦種の基本装備可能カテゴリを取得
+			dispType = LINK_SHIP_ITEM.find(v => v.type === ship.type).e_type;
+		}
 
 		// 補強増設？
 		const isExpandedSlot = $target.hasClass('expanded_slot');
-
-		dispType = basicCanEquip.e_type.concat();
-
-		// 特別装備可能な装備カテゴリ対応
-		if (special && special.itemTypes.length > 0) dispType = dispType.concat(special.itemTypes);
-
-		if (!dispType || !dispType.includes(selectedType)) {
-			selectedType = 0;
-		}
-
 		// 補強増設枠チェック
 		if (isExpandedSlot) {
 			dispType = dispType.filter(v => EXPANDED_ITEM_TYPE.includes(v));
 		}
 
+		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
+		if (!dispType || !dispType.findIndex(v => getTypeIcon(v.type) === selectedType) === -1) {
+			selectedType = 0;
+		}
+
+		// 選択カテゴリに該当する装備を取得
 		org = getItemsForIcon(selectedType);
 
-		// 試製景雲削除
-		org = org.filter(v => v.id !== 151);
-
-		// 重複を切る
-		dispType = dispType.filter((x, i, self) => self.indexOf(x) === i);
-		dispType.sort((a, b) => a - b);
-
-		// カテゴリ一覧にないもの除外
+		// 装備カテゴリに存在しない装備は除外
 		org = org.filter(v => dispType.includes(v.type));
 
-		if (special) {
-			// 通常　特別装備可能な装備idの対応
-			if (special.itemIDs.length > 0 && !isExpandedSlot) {
-				for (const id of special.itemIDs) {
-					const plane = ITEM_DATA.find(v => v.id === id);
-					dispType.push(plane.type);
+		// 装甲空母ではない場合、試製景雲を削除する
+		if (ship.type !== 18) {
+			org = org.filter(v => v.id !== 151);
+		}
 
-					// もしまだ追加されてないなら追加
-					if (!org.find(v => v.id === id) && (selectedType === 0 || selectedType === plane.type)) org.push(plane);
-				}
-			}
-
-			// 補強増設　特別枠
-			if (isExpandedSlot && special.exItemIDs.length > 0) {
-				for (const id of special.exItemIDs) {
-					const item = ITEM_DATA.find(v => v.id === id);
-					dispType.push(item.type);
-
-					// もしまだ追加されてないなら追加
-					if (!org.find(v => v.id === id) && (selectedType === 0 || selectedType === item.type)) org.push(item);
+		// 補強増設　特別枠
+		if (isExpandedSlot) {
+			const sp = EXPANDED_SPECIAL_ITEM.find(v => v.shipApiIds.includes(ship.api));
+			if (sp) {
+				const spItem = ITEM_DATA.find(v => v.id === sp.itemId);
+				// まだ未追加 かつ カテゴリがALLか、それに該当するカテゴリなら追加
+				if (spItem && !org.find(v => v.id === spItem.id) && (selectedType === 0 || selectedType === spItem.type)) {
+					org.push(spItem);
 				}
 			}
 		}
@@ -10449,7 +10485,9 @@ function plane_type_select_Changed($this = null) {
 		if (typeId === selectedType) $(e).addClass('active');
 		else $(e).removeClass('active');
 
-		if (typeId !== 0 && !dispType.includes(typeId)) $(e).addClass('disabled d-none');
+		if (typeId > 0 && dispType.findIndex(v => getTypeIcon(v) === typeId) === -1) {
+			$(e).addClass('disabled d-none')
+		}
 	});
 
 	if (searchWord) {
