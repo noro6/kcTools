@@ -7389,19 +7389,25 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 
 	let planeText = '';
 	let index = 0;
+	let planeIndex = 0;
 	for (const id of enemy.eqp) {
 		const p = ENEMY_ITEM.find(v => v.id === id);
+		const eSlot = enemy.slot[index];
 		planeText += `
-		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+		<div class="row mx-1 py-0_5 ${slotNo === planeIndex ? 'selected' : ''} ${PLANE_TYPE.includes(p.type) ? `general_tr btn_show_detail` : ''}" data-slot_no="${planeIndex}">
 			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
 			<div class="col d-flex align-self-center">
 				<img src="../img/type/icon${p.itype}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${p.name}</div>
 			</div>
 			<div class="col font_size_12 align-self-center">
-				(搭載: ${targetEnemy.slots[index++]}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
+				(搭載: ${eSlot >= 0 ? eSlot : '-'} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
 			</div>
 		</div>`;
+
+		index++;
+		// 表示可能なものだったときのみインデックスを加算
+		if (PLANE_TYPE.includes(p.type)) planeIndex++;
 	}
 
 	const detailLegend = `
