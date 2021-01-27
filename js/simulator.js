@@ -296,6 +296,8 @@ class Ship {
 		this.rateDown = 0;
 		/** @type {number} */
 		this.minimumDown = 1;
+		/** @type {Array<AntiAirCutIn>} */
+		this.antiAirCutIn = [];
 		// /** @type {number} */
 		// this.antiAirWeight_kai = 0;
 		// /** @type {number} */
@@ -355,6 +357,231 @@ class Ship {
 
 		// 艦隊防空ボーナス
 		this.antiAirBonus = Math.floor(sumBonus);
+
+		// 利用可能対空CIの設定
+		this.setAntiAirCutIn();
+	}
+
+	/**
+	 * 発動可能対空CIと発動率など
+	 * @memberof Ship
+	 */
+	setAntiAirCutIn() {
+		// 発動できる種別群
+		const cutin = [];
+		// 英国 / 金剛型改二
+		const bl = [149, 150, 151, 152, 239, 315, 314, 319, 320, 371, 376, 391, 392, 1444, 1473, 1474, 1493, 1705];
+		// 艦娘id
+		const shipId = this.id;
+		// 装備一覧
+		const items = this.planes;
+		// 特殊高角砲の数 (対空値8以上)
+		const tkCount = items.filter(v => v.itype === 16 && v.antiAir > 7).length;
+		// 通常高角砲の数 (対空値7以下)
+		const kCount = items.filter(v => v.itype === 16 && v.antiAir <= 7).length;
+		// 対空電探の数 (対空値1以上)
+		const arCount = items.filter(v => v.itype === 11 && v.antiAir > 0).length;
+		// 電探の数 (対空値関係なし)
+		const rCount = items.filter(v => v.itype === 11).length;
+		// 特殊機銃の数 (対空値9以上)
+		const tkjCount = items.filter(v => v.type === 21 && v.antiAir > 8).length;
+		// 普通の機銃の数 (対空値8以下)
+		const kjCount = items.filter(v => v.type === 21 && v.antiAir <= 8).length;
+		// 高角砲の有無
+		const hasKoukaku = (tkCount + kCount) > 0;
+		// 高射装置の有無
+		const hasKousha = hasTypeItem(items, 36);
+		// GFCS Mk.37の有無
+		const hasGFCS = items.findIndex(v => v.id === 307) >= 0;
+
+		// 秋月型
+		if ([221, 222, 223, 332, 1422, 1426, 1437, 337].includes(shipId)) {
+			// 1種 (高角砲2, 電探)
+			if ((tkCount + kCount) >= 2 && rCount > 0) cutin.push(1);
+			// 2種 (高角砲, 電探)
+			if (hasKoukaku && rCount > 0) cutin.push(2);
+			// 3種 (高角砲2)
+			if ((tkCount + kCount) >= 2) cutin.push(3);
+		}
+		// Atlanta
+		else if (shipId === 397 || shipId === 1496) {
+			// GFCS Mk.37+5inch連装両用砲(集中配備), 5inch連装両用砲(集中配備)
+			if (items.findIndex(v => v.id === 363) >= 0 && items.findIndex(v => v.id === 362) >= 0) {
+				// 39種
+				cutin.push(39);
+				// 40種 (GFCS Mk.37)
+				if (hasGFCS) cutin.push(40);
+				// 41種
+				cutin.push(41);
+			}
+			// 5inch連装両用砲(集中配備) * 2
+			if (items.filter(v => v.id === 362).length >= 2) {
+				// 40種 (GFCS Mk.37)
+				if (hasGFCS) cutin.push(40);
+				// 41種
+				cutin.push(41);
+			}
+		}
+		// Fletcher級
+		else if ([362, 396, 428, 429, 1489, 1492].includes(shipId)) {
+			// 34種 (5inch単装砲 Mk.30改+GFCS Mk.37, 5inch単装砲 Mk.30改+GFCS Mk.37)
+			if (items.filter(v => v.id === 308).length >= 2) cutin.push(34);
+			// 35種 (5inch単装砲 Mk.30改+GFCS Mk.37, 5inch単装砲 Mk.30 / 改)
+			if (items.findIndex(v => v.id === 308) >= 0 && items.findIndex(v => v.id === 284 || v.id === 313) >= 0) cutin.push(35);
+			// 36種 (5inch単装砲 Mk.30 / 改 2種, GFCS Mk.37)
+			if (items.filter(v => v.id === 284 || v.id === 313).length >= 2 && hasGFCS) cutin.push(36);
+			// 37種 (5inch単装砲 Mk.30 / 改 2種)
+			if (items.filter(v => v.id === 284 || v.id === 313).length >= 2) cutin.push(37);
+		}
+		// 摩耶様改二
+		else if (shipId === 228) {
+			// 10種 (高角砲, 特殊機銃, 対空電探)
+			if (hasKoukaku && tkjCount > 0 && arCount > 0) cutin.push(10);
+			// 11種 (高角砲, 特殊機銃)
+			if (hasKoukaku && tkjCount > 0) cutin.push(11);
+		}
+		// 五十鈴改二
+		else if (shipId === 141) {
+			// 14種 (高角砲, 対空機銃, 対空電探)
+			if (hasKoukaku && kjCount > 0 && arCount > 0) cutin.push(14);
+			// 15種 (高角砲, 対空機銃)
+			if (hasKoukaku && kjCount > 0) cutin.push(15);
+		}
+		// 霞改二乙 夕張改二
+		else if (shipId === 270 && shipId === 422) {
+			// 16種 (高角砲, 対空機銃, 対空電探)
+			if (hasKoukaku && kjCount > 0 && arCount > 0) cutin.push(16);
+			// 17種 (高角砲, 対空機銃)
+			if (hasKoukaku && kjCount > 0) cutin.push(17);
+		}
+		// 皐月改二
+		else if (shipId === 218) {
+			// 18種 (特殊機銃)
+			if (tkjCount > 0) cutin.push(18);
+		}
+		// 鬼怒改二
+		else if (shipId === 278) {
+			// 19種 (よわ高角砲, 特殊機銃)
+			if (kCount > 0 && tkjCount > 0) cutin.push(19);
+			// 20種 (特殊機銃)
+			if (tkjCount > 0) cutin.push(20);
+		}
+		// 由良改二
+		else if (shipId === 288) {
+			// 21種 (高角砲, 対空電探)
+			if (hasKoukaku && arCount > 0) cutin.push(21);
+		}
+		// 皐月改二
+		else if (shipId === 348) {
+			// 22種 (特殊機銃)
+			if (tkjCount > 0) cutin.push(22);
+		}
+		// UIT-25 伊504
+		else if (shipId === 348 || shipId === 330) {
+			// 23種 (通常機銃)
+			if (kjCount > 0) cutin.push(23);
+		}
+		// 天龍改二
+		else if (shipId === 277) {
+			// 24種 (高角砲, 通常機銃)
+			if (kCount > 0 && kjCount > 0) cutin.push(24);
+			// 30種 (高角砲3)
+			if ((tkCount + kCount) >= 3) cutin.push(30);
+			// 31種 (高角砲2)
+			if ((tkCount + kCount) >= 2) cutin.push(31);
+		}
+		// 龍田改二
+		else if (shipId === 278) {
+			// 24種 (高角砲, 通常機銃)
+			if (kCount > 0 && kjCount > 0) cutin.push(24);
+		}
+		// 伊勢型改 / 改二
+		else if ([102, 103, 353, 354].includes(shipId)) {
+			// 25種 (噴進砲改二, 対空電探, 三式弾)
+			if (arCount > 0 && hasTypeItem(items, 18) && items.findIndex(v => v.id === 274) >= 0) cutin.push(25);
+			// 28種 (噴進砲改二, 対空電探)
+			if (arCount > 0 && items.findIndex(v => v.id === 274) >= 0) cutin.push(28);
+		}
+		// 武蔵改 / 改二
+		else if (shipId === 148 || shipId === 346) {
+			// 26種 (武蔵改二, 10cm改+増設, 対空電探)
+			if (shipId === 346 && arCount > 0 && items.findIndex(v => v.id === 275) >= 0) cutin.push(26);
+			// 28種 (噴進砲改二, 対空電探)
+			if (arCount > 0 && items.findIndex(v => v.id === 274) >= 0) cutin.push(28);
+		}
+		// 磯風乙改 / 浜風乙改
+		else if (shipId === 357 || shipId === 358) {
+			// 29種 (高角砲, 対空電探)
+			if (hasKoukaku && arCount > 0) cutin.push(29);
+		}
+		// Gotland改以降
+		else if (shipId === 379 || shipId === 430) {
+			// 30種 (高角砲3)
+			if ((tkCount + kCount) >= 3) cutin.push(30);
+			// 33種 (高角砲, 通常機銃)
+			if (hasKoukaku && kjCount > 0) cutin.push(33);
+		}
+		// 英国艦艇 / 金剛型改二
+		else if (bl.includes(shipId)) {
+			// 32種 (16inch Mk.I三連装砲改+FCR type284, QF 2ポンド8連装ポンポン砲)
+			if (items.findIndex(v => v.id === 300) >= 0 && items.findIndex(v => v.id === 191) >= 0) cutin.push(32);
+			// 32種 (20連装7inch UP Rocket Launchers, QF 2ポンド8連装ポンポン砲)
+			if (items.findIndex(v => v.id === 301) >= 0 && items.findIndex(v => v.id === 191) >= 0) cutin.push(32);
+			// 32種 (20連装7inch UP Rocket Launchers, 20連装7inch UP Rocket Launchers)
+			if (items.filter(v => v.id === 301).length >= 2) cutin.push(32);
+		}
+
+		// 以下汎用CI
+		// 全ての水上艦 => 判定できないが必須装備が潜水艦を弾ける
+		// 5種 (特殊高角砲2, 対空電探)
+		if (tkCount >= 2 && arCount > 0) cutin.push(5);
+		// 7種 (高角砲, 高射装置, 対空電探)
+		if (hasKoukaku && hasKousha && arCount > 0) cutin.push(7);
+		// 8種 (特殊高角砲, 対空電探)
+		if (tkCount >= 1 && arCount > 0) cutin.push(8);
+		// 9種 (高角砲, 高射装置)
+		if (hasKoukaku && hasKousha) cutin.push(9);
+		// 12種 (特殊機銃, 素対空値3以上の機銃)
+		if (tkjCount > 0 && items.filter(v => v.type === 21 && v.antiAir >= 3).length) cutin.push(12);
+
+		// 戦艦 航空戦艦 => 判定できないが大口径主砲を積めるのが戦艦だけ
+		if (hasTypeItem(items, 3)) {
+			// 4種 (大口径, 三式弾, 高射装置, 対空電探)
+			if (hasTypeItem(items, 18) && hasKousha && arCount > 0) cutin.push(4);
+			// 6種 (大口径, 三式弾, 高射装置)
+			if (hasTypeItem(items, 18) && hasKousha) cutin.push(6);
+		}
+
+		// マスタより、対空CIオブジェクトを格納
+		for (const id of cutin) {
+			const raw = ANTIAIR_CUTIN.find(v => v.id === id);
+			if (raw) {
+				const aac = new AntiAirCutIn();
+				aac.id = raw.id;
+				aac.rateCorr = raw.adj[0];
+				aac.fixCorr = raw.adj[1];
+				aac.rate = 0;
+
+				this.antiAirCutIn.push(aac);
+			}
+		}
+	}
+}
+
+/**
+ * 対空CIクラス
+ * @class AntiAirCutIn
+ */
+class AntiAirCutIn {
+	constructor() {
+		/** @type {number} */
+		this.id = 0;
+		/** @type {number} */
+		this.fixCorr = 0;
+		/** @type {number} */
+		this.rateCorr = 1.0;
+		/** @type {number} */
+		this.rate = 0;
 	}
 }
 
@@ -364,7 +591,7 @@ class Ship {
  */
 class LandBaseAll {
 	constructor() {
-		/** @type {Array<LandBase} */
+		/** @type {Array<LandBase>} */
 		this.landBases = [];
 		/** @type {number} */
 		this.defenseAirPower = 0;
@@ -1689,7 +1916,7 @@ function getItemsForIcon(type) {
  * @param {number} type
  * @returns {number}
  */
-function getTypeIcon(type) {
+function convertItemType(type) {
 	switch (type) {
 		case 10:
 		case 11:
@@ -1811,7 +2038,7 @@ function checkInvalidPlane(shipID, item, slotIndex = -1) {
 	}
 	else {
 		// 通常艦種装備可能から取得
-		types = LINK_SHIP_ITEM.find(v => v.type === ship.type);
+		types = LINK_SHIP_ITEM.find(v => v.type === ship.type).e_type;
 	}
 
 	// 装備可能カテゴリ内にない場合、さらに特別装備枠(試製景雲くらい？)を検索しその結果を返却
@@ -6258,6 +6485,7 @@ function createFleetInstance() {
 			}
 		}
 
+		// 対空砲火情報の更新
 		shipInstance.updateAntiAirStatus();
 
 		// 連合設定 かつ 6番目以降
@@ -6291,8 +6519,10 @@ function createFleetInstance() {
 	fleet.updateAirPower();
 	fleet.initFullAirPower();
 
+	// 陣形取得
+	const formationId = castInt(document.getElementById('fleet_antiair_formation').value);
 	// 対空砲火設定更新
-	fleet.updateStage2();
+	fleet.updateStage2(formationId);
 
 	return fleet;
 }
@@ -6377,13 +6607,6 @@ function createContactTable(planes) {
  * @returns {BattleData}
  */
 function updateEnemyFleetInfo() {
-	let sumAp = 0;
-	let sumLBAp = 0;
-	let sumAntiAirBonus = 0;
-	let map = "999-1";
-	let cells = "";
-	let isMixed = false;
-	let isAllSubmarine = true;
 	const battleData = new BattleData();
 
 	for (let node_battle_content of document.getElementsByClassName('battle_content')) {
@@ -6395,12 +6618,9 @@ function updateEnemyFleetInfo() {
 		if (node_battle_content.classList.contains('d-none')) continue;
 
 		const battle = new Battle();
-		sumAp = 0;
-		sumLBAp = 0;
-		sumAntiAirBonus = 0;
-		isAllSubmarine = true;
+		let isAllSubmarine = true;
 
-		// マス情報格納
+		// マス戦闘形式格納
 		battle.cellType = castInt(node_battle_content.getElementsByClassName('cell_type')[0].value);
 
 		// 敵情報取得
@@ -6411,23 +6631,17 @@ function updateEnemyFleetInfo() {
 			// 非表示の敵は飛ばす
 			if (node_enemy_content.classList.contains('d-none')) continue;
 
-			// 連合以外で6隻埋まってたら以降は飛ばす
+			// 連合以外で6隻埋まってたら終了
 			if (battle.cellType !== CELL_TYPE.grand && battle.enemies.length === 6) break;
 
 			// 潜水以外が含まれていればAll潜水フラグを落とす
-			if (isAllSubmarine && !enemy.type.includes(18) && enemy.id > 0) {
+			if (isAllSubmarine && !enemy.type.includes(18)) {
 				isAllSubmarine = false;
 			}
 
-			// 連合かつ7隻目以降
+			// 連合かつ7番目以降で随伴フラグ
 			enemy.isEscort = battle.cellType === CELL_TYPE.grand && enemyIndex > 6;
-
 			battle.enemies.push(enemy);
-			sumAp += enemy.airPower;
-			sumLBAp += enemy.landBaseAirPower;
-
-			// 艦隊防空ボーナス加算
-			sumAntiAirBonus += enemy.antiAirBonus;
 		}
 
 		// 潜水マスフラグを持たせる
@@ -6436,12 +6650,11 @@ function updateEnemyFleetInfo() {
 		}
 
 		// 陣形補正
-		const formationId = castInt(node_battle_content.getElementsByClassName('formation')[0].value);
-		const formation = FORMATION.find(v => v.id === formationId);
-		const aj1 = formation ? formation.correction : 1.0;
-
-		battle.formation = formationId;
+		battle.formation = castInt(node_battle_content.getElementsByClassName('formation')[0].value);
+		// 対空砲火計算
 		battle.createStage2Table();
+
+		// 戦闘情報に追加
 		battleData.battles.push(battle);
 	}
 
@@ -6882,7 +7095,7 @@ function rateCalculate() {
 				let downAp = 0;
 				for (let i = 0; i < enemies.length; i++) {
 					const enemy = enemies[i];
-					if (!enemy.onlyScout && enemy.id > 0) {
+					if (!enemy.onlyScout && enemy.id) {
 						const slots = enemy.slots;
 						const attackers = enemy.attackers.concat();
 						for (let j = 0; j < slots.length; j++) {
@@ -7305,18 +7518,18 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	$('#detail_warning').html(warningText);
 
 	for (const pl of shipInstance.planes) {
-		const p = ITEM_DATA.find(v => v.id === pl.id && PLANE_TYPE.includes(v.type));
+		const p = ITEM_DATA.find(v => v.id === pl.id);
 		if (index === (ship ? ship.slot.length : 4)) break;
 		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
 		planeText += `
-		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${PLANE_TYPE.includes(p.type) ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
 			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
 			<div class="col d-flex align-self-center font_size_12 pl-0">
 				<img src="../img/type/${p ? `icon${p.itype}` : 'undefined'}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${name}</div>
 			</div>
 			<div class="col font_size_11 align-self-center">
-				${p ? (`(搭載: ${pl.slot}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
+				${p ? (`(搭載: ${pl.slot} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
 			</div>
 		</div>`;
 		index++;
@@ -7520,7 +7733,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 				<div class="align-self-center">${name}</div>
 			</div>
 			<div class="col font_size_11 align-self-center">
-				${p ? (`(搭載: ${pl.slot}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
+				${p ? (`(搭載: ${pl.slot} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
 			</div>
 		</div>`;
 		index++;
@@ -7682,19 +7895,25 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 
 	let planeText = '';
 	let index = 0;
+	let planeIndex = 0;
 	for (const id of enemy.eqp) {
 		const p = ENEMY_ITEM.find(v => v.id === id);
+		const eSlot = enemy.slot[index];
 		planeText += `
-		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+		<div class="row mx-1 py-0_5 ${slotNo === planeIndex ? 'selected' : ''} ${PLANE_TYPE.includes(p.type) ? `general_tr btn_show_detail` : ''}" data-slot_no="${planeIndex}">
 			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
 			<div class="col d-flex align-self-center">
 				<img src="../img/type/icon${p.itype}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${p.name}</div>
 			</div>
 			<div class="col font_size_12 align-self-center">
-				(搭載: ${targetEnemy.slots[index++]}機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
+				(搭載: ${eSlot >= 0 ? eSlot : '-'} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
 			</div>
 		</div>`;
+
+		index++;
+		// 表示可能なものだったときのみインデックスを加算
+		if (PLANE_TYPE.includes(p.type)) planeIndex++;
 	}
 
 	const detailLegend = `
@@ -9419,7 +9638,58 @@ function showPlaneBasicToolTip($this) {
 }
 
 /**
- * 乗せられた位置に機体ツールチップ展開
+ * 乗せられた位置に敵艦情報ツールチップ展開
+ * @param {JQuery} $this
+ */
+function showEnemyStatusToolTip($this) {
+	if (!$this.length || !$this[0].dataset.enemyid) return;
+
+	// 敵情報オブジェクト取得
+	const enm = ENEMY_DATA.find(v => v.id === castInt($this[0].dataset.enemyid));
+
+	if (!enm) return;
+	const enemy = new Enemy(enm.id);
+
+	let itemText = '';
+	for (let i = 0; i < enm.eqp.length; i++) {
+		const itemId = enm.eqp[i];
+		const slot = enm.slot[i];
+		const item = ENEMY_ITEM.find(v => v.id === itemId);
+		if (!item) continue;
+
+		itemText += `
+			<div class="d-flex my-1">
+				<div class="mr-2 align-self-center enemy_tool_slot">${slot > 0 ? slot : 0}</div>
+				<div class="align-self-center">
+					<img src="../img/type/icon${item.itype}.png" alt="${item.itype}" class="img-size-25">
+				</div>
+				<div class="align-self-center">
+					<span class="font_size_11">id: ${item.id}</span>
+					<span> ${item.name}</span>
+				</div>
+			</div>`;
+	}
+
+	let text =
+		`<div class="text-left mx-2">
+			<div>
+				<span class="font_size_11 text-primary">ID: ${enm.id}</span>
+				<span>${enm.name}</span>
+			</div>
+			<div class="d-flex">
+				${enemy.airPower ? `<div class="">制空値: ${enemy.airPower}</div>` : ''}
+				${enemy.landBaseAirPower ? `<div class="">基地制空値: ${enemy.landBaseAirPower}</div>` : ''}
+			</div>
+			<div class="mt-2">
+				${itemText}
+			</div>
+		</div>`;
+
+	showTooltip($this[0], text);
+}
+
+/**
+ * 乗せられた位置に敵機体ツールチップ展開
  * @param {JQuery} $this
  */
 function showEnemyPlaneToolTip($this) {
@@ -10431,7 +10701,7 @@ function plane_type_select_Changed($this = null) {
 		}
 
 		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
-		if (!dispType || !dispType.findIndex(v => getTypeIcon(v.type) === selectedType) === -1) {
+		if (!dispType || !dispType.findIndex(v => convertItemType(v.type) === selectedType) === -1) {
 			selectedType = 0;
 		}
 
@@ -10480,12 +10750,14 @@ function plane_type_select_Changed($this = null) {
 	}
 
 	// 装備可能カテゴリ表示変更
+	const typeIcons = dispType.map(v => convertItemType(v));
+	console.log(typeIcons);
 	$('#plane_type_select').find('.item_type').each((i, e) => {
 		const typeId = castInt($(e)[0].dataset.type);
 		if (typeId === selectedType) $(e).addClass('active');
 		else $(e).removeClass('active');
 
-		if (typeId > 0 && dispType.findIndex(v => getTypeIcon(v) === typeId) === -1) {
+		if (typeId > 0 && !typeIcons.includes(typeId)) {
 			$(e).addClass('disabled d-none')
 		}
 	});
@@ -13423,6 +13695,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		mouseenter: function () { showTooltip($(this)[0], "閉じる"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.btn_remove_ship');
+	$('#enemyFleet_content').on({
+		mouseenter: function () { showEnemyStatusToolTip($(this)); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.enemy_content ');
 	$('#result_content').on({
 		mouseenter: function () { shoot_down_table_tbody_MouseEnter($(this)); },
 		mouseleave: function () { shoot_down_table_tbody_MouseLeave($(this)); }

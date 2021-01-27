@@ -643,6 +643,10 @@ input[type="text"] { font-size: 12px; }
 .formation{ width: 100%; }
 #air_raid_enemies { width: 250px; }
 
+.enemy_tool_slot {
+  width: 30px;
+  text-align: right;
+}
 
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
