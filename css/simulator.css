@@ -768,6 +768,9 @@ input[type="text"] { font-size: 12px; }
   #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } 
 }
 
+.ship_tr {
+  padding: 0.05rem;
+}
 
 .ship_td_stock {
   color: #ff4400;

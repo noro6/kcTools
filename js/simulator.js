@@ -883,7 +883,7 @@ class Plane {
 		if (plane) {
 			// 基本ステータス
 			this.id = plane.id;
-			this.name = plane.abbr ? plane.abbr : plane.name;
+			this.name = plane.name;
 			this.type = plane.type;
 			this.itype = plane.itype;
 			this.antiAir = plane.antiAir;
@@ -1934,7 +1934,7 @@ function convertItemType(type) {
 		case 14:
 		case 15:
 		case 40:
-			return 5;
+			return 14;
 		case 24:
 		case 30:
 		case 46:
@@ -2466,7 +2466,10 @@ function setPlaneTypeIconSelect(element, withoutAll = false) {
 				altText = '対潜装備';
 				break;
 			case 24:
-				altText = '上陸用兵装';
+				altText = '輸送 / 上陸用兵装';
+				break;
+			case 48:
+				altText = '局地戦闘機 / 陸軍戦闘機';
 				break;
 			case 17:
 				altText = 'その他';
@@ -2647,7 +2650,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	$div.removeClass(getItemCss($div[0].dataset.type)).addClass(getItemCss(plane.itype));
 	$div[0].dataset.planeid = plane.id;
 	$div[0].dataset.type = plane.itype;
-	$div.find('.plane_name_span').text(plane.abbr ? plane.name : plane.name).attr('title', plane.abbr ? plane.name : '');
+	$div.find('.plane_name_span').text(plane.name).attr('title', plane.name);
 	$div.find('.plane_img').attr('src', `../img/type/icon${plane.itype}.png`).attr('alt', plane.itype);
 	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
 	$div.find('.plane_name').addClass('drag_handle');
@@ -3583,6 +3586,7 @@ function createShipTable() {
 	const imgHeight = 30;
 
 	let prevType = 0;
+	let prevType2 = 0;
 	for (const ship of ships) {
 		// 残り隻数
 		let shipCount = 0;
@@ -3606,10 +3610,10 @@ function createShipTable() {
 		const $shipDiv = document.createElement('div');
 		// 0を切っていれば選択不可
 		if (dispInStock && dispEquipped && !shipCount) {
-			$shipDiv.className = `ship_tr ship_tr_disabled d-flex ${displayMode === "multi" ? 'tr_multi' : 'py-1'}`;
+			$shipDiv.className = `ship_tr ship_tr_disabled d-flex ${displayMode === "multi" ? 'tr_multi' : ''}`;
 		}
 		else {
-			$shipDiv.className = `ship_tr general_tr d-flex ${displayMode === "multi" ? 'tr_multi' : 'py-1'}`;
+			$shipDiv.className = `ship_tr general_tr d-flex ${displayMode === "multi" ? 'tr_multi' : ''}`;
 		}
 		$shipDiv.dataset.shipid = ship.id;
 		$shipDiv.id = 'ship_tr_' + ship.id;
@@ -3638,7 +3642,7 @@ function createShipTable() {
 
 		// 残り個数
 		const $stockDiv = document.createElement('div');
-		$stockDiv.className = 'ml-1 ship_td_stock align-self-center d-none';
+		$stockDiv.className = 'ml-1 ship_td_stock align-self-center ' + (dispInStock ? '' : 'd-none');
 		$stockDiv.textContent = `×${shipCount}`;
 		$nameDiv.appendChild($stockDiv);
 
@@ -3661,10 +3665,10 @@ function createShipTable() {
 		// 艦種分割ライン　絶対
 		if (prevType !== ship.type) {
 			const $typeDiv = document.createElement('div');
-			$typeDiv.className = 'type_divider mt-3 mb-1';
+			$typeDiv.className = 'type_divider mt-4';
 
 			const $type = document.createElement('div');
-			$type.className = 'font_size_12 font_color_half align-self-center';
+			$type.className = 'align-self-center';
 			$type.textContent = API_SHIP_TYPE.find(v => v.id === ship.type).name;
 
 			const $typeLine = document.createElement('div');
@@ -3676,7 +3680,31 @@ function createShipTable() {
 			fragment.appendChild($typeDiv);
 		}
 
+		// 艦型分割ライン (よくあるソート以外)
+		if (!isFrequent && prevType2 !== ship.type2) {
+			const $typeDiv = document.createElement('div');
+			$typeDiv.className = 'type_divider mt-1 ml-1';
+
+			const $type = document.createElement('div');
+			$type.className = 'font_size_12 font_color_half align-self-center';
+			if (!API_CTYPE.find(v => v.id === ship.type2)) {
+				console.log(ship.type2);
+			}
+			else {
+				$type.textContent = API_CTYPE.find(v => v.id === ship.type2).name;
+			}
+
+			const $typeLine = document.createElement('div');
+			$typeLine.className = 'flex-grow-1 border-bottom align-self-center mx-2';
+
+			$typeDiv.appendChild($type);
+			$typeDiv.appendChild($typeLine);
+
+			fragment.appendChild($typeDiv);
+		}
+
 		prevType = ship.type;
+		prevType2 = ship.type2;
 		fragment.appendChild($shipDiv);
 	}
 
@@ -7520,7 +7548,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	for (const pl of shipInstance.planes) {
 		const p = ITEM_DATA.find(v => v.id === pl.id);
 		if (index === (ship ? ship.slot.length : 4)) break;
-		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
+		const name = p ? p.name : '-';
 		planeText += `
 		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${PLANE_TYPE.includes(p.type) ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
 			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
@@ -7724,7 +7752,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 
 	for (const pl of landBaseData.landBases[landBaseNo].planes) {
 		const p = ITEM_DATA.find(v => v.id === pl.id);
-		const name = p ? (p.abbr ? p.abbr : p.name) : '-';
+		const name = p ? p.name : '-';
 		planeText += `
 		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
 			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
@@ -9527,7 +9555,7 @@ function showPlaneToolTip($this, isLandBase = false) {
 	const rangeText = plane.range && rangeObj ? rangeObj.name : '';
 
 	const text =
-		`<div class="text-left">
+		`<div class="text-left m-1">
 			<div>
 				<img src="../img/type/icon${rawPlane.itype}.png" alt="${rawPlane.itype}" class="img-size-25">
 				<span>${plane.name}</span>
@@ -9548,10 +9576,10 @@ function showPlaneToolTip($this, isLandBase = false) {
 					<span>爆装: ${rawPlane.bomber}</span>
 					${bonusBomber ? `<span class="text_remodel">(+${bonusBomber.toFixed(2)})</span>` : ''}
 				</div>` : ''}
+				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
 				${rawPlane.asw ? `<div class="col_half">対潜: ${rawPlane.asw}</div>` : ''}
 				${rawPlane.armor ? `<div class="col_half">装甲: ${rawPlane.armor}</div>` : ''}
 				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
-				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
 				${rawPlane.avoid2 ? `<div class="col_half">回避: ${rawPlane.avoid2}</div>` : ''}
 				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
@@ -9598,7 +9626,7 @@ function showPlaneBasicToolTip($this) {
 	const rangeText = plane.range2 && rangeObj ? rangeObj.name : '';
 
 	const text =
-		`<div class="text-left">
+		`<div class="text-left m-1">
 			<div>
 				<img src="../img/type/icon${plane.itype}.png" alt="${plane.itype}" class="img-size-25">
 				<span>${plane.name}</span>
@@ -9620,10 +9648,10 @@ function showPlaneBasicToolTip($this) {
 					<span>爆装: ${plane.bomber}</span>
 					${bonusBomber ? `<span class="text_remodel">(+${bonusBomber.toFixed(2)})</span>` : ''}
 				</div>` : ''}
+				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
 				${plane.asw ? `<div class="col_half">対潜: ${plane.asw}</div>` : ''}
 				${plane.armor ? `<div class="col_half">装甲: ${plane.armor}</div>` : ''}
 				${plane.scout ? `<div class="col_half">索敵: ${plane.scout}</div>` : ''}
-				${plane.accuracy ? `<div class="col_half">命中: ${plane.accuracy}</div>` : ''}
 				${plane.avoid2 ? `<div class="col_half">回避: ${plane.avoid2}</div>` : ''}
 				${plane.antiBomber ? `<div class="col_half">対爆: ${plane.antiBomber}</div>` : ''}
 				${plane.interception ? `<div class="col_half">迎撃: ${plane.interception}</div>` : ''}
@@ -9658,12 +9686,12 @@ function showEnemyStatusToolTip($this) {
 		if (!item) continue;
 
 		itemText += `
-			<div class="d-flex my-1">
-				<div class="mr-2 align-self-center enemy_tool_slot">${slot > 0 ? slot : 0}</div>
-				<div class="align-self-center">
-					<img src="../img/type/icon${item.itype}.png" alt="${item.itype}" class="img-size-25">
+			<div class="d-flex">
+				<div class="align-self-center enemy_tool_slot">${slot > 0 ? slot : 0}</div>
+				<div class="ml-1 align-self-center">
+					<img src="../img/type/icon${item.itype}.png" alt="${item.itype}" class="img-size-30">
 				</div>
-				<div class="align-self-center">
+				<div class="ml-1 align-self-center">
 					<span class="font_size_11">id: ${item.id}</span>
 					<span> ${item.name}</span>
 				</div>
@@ -9671,16 +9699,16 @@ function showEnemyStatusToolTip($this) {
 	}
 
 	let text =
-		`<div class="text-left mx-2">
-			<div>
-				<span class="font_size_11 text-primary">ID: ${enm.id}</span>
-				<span>${enm.name}</span>
-			</div>
+		`<div class="text-left m-1">
 			<div class="d-flex">
-				${enemy.airPower ? `<div class="">制空値: ${enemy.airPower}</div>` : ''}
-				${enemy.landBaseAirPower ? `<div class="">基地制空値: ${enemy.landBaseAirPower}</div>` : ''}
+				<div class="align-self-center font_size_11">ID: ${enm.id}</div>
+				<div class="ml-2 align-self-center">${enm.name}</div>
 			</div>
-			<div class="mt-2">
+			<div class="d-flex mt-1">
+				${enemy.airPower ? `<div class="">制空値: ${enemy.airPower}</div>` : ''}
+				
+			</div>
+			<div class="mt-1">
 				${itemText}
 			</div>
 		</div>`;
@@ -10672,6 +10700,10 @@ function plane_type_select_Changed($this = null) {
 		$('#plane_type_select .item_type').removeClass('active');
 		$this.addClass('active');
 	}
+
+	// ツールチップもお掃除
+	$('#modal_plane_select').find('.plane').tooltip('hide');
+
 	// 選択時のカテゴリ
 	let selectedType = castInt($this.length ? $this[0].dataset.type : 0);
 	// ベース機体一覧
@@ -10701,7 +10733,7 @@ function plane_type_select_Changed($this = null) {
 		}
 
 		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
-		if (!dispType || !dispType.findIndex(v => convertItemType(v.type) === selectedType) === -1) {
+		if (!dispType || !dispType.find(v => convertItemType(v) === selectedType)) {
 			selectedType = 0;
 		}
 
@@ -10751,7 +10783,6 @@ function plane_type_select_Changed($this = null) {
 
 	// 装備可能カテゴリ表示変更
 	const typeIcons = dispType.map(v => convertItemType(v));
-	console.log(typeIcons);
 	$('#plane_type_select').find('.item_type').each((i, e) => {
 		const typeId = castInt($(e)[0].dataset.type);
 		if (typeId === selectedType) $(e).addClass('active');
