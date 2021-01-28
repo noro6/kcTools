@@ -5154,21 +5154,24 @@
 							</div>
 							<div class="ml-1 flex-grow-1 align-self-center">
 								<select class="custom-select custom-select-sm sort_select" id="plane_sort_select">
-									<option value="default">カテゴリ順</option>
-									<option value="history">よく使う順</option>
-									<option value="id">図鑑No順</option>
-									<option value="antiAir">装備対空順</option>
-									<option value="battle_anti_air">出撃対空順</option>
-									<option value="defense_anti_air">防空対空順</option>
-									<option value="land_base_power">基地火力順</option>
-									<option value="radius">半径順</option>
-									<option value="torpedo">雷装順</option>
-									<option value="bomber">爆装順</option>
-									<option value="accuracy">命中順</option>
-									<option value="scout">索敵順</option>
-									<option value="antiBomber">対爆順</option>
-									<option value="interception">迎撃順</option>
-									<option value="cost">コスト順</option>
+									<option value="default">カテゴリ</option>
+									<option value="history">よく使う</option>
+									<option value="id">図鑑No</option>
+									<option value="antiAir">装備対空値</option>
+									<option value="battle_anti_air">出撃対空値</option>
+									<option value="defense_anti_air">防空対空値</option>
+									<option value="antiAirWeight">加重対空値</option>
+									<option value="antiAirBonus">艦隊防空値</option>
+									<option value="fire">火力</option>
+									<option value="torpedo">雷装</option>
+									<option value="bomber">爆装</option>
+									<option value="accuracy">命中</option>
+									<option value="scout">索敵</option>
+									<option value="antiBomber">対爆</option>
+									<option value="interception">迎撃</option>
+									<option value="radius">半径</option>
+									<option value="cost">コスト</option>
+									<option value="land_base_power">基地火力</option>
 								</select>
 							</div>
 						</div>
@@ -5247,18 +5250,15 @@
 						<div class="d-flex flex-wrap" id="plane_type_select"></div>
 					</div>
 					<div class="pb-1 custom_table" id="plane_table">
-						<div class="scroll_thead d-flex px-lg-2">
+						<div class="scroll_thead d-flex px-lg-2" id="plane_table_thead">
 							<div class="plane_td_type align-self-center">
 								<img class="img-size-25" src="../img/type/undefined.png" alt="種">
 							</div>
 							<div class="pl-2 plane_td_name align-self-center">装備名</div>
-							<div class="ml-auto plane_td_basic align-self-center">対空</div>
-							<!-- <div class="plane_td_basic align-self-center d-none d-lg-block">雷装</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">爆装</div>
-							<div class="plane_td_basic align-self-center d-none d-xl-block">命中</div> -->
-							<div class="plane_td_basic align-self-center">半径</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">コスト</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">射撃回避</div>
+							<div class="ml-auto plane_td_basic align-self-center">ステータス1</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス2</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス3</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス4</div>
 						</div>
 						<div id="plane_tbody_wrap">
 							<div id="plane_tbody"></div>
@@ -5266,6 +5266,10 @@
 					</div>
 				</div>
 				<div class="modal-footer">
+					<div class="mr-sm-auto custom-control custom-checkbox align-self-center">
+						<input type="checkbox" class="custom-control-input" id="plane_only" checked>
+						<label class="custom-control-label" for="plane_only">航空機のみ表示</label>
+					</div>
 					<button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
 					<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
 				</div>
@@ -5387,6 +5391,10 @@
 					</div>
 				</div>
 				<div class="modal-footer">
+					<div class="mr-sm-auto custom-control custom-checkbox align-self-center">
+						<input type="checkbox" class="custom-control-input" id="has_slot_only" checked>
+						<label class="custom-control-label" for="has_slot_only">搭載数のある艦娘のみ表示</label>
+					</div>
 					<button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
 					<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
 				</div>
@@ -6390,16 +6398,19 @@
 		<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
 			<div class="modal-content mt-5">
 				<div class="modal-header">
-					<h5 class="modal-title">艦隊対空砲火設定</h5>
+					<h5 class="modal-title">艦隊対空砲火情報</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body py-2">
 					<div class="font_size_12 mt-1">
 						<div>
-							<span>入力された艦隊の対空砲火性能の確認と、対空カットインの設定が行えます。</span>
+							<span>入力された艦隊の対空砲火性能の確認が行えます。</span>
 						</div>
 						<div>
 							<span>正しい撃墜数を求める場合は、実際に編成されている全ての艦娘と装備を入力する必要があります。</span>
+						</div>
+						<div>
+							<span>対空カットインの発動率は推定値です。</span>
 						</div>
 					</div>
 					<div class="d-flex flex-wrap my-1">
@@ -6447,11 +6458,7 @@
 							</div>
 							<div class="col-12 col-lg-6 order-3 order-lg-2 mt-2 px-1">
 								<div class="d-flex">
-									<div class="font_size_16">対空カットイン設定</div>
-									<div class="ml-auto align-self-end" id="btn_reset_cutin">
-										<i class="fas fa-trash-o"></i>
-										<span>発動率リセット</span>
-									</div>
+									<div class="font_size_16">対空カットイン情報</div>
 								</div>
 								<div class="mt-1 tab-content">
 									<table class="text-center mt-1" id="antiair_cutin_table">
@@ -6460,7 +6467,7 @@
 												<td class="w_40">カットイン種別</td>
 												<td class="w_15">変動</td>
 												<td class="w_15">固定</td>
-												<td class="w_30">発動率(%)</td>
+												<td class="w_30">発動率</td>
 											</tr>
 										</thead>
 										<tbody id="antiair_cutin_inputs"></tbody>

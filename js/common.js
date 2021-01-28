@@ -104,7 +104,6 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
 	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = true;
 	if (!setting.hasOwnProperty('copyToClipboard')) setting.copyToClipboard = false;
-	if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
 	if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
 	if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
 	if (!setting.hasOwnProperty('themeColor')) setting.themeColor = 'normal_theme';
@@ -119,6 +118,8 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
+	if (!setting.hasOwnProperty('planeOnly')) setting.planeOnly = true;
+	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -310,6 +311,8 @@ function adaptUpdater() {
 		if (major <= 11) {
 			// 対空CI非表示項目設定削除
 			delete setting.invisibleCutin;
+			// 連合チェックいらん
+			delete setting.isUnion;
 		}
 	}
 
