@@ -345,7 +345,7 @@ const ITEM_DATA = [
 	{ id: 323, type: 11, itype: 10, name: "瑞雲改二(六三四空/熟練)", abbr: "瑞雲改二(634空/熟練)", fire: 2, antiAir: 5, torpedo: 0, bomber: 11, armor: 0, asw: 7, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 3, avoid2: 3, radius: 5, cost: 8, avoid: 4, range2: 0 },
 	{ id: 367, type: 11, itype: 10, name: "Swordfish(水上機型)", abbr: "", fire: 2, antiAir: 0, torpedo: 5, bomber: 5, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 3, cost: 5, avoid: 0, range2: 0 },
 	{ id: 368, type: 11, itype: 10, name: "Swordfish Mk.III改(水上機型)", abbr: "Swordfish Mk.III改(水爆)", fire: 4, antiAir: 0, torpedo: 6, bomber: 7, armor: 0, asw: 7, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 2, avoid2: 0, radius: 3, cost: 6, avoid: 0, range2: 0 },
-	{ id: 369, type: 11, itype: 10, name: "Swordfish Mk.III改(水上機型/熟練)", abbr: "Swordfish Mk.III改(水爆/熟練)", fire: 4, antiAir: 0, torpedo: 7, bomber: 8, armor: 0, asw: 8, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, accuracy: 3, avoid2: 0, radius: 3, cost: 5, avoid: 0, range2: 0 },
+	{ id: 369, type: 11, itype: 10, name: "Swordfish Mk.III改(水上機型/熟練)", abbr: "Swordfish Mk.III改(水爆/熟練)", fire: 4, antiAir: 0, torpedo: 7, bomber: 8, armor: 0, asw: 8, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 3, cost: 5, avoid: 0, range2: 0 },
 	{ id: 27, type: 12, itype: 11, name: "13号対空電探", abbr: "", fire: 0, antiAir: 2, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0 },
 	{ id: 28, type: 12, itype: 11, name: "22号対水上電探", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0 },
 	{ id: 29, type: 12, itype: 11, name: "33号対水上電探", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, accuracy: 5, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0 },
@@ -1868,6 +1868,10 @@ const MAP_DATA = [
 	{ area: 493, name: "ノルウェー北岬沖/北極海" },
 	{ area: 494, name: "ルソン島沖/オルモック沖" },
 ];
+
+// 基地空襲のある海域
+const AIR_RAID_MAP = [65, 464, 465, 466, 471, 483, 484, 485, 486, 487, 493, 494];
+
 // 制空状態
 const AIR_STATUS = [
 	{ id: 0, name: "制空権確保", abbr: "確保", rate: 10 },
@@ -2137,6 +2141,14 @@ const FORBIDDEN_LINK_SHIP_ITEM = [
 	// 伊勢型改二 第3，4，5スロットに 主砲系
 	{ shipId: 353, index: [3, 4, 5], itemType: [2, 3], itemIDs: [] },
 	{ shipId: 354, index: [3, 4, 5], itemType: [2, 3], itemIDs: [] },
+	// 夕張改二 4スロットに 主砲系 魚雷系 不可
+	{ shipId: 422, index: [4], itemType: [1, 2, 5], itemIDs: [] },
+	{ shipId: 423, index: [4], itemType: [1, 2, 5, 22], itemIDs: [] },
+	{ shipId: 424, index: [4], itemType: [1, 2, 5], itemIDs: [] },
+	// 夕張改二 5スロットに 主砲系 魚雷系 不可
+	{ shipId: 422, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
+	{ shipId: 423, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
+	{ shipId: 424, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
 ];
 
 // 補強増設枠
@@ -2193,4 +2205,4 @@ const DEFAULT_PLANE_PRESET = [
 const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
-const LATEST_VERSION = '1.11.3.4';
+const LATEST_VERSION = '1.12.0';

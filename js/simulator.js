@@ -57,6 +57,9 @@ let usedPlane = [];
 // 編成済み艦娘
 let usedShip = [];
 
+// 基地空襲被害を促すアラート
+let needAirRaidAlert = false;
+
 // Chart描画用データ
 let chartInstance = null;
 let subChartInstance = null;
@@ -3373,8 +3376,18 @@ function createItemTable(planes, type) {
 		const nameWrapper = document.createElement('div');
 		nameWrapper.className = 'pl-1 d-flex align-self-center flex-grow-1';
 
+		let specialItem = false;
+		if (plane.itype === 16 && plane.antiAir >= 8) {
+			// 特殊高角砲
+			specialItem = true;
+		}
+		else if (plane.type === 21 && plane.antiAir >= 9) {
+			// 特殊機銃
+			specialItem = true;
+		}
+
 		const $nameDiv = document.createElement('div');
-		$nameDiv.className = 'pl-1 plane_td_name align-self-center';
+		$nameDiv.className = `pl-1 plane_td_name align-self-center${specialItem ? ' special_item' : ''}`;
 		$nameDiv.textContent = plane.name;
 		nameWrapper.appendChild($nameDiv);
 
@@ -3436,7 +3449,7 @@ function createItemTable(planes, type) {
 		if (isDivideStock && plane.remodel > 0) {
 			// 改修値
 			const $remodelDiv = document.createElement('div');
-			$remodelDiv.className = 'plane_td_remodel align-self-center';
+			$remodelDiv.className = 'plane_td_remodel text_remodel align-self-center';
 			$remodelDiv.dataset.remodel = plane.remodel;
 			let remodelText = '';
 			if (displayMode === 'multi') {
@@ -4204,10 +4217,10 @@ function drawPlanePresetPreview(preset) {
 	for (const plane of planes) {
 		const needWarning = !checkInvalidPlane(parentId, plane, idx++);
 		text += `
-		<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="`+ plane.id + `" data-remodel="` + plane.remodel + `">
-			<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/icon`+ plane.itype + `.png"></div>
+		<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="${plane.id}" data-remodel="${plane.remodel}">
+			<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/icon${plane.itype}.png"></div>
 			<div class="preset_preview_td_name ml-1 py-2">`+ plane.name + `</div>
-			<div class="preset_preview_td_remodel">`+ (plane.remodel ? '★' + plane.remodel : '') + `</div>
+			<div class="text_remodel">${plane.remodel ? '★' + plane.remodel : ''}</div>
 			` + (needWarning ? warningIcon : '') + `
 		</div>
 		`;
@@ -5937,7 +5950,7 @@ function updateLandBaseView() {
 	}
 
 	// 基地空襲おこした？アラート
-	let needAlert = false;
+	needAirRaidAlert = false;
 
 	// 待機以外の札があるかどうか
 	const exists = landBaseAll.landBases.some(v => v.mode !== -1);
@@ -5973,7 +5986,7 @@ function updateLandBaseView() {
 			// 一番上の機体が18機か4機
 			for (const plane of topPlanes) {
 				if ((plane.isRecon && plane.slot === 4) || (!plane.isRecon && plane.slot === 18)) {
-					needAlert = true;
+					needAirRaidAlert = true;
 					break;
 				}
 			}
@@ -5997,13 +6010,6 @@ function updateLandBaseView() {
 	else {
 		document.getElementById('defense_summary').classList.remove('d-flex');
 		document.getElementById('defense_summary').classList.add('d-none');
-	}
-
-	if (!isDefMode && needAlert) {
-		document.getElementById('air_raid_alert').classList.remove('d-none');
-	}
-	else {
-		document.getElementById('air_raid_alert').classList.add('d-none');
 	}
 }
 
@@ -6377,6 +6383,14 @@ function updateEnemyView() {
 	}
 	else {
 		document.getElementById('route').textContent = world;
+	}
+
+	// 基地空襲を促す
+	if (!isDefMode && needAirRaidAlert && AIR_RAID_MAP.includes(castInt(world))) {
+		document.getElementById('air_raid_alert').classList.remove('d-none');
+	}
+	else {
+		document.getElementById('air_raid_alert').classList.add('d-none');
 	}
 
 	const cutinAlert = document.getElementById('enemy_cutin_contain');
@@ -9512,9 +9526,9 @@ function remodelSelect_Shown($this) {
 	if (!$this.find('.dropdown-menu').html().trim()) {
 		let menuText = '';
 		for (let i = 0; i < 10; i++) {
-			menuText += `<div class="remodel_item" data-remodel="${i}"><i class="fas fa-star"></i>+${i}</div>`;
+			menuText += `<div class="remodel_item text_remodel" data-remodel="${i}"><i class="fas fa-star"></i>+${i}</div>`;
 		}
-		menuText += '<div class="remodel_item" data-remodel="10"><i class="fas fa-star"></i>max</div>';
+		menuText += '<div class="remodel_item text_remodel" data-remodel="10"><i class="fas fa-star"></i>max</div>';
 		$this.find('.dropdown-menu').append(menuText);
 	}
 	else $this.find('.remodel_item_selected').removeClass('remodel_item_selected');

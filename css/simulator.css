@@ -73,7 +73,8 @@ input[type="text"] { font-size: 12px; }
 .text_orange { color: rgb(255, 120, 0); }
 .text_deep_orange { color: rgb(255, 80, 0); }
 .text_red { color: rgb(255, 0, 0); }
-.text_remodel { color: rgb(0, 200, 200); }
+.text_remodel { color: rgb(0, 175, 175); }
+.dark-theme .text_remodel { color: rgb(0, 200, 200); }
 .min-h-31px { height: 31px }
 
 .general_tr {
@@ -420,7 +421,7 @@ input[type="text"] { font-size: 12px; }
 .btn_antiair_input:hover { opacity: 1; }
 
 /* -----------------------------------
-  機体コントロール関連
+  装備コントロール関連
 ----------------------------------- */
 .plane_name {
   cursor: pointer;
@@ -437,6 +438,7 @@ input[type="text"] { font-size: 12px; }
   font-size: 12px;
   padding-left: 0.25rem;
 }
+
 .plane_img_sm {
   width: 22px;
   height: auto;
@@ -492,10 +494,7 @@ input[type="text"] { font-size: 12px; }
 }
 .btn_remove_plane > i { font-size: 16px; }
 /* 改修関連 */
-.remodel_select_parent {
-  color: rgb(0, 200, 200);
-  width: 34px;
-}
+.remodel_select_parent { width: 34px; }
 .remodel_select{
   cursor: pointer;
   transition: 0.4s;
@@ -507,7 +506,6 @@ input[type="text"] { font-size: 12px; }
 .remodel_select:hover { filter: drop-shadow(0px 0px 6px #0ff); }
 .remodel_disabled:hover { filter: drop-shadow(0px 0px 0px #fff); }
 .remodel_select_parent .dropdown-menu {
-  color: rgb(0, 200, 200);
   min-width: 62px;
   box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);
   font-size: 14px;
@@ -521,7 +519,7 @@ input[type="text"] { font-size: 12px; }
 .remodel_item:hover { background-color: rgba(128, 128, 128, 0.3); }
 .remodel_item:active {
   color: #fff;
-  background-color: #00c8c8;
+  background-color: rgb(0, 200, 200);
   filter: drop-shadow(0px 0px 6px #0ff);
 }
 /* 熟練度関連 */
@@ -726,6 +724,11 @@ input[type="text"] { font-size: 12px; }
   text-align: right;
   width: 60px;
 }
+
+/* 特殊機銃とか */
+.special_item { color: rgb(50, 152, 65); }
+.dark-theme .special_item { color: rgb(100, 200, 120); }
+
 .plane_td_name {
   -ms-flex-positive: 1!important;
   flex-grow: 1!important;
@@ -734,14 +737,13 @@ input[type="text"] { font-size: 12px; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.plane_tr_disabled .plane_td_name { color: #ff6b6b; }
+
 .plane_td_stock {
   color: #ff4400;
   font-size: 11px;
 }
-.plane_td_remodel {
-  color: #00c8c8;
-  font-size: 12px;
-}
+.plane_td_remodel { font-size: 12px; }
 .tr_multi {
   padding-top: .15rem;
   padding-bottom: .15rem;
@@ -884,7 +886,6 @@ input[type="text"] { font-size: 12px; }
   align-self: center;
 }
 .preset_preview_td_type { width: 30px; }
-.preset_preview_td_remodel { color: rgb(0, 200, 200); }
 
 
 /* ---------------------------------------
@@ -949,7 +950,6 @@ input[type="text"] { font-size: 12px; }
 .btn_remodel {
   cursor: pointer;
   font-size: 12px;
-  color: rgb(0, 200, 200);
   border-radius: .25rem;
   transition: .2s;
   padding: 7px 4px;
@@ -1158,7 +1158,6 @@ input[type="text"] { font-size: 12px; }
 .plane_status_anti_bomber { width: 33%; }
 .plane_status_avoid { width: 33%; }
 
-.remodel_label { color: rgb(0, 200, 200); }
 .img_plane_card {
   width: 240px;
   height: 240px;
