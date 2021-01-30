@@ -551,20 +551,25 @@ input[type="text"] { font-size: 12px; }
 .prof_select_parent .dropdown-item:hover { background-color: rgba(128, 128, 128, 0.3); }
 .prof_select_parent .dropdown-item:active { background-color: rgba(128, 128, 128, 0.5); }
 /* 搭載数 */
-.slot_select_parent{
-  display: table;
-  width: 20px;
-  height: 28px;
+.slot_select_parent {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  width: 22px;
+  padding-right: 0.25rem;
   margin-left: 0.25rem;
 }
-.slot,
+.slot:not(.d-none),
 .slot_wrench {
+  /* -ms-flex-item-align: center;
+  align-self: center; */
   cursor: pointer;
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
   transition: .4s;
 }
+.capturing .slot_wrench { margin-right: 2rem; }
+
 .slot:hover { filter: drop-shadow(0 0 3px #969696); }
 .slot_select_parent .dropdown-menu {
   z-index: 1000;

@@ -7461,7 +7461,9 @@ function rateCalculate() {
 		$('#shoot_down_table').find(`.fap.battle${i + 1}`).text(avgAP);
 		$('#shoot_down_table').find(`.eap.battle${i + 1}`).text(avgEAP);
 		$('#shoot_down_table').find(`.cond.battle${i + 1}`)
-			.html(`<span class="px-5 airStatus${airIndex}">${AIR_STATUS[airIndex].abbr}</span>`);
+			.html(`<span>${AIR_STATUS[airIndex].abbr}</span>`)
+			.removeClass(`airStatus0 airStatus1 airStatus2 airStatus3 airStatus4`)
+			.addClass(`airStatus${airIndex}`);
 
 		for (const ship of fleet.ships) {
 			for (const plane of ship.planes) {
