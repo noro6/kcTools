@@ -121,10 +121,6 @@
 				</div>
 				<div class="ml-2 r_btn btn_ex_setting" data-toggle="tooltip" title="一括設定"><i class="fas fa-wrench"></i>
 				</div>
-				<div class="ml-2 r_btn d-none d-lg-flex btn_show_plane_box" data-toggle="tooltip"
-					title="Drag & Drop 用艦載機一覧呼び出し">
-					<i class="fas fa-list-ul"></i>
-				</div>
 				<div class="ml-2 r_btn btn_capture" data-toggle="tooltip" title="基地航空隊入力情報を画像で保存"><i class="fas fa-camera"></i>
 				</div>
 				<div class="ml-auto r_btn d-none btn_commit_trade" data-toggle="tooltip" title="入れ替え終了"><i
@@ -861,10 +857,6 @@
 						class="fas fa-trash-o"></i>
 				</div>
 				<div class="ml-2 r_btn btn_ex_setting" data-toggle="tooltip" title="一括設定"><i class="fas fa-wrench"></i>
-				</div>
-				<div class="ml-2 r_btn d-none d-lg-flex btn_show_plane_box" data-toggle="tooltip"
-					title="Drag & Drop 用艦載機一覧呼び出し">
-					<i class="fas fa-list-ul"></i>
 				</div>
 				<div class="ml-2 r_btn btn_capture" data-toggle="tooltip" title="艦隊入力情報を画像で保存"><i class="fas fa-camera"></i>
 				</div>
@@ -5294,52 +5286,6 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="px-2 py-2 general_box d-none" id="draggable_plane_box">
-		<div class="d-flex font_size_18 mb-1 drag_handle cur_move">
-			<div class="align-self-center">機体一覧</div>
-			<div class="ml-auto align-self-center cur_pointer" id="btn_hide_plane_box">
-				<i class="fas fa-times"></i>
-			</div>
-		</div>
-		<div class="mb-1 d-flex">
-			<div class="input-group input-group-sm ml-1">
-				<div class="input-group-prepend">
-					<span class="input-group-text">ソート</span>
-				</div>
-				<select class="custom-select custom-select-sm sort_select" id="draggable_plane_sort_select">
-					<option value="default">図鑑</option>
-					<option value="history">よく使う</option>
-					<option value="antiAir">装備対空</option>
-					<option value="battle_anti_air">出撃対空</option>
-					<option value="defense_anti_air">防空対空</option>
-					<option value="land_base_power">基地火力</option>
-					<option value="radius">半径</option>
-					<option value="torpedo">雷装</option>
-					<option value="bomber">爆装</option>
-					<option value="accuracy">命中</option>
-					<option value="scout">索敵</option>
-					<option value="antiBomber">対爆</option>
-					<option value="interception">迎撃</option>
-					<option value="cost">コスト</option>
-				</select>
-			</div>
-		</div>
-		<div class="p-1 d-flex flex-wrap" id="draggable_plane_type_select">
-		</div>
-		<div class="custom_table" id="draggable_plane_table">
-			<div class="scroll_thead d-flex">
-				<div class="plane_td_type align-self-center">
-					<img class="img-size-20_lock" src="../img/type/undefined.png" alt="種">
-				</div>
-				<div class="pl-2 plane_td_name align-self-center">装備名</div>
-				<div class="ml-auto plane_td_basic align-self-center">対空</div>
-				<div class="plane_td_basic align-self-center">半径</div>
-			</div>
-			<div id="draggable_plane_tbody"></div>
-		</div>
-	</div>
-
 	<div class="modal fade" id="modal_ship_select" tabindex="-1">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
 			<div class="modal-content">
