@@ -581,10 +581,12 @@ input[type="text"] { font-size: 12px; }
   transition: 0.2s;
 }
 
-.plane_status_box {
+.item_tooltip { min-width: 175px; }
+.item_status_box {
   min-width: 120px;
   max-width: 180px;
 }
+.item_status_box .col_half{ white-space: nowrap; }
 
 
 /* ------------------------------
@@ -721,11 +723,16 @@ input[type="text"] { font-size: 12px; }
 }
 .dark-theme .plane_tr_disabled:hover { text-shadow: 1px 1px 3px #000; }
 .plane_td_basic {
-  text-align: center;
+  text-align: right;
   width: 60px;
 }
-.plane_td_name { 
-  /* max-width: 290px;  */
+.plane_td_name {
+  -ms-flex-positive: 1!important;
+  flex-grow: 1!important;
+  width: 1px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .plane_td_stock {
   color: #ff4400;
@@ -1292,33 +1299,21 @@ input[type="text"] { font-size: 12px; }
   text-align: right;
 }
 #antiair_input_table tbody td {
-  padding-top: 0.45rem;
-  padding-bottom: 0.45rem;
+  height: 36px;
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
-#antiair_cutin_table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+#antiair_cutin_inputs .general_tr { height: 36px; }
+#antiair_cutin_inputs .general_tr div {
+  -ms-flex-item-align: center;
+  align-self: center;
 }
-#antiair_cutin_table tbody td {
-  padding: .15rem;
-  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
+#antiair_cutin_inputs .general_tr.disabled {
+  opacity: 0.4;
 }
-#antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
 #fleet_antiair { width: 100px; }
-
-#btn_reset_cutin {
-  cursor: pointer;
-  opacity: 0.6;
-  transition: 0.2s;
-}
-#btn_reset_cutin:hover {
-  opacity: 1.0;
-}
 
 
 /* ------------------------------

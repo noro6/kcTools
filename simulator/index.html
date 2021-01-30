@@ -2487,7 +2487,7 @@
 							</select>
 							<div class="ml-1 mr-2 align-self-center no_capture">隻</div>
 							<div class="ml-2 align-self-center">
-								<span class="font_color_half">艦隊制空値: </span>
+								<span class="font_color_half">総制空値: </span>
 								<span class="fleet_ap">0</span>
 							</div>
 							<div class="ml-3 align-self-center">
@@ -2496,11 +2496,19 @@
 							</div>
 							<div class="ml-1 align-self-center btn_show_contact_rate no_capture">
 								<i class="fas fa-search"></i>
-								<span class="font_size_11">触接詳細</span>
+								<span class="font_size_11">触接</span>
 							</div>
 							<div class="ml-3 align-self-center">
-								<span class="font_color_half">夜間触接率: </span>
+								<span class="font_color_half">夜間触接: </span>
 								<span class="night_contact_rate">0.0%</span>
+							</div>
+							<div class="ml-3 align-self-center">
+								<span class="font_color_half">艦隊防空: </span>
+								<span class="fleet_anti_air">0.0%</span>
+							</div>
+							<div class="ml-3 align-self-center btn_antiair_input no_capture">
+								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
+								<span class="font_size_12">対空砲火性能確認</span>
 							</div>
 						</div>
 						<div class="fleet_tab">
@@ -5167,20 +5175,21 @@
 									<option value="default">カテゴリ</option>
 									<option value="history">よく使う</option>
 									<option value="id">図鑑No</option>
-									<option value="antiAir">装備対空値</option>
-									<option value="battle_anti_air">出撃対空値</option>
-									<option value="defense_anti_air">防空対空値</option>
-									<option value="antiAirWeight">加重対空値</option>
-									<option value="antiAirBonus">艦隊防空値</option>
 									<option value="fire">火力</option>
+									<option value="antiAir">対空</option>
 									<option value="torpedo">雷装</option>
 									<option value="bomber">爆装</option>
 									<option value="accuracy">命中</option>
 									<option value="scout">索敵</option>
+									<option value="asw">対潜</option>
 									<option value="antiBomber">対爆</option>
 									<option value="interception">迎撃</option>
+									<option value="antiAirWeight">加重対空</option>
+									<option value="antiAirBonus">艦隊防空</option>
 									<option value="radius">半径</option>
 									<option value="cost">コスト</option>
+									<option value="battle_anti_air">出撃対空</option>
+									<option value="defense_anti_air">防空対空</option>
 									<option value="land_base_power">基地火力</option>
 								</select>
 							</div>
@@ -5192,16 +5201,22 @@
 									<span class="d-none d-lg-inline-block">フィルタ:</span>
 								</div>
 								<select class="ml-2 align-self-center custom-select custom-select-sm" id="plane_filter_key_select">
-									<option value="radius">半径</option>
-									<option value="antiAir">装備対空</option>
-									<option value="battle_anti_air">出撃対空</option>
-									<option value="defense_anti_air">防空対空</option>
+									<option value="fire">火力</option>
+									<option value="antiAir">対空</option>
 									<option value="torpedo">雷装</option>
 									<option value="bomber">爆装</option>
 									<option value="accuracy">命中</option>
 									<option value="scout">索敵</option>
+									<option value="asw">対潜</option>
 									<option value="antiBomber">対爆</option>
 									<option value="interception">迎撃</option>
+									<option value="antiAirWeight">加重対空</option>
+									<option value="antiAirBonus">艦隊防空</option>
+									<option value="radius">半径</option>
+									<option value="cost">コスト</option>
+									<option value="battle_anti_air">出撃対空</option>
+									<option value="defense_anti_air">防空対空</option>
+									<option value="land_base_power">基地火力</option>
 								</select>
 								<select class="align-self-center custom-select custom-select-sm" id="plane_filter_value">
 									<option value="0">0</option>
@@ -5260,15 +5275,16 @@
 						<div class="d-flex flex-wrap" id="plane_type_select"></div>
 					</div>
 					<div class="pb-1 custom_table" id="plane_table">
-						<div class="scroll_thead d-flex px-lg-2" id="plane_table_thead">
+						<div class="scroll_thead d-flex px-1" id="plane_table_thead">
 							<div class="plane_td_type align-self-center">
 								<img class="img-size-25" src="../img/type/undefined.png" alt="種">
 							</div>
 							<div class="pl-2 plane_td_name align-self-center">装備名</div>
 							<div class="ml-auto plane_td_basic align-self-center">ステータス1</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス2</div>
+							<div class="plane_td_basic align-self-center">ステータス2</div>
 							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス3</div>
 							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス4</div>
+							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス5</div>
 						</div>
 						<div id="plane_tbody_wrap">
 							<div id="plane_tbody"></div>
@@ -6368,7 +6384,7 @@
 				<div class="modal-body py-2">
 					<div class="font_size_12 mt-1">
 						<div>
-							<span>入力されている艦隊の対空砲火性能の一覧です。正しい撃墜数を求める場合は、実際に編成されている全ての艦娘と装備を入力する必要があります。</span>
+							<span>現在入力されている艦隊全体の対空砲火性能を確認できます。正しい撃墜数を求める場合は、実際に編成されている全ての艦娘と装備を入力してください。</span>
 						</div>
 						<div>
 							<span>対空カットインの発動率は推定値です。実際の発動率と異なる可能性があります。</span>
@@ -6398,7 +6414,7 @@
 						</div>
 						<div class="mx-3 align-self-center custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
-							<label class="custom-control-label" for="antiair_air_raid">空襲</label>
+							<label class="custom-control-label" for="antiair_air_raid">空襲マス</label>
 						</div>
 					</div>
 					<div class="container border-top">
@@ -6408,31 +6424,28 @@
 								<table class="text-center mt-1" id="antiair_input_table">
 									<thead class="general_thead">
 										<tr>
-											<td class="w_40"></td>
-											<td class="w_20">割合撃墜</td>
-											<td class="w_20">固定撃墜</td>
-											<td class="w_20">最低保証</td>
+											<td class="w_40 text-left pl-3 py-1">艦娘</td>
+											<td class="w_20 py-1">割合撃墜</td>
+											<td class="w_20 py-1">固定撃墜</td>
+											<td class="w_20 py-1">最低保証</td>
 										</tr>
 									</thead>
-									<tbody id="antiair_weight_inputs"></tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 							<div class="col-12 col-lg-6 order-3 order-lg-2 mt-2 px-1">
 								<div class="d-flex">
-									<div class="font_size_16">対空カットイン情報</div>
+									<div class="font_size_16">対空カットイン</div>
+									<div class="align-self-end ml-auto font_size_11">※ クリックで有効 / 無効を切り替え可</div>
 								</div>
 								<div class="mt-1 tab-content">
-									<table class="text-center mt-1" id="antiair_cutin_table">
-										<thead class="general_thead">
-											<tr>
-												<td class="w_40">カットイン種別</td>
-												<td class="w_15">変動</td>
-												<td class="w_15">固定</td>
-												<td class="w_30">発動率</td>
-											</tr>
-										</thead>
-										<tbody id="antiair_cutin_inputs"></tbody>
-									</table>
+									<div class="scroll_thead d-flex px-2 py-1">
+										<div class="w_50 pl-4">種別</div>
+										<div class="w_15 text-right">変動</div>
+										<div class="w_15 text-right">固定</div>
+										<div class="w_20 text-right">発動率</div>
+									</div>
+									<div class="" id="antiair_cutin_inputs"></div>
 								</div>
 							</div>
 						</div>
