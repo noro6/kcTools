@@ -979,12 +979,16 @@ input[type="text"] { font-size: 12px; }
 #shoot_down_table_tbody .td_battle { cursor: pointer; }
 #shoot_down_table .battle1 { border-left: 1px rgba(128, 128, 128, 0.502) solid; }
 #shoot_down_table .tr_fap td{ border-top:1px rgba(128, 128, 128, 0.502) solid; }
+
+/* 消費予測ヘッダー */
 #shoot_down_table .fap.battle_end {
   background-color: rgba(128, 128, 128, 0.2);
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
+/* 消費予測レコード */
 #shoot_down_table .eap.battle_end { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 #shoot_down_table .tr_eap td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
+/* 制空状態表示 */
 #shoot_down_table .tr_cond td{
   border-top:1px rgba(128, 128, 128, 0.502) solid;
   border-bottom:1px rgba(128, 128, 128, 0.502) solid;

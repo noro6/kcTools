@@ -934,7 +934,7 @@
 							</div>
 							<div class="ml-3 align-self-center btn_antiair_input no_capture">
 								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
-								<span class="font_size_12">対空砲火設定</span>
+								<span class="font_size_12">対空砲火性能確認</span>
 							</div>
 						</div>
 						<div class="fleet_tab">
@@ -4716,18 +4716,30 @@
 						</table>
 					</div>
 					<div class="mb-2" id="enemy_shoot_down_table_parent">
-						<div class="font_size_14 d-flex">
+						<div class="font_size_14 d-flex flex-wrap mb-1">
 							<div class="drag_handle cur_move align-self-center">
 								<span>敵艦隊の搭載数</span>
 								<span id="enemy_slot_result_mode">（本隊航空戦 stage1 後）</span>
 							</div>
-							<div class="ml-auto btn_antiair_input align-self-center no_capture">
-								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
-								<span>対空砲火設定</span>
-							</div>
-							<div class="ml-3 custom-control custom-checkbox no_capture">
-								<input type="checkbox" class="custom-control-input" id="ignore_stage2">
-								<label class="custom-control-label cur_pointer" for="ignore_stage2">対空砲火無視</label>
+							<div class="ml-auto d-flex" id="result_stage2_setting">
+								<div class="align-self-center custom-control custom-checkbox no_capture text-nowrap">
+									<input type="checkbox" class="custom-control-input" id="adapt_stage2">
+									<label class="custom-control-label cur_pointer" for="adapt_stage2">対空砲火有効</label>
+								</div>
+								<div class="mx-2 align-self-center font_color_half text-nowrap" id="fleet_formation_label">この戦闘の自軍陣形:
+								</div>
+								<select class="align-self-center custom-select custom-select-sm" id="fleet_formation">
+									<option value="1" selected>単縦陣</option>
+									<option value="2">複縦陣</option>
+									<option value="3">輪形陣</option>
+									<option value="4">梯形陣</option>
+									<option value="5">単横陣</option>
+									<option value="6">警戒陣</option>
+									<option class="d-none" value="15">第一警戒</option>
+									<option class="d-none" value="12">第二警戒</option>
+									<option class="d-none" value="13">第三警戒</option>
+									<option class="d-none" value="11">第四警戒</option>
+								</select>
 							</div>
 						</div>
 						<table class="text-center w-100" id="enemy_shoot_down_table">
@@ -4745,6 +4757,12 @@
 							</thead>
 							<tbody id="enemy_shoot_down_tbody"></tbody>
 						</table>
+						<div class="text-right align-self-center no_capture">
+							<img src="../img/type/type21.png" class="img-size-20" alt="aa">
+							<span class="btn_antiair_input font_size_12" data-toggle="tooltip" title="味方艦隊の対空砲火性能を確認できます。">
+								対空砲火性能確認
+							</span>
+						</div>
 					</div>
 					<div class="mb-2" id="enemy_ap_dist_table_parent">
 						<div class="mt-2 font_size_14">
@@ -6404,21 +6422,14 @@
 				<div class="modal-body py-2">
 					<div class="font_size_12 mt-1">
 						<div>
-							<span>入力された艦隊の対空砲火性能の確認が行えます。</span>
+							<span>入力されている艦隊の対空砲火性能の一覧です。正しい撃墜数を求める場合は、実際に編成されている全ての艦娘と装備を入力する必要があります。</span>
 						</div>
 						<div>
-							<span>正しい撃墜数を求める場合は、実際に編成されている全ての艦娘と装備を入力する必要があります。</span>
-						</div>
-						<div>
-							<span>対空カットインの発動率は推定値です。</span>
+							<span>対空カットインの発動率は推定値です。実際の発動率と異なる可能性があります。</span>
 						</div>
 					</div>
 					<div class="d-flex flex-wrap my-1">
-						<div class="align-self-center custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
-							<label class="custom-control-label" for="antiair_air_raid">空襲</label>
-						</div>
-						<div class="ml-4 align-self-center">
+						<div class="align-self-center">
 							<div class="font_size_12">陣形：</div>
 						</div>
 						<div class="align-self-center">
@@ -6438,6 +6449,10 @@
 						<div class="mx-2 align-self-center">
 							<span class="font_size_12">艦隊防空値：</span>
 							<span id="fleet_antiair"></span>
+						</div>
+						<div class="mx-3 align-self-center custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
+							<label class="custom-control-label" for="antiair_air_raid">空襲</label>
 						</div>
 					</div>
 					<div class="container border-top">

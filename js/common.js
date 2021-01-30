@@ -435,7 +435,7 @@ function readDeckBuilder(deck) {
 						let slot = 0
 						// スロット番号精査
 						if (planeIndex < -1 || planeIndex >= shipData.slot.length) {
-							// スロット番号不明もしくは限界突破してたら
+							// スロット番号不明もしくは限界突破してたら補強増設に逃げる
 							planeIndex = -1;
 						}
 						else {
