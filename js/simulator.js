@@ -5655,7 +5655,7 @@ function sendErrorLog(error) {
 		data: encodePreset(),
 		createdAt: firebase.firestore.FieldValue.serverTimestamp(),
 		remarks: "",
-		version: "1.11.3"
+		version: "1.12.0"
 	};
 
 	console.log(error);
