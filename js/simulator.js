@@ -7776,16 +7776,29 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		const p = ITEM_DATA.find(v => v.id === pl.id);
 		if (index === (ship ? ship.slot.length : 4)) break;
 		const name = p ? p.name : '-';
+		const isPlane = PLANE_TYPE.includes(p ? p.type : 0);
+
+		let statusText = '';
+		if (isPlane && FIGHTERS.includes(p.type)) {
+			statusText = p.antiAir ? `<span class="mx-1">対空: ${p.antiAir}</span>` : '';
+		}
+		else if (isPlane && RECONNAISSANCES.includes(p.type)) {
+			statusText = p.antiAir ? `<span class="mx-1">対空: ${p.antiAir}</span>` : '';
+			statusText += `<span class="mx-1">索敵: ${p.scout}</span>`;
+		}
+		else if (isPlane) {
+			statusText = p.torpedo ? `<span class="mx-1">雷装: ${p.torpedo}</span>` : '';
+			statusText += p.bomber ? `<span class="mx-1">爆装: ${p.bomber}</span>` : '';
+		}
+
 		planeText += `
-		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${PLANE_TYPE.includes(p ? p.type : 0) ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
-			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
-			<div class="col d-flex align-self-center font_size_12 pl-0">
+		<div class="d-flex px-2 py-1 ${slotNo === index ? 'selected' : ''} ${isPlane ? `general_tr btn_show_detail` : 'disabled_detail_slot'}" data-slot_no="${index}">
+			<div class="w_5 align-self-center font_size_11 text-right pr-2">${isPlane ? pl.slot : '-'}</div>
+			<div class="${isPlane ? 'w_55' : 'w_90'} d-flex align-self-center font_size_12 pl-0">
 				<img src="../img/type/${p ? `icon${p.itype}` : 'undefined'}.png" class="plane_img_sm align-self-center">
-				<div class="align-self-center">${name}</div>
+				<div class="align-self-center detail_item_name"><span>${name}</span></div>
 			</div>
-			<div class="col font_size_11 align-self-center">
-				${p ? (`(搭載: ${pl.slot} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
-			</div>
+			${isPlane ? `<div class="w_40 font_size_11 align-self-center">(${statusText})</div>` : ''}
 		</div>`;
 		index++;
 	}
@@ -7980,16 +7993,31 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	for (const pl of landBaseData.landBases[landBaseNo].planes) {
 		const p = ITEM_DATA.find(v => v.id === pl.id);
 		const name = p ? p.name : '-';
+
+		let statusText = '';
+		if (FIGHTERS.includes(p.type)) {
+			statusText = p.antiAir ? `<span class="mx-1">対空: ${p.antiAir}</span>` : '';
+			statusText += `<span class="mx-1">半径: ${p.radius}</span>`;
+		}
+		else if (RECONNAISSANCES.includes(p.type)) {
+			statusText = p.antiAir ? `<span class="mx-1">対空: ${p.antiAir}</span>` : '';
+			statusText += `<span class="mx-1">索敵: ${p.scout}</span>`;
+			statusText += `<span class="mx-1">半径: ${p.radius}</span>`;
+		}
+		else {
+			statusText = p.torpedo ? `<span class="mx-1">雷装: ${p.torpedo}</span>` : '';
+			statusText += p.bomber ? `<span class="mx-1">爆装: ${p.bomber}</span>` : '';
+			statusText += `<span class="mx-1">半径: ${p.radius}</span>`;
+		}
+
 		planeText += `
-		<div class="row mx-1 py-0_5 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
-			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
-			<div class="col d-flex align-self-center font_size_12 pl-0">
+		<div class="d-flex px-2 py-1 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
+			<div class="w_5 align-self-center font_size_11 text-right pr-2">${pl.slot}</div>
+			<div class="w_55 d-flex align-self-center font_size_12 pl-0">
 				<img src="../img/type/${p ? `icon${p.itype}` : 'undefined'}.png" class="plane_img_sm align-self-center">
-				<div class="align-self-center">${name}</div>
+				<div class="align-self-center detail_item_name"><span>${name}</span></div>
 			</div>
-			<div class="col font_size_11 align-self-center">
-				${p ? (`(搭載: ${pl.slot} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})`) : ''}
-			</div>
+			<div class="w_40 font_size_11 align-self-center">(${statusText})</div>
 		</div>`;
 		index++;
 	}
@@ -8171,16 +8199,26 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	for (const id of enemy.eqp) {
 		const p = ENEMY_ITEM.find(v => v.id === id);
 		const eSlot = enemy.slot[index];
+		const isPlane = PLANE_TYPE.includes(p ? p.type : 0);
+
+		let statusText = '';
+		if (isPlane && FIGHTERS.includes(p.type)) {
+			statusText = p.antiAir ? `<span class="mx-1">対空: ${p.antiAir}</span>` : '';
+		}
+		else if (isPlane) {
+			statusText = p.antiAir ? `<span class="mx-1">対空: ${p.antiAir}</span>` : '';
+			statusText += p.torpedo ? `<span class="mx-1">雷装: ${p.torpedo}</span>` : '';
+			statusText += p.bomber ? `<span class="mx-1">爆装: ${p.bomber}</span>` : '';
+		}
+
 		planeText += `
-		<div class="row mx-1 py-0_5 ${slotNo === planeIndex ? 'selected' : ''} ${PLANE_TYPE.includes(p.type) ? `general_tr btn_show_detail` : ''}" data-slot_no="${planeIndex}">
-			<div class="col-1 align-self-center font_size_11 text-left">${index + 1}</div>
-			<div class="col d-flex align-self-center">
+		<div class="d-flex px-2 py-1 ${slotNo === planeIndex ? 'selected' : ''} ${isPlane ? `general_tr btn_show_detail` : 'disabled_detail_slot'}" data-slot_no="${planeIndex}">
+			<div class="w_5 align-self-center font_size_11 text-right pr-2">${eSlot >= 0 ? eSlot : '-'}</div>
+			<div class="${isPlane ? 'w_55' : 'w_90'} d-flex font_size_12 align-self-center">
 				<img src="../img/type/icon${p.itype}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center">${p.name}</div>
 			</div>
-			<div class="col font_size_12 align-self-center">
-				(搭載: ${eSlot >= 0 ? eSlot : '-'} 機${p.torpedo ? `　雷装: ${p.torpedo}` : ''}${p.bomber ? `　爆装: ${p.bomber}` : ''})</span>
-			</div>
+			${isPlane ? `<div class="w_40 font_size_11 align-self-center">(${statusText})</div>` : ''}
 		</div>`;
 
 		index++;
@@ -8191,7 +8229,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	const detailLegend = `
 		<img src="../img/enemy/${enemy.id}.png" class="ship_img align-self-center">
 		<span class="ml-1 text-primary font_size_11 align-self-center">ID: ${enemy.id + 1500}</span>
-		<span class="ml-1 align-self-center legend_name" data-enemyid="${enemy.id}">${enemy.name}</span>
+		<span class="ml-1 font_size_12 align-self-center legend_name" data-enemyid="${enemy.id}">${enemy.name}</span>
 	`;
 
 	$('#detail_legend').html(detailLegend);
@@ -9940,7 +9978,7 @@ function showEnemyStatusToolTip($this) {
 			</div>
 			<div class="d-flex mt-1">
 				${enemy.airPower ? `<div class="">制空値: ${enemy.airPower}</div>` : ''}
-				
+				${!enemy.airPower && enemy.landBaseAirPower ? `<div class="">基地制空値: ${enemy.landBaseAirPower}</div>` : ''}
 			</div>
 			<div class="mt-1">
 				${itemText}
