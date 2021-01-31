@@ -104,7 +104,6 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('enemyDisplayImage')) setting.enemyDisplayImage = true;
 	if (!setting.hasOwnProperty('enemyFleetDisplayImage')) setting.enemyFleetDisplayImage = true;
 	if (!setting.hasOwnProperty('copyToClipboard')) setting.copyToClipboard = false;
-	if (!setting.hasOwnProperty('isUnion')) setting.isUnion = true;
 	if (!setting.hasOwnProperty('selectedHistory')) setting.selectedHistory = [[], []];
 	if (!setting.hasOwnProperty('orderByFrequency')) setting.orderByFrequency = false;
 	if (!setting.hasOwnProperty('themeColor')) setting.themeColor = 'normal_theme';
@@ -119,7 +118,8 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
-	if (!setting.hasOwnProperty('invisibleCutin')) setting.invisibleCutin = [];
+	if (!setting.hasOwnProperty('planeOnly')) setting.planeOnly = true;
+	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -307,6 +307,15 @@ function adaptUpdater() {
 		}
 	}
 
+	if (major <= 12) {
+		if (major <= 11) {
+			// 対空CI非表示項目設定削除
+			delete setting.invisibleCutin;
+			// 連合チェックいらん
+			delete setting.isUnion;
+		}
+	}
+
 	setting.adaptedVersion = LATEST_VERSION;
 }
 
@@ -420,11 +429,22 @@ function readDeckBuilder(deck) {
 						// マスタデータと照合
 						if (!ITEM_DATA.find(v => v.id === castInt(i_.id))) return;
 
-						// スロット番号
-						const planeIndex = castInt(i.replace('i', '')) - 1;
+						// スロット番号 xは補強増設
+						let planeIndex = castInt(i.replace('i', '')) - 1;
 
-						// 装備プロパティの抽出
-						const plane = [0, 0, 0, shipData.slot[planeIndex], planeIndex];
+						let slot = 0
+						// スロット番号精査
+						if (planeIndex < -1 || planeIndex >= shipData.slot.length) {
+							// スロット番号不明もしくは限界突破してたら補強増設に逃げる
+							planeIndex = -1;
+						}
+						else {
+							// 正常っぽい
+							slot = castInt(shipData.slot[planeIndex]);
+						}
+
+						// 装備プロパティの抽出 id, remodel, level, slot, スロット番号
+						const plane = [0, 0, 0, slot, planeIndex];
 						Object.keys(i_).forEach((i_key) => {
 							if (i_key === "id") plane[0] = castInt(i_[i_key]);
 							else if (i_key === "mas") plane[1] = castInt(i_[i_key]);
@@ -439,10 +459,6 @@ function readDeckBuilder(deck) {
 				fleets.push(fleet);
 			}
 		});
-
-		// マスタ管理外艦娘チェック
-		// if (unmanageShip) document.getElementById('duck_read_warning').classList.remove('d-none');
-		// else document.getElementById('duck_read_warning').classList.add('d-none');
 
 		// 第1、第2艦隊のみに絞る
 		const fleet1 = fleets.find(v => v[0] === 0)[1];
