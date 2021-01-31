@@ -10776,11 +10776,6 @@ function plane_type_select_Changed($this = null) {
 			}
 		}
 
-		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
-		if (!dispType || !dispType.find(v => convertItemType(v) === selectedType)) {
-			selectedType = 0;
-		}
-
 		// 選択カテゴリに該当する装備を取得
 		org = getItemsForIcon(selectedType);
 
@@ -10801,14 +10796,24 @@ function plane_type_select_Changed($this = null) {
 			// 補強増設枠　タービン以外の強化機関を削除する
 			org = org.filter(v => ![34, 87].includes(v.id));
 
-			const sp = EXPANDED_SPECIAL_ITEM.find(v => v.shipApiIds.includes(ship.api));
-			if (sp) {
+			const sps = EXPANDED_SPECIAL_ITEM.filter(v => v.shipApiIds.includes(ship.api));
+			for (const sp of sps) {
 				const spItem = ITEM_DATA.find(v => v.id === sp.itemId);
-				// まだ未追加 かつ カテゴリがALLか、それに該当するカテゴリなら追加
+				// カテゴリに追加
+				if (spItem && !dispType.includes(spItem.type)) {
+					dispType.push(spItem.type);
+				}
+
+				// まだ装備欄に未追加 かつ カテゴリがALLか、それに該当するカテゴリなら追加
 				if (spItem && !org.find(v => v.id === spItem.id) && (selectedType === 0 || selectedType === spItem.type)) {
-					org.push(spItem);
+					org.unshift(spItem);
 				}
 			}
+		}
+
+		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
+		if (!dispType || !dispType.find(v => convertItemType(v) === selectedType)) {
+			selectedType = 0;
 		}
 	}
 	else if ($target && $target.hasClass('ship_plane')) {
