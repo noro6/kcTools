@@ -8,8 +8,6 @@ input[type="text"] { font-size: 12px; }
 
 #main { min-height: 100vh; }
 
-#modal_plane_select .modal-content { min-height: 80vh; }
-#modal_ship_select .modal-content { min-height: 80vh; }
 #modal_enemy_select .modal-content { min-height: 80vh; }
 @media (min-width: 577px) { .modal-xl { max-width: 522px; } }
 @media (min-width: 992px) { .modal-xl { max-width: 800px; } }
@@ -35,8 +33,6 @@ input[type="text"] { font-size: 12px; }
 .bg-e9ecef { background-color: #e9ecef; }
 .bg-hover { background-color: rgba(128, 128, 128, 0.05); }
 .sortable_handle { cursor: move; }
-.cur_pointer { cursor: pointer; }
-.cur_move { cursor: move; }
 .cur_help { cursor: help; }
 
 .img-size-18 {
@@ -75,7 +71,8 @@ input[type="text"] { font-size: 12px; }
 .text_orange { color: rgb(255, 120, 0); }
 .text_deep_orange { color: rgb(255, 80, 0); }
 .text_red { color: rgb(255, 0, 0); }
-.text_remodel { color: rgb(0, 200, 200); }
+.text_remodel { color: rgb(0, 175, 175); }
+.dark-theme .text_remodel { color: rgb(0, 200, 200); }
 .min-h-31px { height: 31px }
 
 .general_tr {
@@ -422,7 +419,7 @@ input[type="text"] { font-size: 12px; }
 .btn_antiair_input:hover { opacity: 1; }
 
 /* -----------------------------------
-  機体コントロール関連
+  装備コントロール関連
 ----------------------------------- */
 .plane_name {
   cursor: pointer;
@@ -430,11 +427,16 @@ input[type="text"] { font-size: 12px; }
   transition: 0.5s;
   -ms-flex-positive: 1!important;
   flex-grow: 1!important;
+  width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .plane_name_span {
   font-size: 12px;
   padding-left: 0.25rem;
 }
+
 .plane_img_sm {
   width: 22px;
   height: auto;
@@ -490,10 +492,7 @@ input[type="text"] { font-size: 12px; }
 }
 .btn_remove_plane > i { font-size: 16px; }
 /* 改修関連 */
-.remodel_select_parent {
-  color: rgb(0, 200, 200);
-  width: 34px;
-}
+.remodel_select_parent { width: 34px; }
 .remodel_select{
   cursor: pointer;
   transition: 0.4s;
@@ -505,7 +504,6 @@ input[type="text"] { font-size: 12px; }
 .remodel_select:hover { filter: drop-shadow(0px 0px 6px #0ff); }
 .remodel_disabled:hover { filter: drop-shadow(0px 0px 0px #fff); }
 .remodel_select_parent .dropdown-menu {
-  color: rgb(0, 200, 200);
   min-width: 62px;
   box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);
   font-size: 14px;
@@ -519,7 +517,7 @@ input[type="text"] { font-size: 12px; }
 .remodel_item:hover { background-color: rgba(128, 128, 128, 0.3); }
 .remodel_item:active {
   color: #fff;
-  background-color: #00c8c8;
+  background-color: rgb(0, 200, 200);
   filter: drop-shadow(0px 0px 6px #0ff);
 }
 /* 熟練度関連 */
@@ -551,19 +549,25 @@ input[type="text"] { font-size: 12px; }
 .prof_select_parent .dropdown-item:hover { background-color: rgba(128, 128, 128, 0.3); }
 .prof_select_parent .dropdown-item:active { background-color: rgba(128, 128, 128, 0.5); }
 /* 搭載数 */
-.slot_select_parent{
-  display: table;
-  width: 20px;
-  height: 28px;
+.slot_select_parent {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  width: 22px;
+  padding-right: 0.25rem;
   margin-left: 0.25rem;
 }
-.slot {
+.slot:not(.d-none),
+.slot_wrench {
+  /* -ms-flex-item-align: center;
+  align-self: center; */
   cursor: pointer;
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
   transition: .4s;
 }
+.capturing .slot_wrench { margin-right: 2rem; }
+
 .slot:hover { filter: drop-shadow(0 0 3px #969696); }
 .slot_select_parent .dropdown-menu {
   z-index: 1000;
@@ -578,10 +582,12 @@ input[type="text"] { font-size: 12px; }
   transition: 0.2s;
 }
 
-.plane_status_box {
+.item_tooltip { min-width: 175px; }
+.item_status_box {
   min-width: 120px;
   max-width: 180px;
 }
+.item_status_box .col_half{ white-space: nowrap; }
 
 
 /* ------------------------------
@@ -640,11 +646,14 @@ input[type="text"] { font-size: 12px; }
 .formation{ width: 100%; }
 #air_raid_enemies { width: 250px; }
 
+.enemy_tool_slot {
+  width: 30px;
+  text-align: right;
+}
 
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */
-.search_basic{ width: 460px; }
 #plane_filter_key_select { width: 104px; }
 #plane_filter_value { width: 56px; }
 
@@ -673,21 +682,29 @@ input[type="text"] { font-size: 12px; }
 .dark-theme .toggle_display_type.selected { text-shadow: 2px 2px 3px #000;}
 
 #plane_table { overflow-y: auto; }
+
+#plane_tbody_wrap,
 #plane_tbody:not(.multi_mode) { height: 50vh; }
 #plane_tbody.multi_mode {
-  max-height: 50vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 @media (min-width: 992px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
 @media (min-width: 1200px) { #plane_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
 
+.ship_type {
+  opacity: 0.65;
+}
+.ship_type.active,
 .item_type.active {
+  opacity: 1;
   border-color: rgb(98, 197, 255);
   box-shadow: inset 0 0 15px rgba(98, 197, 255, 0.5), 0 0 15px rgba(98, 197, 255, 0.2);
   text-shadow: 2px 2px 3px #fff;
 }
+.dark-theme .ship_type.active,
 .dark-theme .item_type.active {
+  border-bottom: none;
   border-color: #aaa;
   box-shadow: inset 0 0 15px rgba(240, 240, 240, 0.5), 0 0 15px rgba(240, 240, 240, 0.2);
   text-shadow: 2px 2px 3px #000;
@@ -707,20 +724,29 @@ input[type="text"] { font-size: 12px; }
 }
 .dark-theme .plane_tr_disabled:hover { text-shadow: 1px 1px 3px #000; }
 .plane_td_basic {
-  text-align: center;
+  text-align: right;
   width: 60px;
 }
-.plane_td_name { 
-  /* max-width: 290px;  */
+
+/* 特殊機銃とか */
+.special_item { color: rgb(50, 152, 65); }
+.dark-theme .special_item { color: rgb(100, 200, 120); }
+
+.plane_td_name {
+  -ms-flex-positive: 1!important;
+  flex-grow: 1!important;
+  width: 1px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+.plane_tr_disabled .plane_td_name { color: #ff6b6b; }
+
 .plane_td_stock {
   color: #ff4400;
   font-size: 11px;
 }
-.plane_td_remodel {
-  color: #00c8c8;
-  font-size: 12px;
-}
+.plane_td_remodel { font-size: 12px; }
 .tr_multi {
   padding-top: .15rem;
   padding-bottom: .15rem;
@@ -734,18 +760,30 @@ input[type="text"] { font-size: 12px; }
   艦娘選択モーダル #modal_ship_select
 -------------------------------- */
 #ship_table { overflow-y: auto; }
-#ship_tbody { max-height: 58vh; }
+
+#ship_tbody_wrap,
+#ship_tbody:not(.multi_mode) { height: 54vh; }
 #ship_tbody.multi_mode { 
-  max-height: 50vh; 
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-@media (min-width: 992px) { #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; } }
-@media (min-width: 1200px) { #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
 .ship_td_slot {
   text-align: center;
   width: 35px;
 }
+@media (min-width: 992px) { 
+  #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr; }
+  .ship_td_slot { width: 64px; }
+}
+@media (min-width: 1200px) { 
+  #ship_tbody.multi_mode { grid-template-columns: 1fr 1fr 1fr 1fr; } 
+}
+
+.ship_tr {
+  padding: 0.05rem;
+}
+
 .ship_td_stock {
   color: #ff4400;
   font-size: 10px;
@@ -851,7 +889,6 @@ input[type="text"] { font-size: 12px; }
   align-self: center;
 }
 .preset_preview_td_type { width: 30px; }
-.preset_preview_td_remodel { color: rgb(0, 200, 200); }
 
 
 /* ---------------------------------------
@@ -916,69 +953,11 @@ input[type="text"] { font-size: 12px; }
 .btn_remodel {
   cursor: pointer;
   font-size: 12px;
-  color: rgb(0, 200, 200);
   border-radius: .25rem;
   transition: .2s;
   padding: 7px 4px;
 }
 .btn_remodel:hover { background-color: rgba(128, 128, 128, 0.3); }
-
-
-/* ------------------------------
-  入力情報欄 #input_data
--------------------------------- */
-.info_table {
-  font-size: 12px;
-  border-collapse: collapse;
-}
-.info_table tbody td {
-  padding: .1rem;
-  border-top:1px rgba(128, 128, 128, 0.2) solid;
-}
-.info_table .info_warning { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
-.info_table .info_name {
-  width: 20%;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table .info_plane { text-align: left; }
-.info_table .info_slot {
-  width: 10%;
-  padding: .1rem .25rem;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-}
-.info_table .info_ap {
-  width: 8%;
-  padding: .1rem .25rem;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-}
-.info_table .info_sumAp {
-  width: 8%;
-  padding: .1rem .25rem;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table .info_range {
-  width: 10%;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table .info_defAp {
-  width: 10%;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
-}
-.info_table tbody .last_slot { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
-.info_table tbody .info_fleetAp {
-  width: 72px;
-  border-left:1px rgba(128, 128, 128, 0.2) solid;
-  border-bottom:1px rgba(128, 128, 128, 0.502) solid;
-}
-#lb_info_table tbody .slot4 td{ border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
-#input_summary {
-  height: calc( 1.4em * 15 );
-  max-height: calc( 1.4em * 20 );
-  line-height: 1.3;
-}
 
 
 /* ------------------------------
@@ -1000,6 +979,9 @@ input[type="text"] { font-size: 12px; }
   cursor: pointer;
   font-size: 11px;
   width: 168px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 #shoot_down_table_tbody td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
 #shoot_down_table_tbody .td_plane_name { text-align: left; }
@@ -1007,12 +989,16 @@ input[type="text"] { font-size: 12px; }
 #shoot_down_table_tbody .td_battle { cursor: pointer; }
 #shoot_down_table .battle1 { border-left: 1px rgba(128, 128, 128, 0.502) solid; }
 #shoot_down_table .tr_fap td{ border-top:1px rgba(128, 128, 128, 0.502) solid; }
+
+/* 消費予測ヘッダー */
 #shoot_down_table .fap.battle_end {
   background-color: rgba(128, 128, 128, 0.2);
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
+/* 消費予測レコード */
 #shoot_down_table .eap.battle_end { border-bottom: 1px rgba(128, 128, 128, 0.502) solid; }
 #shoot_down_table .tr_eap td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
+/* 制空状態表示 */
 #shoot_down_table .tr_cond td{
   border-top:1px rgba(128, 128, 128, 0.502) solid;
   border-bottom:1px rgba(128, 128, 128, 0.502) solid;
@@ -1175,7 +1161,6 @@ input[type="text"] { font-size: 12px; }
 .plane_status_anti_bomber { width: 33%; }
 .plane_status_avoid { width: 33%; }
 
-.remodel_label { color: rgb(0, 200, 200); }
 .img_plane_card {
   width: 240px;
   height: 240px;
@@ -1211,6 +1196,14 @@ input[type="text"] { font-size: 12px; }
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
   text-shadow: 2px 2px 3px #000;
 }
+
+.disabled_detail_slot { opacity: 0.6; }
+.detail_item_name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ------------------------------
   stage2詳細 #modal_stage2_detail
 -------------------------------- */
@@ -1311,55 +1304,26 @@ input[type="text"] { font-size: 12px; }
   table-layout: fixed;
   border-collapse: collapse;
 }
+#antiair_input_table td {
+  padding-right: .5rem;
+  text-align: right;
+}
 #antiair_input_table tbody td {
-  padding: .15rem;
+  height: 36px;
   border-bottom:1px rgba(128, 128, 128, 0.2) solid;
 }
 #antiair_input_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
 
-#antiair_cutin_table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+#antiair_cutin_inputs .general_tr { height: 36px; }
+#antiair_cutin_inputs .general_tr div {
+  -ms-flex-item-align: center;
+  align-self: center;
 }
-#antiair_cutin_table tbody td {
-  padding: .15rem;
-  border-bottom:1px rgba(128, 128, 128, 0.2) solid;
-}
-#antiair_cutin_table tbody tr:hover { background-color: rgba(128, 128, 128, 0.1); }
-
-#antiair_cutin_setting_table {
-  height: 460px;
-  overflow-y: scroll;
-}
-#antiair_cutin_setting_table .scroll_thead {
-  padding-top: .2rem;
-  padding-bottom: .2rem;
-}
-.cutin_visible.disabled {
-  opacity: 0.3;
+#antiair_cutin_inputs .general_tr.disabled {
+  opacity: 0.4;
 }
 
 #fleet_antiair { width: 100px; }
-#fleet_antiair_base { width: 100px; }
-#import_antiair {
-  font-size: 12px;
-  overflow: hidden;
-  height: 31px;
-  resize: none;
-}
-
-#aa_ci_setting .nav-tabs,
-#aa_ci_setting .nav-link {
-  color: #888 !important;
-  border: none !important;
-}
-#aa_ci_setting .nav-link:hover {
-  color: #444 !important;
-}
-.dark-theme #aa_ci_setting .nav-link:hover {
-  color: #ccc !important;
-}
 
 
 /* ------------------------------
@@ -1425,71 +1389,6 @@ input[type="text"] { font-size: 12px; }
   text-align: right;
 }
 
-
-/* ------------------------------
-  艦載機ボックス #draggable_plane_box
--------------------------------- */
-#draggable_plane_box {
-  user-select: none;
-  width: 420px;
-  background-color: rgba(255, 255, 255, 0.96);
-}
-.dark-theme #draggable_plane_box {
-  background-color: rgba(60, 65, 75, 0.96);
-}
-.deep_blue_theme #draggable_plane_box{
-  background-color: rgba(30, 35, 60, 0.96);
-}
-#draggable_plane_box a.nav-link {
-  padding-right: 10px;
-  padding-left: 10px;
-  transition: .2s;
-  color: #777;
-}
-.dark-theme #draggable_plane_box a.nav-link {
-  color: #555 !important;
-  background-color: transparent !important;
-  border-bottom-color: #777 !important;
-}
-.dark-theme #draggable_plane_box a.nav-link:hover {
-  border-bottom: 2px solid;
-  border-color: transparent transparent #00aeff80 transparent !important;
-  color: #999 !important;
-}
-.dark-theme #draggable_plane_box a.nav-link.active{
-  border-bottom: 2px solid;
-  border-color: transparent transparent #00aeff transparent !important;
-  color: #eee !important;
-}
-#btn_hide_plane_box {
-  opacity: 0.4;
-  transition: .4s;
-}
-#btn_hide_plane_box:hover {
-  opacity: 0.8;
-}
-#draggable_plane_table {
-  overflow: auto;
-}
-#draggable_plane_tbody {
-  max-height: 60vh;
-}
-.plane_tr_draggable {
-  cursor: move;
-  border: 1px solid transparent;
-}
-.plane_tr_draggable:hover {
-  border: 1px solid rgb(98, 197, 255);
-  box-shadow: inset 0 0 20px rgba(98, 197, 255, 0.5), 0 0 20px rgba(98, 197, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.8);
-  text-shadow: 1px 1px 3px #fff;
-}
-.dark-theme .plane_tr_draggable:hover {
-  border: 1px solid #ccc;
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
-  text-shadow: 1px 1px 3px #000;
-  background-color: rgba(20, 25, 35, 0.4);
-}
 
 /* ------------------------------
   カラー
@@ -1612,6 +1511,187 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
   background-color: rgba(122, 98, 255, 0.08);
 }
 
+/* 艦載機以外 */
+.css_radar,
+.dark-theme .css_radar {
+  border: 2px rgb(210, 120, 20) solid;
+  box-shadow: inset 0 0 20px rgba(210, 120, 20, 0.25);
+}
+.css_radar:hover {
+  box-shadow: inset 0 0 20px rgba(210, 120, 20, 0.5), 0 0 20px rgba(210, 120, 20, 0.2);
+}
+.capturing .css_radar {
+  background-color: rgba(210, 120, 20, 0.08);
+}
+
+.css_sonar,
+.dark-theme .css_sonar {
+  border: 2px rgb(128, 216, 255) solid;
+  box-shadow: inset 0 0 20px rgba(128, 216, 255, 0.25);
+}
+.css_sonar:hover {
+  box-shadow: inset 0 0 20px rgba(128, 216, 255, 0.5), 0 0 20px rgba(128, 216, 255, 0.2);
+}
+.capturing .css_sonar {
+  background-color: rgba(128, 216, 255, 0.08);
+}
+
+.css_recover,
+.dark-theme .css_recover {
+  border: 2px rgb(196, 196, 196) solid;
+  box-shadow: inset 0 0 20px rgba(196, 196, 196, 0.25);
+}
+.css_recover:hover {
+  box-shadow: inset 0 0 20px rgba(196, 196, 196, 0.5), 0 0 20px rgba(196, 196, 196, 0.2);
+}
+.capturing .css_recover {
+  background-color: rgba(196, 196, 196, 0.08);
+}
+
+.css_ammo,
+.dark-theme .css_ammo {
+  border: 2px rgb(255, 125, 125) solid;
+  box-shadow: inset 0 0 20px rgba(255, 125, 125, 0.25);
+}
+.css_ammo:hover {
+  box-shadow: inset 0 0 20px rgba(255, 125, 125, 0.5), 0 0 20px rgba(255, 125, 125, 0.2);
+}
+.capturing .css_ammo {
+  background-color: rgba(255, 125, 125, 0.08);
+}
+
+.css_wg,
+.dark-theme .css_wg {
+  border: 2px rgb(255, 55, 55) solid;
+  box-shadow: inset 0 0 20px rgba(255, 55, 55, 0.25);
+}
+.css_wg:hover {
+  box-shadow: inset 0 0 20px rgba(255, 55, 55, 0.5), 0 0 20px rgba(255, 55, 55, 0.2);
+}
+.capturing .css_wg {
+  background-color: rgba(255, 55, 55, 0.08);
+}
+
+.css_mihari,
+.dark-theme .css_mihari {
+  border: 2px rgb(190, 240, 150) solid;
+  box-shadow: inset 0 0 20px rgba(190, 240, 150, 0.25);
+}
+.css_mihari:hover {
+  box-shadow: inset 0 0 20px rgba(190, 240, 150, 0.5), 0 0 20px rgba(190, 240, 150, 0.2);
+}
+.capturing .css_mihari {
+  background-color: rgba(190, 240, 150, 0.08);
+}
+
+.css_kousha,
+.dark-theme .css_kousha {
+  border: 2px rgb(135, 150, 75) solid;
+  box-shadow: inset 0 0 20px rgba(135, 150, 75, 0.25);
+}
+.css_kousha:hover {
+  box-shadow: inset 0 0 20px rgba(135, 150, 75, 0.5), 0 0 20px rgba(135, 150, 75, 0.2);
+}
+.capturing .css_kousha {
+  background-color: rgba(135, 150, 75, 0.08);
+}
+
+.css_armor,
+.dark-theme .css_armor {
+  border: 2px rgb(150, 125, 175) solid;
+  box-shadow: inset 0 0 20px rgba(150, 125, 175, 0.25);
+}
+.css_armor:hover {
+  box-shadow: inset 0 0 20px rgba(150, 125, 175, 0.5), 0 0 20px rgba(150, 125, 175, 0.2);
+}
+.capturing .css_armor {
+  background-color: rgba(150, 125, 175, 0.08);
+}
+
+.css_wrench,
+.dark-theme .css_wrench {
+  border: 2px rgb(205, 165, 100) solid;
+  box-shadow: inset 0 0 20px rgba(205, 165, 100, 0.25);
+}
+.css_wrench:hover {
+  box-shadow: inset 0 0 20px rgba(205, 165, 100, 0.5), 0 0 20px rgba(205, 165, 100, 0.2);
+}
+.capturing .css_wrench {
+  background-color: rgba(205, 165, 100, 0.08);
+}
+
+.css_light,
+.dark-theme .css_light {
+  border: 2px rgb(240, 130, 60) solid;
+  box-shadow: inset 0 0 20px rgba(240, 130, 60, 0.25);
+}
+.css_light:hover {
+  box-shadow: inset 0 0 20px rgba(240, 130, 60, 0.5), 0 0 20px rgba(240, 130, 60, 0.2);
+}
+.capturing .css_light {
+  background-color: rgba(240, 130, 60, 0.08);
+}
+
+.css_light_ammo,
+.dark-theme .css_light_ammo {
+  border: 2px rgb(255, 155, 0) solid;
+  box-shadow: inset 0 0 20px rgba(255, 155, 0, 0.25);
+}
+.css_light_ammo:hover {
+  box-shadow: inset 0 0 20px rgba(255, 155, 0, 0.5), 0 0 20px rgba(255, 155, 0, 0.2);
+}
+.capturing .css_light_ammo {
+  background-color: rgba(255, 155, 0, 0.08);
+}
+
+.css_shirei,
+.dark-theme .css_shirei {
+  border: 2px rgb(140, 120, 170) solid;
+  box-shadow: inset 0 0 20px rgba(140, 120, 170, 0.25);
+}
+.css_shirei:hover {
+  box-shadow: inset 0 0 20px rgba(140, 120, 170, 0.5), 0 0 20px rgba(140, 120, 170, 0.2);
+}
+.capturing .css_shirei {
+  background-color: rgba(140, 120, 170, 0.08);
+}
+
+.css_tank,
+.dark-theme .css_tank {
+  border: 2px rgb(155, 165, 95) solid;
+  box-shadow: inset 0 0 20px rgba(155, 165, 95, 0.25);
+}
+.css_tank:hover {
+  box-shadow: inset 0 0 20px rgba(155, 165, 95, 0.5), 0 0 20px rgba(155, 165, 95, 0.2);
+}
+.capturing .css_tank {
+  background-color: rgba(155, 165, 95, 0.08);
+}
+
+.css_supply,
+.dark-theme .css_supply {
+  border: 2px rgb(95, 195, 155) solid;
+  box-shadow: inset 0 0 20px rgba(95, 195, 155, 0.25);
+}
+.css_supply:hover {
+  box-shadow: inset 0 0 20px rgba(95, 195, 155, 0.5), 0 0 20px rgba(95, 195, 155, 0.2);
+}
+.capturing .css_supply {
+  background-color: rgba(95, 195, 155, 0.08);
+}
+
+.css_submarine,
+.dark-theme .css_submarine {
+  border: 2px rgb(160, 190, 225) solid;
+  box-shadow: inset 0 0 20px rgba(160, 190, 225, 0.25);
+}
+.css_submarine:hover {
+  box-shadow: inset 0 0 20px rgba(160, 190, 225, 0.5), 0 0 20px rgba(160, 190, 225, 0.2);
+}
+.capturing .css_submarine {
+  background-color: rgba(160, 190, 225, 0.08);
+}
+
 .shoot_table_fighter { background-color: rgba(0, 255, 64, 0.1); }
 .shoot_table_torpedo_bomber { background-color: rgba(0, 189, 252, 0.1); }
 .shoot_table_dive_bomber { background-color: rgba(255, 0, 0, 0.1); }
@@ -1622,6 +1702,22 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_lb_fighter { background-color: rgba(97, 255, 137, 0.1); }
 .shoot_table_lb_asw_aircraft { background-color: rgba(34, 104, 255, 0.1); }
 .shoot_table_cb_night_aircraft { background-color: rgba(80, 67, 255, 0.1); }
+.shoot_table_radar { background-color: rgba(210, 120, 20, 0.1)!important; }
+.shoot_table_sonar { background-color: rgba(128, 216, 255, 0.1)!important; }
+.shoot_table_recover { background-color: rgba(196, 196, 196, 0.1)!important; }
+.shoot_table_ammo { background-color: rgba(255, 125, 125, 0.1)!important; }
+.shoot_table_wg { background-color: rgba(255, 55, 55, 0.1)!important; }
+.shoot_table_mihari { background-color: rgba(190, 240, 150, 0.1)!important; }
+.shoot_table_kousha { background-color: rgba(135, 150, 75, 0.1)!important; }
+.shoot_table_armor { background-color: rgba(150, 125, 175, 0.1)!important; }
+.shoot_table_wrench { background-color: rgba(205, 165, 100, 0.1)!important; }
+.shoot_table_light { background-color: rgba(240, 130, 60, 0.1)!important; }
+.shoot_table_light_ammo { background-color: rgba(255, 155, 0, 0.1)!important; }
+.shoot_table_shirei { background-color: rgba(140, 120, 170, 0.1)!important; }
+.shoot_table_tank { background-color: rgba(155, 165, 95, 0.1)!important; }
+.shoot_table_supply { background-color: rgba(95, 195, 155, 0.1)!important; }
+.shoot_table_submarine { background-color: rgba(160, 190, 225, 0.1)!important; }
+
 .shoot_table_fighter_hover { background-color: rgba(0, 255, 64, 0.2)!important; }
 .shoot_table_torpedo_bomber_hover { background-color: rgba(0, 189, 252, 0.2)!important; }
 .shoot_table_dive_bomber_hover { background-color: rgba(255, 0, 0, 0.15)!important; }
@@ -1632,6 +1728,22 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 .shoot_table_lb_fighter_hover { background-color: rgba(97, 255, 137, 0.2)!important; }
 .shoot_table_lb_asw_aircraft_hover { background-color: rgba(34, 104, 255, 0.2)!important; }
 .shoot_table_cb_night_aircraft_hover { background-color: rgba(80, 67, 255, 0.2)!important; }
+.shoot_table_radar_hover { background-color: rgba(210, 120, 20, 0.2)!important; }
+.shoot_table_sonar_hover { background-color: rgba(128, 216, 255, 0.2)!important; }
+.shoot_table_recover_hover { background-color: rgba(196, 196, 196, 0.2)!important; }
+.shoot_table_ammo_hover { background-color: rgba(255, 125, 125, 0.2)!important; }
+.shoot_table_wg_hover { background-color: rgba(255, 55, 55, 0.2)!important; }
+.shoot_table_mihari_hover { background-color: rgba(190, 240, 150, 0.2)!important; }
+.shoot_table_kousha_hover { background-color: rgba(135, 150, 75, 0.2)!important; }
+.shoot_table_armor_hover { background-color: rgba(150, 125, 175, 0.2)!important; }
+.shoot_table_wrench_hover { background-color: rgba(205, 165, 100, 0.2)!important; }
+.shoot_table_light_hover { background-color: rgba(240, 130, 60, 0.2)!important; }
+.shoot_table_light_ammo_hover { background-color: rgba(255, 155, 0, 0.2)!important; }
+.shoot_table_shirei_hover { background-color: rgba(140, 120, 170, 0.2)!important; }
+.shoot_table_tank_hover { background-color: rgba(155, 165, 95, 0.2)!important; }
+.shoot_table_supply_hover { background-color: rgba(95, 195, 155, 0.2)!important; }
+.shoot_table_submarine_hover { background-color: rgba(160, 190, 225, 0.2)!important; }
+
 .airStatus0 { background: linear-gradient(.25turn, transparent, rgba(0, 255, 0, .1), transparent); }
 .airStatus1 { background: linear-gradient(.25turn, transparent, rgba(150, 255, 0, .1), transparent); }
 .airStatus2 { background: linear-gradient(.25turn, transparent, rgba(255, 255, 0, .1), transparent); }

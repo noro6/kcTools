@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?e7ibm2') format('truetype'),
-    url('fonts/icons.woff?e7ibm2') format('woff'),
-    url('fonts/icons.svg?e7ibm2#icons') format('svg');
+    url('fonts/icons.ttf?z8dyns') format('truetype'),
+    url('fonts/icons.woff?z8dyns') format('woff'),
+    url('fonts/icons.svg?z8dyns#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -105,6 +105,9 @@
 .fa-wrench:before {
   content: "\f0ad";
 }
+.fa-filter:before {
+  content: "\f0b0";
+}
 .fa-copy:before {
   content: "\f0c5";
 }
@@ -140,6 +143,12 @@
 }
 .fa-file-text:before {
   content: "\f15c";
+}
+.fa-sort-amount-asc:before {
+  content: "\f160";
+}
+.fa-sort-amount-desc:before {
+  content: "\f161";
 }
 .fa-archive:before {
   content: "\f187";
