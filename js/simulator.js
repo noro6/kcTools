@@ -4895,6 +4895,10 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		if (preset.length >= 4 && preset[3]) {
 			// 対空砲火有効化チェック復帰 前verのデータとかグちゃってるけどあんま影響ないのでヨシ！よくない
 			document.getElementById('adapt_stage2')['checked'] = true;
+			const value = castInt(preset[3]);
+			if (value) {
+				document.getElementById('fleet_formation').value = value;
+			}
 		}
 		else {
 			document.getElementById('adapt_stage2')['checked'] = false;
@@ -4924,7 +4928,7 @@ function encodePreset() {
 			createLandBasePreset(),
 			createFriendFleetPreset(),
 			createEnemyFleetPreset(),
-			document.getElementById('adapt_stage2')['checked'],
+			document.getElementById('adapt_stage2')['checked'] ? castInt(document.getElementById('fleet_formation').value) : 0,
 			isDefMode,
 			createAirRaidEnemyFleetPreset()
 		];
@@ -8083,7 +8087,9 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 今回の記録用の敵データ
 	const targetEnemy = battleInfo.battles[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.onlyScout)[enemyNo];
 	const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
-	const plane = ENEMY_ITEM.find(v => v.id === enemy.eqp[slotNo]);
+	// slotNo は艦載機だけの配列で見ている => 艦載機のみ配列を作る enemy.eqp.filter()
+	const planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
+	const plane = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type))[slotNo];
 
 	// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
 	const rate = Math.abs(plane.type) === 8 ? [0.8, 1.5] : !ATTACKERS.includes(plane.type) ? [0] : [1];
