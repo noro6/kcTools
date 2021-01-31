@@ -33,8 +33,6 @@ input[type="text"] { font-size: 12px; }
 .bg-e9ecef { background-color: #e9ecef; }
 .bg-hover { background-color: rgba(128, 128, 128, 0.05); }
 .sortable_handle { cursor: move; }
-.cur_pointer { cursor: pointer; }
-.cur_move { cursor: move; }
 .cur_help { cursor: help; }
 
 .img-size-18 {

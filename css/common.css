@@ -566,6 +566,9 @@ h1 {
   font-size: 16px;
   font-weight: bold;
 }
+.cur_pointer { cursor: pointer; }
+.cur_move { cursor: move; }
+
 .font_size_16 { font-size: 16px; }
 .font_size_14 { font-size: 14px; }
 .font_size_13 { font-size: 13px; }
