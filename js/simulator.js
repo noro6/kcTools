@@ -3720,7 +3720,7 @@ function createShipTable() {
 			break;
 		case 116:
 			// 補助艦艇
-			dispType = [16, 17, 19, 20, 21, 22];
+			dispType = [1, 16, 17, 19, 20, 21, 22];
 			break;
 		case 11:
 			// 正規空母(大画面)
@@ -3732,7 +3732,7 @@ function createShipTable() {
 			break;
 		case 117:
 			// 補助艦艇(大画面)
-			dispType = [17, 19, 20, 21, 22];
+			dispType = [1, 17, 19, 20, 21, 22];
 			break;
 		default:
 			dispType.push(type);
