@@ -32,14 +32,12 @@ function saveLocalStorage(key, data) {
 		window.localStorage.setItem(key, JSON.stringify(data));
 		return true;
 	} catch (error) {
-
 		const $modal = $('#modal_confirm');
 		$modal.find('.modal-body').html(`
 			<div class="h6">データの更新に失敗しました。</div>
-			<div class="mt-3 font_size_12">Local Strageのデータ更新に失敗しました。保存領域上限に達している可能性があります。</div>
-			<div class="font_size_12">不要な編成データの削除や、展開している編成タブを閉じ、再度試してみてください。</div>
+			<div class="m-3 font_size_12">お使いのブラウザのLocalStrage保存領域上限に達した可能性があります。</div>
+			<div class="mx-3 font_size_12">不要な編成データの削除や、展開している編成タブを閉じ、再度試してみてください。</div>
 		`);
-		$modal[0].dataset.target = container[0].dataset.presetid;
 		confirmType = 'strageOver';
 		$modal.modal('show');
 		return false;
