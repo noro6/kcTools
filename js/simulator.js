@@ -1284,8 +1284,8 @@ class Item {
 	 */
 	static getBonusAccuracy(id, type, remodel) {
 		let bonus = 0;
-		// 一部電探
-		if ([28, 29, 31, 32, 88, 89, 141, 278].includes(id)) {
+		// 一部電探 電探改修可能変更時注意
+		if ([28, 29, 31, 32, 88, 89, 141, 278, 279, 315].includes(id)) {
 			bonus = 1.7 * Math.sqrt(remodel);
 		}
 		// 主砲 副砲 徹甲弾 高射装置 探照灯
@@ -3064,6 +3064,8 @@ function clearShipDiv($div) {
 	// スロットは全ていったんロック解除
 	$div.find('.plane_lock').addClass('d-none');
 	$div.find('.plane_unlock').removeClass('d-none');
+	// 練度
+	$div.find('.ship_level').text(99);
 }
 
 /**
@@ -3234,7 +3236,7 @@ function createItemTable(planes, type) {
 	const sortKey = $('#plane_sort_select').val();
 	const usedTable = usedPlane.concat();
 
-	// ステータス表示を行うプロパティ名 カテゴリ、ソートキーによって可変 
+	// ステータス表示を行うプロパティ名 カテゴリ、ソートキーによって可変
 	let displayLabels = ['antiAir', 'antiAirWeight', 'antiAirBonus', 'fire', 'accuracy'];
 
 	// 艦戦 水戦
@@ -3247,10 +3249,6 @@ function createItemTable(planes, type) {
 	else if (type === 10 || type === 11) displayLabels = ['bomber', 'scout', 'antiAir', 'avoid', 'accuracy'];
 	// 偵察機系
 	else if (RECONNAISSANCES.includes(type)) displayLabels = ['scout', 'radius', 'accuracy', 'antiAir', 'cost'];
-	// 陸攻系
-	else if (LB_ATTACKERS.includes(type)) displayLabels = ['antiAir', 'radius', 'torpedo', 'avoid', 'cost'];
-	// 局地戦闘機
-	else if (type === 48) displayLabels = ['antiAir', 'radius', 'battle_anti_air', 'defense_anti_air', 'cost'];
 	// 主砲 副砲
 	else if ([1, 2, 3, 4].includes(type)) displayLabels = ['fire', 'accuracy', 'antiAir', 'antiAirWeight', 'antiAirBonus'];
 	// 電探
@@ -3259,47 +3257,36 @@ function createItemTable(planes, type) {
 	else if ([14, 15].includes(type)) displayLabels = ['asw', 'fire', 'accuracy', 'avoid2', 'armor'];
 	// 機銃 / 高射装置
 	else if (type === 21) displayLabels = ['antiAir', 'antiAirWeight', 'antiAirBonus', 'fire', 'torpedo'];
+	// 陸攻系
+	else if (LB_ATTACKERS.includes(type)) displayLabels = ['antiAir', 'radius', 'battle_anti_air', 'avoid', 'cost'];
+	// 局地戦闘機
+	else if (type === 48) displayLabels = ['antiAir', 'radius', 'battle_anti_air', 'defense_anti_air', 'cost'];
 
 	// 基地機体選択中なら、第2、第5の表示は半径とコストに置換
 	if ($target && !$target.hasClass('ship_plane')) {
 		displayLabels[1] = 'radius';
 		displayLabels[4] = 'cost';
 
-		if (sortKey === 'defense_anti_air') {
-			if (type === 0) {
-				displayLabels = ['defense_anti_air', 'radius', 'battle_anti_air', 'cost', 'avoid'];
-			}
-			else if (type === 48) {
-				displayLabels = ['defense_anti_air', 'radius', 'antiAir', 'battle_anti_air', 'cost'];
-			}
-			else {
-				const antiAirIndex = displayLabels.findIndex(v => v === 'antiAir');
-				displayLabels[antiAirIndex] = sortKey;
-			}
-		}
-		else if (sortKey === 'battle_anti_air') {
-			if (type === 0) {
-				displayLabels = ['battle_anti_air', 'radius', 'defense_anti_air', 'cost', 'avoid'];
-			}
-			else if (type === 48) {
-				displayLabels = ['battle_anti_air', 'radius', 'antiAir', 'defense_anti_air', 'cost'];
-			}
-			else {
-				const antiAirIndex = displayLabels.findIndex(v => v === 'antiAir');
-				displayLabels[antiAirIndex] = sortKey;
-			}
-		}
-		else {
-			if (type === 0) {
-				displayLabels = ['battle_anti_air', 'radius', 'defense_anti_air', 'cost', 'avoid'];
-			}
+		// 全体 基本
+		if (type === 0) {
+			displayLabels = ['antiAir', 'radius', 'battle_anti_air', 'cost', 'avoid'];
 		}
 	}
 
 
 	// ステータスヘッダ調整
+	let basic_index = 0;
 	$('#plane_table_thead').find('.plane_td_basic').each((i, e) => {
-		$(e).text(convertHeaderText(displayLabels[i]));
+		// 可変ヘッダーの書き換え
+		$(e).text(convertHeaderText(displayLabels[basic_index]));
+		$(e)[0].dataset.sortkey = displayLabels[basic_index++];
+
+		if (sortKey === $(e)[0].dataset.sortkey) {
+			$(e).addClass('active');
+		}
+		else {
+			$(e).removeClass('active');
+		}
 	});
 
 	if (displayMode === "multi") {
@@ -10662,6 +10649,18 @@ function plane_only_Clicked() {
 }
 
 /**
+ * 列ヘッダークリック時
+ * @param {JQuery} $this 押された列ヘッダー
+ */
+function sortable_td_Clicked($this) {
+	const key = $this[0].dataset.sortkey;
+	if (key) {
+		$('#plane_sort_select').val(key);
+		plane_type_select_Changed();
+	}
+}
+
+/**
  * 機体選択欄 機体カテゴリ変更時
  */
 function plane_type_select_Changed($this = null) {
@@ -10727,13 +10726,13 @@ function plane_type_select_Changed($this = null) {
 		// 装備カテゴリに存在しない装備は除外
 		org = org.filter(v => dispType.includes(v.type));
 
-		// 装甲空母ではない場合、試製景雲を削除する
+		// 装甲空母ではない場合、試製景雲(id:151)を削除する
 		if (ship.type !== 18) {
 			org = org.filter(v => v.id !== 151);
 		}
-		// 戦艦系ではない場合、15m二重測距儀+21号電探改二OKを削除する
+		// 戦艦系ではない場合、15m二重測距儀+21号電探改二(id:142)を削除する
 		if (![8, 9, 10].includes(ship.type)) {
-			org = org.filter(v => v.id !== 151);
+			org = org.filter(v => v.id !== 142);
 		}
 
 		// 補強増設　特別枠
@@ -10885,7 +10884,11 @@ function plane_type_select_Changed($this = null) {
 			}
 		case 'id':
 		case 'cost':
+			// これは昇順
 			org.sort((a, b) => a[sortKey] - b[sortKey]);
+			break;
+		case 'name':
+			org.sort(function (a, b) { return a.name > b.name ? 1 : -1; });
 			break;
 		case 'default':
 			break;
@@ -13622,6 +13625,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('change', '#plane_filter_value', plane_filter_Changed);
 	$('#modal_plane_select').on('click', '.toggle_display_type', function () { plane_type_select_Changed(); });
 	$('#modal_plane_select').on('click', '#plane_only', plane_only_Clicked);
+	$('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
