@@ -3064,6 +3064,8 @@ function clearShipDiv($div) {
 	// スロットは全ていったんロック解除
 	$div.find('.plane_lock').addClass('d-none');
 	$div.find('.plane_unlock').removeClass('d-none');
+	// 練度
+	$div.find('.ship_level').text(99);
 }
 
 /**
@@ -10724,13 +10726,13 @@ function plane_type_select_Changed($this = null) {
 		// 装備カテゴリに存在しない装備は除外
 		org = org.filter(v => dispType.includes(v.type));
 
-		// 装甲空母ではない場合、試製景雲を削除する
+		// 装甲空母ではない場合、試製景雲(id:151)を削除する
 		if (ship.type !== 18) {
 			org = org.filter(v => v.id !== 151);
 		}
-		// 戦艦系ではない場合、15m二重測距儀+21号電探改二OKを削除する
+		// 戦艦系ではない場合、15m二重測距儀+21号電探改二(id:142)を削除する
 		if (![8, 9, 10].includes(ship.type)) {
-			org = org.filter(v => v.id !== 151);
+			org = org.filter(v => v.id !== 142);
 		}
 
 		// 補強増設　特別枠
