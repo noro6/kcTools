@@ -5175,6 +5175,7 @@
 									<option value="default">カテゴリ</option>
 									<option value="history">よく使う</option>
 									<option value="id">図鑑No</option>
+									<option value="name">名称</option>
 									<option value="fire">火力</option>
 									<option value="antiAir">対空</option>
 									<option value="battle_anti_air">出撃対空</option>
@@ -5191,6 +5192,7 @@
 									<option value="radius">半径</option>
 									<option value="cost">コスト</option>
 									<option value="land_base_power">基地火力</option>
+									<option value="avoid">射撃回避</option>
 								</select>
 							</div>
 						</div>
@@ -5275,16 +5277,14 @@
 						<div class="d-flex flex-wrap" id="plane_type_select"></div>
 					</div>
 					<div class="pb-1 custom_table" id="plane_table">
-						<div class="scroll_thead d-flex px-1" id="plane_table_thead">
-							<div class="plane_td_type align-self-center">
-								<img class="img-size-25" src="../img/type/undefined.png" alt="種">
-							</div>
-							<div class="pl-2 plane_td_name align-self-center">装備名</div>
-							<div class="ml-auto plane_td_basic align-self-center">ステータス1</div>
-							<div class="plane_td_basic align-self-center">ステータス2</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス3</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス4</div>
-							<div class="plane_td_basic align-self-center d-none d-lg-block">ステータス5</div>
+						<div class="scroll_thead d-flex px-1 py-2" id="plane_table_thead">
+							<div class="plane_td_type px-3 align-self-center sortable_td" data-sortkey="default">#</div>
+							<div class="plane_td_name align-self-center sortable_td" data-sortkey="name">装備名</div>
+							<div class="ml-auto plane_td_basic sortable_td align-self-center">ステータス1</div>
+							<div class="plane_td_basic sortable_td align-self-center">ステータス2</div>
+							<div class="plane_td_basic sortable_td align-self-center d-none d-lg-block">ステータス3</div>
+							<div class="plane_td_basic sortable_td align-self-center d-none d-lg-block">ステータス4</div>
+							<div class="plane_td_basic sortable_td align-self-center d-none d-lg-block">ステータス5</div>
 						</div>
 						<div id="plane_tbody_wrap">
 							<div id="plane_tbody"></div>
