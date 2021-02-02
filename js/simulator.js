@@ -13625,7 +13625,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('change', '#plane_filter_value', plane_filter_Changed);
 	$('#modal_plane_select').on('click', '.toggle_display_type', function () { plane_type_select_Changed(); });
 	$('#modal_plane_select').on('click', '#plane_only', plane_only_Clicked);
-	$('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
+	// $('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
