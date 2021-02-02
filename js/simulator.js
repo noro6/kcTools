@@ -1285,7 +1285,7 @@ class Item {
 	static getBonusAccuracy(id, type, remodel) {
 		let bonus = 0;
 		// 一部電探 電探改修可能変更時注意
-		if ([28, 29, 31, 32, 88, 89, 141, 278, 279, 315].includes(id)) {
+		if ([28, 29, 31, 32, 88, 89, 141, 240, 278, 279, 315].includes(id)) {
 			bonus = 1.7 * Math.sqrt(remodel);
 		}
 		// 主砲 副砲 徹甲弾 高射装置 探照灯
