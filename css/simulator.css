@@ -178,6 +178,13 @@ input[type="text"] { font-size: 12px; }
   height: 8px;
 }
 
+.dummy_a {
+  cursor: pointer;
+  color: #006eff;
+}
+.dummy_a:hover {
+  text-decoration: underline;
+}
 
 /* -----------------------------------
   sideBar
@@ -310,14 +317,6 @@ input[type="text"] { font-size: 12px; }
 }
 .btn_toggle_lb_info:hover {
   opacity: 1.0;
-}
-
-#alert_air_raid_button {
-  cursor: pointer;
-  color: #006eff;
-}
-#alert_air_raid_button:hover {
-  text-decoration: underline;
 }
 
 /* -----------------------------------
