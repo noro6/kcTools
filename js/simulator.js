@@ -517,8 +517,8 @@ class Ship {
 				if (items.some(v => v.id === 308) && items.some(v => v.id === 284 || v.id === 313)) cutin.push(35);
 				// 36種 (5inch単装砲 Mk.30 / 改 2種, GFCS Mk.37)
 				if (items.filter(v => v.id === 284 || v.id === 313).length >= 2 && hasGFCS) cutin.push(36);
-				// 37種 (5inch単装砲 Mk.30 / 改 2種)
-				if (items.filter(v => v.id === 284 || v.id === 313).length >= 2) cutin.push(37);
+				// 37種 (5inch単装砲 Mk.30改 2種)
+				if (items.filter(v => v.id === 313).length >= 2) cutin.push(37);
 			}
 			// 摩耶様改二
 			else if (shipId === 228) {
@@ -3255,6 +3255,8 @@ function createItemTable(planes, type) {
 	else if ([12, 13].includes(type)) displayLabels = ['antiAir', 'accuracy', 'antiAirWeight', 'antiAirBonus', 'scout'];
 	// 対潜
 	else if ([14, 15].includes(type)) displayLabels = ['asw', 'fire', 'accuracy', 'avoid2', 'armor'];
+	// 魚雷
+	else if ([5, 22, 32].includes(type)) displayLabels = ['torpedo', 'fire', 'accuracy', 'avoid2', 'armor'];
 	// 機銃 / 高射装置
 	else if (type === 21) displayLabels = ['antiAir', 'antiAirWeight', 'antiAirBonus', 'fire', 'torpedo'];
 	// 陸攻系
@@ -5255,6 +5257,16 @@ function drawResult() {
 	$('.simple_lb_progress').addClass('d-none').removeClass('d-flex');
 	$('#fleet_simple_bar').addClass('d-none');
 
+	// 10万回計算できるアラート追加
+	const calculateCount = castInt($('#calculate_count').val());
+	if (calculateCount < 50000) {
+		$('#prev_calculate_count').text(calculateCount);
+		$('#calculate_confirm').removeClass('d-none');
+	}
+	else {
+		$('#calculate_confirm').addClass('d-none');
+	}
+
 	const loopCount = isDefMode ? 1 : 6;
 	let airPowers = [];
 	let enemyAirPowers = [];
@@ -5324,12 +5336,24 @@ function drawResult() {
 		$rate_td_eap.find('.avg_eap').text(eap);
 		$rate_td_eap.find('.eap_border').html(`( ${border.slice(0, 4).map(v => v <= ap ? `<b>${v}</b>` : v.toString()).join(' / ')} )`);
 
+		// 総確率から引いていく表示形式で。
+		let sumRate = 100;
 		for (let j = 0; j < rates.length; j++) {
 			$target_tr.find('.rate_td_status' + j).text('-');
 			if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100 %');
 			else if (rates[j] > 0) {
-				const rate = rates[j] * 100;
-				$target_tr.find('.rate_td_status' + j).text((rate === 100 ? 100 : rate.toFixed(2)) + ' %');
+				// 小数点2桁以降を切り捨て。
+				const rate = Math.floor(rates[j] * 1000) / 10;
+				// 次の制空状態の確率に何か値があるなら、総確率から引く
+				let rateText = 0;
+				if (j + 1 < rates.length && rates[j + 1] > 0) {
+					rateText = rate;
+					sumRate -= rate;
+				}
+				else {
+					rateText = sumRate.toFixed(1);
+				}
+				$target_tr.find('.rate_td_status' + j).text((rateText) + ' %');
 				visible = true;
 			}
 		}
@@ -5378,7 +5402,6 @@ function drawResult() {
 	let sumBauxiteAvg = 0;
 	let sumBauxiteMax = 0;
 	let sumBauxiteMin = 0;
-	const calculateCount = castInt($('#calculate_count').val());
 	// 出撃後スロット平均、全滅率の表示
 	for (let index = 0; index < resultData.fleetSlots.length; index++) {
 		const s = resultData.fleetSlots[index];
@@ -5392,7 +5415,7 @@ function drawResult() {
 		node_battle_end.textContent = Math.round(s.avg);
 
 		const node_battle_death = node_tr.getElementsByClassName('battle_death')[0];
-		node_battle_death.textContent = (s.deathRate === 0 ? '-' : deathRate >= 10 ? deathRate.toFixed(1) + ' %' : deathRate.toFixed(2) + ' %');
+		node_battle_death.textContent = (s.deathRate === 0 ? '-' : deathRate >= 10 ? deathRate.toFixed(1) + ' %' : Math.ceil(deathRate * 10) / 10 + ' %');
 
 		// 1戦目との差分から平均ボーキ消費量を算出
 		if (initSlot > 0) {
@@ -5433,9 +5456,9 @@ function drawResult() {
 	// 棒立ち率
 	if (!isDefMode && document.getElementById('adapt_stage2')['checked']) {
 		for (let i = 0; i < resultData.enemySlotAllDead.length; i++) {
-			const rate = Math.floor(1000 * (resultData.enemySlotAllDead[i] / calculateCount)) / 10;
+			const rate = Math.round(1000 * (resultData.enemySlotAllDead[i] / calculateCount)) / 10;
 			const node_tr = document.getElementsByClassName(`enemy_no_${i} slot_0`)[0];
-			node_tr.getElementsByClassName('td_all_dead')[0].textContent = rate + '%';
+			node_tr.getElementsByClassName('td_all_dead')[0].textContent = Math.floor(rate) + '%';
 		}
 		document.getElementById('enemy_slot_result_mode').textContent = '（航空戦 stage2 後）';
 	}
@@ -6773,6 +6796,12 @@ function createFleetInstance() {
 		// 射程上書き
 		if (shipInstance.range < planeRange) {
 			shipInstance.range = planeRange;
+		}
+
+		// 伊勢日向飛龍蒼龍の改二 二式艦上偵察機で射程バフ+1
+		if ([353, 354, 196, 197].includes(shipInstance.id) && shipInstance.planes.some(v => v.id === 61)) {
+			if (shipInstance.range < 1) shipInstance.range += 1;
+			shipInstance.range++;
 		}
 	}
 
@@ -10656,7 +10685,7 @@ function sortable_td_Clicked($this) {
 	const key = $this[0].dataset.sortkey;
 	if (key) {
 		$('#plane_sort_select').val(key);
-		plane_type_select_Changed();
+		sort_Changed($('#plane_sort_select'));
 	}
 }
 
@@ -11835,6 +11864,21 @@ function enemy_shoot_down_table_tbody_MouseLeave($this) {
 	$tr.removeClass('bg-hover');
 	$tr.find('.td_plane_name').removeClass(css);
 	$('#enemy_shoot_down_tbody').find('.enemy_no_' + rowIndex + ':first').find('.td_name').removeClass('bg-hover');
+}
+
+/**
+ * 計算もっと！
+ */
+function btn_more_calc_Clicked() {
+	const prevCount = $('#calculate_count').val();
+	$('#calculate_count').val(100000);
+
+	calculate(false, false, false);
+
+	inform_success('計算が完了しました。(+100,000 回出撃分)');
+
+	$('#calculate_count').val(prevCount);
+	$('#calculate_confirm').addClass('d-none');
 }
 
 /**
@@ -13575,6 +13619,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#enemyFleet_content').on('click', '#btn_lb_target', btn_lb_target_Clicked);
 	$('#enemyFleet_content').on('click', 'input[name="enemy_fleet_display_mode"]', function () { enemy_fleet_display_mode_Changed($(this)); });
 	$('#result').on('click', '#btn_calculate', function () { calculate(false, false, false); });
+	$('#result_content').on('click', '#btn_more_calc', btn_more_calc_Clicked);
 	$('#result_content').on('click', '#display_battle_tab .nav-item', function () { display_battle_tab_Changed($(this)); });
 	$('#result_content').on('click', '#empty_slot_invisible', function () { calculate(false, false, false); });
 	$('#result_content').on('click', '#display_setting .custom-control-input', display_result_Changed);
@@ -13625,7 +13670,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('change', '#plane_filter_value', plane_filter_Changed);
 	$('#modal_plane_select').on('click', '.toggle_display_type', function () { plane_type_select_Changed(); });
 	$('#modal_plane_select').on('click', '#plane_only', plane_only_Clicked);
-	// $('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
+	$('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });

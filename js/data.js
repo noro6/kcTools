@@ -1986,6 +1986,8 @@ const RANGES = [
 	{ id: 2, name: '中' },
 	{ id: 3, name: '長' },
 	{ id: 4, name: '超長' },
+	{ id: 5, name: '超長+' },
+	{ id: 6, name: '超長++' },
 ];
 
 // 艦種毎装備可能カテゴリ(最低限)
@@ -2205,4 +2207,4 @@ const DEFAULT_PLANE_PRESET = [
 const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
-const LATEST_VERSION = '1.12.0';
+const LATEST_VERSION = '1.12.0.1';
