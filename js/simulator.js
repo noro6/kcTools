@@ -517,8 +517,8 @@ class Ship {
 				if (items.some(v => v.id === 308) && items.some(v => v.id === 284 || v.id === 313)) cutin.push(35);
 				// 36種 (5inch単装砲 Mk.30 / 改 2種, GFCS Mk.37)
 				if (items.filter(v => v.id === 284 || v.id === 313).length >= 2 && hasGFCS) cutin.push(36);
-				// 37種 (5inch単装砲 Mk.30 / 改 2種)
-				if (items.filter(v => v.id === 284 || v.id === 313).length >= 2) cutin.push(37);
+				// 37種 (5inch単装砲 Mk.30改 2種)
+				if (items.filter(v => v.id === 313).length >= 2) cutin.push(37);
 			}
 			// 摩耶様改二
 			else if (shipId === 228) {
@@ -13670,7 +13670,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('change', '#plane_filter_value', plane_filter_Changed);
 	$('#modal_plane_select').on('click', '.toggle_display_type', function () { plane_type_select_Changed(); });
 	$('#modal_plane_select').on('click', '#plane_only', plane_only_Clicked);
-	// $('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
+	$('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_delete_preset', function () { btn_delete_plane_preset_Clicked($(this)); });
