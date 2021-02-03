@@ -517,8 +517,8 @@ class Ship {
 				if (items.some(v => v.id === 308) && items.some(v => v.id === 284 || v.id === 313)) cutin.push(35);
 				// 36種 (5inch単装砲 Mk.30 / 改 2種, GFCS Mk.37)
 				if (items.filter(v => v.id === 284 || v.id === 313).length >= 2 && hasGFCS) cutin.push(36);
-				// 37種 (5inch単装砲 Mk.30 / 改 2種)
-				if (items.filter(v => v.id === 284 || v.id === 313).length >= 2) cutin.push(37);
+				// 37種 (5inch単装砲 Mk.30改 2種)
+				if (items.filter(v => v.id === 313).length >= 2) cutin.push(37);
 			}
 			// 摩耶様改二
 			else if (shipId === 228) {
@@ -1285,7 +1285,7 @@ class Item {
 	static getBonusAccuracy(id, type, remodel) {
 		let bonus = 0;
 		// 一部電探 電探改修可能変更時注意
-		if ([28, 29, 31, 32, 88, 89, 141, 278, 279, 315].includes(id)) {
+		if ([28, 29, 31, 32, 88, 89, 141, 240, 278, 279, 315].includes(id)) {
 			bonus = 1.7 * Math.sqrt(remodel);
 		}
 		// 主砲 副砲 徹甲弾 高射装置 探照灯
