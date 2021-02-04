@@ -10939,25 +10939,33 @@ function plane_type_select_Changed($this = null) {
 		// 装甲空母ではない場合、試製景雲(id:151)を削除する
 		if (ship.type !== 18) {
 			const delIndex = org.findIndex(v => v.id === 151);
-			org.splice(delIndex, 1);
+			if (delIndex >= 0) {
+				org.splice(delIndex, 1);
+			}
 		}
 		// 戦艦系ではない場合、15m二重測距儀+21号電探改二(id:142)を削除する
 		if (![8, 9, 10].includes(ship.type)) {
 			const delIndex = org.findIndex(v => v.id === 142);
-			org.splice(delIndex, 1);
+			if (delIndex >= 0) {
+				org.splice(delIndex, 1);
+			}
 		}
 
 		// 補強増設　特別枠
 		if (isExpandedSlot) {
 			// 補強増設枠　タービン以外の強化機関を削除する
 			let delIndex = org.findIndex(v => v.id === 34);
-			org.splice(delIndex, 1);
+			if (delIndex >= 0) {
+				org.splice(delIndex, 1);
+			}
 			delIndex = org.findIndex(v => v.id === 87);
-			org.splice(delIndex, 1);
+			if (delIndex >= 0) {
+				org.splice(delIndex, 1);
+			}
 
 			const sps = EXPANDED_SPECIAL_ITEM.filter(v => v.shipApiIds.includes(ship.api));
 			for (const sp of sps) {
-				const spItem = ITEM_DATA.find(v => v.id === sp.itemId);
+				const spItem = ITEM_LIST.find(v => v.id === sp.itemId);
 				// カテゴリに追加
 				if (spItem && !dispType.includes(spItem.type)) {
 					dispType.push(spItem.type);
