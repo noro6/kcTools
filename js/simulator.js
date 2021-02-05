@@ -2351,7 +2351,7 @@ function getItemsForIcon(type) {
 	// 輸送装備系
 	else if (type === 24) items = ITEM_LIST.filter(v => [24, 30, 46].includes(v.type));
 	// その他もろもろ
-	else if (type === 17) items = ITEM_LIST.filter(v => [17, 18, 19, 23, 25, 26, 27, 28, 29, 30, 31, 33, 34, 35, 36, 37, 39, 42, 43, 44, 50, 51].includes(v.type));
+	else if (type === 17) items = ITEM_LIST.filter(v => [17, 18, 19, 23, 25, 26, 27, 28, 29, 31, 33, 34, 35, 36, 37, 39, 42, 43, 44, 50, 51].includes(v.type));
 	// それ以外
 	else items = ITEM_LIST.filter(v => v.type === type);
 	return items;
@@ -2630,6 +2630,10 @@ function initialize(callback) {
 
 	// 表示隻数初期化
 	for (const e of document.getElementsByClassName('display_ship_count')) e.value = 2;
+
+	// 味方艦隊複製
+	text = $('#shipNo_1').html();
+	$('.ship_tab').each((i, e) => { if (i > 0) $(e).html(text); });
 
 	// 敵艦隊欄複製
 	text = $('#battle_container').html();
@@ -10910,9 +10914,22 @@ function plane_type_select_Changed($this = null) {
 
 		// 補強増設？
 		const isExpandedSlot = $target.hasClass('expanded_slot');
+		// 補強増設枠用特殊装備 -無くてもいいよ
+		const exSpecialItems = [];
 		// 補強増設枠チェック
 		if (isExpandedSlot) {
 			dispType = dispType.filter(v => EXPANDED_ITEM_TYPE.includes(v));
+
+			const sps = EXPANDED_SPECIAL_ITEM.filter(v => v.shipApiIds.includes(ship.api));
+			for (const sp of sps) {
+				const spItem = ITEM_LIST.find(v => v.id === sp.itemId);
+				// 補強増設枠に装備可能な特別装備があった場合、その装備カテゴリに追加
+				if (spItem && !dispType.includes(spItem.type)) {
+					dispType.push(spItem.type);
+				}
+
+				exSpecialItems.push(spItem);
+			}
 		}
 
 		// 機体のみモードなら機体に絞る
@@ -10928,6 +10945,12 @@ function plane_type_select_Changed($this = null) {
 				// 禁止カテゴリ フィルタ
 				dispType = dispType.filter(v => !forbiddens.itemType.includes(v));
 			}
+		}
+
+		// 装備可能カテゴリはここの時点で確定
+		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
+		if (!dispType || !dispType.find(v => convertItemType(v) === selectedType)) {
+			selectedType = 0;
 		}
 
 		// 選択カテゴリに該当する装備を取得
@@ -10963,24 +10986,11 @@ function plane_type_select_Changed($this = null) {
 				org.splice(delIndex, 1);
 			}
 
-			const sps = EXPANDED_SPECIAL_ITEM.filter(v => v.shipApiIds.includes(ship.api));
-			for (const sp of sps) {
-				const spItem = ITEM_LIST.find(v => v.id === sp.itemId);
-				// カテゴリに追加
-				if (spItem && !dispType.includes(spItem.type)) {
-					dispType.push(spItem.type);
-				}
-
-				// まだ装備欄に未追加 かつ カテゴリがALLか、それに該当するカテゴリなら追加
-				if (spItem && !org.find(v => v.id === spItem.id) && (selectedType === 0 || selectedType === spItem.type)) {
-					org.unshift(spItem);
-				}
+			const enabledIds = exSpecialItems.map(v => v.id);
+			for (const spItem of exSpecialItems) {
+				// 特別装備可能アイテム以外の同カテゴリアイテム削除
+				org = org.filter(v => enabledIds.includes(v.id) || spItem.type !== v.type);
 			}
-		}
-
-		// 前の表示値が残ってて変な選択してる場合はカテゴリを全てに変更
-		if (!dispType || !dispType.find(v => convertItemType(v) === selectedType)) {
-			selectedType = 0;
 		}
 	}
 	else if ($target && $target.hasClass('ship_plane')) {
@@ -11711,12 +11721,11 @@ function calculateStage2Detail() {
 					${drawEnemyGradeColor(enemy.name)}
 				</span>
 			</td>
-			<td>
-				<span class="text-right">
-					${(battleData.stage2[avoid][0][idx++] * 100).toFixed(1)}% (${rate}機)</span>
+			<td class="text-right">
+				<span class="text-right">${(battleData.stage2[avoid][0][idx++] * 100).toFixed(1)}% (${rate}機)</span>
 			</td>
-			<td>${fix}機</td>
-			<td>${sum}機</td>
+			<td class="text-right">${fix}機</td>
+			<td class="text-right">${sum}機</td>
 		</tr>
 		`;
 	}
