@@ -156,6 +156,7 @@ const ITEM_DATA = [
 	{ id: 386, type: 2, itype: 2, name: "6inch三連装速射砲 Mk.16", abbr: "", fire: 7, antiAir: 2, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 2, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 2 },
 	{ id: 387, type: 2, itype: 2, name: "6inch三連装速射砲 Mk.16 mod.2", abbr: "", fire: 8, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 4, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 2 },
 	{ id: 399, type: 2, itype: 2, name: "6inch Mk.XXIII三連装砲", abbr: "", fire: 7, antiAir: 2, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 1, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 2 },
+	{ id: 407, type: 2, itype: 2, name: "15.2cm連装砲改二", abbr: "", fire: 6, antiAir: 4, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 4, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 2 },
 	{ id: 7, type: 3, itype: 3, name: "35.6cm連装砲", abbr: "", fire: 15, antiAir: 4, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 3 },
 	{ id: 8, type: 3, itype: 3, name: "41cm連装砲", abbr: "", fire: 20, antiAir: 4, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 3 },
 	{ id: 9, type: 3, itype: 3, name: "46cm三連装砲", abbr: "", fire: 26, antiAir: 5, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 4 },
@@ -302,7 +303,7 @@ const ITEM_DATA = [
 	{ id: 188, type: 8, itype: 8, name: "Re.2001 G改", abbr: "", fire: 3, antiAir: 4, torpedo: 4, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 2, radius: 3, cost: 6, avoid: 0, range2: 0 },
 	{ id: 196, type: 8, itype: 8, name: "TBD", abbr: "", fire: 1, antiAir: 0, torpedo: 5, bomber: 0, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 4, cost: 6, avoid: 0, range2: 0 },
 	{ id: 242, type: 8, itype: 8, name: "Swordfish", abbr: "", fire: 2, antiAir: 0, torpedo: 3, bomber: 0, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 1, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 3, cost: 3, avoid: 0, range2: 0 },
-	{ id: 243, type: 8, itype: 8, name: "Swordfish Mk.II(熟練)", abbr: "", fire: 3, antiAir: 0, torpedo: 5, bomber: 0, armor: 0, asw: 6, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 3, avoid2: 0, radius: 3, cost: 3, avoid: 0, range2: 0 },
+	{ id: 243, type: 8, itype: 8, name: "Swordfish Mk.II(熟練)", abbr: "", fire: 3, antiAir: 0, torpedo: 5, bomber: 0, armor: 0, asw: 6, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 3, cost: 3, avoid: 0, range2: 0 },
 	{ id: 244, type: 8, itype: 8, name: "Swordfish Mk.III(熟練)", abbr: "", fire: 4, antiAir: 0, torpedo: 8, bomber: 0, armor: 0, asw: 10, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 4, avoid2: 0, radius: 3, cost: 4, avoid: 0, range2: 0 },
 	{ id: 256, type: 8, itype: 8, name: "TBF", abbr: "", fire: 2, antiAir: 1, torpedo: 9, bomber: 0, armor: 0, asw: 6, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 6, cost: 10, avoid: 0, range2: 0 },
 	{ id: 257, type: 8, itype: 46, name: "TBM-3D", abbr: "", fire: 2, antiAir: 1, torpedo: 9, bomber: 0, armor: 0, asw: 8, antiBomber: 0, interception: 0, scout: 4, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 6, cost: 11, avoid: 0, range2: 0 },
@@ -1012,7 +1013,8 @@ const SHIP_DATA = [
 	{ id: 137, api: 137, type: 3, name: "阿賀野", slot: [2, 2, 2], final: 0, orig: 137, ver: 0, range: 2, type2: 41, max_aa: 60 },
 	{ id: 1401, api: 305, type: 3, name: "阿賀野改", slot: [2, 2, 2], final: 1, orig: 137, ver: 1, range: 2, type2: 41, max_aa: 73 },
 	{ id: 138, api: 138, type: 3, name: "能代", slot: [2, 2, 2], final: 0, orig: 138, ver: 0, range: 2, type2: 41, max_aa: 60 },
-	{ id: 1402, api: 306, type: 3, name: "能代改", slot: [2, 2, 2], final: 1, orig: 138, ver: 1, range: 2, type2: 41, max_aa: 72 },
+	{ id: 1402, api: 306, type: 3, name: "能代改", slot: [2, 2, 2], final: 0, orig: 138, ver: 1, range: 2, type2: 41, max_aa: 72 },
+	{ id: 462, api: 662, type: 3, name: "能代改二", slot: [1, 1, 4, 2], final: 1, orig: 138, ver: 2, range: 2, type2: 41, max_aa: 82 },
 	{ id: 139, api: 139, type: 3, name: "矢矧", slot: [2, 2, 2], final: 0, orig: 139, ver: 0, range: 2, type2: 41, max_aa: 63 },
 	{ id: 1403, api: 307, type: 3, name: "矢矧改", slot: [2, 2, 2], final: 1, orig: 139, ver: 1, range: 2, type2: 41, max_aa: 74 },
 	{ id: 1410, api: 314, type: 3, name: "酒匂改", slot: [2, 2, 2], final: 1, orig: 139, ver: 1, range: 2, type2: 41, max_aa: 73 },
@@ -2134,6 +2136,7 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 652, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 43, 45] },
 	{ apiShip: 656, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 27, 29, 30, 33, 34, 36, 37, 39, 43, 46] },
 	{ apiShip: 657, itemType: [1, 2, 4, 12, 13, 14, 15, 17, 20, 21, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 43, 46] },
+	{ apiShip: 662, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 43, 46] },
 	{ apiShip: 690, itemType: [1, 2, 4, 10, 11, 12, 13, 14, 16, 17, 20, 21, 22, 23, 24, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 41, 43, 45, 46, 50] },
 	{ apiShip: 703, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 24, 29, 30, 33, 36, 37, 39, 43] },
 ];
@@ -2151,6 +2154,8 @@ const FORBIDDEN_LINK_SHIP_ITEM = [
 	{ shipId: 422, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
 	{ shipId: 423, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
 	{ shipId: 424, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
+	// 能代改二 4スロットに 魚雷系 不可
+	{ shipId: 462, index: [4], itemType: [5, 22], itemIDs: [] },
 ];
 
 // 補強増設枠
@@ -2159,9 +2164,9 @@ const EXPANDED_ITEM_TYPE = [17, 21, 23, 27, 28, 36, 39, 43, 44, 51];
 // 補強増設 艦娘指定特別装備枠
 const EXPANDED_SPECIAL_ITEM = [
 	// 8cm高角砲
-	{ itemId: 66, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 503, 504, 508, 509] },
+	{ itemId: 66, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 503, 504, 508, 509, 662] },
 	// 8cm高角砲改+増設機銃
-	{ itemId: 220, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 503, 504, 508, 509] },
+	{ itemId: 220, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 503, 504, 508, 509, 662] },
 	// 10cm連装高角砲(砲架)
 	{ itemId: 71, shipApiIds: [136, 148, 153, 156, 183, 321, 546] },
 	// 10cm連装高角砲改+増設機銃
