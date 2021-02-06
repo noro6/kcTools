@@ -11034,7 +11034,9 @@ function plane_type_select_Changed($this = null) {
 	// フィルタ反映
 	const filterKey = $('#plane_filter_key_select').val();
 	const filterValue = castInt($('#plane_filter_value').val());
-	org = org.filter(v => v[filterKey] >= filterValue);
+	if (org.length >= 1 && org[0].hasOwnProperty(filterKey)) {
+		org = org.filter(v => v[filterKey] >= filterValue);
+	}
 
 	createItemTable(org, selectedType);
 }
