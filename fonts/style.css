@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?z8dyns') format('truetype'),
-    url('fonts/icons.woff?z8dyns') format('woff'),
-    url('fonts/icons.svg?z8dyns#icons') format('svg');
+    url('fonts/icons.ttf?xpwkhv') format('truetype'),
+    url('fonts/icons.woff?xpwkhv') format('woff'),
+    url('fonts/icons.svg?xpwkhv#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fa-plus:before {
+  content: "\f067";
+}
 .fa-search:before {
   content: "\f002";
 }
@@ -87,6 +90,12 @@
 .fa-chevron-down:before {
   content: "\f078";
 }
+.fa-folder:before {
+  content: "\f07b";
+}
+.fa-folder-open:before {
+  content: "\f07c";
+}
 .fa-arrows-v:before {
   content: "\f07d";
 }
@@ -137,6 +146,9 @@
 }
 .fa-flash:before {
   content: "\f0e7";
+}
+.fa-folder-o:before {
+  content: "\f114";
 }
 .fa-folder-open-o:before {
   content: "\f115";

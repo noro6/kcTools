@@ -31,6 +31,10 @@ function setLocalPresets() {
 
   $('#btn_search_preset').prop('disabled', false);
   setPresets(presets);
+
+  // イベント紐づけ
+  $('.folder_content').on('show.bs.collapse', function () { folder_content_Show($(this)); });
+  $('.folder_content').on('hide.bs.collapse', function () { folder_content_Hide($(this)); });
 }
 
 /**
@@ -91,6 +95,104 @@ function setPresets(presets, isLocal = true) {
     fragment.appendChild(empty_container);
   }
 
+  // フォルダー作成
+  const folders = setting.presetFolders;
+  const folderContainers = [];
+  for (let index = 0; index < folders.length; index++) {
+    const folder = folders[index];
+    const wrapper = createDiv();
+    const header = createDiv('preset_container folder_header');
+
+    // このフォルダーに属する編成総数
+    const presetCount = presets.filter(v => v.length >= 6 && v[5] === folder.id).length;
+
+    if (presetCount) {
+      header.dataset.toggle = 'collapse';
+      header.dataset.target = '#folder' + folder.id;
+    }
+    header.dataset.folderid = folder.id;
+
+    const headerBody = createDiv('d-flex my-auto ml-3 mr-2');
+    const headerText = createDiv('preset_name align-self-center');
+    headerText.innerHTML = `<i class="fas fa-folder${presetCount ? '-open' : ' opacity4'} mr-2 cur_move handle"></i>${folder.name}`;
+    headerBody.appendChild(headerText);
+
+    const countText = createDiv('ml-3 font_size_12 align-self-center font_color_half preset_count');
+    countText.textContent = `( ${presetCount}件 )`;
+    if (presetCount) headerBody.appendChild(countText);
+
+    // 名前編集欄
+    const name_edit = document.createElement('input');
+    name_edit.type = 'text';
+    name_edit.maxLength = 50;
+    name_edit.className = 'form-control form-control-sm preset_name_edit mb-1 mr-3 d-none';
+    name_edit.value = folder.name;
+    headerBody.appendChild(name_edit);
+
+    // ボタン群ラッパー
+    const btns = createDiv('d-flex ml-auto btns_container');
+
+    // フォルダー追加コミットボタン
+    const btn_commit_f = createDiv('ml-auto r_btn btn_commit_folder d-none');
+    btn_commit_f.dataset.toggle = 'tooltip';
+    btn_commit_f.dataset.offset = '-50%';
+    btn_commit_f.title = '選択した編成をこのフォルダーに追加します。';
+    btn_commit_f.innerHTML = '<i class="fas fa-save"></i>';
+    btns.appendChild(btn_commit_f);
+
+    // フォルダー追加やめるボタン
+    const btn_rollback_f = createDiv('ml-2 r_btn btn_rollback_folder d-none');
+    btn_rollback_f.dataset.toggle = 'tooltip';
+    btn_rollback_f.dataset.offset = '-50%';
+    btn_rollback_f.title = 'キャンセルします。';
+    btn_rollback_f.innerHTML = '<i class="fas fa-undo"></i>';
+    btns.appendChild(btn_rollback_f);
+
+    // フォルダーに追加ボタン
+    const btn_add = createDiv('ml-auto r_btn btn_add_preset');
+    btn_add.dataset.toggle = 'tooltip';
+    btn_add.dataset.offset = '-50%';
+    btn_add.title = 'このフォルダーに移動させる編成を一括で選択します。';
+    btn_add.innerHTML = '<i class="fas fa-plus"></i>';
+    btns.appendChild(btn_add);
+
+    // 編成編集コミットボタン
+    const btn_commit = createDiv('ml-auto r_btn btn_commit d-none');
+    btn_commit.dataset.toggle = 'tooltip';
+    btn_commit.dataset.offset = '-50%';
+    btn_commit.title = '編集内容を確定します。';
+    btn_commit.innerHTML = '<i class="fas fa-save"></i>';
+    btns.appendChild(btn_commit);
+
+    // 編成編集やめるボタン
+    const btn_rollback = createDiv('ml-2 r_btn btn_rollback d-none');
+    btn_rollback.dataset.toggle = 'tooltip';
+    btn_rollback.dataset.offset = '-50%';
+    btn_rollback.title = '編集内容を取り消します。';
+    btn_rollback.innerHTML = '<i class="fas fa-undo"></i>';
+    btns.appendChild(btn_rollback);
+
+    // 編成編集開始ボタン
+    const btn_edit = createDiv('ml-2 r_btn btn_edit_start');
+    btn_edit.dataset.toggle = 'tooltip';
+    btn_edit.dataset.offset = '-50%';
+    btn_edit.title = 'フォルダー名の変更を行います。';
+    btn_edit.innerHTML = '<i class="fas fa-pencil"></i>';
+    btns.appendChild(btn_edit);
+
+    headerBody.appendChild(btns);
+    header.appendChild(headerBody);
+
+    const container = document.createElement('div');
+    if (presetCount) {
+      container.id = 'folder' + folder.id;
+      container.className = 'folder_content collapse pl-5 ' + (folder.isOpen ? 'show' : '');
+      container.dataset.folderid = folder.id;
+    }
+    wrapper.appendChild(container);
+    folderContainers.push({ id: folder.id, header: header, container: container });
+  }
+
   // 並び替え可能要素
   const sortable_container = createDiv('', 'preset_sortable_container');
 
@@ -130,7 +232,7 @@ function setPresets(presets, isLocal = true) {
     // 艦娘データ
     const fleets = preset_data[1];
 
-    const land_base = createDiv('d-flex land_base_status');
+    const land_base = createDiv('d-none d-md-flex land_base_status');
     for (let i = 1; i <= 3; i++) {
       // 基地データが入っていてかつお札が出撃
       const disabled = lbs.length >= 1 && lbs[1].length >= i && lbs[1][i - 1] >= 0 ? '' : 'disabled';
@@ -206,6 +308,14 @@ function setPresets(presets, isLocal = true) {
       btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
       btns.appendChild(btn_copy);
 
+      // フォルダー移動ボタン
+      const btn_move_folder = createDiv('ml-2 r_btn btn_move_folder');
+      btn_move_folder.dataset.toggle = 'tooltip';
+      btn_move_folder.dataset.offset = '-50%';
+      btn_move_folder.title = '所属フォルダーを変更します。';
+      btn_move_folder.innerHTML = '<i class="fas fa-folder-open-o"></i>';
+      btns.appendChild(btn_move_folder);
+
       // 編成削除ボタン
       const btn_delete = createDiv('ml-2 r_btn btn_delete');
       btn_delete.dataset.toggle = 'tooltip';
@@ -238,10 +348,37 @@ function setPresets(presets, isLocal = true) {
     }
 
     wrapper.appendChild(container);
-    sortable_container.appendChild(wrapper);
+
+    if (isLocal && preset.length >= 6) {
+      // フォルダー検索　あればそっちにappend
+      const targetFolder = folderContainers.find(v => v.id === preset[5]);
+      if (targetFolder) {
+        targetFolder.container.appendChild(wrapper);
+      }
+      else {
+        sortable_container.appendChild(wrapper);
+      }
+    }
+    else {
+      sortable_container.appendChild(wrapper);
+    }
   }
 
+  // 通常分挿入
   fragment.appendChild(sortable_container);
+
+  // Folder挿入
+  if (isLocal) {
+    const foldersSortable = createDiv('', 'foldersParent');
+    for (const folder of folderContainers) {
+      const wrapper = createDiv();
+      wrapper.appendChild(folder.header);
+      wrapper.appendChild(folder.container);
+      foldersSortable.appendChild(wrapper);
+    }
+
+    fragment.appendChild(foldersSortable);
+  }
 
   if (!isLocal && prevSnapShot) {
     const more_container = createDiv(`d-flex preset_container more_load`);
@@ -269,6 +406,48 @@ function setPresets(presets, isLocal = true) {
         if (newPresets.length) {
           saveLocalStorage('presets', newPresets);
           inform_success('編成データの順序が更新されました。');
+        }
+      }
+    });
+
+    const folders = setting.presetFolders;
+    for (let index = 0; index < folders.length; index++) {
+      const folder = folders[index];
+      Sortable.create(document.getElementById('folder' + folder.id), {
+        animation: 200,
+        handle: '.sortable_handle',
+        onEnd: function () {
+          const oldPresets = loadLocalStorage('presets');
+          const newPresets = [];
+          for (const c of document.getElementsByClassName('preset_container')) {
+            const preset = oldPresets.find(v => v[0] === c.dataset.presetid);
+            if (preset) newPresets.push(preset);
+          }
+          if (newPresets.length) {
+            saveLocalStorage('presets', newPresets);
+            inform_success('編成データの順序が更新されました。');
+          }
+        }
+      });
+    }
+  }
+
+  if (isLocal && document.getElementById('foldersParent')) {
+    // フォルダー群自体の順序入れ替え
+    Sortable.create(document.getElementById('foldersParent'), {
+      animation: 200,
+      handle: '.handle',
+      onEnd: function () {
+        const folders = setting.presetFolders;
+        const newFolders = [];
+        for (const c of document.getElementsByClassName('folder_header')) {
+          const folder = folders.find(v => v.id === castInt(c.dataset.folderid));
+          if (folder) newFolders.push(folder);
+        }
+        if (newFolders.length) {
+          setting.presetFolders = newFolders;
+          saveSetting();
+          inform_success('フォルダーの順序が更新されました。');
         }
       }
     });
@@ -481,6 +660,126 @@ function more_load_presets() {
 }
 
 /**
+ * フォルダー追加ボタンクリック
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function btn_add_preset_Clicked($this, e) {
+  e.stopPropagation();
+
+  const p = $this.closest('.preset_container');
+  // ボタン
+  p.find('.btn_edit_start').addClass('d-none');
+  p.find('.btn_add_preset').addClass('d-none');
+  p.find('.btn_commit_folder').removeClass('d-none');
+  p.find('.btn_rollback_folder').removeClass('d-none');
+
+  $('.preset_container:not(.folder_header)').addClass('folder_selectable');
+
+  // 自分自身以外の全てのボタンを消す
+  $('.btns_container').addClass('d-none').removeClass('d-flex');
+  p.find('.btns_container').removeClass('d-none').addClass('d-flex');
+
+  inform_success('このフォルダに移動させる編成を選択し、保存ボタンをクリックしてください。');
+}
+
+
+function btn_commit_folder_Clicked($this, e) {
+  e.stopPropagation();
+
+  const p = $this.closest('.preset_container');
+  p.find('.btn_commit_folder').tooltip('hide');
+
+  const folderId = castInt(p[0].dataset.folderid);
+  const folder = setting.presetFolders.find(v => v.id === folderId);
+
+  if (!folder) {
+    // あり得ない
+    inform_danger('フォルダー更新に失敗しました。');
+    btn_rollback_folder_Clicked($this, e);
+    return;
+  }
+
+  const presets = loadLocalStorage('presets');
+  // 選択したプリセットの所属フォルダを変更
+  $('.folder_selectable.selected').each((i, e) => {
+    const presetId = $(e)[0].dataset.presetid;
+    const preset = presets ? presets.find(v => v[0] === presetId) : null;
+
+    // 見つかったものだけ更新
+    if (preset && preset.length >= 6) preset[5] = folderId;
+    else if (preset && preset.length === 5) preset.push(folderId);
+  });
+
+  saveLocalStorage('presets', presets);
+  // もう一回プリセ一覧生成しておわおわ
+  setLocalPresets();
+
+  inform_success('選択された編成をフォルダー『' + folder.name + '』に移動しました。');
+}
+
+/**
+ * フォルダ追加モードキャンセル
+ * @param {JqueryDomObject} $this クリック要素
+ * @param {*} e
+ */
+function btn_rollback_folder_Clicked($this, e) {
+  e.stopPropagation();
+
+  const p = $this.closest('.preset_container');
+  p.find('.btn_edit_start').removeClass('d-none');
+  p.find('.btn_add_preset').removeClass('d-none');
+  p.find('.btn_commit_folder').addClass('d-none');
+  p.find('.btn_rollback_folder').addClass('d-none');
+
+  // 追加モードのクラスを全て破棄
+  $('.folder_selectable').removeClass('folder_selectable');
+  $('.btns_container').removeClass('d-none').addClass('d-flex');
+}
+
+/**
+ * フォルダー追加モード　編成クリック時
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function folder_selectable_Clicked($this) {
+  if ($this.hasClass('selected')) {
+    $this.removeClass('selected');
+  }
+  else {
+    $this.addClass('selected');
+  }
+}
+
+/**
+ * フォルダー展開時
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function folder_content_Show($this) {
+  const folderId = castInt($this[0].dataset.folderid);
+  const folders = setting.presetFolders;
+  const folder = folders.find(v => v.id === folderId);
+
+  if (folder) {
+    folder.isOpen = true;
+    saveSetting();
+  }
+}
+
+/**
+ * フォルダー格納時
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function folder_content_Hide($this) {
+  const folderId = castInt($this[0].dataset.folderid);
+  const folders = setting.presetFolders;
+  const folder = folders.find(v => v.id === folderId);
+
+  if (folder) {
+    folder.isOpen = false;
+    saveSetting();
+  }
+}
+
+/**
  * 編成編集開始
  * @param {JqueryDomObject} $this クリック要素
  */
@@ -498,6 +797,7 @@ function btn_edit_start_Clicked($this, e) {
   p.removeClass('sortable_handle');
   // 編集領域
   p.find('.preset_name').addClass('d-none');
+  p.find('.preset_count').addClass('d-none');
   p.find('.preset_name_edit').removeClass('d-none');
   p.find('.preset_memo').removeClass('d-none');
   p.find('.preset_memo_view').addClass('d-none');
@@ -505,7 +805,9 @@ function btn_edit_start_Clicked($this, e) {
   p.find('.btn_commit').removeClass('d-none');
   p.find('.btn_rollback').removeClass('d-none');
   p.find('.btn_copy').addClass('d-none');
+  p.find('.btn_move_folder').addClass('d-none');
   p.find('.btn_edit_start').addClass('d-none');
+  p.find('.btn_add_preset').addClass('d-none');
 }
 
 
@@ -519,6 +821,7 @@ function btn_rollback_Clicked($this, e = null) {
   const p = $this.closest('.preset_container');
   // 編集領域
   p.find('.preset_name').removeClass('d-none');
+  p.find('.preset_count').removeClass('d-none');
   p.find('.preset_name_edit').addClass('d-none');
   p.find('.preset_memo').addClass('d-none');
   if (p.find('.preset_memo_view').text()) {
@@ -528,66 +831,97 @@ function btn_rollback_Clicked($this, e = null) {
   p.find('.btn_commit').addClass('d-none');
   p.find('.btn_rollback').addClass('d-none');
   p.find('.btn_copy').removeClass('d-none');
+  p.find('.btn_move_folder').removeClass('d-none');
   p.find('.btn_edit_start').removeClass('d-none');
+  p.find('.btn_add_preset').removeClass('d-none');
 
   p.removeClass('editting');
   p.addClass('sortable_handle');
 }
 
 /**
- * 編成編集完了
+ * 名称編集完了
  * @param {JqueryDomObject} $this クリック要素
  */
 function btn_commit_Clicked($this, e = null) {
   // 保存処理
   const p = $this.closest('.preset_container');
-  const presetid = p[0].dataset.presetid;
+  if (p.hasClass('folder_header')) {
+    // フォルダー名称変更処理
+    const folders = setting.presetFolders;
+    const id = castInt(p[0].dataset.folderid);
 
-  let presets = loadLocalStorage('presets');
-  if (!presets) presets = [];
-
-  const i = presets.findIndex(v => v[0] === presetid);
-
-  if (i >= 0) {
-    // 名称　メモを設定
-    let newName = p.find('.preset_name_edit').val().trim();
-    let newMemo = p.find('.preset_memo').val().trim();
-    if (newName) {
-
-      // 50文字超えてたら切る
-      if (newName.length > 50) {
-        newName = newName.slice(0, 50);
+    const i = folders.findIndex(v => v.id === id);
+    if (i >= 0) {
+      let newName = p.find('.preset_name_edit').val().trim();
+      // 80文字超えてたら切る
+      if (newName.length > 80) {
+        newName = newName.slice(0, 80);
         p.find('.preset_name_edit').val(newName);
       }
 
-      presets[i][1] = newName;
-      p.find('.preset_name').text(newName);
-    }
+      if (p.find('.preset_name').find('.fas').hasClass('opacity4')) {
+        p.find('.preset_name').html(`<i class="fas fa-folder mr-2 opacity4"></i>${newName}`);
+      }
+      else {
+        p.find('.preset_name').html(`<i class="fas fa-folder-open mr-2"></i>${newName}`);
+      }
 
-    // 400文字超えてたら切る
-    if (newMemo.length > 400) {
-      newMemo = newMemo.slice(0, 400);
-      p.find('.preset_memo').val(newMemo);
+      folders[i].name = newName;
+      saveSetting();
+      inform_success('フォルダ名の更新が完了しました。');
     }
-    presets[i][3] = newMemo;
-    const memo = newMemo.replace(/\r?\n/g, ' ');
-    p.find('.preset_memo_view').text(memo);
+  }
+  else {
+    // プリセット名称変更処理
+    const presetid = p[0].dataset.presetid;
 
-    if (!memo.trim().length) {
-      p.find('.preset_memo_view').addClass('d-none');
-    }
-    else {
-      p.find('.preset_memo_view').removeClass('d-none');
-    }
+    let presets = loadLocalStorage('presets');
+    if (!presets) presets = [];
 
-    saveLocalStorage('presets', presets);
+    const i = presets.findIndex(v => v[0] === presetid);
+
+    if (i >= 0) {
+      // 名称　メモを設定
+      let newName = p.find('.preset_name_edit').val().trim();
+      let newMemo = p.find('.preset_memo').val().trim();
+      if (newName) {
+
+        // 50文字超えてたら切る
+        if (newName.length > 50) {
+          newName = newName.slice(0, 50);
+          p.find('.preset_name_edit').val(newName);
+        }
+
+        presets[i][1] = newName;
+        p.find('.preset_name').text(newName);
+      }
+
+      // 400文字超えてたら切る
+      if (newMemo.length > 400) {
+        newMemo = newMemo.slice(0, 400);
+        p.find('.preset_memo').val(newMemo);
+      }
+      presets[i][3] = newMemo;
+      const memo = newMemo.replace(/\r?\n/g, ' ');
+      p.find('.preset_memo_view').text(memo);
+
+      if (!memo.trim().length) {
+        p.find('.preset_memo_view').addClass('d-none');
+      }
+      else {
+        p.find('.preset_memo_view').removeClass('d-none');
+      }
+
+      saveLocalStorage('presets', presets);
+      inform_success('編成情報の更新が完了しました。');
+    }
   }
 
   btn_rollback_Clicked($this, e);
   setTab();
   // アクティブなタブはないので表示修正
   $('.fleet_tab.active').removeClass('active');
-  inform_success('編成情報の更新が完了しました。');
 }
 
 /**
@@ -699,6 +1033,67 @@ function btn_copy_Clicked($this, e) {
   saveLocalStorage('activePresets', activePresets);
 
   window.location.href = `../simulator/?p=${tabData.history.histories[tabData.history.index]}`;
+}
+
+/**
+ * プリセット個別　フォルダ移動ボタンクリック
+ * @param {JqueryDomObject} $this
+ * @param {*} e
+ */
+function btn_move_folder_Clicked($this, e) {
+  e.stopPropagation();
+
+  const presets = loadLocalStorage('presets');
+  const presetId = $this.closest('.preset_container')[0].dataset.presetid;
+
+  const preset = presets ? presets.find(v => v[0] === presetId) : null;
+
+  if (!preset) {
+    // ないことはない
+    inform_danger('移動対象のプリセットデータが読み込めませんでした。');
+    return;
+  }
+
+  // フォルダーセレクトボックスの初期化
+  const folders = setting.presetFolders;
+  let text = '<option value="0">指定なし</option>';
+  for (const folder of folders) {
+    text += `<option value="${folder.id}">${folder.name}</option>`;
+  }
+  $('#preset_folder').html(text);
+
+  $('#modal_folder_confirm')[0].dataset.target = preset[0];
+  $('#modal_folder_confirm').modal('show');
+}
+
+/**
+ * プリセット個別　フォルダ移動コミット
+ */
+function modal_folder_confirm_ok_Clicked() {
+  const presets = loadLocalStorage('presets');
+  const presetId = $('#modal_folder_confirm')[0].dataset.target;
+
+  const preset = presets ? presets.find(v => v[0] === presetId) : null;
+
+  if (!preset) {
+    // ないことはない
+    inform_danger('移動対象のプリセットデータが読み込めませんでした。');
+    return;
+  }
+
+  const folderId = castInt($('#preset_folder').val());
+  const folder = setting.presetFolders.find(v => v.id === folderId);
+
+  if (preset.length >= 6) {
+    preset[5] = folderId;
+  }
+  else if (preset.length === 5) {
+    preset.push(folderId);
+  }
+
+  saveLocalStorage('presets', presets);
+  inform_success(`プリセット『${preset[1]}』をフォルダー『${folder ? folder.name : '未指定'}』に移動しました`);
+  setLocalPresets();
 }
 
 /**
@@ -857,6 +1252,7 @@ function modal_confirm_ok_Clicked() {
     saveLocalStorage('activePresets', activePresets);
 
     setLocalPresets();
+    inform_success('削除が完了しました。');
     setTab();
 
     $modal.modal('hide');
@@ -1263,12 +1659,18 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('change', '#select_preset_level', function () { $('#btn_search_preset').prop('disabled', false); });
   $('#public_presets_container').on('click', '.preset_container .btn_open', function () { public_preset_Clicked($(this)); });
   $('#public_presets_container').on('click', '.preset_container.more_load', more_load_presets);
-  $('#presets_container').on('click', '.preset_container:not(.editting)', function () { preset_Clicked($(this)); });
+  $('#presets_container').on('click', '.preset_container:not(.editting, .folder_header, .folder_selectable)', function () { preset_Clicked($(this)); });
   $('#presets_container').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_rollback', function (e) { btn_rollback_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_copy', function (e) { btn_copy_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_move_folder', function (e) { btn_move_folder_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
+  $('#presets_container').on('click', '.folder_header.editting', function (e) { e.stopPropagation(); });
+  $('#presets_container').on('click', '.btn_add_preset', function (e) { btn_add_preset_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_commit_folder', function (e) { btn_commit_folder_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_rollback_folder', function (e) { btn_rollback_folder_Clicked($(this), e); });
+  $('#presets_container').on('click', '.preset_container.folder_selectable', function () { folder_selectable_Clicked($(this)); });
   $('#public_preset_tab').on('shown.bs.tab', public_preset_tab_Shown);
   $('#public_preset_tab').on('hidden.bs.tab', public_preset_tab_Hidden);
   $('#site_history').on('show.bs.collapse', '.collapse', loadSiteHistory);
@@ -1281,4 +1683,5 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#config_content').on('click', '#btn_reset_localStorage', btn_reset_localStorage_Clicked);
   $('#btn_url_shorten').click(btn_url_shorten_Clicked);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
+  $('#modal_folder_confirm').on('click', '.btn_ok', modal_folder_confirm_ok_Clicked);
 });

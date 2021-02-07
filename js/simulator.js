@@ -3095,6 +3095,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	$div.removeClass(getItemCss($div[0].dataset.type)).addClass(getItemCss(plane.itype));
 	$div[0].dataset.planeid = plane.id;
 	$div[0].dataset.type = plane.itype;
+	$div[0].dataset.type2 = plane.type;
 	$div.find('.plane_name_span').text(plane.name).attr('title', plane.name);
 	$div.find('.plane_img').attr('src', `../img/type/icon${plane.itype}.png`).attr('alt', plane.itype);
 	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
@@ -4700,6 +4701,15 @@ function modal_main_preset_Shown() {
 
 	// 初回海域データの動的取得
 	$('#select_preset_category').html('<option value="1">海域データ読込中</option>');
+
+	// フォルダーセレクトボックスの初期化
+	const folders = setting.presetFolders;
+	let text = '<option value="0">指定なし</option>';
+	for (const folder of folders) {
+		text += `<option value="${folder.id}">${folder.name}</option>`;
+	}
+	$('#preset_folder').html(text);
+
 	loadMapData();
 }
 
@@ -4727,7 +4737,8 @@ function updateMainPreset(isUploadOnly = false) {
 		activePreset.name,
 		presetBody,
 		document.getElementById('preset_remarks').value.trim(),
-		formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss')
+		formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss'),
+		castInt($('#preset_folder').val())
 	];
 
 	if ($('#allow_upload_preset').prop('checked')) {
@@ -4758,6 +4769,10 @@ function updateMainPreset(isUploadOnly = false) {
 
 	for (let i = 0; i < presets.length; i++) {
 		if (presets[i][0] === preset[0]) {
+			// フォルダー引継ぎ
+			if (presets[i].length >= 6) {
+				preset[5] = presets[i][5];
+			}
 			// 同idを持つプリセットがあれば上書き
 			presets[i] = preset;
 			isUpdate = true;
@@ -9723,7 +9738,7 @@ function btn_fighter_prof_max_Clicked() {
 	const $targetContent = $('#' + $('#modal_collectively_setting').data('target'));
 	if ($targetContent.attr('id') === 'landBase') {
 		$targetContent.find('.lb_plane').each((i, e) => {
-			if (FIGHTERS.includes(castInt($(e)[0].dataset.type))) {
+			if (FIGHTERS.includes(castInt($(e)[0].dataset.type2))) {
 				setProficiency($(e).find('.prof_select'), 7);
 			}
 		});

@@ -147,6 +147,11 @@ function initializeSetting() {
 			'friendFleet': ['antiAir', 0]
 		};
 	}
+	if (!setting.hasOwnProperty('presetFolders')) {
+		setting.presetFolders = [];
+		for (let i = 1; i < 20; i++) setting.presetFolders.push({ id: i, name: 'フォルダー' + i, isOpen: false });
+		setting.presetFolders.push({ id: 99, name: 'ゴミ箱', isOpen: false });
+	}
 
 	// バージョン差異による設定変更等を適用する
 	adaptUpdater();
