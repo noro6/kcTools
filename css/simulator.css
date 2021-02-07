@@ -12,7 +12,6 @@ input[type="text"] { font-size: 12px; }
 @media (min-width: 577px) { .modal-xl { max-width: 522px; } }
 @media (min-width: 992px) { .modal-xl { max-width: 800px; } }
 @media (min-width: 1200px) { .modal-xl { max-width: 980px; } }
-.tooltip-inner { max-width: 100%; }
 .modal-backdrop {
   min-width: 1024px;
   min-height: 960px;

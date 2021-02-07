@@ -49,10 +49,14 @@
   user-select: initial;
 }
 
+.preset_container.folder_selectable:not(.selected) { opacity: 0.4; }
+
+.preset_container.selected,
 .preset_container:not(.editting):hover {
   border-color: rgb(98, 197, 255, 0.8);
   box-shadow: inset 0 0 20px rgba(98, 197, 255, 0.8), 0 0 20px rgba(98, 197, 255, 0.2);
 }
+.dark-theme .preset_container.selected,
 .dark-theme .preset_container:not(.editting):hover {
   border-color: #ccc;
   box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5), 0 0 20px rgba(221, 221, 221, 0.2);
@@ -155,7 +159,6 @@
   border-right-color:  #ccc;
 }
 
-
 .update_date {
   position: relative;
   bottom: 0;
@@ -171,6 +174,16 @@
   width: 36px;
   height: 36px;
 }
+
+/* フォルダー関連 */
+.preset_container.folder_header {
+  border-top-width: 2px ;
+}
+.folder_header .preset_name {
+  font-size: 1.5em;
+}
+.preset_name .fas { color: #ffd54b; }
+.dark-theme .preset_name .fas { color: #ffe696; }
 
 /* -----------------------------------
   バージョン表記

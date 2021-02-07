@@ -104,7 +104,7 @@
 			<div class="d-flex flex-wrap">
 				<h1>制空権シミュレータ</h1>
 				<div class="d-flex align-self-center">
-					<div class="font_size_18 ml-2 align-self-center">v1.12.0.1</div>
+					<div class="font_size_18 ml-2 align-self-center">v1.12.1</div>
 					<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 						data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 					</div>
@@ -678,6 +678,31 @@
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body"></div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">OK</button>
+					</div>
+					<div class="ml-2">
+						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_folder_confirm" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">フォルダー移動先選択</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body">
+					<div class="mt-2">
+						<label class="mb-1">移動先のフォルダー：</label>
+						<select id="preset_folder" class="custom-select custom-select-sm"></select>
+					</div>
+				</div>
 				<div class="modal-footer">
 					<div class="ml-auto">
 						<button type="button" class="btn btn-sm btn-primary btn_ok" data-dismiss="modal">OK</button>
