@@ -188,10 +188,14 @@ function setPresets(presets, isLocal = true) {
     header.appendChild(headerBody);
 
     const container = document.createElement('div');
+    container.id = 'folder' + folder.id;
+    container.dataset.folderid = folder.id;
+    container.className = 'folder_content pl-5';
     if (presetCount) {
-      container.id = 'folder' + folder.id;
-      container.className = 'folder_content collapse pl-5 ' + (folder.isOpen ? 'show' : '');
-      container.dataset.folderid = folder.id;
+      container.classList.add('collapse');
+      if (folder.isOpen) {
+        container.classList.add('show');
+      }
     }
     wrapper.appendChild(container);
     folderContainers.push({ id: folder.id, header: header, container: container });
