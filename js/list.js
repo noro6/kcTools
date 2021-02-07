@@ -51,6 +51,10 @@ function setPresets(presets, isLocal = true) {
   // 検索語句
   const keyword = document.getElementById('search_preset').value.trim();
 
+  if (isLocal && keyword) {
+    presets = presets.filter(v => v[1].indexOf(keyword) >= 0);
+  }
+
   if (isLocal) {
     switch (sort) {
       case 1:
@@ -153,7 +157,7 @@ function setPresets(presets, isLocal = true) {
     btn_add.dataset.toggle = 'tooltip';
     btn_add.dataset.offset = '-50%';
     btn_add.title = 'このフォルダーに移動させる編成を一括で選択します。';
-    btn_add.innerHTML = '<i class="fas fa-plus"></i>';
+    btn_add.innerHTML = '<i class="fas fa-folder-download"></i>';
     btns.appendChild(btn_add);
 
     // 編成編集コミットボタン
@@ -304,7 +308,7 @@ function setPresets(presets, isLocal = true) {
       const btn_copy = createDiv('ml-2 r_btn btn_copy');
       btn_copy.dataset.toggle = 'tooltip';
       btn_copy.dataset.offset = '-50%';
-      btn_copy.title = 'この編成内容が複製された新しい編成タブを作成します。';
+      btn_copy.title = '編成を複製して新しい編成タブを作成します。';
       btn_copy.innerHTML = '<i class="fas fa-copy"></i>';
       btns.appendChild(btn_copy);
 
@@ -313,7 +317,7 @@ function setPresets(presets, isLocal = true) {
       btn_move_folder.dataset.toggle = 'tooltip';
       btn_move_folder.dataset.offset = '-50%';
       btn_move_folder.title = '所属フォルダーを変更します。';
-      btn_move_folder.innerHTML = '<i class="fas fa-folder-open-o"></i>';
+      btn_move_folder.innerHTML = '<i class="fas fa-folder-upload"></i>';
       btns.appendChild(btn_move_folder);
 
       // 編成削除ボタン

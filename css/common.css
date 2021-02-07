@@ -602,3 +602,5 @@ h1 {
 .w_15 { width: 15% }
 .w_10 { width: 10% }
 .w_5 { width: 5% }
+
+.tooltip-inner { max-width: 100%; }
