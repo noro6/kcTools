@@ -118,6 +118,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
 	if (!setting.hasOwnProperty('planeOnly')) setting.planeOnly = true;
 	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
+	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
