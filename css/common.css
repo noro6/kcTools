@@ -283,6 +283,54 @@ h1 {
 }
 
 /* -----------------------------------
+  コントロール
+----------------------------------- */
+.custom-check label {
+  margin-bottom: 0;
+  cursor: pointer;
+  user-select: none;
+}
+.custom-check label input[type="checkbox"] { display: none; }
+.custom-check label input[type="checkbox"] ~ span {
+  opacity: 0.8;
+  transition: 0.1s;
+}
+.custom-check label:hover input[type="checkbox"] ~ span { opacity: 1; }
+.custom-check label input[type="checkbox"] ~ i {
+  opacity: 0.3;
+  font-size: 1.5em;
+  margin-right: 0.05rem;
+  transition: 0.1s;
+}
+.custom-check.sm label input[type="checkbox"] ~ i { font-size: 1.15em; }
+.custom-check label:hover input[type="checkbox"] ~ i {
+  opacity: 0.5;
+  color: rgb(56, 135, 255);
+  box-shadow: 0 0 20px rgba(56, 135, 255, 0.2);
+}
+.dark-theme .custom-check label:hover input[type="checkbox"] ~ i {
+  color: rgb(0, 150, 255);
+  box-shadow: 0 0 20px rgba(0, 174, 255, 0.4);
+}
+.custom-check label input[type="checkbox"] ~ i,
+.custom-check label input[type="checkbox"] ~ span {
+  vertical-align: middle;
+}
+/* チェック時 */
+.custom-check label input[type="checkbox"]:checked ~ i {
+  color: rgb(56, 135, 255);
+  opacity: 1;
+}
+.dark-theme .custom-check label input[type="checkbox"]:checked ~ i {
+  color: rgb(0, 154, 255);
+}
+.custom-check label input[type="checkbox"]:checked ~ span { opacity: 1; }
+.custom-check label input[type="checkbox"] ~ i.fa-checkbox-unchecked { display: inline; }
+.custom-check label input[type="checkbox"] ~ i.fa-checkbox-checked { display: none; }
+.custom-check label input[type="checkbox"]:checked ~ i.fa-checkbox-unchecked { display: none; }
+.custom-check label input[type="checkbox"]:checked ~ i.fa-checkbox-checked { display: inline; }
+
+/* -----------------------------------
   ヘッダーなど
 ----------------------------------- */
 #header {
