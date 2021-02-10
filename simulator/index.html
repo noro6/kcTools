@@ -871,10 +871,14 @@
 			</div>
 			<div class="collapse show collapse_content" id="friendFleet_content">
 				<div class="border-top"></div>
-				<div class="my-1 d-flex">
-					<div class="ml-1 custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="union_fleet">
-						<label class="custom-control-label" for="union_fleet">連合艦隊</label>
+				<div class="my-2 d-flex">
+					<div class="ml-1 custom-check">
+						<label>
+							<input type="checkbox" id="union_fleet">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>連合艦隊</span>
+						</label>
 					</div>
 					<div class="ml-2 align-self-center no_capture">
 						<i class="far fa-question-circle-o cur_help" data-toggle="tooltip" data-offset="140,0" data-html="true"
@@ -1781,9 +1785,13 @@
 							<span>戦闘開始時の搭載数推移</span>
 							<span class="ml-1 font_size_11 no_capture">※各行クリックで詳細表示</span>
 						</div>
-						<div class="ml-auto custom-control custom-checkbox font_size_12 align-self-center">
-							<input type="checkbox" class="custom-control-input" id="empty_slot_invisible">
-							<label class="custom-control-label pt-0_5 cur_pointer" for="empty_slot_invisible">艦載機スロットのみ</label>
+						<div class="ml-auto mb-1 custom-check sm no_capture">
+							<label>
+								<input type="checkbox" id="empty_slot_invisible">
+								<i class="fas fa-checkbox-unchecked"></i>
+								<i class="fas fa-checkbox-checked"></i>
+								<span>艦載機スロットのみ</span>
+							</label>
 						</div>
 					</div>
 					<table class="text-center w-100" id="shoot_down_table">
@@ -1817,21 +1825,37 @@
 				</div>
 				<div class="d-flex mt-1 px-lg-2 px-xl-3" id="display_setting">
 					<div class="ml-auto font_size_12 align-self-center display_label_result no_capture">表示：</div>
-					<div class="ml-2 custom-control custom-checkbox font_size_12 align-self-center">
-						<input type="checkbox" class="custom-control-input" id="display_bar">
-						<label class="custom-control-label" for="display_bar">グラフ</label>
+					<div class="ml-1 mb-1 custom-check sm no_capture">
+						<label>
+							<input type="checkbox" id="display_bar">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>グラフ</span>
+						</label>
 					</div>
-					<div class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
-						<input type="checkbox" class="custom-control-input" id="display_land_base_result">
-						<label class="custom-control-label" for="display_land_base_result">基地</label>
+					<div class="ml-3 mb-1 custom-check sm no_capture">
+						<label>
+							<input type="checkbox" id="display_land_base_result">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>基地</span>
+						</label>
 					</div>
-					<div class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
-						<input type="checkbox" class="custom-control-input" id="display_fleet_result">
-						<label class="custom-control-label" for="display_fleet_result">本隊</label>
+					<div class="ml-3 mb-1 custom-check sm no_capture">
+						<label>
+							<input type="checkbox" id="display_fleet_result">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>本隊</span>
+						</label>
 					</div>
-					<div class="ml-3 custom-control custom-checkbox font_size_12 align-self-center">
-						<input type="checkbox" class="custom-control-input" id="display_enemy_table">
-						<label class="custom-control-label" for="display_enemy_table">敵搭載数</label>
+					<div class="ml-3 mb-1 custom-check sm no_capture">
+						<label>
+							<input type="checkbox" id="display_enemy_table">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>敵搭載数</span>
+						</label>
 					</div>
 				</div>
 				<div id="battle_result" class="px-lg-2 px-xl-3 pb-lg-2 pb-xl-3">
@@ -1910,12 +1934,16 @@
 								<span id="enemy_slot_result_mode">（本隊航空戦 stage1 後）</span>
 							</div>
 							<div class="ml-auto d-flex" id="result_stage2_setting">
-								<div class="align-self-center custom-control custom-checkbox no_capture text-nowrap">
-									<input type="checkbox" class="custom-control-input" id="adapt_stage2">
-									<label class="custom-control-label cur_pointer" for="adapt_stage2">対空砲火有効</label>
+								<div class="align-self-center custom-check sm no_capture text-nowrap">
+									<label>
+										<input type="checkbox" id="adapt_stage2">
+										<i class="fas fa-checkbox-unchecked"></i>
+										<i class="fas fa-checkbox-checked"></i>
+										<span>対空砲火有効</span>
+									</label>
 								</div>
 								<div class="mx-2 align-self-center font_color_half text-nowrap" id="fleet_formation_label">
-									この戦闘の自軍陣形:
+									<span>この戦闘の自軍陣形:</span>
 								</div>
 								<select class="align-self-center custom-select custom-select-sm" id="fleet_formation">
 									<option value="1" selected>単縦陣</option>
@@ -2177,10 +2205,12 @@
 				<div class="border-top"></div>
 				<div class="my-3 mx-2 px-2 py-2 general_box">
 					<div class="h6"><i class="fas fa-mouse mr-2"></i>操作設定</div>
-					<div class="custom-control custom-checkbox ml-3">
-						<input type="checkbox" class="custom-control-input" id="drag_drop_copy">
-						<label class="custom-control-label" for="drag_drop_copy">
-							D&amp;Dで交換や移動ではなく上書き複製する
+					<div class="ml-3 custom-check">
+						<label>
+							<input type="checkbox" id="drag_drop_copy">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>D&amp;Dで交換や移動ではなく上書き複製する</span>
 						</label>
 					</div>
 					<div class="ml-4 font_size_12">キーボードのCtrlキーを押下している場合でも一時的に有効になります。</div>
@@ -2222,10 +2252,12 @@
 						</div>
 					</div>
 					<div class="ml-3 my-3">
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="clipboard_mode">
-							<label class="custom-control-label" for="clipboard_mode">
-								スクリーンショット保存時、クリップボードにコピーする
+						<div class="custom-check">
+							<label>
+								<input type="checkbox" id="clipboard_mode">
+								<i class="fas fa-checkbox-unchecked"></i>
+								<i class="fas fa-checkbox-checked"></i>
+								<span>スクリーンショット保存時、クリップボードにコピーする</span>
 							</label>
 						</div>
 						<div class="alert alert-danger px-1 py-1 mt-2 d-none font_size_12" id="cant_use_clipboard">
@@ -2264,53 +2296,101 @@
 							<div class="align-self-center">選択時、内部熟練度を 120 として計算する機体：</div>
 						</div>
 						<div class="d-flex flex-wrap" id="innerProfSetting">
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_6">
-								<label class="custom-control-label" for="prof120_6">艦戦</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_6">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>艦戦</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_8">
-								<label class="custom-control-label" for="prof120_8">艦攻</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_8">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>艦攻</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_7">
-								<label class="custom-control-label" for="prof120_7">艦爆</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_7">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>艦爆</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_9">
-								<label class="custom-control-label" for="prof120_9">艦偵</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_9">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>艦偵</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_10">
-								<label class="custom-control-label" for="prof120_10">水偵</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_10">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>水偵</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_11">
-								<label class="custom-control-label" for="prof120_11">水爆</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_11">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>水爆</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_45">
-								<label class="custom-control-label" for="prof120_45">水戦</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_45">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>水戦</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_57">
-								<label class="custom-control-label" for="prof120_57">噴式</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_57">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>噴式</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_47">
-								<label class="custom-control-label" for="prof120_47">陸攻</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_47">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>陸攻</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_48">
-								<label class="custom-control-label" for="prof120_48">局戦 / 陸戦</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_48">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>局戦 / 陸戦</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_41">
-								<label class="custom-control-label" for="prof120_41">飛行艇</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_41">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>飛行艇</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-3">
-								<input type="checkbox" class="custom-control-input" id="prof120_53">
-								<label class="custom-control-label" for="prof120_53">重爆</label>
+							<div class="custom-check sm mr-3">
+								<label>
+									<input type="checkbox" id="prof120_53">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>重爆</span>
+								</label>
 							</div>
 						</div>
 					</div>
@@ -2447,22 +2527,39 @@
 					</div>
 					<div>
 						<div class="d-flex my-1">
-							<div class="mr-2 mx-r-3 custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="fav_only">
-								<label class="custom-control-label" for="fav_only">お気に入り</label>
+							<div class="custom-check mr-2 mx-r-3">
+								<label>
+									<input type="checkbox" id="fav_only">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>お気に入り</span>
+								</label>
 							</div>
-							<div class="mx-2 mx-lg-3 custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="disp_in_stock">
-								<label class="custom-control-label" for="disp_in_stock">所持装備のみ</label>
+							<div class="custom-check mx-2 mx-lg-3">
+								<label>
+									<input type="checkbox" id="disp_in_stock">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>所持装備のみ</span>
+								</label>
 							</div>
-							<div class="mx-2 mx-lg-3 custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="divide_stock">
-								<label class="custom-control-label" for="divide_stock"><i
-										class="fas fa-star text_remodel"></i>反映</label>
+							<div class="custom-check mx-2 mx-lg-3">
+								<label>
+									<input type="checkbox" id="divide_stock">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span class="d-lg-none"><i class="fas fa-star text_remodel"></i>反映</span>
+									<span class="d-none d-lg-inline-block">
+										改修値(<i class="fas fa-star text_remodel mx-1"></i>)反映</span>
+								</label>
 							</div>
-							<div class="mx-lg-3 custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="disp_equipped">
-								<label class="custom-control-label" for="disp_equipped">配備済も表示</label>
+							<div class="custom-check mx-2 mx-lg-3">
+								<label>
+									<input type="checkbox" id="disp_equipped">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>配備済も表示</span>
+								</label>
 							</div>
 						</div>
 					</div>
@@ -2485,9 +2582,13 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<div class="mr-sm-auto custom-control custom-checkbox align-self-center">
-						<input type="checkbox" class="custom-control-input" id="plane_only" checked>
-						<label class="custom-control-label" for="plane_only">航空機のみ表示</label>
+					<div class="mr-sm-auto custom-check">
+						<label>
+							<input type="checkbox" id="plane_only" checked>
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>航空機のみ表示</span>
+						</label>
 					</div>
 					<button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
 					<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
@@ -2523,26 +2624,46 @@
 								<input type="text" class="form-control form-control-sm" id="ship_word" maxlength="30">
 							</div>
 						</div>
-						<div class="ml-2 custom-control custom-checkbox align-self-center">
-							<input type="checkbox" class="custom-control-input" id="display_final" checked>
-							<label class="custom-control-label" for="display_final">最終改造状態のみ</label>
+						<div class="ml-2 mt-1 custom-check">
+							<label>
+								<input type="checkbox" id="display_final" checked>
+								<i class="fas fa-checkbox-unchecked"></i>
+								<i class="fas fa-checkbox-checked"></i>
+								<span>最終改造状態のみ</span>
+							</label>
 						</div>
-						<div class="ml-2 custom-control custom-checkbox align-self-center">
-							<input type="checkbox" class="custom-control-input" id="frequent_ship">
-							<label class="custom-control-label" for="frequent_ship">よく使う艦優先</label>
+						<div class="ml-2 mt-1 custom-check">
+							<label>
+								<input type="checkbox" id="frequent_ship">
+								<i class="fas fa-checkbox-unchecked"></i>
+								<i class="fas fa-checkbox-checked"></i>
+								<span>よく使う艦優先</span>
+							</label>
 						</div>
-						<div class="d-flex">
-							<div class="mx-2 custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="fav_only_ship">
-								<label class="custom-control-label" for="fav_only_ship">お気に入りのみ</label>
+						<div class="d-flex mt-1">
+							<div class="ml-2 custom-check">
+								<label>
+									<input type="checkbox" id="fav_only_ship">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>お気に入りのみ</span>
+								</label>
 							</div>
-							<div class="mx-2 custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="disp_in_stock_ship">
-								<label class="custom-control-label" for="disp_in_stock_ship">所持艦娘から選択</label>
+							<div class="ml-2 custom-check">
+								<label>
+									<input type="checkbox" id="disp_in_stock_ship">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>所持艦娘から選択</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox align-self-center">
-								<input type="checkbox" class="custom-control-input" id="disp_equipped_ship">
-								<label class="custom-control-label" for="disp_equipped_ship">編成済艦娘も表示</label>
+							<div class="ml-2 custom-check">
+								<label>
+									<input type="checkbox" id="disp_equipped_ship">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>編成済艦娘も表示</span>
+								</label>
 							</div>
 						</div>
 					</div>
@@ -2564,9 +2685,13 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<div class="mr-sm-auto custom-control custom-checkbox align-self-center">
-						<input type="checkbox" class="custom-control-input" id="has_slot_only" checked>
-						<label class="custom-control-label" for="has_slot_only">搭載数のある艦娘のみ表示</label>
+					<div class="mr-sm-auto custom-check">
+						<label>
+							<input type="checkbox" id="has_slot_only" checked>
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>搭載数のある艦娘のみ表示</span>
+						</label>
 					</div>
 					<button type="button" class="btn btn-sm btn-danger btn_remove" disabled>はずす</button>
 					<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
@@ -2793,9 +2918,13 @@
 							<select id="preset_folder" class="custom-select custom-select-sm"></select>
 						</div>
 						<div class="mt-3">
-							<div class="custom-control custom-checkbox mr-2">
-								<input type="checkbox" class="custom-control-input" id="allow_upload_preset">
-								<label class="custom-control-label" for="allow_upload_preset">編成をアップロードする</label>
+							<div class="mr-2 custom-check">
+								<label>
+									<input type="checkbox" id="allow_upload_preset">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>編成をアップロードする</span>
+								</label>
 							</div>
 							<div class="d-none mt-2 px-3" id="upload_option">
 								<div class="mt-1">海域カテゴリ：</div>
@@ -3011,21 +3140,37 @@
 					<div class="mt-4">
 						<div class="h6">配備対象</div>
 						<div class="pl-3 d-flex" id="expand_target">
-							<div class="custom-control custom-checkbox mr-2">
-								<input type="checkbox" class="custom-control-input" id="auto_land_base_1">
-								<label class="custom-control-label" for="auto_land_base_1">第1基地航空隊</label>
+							<div class="mr-2 custom-check">
+								<label>
+									<input type="checkbox" id="auto_land_base_1">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>第1基地航空隊</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-2">
-								<input type="checkbox" class="custom-control-input" id="auto_land_base_2">
-								<label class="custom-control-label" for="auto_land_base_2">第2基地航空隊</label>
+							<div class="mr-2 custom-check">
+								<label>
+									<input type="checkbox" id="auto_land_base_2">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>第2基地航空隊</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-2">
-								<input type="checkbox" class="custom-control-input" id="auto_land_base_3">
-								<label class="custom-control-label" for="auto_land_base_3">第3基地航空隊</label>
+							<div class="mr-2 custom-check">
+								<label>
+									<input type="checkbox" id="auto_land_base_3">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>第3基地航空隊</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox mr-2">
-								<input type="checkbox" class="custom-control-input" id="auto_fleet">
-								<label class="custom-control-label" for="auto_fleet">本隊</label>
+							<div class="mr-2 custom-check">
+								<label>
+									<input type="checkbox" id="auto_fleet">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>本隊</span>
+								</label>
 							</div>
 						</div>
 					</div>
@@ -3062,13 +3207,21 @@
 					<div class="mt-4" id="details_parent">
 						<div class="h6">詳細設定</div>
 						<div class="pl-3">
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="allow_fighter">
-								<label class="custom-control-label" for="allow_fighter">基地航空隊に艦上戦闘機の搭載を許容する</label>
+							<div class="custom-check my-1">
+								<label>
+									<input type="checkbox" id="allow_fighter">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>基地航空隊に艦上戦闘機の搭載を許容する</span>
+								</label>
 							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="no_FBA">
-								<label class="custom-control-label" for="no_FBA">空母系に艦爆を搭載させない</label>
+							<div class="custom-check my-1">
+								<label>
+									<input type="checkbox" id="no_FBA">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>空母系に艦爆を搭載させない</span>
+								</label>
 							</div>
 						</div>
 					</div>
@@ -3609,9 +3762,13 @@
 							<span class="font_size_12">艦隊防空値：</span>
 							<span id="fleet_antiair"></span>
 						</div>
-						<div class="mx-3 align-self-center custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="antiair_air_raid">
-							<label class="custom-control-label" for="antiair_air_raid">空襲マス</label>
+						<div class="custom-check mx-3 align-self-center">
+							<label>
+								<input type="checkbox" id="antiair_air_raid">
+								<i class="fas fa-checkbox-unchecked"></i>
+								<i class="fas fa-checkbox-checked"></i>
+								<span>空襲マス</span>
+							</label>
 						</div>
 					</div>
 					<div class="container border-top">

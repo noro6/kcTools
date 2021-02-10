@@ -130,13 +130,13 @@
 			</div>
 			<div class="d-flex justify-content-end mt-3 mb-2">
 				<div class="d-flex flex-wrap">
-					<div class="m-1 align-self-center" id="empty_folder_visible_parent">
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="empty_folder_visible">
-							<label class="custom-control-label cur_pointer" for="empty_folder_visible">
-								空フォルダーを表示
-							</label>
-						</div>
+					<div class="align-self-center custom-check mr-2" id="empty_folder_visible_parent">
+						<label>
+							<input type="checkbox" id="empty_folder_visible">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>空のフォルダーを表示</span>
+						</label>
 					</div>
 					<div class="m-1 align-self-center" id="search_preset_parent">
 						<input type="text" class="form-control form-control-sm" placeholder="検索語句を入力" id="search_preset">
@@ -234,16 +234,18 @@
 
 				<div class="m-3">
 					<div>タブの挙動：</div>
-					<div class="mx-3 custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="confirm_tab_close">
-						<label class="custom-control-label" for="confirm_tab_close">
-							タブを閉じる際に確認ダイアログを表示する
+					<div class="ml-3 my-1 custom-check">
+						<label>
+							<input type="checkbox" id="confirm_tab_close">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>タブを閉じる際に確認ダイアログを表示する</span>
 						</label>
 					</div>
 				</div>
 				<div class="m-3">
-					<div>サイトテーマ：</div>
-					<div class="mx-3 d-flex">
+					<div>サイトテーマカラー：</div>
+					<div class="mx-3 my-1 d-flex">
 						<div class="theme_select" id="normal_theme">通常</div>
 						<div class="theme_select" id="sky_theme">空</div>
 						<div class="theme_select" id="sakura_theme">桜</div>

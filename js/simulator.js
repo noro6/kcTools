@@ -2641,9 +2641,6 @@ function initialize(callback) {
 	$('.battle_content').each((i, e) => {
 		$(e).find('.battle_no').text(i + 1);
 		if (i > 0) $(e).addClass('d-none');
-
-		$(e).find('.custom-control-input').attr('id', 'grand_' + i);
-		$(e).find('.custom-control-label').attr('for', 'grand_' + i);
 	});
 
 	// 戦闘回数初期化
@@ -2832,7 +2829,8 @@ function initialize(callback) {
 	$('#stock_word').val('');
 
 	// おまかせ配備初期選択
-	$('#modal_auto_expand').find('.custom-control-input').prop('checked', false);
+	$('#modal_auto_expand').find('input[type="checkbox"]').prop('checked', false);
+	$('#modal_auto_expand').find('input[type="radio"]').prop('checked', false);
 	$('#btn_start_auto_expand').prop('disabled', true);
 	$('#mode_1').prop('checked', true);
 	$('#dest_ap').val(100);
@@ -12087,7 +12085,7 @@ function enemy_slot_Clicked($this) {
  * @param {JQuery} $this
  */
 function innerProfSetting_Clicked($this) {
-	const clickedType = castInt($this.attr('id').replace('prof120_', ''));
+	const clickedType = castInt($this.find('input').attr('id').replace('prof120_', ''));
 	if ($this.prop('checked') && !initialProf120Plane.includes(clickedType)) {
 		initialProf120Plane.push(clickedType);
 	}
@@ -13737,7 +13735,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#result_content').on('click', '#btn_more_calc', btn_more_calc_Clicked);
 	$('#result_content').on('click', '#display_battle_tab .nav-item', function () { display_battle_tab_Changed($(this)); });
 	$('#result_content').on('click', '#empty_slot_invisible', function () { calculate(false, false, false); });
-	$('#result_content').on('click', '#display_setting .custom-control-input', display_result_Changed);
+	$('#result_content').on('click', '#display_setting .custom-check', display_result_Changed);
 	$('#result_content').on('click', '#shoot_down_table_tbody tr', function () { fleet_slot_Clicked($(this)); });
 	$('#result_content').on('click', '#rate_table .land_base_detail', function () { land_base_detail_Clicked($(this)); });
 	$('#result_content').on('click', '#enemy_shoot_down_tbody .td_detail_slot', function () { enemy_slot_Clicked($(this)); });
@@ -13746,7 +13744,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#result_content').on('change', '#fleet_formation', function () { calculate(false, false, false); });
 	$('#config_content').on('focus', '#calculate_count', function () { $(this).select(); });
 	$('#config_content').on('input', '#calculate_count', function () { calculate_count_Changed($(this)); });
-	$('#config_content').on('click', '#innerProfSetting .custom-control-input', function () { innerProfSetting_Clicked($(this)); });
+	$('#config_content').on('click', '#innerProfSetting .custom-check', function () { innerProfSetting_Clicked($(this)); });
 	$('#config_content').on('click', '#clipboard_mode', clipboard_mode_Clicked);
 	$('#config_content').on('click', '.dropdown-item', function () { init_proficiency_Changed($(this)); });
 	$('#config_content').on('click', '#btn_reset_selected_plane_history', btn_reset_selected_plane_history_Clicked);
@@ -13839,7 +13837,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_share').on('click', '#open_deckBuilder', open_deckBuilder);
 	$('#modal_share').on('click', '#open_jervis', open_Jervis);
 	$('#modal_auto_expand').on('click', '#btn_start_auto_expand', btn_start_auto_expand_Clicked);
-	$('#modal_auto_expand').on('click', '#expand_target .custom-control-input', expand_target_Clicked);
+	$('#modal_auto_expand').on('click', '#expand_target .custom-check', expand_target_Clicked);
 	$('#modal_auto_expand').on('click', '#auto_battle_mode .custom-control-input', battle_mode_Clicked);
 	$('#modal_auto_expand').on('input', '#simple_enemy_ap', function () { simple_enemy_ap_Changed($(this)); });
 	$('#modal_auto_expand').on('input', '#dest_ap', function () { dest_ap_Changed($(this)); });

@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?nonddi') format('truetype'),
-    url('fonts/icons.woff?nonddi') format('woff'),
-    url('fonts/icons.svg?nonddi#icons') format('svg');
+    url('fonts/icons.ttf?b5ux6k') format('truetype'),
+    url('fonts/icons.woff?b5ux6k') format('woff'),
+    url('fonts/icons.svg?b5ux6k#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -197,4 +197,10 @@
 }
 .fa-folder-upload:before {
   content: "\e934";
+}
+.fa-checkbox-checked:before {
+  content: "\ea52";
+}
+.fa-checkbox-unchecked:before {
+  content: "\ea53";
 }
