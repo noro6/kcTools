@@ -8,6 +8,7 @@ function initialize() {
   // 設定変更
   document.getElementById('confirm_tab_close')['checked'] = setting.confirmTabClosing;
   document.getElementById('presets_order').value = setting.presetsOrder;
+  document.getElementById('empty_folder_visible')['checked'] = setting.visibleEmptyFolder;
 
   // アクティブなタブはないので表示修正
   $('.fleet_tab.active').removeClass('active');
@@ -50,6 +51,9 @@ function setPresets(presets, isLocal = true) {
   const sort = castInt(document.getElementById('presets_order').value);
   // 検索語句
   const keyword = document.getElementById('search_preset').value.trim();
+  // 空フォルダー表示チェック
+  const visibleEmptyFolder = document.getElementById('empty_folder_visible')['checked'];
+  setting.visibleEmptyFolder = visibleEmptyFolder;
 
   if (isLocal && keyword) {
     presets = presets.filter(v => v[1].indexOf(keyword) >= 0);
@@ -105,10 +109,10 @@ function setPresets(presets, isLocal = true) {
   for (let index = 0; index < folders.length; index++) {
     const folder = folders[index];
     const wrapper = createDiv();
-    const header = createDiv('preset_container folder_header');
-
     // このフォルダーに属する編成総数
     const presetCount = presets.filter(v => v.length >= 6 && v[5] === folder.id).length;
+
+    const header = createDiv(`preset_container folder_header ${presetCount === 0 && !visibleEmptyFolder ? 'd-none' : ''}`);
 
     if (presetCount) {
       header.dataset.toggle = 'collapse';
@@ -1559,6 +1563,7 @@ function public_preset_tab_Shown() {
   $('#btn_search_preset').parent().removeClass('d-none');
   $('#map_select').parent().removeClass('d-none');
   $('#search_preset_parent').addClass('d-none');
+  $('#empty_folder_visible_parent').addClass('d-none');
 
   if (castInt($('#presets_order').val()) === 0) {
     $('#presets_order').val(1);
@@ -1599,6 +1604,7 @@ function public_preset_tab_Hidden() {
   $('#btn_search_preset').parent().addClass('d-none');
   $('#map_select').parent().addClass('d-none');
   $('#search_preset_parent').removeClass('d-none');
+  $('#empty_folder_visible_parent').removeClass('d-none');
   $('#presets_order').find('option[value="0"]').prop('disabled', false);
   $('#presets_order').removeClass('d-none');
 
@@ -1664,6 +1670,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#main').on('change', '#presets_order', setLocalPresets);
   $('#main').on('click', '#btn_search_preset', searchUploadedPreset);
   $('#main').on('change', '#map_select', map_select_Changed);
+  $('#main').on('click', '#empty_folder_visible', setLocalPresets);
   $('#main').on('change', '#select_preset_level', function () { $('#btn_search_preset').prop('disabled', false); });
   $('#public_presets_container').on('click', '.preset_container .btn_open', function () { public_preset_Clicked($(this)); });
   $('#public_presets_container').on('click', '.preset_container.more_load', more_load_presets);
