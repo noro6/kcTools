@@ -186,8 +186,8 @@ h1 {
 }
 .dark-theme .form-control:-moz-read-only { background-color: rgba(255, 255, 255, .1) !important; }
 .dark-theme .form-control:read-only { background-color: rgba(255, 255, 255, .1) !important; }
-.dark-theme .form-control::placeholder { color: #ccc; }
-.dark-theme .form-control::-ms-input-placeholder { color: #ccc; }
+.dark-theme .form-control::placeholder { color: rgb(128, 128, 128); }
+.dark-theme .form-control::-ms-input-placeholder { color: rgb(128, 128, 128); }
 .form-control-dark {
   color: #ddd;
   border-color: rgba(255, 255, 255, .2);
