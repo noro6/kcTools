@@ -1010,10 +1010,18 @@ input[type="text"] { font-size: 12px; }
 #shoot_down_table .td_plane_name {
   cursor: pointer;
   font-size: 11px;
-  width: 168px;
+  width: 120px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+@media (min-width: 760px) {
+  #shoot_down_table .td_name { width: 100px; }
+  #shoot_down_table .td_plane_name { width: 150px; }
+}
+@media (min-width: 1200px) {
+  #shoot_down_table .td_name { width: 130px; }
+  #shoot_down_table .td_plane_name { width: 180px; }
 }
 #shoot_down_table_tbody td{ border-top:1px rgba(128, 128, 128, 0.2) solid; }
 #shoot_down_table_tbody .td_plane_name { text-align: left; }
@@ -1115,9 +1123,18 @@ input[type="text"] { font-size: 12px; }
   border-bottom: 1px rgba(128, 128, 128, 0.502) solid;
 }
 #enemy_shoot_down_tbody .td_plane_name {
-  width: 140px;
+  width: 100px;
   text-align: left;
   border-right: 1px rgba(128, 128, 128, 0.502) solid;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@media (min-width: 760px) {
+  #enemy_shoot_down_tbody .td_plane_name { width: 120px; }
+}
+@media (min-width: 1200px) {
+  #enemy_shoot_down_tbody .td_plane_name { width: 160px; }
 }
 .td_detail_slot { cursor: pointer !important; }
 #enemy_shoot_down_tbody .td_detail_slot {
