@@ -416,7 +416,7 @@
 						<div class="pl-3 mt-1">
 							■ 航空戦マス
 							<div class="ml-2 font_size_12">
-								航空戦マスについては、同じ戦闘を2回入力することで代用可能です。
+								航空戦マスについては、同じ戦闘を2回入力することで疑似的に代用可能です。
 								航空戦マスは敵艦からの対空砲火が行われるため、戦闘形式には「通常」を選択してください。
 								(本サイトでは「空襲」を選択すると対空砲火を起こさない仕様になっているためです。)
 							</div>
@@ -545,24 +545,7 @@
 						<div class="border-top collapse history_content" id="faq_2">
 							<div class="pl-3 py-2 font_size_12">
 								A.
-								敵対空CI発動時の撃墜補正の計算が現状資料不足で未実装です。また、基地航空隊を分散させて別のマスに同時に飛ばす機能はまだ未実装です。（第一基地航空隊をAマスに、第二基地航空隊をボスマスに飛ばす…など）
-							</div>
-						</div>
-						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_3">
-							Q. 防空の計算がしたい ／ 基地の札が防空にできない。
-						</div>
-						<div class="border-top collapse history_content" id="faq_3">
-							<div class="pl-3 py-2 font_size_12">
-								A.
-								ゲーム同様、基地に機体を1つ以上配備すると、防空札を選択できるようになり、これを選ぶと防空計算ができるようになります。または、艦隊一覧から空襲時の編成を展開した場合も防空計算モードになります。
-							</div>
-						</div>
-						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_4">
-							Q. 出撃と防空は同時に設定できない？
-						</div>
-						<div class="border-top collapse history_content" id="faq_4">
-							<div class="pl-3 py-2 font_size_12">
-								A. 計算結果の表示や敵艦隊入力欄の単純化のため、現在は同時に計算することはできません。防空時の計算と出撃時の計算はそれぞれ個別で計算してください。
+								敵対空CI発動時の撃墜補正の計算が現状資料不足で未実装です。
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_5">
@@ -570,7 +553,7 @@
 						</div>
 						<div class="border-top collapse history_content" id="faq_5">
 							<div class="pl-3 py-2 font_size_12">
-								A. 防空計算モードでは味方艦隊欄が非表示になります。基地の防空札を全て待機か、集中等にし、防空計算モードを解除してください。
+								A. 防空計算モードでは味方艦隊欄が非表示になります。基地航空隊欄上部の『防空計算モード』を解除してください。
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_6">
@@ -601,12 +584,12 @@
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_9">
-							Q. 機体一覧に機体が一つもない…
+							Q. 装備一覧に装備が一つもない…
 						</div>
 						<div class="border-top collapse history_content" id="faq_9">
 							<div class="pl-3 py-2 font_size_12">
 								A.
-								機体選択画面内「所持装備から選択」にチェックが入っていませんか？その場合、「所持装備」欄にて艦載機の所持数を登録していないと機体が表示されません。また、検索条件や、機種の選択が問題ないかも確認してみてください。
+								装備一覧画面内「所持装備から選択」にチェックが入っていませんか？その場合、「所持装備」欄にて装備の所持数を登録していないと機体が表示されません。また、検索条件や、装備種別の選択が問題ないかも確認してみてください。
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_10">
@@ -624,7 +607,7 @@
 						<div class="border-top collapse history_content" id="faq_11">
 							<div class="pl-3 py-2 font_size_12">
 								A.
-								ゲーム同様、装備できる艦娘のスロットから機体選択ボタンをクリックしないと表示されません。具体的には翔鶴改二甲、瑞鶴改二甲、加賀改二護の3隻が該当します。もし表示されていない場合は、同改二「甲」または「護」を正しく選択しているか確認してください。
+								ゲーム同様、装備できる艦娘のスロットから装備選択をクリックしないと表示されません。具体的には翔鶴改二甲、瑞鶴改二甲、加賀改二護の3隻が該当します。もし表示されていない場合は、同改二「甲」または「護」を正しく選択しているか確認してください。
 							</div>
 						</div>
 						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_12">
@@ -633,7 +616,16 @@
 						<div class="border-top collapse history_content" id="faq_12">
 							<div class="pl-3 py-2 font_size_12">
 								A.
-								サイトごとに、艦載機の内部熟練度の処理方法が違うケースが考えられます。「詳細設定」欄から、内部熟練度の取り扱いを設定できるため、この設定を見直してみてください。
+								サイトごとに、艦載機の内部熟練度の処理方法が違うケースが考えられます。計算画面の「詳細設定」欄から、内部熟練度の取り扱いを設定できるため、この設定を見直してみてください。
+							</div>
+						</div>
+						<div class="py-3 px-2 d-flex collapsed history_item" data-toggle="collapse" data-target="#faq_13">
+							Q. 夜戦マスが選択できない
+						</div>
+						<div class="border-top collapse history_content" id="faq_13">
+							<div class="pl-3 py-2 font_size_12">
+								A.
+								制空権に一切関係しない戦闘マスは本サイトでは取り扱っていません。無視して次のマスを選択してください。
 							</div>
 						</div>
 					</div>
@@ -655,7 +647,8 @@
 		</div>
 		<div class="border-secondary border-top mx-auto my-4 font_size_12" id="main_footer">
 			<div class="mt-3">
-				質問・要望・バグ報告・ご感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>まで
+				質問・要望・バグ報告・ご感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>や、<a
+					href="https://twitter.com/noro_006" target="_blank">作者のTwitter</a>まで
 			</div>
 			<div class="mt-2">
 				著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。

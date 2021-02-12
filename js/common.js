@@ -119,6 +119,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('planeOnly')) setting.planeOnly = true;
 	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
 	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
+	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -424,8 +425,15 @@ function readDeckBuilder(deck) {
 						level = level ? level : 99;
 					}
 
+					// 運
+					let luck = -1;
+					if (s_.hasOwnProperty('luck')) {
+						luck = castInt(s_.luck);
+						luck = luck ? luck : -1;
+					}
+
 					// 装備の抽出
-					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo), 0, level];
+					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo), 0, level, 0, luck];
 					Object.keys(s_.items).forEach((i) => {
 						const i_ = s_.items[i];
 						if (!i_ || !i_.hasOwnProperty("id")) return;

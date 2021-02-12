@@ -884,6 +884,14 @@
 						<i class="far fa-question-circle-o cur_help" data-toggle="tooltip" data-offset="140,0" data-html="true"
 							title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>"></i>
 					</div>
+					<div class="d-none ml-auto align-self-center custom-check sm no_capture">
+						<label>
+							<input type="checkbox" id="visible_anti_air_status">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>対空砲火性能を表示</span>
+						</label>
+					</div>
 				</div>
 				<div class="mb-2">
 					<ul class="nav nav-tabs">
@@ -962,25 +970,45 @@
 											<i class="fas fa-times"></i>
 										</div>
 									</div>
+									<div class="font_size_12 mt-1 anti_air_status d-none">
+										<div>
+											<span class="font_color_half">割合撃墜: </span>
+											<span class="rate_down">0</span>
+											<span class="font_color_half">%</span>
+										</div>
+										<div>
+											<span class="ml-2 font_color_half">固定撃墜: </span>
+											<span class="fix_down">0</span>
+											<span class="font_color_half">機</span>
+										</div>
+										<div class="ml-2 hunshin d-none">
+											<div>
+												<span class="font_color_half">噴進弾幕: </span>
+												<span class="hunshin_rate">0</span>
+												<span class="font_color_half">%</span>
+											</div>
+											<div class="ml-2 form_ship_luck" data-toggle="tooltip" title="運を変更する">
+												<span class="font_color_half">運: </span>
+												<span class="ship_luck">10</span>
+											</div>
+										</div>
+									</div>
 									<div class="d-flex">
-										<div class="ship_sumAP font_size_12 mt-1">
+										<div class="font_size_12 ship_sumAP">
 											<span class="font_color_half">制空値: </span>
 											<span class="ap">0</span>
 											<span class="ap_detail"></span>
 										</div>
-										<div class="align-self-center d-none">
-											<span class="font_color_half">対空: </span>
-											<span class="aa">0</span>
-										</div>
-										<div class="ml-auto ship_disabled btn_icon">
+										<div class="ml-auto align-self-end ship_disabled btn_icon">
 											<i class="fas fa-eye no_capture"></i>
 										</div>
-										<div class="ml-2 btn_preset btn_plane_preset btn_icon no_capture">
+										<div class="ml-2 align-self-end btn_preset btn_plane_preset btn_icon no_capture">
 											<i class="fas fa-archive"></i>
 										</div>
-										<div class="ml-2 btn_reset_ship_plane btn_icon no_capture">
+										<div class="ml-2 align-self-end btn_reset_ship_plane btn_icon no_capture">
 											<i class="fas fa-trash-o"></i>
 										</div>
+										<span class="d-none aa">0</span>
 									</div>
 								</div>
 								<div class="ship_planes">
@@ -2399,7 +2427,8 @@
 		</div>
 		<div class="border-secondary border-top mx-auto my-4 font_size_12" id="main_footer">
 			<div class="mt-3">
-				質問・要望・バグ報告・ご感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>まで
+				質問・要望・バグ報告・ご感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">こちら</a>や、<a
+					href="https://twitter.com/noro_006" target="_blank">作者のTwitter</a>まで
 			</div>
 			<div class="mt-2">
 				著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。
@@ -3725,7 +3754,7 @@
 	</div>
 
 	<div class="modal fade" id="modal_fleet_antiair_input" tabindex="-1">
-		<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
 			<div class="modal-content mt-5">
 				<div class="modal-header">
 					<h5 class="modal-title">艦隊対空砲火情報</h5>
@@ -4168,6 +4197,29 @@
 						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="140">Lv.140</button></div>
 						<div><button type="button" class="btn btn-sm btn-outline-info" data-level="175">Lv.175</button></div>
 					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" class="btn btn-primary px-3" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_luck_input" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">艦娘運入力</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body px-4">
+					<div>
+						運を入力してください。
+					</div>
+					<input type="number" class="form-control form-control-sm my-3 ship_luck_input" value="99" min="1" max="175">
+					<input type="range" class="custom-range ship_luck_range" value="99" min="1" max="175">
 				</div>
 				<div class="modal-footer">
 					<div class="ml-auto">

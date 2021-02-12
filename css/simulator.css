@@ -349,11 +349,13 @@ input[type="text"] { font-size: 12px; }
 }
 
 .ship_name_span,
-.form_ship_level {
+.form_ship_level,
+.form_ship_luck {
   cursor: pointer;
 }
 .ship_name_span::after,
-.form_ship_level::after {
+.form_ship_level::after,
+.form_ship_luck::after {
   content: '';
   display: block;
   width: 0;
@@ -361,7 +363,8 @@ input[type="text"] { font-size: 12px; }
   transition: 0.25s ease-in-out;
 }
 .ship_name_span:hover::after,
-.form_ship_level:hover::after {
+.form_ship_level:hover::after,
+.form_ship_luck:hover::after {
   width: 100%;
 }
 
