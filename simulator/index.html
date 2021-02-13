@@ -871,7 +871,7 @@
 			</div>
 			<div class="collapse show collapse_content" id="friendFleet_content">
 				<div class="border-top"></div>
-				<div class="my-2 d-flex">
+				<div class="mt-2 d-flex">
 					<div class="ml-1 custom-check">
 						<label>
 							<input type="checkbox" id="union_fleet">
@@ -884,12 +884,12 @@
 						<i class="far fa-question-circle-o cur_help" data-toggle="tooltip" data-offset="140,0" data-html="true"
 							title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>"></i>
 					</div>
-					<div class="d-none ml-auto align-self-center custom-check sm no_capture">
+					<div class="ml-auto align-self-center custom-check sm no_capture">
 						<label>
 							<input type="checkbox" id="visible_anti_air_status">
 							<i class="fas fa-checkbox-unchecked"></i>
 							<i class="fas fa-checkbox-checked"></i>
-							<span>対空砲火性能を表示</span>
+							<span>対空砲火情報を表示</span>
 						</label>
 					</div>
 				</div>
@@ -942,19 +942,29 @@
 							</div>
 						</div>
 						<div class="fleet_tab">
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1" id="shipNo_1">
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_1">
 								<div class="ship_header">
 									<div class="d-flex">
-										<div class="sortable_handle cur_move mr-2 d-none align-self-center">
+										<div class="sortable_handle cur_move mr-2 mb-1 d-none align-self-end">
 											<img src="../img/ship/0.png" class="ship_img">
 										</div>
-										<div class="align-self-center">
-											<div class="ship_name_span text-truncate" data-toggle="tooltip" title="艦娘を変更する">艦娘を選択
+										<div class="align-self-center flex-grow-1">
+											<div class="d-flex">
+												<div class="ship_name_span text-truncate align-self-end" data-toggle="tooltip" title="艦娘を変更する">
+													艦娘を選択
+												</div>
+												<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture">
+													<i class="fas fa-times"></i>
+												</div>
 											</div>
 											<div class="d-flex font_size_12">
 												<div class="form_ship_level" data-toggle="tooltip" title="練度を変更する">
 													<span class="font_color_half">Lv: </span>
 													<span class="ship_level">99</span>
+												</div>
+												<div class="ml-2 form_ship_luck" data-toggle="tooltip" title="運を変更する">
+													<span class="font_color_half">運: </span>
+													<span class="ship_luck font_size_12">10</span>
 												</div>
 												<div class="ml-2 ship_range_parent">
 													<span class="font_color_half">射程: </span>
@@ -962,38 +972,30 @@
 												</div>
 												<div class="ml-2 can_attack_lb">
 													<span class="font_color_half">対地: </span>
-													<span>不可</span>
+													<i class="fas fa-times font_color_half"></i>
 												</div>
 											</div>
 										</div>
-										<div class="ml-auto btn_reset btn_remove_ship btn_icon no_capture align-self-center">
-											<i class="fas fa-times"></i>
-										</div>
 									</div>
-									<div class="font_size_12 mt-1 anti_air_status d-none">
+									<div class="pt-1 no_capture"></div>
+									<div class="font_size_12 px-1 anti_air_status d-none">
 										<div>
 											<span class="font_color_half">割合撃墜: </span>
 											<span class="rate_down">0</span>
 											<span class="font_color_half">%</span>
 										</div>
-										<div>
-											<span class="ml-2 font_color_half">固定撃墜: </span>
+										<div class="ml-2">
+											<span class="font_color_half">固定撃墜: </span>
 											<span class="fix_down">0</span>
 											<span class="font_color_half">機</span>
 										</div>
 										<div class="ml-2 hunshin d-none">
-											<div>
-												<span class="font_color_half">噴進弾幕: </span>
-												<span class="hunshin_rate">0</span>
-												<span class="font_color_half">%</span>
-											</div>
-											<div class="ml-2 form_ship_luck" data-toggle="tooltip" title="運を変更する">
-												<span class="font_color_half">運: </span>
-												<span class="ship_luck">10</span>
-											</div>
+											<span class="font_color_half">噴進弾幕: </span>
+											<span class="hunshin_rate">0</span>
+											<span class="font_color_half">%</span>
 										</div>
 									</div>
-									<div class="d-flex">
+									<div class="d-flex pl-1">
 										<div class="font_size_12 ship_sumAP">
 											<span class="font_color_half">制空値: </span>
 											<span class="ap">0</span>
@@ -1011,7 +1013,7 @@
 										<span class="d-none aa">0</span>
 									</div>
 								</div>
-								<div class="ship_planes">
+								<div class="ship_planes px-1 pb-1">
 									<div class="ship_plane mt-1 d-flex">
 										<div class="d-flex ship_plane_draggable">
 											<div class="dropdown slot_select_parent">
@@ -1219,11 +1221,11 @@
 									</div>
 								</div>
 							</div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1" id="shipNo_2"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_3"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_4"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_5"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_6"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_2"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_3"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_4"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_5"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_6"></div>
 						</div>
 					</div>
 					<div class="tab-pane fade friendFleet_tab container-fluid px-0" id="friendFleet_item2">
@@ -1264,12 +1266,12 @@
 							</div>
 						</div>
 						<div class="fleet_tab">
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1" id="shipNo_7"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1" id="shipNo_8"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_9"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_10"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_11"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-2 flex-grow-1 d-none" id="shipNo_12"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_7"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_8"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_9"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_10"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_11"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_12"></div>
 						</div>
 					</div>
 				</div>
@@ -2019,13 +2021,13 @@
 							<thead class="general_thead">
 								<tr class="enemy_shoot_down_tr">
 									<td></td>
-									<td>最小値</td>
+									<td>　最小値</td>
 									<td>上位50%値</td>
 									<td>上位25%値</td>
 									<td>上位10%値</td>
 									<td>上位5%値</td>
 									<td>上位1%値</td>
-									<td>最大値</td>
+									<td>　最大値</td>
 								</tr>
 							</thead>
 							<tbody>
