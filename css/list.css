@@ -24,7 +24,7 @@
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
-  min-height: 76px;
+  min-height: 72px;
   border-top: 1px solid #dee2e6;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
@@ -64,6 +64,7 @@
 #presets_container .preset_container:not(.editting):active { background-color: rgba(109, 214, 255, 0.5) !important; }
 .dark-theme #presets_container .preset_container:not(.editting):active { background-color: rgba(230, 248, 255, 0.4) !important; }
 .preset_container.new {
+  border-top-width: 2px;
   height: 88px;
 }
 .preset_container .new_body {
@@ -177,7 +178,7 @@
 
 /* フォルダー関連 */
 .preset_container.folder_header {
-  border-top-width: 2px ;
+  border-top-width: 2px;
 }
 .folder_header .preset_name {
   font-size: 1.5em;

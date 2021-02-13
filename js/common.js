@@ -319,6 +319,10 @@ function adaptUpdater() {
 			// 連合チェックいらん
 			delete setting.isUnion;
 		}
+		//　～ v1.12.1.1
+		if (major <= 11 || minor < 1 || (minor === 1 && patch < 1)) {
+			setting.visibleAntiAirStatus = true;
+		}
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;

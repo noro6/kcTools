@@ -703,7 +703,7 @@ class Ship {
 		// 噴進砲改二チェック
 		const hunshinCount = this.planes.filter(v => v.id === 274).length
 		if (hunshinCount) {
-			this.hunshinRate = (0.9 * this.luck + this.antiAirWeight) / 281;
+			this.hunshinRate = (0.9 * Math.min(this.luck, 50) + this.antiAirWeight) / 281;
 
 			// 複数積みボーナス
 			if (hunshinCount === 2) {
@@ -3216,17 +3216,16 @@ function setShipDiv($div, id) {
 
 	// 補強増設表示
 	$div.find('.expanded_slot').removeClass('d-none');
-
 	// 素対空値
 	$div.find('.aa').text(ship.max_aa);
 	// 素運
 	$div.find('.ship_luck').text(ship.luck);
 	// 噴進弾幕の表示可否
 	if ([6, 7, 10, 11, 16, 18].includes(ship.type)) {
-		$div.find('.hunshin').addClass('d-flex').removeClass('d-none');
+		$div.find('.hunshin').removeClass('disabled');
 	}
 	else {
-		$div.find('.hunshin').removeClass('d-flex').addClass('d-none');
+		$div.find('.hunshin').addClass('disabled');
 	}
 }
 
@@ -3259,7 +3258,7 @@ function clearShipDiv($div) {
 	// 練度
 	$div.find('.ship_level').text(99);
 	// 噴進弾幕
-	$div.find('.hunshin').removeClass('d-flex').addClass('d-none');
+	$div.find('.hunshin').addClass('d-none');
 }
 
 /**
@@ -3454,7 +3453,7 @@ function createItemTable(items, type) {
 	// 機銃 / 高射装置
 	else if (type === 21) displayLabels = ['antiAir', 'antiAirWeight', 'antiAirBonus', 'fire', 'torpedo'];
 	// 陸攻系
-	else if (LB_ATTACKERS.includes(type)) displayLabels = ['antiAir', 'radius', 'battleAntiAir', 'avoid', 'cost'];
+	else if (LB_ATTACKERS.includes(type)) displayLabels = ['antiAir', 'radius', 'torpedo', 'avoid', 'cost'];
 	// 局地戦闘機
 	else if (type === 48) displayLabels = ['antiAir', 'radius', 'battleAntiAir', 'defenseAntiAir', 'cost'];
 
@@ -6392,12 +6391,10 @@ function updateFleetView() {
 
 		// 噴進弾幕
 		if (ship.hunshinRate > 0) {
-			node_hunshin_rate.textContent = Math.floor(ship.hunshinRate * 1000) / 10;
+			node_hunshin_rate.textContent = (ship.hunshinRate * 100).toFixed(1);
 			node_hunshin.classList.remove('d-none');
-			node_hunshin.classList.add('d-flex');
 		}
 		else {
-			node_hunshin.classList.remove('d-flex');
 			node_hunshin.classList.add('d-none');
 		}
 
@@ -6632,7 +6629,7 @@ function updateEnemyView() {
 					col_header_text = `
 					<td class="td_name align-middle last_slot" rowspan="${enemy.slots.length}">
 						<div>${drawEnemyGradeColor(enemy.name)}</div>
-						<div>xxPxx</div>
+						<div class="d-none d-md-block">xxPxx</div>
 					</td>`;
 					death_td_text = `<td class="td_all_dead align-middle last_slot" rowspan="${enemy.slots.length}"></td>`;
 					detail_td_text = `<td class="td_detail_slot align-middle last_slot" rowspan="${enemy.slots.length}"><i class="fas fa-file-text"></i></td>`;
@@ -7054,6 +7051,9 @@ function createFleetInstance() {
 			node_ship_tab.getElementsByClassName('ap')[0].textContent = '-';
 			node_ship_tab.getElementsByClassName('ap_detail')[0].textContent = '';
 			node_ship_tab.getElementsByClassName('ship_range')[0].textContent = '-';
+			node_ship_tab.getElementsByClassName('rate_down')[0].textContent = '-';
+			node_ship_tab.getElementsByClassName('fix_down')[0].textContent = '-';
+			node_ship_tab.getElementsByClassName('hunshin_rate')[0].textContent = '-';
 		}
 
 		// 制空値更新
@@ -9641,6 +9641,12 @@ function btn_capture_Clicked($this) {
 		if ($(e).text() === '装備を選択') $(e).text('-');
 		if ($(e).text() === '補強増設') $(e).text('-');
 	});
+	// 補強増設未装備なら非表示で
+	$targetContent.find('.expanded_slot').each((i, e) => {
+		if (castInt($(e)[0].dataset.planeid) <= 0) {
+			$(e).addClass('d-none');
+		}
+	});
 
 	// レンダリングズレ修正
 	$targetContent.find('.custom-select').addClass('pt-0');
@@ -9676,8 +9682,10 @@ function btn_capture_Clicked($this) {
 			$targetContent.find('.btn_remove_plane').removeClass('btn_remove_plane_capture');
 			$targetContent.find('.battle_only').addClass('ml-auto').removeClass('ml-2');
 			$targetContent.find('.plane_name_span').each((i, e) => {
+				if ($(e).text() === '-' && $(e).closest('.ship_plane').hasClass('expanded_slot')) $(e).text('補強増設');
 				if ($(e).text() === '-') $(e).text('装備を選択');
 			});
+			$targetContent.find('.expanded_slot').removeClass('d-none');
 			$no_captures.removeClass('d-none');
 
 			$targetContent.find('.custom-select').removeClass('pt-0');

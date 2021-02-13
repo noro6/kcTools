@@ -244,13 +244,13 @@ function setPresets(presets, isLocal = true) {
     // 艦娘データ
     const fleets = preset_data[1];
 
-    const land_base = createDiv('d-none d-md-flex land_base_status');
-    for (let i = 1; i <= 3; i++) {
-      // 基地データが入っていてかつお札が出撃
-      const disabled = lbs.length >= 1 && lbs[1].length >= i && lbs[1][i - 1] >= 0 ? '' : 'disabled';
-      land_base.appendChild(createDiv(`land_base_state no_${i} mr-1 ${disabled}`, '', `第${i}基地航空隊`));
-    }
-    abstract.appendChild(land_base);
+    // const land_base = createDiv('d-none d-md-flex land_base_status');
+    // for (let i = 1; i <= 3; i++) {
+    //   // 基地データが入っていてかつお札が出撃
+    //   const disabled = lbs.length >= 1 && lbs[1].length >= i && lbs[1][i - 1] >= 0 ? '' : 'disabled';
+    //   land_base.appendChild(createDiv(`land_base_state no_${i} mr-1 ${disabled}`, '', `第${i}基地航空隊`));
+    // }
+    // abstract.appendChild(land_base);
 
     const fleet_container = createDiv('d-flex ships flex-wrap');
 
