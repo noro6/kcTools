@@ -55,7 +55,7 @@ let isCtrlPress = false;
 let releaseTimer = null;
 
 // 配備機体
-let usedPlane = [];
+let usedItems = [];
 
 // 編成済み艦娘
 let usedShip = [];
@@ -111,7 +111,7 @@ let inputItems = new InputData();
  */
 class Fleet {
 	constructor() {
-		/** @type {Array<Ship>} */
+		/** @type {Ship[]} */
 		this.ships = [];
 		/** @type {number} */
 		this.airPower = 0;
@@ -129,7 +129,7 @@ class Fleet {
 		this.hasJet = false;
 		/** @type {boolean} */
 		this.isUnion = false;
-		/** @type {Array<FleetStage2>} */
+		/** @type {FleetStage2[]} */
 		this.allStage2 = [];
 		/** @type {number} */
 		this.antiAirBonus = 0;
@@ -172,11 +172,11 @@ class Fleet {
 	 * この艦隊の夜偵発動率
 	 * @memberof Fleet
 	 */
-	nightContactRate(isUnion = false) {
+	nightContactRate() {
 		let sum = 1;
 		for (const ship of this.ships) {
-			if (!isUnion || (isUnion && ship.isEscort)) {
-				for (const plane of ship.planes.filter(v => v.id === 102 && v.slot > 0)) {
+			if (!this.isUnion || (this.isUnion && ship.isEscort)) {
+				for (const plane of ship.items.filter(v => v.id === 102 && v.slot > 0)) {
 					// 連続で成功しない確率をとっていく
 					sum *= (1 - Math.floor(Math.sqrt(ship.level) * Math.sqrt(plane.scout)) / 25);
 				}
@@ -192,7 +192,7 @@ class Fleet {
 	 */
 	clearResult() {
 		for (const ship of this.ships) {
-			for (const plane of ship.planes) {
+			for (const plane of ship.items) {
 				plane.results = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			}
 		}
@@ -245,7 +245,6 @@ class Fleet {
 
 			for (let index = 0; index < this.ships.length; index++) {
 				const ship = this.ships[index];
-				// [割合, 固定, 最低保証] 形式のテーブルを生成
 				const status = new ShootDownStatus();
 				status.rateDown = ship.rateDown;
 				status.fixDown = ship.fixDown;
@@ -360,13 +359,15 @@ class Ship {
 		/** @type {number} */
 		this.shipNo = shipNo;
 		/** @type {ShipItem[]} */
-		this.planes = [];
+		this.items = [];
 		/** @type {boolean} */
 		this.isEscort = false;
 		/** @type {number} */
 		this.airPower = 0;
 		/** @type {number} */
 		this.fullAirPower = 0;
+		/** @type {boolean} */
+		this.ignoreSlot = true;
 		/** @type {number} */
 		this.level = 99;
 		/** @type {boolean} */
@@ -385,7 +386,7 @@ class Ship {
 		this.rateDown = 0;
 		/** @type {number} */
 		this.minimumDown = 1;
-		/** @type {Array<AntiAirCutIn>} */
+		/** @type {AntiAirCutIn[]} */
 		this.antiAirCutIn = [];
 		// /** @type {number} */
 		// this.antiAirWeight_kai = 0;
@@ -407,8 +408,8 @@ class Ship {
 	 */
 	updateAirPower() {
 		let sum = 0;
-		for (const plane of this.planes) {
-			sum += plane.airPower;
+		for (const item of this.items) {
+			sum += item.airPower;
 		}
 		this.airPower = sum;
 	}
@@ -430,7 +431,7 @@ class Ship {
 		// let sumWeight_kai = 0;
 		let sumBonus = 0;
 
-		for (const item of this.planes) {
+		for (const item of this.items) {
 			sumWeight += item.antiAirWeight;
 			// sumWeight_kai += item.antiAirWeight_kai;
 
@@ -441,7 +442,7 @@ class Ship {
 		// this.antiAirWeight_kai = sumWeight_kai + this.antiAir / 2;
 
 		// 加重対空値 -ブラウザ
-		if (this.planes.length > 0) {
+		if (this.items.length > 0) {
 			// not 素手
 			this.antiAirWeight = 2 * Math.floor((this.antiAir + sumWeight) / 2);
 		}
@@ -472,7 +473,7 @@ class Ship {
 		// 艦娘id
 		const shipId = this.id;
 		// 装備一覧
-		const items = this.planes;
+		const items = this.items;
 		// 特殊高角砲の数 (対空値8以上)
 		const tkCount = items.filter(v => v.itype === 16 && v.antiAir > 7).length;
 		// 通常高角砲の数 (対空値7以下)
@@ -701,7 +702,7 @@ class Ship {
 	 */
 	setHunshinRate() {
 		// 噴進砲改二チェック
-		const hunshinCount = this.planes.filter(v => v.id === 274).length
+		const hunshinCount = this.items.filter(v => v.id === 274).length
 		if (hunshinCount) {
 			this.hunshinRate = (0.9 * Math.min(this.luck, 50) + this.antiAirWeight) / 281;
 
@@ -750,7 +751,7 @@ class FleetStage2 {
 		this.rate = 0;
 		/** @type {number} */
 		this.border = 0;
-		/** @type {Array<ShootDownStatus>} */
+		/** @type {ShootDownStatus[]} */
 		this.table = [];
 	}
 }
@@ -776,7 +777,7 @@ class ShootDownStatus {
  */
 class LandBaseAll {
 	constructor() {
-		/** @type {Array<LandBase>} */
+		/** @type {LandBase[]} */
 		this.landBases = [];
 		/** @type {number} */
 		this.defenseAirPower = 0;
@@ -834,7 +835,7 @@ class LandBase {
 		this.planes = [];
 		/** @type {number} */
 		this.mode = mode;
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.target = [-1, -1];
 		/** @type {number} */
 		this.airPower = 0;
@@ -846,7 +847,7 @@ class LandBase {
 		this.reconCorr = 0;
 		/** @type {number} */
 		this.defenseCorr = 1.0;
-		/** @type {Array<AirStatusResult>} */
+		/** @type {AirStatusResult[]} */
 		this.results = [];
 		/** @type {boolean} */
 		this.hasJet = false;
@@ -1041,7 +1042,7 @@ class Item {
 		this.isExpanded = false;
 		/** @type {number} */
 		this.contact = 0;
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.selectRate = [];
 		/** @type {number} */
 		this.fullSlot = 0;
@@ -1530,7 +1531,7 @@ class ShipItem extends Item {
 	 */
 	constructor(id, slot = 0, remodel = 0, level = 0) {
 		super(id, slot, remodel, level);
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.results = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		/** @type {number} */
 		this.antiAirWeight = 0;
@@ -1755,11 +1756,11 @@ class ItemDetail extends Item {
  */
 class AirStatusResult {
 	constructor() {
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.mainAirPower = [0, 0];
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.enemyAirPower = [0, 0];
-		/** @type {Array<Array<number>>} */
+		/** @type {number[][]} */
 		this.airStatusIndex = [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]];
 	}
 }
@@ -1767,14 +1768,14 @@ class AirStatusResult {
 
 class BattleData {
 	constructor() {
-		/** @type {Array<Battle>} */
+		/** @type {Battle[]} */
 		this.battles = [];
 	}
 }
 
 class Battle {
 	constructor() {
-		/** @type {Array<Enemy>} */
+		/** @type {Enemy[]} */
 		this.enemies = [];
 		/** @type {number} */
 		this.cellType = 0;
@@ -1895,17 +1896,17 @@ class Enemy {
 	constructor(id) {
 		/** @type {number} */
 		this.id = 0;
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.type = [];
 		/** @type {string} */
 		this.name = "";
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.antiAirs = [];
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.slots = [];
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.fullSlots = [];
-		/** @type {Array<number>} */
+		/** @type {number[]} */
 		this.rawSlots = [];
 		/** @type {number} */
 		this.airPower = 0;
@@ -1919,9 +1920,9 @@ class Enemy {
 		this.antiAirWeight = 0;
 		/** @type {number} */
 		this.antiAirBonus = 0;
-		/** @type {Array<boolean>} */
+		/** @type {boolean[]} */
 		this.attackers = [];
-		/** @type {Array<Equipment>} */
+		/** @type {Equipment[]} */
 		this.equipments = [];
 		/** @type {boolean} */
 		this.onlyScout = false;
@@ -2076,19 +2077,6 @@ class Equipment {
 	}
 }
 
-/*
-	プリセットメモ
-	全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット, 4: 防空モードかどうか], 3:メモ, 4:更新日時]
-		基地: [0:機体群, 1:札群, 2:ターゲット戦闘番号[1-1, 1-2, 2-1, ..., 3-2]]
-		艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合フラグ]
-			機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
-		敵艦: [0:戦闘位置, 1:enemyId配列(※ 直接入力時は負値で制空値), 2:マス名, 3:マス種別, 4:陣形, 5:半径]
-		対空: [0:対空CI毎撃墜テーブル, 1:基準艦隊防空, 2:(v1.9.1～未使用), 3:連合フラグ, 4:空襲フラグ, 5:入力加重対空値, 6:陣形]
-		防空モード: そのまんま boolean
-		防空モード敵艦隊: { 0: [enemyId配列], 1: マス種別, 2: 陣形 }
-	在庫メモ
-	[0:id, 1:[0:未改修数, 1:★1数, ... 10:★MAX数]]
-*/
 /*==================================
 		汎用
 ==================================*/
@@ -2139,7 +2127,7 @@ function copyInputTextToClipboard($this) {
 
 /**
  * 数値配列の合計値を返却(処理速度優先)
- * @param {Array<number>} array 数値配列
+ * @param {number[]} array 数値配列
  * @returns {number} 合計値
  */
 function getArraySum(array) {
@@ -2153,7 +2141,7 @@ function getArraySum(array) {
 
 /**
  * 数値配列の最大値を返却(処理速度優先 / 大きい値でapplyやスプレッド演算子が落ちるため)
- * @param {Array<number>} array 数値配列
+ * @param {number[]} array 数値配列
  * @returns {number} 合計値
  */
 function getArrayMax(array) {
@@ -2167,7 +2155,7 @@ function getArrayMax(array) {
 
 /**
  * 数値配列の最小値を返却(処理速度優先 / 大きい値でapplyやスプレッド演算子が落ちるため)
- * @param {Array<number>} array 数値配列
+ * @param {number[]} array 数値配列
  * @returns {number} 合計値
  */
 function getArrayMin(array) {
@@ -2192,7 +2180,7 @@ function hexToRGB(hex) {
 }
 
 /**
- * * ステータス表示用のフォーマット
+ * ステータス表示用のフォーマット
  * 小数以下があれば第1位のみ表示 第2位以下は切り捨てる
  * 対空射撃回避の場合はマスタから文字列取得
  * @param {object} value
@@ -2891,7 +2879,7 @@ function initialize(callback) {
 /**
  * 機体カテゴリselectタグに、第2引数配列からoptionタグを生成
  * @param {HTMLElement} element 設置する対象の select
- * @param {Array<number>} array 展開する機体カテゴリid配列
+ * @param {number[]} array 展開する機体カテゴリid配列
  */
 function setPlaneType(element) {
 	element.innerHTML = '';
@@ -2908,7 +2896,7 @@ function setPlaneType(element) {
 /**
  * 機体カテゴリタブを生成
  * @param {HTMLElement} element 設置する対象の ul
- * @param {Array<number>} array 展開する機体カテゴリid配列
+ * @param {number[]} array 展開する機体カテゴリid配列
  */
 function setPlaneTypeIconSelect(element, withoutAll = false) {
 	if (withoutAll) element.innerHTML = '';
@@ -3003,7 +2991,7 @@ function setShipType() {
 
 /**
  * 敵艦種selectタグに、第二引数配列からoptionタグを生成
- * @param {Array<number>} array 展開する艦種id配列
+ * @param {number[]} array 展開する艦種id配列
  */
 function setEnemyType(array) {
 	const parent1 = document.getElementById('enemy_type_select');
@@ -3427,7 +3415,7 @@ function createItemTable(items, type) {
 	const dispEquipped = setting.visibleEquipped;
 	const favOnly = setting.favoriteOnly;
 	const sortKey = $('#plane_sort_select').val();
-	const usedTable = usedPlane.concat();
+	const usedTable = usedItems.concat();
 
 	// ステータス表示を行うプロパティ名 カテゴリ、ソートキーによって可変
 	let displayLabels = ['antiAir', 'antiAirWeight', 'antiAirBonus', 'fire', 'accuracy'];
@@ -4243,7 +4231,7 @@ function initializeEnemyTable() {
 
 /**
  * 敵一覧テーブルを描画
- * @param {Array.<number>} type カテゴリで絞る場合のカテゴリ配列 type[0] === 0 は全て選択時
+ * @param {number[]} type カテゴリで絞る場合のカテゴリ配列 type[0] === 0 は全て選択時
  */
 function createEnemyTable(type) {
 	const modal = document.getElementById('modal_enemy_select').getElementsByClassName('modal-dialog')[0];
@@ -4915,7 +4903,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 				const huda = castInt(landBase[1][i], -1);
 				$(e).val(huda === 1 ? 2 : huda);
 			}
-			else $(e).val(-1);
+			else if (isResetLandBase) $(e).val(-1);
 		});
 
 		// 基地タゲ
@@ -5135,7 +5123,17 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
  */
 function encodePreset() {
 	try {
-		// 現在のプリセットを取得し、オブジェクトを文字列化
+		/*
+			プリセットメモ
+			全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット, 4: 防空モードかどうか], 3:メモ, 4:更新日時]
+				基地: [0:機体群, 1:札群, 2:ターゲット戦闘番号[1-1, 1-2, 2-1, ..., 3-2]]
+				艦隊: [0:id, 1: Item配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合フラグ, 6:運]
+					装備: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
+				敵艦: [0:戦闘位置, 1:[敵id配列], 2:マス名, 3:マス種別, 4:陣形, 5:半径]
+				対空: 対空砲火適用有効なら陣形id その他0
+				防空モード: そのまんま boolean
+				防空モード敵艦隊: { 0:[敵id配列], 1:マス種別, 2:陣形 }
+		*/
 		const preset = [
 			createLandBasePreset(),
 			createFriendFleetPreset(),
@@ -5161,7 +5159,7 @@ function encodePreset() {
 
 /**
  * 基地航空隊プリセットを生成し返却
- * @returns {Array} 基地プリセット
+ * @returns {any[][]} 基地プリセット
  */
 function createLandBasePreset() {
 	// 基地: [0:機体群, 1:札群, 2:ターゲット戦闘番号[1-1, 1-2, 2-1, ..., 3-2]]
@@ -5200,7 +5198,6 @@ function createLandBasePreset() {
  */
 function createFriendFleetPreset() {
 	// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合かどうか, 6:運]
-	// 機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 	const friendFleetPreset = [];
 	let shipIndex = 0;
 	const isUnion = document.getElementById('union_fleet')['checked'] ? 1 : 0;
@@ -5223,7 +5220,7 @@ function createFriendFleetPreset() {
 		];
 		$(e).find('.ship_plane:not(.ui-draggable-dragging)').each((j, ce) => {
 			const $ce = $(ce);
-			// 機体: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
+			// 装備: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 			const plane = [
 				castInt($ce[0].dataset.planeid),
 				castInt($ce.find('.prof_select')[0].dataset.prof),
@@ -5332,13 +5329,12 @@ function convertToDeckBuilder() {
 
 		// 基地データ
 		for (const plane of landBase[0]) {
-			obj["a" + (Math.floor(plane[4] / 4) + 1)].items["i" + (Math.floor(plane[4] % 4) + 1)] = { id: plane[0], rf: plane[2], mas: plane[1] };
+			obj[`a${Math.floor(plane[4] / 4) + 1}`].items[`i${Math.floor(plane[4] % 4) + 1}`] = { id: plane[0], rf: plane[2], mas: plane[1] };
 		}
 		for (let index = 0; index < landBase[1].length; index++) {
 			const mode = landBase[1][index];
-			obj["a" + (index + 1)].mode = mode > 0 ? 1 : mode === 0 ? 2 : 0;
+			obj[`a${index + 1}`].mode = mode > 0 ? 1 : mode === 0 ? 2 : 0;
 		}
-
 
 		// 艦隊データ
 		for (let index = 0; index < fleet.length; index++) {
@@ -5347,14 +5343,14 @@ function convertToDeckBuilder() {
 			if (!shipData) continue;
 
 			// 装備機体群オブジェクト生成
-			const planes = { i1: null, i2: null, i3: null, i4: null, i5: null };
-			for (const plane of ship[1]) {
-				const i = { id: plane[0], rf: plane[2], mas: plane[1] };
-				const index = plane[4] >= 0 ? plane[4] + 1 : 'x';
-				planes[`i${index}`] = i;
+			const items = { i1: null, i2: null, i3: null, i4: null, i5: null };
+			for (const item of ship[1]) {
+				const i = { id: item[0], rf: item[2], mas: item[1] };
+				const index = item[4] >= 0 ? item[4] + 1 : 'x';
+				items[`i${index}`] = i;
 			}
 
-			const s = { id: `${shipData.api}`, lv: ship[4], luck: ship[6], items: planes };
+			const s = { id: `${shipData.api}`, lv: ship[4], luck: ship[6], items: items };
 			const shipIndex = ship[2];
 			if (shipIndex < 6) obj.f1["s" + ((shipIndex % 6) + 1)] = s;
 			else obj.f2[`s${(shipIndex % 6) + 1}`] = s;
@@ -5783,7 +5779,7 @@ function drawResult() {
 
 /**
  * 数値配列から [min 上位50 25 10 5 1 max] 配列を返却
- * @param {Array<number>} data
+ * @param {number[]} data
  */
 function getEnemyApDistribution(data) {
 	// 昇順ソート
@@ -5846,7 +5842,7 @@ function getAirStatusIndex(x, y) {
 /**
  * 引数の制空値から、必要な制空状態のボーダーを返却
  * @param {number} enemyAp 基準制空値
- * @returns {Array.<number>} 制空状態ボーダーのリスト [確保ボーダー, 優勢ボーダー, ...]
+ * @returns {number[]} 制空状態ボーダーのリスト [確保ボーダー, 優勢ボーダー, ...]
  */
 function getAirStatusBorder(enemyAp) {
 	if (enemyAp === 0) return [0, 0, 0, 0, 0];
@@ -5999,7 +5995,7 @@ function calculateInit() {
 	}
 
 	// 機体使用数テーブル初期化
-	usedPlane = [];
+	usedItems = [];
 	// 配備済み艦娘テーブル初期化
 	usedShip = [];
 
@@ -6362,7 +6358,7 @@ function updateFleetView() {
 
 		// 撃墜テーブルに表示する数
 		let planeCount = 0
-		for (const plane of ship.planes) {
+		for (const plane of ship.items) {
 			if (plane.isPlane && plane.slot > 0) {
 				planeCount++;
 			}
@@ -6372,9 +6368,9 @@ function updateFleetView() {
 		drawChangeValue(node_AP, castInt(node_AP.textContent), ship.airPower);
 
 		// 制空値内訳
-		if (ship.planes.length && ship.airPower) {
+		if (ship.items.length && ship.airPower) {
 			const aps = [];
-			for (const plane of ship.planes) {
+			for (const plane of ship.items) {
 				if (!plane.isExpanded) aps.push(plane.airPower);
 			}
 			node_AP_detail.classList.remove('d-none');
@@ -6429,8 +6425,8 @@ function updateFleetView() {
 			}
 
 			let shootTemplate = document.createElement('tr');
-			for (let i = 0; i < ship.planes.length; i++) {
-				const plane = ship.planes[i];
+			for (let i = 0; i < ship.items.length; i++) {
+				const plane = ship.items[i];
 				const planeName = plane.name;
 
 				// 艦娘未指定の場合 搭載数 0 または艦載機以外(未装備も当然含む) のスロットは表示しない
@@ -6506,7 +6502,7 @@ function updateFleetView() {
 
 	let planes = [];
 	for (const ship of fleet.ships) {
-		planes = planes.concat(ship.planes);
+		planes = planes.concat(ship.items);
 	}
 
 	// 艦隊防空値
@@ -6515,7 +6511,7 @@ function updateFleetView() {
 
 	// 触接テーブルより、制空権確保時の合計触接率を取得
 	const contactRate = createContactTable(planes)[0][4];
-	const contactRateN = Math.floor(fleet.nightContactRate(fleet.isUnion) * 1000) / 10;
+	const contactRateN = Math.floor(fleet.nightContactRate() * 1000) / 10;
 	if (fleet.isUnion) {
 		// 第1艦隊
 		fleetSumAP1.textContent = `${fleet.airPower}`;
@@ -6598,10 +6594,7 @@ function updateEnemyView() {
 			}
 
 			// 表示戦闘でないので飛ばし
-			if (i !== mainBattle) {
-				continue;
-			}
-
+			if (i !== mainBattle) continue;
 			if (enemy.onlyScout || !enemy.slots.length) continue;
 
 			// 撃墜テーブルの初期化
@@ -6780,12 +6773,12 @@ function createLandBaseInstance() {
 			}
 
 			// 機体使用数テーブル更新
-			let usedData = usedPlane.find(v => v.id === plane.id);
+			let usedData = usedItems.find(v => v.id === plane.id);
 			if (usedData) usedData.num[plane.remodel]++;
 			else {
 				usedData = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
 				usedData.num[plane.remodel]++;
-				usedPlane.push(usedData);
+				usedItems.push(usedData);
 			}
 		}
 
@@ -7001,7 +6994,12 @@ function createFleetInstance() {
 
 			plane.slotNo = slotNo++;
 
-			shipInstance.planes.push(plane);
+			shipInstance.items.push(plane);
+
+			// 機体を検知したら無視フラグを落とす
+			if (shipInstance.ignoreSlot && plane.isPlane) {
+				shipInstance.ignoreSlot = false;
+			}
 
 			// 射程
 			if (planeRange < plane.range) {
@@ -7027,12 +7025,12 @@ function createFleetInstance() {
 			plane.isExpanded = node_ship_plane.classList.contains('expanded_slot');
 
 			// 機体使用数テーブル更新
-			let usedData = usedPlane.find(v => v.id === plane.id);
+			let usedData = usedItems.find(v => v.id === plane.id);
 			if (usedData) usedData.num[plane.remodel]++;
 			else {
 				usedData = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
 				usedData.num[plane.remodel]++;
-				usedPlane.push(usedData);
+				usedItems.push(usedData);
 			}
 		}
 
@@ -7043,7 +7041,7 @@ function createFleetInstance() {
 		shipInstance.isEscort = isUnionFleet && shipNo > 6;
 
 		// 艦娘が配備されているか　もしくは装備がなんらか1つでもあれば追加
-		if (shipInstance.id > 0 || shipInstance.planes.some(v => v.id > 0)) {
+		if (shipInstance.id > 0 || shipInstance.items.some(v => v.id > 0)) {
 			fleet.ships.push(shipInstance);
 		}
 		else {
@@ -7066,7 +7064,7 @@ function createFleetInstance() {
 		}
 
 		// 伊勢日向飛龍蒼龍の改二 二式艦上偵察機で射程バフ+1
-		if ([353, 354, 196, 197].includes(shipInstance.id) && shipInstance.planes.some(v => v.id === 61)) {
+		if ([353, 354, 196, 197].includes(shipInstance.id) && shipInstance.items.some(v => v.id === 61)) {
 			if (shipInstance.range < 1) shipInstance.range += 1;
 			shipInstance.range++;
 		}
@@ -7084,7 +7082,7 @@ function createFleetInstance() {
 
 /**
  * 味方艦隊から触接テーブル生成
- * @param {Array<Plane>} planes
+ * @param {Item[]} planes
  * @returns
  */
 function createContactTable(planes) {
@@ -7219,9 +7217,9 @@ function updateEnemyFleetInfo() {
 /**
  * 敵機撃墜処理 (繰り返し用)
  * @param {number} index 制空状態
- * @param {Array<Enemy>} enemyFleet 撃墜対象の敵艦隊
+ * @param {Enemy[]} enemyFleet 撃墜対象の敵艦隊
  * @param {boolean} [enabledStage2=false] 対空砲火計算の有効
- * @param {Array<FleetStage2>} [stage2Tables=[]] 撃墜テーブル
+ * @param {FleetStage2[]} [stage2Tables=[]] 撃墜テーブル
  */
 function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2Tables = []) {
 	const max_i = enemyFleet.length;
@@ -7324,12 +7322,13 @@ function doLandBaseJetPhase(landBase, battleInfo) {
 function doJetPhase(fleet, battleInfo) {
 	const range = battleInfo.stage2[0][0].length;
 	// 戦闘マスが通常/連合戦闘マスじゃないなら強襲なし　ALL潜水も除外
-	if (!fleet.hasJet || !range || battleInfo.cellType > CELL_TYPE.grand || battleInfo.isAllSubmarine) return 0;
+	if (!fleet.hasJet || !range || (battleInfo.cellType > CELL_TYPE.grand && battleInfo.cellType !== CELL_TYPE.aerialCombat) || battleInfo.isAllSubmarine) return 0;
 	let steel = 0;
 	for (let i = 0; i < fleet.ships.length; i++) {
 		const ship = fleet.ships[i];
-		for (let j = 0; j < ship.planes.length; j++) {
-			const plane = ship.planes[j];
+		if (ship.ignoreSlot) continue;
+		for (let j = 0; j < ship.items.length; j++) {
+			const plane = ship.items[j];
 			// 噴式以外は飛ばす
 			if (plane.type !== 57) continue;
 			// 鋼材のお支払い
@@ -7366,16 +7365,18 @@ function shootDownFriend(asIndex, fleet, battleInfo, battle) {
 	// 双方制空0(asIndex === 5)の場合、制空権確保となるので変更
 	if (asIndex === 5) asIndex = 0;
 	const sTable = SHOOT_DOWN_TABLE;
-	const isNormalBattle = battleInfo.cellType === CELL_TYPE.normal || battleInfo.cellType === CELL_TYPE.airRaid;
-	const needStage2 = battleInfo.cellType <= CELL_TYPE.grand;
+	const isNormalBattle = battleInfo.cellType === CELL_TYPE.normal || battleInfo.cellType === CELL_TYPE.airRaid || battleInfo.cellType === CELL_TYPE.aerialCombat;
+	const needStage2 = battleInfo.cellType <= CELL_TYPE.grand || battleInfo.cellType === CELL_TYPE.aerialCombat;
 	const len = fleet.ships.length;
 	for (let i = 0; i < len; i++) {
 		const ship = fleet.ships[i];
-		// 通常戦闘の場合、第2艦隊スキップ
+		// 制空に関係ない艦娘はスキップ
+		if (ship.ignoreSlot) continue;
+		// 通常戦闘の場合、第2艦隊スキップ ただし搭載数の記録は必要なのでここでcontinueはしない
 		const isSkip = isNormalBattle && ship.isEscort;
-		const planeLen = ship.planes.length;
+		const planeLen = ship.items.length;
 		for (let j = 0; j < planeLen; j++) {
-			const plane = ship.planes[j];
+			const plane = ship.items[j];
 			// この戦闘開始時のスロット数を記録
 			plane.results[battle] += plane.slot;
 
@@ -7532,7 +7533,6 @@ function getLandBasePower(id, slot, remodel) {
 
 /**
  * 各種制空状態確率計算
- * @returns {object}
  */
 function rateCalculate() {
 	// 引数群
@@ -7578,8 +7578,13 @@ function rateCalculate() {
 		avgMainAps.push(0);
 		avgEnemyAps.push(0);
 	}
+
+	// 機体の最終搭載数をシミュ1回毎に記録するための準備
 	for (let i = 0; i < fleetLen; i++) {
-		for (let j = 0; j < fleet.ships[i].planes.length; j++) {
+		const ship = fleet.ships[i];
+		if (ship.ignoreSlot) continue;
+		for (let j = 0; j < ship.items.length; j++) {
+			if (!ship.items[j].isPlane) continue;
 			slotResults.push(new Array(maxCount));
 		}
 	}
@@ -7631,12 +7636,10 @@ function rateCalculate() {
 
 	// メイン
 	for (let count = 0; count < maxCount; count++) {
-
 		// 道中含めてブン回し
 		for (let battle = 0; battle < maxBattle; battle++) {
 			const thisBattleInfo = battleInfo[battle];
 			const enemies = thisBattleInfo.enemies;
-
 			let needSupply = false;
 
 			// 基地戦闘 trueが帰ってきたら補給必要
@@ -7647,7 +7650,7 @@ function rateCalculate() {
 
 			const fap = isDefMode ? defAp : thisBattleInfo.cellType !== CELL_TYPE.grand ? fleet.airPower : fleet.unionAirPower;
 			const eap = thisBattleInfo.getAirPower();
-			const airIndex = getAirStatusIndex(fap, eap);
+			let airIndex = getAirStatusIndex(fap, eap);
 
 			// 表示戦闘での制空状態を記録
 			if (battle === mainBattle) fleetASDist[airIndex]++;
@@ -7659,6 +7662,15 @@ function rateCalculate() {
 			// 味方st1 & st2
 			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
 
+			// 航空戦マスならもう一回
+			if (thisBattleInfo.cellType === CELL_TYPE.aerialCombat) {
+				// 敵機撃墜(1回目)
+				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				// 減った制空値でもう一回st1 st2を起こす
+				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
+				// 味方st1 & st2
+				shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+			}
 			// 表示戦闘の敵機撃墜と搭載数記録　これ以外の戦闘は本隊における撃墜計算はしない
 			if (battle === mainBattle) {
 				// 敵st1 & st2
@@ -7685,7 +7697,7 @@ function rateCalculate() {
 							if (slotValue === 0) attackers[j] = false;
 						}
 
-						// 棒立ち判定
+						// 棒立ち判定 => 全ての攻撃機フラグが落ちているかどうか
 						if (attackers.indexOf(true) < 0) enemySlotAllDead[index2]++;
 						index2++;
 
@@ -7735,15 +7747,18 @@ function rateCalculate() {
 		// 自艦隊各種スロット清算、補給
 		for (let i = 0; i < fleetLen; i++) {
 			const ship = fleet.ships[i];
-			const planesLen = ship.planes.length;
+			if (ship.ignoreSlot) continue;
+
+			const planesLen = ship.items.length;
 			ship.airPower = 0;
 			for (let j = 0; j < planesLen; j++) {
-				const plane = ship.planes[j];
-				slotResults[resultIndex++][count] = plane.slot;
-				plane.slot = plane.fullSlot;
-				plane.airPower = plane.fullAirPower;
-
-				ship.airPower += plane.airPower;
+				const plane = ship.items[j];
+				if (plane.isPlane) {
+					slotResults[resultIndex++][count] = plane.slot;
+					plane.slot = plane.fullSlot;
+					plane.airPower = plane.fullAirPower;
+					ship.airPower += plane.airPower;
+				}
 			}
 			ship.airPower = ship.fullAirPower;
 		}
@@ -7756,22 +7771,26 @@ function rateCalculate() {
 	let n = 0;
 	for (let i = 0; i < fleetLen; i++) {
 		const ship = fleet.ships[i];
-		for (let j = 0; j < ship.planes.length; j++) {
-			const s = slotResults[n];
-			const tmp =
-			{
-				shipNo: ship.shipNo,
-				slot: ship.planes[j].slotNo,
-				max: getArrayMax(s),
-				min: getArrayMin(s),
-				avg: s.reduce((t, v) => t + v) / maxCount,
-				death: s.filter(v => v === 0).length,
-				deathRate: 0,
-			};
-			tmp.deathRate = tmp.death / s.length;
-			resultData.fleetSlots.push(tmp);
+		// 関係ないので結果無視
+		if (ship.ignoreSlot) continue;
 
-			n++;
+		for (let j = 0; j < ship.items.length; j++) {
+			if (ship.items[j].isPlane) {
+				const s = slotResults[n];
+				const tmp = {
+					shipNo: ship.shipNo,
+					slot: ship.items[j].slotNo,
+					max: getArrayMax(s),
+					min: getArrayMin(s),
+					avg: s.reduce((t, v) => t + v) / maxCount,
+					death: s.filter(v => v === 0).length,
+					deathRate: 0,
+				};
+				tmp.deathRate = tmp.death / s.length;
+				resultData.fleetSlots.push(tmp);
+
+				n++;
+			}
 		}
 	}
 
@@ -7788,7 +7807,8 @@ function rateCalculate() {
 			.addClass(`airStatus${airIndex}`);
 
 		for (const ship of fleet.ships) {
-			for (const plane of ship.planes) {
+			if (ship.ignoreSlot) continue;
+			for (const plane of ship.items) {
 				if (plane.isPlane) {
 					const result = plane.results[i];
 					$(`#shoot_down_table .shipNo${ship.shipNo}.slot${plane.slotNo} .battle${i + 1}`).text(Math.round(result / maxCount));
@@ -7831,14 +7851,13 @@ function rateCalculate() {
 	else {
 		resultData.enemyAirPowers.push(Math.round(avgEnemyAps[mainBattle] / maxCount));
 	}
+
 	resultData.landBaseAirStatus = airStatusDist;
 	resultData.fleetAirStatus = fleetASDist.map(v => v / maxCount);
 	resultData.enemySlots = enemySlotResult;
 	resultData.enemyAirPowerResults = enemyAps;
 	resultData.enemySlotAllDead = enemySlotAllDead;
 	resultData.usedSteels = sumUsedSteels;
-
-	return null;
 }
 
 /**
@@ -7970,16 +7989,36 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	const data = [];
 	// 今回の記録用の味方データ
 	const shipInstance = fleet.ships[shipNo];
-	const plane = ITEM_DATA.find(v => v.id === shipInstance.planes[slotNo].id && PLANE_TYPE.includes(v.type));
+	const plane = ITEM_DATA.find(v => v.id === shipInstance.items[slotNo].id && PLANE_TYPE.includes(v.type));
 	if (!plane) {
 		return false;
 	}
 	// 例外排除
 	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
 
+	// 対空砲火設定を適用する？
+	const enabledStage2 = document.getElementById('adapt_stage2')['checked'];
+	// 味方stage2テーブルおきば
+	let stage2Table = [];
+	// 対空砲火設定を適用する場合
+	if (enabledStage2) {
+		// 陣形取得 => ここは計算結果欄で選択されている陣形
+		const formationId = castInt($('#fleet_formation').val());
+		if (fleet.isUnion && battleInfo[mainBattle].cellType === CELL_TYPE.airRaid) {
+			// 連合艦隊かつ表示戦闘が空襲戦だった場合、艦隊の対空性能を再計算する(空襲補正がかかるため)
+			fleet.updateStage2All(formationId, true);
+		}
+		else {
+			// 陣形のみ設定して艦隊対空性能を再計算
+			fleet.updateStage2All(formationId);
+		}
+
+		stage2Table = fleet.allStage2;
+	}
+
 	// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
 	const rate = plane.type === 8 ? [0.8, 1.5] : ATTACKERS.includes(plane.type) ? [1] : [0];
-	const remodel = shipInstance.planes[slotNo].remodel;
+	const remodel = shipInstance.items[slotNo].remodel;
 
 	let fire = 0;
 	switch (plane.type) {
@@ -8016,11 +8055,20 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 			const cellType = thisBattleInfo.cellType;
 			const fap = cellType !== CELL_TYPE.grand ? fleet.airPower : fleet.unionAirPower;
 			const eap = thisBattleInfo.getAirPower();
-			const airIndex = getAirStatusIndex(fap, eap);
+			let airIndex = getAirStatusIndex(fap, eap);
 
 			// 味方st1 & st2
 			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
 
+			// 航空戦マスならもう一回
+			if (cellType === CELL_TYPE.aerialCombat) {
+				// 敵機撃墜(1回目)
+				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				// 減った制空値でもう一回st1 st2を起こす
+				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
+				// 味方st1 & st2
+				shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+			}
 			// 敵機補給
 			for (const enemy of enemies) {
 				enemy.slots = enemy.fullSlots.concat();
@@ -8044,10 +8092,10 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		// 自艦隊各種スロット清算、補給
 		for (let i = 0; i < fleet.ships.length; i++) {
 			const ship = fleet.ships[i];
-			const planesLen = ship.planes.length;
+			const planesLen = ship.items.length;
 			ship.airPower = 0;
 			for (let j = 0; j < planesLen; j++) {
-				const plane = ship.planes[j];
+				const plane = ship.items[j];
 				if (i === shipNo && plane.slotNo === slotNo) {
 					data.push(plane.slot);
 				}
@@ -8094,7 +8142,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		<div>※ 最終戦闘の航空戦終了時点での残数の分布を表示しています。</div>`;
 	$('#detail_warning').html(warningText);
 
-	for (const pl of shipInstance.planes) {
+	for (const pl of shipInstance.items) {
 		const p = ITEM_DATA.find(v => v.id === pl.id);
 		if (index === (ship ? ship.slot.length : 4)) break;
 		const name = p ? p.name : '-';
@@ -8423,11 +8471,20 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 			const cellType = thisBattleInfo.cellType;
 			const fap = cellType !== CELL_TYPE.grand ? fleet.airPower : fleet.unionAirPower;
 			const eap = thisBattleInfo.getAirPower();
-			const airIndex = getAirStatusIndex(fap, eap);
+			let airIndex = getAirStatusIndex(fap, eap);
 
 			// 味方st1 & st2
 			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
 
+			// 航空戦マスならもう一回
+			if (cellType === CELL_TYPE.aerialCombat) {
+				// 敵機撃墜(1回目)
+				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				// 減った制空値でもう一回st1 st2を起こす
+				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
+				// 味方st1 & st2
+				shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+			}
 			// 表示戦闘の敵搭載数記録
 			if (battle === mainBattle) {
 				// 敵st1 & st2
@@ -8472,10 +8529,10 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 		// 自艦隊各種スロット清算、補給
 		for (let i = 0; i < fleet.ships.length; i++) {
 			const ship = fleet.ships[i];
-			const planesLen = ship.planes.length;
+			const planesLen = ship.items.length;
 			ship.airPower = 0;
 			for (let j = 0; j < planesLen; j++) {
-				const plane = ship.planes[j];
+				const plane = ship.items[j];
 				plane.slot = plane.fullSlot;
 				plane.updateAirPower();
 
@@ -8563,7 +8620,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 
 /**
  * グラフ更新 なければ作成
- * @param {Array.<number>} data 表示データセット
+ * @param {number[]} data 表示データセット
  * @param {string} xLabelString x軸
  * @param {object} tooltips ツールチップオブジェクト
  */
@@ -10448,8 +10505,8 @@ function btn_show_contact_rate_Clicked() {
 	let planes = [];
 	let unionPlanes = [];
 	for (const ship of fleet.ships) {
-		for (const plane of ship.planes) {
-			if (plane.id === 0) {
+		for (const item of ship.items) {
+			if (item.id === 0) {
 				continue;
 			}
 
@@ -11920,10 +11977,10 @@ function calculateStage2Detail() {
 	const sumfleetAntiAir = Math.floor(aj1 * sumAntiAirBonus) * 2;
 
 	// 空襲なので撃墜ないよ注意
-	if (battleData.cellType <= CELL_TYPE.grand) $('#is_air_raid').addClass('d-none');
+	if (battleInfo.cellType !== CELL_TYPE.airRaid) $('#is_air_raid').addClass('d-none');
 	else $('#is_air_raid').removeClass('d-none');
 	// 対空CIあるよ注意
-	if (battleData.cellType <= CELL_TYPE.grand && cutInWarnning) $('#stage2_warning').removeClass('d-none');
+	if (battleInfo.cellType !== CELL_TYPE.airRaid && cutInWarnning) $('#stage2_warning').removeClass('d-none');
 	else $('#stage2_warning').addClass('d-none');
 
 	$('#stage2_table tbody').html(tableHtml);
@@ -13316,7 +13373,7 @@ async function btn_url_shorten_Clicked() {
 	// urlチェック
 	if (!url) {
 		textbox.value = "";
-		inform_warning('URLを入力してください。');
+		inform_warning('URLやデッキビルダー形式の文字列を入力してください。');
 	}
 	else if (!url.match(/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
 		textbox.value = "";
@@ -13340,7 +13397,7 @@ async function btn_url_shorten_Clicked() {
 			inform_success('所持艦娘の反映に成功しました。');
 		}
 		else {
-			inform_danger('入力されたURLの短縮に失敗しました。');
+			inform_danger('入力値の読み込みに失敗しました。');
 		}
 	}
 	else if (!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
@@ -13357,11 +13414,11 @@ async function btn_url_shorten_Clicked() {
 			})
 			.catch(error => {
 				textbox.value = "";
-				inform_danger('入力されたURLの短縮に失敗しました。');
+				inform_danger('入力値の読み込みに失敗しました。');
 			});
 	}
 
-	button.textContent = 'URL短縮';
+	button.textContent = '読み込み';
 	button.classList.remove('shortening');
 }
 
@@ -13664,9 +13721,7 @@ function simulatorTab_Clicked($this) {
 			// 全て空のデータ ↓
 			history: {
 				index: 0,
-				histories: [
-					'Noi6BpgWgRnX4wtOC2o6ZzgAZL6HhG4QBEZ4ccpEAZgIYA2AzgKbiOscgnH-lwAZmJYgA'
-				]
+				histories: ['Noi6BpgWgRnX4wtOC2o6ZzgAZL6HhG4QBEZ4ccpEAZgIYA2AzgKbiOscgnH-lwAZmJYgA']
 			}
 		};
 		let activePresets = loadLocalStorage('activePresets');

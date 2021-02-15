@@ -205,8 +205,8 @@ h1 {
 }
 .form-control-dark:-moz-read-only { background-color: rgba(255, 255, 255, .1) !important; }
 .form-control-dark:read-only { background-color: rgba(255, 255, 255, .1) !important; }
-.form-control-dark::placeholder { color: #ccc; }
-.form-control-dark::-ms-input-placeholder { color: #ccc; }
+.form-control-dark::placeholder { color: rgb(128, 128, 128); }
+.form-control-dark::-ms-input-placeholder { color: rgb(128, 128, 128); }
 
 /*Chrome*/
 ::-webkit-scrollbar { width: 10px; }
