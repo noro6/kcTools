@@ -94,11 +94,13 @@
 			<div class="tool_item" id="btn_redo" data-toggle="tooltip" title="やり直す(直前の「元に戻す」操作をなかったことにします)">
 				<i class="fas fa-repeat"></i>
 			</div>
-			<div class="d-none d-md-block flex-grow-1" id="url_shortener">
-				<textarea class="form-control form-control-dark" id="input_url"></textarea>
+			<div class="d-none d-md-block flex-grow-1 mr-1" id="url_shortener">
+				<textarea class="form-control form-control-dark" id="input_url"
+					placeholder="デッキビルダー文字列, 短縮したいURL等..."></textarea>
 			</div>
-			<div class="d-none d-md-block ml-auto tool_item px-2" id="btn_url_shorten">
-				<span>URL短縮</span>
+			<div class="d-none d-md-block ml-auto tool_item px-2" id="btn_url_shorten" data-toggle="tooltip"
+				title="デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や所持艦娘情報の反映が可能です。">
+				<span>読み込み</span>
 			</div>
 			<div class="d-none d-xl-flex tool_item" id="reduced_display">
 				縮小表示OFF
@@ -1392,6 +1394,7 @@
 										<option value="1" selected>通常</option>
 										<option value="2">連合</option>
 										<option value="3">空襲</option>
+										<option value="6">航空戦</option>
 									</optgroup>
 								</select>
 								<select class="custom-select custom-select-sm align-self-center font_size_12 formation ml-1">

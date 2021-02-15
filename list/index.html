@@ -89,11 +89,13 @@
 			<div class="tool_item disabled" id="btn_redo">
 				<i class="fas fa-repeat"></i>
 			</div>
-			<div class="d-none d-md-block flex-grow-1" id="url_shortener">
-				<textarea class="form-control form-control-dark" id="input_url"></textarea>
+			<div class="d-none d-md-block flex-grow-1 mr-1" id="url_shortener">
+				<textarea class="form-control form-control-dark" id="input_url"
+					placeholder="デッキビルダー文字列, 短縮したいURL等..."></textarea>
 			</div>
-			<div class="d-none d-md-block ml-auto tool_item" id="btn_url_shorten">
-				<span>URL短縮</span>
+			<div class="d-none d-md-block ml-auto tool_item" id="btn_url_shorten" data-toggle="tooltip"
+				title="デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や所持艦娘情報の反映が可能です。">
+				<span>読み込み</span>
 			</div>
 		</div>
 		<div class="d-flex" id="fleet_tab_container"></div>
@@ -104,7 +106,7 @@
 			<div class="d-flex flex-wrap">
 				<h1>制空権シミュレータ</h1>
 				<div class="d-flex align-self-center">
-					<div class="font_size_18 ml-2 align-self-center">v1.12.1.1</div>
+					<div class="font_size_18 ml-2 align-self-center">v1.12.2</div>
 					<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 						data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 					</div>
@@ -408,14 +410,6 @@
 					<div class="my-4">
 						<p class="h6">未実装のもの</p>
 						<div class="pl-3">■ 敵艦の対空CIによる撃墜補正</div>
-						<div class="pl-3 mt-1">
-							■ 航空戦マス
-							<div class="ml-2 font_size_12">
-								航空戦マスについては、同じ戦闘を2回入力することで疑似的に代用可能です。
-								航空戦マスは敵艦からの対空砲火が行われるため、戦闘形式には「通常」を選択してください。
-								(本サイトでは「空襲」を選択すると対空砲火を起こさない仕様になっているためです。)
-							</div>
-						</div>
 					</div>
 					<div class="my-4">
 						<p class="h6">参考サイト</p>

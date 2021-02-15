@@ -1885,7 +1885,7 @@ const AIR_STATUS = [
 ];
 
 // セル種別
-const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5 };
+const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5, aerialCombat: 6 };
 
 // 実装されている機体カテゴリ
 const PLANE_TYPE = [6, 7, 8, 9, 10, 11, 41, 45, 47, 48, 49, 53, 57];
@@ -1938,7 +1938,7 @@ const FORMATION = [
 	{ id: 12, name: "第二警戒", correction: 1.0 },
 	{ id: 13, name: "第三警戒", correction: 1.5 },
 	{ id: 11, name: "第四警戒", correction: 1.0 },
-]
+];
 // 対空カットイン
 const ANTIAIR_CUTIN = [
 	{ id: 0, name: "不発", adj: [1.0, 0], rate: 100, remarks: "" },
@@ -2208,4 +2208,4 @@ const DEFAULT_PLANE_PRESET = [
 const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
-const LATEST_VERSION = '1.12.1.1';
+const LATEST_VERSION = '1.12.2';

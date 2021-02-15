@@ -1511,7 +1511,7 @@ async function btn_url_shorten_Clicked() {
   // urlチェック
   if (!url) {
     textbox.value = "";
-    inform_warning('URLを入力してください。');
+    inform_warning('URLやデッキビルダー形式の文字列を入力してください。');
   }
   else if (!url.match(/^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
     textbox.value = "";
@@ -1530,7 +1530,7 @@ async function btn_url_shorten_Clicked() {
       inform_success('所持艦娘の反映に成功しました。');
     }
     else {
-      inform_danger('入力されたURLの短縮に失敗しました。');
+      inform_danger('入力値の読み込みに失敗しました。');
     }
   }
   else if (!url.match(/^(https:\/\/aircalc.page.link\/)([.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)$/)) {
@@ -1547,7 +1547,7 @@ async function btn_url_shorten_Clicked() {
       })
       .catch(error => {
         textbox.value = "";
-        inform_danger('入力されたURLの短縮に失敗しました。');
+        inform_danger('入力値の読み込みに失敗しました。');
       });
   }
 
