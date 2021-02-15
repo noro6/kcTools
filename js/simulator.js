@@ -7360,7 +7360,7 @@ function doJetPhase(fleet, battleInfo) {
  * @param {Battle} battleInfo 戦闘情報(enemies: 敵id羅列 stage2: st2撃墜テーブル cellType: 戦闘タイプ)
  * @param {number} battle 戦闘番号
  */
-function shootDownFriend(asIndex, fleet, battleInfo, battle) {
+function shootDownFriend(asIndex, fleet, battleInfo, battle, isFirst = true) {
 	const range = battleInfo.stage2[0][0].length;
 	// 双方制空0(asIndex === 5)の場合、制空権確保となるので変更
 	if (asIndex === 5) asIndex = 0;
@@ -7378,7 +7378,7 @@ function shootDownFriend(asIndex, fleet, battleInfo, battle) {
 		for (let j = 0; j < planeLen; j++) {
 			const plane = ship.items[j];
 			// この戦闘開始時のスロット数を記録
-			plane.results[battle] += plane.slot;
+			if (isFirst) plane.results[battle] += plane.slot;
 
 			// 0機スロ 非制空争い機は搭載数を据え置いてスキップ
 			if (plane.slot <= 0 || !plane.canBattle || isSkip || !range) {
@@ -7669,7 +7669,7 @@ function rateCalculate() {
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
 				// 味方st1 & st2
-				shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+				shootDownFriend(airIndex, fleet, thisBattleInfo, battle, false);
 			}
 			// 表示戦闘の敵機撃墜と搭載数記録　これ以外の戦闘は本隊における撃墜計算はしない
 			if (battle === mainBattle) {
@@ -8067,7 +8067,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
 				// 味方st1 & st2
-				shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+				shootDownFriend(airIndex, fleet, thisBattleInfo, battle, false);
 			}
 			// 敵機補給
 			for (const enemy of enemies) {
@@ -8483,7 +8483,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
 				// 味方st1 & st2
-				shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+				shootDownFriend(airIndex, fleet, thisBattleInfo, battle, false);
 			}
 			// 表示戦闘の敵搭載数記録
 			if (battle === mainBattle) {
