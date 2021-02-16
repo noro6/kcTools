@@ -7666,6 +7666,7 @@ function rateCalculate() {
 			if (thisBattleInfo.cellType === CELL_TYPE.aerialCombat) {
 				// 敵機撃墜(1回目)
 				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				needSupply = true;
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
 				// 味方st1 & st2
@@ -10510,9 +10511,9 @@ function btn_show_contact_rate_Clicked() {
 				continue;
 			}
 
-			unionPlanes.push(plane);
+			unionPlanes.push(item);
 			if (!ship.isEscort) {
-				planes.push(plane);
+				planes.push(item);
 			}
 		}
 	}
@@ -11977,10 +11978,10 @@ function calculateStage2Detail() {
 	const sumfleetAntiAir = Math.floor(aj1 * sumAntiAirBonus) * 2;
 
 	// 空襲なので撃墜ないよ注意
-	if (battleInfo.cellType !== CELL_TYPE.airRaid) $('#is_air_raid').addClass('d-none');
+	if (battleData.cellType !== CELL_TYPE.airRaid) $('#is_air_raid').addClass('d-none');
 	else $('#is_air_raid').removeClass('d-none');
 	// 対空CIあるよ注意
-	if (battleInfo.cellType !== CELL_TYPE.airRaid && cutInWarnning) $('#stage2_warning').removeClass('d-none');
+	if (battleData.cellType !== CELL_TYPE.airRaid && cutInWarnning) $('#stage2_warning').removeClass('d-none');
 	else $('#stage2_warning').addClass('d-none');
 
 	$('#stage2_table tbody').html(tableHtml);
