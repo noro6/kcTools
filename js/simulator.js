@@ -8412,7 +8412,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 戦闘情報オブジェクト取得
 	const battleInfo = updateEnemyFleetInfo(false);
 	// 計算回数
-	const maxCount = castInt($('#calculate_count').val());
+	const maxCount = castInt($('#detail_calculate_count').val());
 	// 表示戦闘
 	let mainBattle = isDefMode ? 0 : (displayBattle - 1);
 	// 例外排除
