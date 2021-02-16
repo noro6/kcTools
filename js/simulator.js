@@ -8005,7 +8005,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	if (enabledStage2) {
 		// 陣形取得 => ここは計算結果欄で選択されている陣形
 		const formationId = castInt($('#fleet_formation').val());
-		if (fleet.isUnion && battleInfo[mainBattle].cellType === CELL_TYPE.airRaid) {
+		if (fleet.isUnion && battleInfo.battles[mainBattle].cellType === CELL_TYPE.airRaid) {
 			// 連合艦隊かつ表示戦闘が空襲戦だった場合、艦隊の対空性能を再計算する(空襲補正がかかるため)
 			fleet.updateStage2All(formationId, true);
 		}
@@ -8439,7 +8439,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	if (enabledStage2) {
 		// 陣形取得 => ここは計算結果欄で選択されている陣形
 		const formationId = castInt($('#fleet_formation').val());
-		if (fleet.isUnion && battleInfo[mainBattle].cellType === CELL_TYPE.airRaid) {
+		if (fleet.isUnion && battleInfo.battles[mainBattle].cellType === CELL_TYPE.airRaid) {
 			// 連合艦隊かつ表示戦闘が空襲戦だった場合、艦隊の対空性能を再計算する(空襲補正がかかるため)
 			fleet.updateStage2All(formationId, true);
 		}
