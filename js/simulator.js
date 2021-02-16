@@ -1785,6 +1785,10 @@ class Battle {
 		this.isAllSubmarine = false;
 		/** @type {number} */
 		this.formation = 0;
+		/** @type {boolean} */
+		this.enabledStage2 = false;
+		/** @type {boolean} */
+		this.isUnion = false;
 	}
 
 	/**
@@ -1828,10 +1832,7 @@ class Battle {
 
 		// 詳細設定入力欄の値を格納
 		AVOID_TYPE[5].adj[0] = castFloat($('#free_anti_air_weight').val());
-		AVOID_TYPE[5].adj[1] = castFloat($('#free_anti_air_bornus').val());
-
-		// 連合艦隊
-		const isUnion = this.cellType === CELL_TYPE.grand;
+		AVOID_TYPE[5].adj[1] = castFloat($('#free_anti_air_bornus').val());;
 
 		// 陣形補正
 		const formation = FORMATION.find(v => v.id === this.formation);
@@ -1846,7 +1847,7 @@ class Battle {
 			if (enm.id === 0) continue;
 
 			// 連合艦隊補正
-			const unionFactor = isUnion && enm.isEscort ? 0.48 : isUnion && !enm.isEscort ? 0.8 : 1.0;
+			const unionFactor = this.isUnion && enm.isEscort ? 0.48 : this.isUnion && !enm.isEscort ? 0.8 : 1.0;
 
 			// 各回避補正毎にテーブルを作成
 			for (let j = 0; j < AVOID_TYPE.length; j++) {
@@ -2237,13 +2238,7 @@ function setPreCalculateTable() {
 				for (let i = 0; i <= max; i += 0.01) {
 					tmpB.push(slot * (i + v / 4) / 10);
 				}
-
-				if (!tmpB.some(v => v >= 1)) {
-					tmpB = [0];
-				}
-				else {
-					shuffleArray(tmpB);
-				}
+				shuffleArray(tmpB);
 				tmpA.push(tmpB);
 			}
 			SHOOT_DOWN_TABLE.push(tmpA);
@@ -2273,12 +2268,7 @@ function setPreCalculateTable() {
 						tmpB.push(value);
 					}
 				}
-				if (!tmpB.some(v => v >= 1)) {
-					tmpB = [0];
-				}
-				else {
-					shuffleArray(tmpB);
-				}
+				shuffleArray(tmpB);
 				tmpA.push(tmpB);
 			}
 			SHOOT_DOWN_TABLE_ENEMY.push(tmpA);
@@ -6000,7 +5990,7 @@ function calculateInit() {
 	usedShip = [];
 
 	// 入力データの取得 / 反映
-	UpdateInputData();
+	updateInputData();
 
 	// 入力データから各種ステータス情報等を更新
 	updateView();
@@ -6077,7 +6067,7 @@ function calculateInit() {
 /**
  * 計算用入力データクラス初期化
  */
-function UpdateInputData() {
+function updateInputData() {
 	// 初期化
 	if (!inputItems) {
 		inputItems = new InputData();
@@ -7174,7 +7164,14 @@ function updateEnemyFleetInfo() {
 		let isAllSubmarine = true;
 
 		// マス戦闘形式格納
-		battle.cellType = castInt(node_battle_content.getElementsByClassName('cell_type')[0].value);
+		const cellType = castInt(node_battle_content.getElementsByClassName('cell_type')[0].value);
+		battle.cellType = cellType;
+		// 連合フラグ
+		battle.isUnion = cellType === CELL_TYPE.grand;
+		// 戦闘形式による敵対空砲火の有効フラグ
+		if (cellType === CELL_TYPE.normal || cellType === CELL_TYPE.aerialCombat || battle.isUnion) {
+			battle.enabledStage2 = true;
+		}
 
 		// 敵情報取得
 		for (const node_enemy_content of node_battle_content.getElementsByClassName('enemy_content')) {
@@ -7185,7 +7182,7 @@ function updateEnemyFleetInfo() {
 			if (node_enemy_content.classList.contains('d-none')) continue;
 
 			// 連合以外で6隻埋まってたら終了
-			if (battle.cellType !== CELL_TYPE.grand && battle.enemies.length === 6) break;
+			if (!battle.isUnion && battle.enemies.length === 6) break;
 
 			// 潜水以外が含まれていればAll潜水フラグを落とす
 			if (isAllSubmarine && !enemy.type.includes(18)) {
@@ -7193,7 +7190,7 @@ function updateEnemyFleetInfo() {
 			}
 
 			// 連合かつ7番目以降で随伴フラグ
-			enemy.isEscort = battle.cellType === CELL_TYPE.grand && enemyIndex > 6;
+			enemy.isEscort = battle.isUnion && enemyIndex > 6;
 			battle.enemies.push(enemy);
 		}
 
@@ -7218,10 +7215,10 @@ function updateEnemyFleetInfo() {
  * 敵機撃墜処理 (繰り返し用)
  * @param {number} index 制空状態
  * @param {Enemy[]} enemyFleet 撃墜対象の敵艦隊
- * @param {boolean} [enabledStage2=false] 対空砲火計算の有効
+ * @param {boolean} [adaptStage2=false] 対空砲火計算の有効
  * @param {FleetStage2[]} [stage2Tables=[]] 撃墜テーブル
  */
-function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2Tables = []) {
+function shootDownEnemy(index, enemyFleet, adaptStage2 = false, stage2Tables = []) {
 	const max_i = enemyFleet.length;
 
 	// 対空CIの選択
@@ -7242,7 +7239,7 @@ function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2Tables =
 			enemy.slots[j] -= getShootDownSlot(index, slot);
 
 			// stage2 撃墜 するしない 攻撃機ならする
-			if (enabledStage2 && range > 0 && enemy.attackers[j]) {
+			if (adaptStage2 && range > 0 && enemy.attackers[j]) {
 				slot = enemy.slots[j];
 				// 迎撃担当選出
 				const table = stage2[Math.floor(Math.random() * range)];
@@ -7256,7 +7253,7 @@ function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2Tables =
 				enemy.slots[j] = slot > 0 ? slot : 0;
 			}
 			// 新しい制空値よ
-			sumAp += Math.floor(enemy.antiAirs[j] * Math.sqrt(Math.floor(enemy.slots[j])));
+			sumAp += Math.floor(enemy.antiAirs[j] * Math.sqrt(enemy.slots[j]));
 		}
 
 		// 制空値の更新
@@ -7272,9 +7269,21 @@ function shootDownEnemy(index, enemyFleet, enabledStage2 = false, stage2Tables =
  * @returns {number} 撃墜数
  */
 function getShootDownSlot(index, slot) {
-	// 撃墜テーブルから撃墜数を取得
-	const range = SHOOT_DOWN_TABLE_ENEMY[slot][index].length;
+	// 撃墜テーブルから撃墜数を取得 インデックスは0から順に 121 81 49 25 4 1
+	const range = [121, 81, 49, 25, 4, 1][index];
 	return SHOOT_DOWN_TABLE_ENEMY[slot][index][Math.floor(Math.random() * range)];
+}
+
+/**
+ * 引数の制空状態、搭載数をもとに撃墜後の搭載数を返却 撃墜数はランダム
+ * @param {number} index 制空状態インデックス
+ * @param {number} slot 撃墜前搭載数
+ * @returns {number} 撃墜後搭載数(整数)
+ */
+function getShootDownSlotFF(index, slot) {
+	// 撃墜テーブルから撃墜数を取得 インデックスは0から順に 34 100 167 234 334
+	const range = [34, 100, 167, 234, 334][index];
+	return SHOOT_DOWN_TABLE[slot][index][Math.floor(Math.random() * range)];
 }
 
 /**
@@ -7322,7 +7331,7 @@ function doLandBaseJetPhase(landBase, battleInfo) {
 function doJetPhase(fleet, battleInfo) {
 	const range = battleInfo.stage2[0][0].length;
 	// 戦闘マスが通常/連合戦闘マスじゃないなら強襲なし　ALL潜水も除外
-	if (!fleet.hasJet || !range || (battleInfo.cellType > CELL_TYPE.grand && battleInfo.cellType !== CELL_TYPE.aerialCombat) || battleInfo.isAllSubmarine) return 0;
+	if (!fleet.hasJet || !range || !battleInfo.enabledStage2 || battleInfo.isAllSubmarine) return 0;
 	let steel = 0;
 	for (let i = 0; i < fleet.ships.length; i++) {
 		const ship = fleet.ships[i];
@@ -7359,21 +7368,20 @@ function doJetPhase(fleet, battleInfo) {
  * @param {Fleet} fleet 味方艦隊
  * @param {Battle} battleInfo 戦闘情報(enemies: 敵id羅列 stage2: st2撃墜テーブル cellType: 戦闘タイプ)
  * @param {number} battle 戦闘番号
+ * @param {boolean} [isFirst=true] 航空戦1回目かどうか 航空戦マス2回目ならfalse
  */
-function shootDownFriend(asIndex, fleet, battleInfo, battle, isFirst = true) {
+function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 	const range = battleInfo.stage2[0][0].length;
 	// 双方制空0(asIndex === 5)の場合、制空権確保となるので変更
 	if (asIndex === 5) asIndex = 0;
-	const sTable = SHOOT_DOWN_TABLE;
-	const isNormalBattle = battleInfo.cellType === CELL_TYPE.normal || battleInfo.cellType === CELL_TYPE.airRaid || battleInfo.cellType === CELL_TYPE.aerialCombat;
-	const needStage2 = battleInfo.cellType <= CELL_TYPE.grand || battleInfo.cellType === CELL_TYPE.aerialCombat;
+	const needStage2 = battleInfo.enabledStage2;
 	const len = fleet.ships.length;
 	for (let i = 0; i < len; i++) {
 		const ship = fleet.ships[i];
 		// 制空に関係ない艦娘はスキップ
 		if (ship.ignoreSlot) continue;
 		// 通常戦闘の場合、第2艦隊スキップ ただし搭載数の記録は必要なのでここでcontinueはしない
-		const isSkip = isNormalBattle && ship.isEscort;
+		const isSkip = !battleInfo.isUnion && ship.isEscort;
 		const planeLen = ship.items.length;
 		for (let j = 0; j < planeLen; j++) {
 			const plane = ship.items[j];
@@ -7386,8 +7394,7 @@ function shootDownFriend(asIndex, fleet, battleInfo, battle, isFirst = true) {
 			}
 
 			// st1撃墜 噴式の場合0.6掛け
-			const table = sTable[plane.slot][asIndex];
-			const downNumber = table[Math.floor(Math.random() * table.length)];
+			const downNumber = getShootDownSlotFF(asIndex, plane.slot);
 			plane.slot -= Math.floor(plane.type === 57 ? 0.6 * downNumber : downNumber);
 
 			// st2撃墜 (攻撃機のみ)
@@ -7435,7 +7442,6 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 
 	// 双方制空0(asIndex === 5)の場合、制空権確保となるので変更
 	if (asIndex === 5) asIndex = 0;
-	const sTable = SHOOT_DOWN_TABLE;
 	const len = landBase.planes.length;
 	for (let j = 0; j < len; j++) {
 		const plane = landBase.planes[j];
@@ -7443,8 +7449,7 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 		if (plane.slot <= 0) continue;
 
 		// st1撃墜 噴式の場合0.6掛け
-		const table = sTable[plane.slot][asIndex];
-		const downNumber = table[Math.floor(Math.random() * table.length)];
+		const downNumber = getShootDownSlotFF(asIndex, plane.slot);
 		plane.slot -= Math.floor(plane.type === 57 ? 0.6 * downNumber : downNumber);
 
 		// st2撃墜
@@ -7464,18 +7469,6 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 
 	// この航空隊の制空値を再計算
 	landBase.updateAirPower();
-}
-
-/**
- * 引数の制空状態、搭載数をもとに撃墜後の搭載数を返却 撃墜数はランダム
- * @param {number} index 制空状態インデックス
- * @param {number} slot 撃墜前搭載数
- * @returns {number} 撃墜後搭載数(整数)
- */
-function getShootDownSlotFF(index, slot) {
-	// 撃墜テーブルから撃墜数を取得
-	const downTable = SHOOT_DOWN_TABLE[slot][index];
-	return downTable[Math.floor(Math.random() * downTable.length)];
 }
 
 /**
@@ -7608,6 +7601,13 @@ function rateCalculate() {
 	// 1戦目の戦闘形態で重爆かどうか判定 (1戦は絶対なんかデータあるのでnullがくるこたないはず)
 	const defAp = battleInfo[0].cellType === CELL_TYPE.highAirRaid ? landBaseData.defense2AirPower : landBaseData.defenseAirPower;
 	resultData.defenseAirPower = defAp;
+	if (isDefMode) {
+		// 本隊制空値を書き換えてしまう => ループ中に防空かどうかを判定しなくてよくなる
+		fleet.fullAirPower = defAp;
+		fleet.airPower = defAp;
+		fleet.fullUnionAirPower = defAp;
+		fleet.unionAirPower = defAp;
+	}
 
 	let defEnemyAp = 0;
 	if (isDefMode || battleInfo[0]) {
@@ -7615,11 +7615,11 @@ function rateCalculate() {
 	}
 
 	// 対空砲火設定を適用する？
-	let enabledStage2 = !isDefMode && document.getElementById('adapt_stage2')['checked'];
+	const adaptStage2 = !isDefMode && document.getElementById('adapt_stage2')['checked'];
 	// 味方stage2テーブルおきば
 	let stage2Table = [];
 	// 対空砲火設定を適用する場合
-	if (enabledStage2) {
+	if (adaptStage2) {
 		// 陣形取得 => ここは計算結果欄で選択されている陣形
 		const formationId = castInt($('#fleet_formation').val());
 		if (fleet.isUnion && battleInfo[mainBattle].cellType === CELL_TYPE.airRaid) {
@@ -7640,15 +7640,16 @@ function rateCalculate() {
 		for (let battle = 0; battle < maxBattle; battle++) {
 			const thisBattleInfo = battleInfo[battle];
 			const enemies = thisBattleInfo.enemies;
+			// 敵機の補給が必要かどうか
 			let needSupply = false;
 
-			// 基地戦闘 trueが帰ってきたら補給必要
+			// 基地戦闘 trueが帰ってきたら敵機が減っているので補給必要
 			needSupply = calculateLandBase(landBaseData, thisBattleInfo, battle);
 
-			// 噴式強襲フェーズ
+			// 本隊噴式強襲フェーズ 返り値として鋼材消費
 			sumUsedSteels += doJetPhase(fleet, thisBattleInfo);
 
-			const fap = isDefMode ? defAp : thisBattleInfo.cellType !== CELL_TYPE.grand ? fleet.airPower : fleet.unionAirPower;
+			const fap = thisBattleInfo.isUnion ? fleet.unionAirPower : fleet.airPower;
 			const eap = thisBattleInfo.getAirPower();
 			let airIndex = getAirStatusIndex(fap, eap);
 
@@ -7660,22 +7661,24 @@ function rateCalculate() {
 			avgEnemyAps[battle] += eap;
 
 			// 味方st1 & st2
-			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+			shootDownFleet(airIndex, fleet, thisBattleInfo, battle);
 
 			// 航空戦マスならもう一回
 			if (thisBattleInfo.cellType === CELL_TYPE.aerialCombat) {
 				// 敵機撃墜(1回目)
-				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
+				// 撃墜処理を行ったので補給を行う必要がある
 				needSupply = true;
+
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
-				// 味方st1 & st2
-				shootDownFriend(airIndex, fleet, thisBattleInfo, battle, false);
+				// 味方st1 & st2 2回目
+				shootDownFleet(airIndex, fleet, thisBattleInfo, battle, false);
 			}
 			// 表示戦闘の敵機撃墜と搭載数記録　これ以外の戦闘は本隊における撃墜計算はしない
 			if (battle === mainBattle) {
 				// 敵st1 & st2
-				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
 
 				let index = 0;
 				let index2 = 0;
@@ -7837,7 +7840,6 @@ function rateCalculate() {
 	}
 
 	// それぞれの制空状態の総数を確率化して格納 基地は表示戦闘の各フェーズあり
-
 	// 表示戦闘の基地開始制空値を格納
 	for (const landBase of landBaseData.landBases) {
 		resultData.landBaseAirPowers.push(Math.round(landBase.results[mainBattle].mainAirPower[0] / maxCount));
@@ -7998,11 +8000,11 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
 
 	// 対空砲火設定を適用する？
-	const enabledStage2 = document.getElementById('adapt_stage2')['checked'];
+	const adaptStage2 = document.getElementById('adapt_stage2')['checked'];
 	// 味方stage2テーブルおきば
 	let stage2Table = [];
 	// 対空砲火設定を適用する場合
-	if (enabledStage2) {
+	if (adaptStage2) {
 		// 陣形取得 => ここは計算結果欄で選択されている陣形
 		const formationId = castInt($('#fleet_formation').val());
 		if (fleet.isUnion && battleInfo.battles[mainBattle].cellType === CELL_TYPE.airRaid) {
@@ -8054,21 +8056,21 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 			doJetPhase(fleet, thisBattleInfo);
 
 			const cellType = thisBattleInfo.cellType;
-			const fap = cellType !== CELL_TYPE.grand ? fleet.airPower : fleet.unionAirPower;
+			const fap = thisBattleInfo.isUnion ? fleet.unionAirPower : fleet.airPower;
 			const eap = thisBattleInfo.getAirPower();
 			let airIndex = getAirStatusIndex(fap, eap);
 
 			// 味方st1 & st2
-			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+			shootDownFleet(airIndex, fleet, thisBattleInfo, battle);
 
 			// 航空戦マスならもう一回
 			if (cellType === CELL_TYPE.aerialCombat) {
 				// 敵機撃墜(1回目)
-				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
 				// 味方st1 & st2
-				shootDownFriend(airIndex, fleet, thisBattleInfo, battle, false);
+				shootDownFleet(airIndex, fleet, thisBattleInfo, battle, false);
 			}
 			// 敵機補給
 			for (const enemy of enemies) {
@@ -8313,7 +8315,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	// 陸偵補正：二式陸偵 = 1.125、二式陸偵(熟練) = 1.15
 	const adj2 = planes.find(v => v.id === 312) ? 1.15 : planes.find(v => v.id === 311) ? 1.125 : 1.0;
 	// 敵連合特効：対敵通常艦隊 = 1.0、対敵連合艦隊 = 1.1
-	const adj3 = battleInfo.cellType === CELL_TYPE.grand ? 1.1 : 1.0;
+	const adj3 = battleInfo.battles[mainBattle].isUnion ? 1.1 : 1.0;
 	const tooltips = {
 		mode: 'index',
 		callbacks: {
@@ -8410,7 +8412,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 戦闘情報オブジェクト取得
 	const battleInfo = updateEnemyFleetInfo(false);
 	// 計算回数
-	const maxCount = castInt($('#calculate_count').val());
+	const maxCount = castInt($('#detail_calculate_count').val());
 	// 表示戦闘
 	let mainBattle = isDefMode ? 0 : (displayBattle - 1);
 	// 例外排除
@@ -8432,11 +8434,11 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	const isSlotDetail = $('#slot_detail').prop('checked');
 
 	// 対空砲火設定を適用する？
-	let enabledStage2 = document.getElementById('adapt_stage2')['checked'];
+	const adaptStage2 = document.getElementById('adapt_stage2')['checked'];
 	// 味方stage2テーブルおきば
 	let stage2Table = [];
 	// 対空砲火設定を適用する場合
-	if (enabledStage2) {
+	if (adaptStage2) {
 		// 陣形取得 => ここは計算結果欄で選択されている陣形
 		const formationId = castInt($('#fleet_formation').val());
 		if (fleet.isUnion && battleInfo.battles[mainBattle].cellType === CELL_TYPE.airRaid) {
@@ -8470,26 +8472,26 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 			doJetPhase(fleet, thisBattleInfo);
 
 			const cellType = thisBattleInfo.cellType;
-			const fap = cellType !== CELL_TYPE.grand ? fleet.airPower : fleet.unionAirPower;
+			const fap = thisBattleInfo.isUnion ? fleet.unionAirPower : fleet.airPower;
 			const eap = thisBattleInfo.getAirPower();
 			let airIndex = getAirStatusIndex(fap, eap);
 
 			// 味方st1 & st2
-			shootDownFriend(airIndex, fleet, thisBattleInfo, battle);
+			shootDownFleet(airIndex, fleet, thisBattleInfo, battle);
 
 			// 航空戦マスならもう一回
 			if (cellType === CELL_TYPE.aerialCombat) {
 				// 敵機撃墜(1回目)
-				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
 				// 減った制空値でもう一回st1 st2を起こす
 				airIndex = getAirStatusIndex(fleet.airPower, thisBattleInfo.getAirPower());
 				// 味方st1 & st2
-				shootDownFriend(airIndex, fleet, thisBattleInfo, battle, false);
+				shootDownFleet(airIndex, fleet, thisBattleInfo, battle, false);
 			}
 			// 表示戦闘の敵搭載数記録
 			if (battle === mainBattle) {
 				// 敵st1 & st2
-				shootDownEnemy(airIndex, enemies, enabledStage2, stage2Table);
+				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
 
 				if (isSlotDetail) {
 					// 指定した敵とスロットの数を格納
