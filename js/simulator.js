@@ -7185,7 +7185,7 @@ function updateEnemyFleetInfo() {
 			if (!battle.isUnion && battle.enemies.length === 6) break;
 
 			// 潜水以外が含まれていればAll潜水フラグを落とす
-			if (isAllSubmarine && !enemy.type.includes(18)) {
+			if (isAllSubmarine && enemy.id && !enemy.type.includes(18)) {
 				isAllSubmarine = false;
 			}
 
