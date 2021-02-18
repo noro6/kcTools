@@ -120,6 +120,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
 	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
 	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
+	if (!setting.hasOwnProperty('visibleFixedMenu')) setting.visibleFixedMenu = true;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -714,6 +715,19 @@ function getUrlParams() {
 }
 
 /**
+ * リンクにaタグを付与
+ * @param {string} str 入力文字列
+ */
+function AutoLink(str) {
+	const regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
+	const regexp_makeLink = function (all, url, h, href) {
+		return '<a href="h' + href + '" target="_blank">' + url + '</a>';
+	}
+
+	return str.replace(regexp_url, regexp_makeLink);
+}
+
+/**
  * アラート緑
  * @param {string} content 本文
  */
@@ -976,7 +990,8 @@ function getActivePreset() {
 	let activePreset = {
 		id: '',
 		name: '',
-		history: { index: 0, histories: [] }
+		history: { index: 0, histories: [] },
+		memo: ''
 	};
 
 	// 画面上のアクティブタブと整合性をとる

@@ -465,7 +465,7 @@ h1 {
   font-weight: bold;
   border-radius: 100%;
   flex-shrink: 0;
-  opacity: 0;
+  opacity: 0.8;
 }
 #fleet_tab_container .fleet_tab:hover .btn_close_tab,
 #fleet_tab_container .fleet_tab.active .btn_close_tab {

@@ -116,11 +116,11 @@
   overflow: hidden;
   border-radius: 0.25rem;
   background-color: rgba(128, 128, 128, 0.1);
+  white-space: pre-wrap;
 }
 
 #public_presets_container .preset_memo_view {
   cursor: text;
-  white-space: pre-wrap;
 }
 
 .preset_memo {

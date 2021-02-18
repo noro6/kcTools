@@ -467,19 +467,6 @@ function setPresets(presets, isLocal = true) {
 }
 
 /**
- * リンクにaタグを付与
- * @param {string} str 
- */
-function AutoLink(str) {
-  const regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g;
-  const regexp_makeLink = function (all, url, h, href) {
-    return '<a href="h' + href + '" target="_blank">' + url + '</a>';
-  }
-
-  return str.replace(regexp_url, regexp_makeLink);
-}
-
-/**
  * 海域変更時
  */
 function map_select_Changed() {
@@ -968,10 +955,9 @@ function preset_Clicked($this) {
     // 全て空のデータ ↓
     history: {
       index: 0,
-      histories: [
-        'Noi6BpgWgRnX41BYLgAZKe-H6IBEB4cSaA3gQMYCuALgJYB2AkgCYEBcmBATgIZ0AplxjoedfgCMANiM6pwBKQHtebIb1HiAvhBwAzfjIDOQ8EdPnFZIA'
-      ]
-    }
+      histories: ['Noi6BpgWgRnX4wtOC2o6ZzgAZL6HhG4QBEZ4ccpEcAZgIYA2AzgKaR7E8kQDMxLEA']
+    },
+    memo: ''
   };
 
   if (preset) {
@@ -979,6 +965,7 @@ function preset_Clicked($this) {
     tabData.id = preset[0];
     tabData.name = $this.find('.preset_name').text();
     tabData.history.histories[0] = preset[2];
+    tabData.memo = preset[3];
   }
 
   let activePresets = loadLocalStorage('activePresets');
@@ -1009,7 +996,23 @@ function public_preset_Clicked($this) {
   const $parent = $this.closest('.preset_container');
   const data = $parent[0].dataset.presetdata;
   const name = $parent.find('.preset_name').text();
-  window.location.href = `../simulator/?d=${data}&name=${encodeURIComponent(name)}`;
+
+  // 外部編成データが読み込まれたため新しいタブを生成したうえで遷移
+  let tabData = {
+    id: getUniqueId(),
+    name: name,
+    history: { index: 0, histories: [data] },
+    memo: $parent.find('.preset_memo').val()
+  };
+
+  let activePresets = loadLocalStorage('activePresets');
+  if (!activePresets) activePresets = { activeId: "", presets: [] };
+  activePresets.presets.push(tabData);
+  activePresets.activeId = tabData.id;
+
+  saveLocalStorage('activePresets', activePresets);
+
+  window.location.href = `../simulator/?p=${data}`;
 }
 
 /**
@@ -1033,7 +1036,8 @@ function btn_copy_Clicked($this, e) {
   let tabData = {
     id: getUniqueId(),
     name: preset[1] + '_コピー',
-    history: { index: 0, histories: [preset[2]] }
+    history: { index: 0, histories: [preset[2]] },
+    memo: preset[3]
   };
 
   let activePresets = loadLocalStorage('activePresets');

@@ -2857,6 +2857,11 @@ function initialize(callback) {
 		$('#lb_item1').addClass('active');
 	}
 
+	if (setting.visibleFixedMenu) {
+		$('#footer_menu').collapse('show');
+		fixedMenuShown();
+	}
+
 	// tooltip起動
 	$('[data-toggle="tooltip"]').tooltip();
 
@@ -4806,6 +4811,8 @@ function updateMainPreset(isUploadOnly = false) {
 	if (!isUpdate) {
 		presets.push(preset);
 		inform_success(`プリセット「${preset[1]}」の新規登録が完了しました。`);
+		// 編成メモが更新されている可能性があるので、activePresetのmemoを置き換えて同期
+		activePreset.memo = preset[3];
 	}
 	else {
 		inform_success(`プリセット「${preset[1]}」の編成データの更新が完了しました。`);
@@ -4826,7 +4833,6 @@ function updateMainPreset(isUploadOnly = false) {
  * @param {*} preset アップロード対象の編成
  */
 function uploadMainPreset(preset) {
-
 	const area = castInt($('#select_preset_category').val());
 	const user = $('#upload_user').val().trim();
 
@@ -6028,15 +6034,19 @@ function calculateInit() {
 
 	if (enabled && history.index < history.histories.length - 1) {
 		document.getElementById('btn_undo').classList.remove('disabled');
+		document.getElementById('menu_undo').classList.remove('disabled');
 	}
 	else {
 		document.getElementById('btn_undo').classList.add('disabled');
+		document.getElementById('menu_undo').classList.add('disabled');
 	}
 	if (enabled && history.index > 0) {
 		document.getElementById('btn_redo').classList.remove('disabled');
+		document.getElementById('menu_redo').classList.remove('disabled');
 	}
 	else {
 		document.getElementById('btn_redo').classList.add('disabled');
+		document.getElementById('menu_redo').classList.add('disabled');
 	}
 
 	// 空スロット表示可否
@@ -7886,6 +7896,7 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 			continue;
 		}
 		const result = landBase.results[battleIndex];
+		const isSeparate = wave1 !== wave2;
 
 		// 出撃第一波
 		if (wave1 === battleIndex) {
@@ -7908,7 +7919,7 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 			enemyShootDown = true;
 
 			// 派遣先が違う場合は被害を起こす
-			if (wave1 !== wave2) {
+			if (isSeparate) {
 				shootDownLandBase(airStatusIndex, landBase, battleInfo);
 			}
 		}
@@ -7917,7 +7928,7 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 		if (wave2 === battleIndex) {
 
 			// 派遣先が違う場合は噴式強襲フェーズ起こす
-			if (wave1 !== wave2) {
+			if (isSeparate) {
 				doLandBaseJetPhase(landBase, battleInfo);
 			}
 
@@ -7936,7 +7947,7 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 			enemyShootDown = true;
 
 			// 派遣先が違う場合は被害を起こす
-			if (wave1 !== wave2) {
+			if (isSeparate) {
 				shootDownLandBase(airStatusIndex, landBase, battleInfo);
 			}
 		}
@@ -9523,6 +9534,14 @@ function modal_Closed($this) {
 			// アップロード非チェック
 			$('#allow_upload_preset').prop('checked', false);
 			$('#btn_upload_preset').addClass('d-none');
+			break;
+		case "modal_preset_memo":
+			// アクティブタブのメモに反映
+			const activePreset = getActivePreset();
+			if (activePreset) {
+				activePreset.memo = document.getElementById('preset_memo').value.trim();
+				updateActivePreset(activePreset);
+			}
 			break;
 		case "modal_confirm":
 			if (confirmType === 'Error') {
@@ -13222,15 +13241,22 @@ function btn_save_preset_Clicked() {
 	$('#btn_upload_preset').addClass('d-none');
 
 	// 現在のアクティブタブの情報を取得
+	const activeTab = getActivePreset();
+	// 編成メモはアクティブタブ情報から取得
+	document.getElementById('preset_remarks').value = activeTab.memo;
+	document.getElementById('preset_remarks').classList.remove('is-valid');
+	document.getElementById('input_preset_name').classList.remove('is-valid');
+
+	// ローカルストレージ編成の取得
 	const presets = loadLocalStorage('presets');
 	if (presets) {
-		const preset = presets.find(v => v[0] === getActivePreset().id);
+		const preset = presets.find(v => v[0] === activeTab.id);
 
 		if (preset) {
 			// ローカルストレージにすでに保存済みの編成だったら
 			document.getElementById('input_preset_name').value = preset[1];
+			// 編成メモは最後に確定したメモのものを使う
 			document.getElementById('preset_remarks').value = preset[3];
-
 			// 編成の更新を行って終わり
 			updateMainPreset();
 			inform_success('編成の上書き更新が完了しました。');
@@ -13239,13 +13265,11 @@ function btn_save_preset_Clicked() {
 		else {
 			// ローカルストレージに存在しない編成だったら
 			document.getElementById('input_preset_name').value = '';
-			document.getElementById('preset_remarks').value = '';
 		}
 	}
 	else {
 		// ローカルストレージ編成がそもそも存在しなかったら
 		document.getElementById('input_preset_name').value = '';
-		document.getElementById('preset_remarks').value = '';
 	}
 
 	$('#modal_main_preset').find('.btn_commit_preset').prop('disabled', true);
@@ -13261,14 +13285,18 @@ function btn_save_preset_sub_Clicked() {
 	$('#upload_option').addClass('d-none');
 	$('#btn_upload_preset').addClass('d-none');
 
-	// 現在のアクティブタブの情報を取得
+	// 編成メモはアクティブタブ情報から取得
+	const activeTab = getActivePreset();
+	document.getElementById('preset_remarks').value = activeTab.memo;
+	document.getElementById('preset_remarks').classList.remove('is-valid');
+
+	// 現在のローカル編成の情報を取得
 	const presets = loadLocalStorage('presets');
 	if (presets) {
 		const preset = presets.find(v => v[0] === getActivePreset().id);
 		if (preset) {
 			// ローカルストレージにすでに保存済みの編成だったら
 			document.getElementById('input_preset_name').value = preset[1];
-			document.getElementById('preset_remarks').value = preset[3];
 
 			// 新しい名前で保存しようとする　-> 別名保存ボタンにする
 			const $btn = $('#modal_main_preset').find('.btn_commit_preset');
@@ -13283,6 +13311,54 @@ function btn_save_preset_sub_Clicked() {
 
 	// 上記以外の場合は編成上書きクリック時と同じ挙動させる
 	btn_save_preset_Clicked();
+}
+
+/**
+ * メニュー「メモ」クリック時
+ */
+function btn_memo_Clicked() {
+	// 現在のアクティブタブからメモを取得
+	const activePreset = getActivePreset();
+	let memo = '';
+	if (activePreset && activePreset.memo) {
+		memo = activePreset.memo;
+	}
+
+	const memoTextArea = document.getElementById('preset_memo');
+	memoTextArea.value = memo;
+	preset_memo_Changed($(memoTextArea));
+
+	const commitBtn = document.getElementById('modal_preset_memo').getElementsByClassName('btn_commit_preset')[0];
+	commitBtn.classList.add('d-none');
+
+	// 現在のアクティブタブの情報を取得
+	const presets = loadLocalStorage('presets');
+	if (presets) {
+		const preset = presets.find(v => v[0] === getActivePreset().id);
+		if (preset) {
+			// ローカルストレージにすでに保存済みの編成だったらメモ保存ボタンを表示
+			commitBtn.classList.remove('d-none');
+		}
+	}
+
+	$('#modal_preset_memo').modal('show');
+}
+
+/**
+ * 固定メニュー表示時
+ */
+function fixedMenuShown() {
+	document.getElementById('main').classList.add('mr-md-5');
+	setting.visibleFixedMenu = true;
+	saveSetting();
+}
+/**
+ * 固定メニュー表示時
+ */
+function fixedMenuHidden() {
+	document.getElementById('main').classList.remove('mr-md-5');
+	setting.visibleFixedMenu = false;
+	saveSetting();
 }
 
 /**
@@ -13315,7 +13391,9 @@ function btn_undo_Clicked() {
 	const preset = getActivePreset();
 	const history = preset.history;
 	const nowIndex = history.index + 1;
-	if (nowIndex >= history.histories.length || document.getElementById('btn_undo').classList.contains('disabled')) return;
+	if (nowIndex >= history.histories.length || document.getElementById('btn_undo').classList.contains('disabled') || document.getElementById('menu_undo').classList.contains('disabled')) {
+		return;
+	}
 	const tmp = history.histories.concat();
 
 	expandMainPreset(decodePreset(history.histories[nowIndex]));
@@ -13329,9 +13407,11 @@ function btn_undo_Clicked() {
 	// 次回できなさそうなら無効化
 	if (nowIndex + 1 === history.histories.length) {
 		document.getElementById('btn_undo').classList.add('disabled');
+		document.getElementById('menu_undo').classList.add('disabled');
 	}
 
 	document.getElementById('btn_redo').classList.remove('disabled');
+	document.getElementById('menu_redo').classList.remove('disabled');
 }
 
 /**
@@ -13341,7 +13421,9 @@ function btn_redo_Clicked() {
 	const preset = getActivePreset();
 	const history = preset.history;
 	const nowIndex = history.index - 1;
-	if (nowIndex < 0 || document.getElementById('btn_redo').classList.contains('disabled')) return;
+	if (nowIndex < 0 || document.getElementById('btn_redo').classList.contains('disabled') || document.getElementById('menu_redo').classList.contains('disabled')) {
+		return;
+	}
 	const tmp = history.histories.concat();
 
 	expandMainPreset(decodePreset(history.histories[history.index - 1]));
@@ -13355,9 +13437,11 @@ function btn_redo_Clicked() {
 	// 次回できなさそうなら無効化
 	if (nowIndex - 1 < 0) {
 		document.getElementById('btn_redo').classList.add('disabled');
+		document.getElementById('menu_redo').classList.add('disabled');
 	}
 	else {
 		document.getElementById('btn_redo').classList.remove('disabled');
+		document.getElementById('menu_redo').classList.remove('disabled');
 	}
 }
 
@@ -13442,6 +13526,24 @@ function preset_remarks_Changed($this) {
 }
 
 /**
+ * プリセットメモ(本格入力欄)変更時
+ * @param {JQuery} $this
+ */
+function preset_memo_Changed($this) {
+	// 入力検証
+	preset_remarks_Changed($this);
+
+	$this.removeClass('is-valid');
+
+	// サイズ自動補正
+	const rowLength = $this.val().match(/\n/g);
+	$this.attr('rows', (rowLength && rowLength.length ? rowLength.length + 2 : 2));
+
+	// プレビュー欄に反映
+	document.getElementById('preset_memo_view').innerHTML = AutoLink($this.val().trim());
+}
+
+/**
  * 編成取り込みデータテキスト変更時
  * @param {JQuery} $this
  */
@@ -13483,7 +13585,6 @@ function output_data_Changed($this) {
  * 編成プリセット保存ボタンクリック
  */
 function btn_commit_main_preset_Clicked() {
-
 	const user = $('#upload_user').val().trim();
 	const name = document.getElementById('input_preset_name').value.trim();
 	if ($('#allow_upload_preset').prop('checked') && user.length > 20) {
@@ -13497,6 +13598,36 @@ function btn_commit_main_preset_Clicked() {
 
 	// 新規登録 or 更新処理
 	updateMainPreset();
+}
+
+/**
+ * プリセットメモのみ変更処理
+ */
+function btn_commit_preset_memo_Clicked() {
+	// 今現在のタブ情報
+	const activePreset = getActivePreset();
+	const presetid = activePreset.id;
+
+	let presets = loadLocalStorage('presets');
+	if (!presets) presets = [];
+
+	const i = presets.findIndex(v => v[0] === presetid);
+	if (i >= 0) {
+		// 名称　メモを設定
+		let newMemo = $('#preset_memo').val().trim();
+		// 400文字超えてたら切る
+		if (newMemo.length > 400) {
+			newMemo = newMemo.slice(0, 400);
+			$('#preset_memo').val(newMemo);
+		}
+		presets[i][3] = newMemo;
+
+		saveLocalStorage('presets', presets);
+		inform_success('編成メモの更新が完了しました。');
+	}
+	else {
+		inform_success('編成メモの更新に失敗しました。');
+	}
 }
 
 /**
@@ -13724,8 +13855,9 @@ function simulatorTab_Clicked($this) {
 			// 全て空のデータ ↓
 			history: {
 				index: 0,
-				histories: ['Noi6BpgWgRnX4wtOC2o6ZzgAZL6HhG4QBEZ4ccpEAZgIYA2AzgKbiOscgnH-lwAZmJYgA']
-			}
+				histories: ['Noi6BpgWgRnX4wtOC2o6ZzgAZL6HhG4QBEZ4ccpEcAZgIYA2AzgKaR7E8kQDMxLEA']
+			},
+			memo: ''
 		};
 		let activePresets = loadLocalStorage('activePresets');
 		if (!activePresets) activePresets = { activeId: "", presets: [] };
@@ -13857,15 +13989,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (existURLData) {
-			let presetname = '外部データ';
-			if (params.hasOwnProperty("name")) {
-				presetname = decodeURIComponent(params.name);
-			}
 			// 外部編成データが読み込まれたため新しいタブを生成
 			let tabData = {
 				id: getUniqueId(),
-				name: presetname,
-				history: { index: 0, histories: [] }
+				name: '外部データ',
+				history: { index: 0, histories: [] },
+				memo: ''
 			};
 			let activePresets = loadLocalStorage('activePresets');
 			if (!activePresets) activePresets = { activeId: "", presets: [] };
@@ -14115,6 +14244,16 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
 	$('#modal_confirm').on('click', '#error_str', function () { if (copyInputTextToClipboard($(this))) inform_success('コピーしました'); });
 	$('#modal_confirm').on('click', '#send_error', sendError);
+	$('#fixed_btns').on('show.bs.collapse', '.collapse', fixedMenuShown);
+	$('#fixed_btns').on('hide.bs.collapse', '.collapse', fixedMenuHidden);
+	$('#fixed_btns').on('click', '.sub_btn.save', btn_save_preset_Clicked);
+	$('#fixed_btns').on('click', '.sub_btn.memo', btn_memo_Clicked);
+	$('#fixed_btns').on('click', '.sub_btn.share', function () { $('#modal_share').modal('show'); });
+	$('#fixed_btns').on('click', '.sub_btn.undo', btn_undo_Clicked);
+	$('#fixed_btns').on('click', '.sub_btn.redo', btn_redo_Clicked);
+	$('#fixed_btns').on('click', '.sub_btn.go_back', function () { window.location.href = '../list/'; });
+	$('#modal_preset_memo').on('input', '#preset_memo', function () { preset_memo_Changed($(this)); });
+	$('#modal_preset_memo').on('click', '.btn_commit_preset', function () { btn_commit_preset_memo_Clicked($(this)); });
 	$('#btn_save_preset').click(btn_save_preset_Clicked);
 	$('#btn_save_preset_sub').click(btn_save_preset_sub_Clicked);
 	$('#btn_auto_expand').click(btn_auto_expand_Clicked);
