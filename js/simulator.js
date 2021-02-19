@@ -4070,12 +4070,8 @@ function createShipTable() {
 
 			const $type = document.createElement('div');
 			$type.className = 'font_size_12 font_color_half align-self-center';
-			if (!API_CTYPE.find(v => v.id === ship.type2)) {
-				console.log(ship.type2);
-			}
-			else {
-				$type.textContent = API_CTYPE.find(v => v.id === ship.type2).name;
-			}
+			const ctype = API_CTYPE.find(v => v.id === ship.type2) || { name: '' };
+			$type.textContent = ctype.name;
 
 			$typeDiv.appendChild($type);
 
@@ -4607,6 +4603,7 @@ function createEnemyPattern(patternNo = 0) {
 	const enemiesLength = enemies.length;
 	for (let index = 0; index < enemiesLength; index++) {
 		const enemy = ENEMY_DATA.find(v => v.id === enemies[index]);
+		if (!enemy) continue;
 		const enemyObj = new Enemy(enemy.id);
 		sumAp += enemyObj.airPower;
 		sumFleetAntiAir += enemyObj.antiAirBonus;
@@ -4791,8 +4788,7 @@ function updateMainPreset(isUploadOnly = false) {
 		activePreset.id = newId;
 	}
 
-	let presets = loadLocalStorage('presets');
-	if (!presets) presets = [];
+	const presets = loadLocalStorage('presets') || [];
 
 	for (let i = 0; i < presets.length; i++) {
 		if (presets[i][0] === preset[0]) {
@@ -5202,7 +5198,6 @@ function createFriendFleetPreset() {
 		if (i === 6) shipIndex = 6;
 		// 非表示なら飛ばす
 		if ($(e).attr('class').includes('d-none')) return;
-
 
 		// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合かどうか, 6:運]
 		const ship = [
@@ -13004,10 +12999,7 @@ function commit_enemy_Clicked() {
 			}
 		}
 
-		let manualEnemies = loadLocalStorage('manual_enemies');
-		if (!manualEnemies) {
-			manualEnemies = [];
-		}
+		let manualEnemies = loadLocalStorage('manual_enemies') || [];
 
 		const index = manualEnemies.findIndex(v => v.id === enemy.id);
 		if (index < 0) {
@@ -13375,13 +13367,23 @@ function btn_auto_expand_Clicked() {
 async function btn_twitter_Clicked() {
 	const url = 'https://noro6.github.io/kcTools/?d=' + encodePreset();
 	let shortURL = url;
+	let result = false;
 	await postURLData(url)
 		.then(json => {
 			if (json.error || !json.shortLink) console.log(json);
-			else shortURL = json.shortLink;
+			else {
+				result = true;
+				shortURL = json.shortLink;
+			}
 		})
 		.catch(error => console.error(error));
-	window.open('https://twitter.com/share?url=' + shortURL);
+
+	if (result) {
+		window.open('https://twitter.com/share?url=' + shortURL);
+	}
+	else {
+		inform_danger('共有リンクの生成に失敗しました。');
+	}
 }
 
 /**
@@ -13608,8 +13610,7 @@ function btn_commit_preset_memo_Clicked() {
 	const activePreset = getActivePreset();
 	const presetid = activePreset.id;
 
-	let presets = loadLocalStorage('presets');
-	if (!presets) presets = [];
+	const presets = loadLocalStorage('presets') || [];
 
 	const i = presets.findIndex(v => v[0] === presetid);
 	if (i >= 0) {
@@ -13711,16 +13712,26 @@ async function btn_output_url_Clicked() {
 		const $output = $('#output_url');
 		const url = 'https://noro6.github.io/kcTools/?d=' + encodePreset();
 		let shortURL = url;
+		let result = false;
 		await postURLData(url)
 			.then(json => {
 				if (json.error || !json.shortLink) console.log(json);
-				else shortURL = json.shortLink;
+				else {
+					result = true;
+					shortURL = json.shortLink;
+				}
 			})
 			.catch(error => console.error(error));
 
-		$output.val(shortURL);
-		$output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
-		$output.removeClass('is-invalid').addClass('is-valid');
+		if (result) {
+			$output.val(shortURL);
+			$output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
+			$output.removeClass('is-invalid').addClass('is-valid');
+		}
+		else {
+			$output.nextAll('.valid-feedback').text('生成に失敗しました。');
+			$output.addClass('is-invalid').removeClass('is-valid');
+		}
 	} catch (error) {
 		$('#output_url').addClass('is-invalid').removeClass('is-valid');
 		return;
@@ -13896,8 +13907,7 @@ function simulatorActiveTab_Clicked($this) {
 function fleet_name_input_Changed($this) {
 	const $tab = $this.closest('.fleet_tab');
 	const presetid = $tab[0].dataset.presetid;
-	let presets = loadLocalStorage('presets');
-	if (!presets) presets = [];
+	const presets = loadLocalStorage('presets') || [];
 
 	$tab.removeClass('editting');
 	$tab.find('.fleet_name').removeClass('d-none');
@@ -13996,9 +14006,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				history: { index: 0, histories: [] },
 				memo: ''
 			};
-			let activePresets = loadLocalStorage('activePresets');
-			if (!activePresets) activePresets = { activeId: "", presets: [] };
-
+			const activePresets = loadLocalStorage('activePresets') || { activeId: "", presets: [] };
 			activePresets.presets.push(tabData);
 			activePresets.activeId = tabData.id;
 
