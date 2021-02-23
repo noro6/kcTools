@@ -6399,8 +6399,10 @@ function updateFleetView() {
 		node_range.textContent = shipRange ? shipRange.name : '短';
 
 		if (node_taichi) {
-			// 空母かつ対地可能艦爆ナシ
-			if (rawShip && [7, 11, 18].includes(rawShip.type) && !ship.items.some(v => TAICHI.includes(v.id) && v.slot > 0)) {
+			// 空母かつ対地可能艦爆ナシかつ艦爆あり
+			if (rawShip && [7, 11, 18].includes(rawShip.type)
+				&& !ship.items.some(v => TAICHI.includes(v.id) && v.slot > 0)
+				&& ship.items.some(v => [7, 57].includes(v.type))) {
 				node_taichi.classList.remove('d-none');
 			}
 			else {

@@ -240,7 +240,7 @@ input[type="text"] { font-size: 12px; }
 }
 /* 基地機体選択欄 */
 .lb_plane {
-  min-width: 290px;
+  min-width: 270px;
   border: 2px rgb(180, 180, 180) solid;
   border-radius: .25rem;
   text-shadow: 1px 1px 3px #fff;
@@ -405,7 +405,7 @@ input[type="text"] { font-size: 12px; }
   transition: 0.5s;
   -ms-flex-positive: 1!important;
   flex-grow: 1!important;
-  width: 156px;
+  width: 146px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
