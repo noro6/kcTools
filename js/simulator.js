@@ -37,7 +37,7 @@ let isDefMode = false;
 let battleCount = 1;
 
 // 結果表示戦闘
-let displayBattle = 1;
+let displayBattle = 0;
 
 // イベント発生用タイマー
 let timer = false;
@@ -5627,8 +5627,6 @@ function drawResult() {
 		const node_tr = document.getElementById(`s${s.shipNo}sl${s.slot}`);
 		if (!node_tr) continue;
 		const initSlot = castInt(node_tr.getElementsByClassName('battle1')[0].textContent);
-		if (!initSlot) continue;
-
 		const node_battle_end = node_tr.getElementsByClassName('battle_end')[0];
 		node_battle_end.textContent = Math.round(s.avg);
 
@@ -7358,7 +7356,11 @@ function doJetPhase(fleet, battleInfo) {
 			// 固定撃墜 50% で失敗
 			if (Math.floor(Math.random() * 2)) plane.slot -= battleInfo.stage2[plane.avoid][1][index];
 
+			// 制空値の更新
+			let prevAp = plane.airPower;
 			plane.updateAirPower();
+			fleet.airPower -= prevAp - plane.airPower;
+			fleet.unionAirPower -= prevAp - plane.airPower;
 		}
 	}
 
