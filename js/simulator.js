@@ -6402,7 +6402,7 @@ function updateFleetView() {
 			// 空母かつ対地可能艦爆ナシかつ艦爆あり
 			if (rawShip && [7, 11, 18].includes(rawShip.type)
 				&& !ship.items.some(v => TAICHI.includes(v.id) && v.slot > 0)
-				&& ship.items.some(v => [7, 57].includes(v.type))) {
+				&& ship.items.some(v => [7, 57].includes(v.type) && v.slot > 0)) {
 				node_taichi.classList.remove('d-none');
 			}
 			else {
