@@ -1225,7 +1225,7 @@ class Item {
 			aa = 0.2 * remodel;
 		}
 		// 艦爆
-		else if (type === 7 && prevAntiAir > 2 && id !== 316) {
+		else if (type === 7 && prevAntiAir > 2 && id !== 277 && id !== 316) {
 			aa = 0.25 * remodel;
 		}
 		// 陸攻
@@ -1351,7 +1351,7 @@ class Item {
 			bonus = 0.2 * remodel;
 		}
 		// 艦爆 対空2以下
-		else if (type === 7 && (prevAntiAir <= 2 || id === 316)) {
+		else if (type === 7 && (prevAntiAir <= 2 || id === 277 || id === 316)) {
 			bonus = 0.2 * remodel;
 		}
 		return bonus;
