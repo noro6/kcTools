@@ -1420,6 +1420,14 @@ let CHANGE_LOG = [
 			}
 		],
 	},
+	{
+		id: "1.12.2.2", changes: [
+			{
+				type: 0, title: "データの更新を行いました。",
+				content: "曙改二を追加しました。改修可能装備情報を更新しました。"
+			}
+		],
+	},
 ];
 
-const LAST_UPDATE_DATE = "2021/2/22";
+const LAST_UPDATE_DATE = "2021/3/2";

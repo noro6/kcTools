@@ -1007,6 +1007,8 @@ class Item {
 		/** @type {number} */
 		this.bonusAntiAir = 0;
 		/** @type {number} */
+		this.actualAntiAir = 0;
+		/** @type {number} */
 		this.antiBomber = 0;
 		/** @type {number} */
 		this.interception = 0;
@@ -1098,6 +1100,14 @@ class Item {
 				// 改修値による対空値ボーナスの計算
 				this.bonusAntiAir = Item.getBonusAntiAir(this.id, this.type, this.remodel, this.antiAir);
 				this.antiAir += this.bonusAntiAir;
+
+				// 制空計算用対空値の更新
+				if (this.isFighter) {
+					this.actualAntiAir = (this.antiAir + 1.5 * this.interception);
+				}
+				else {
+					this.actualAntiAir = this.antiAir;
+				}
 
 				// 制空値算出
 				this.updateAirPower();
@@ -1204,6 +1214,15 @@ class Item {
 
 		// 内部熟練度ボーナス
 		sumPower += Math.sqrt(getInnerProficiency(level, type) / 10);
+
+		if (type === 49) {
+			// 陸偵 搭載4★2以上で制空値+1
+			sumPower += (this.remodel >= 2 && this.slot === 4 ? 1 : 0);
+		}
+		else if (this.id === 138) {
+			// 二式大艇 搭載4★4で制空+1
+			sumPower += (this.remodel >= 4 && this.slot === 4 ? 1 : 0);
+		}
 
 		this.bonusAirPower = sumPower;
 	}
@@ -1585,26 +1604,7 @@ class LandBaseItem extends Item {
 			this.slot = 0;
 			return;
 		}
-
-		let sumPower = this.bonusAirPower;
-
-		if (this.isFighter) {
-			// 艦戦系
-			sumPower += (this.antiAir + 1.5 * this.interception) * Math.sqrt(this.slot);
-		}
-		// 陸偵
-		else if (this.type === 49) {
-			// 搭載4★2以上を制空値+1
-			sumPower += this.antiAir * Math.sqrt(this.slot) + (this.remodel >= 2 && this.slot === 4 ? 1 : 0);
-		}
-		else if (this.id === 138) {
-			// 二式大艇 搭載4★4で制空+1
-			sumPower += this.antiAir * Math.sqrt(this.slot) + (this.remodel >= 4 && this.slot === 4 ? 1 : 0);
-		}
-		// その他
-		else sumPower += this.antiAir * Math.sqrt(this.slot);
-
-		this.airPower = Math.floor(sumPower);
+		this.airPower = Math.floor(this.bonusAirPower + this.actualAntiAir * Math.sqrt(this.slot));
 	}
 
 	/**
@@ -1621,15 +1621,6 @@ class LandBaseItem extends Item {
 		let sumPower = this.bonusAirPower;
 		if (this.isFighter) {
 			sumPower += (this.antiAir + this.interception + 2.0 * this.antiBomber) * Math.sqrt(this.slot);
-		}
-		// 陸偵
-		else if (this.type === 49) {
-			// 搭載4★2以上を制空値+1
-			sumPower += this.antiAir * Math.sqrt(this.slot) + (this.remodel >= 2 && this.slot === 4 ? 1 : 0);
-		}
-		else if (this.id === 138) {
-			// 二式大艇 搭載4★4で制空+1
-			sumPower += this.antiAir * Math.sqrt(this.slot) + (this.remodel >= 4 && this.slot === 4 ? 1 : 0);
 		}
 		// その他
 		else sumPower += this.antiAir * Math.sqrt(this.slot);
@@ -7299,10 +7290,14 @@ function doLandBaseJetPhase(landBase, battleInfo) {
 		return;
 	}
 
+	let sumAp = 0;
 	for (let j = 0; j < landBase.planes.length; j++) {
 		const plane = landBase.planes[j];
-		// 噴式以外は飛ばす
-		if (plane.type !== 57) continue;
+		// 噴式以外は制空値だけ加算して飛ばす
+		if (plane.type !== 57) {
+			sumAp += plane.airPower;
+			continue;
+		}
 
 		// 噴式強襲st1
 		// st1 0.6掛け
@@ -7317,10 +7312,11 @@ function doLandBaseJetPhase(landBase, battleInfo) {
 		if (Math.floor(Math.random() * 2)) plane.slot -= battleInfo.stage2[plane.avoid][1][index];
 
 		plane.updateAirPower();
+		sumAp += plane.airPower;
 	}
 
 	// この航空隊の制空値を再計算
-	landBase.updateAirPower();
+	landBase.airPower = Math.floor(sumAp * landBase.reconCorr);
 }
 
 /**
@@ -7385,6 +7381,7 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 		const ship = fleet.ships[i];
 		// 制空に関係ない艦娘はスキップ
 		if (ship.ignoreSlot) continue;
+		let shipAp = 0;
 		// 通常戦闘の場合、第2艦隊スキップ ただし搭載数の記録は必要なのでここでcontinueはしない
 		const isSkip = !battleInfo.isUnion && ship.isEscort;
 		const planeLen = ship.items.length;
@@ -7395,6 +7392,7 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 
 			// 0機スロ 非制空争い機は搭載数を据え置いてスキップ
 			if (plane.slot <= 0 || !plane.canBattle || isSkip || !range) {
+				shipAp += plane.airPower;
 				continue;
 			}
 
@@ -7425,9 +7423,11 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 			else {
 				plane.airPower = 0;
 			}
+
+			shipAp += plane.airPower;
 		}
 		// 制空値更新
-		ship.updateAirPower();
+		ship.airPower = shipAp;
 	}
 	// 制空値更新
 	fleet.updateAirPower();
@@ -7447,6 +7447,7 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 
 	// 双方制空0(asIndex === 5)の場合、制空権確保となるので変更
 	if (asIndex === 5) asIndex = 0;
+	let sumAp = 0;
 	const len = landBase.planes.length;
 	for (let j = 0; j < len; j++) {
 		const plane = landBase.planes[j];
@@ -7470,10 +7471,11 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 
 		// この機体の制空値を再計算
 		plane.updateAirPower();
+		sumAp += plane.airPower;
 	}
 
 	// この航空隊の制空値を再計算
-	landBase.updateAirPower();
+	landBase.airPower = Math.floor(sumAp * landBase.reconCorr);
 }
 
 /**
@@ -7760,14 +7762,12 @@ function rateCalculate() {
 			if (ship.ignoreSlot) continue;
 
 			const planesLen = ship.items.length;
-			ship.airPower = 0;
 			for (let j = 0; j < planesLen; j++) {
 				const plane = ship.items[j];
 				if (plane.isPlane) {
 					slotResults[resultIndex++][count] = plane.slot;
 					plane.slot = plane.fullSlot;
 					plane.airPower = plane.fullAirPower;
-					ship.airPower += plane.airPower;
 				}
 			}
 			ship.airPower = ship.fullAirPower;
