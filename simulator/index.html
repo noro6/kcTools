@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 	<link rel="stylesheet" href="../fonts/style.css">
 	<link rel="stylesheet" href="../css/common.min.css">
-	<link rel="stylesheet" href="../css/simulator.min.css">
+	<link rel="stylesheet" href="../css/simulator.css">
 	<script src="../js/common.min.js"></script>
 	<script async src="../js/html2canvas.min.js"></script>
 	<script defer src="../js/jquery-3.5.1.min.js"></script>
@@ -31,7 +31,7 @@
 	<script defer src="../js/chart.min.js"></script>
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
-	<script defer src="../js/simulator.min.js"></script>
+	<script defer src="../js/simulator.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -3436,88 +3436,128 @@
 		</div>
 	</div>
 	<div class="modal fade" id="modal_result_detail" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
 			<div class="modal-content mt-5">
 				<div class="modal-header">
 					<h5 class="modal-title">艦載機残数詳細計算</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
-				<div class="modal-body py-1">
-					<fieldset class="border rounded">
-						<legend class="font_size_14 w-auto ml-2 px-1" id="detail_legend">搭載艦情報</legend>
-						<div class="container-fluid px-2 pb-2" id="detail_info"></div>
-					</fieldset>
-					<div class="d-flex mt-1">
-						<div class="align-self-center mx-2 detail_wave">
-							<span>※ 出撃終了後時点の残数です。</span>
-						</div>
-						<div class="align-self-center mx-2 detail_fire">
-							<div class="custom-control custom-radio custom-control-inline">
-								<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
-								<label class="custom-control-label" for="slot_detail">搭載数</label>
+				<div class="modal-body py-1 row">
+					<div class="col-12 col-xl-6 mt-3">
+						<fieldset class="border rounded">
+							<legend class="font_size_14 w-auto ml-2 px-1" id="detail_legend">搭載艦情報</legend>
+							<div class="container-fluid px-2 pb-2" id="detail_info"></div>
+						</fieldset>
+						<div class="d-flex mt-1">
+							<div class="align-self-center mx-2 detail_wave">
+								<span>※ 出撃終了後時点の残数です。</span>
 							</div>
-							<div class="custom-control custom-radio custom-control-inline detail_fire">
-								<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
-								<label class="custom-control-label" for="fire_detail">航空戦火力</label>
+							<div class="align-self-center mx-2 detail_fire">
+								<div class="custom-control custom-radio custom-control-inline">
+									<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
+									<label class="custom-control-label" for="slot_detail">搭載数</label>
+								</div>
+								<div class="custom-control custom-radio custom-control-inline detail_fire">
+									<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
+									<label class="custom-control-label" for="fire_detail">航空戦火力</label>
+								</div>
 							</div>
-						</div>
-						<div class="ml-auto">
-							<div class="r_btn" id="btn_output_slot_dist_table" data-toggle="tooltip"
-								title="このスロットの残機数分布データをクリップボードにコピー(表形式)">
-								<i class="fas fa-table"></i>
+							<div class="ml-auto">
+								<div class="r_btn" id="btn_output_slot_dist_table" data-toggle="tooltip"
+									title="このスロットの残機数分布データをクリップボードにコピー(表形式)">
+									<i class="fas fa-table"></i>
+								</div>
 							</div>
-						</div>
-						<div class="ml-2">
-							<div class="r_btn" id="btn_output_slot_dist" data-toggle="tooltip"
-								title="このスロットの残機数分布データをクリップボードにコピー(JSON形式)">
-								<i class="fas fa-file-code-o"></i>
+							<div class="ml-2">
+								<div class="r_btn" id="btn_output_slot_dist" data-toggle="tooltip"
+									title="このスロットの残機数分布データをクリップボードにコピー(JSON形式)">
+									<i class="fas fa-file-code-o"></i>
+								</div>
+								<textarea class="d-none" id="dist_text"></textarea>
 							</div>
 							<textarea class="d-none" id="dist_text"></textarea>
 						</div>
-						<textarea class="d-none" id="dist_text"></textarea>
+						<canvas id="detailChart" width="440" height="260"></canvas>
+						<div>
+							<table class="text-right" id="detail_table">
+								<thead class="general_thead">
+									<tr>
+										<td>最大</td>
+										<td>最小</td>
+										<td>上位50%</td>
+										<td>上位10%</td>
+										<td>上位5%</td>
+										<td>上位1%</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td id="detail_max"></td>
+										<td id="detail_min"></td>
+										<td id="detail_50"></td>
+										<td id="detail_90"></td>
+										<td id="detail_95"></td>
+										<td id="detail_99"></td>
+									</tr>
+								</tbody>
+							</table>
+							<table class="text-right" id="land_base_detail_table">
+								<thead class="general_thead">
+									<tr>
+										<td class="text_orange font-weight-bold">攻撃機未帰還機多数!</td>
+										<td class="text_deep_orange font-weight-bold">攻撃隊被害甚大!</td>
+										<td class="text_red font-weight-bold">攻撃隊全滅!</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td id="status_s"></td>
+										<td id="status_m"></td>
+										<td id="status_l"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="border-top pt-1 font_size_11" id="detail_warning">注意事項</div>
 					</div>
-					<canvas id="detailChart" width="440" height="260"></canvas>
-					<div>
-						<table class="text-right" id="detail_table">
+					<div class="col-12 col-xl-6 mt-3" id="stage3_table_parent">
+						<div class="h6">航空戦ダメージ計算</div>
+						<div class="d-flex">
+							<div class="align-self-center">
+								<div>
+									<span>航空戦火力幅：</span>
+									<span id="fire_power_range"></span>
+								</div>
+								<div class="align-self-center">
+									<span>熟練度クリティカル補正：</span>
+									<span id="level_cr_bonus"></span>
+								</div>
+							</div>
+							<div class="custom-check sm ml-auto align-self-center">
+								<label>
+									<input type="checkbox" id="critical_hit">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>クリティカル</span>
+								</label>
+							</div>
+						</div>
+						<table class="text-right" id="stage3_table">
 							<thead class="general_thead">
 								<tr>
-									<td>最大</td>
-									<td>最小</td>
-									<td>上位50%</td>
-									<td>上位10%</td>
-									<td>上位5%</td>
-									<td>上位1%</td>
+									<td class="enemy_img_sm">名称</td>
+									<td class="w_10">耐久</td>
+									<td class="w_10">装甲</td>
+									<td>ダメージ幅</td>
+									<td class="w_10">撃沈</td>
+									<td class="w_10">大破</td>
+									<td class="w_10">中破</td>
+									<td class="w_10">小破</td>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td id="detail_max"></td>
-									<td id="detail_min"></td>
-									<td id="detail_50"></td>
-									<td id="detail_90"></td>
-									<td id="detail_95"></td>
-									<td id="detail_99"></td>
-								</tr>
-							</tbody>
-						</table>
-						<table class="text-right" id="land_base_detail_table">
-							<thead class="general_thead">
-								<tr>
-									<td class="text_orange font-weight-bold">攻撃機未帰還機多数!</td>
-									<td class="text_deep_orange font-weight-bold">攻撃隊被害甚大!</td>
-									<td class="text_red font-weight-bold">攻撃隊全滅!</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="status_s"></td>
-									<td id="status_m"></td>
-									<td id="status_l"></td>
-								</tr>
-							</tbody>
+							<tbody id="stage3_table_tbody"></tbody>
 						</table>
 					</div>
-					<div class="border-top pt-1 font_size_11" id="detail_warning">注意事項</div>
 				</div>
 				<div class="modal-footer">
 					<div class="font_size_12">計算回数(本画面のみ有効)</div>

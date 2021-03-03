@@ -11,6 +11,9 @@ const IMAGES = {};
 // 一覧用
 /** @type {ItemDetail[]} */
 const ITEM_LIST = [];
+
+//　航空戦火力キャップ 170
+const AS_CAP = 170;
 /*==================================
 		グローバル変数
 ==================================*/
@@ -694,6 +697,31 @@ class Ship {
 		}
 	}
 
+
+	/**
+	 * この艦の熟練度クリティカルボーナスを返却
+	 * @returns
+	 * @memberof Ship
+	 */
+	getProfCriticalBonus() {
+		let bonus = 0;
+		for (const item of this.items) {
+			// 対象は搭載数が存在する攻撃機か大型飛行艇
+			if (item.slot > 0 && (item.isAttacker || item.type === 41)) {
+				// 内部熟練度
+				const innerLevel = getInnerProficiency(item.level, item.type);
+				// 熟練度定数C
+				const c = [0, 1, 2, 3, 4, 5, 7, 10][item.level];
+				// 隊長機補正
+				const div = item.slotNo === 0 ? 100 : 200;
+				bonus += Math.floor(Math.sqrt(innerLevel) + c) / div;
+			}
+		}
+
+		// 補正値 = int(√内部熟練度  + C) / (100 or 200)
+		return 1 + bonus;
+	}
+
 	/**
 	 * 噴進弾幕発動率を設定
 	 * @memberof Ship
@@ -1028,6 +1056,12 @@ class Item {
 		this.avoid = 0;
 		/** @type {number} */
 		this.range = 0;
+		/** @type {number} */
+		this.fire = 0;
+		/** @type {number} */
+		this.torpedo = 0;
+		/** @type {number} */
+		this.bomber = 0;
 		/** @type {boolean} */
 		this.isFighter = false;
 		/** @type {boolean} */
@@ -1081,6 +1115,9 @@ class Item {
 			this.accuracy = raw.accuracy;
 			this.avoid = raw.avoid;
 			this.range = raw.range2;
+			this.fire = raw.fire;
+			this.torpedo = raw.torpedo;
+			this.bomber = raw.bomber;
 			this.isFighter = FIGHTERS.includes(raw.type);
 			this.isAttacker = ATTACKERS.includes(raw.type);
 			this.isRecon = RECONNAISSANCES.includes(raw.type);
@@ -1314,7 +1351,7 @@ class Item {
 	 * @returns {number} ボーナス爆装値
 	 * @memberof Item
 	 */
-	static getBonusBomber(type, remodel, antiAir) {
+	static getBonusBomber(type, remodel, antiAir = 0) {
 		let bonus = 0;
 		// 艦爆
 		if (type === 7 && antiAir <= 2) {
@@ -1533,7 +1570,7 @@ class Item {
 }
 
 /**
- * 艦娘用機体クラス
+ * 艦娘用装備クラス
  * @class ShipItem
  * @extends {Item}
  */
@@ -1567,6 +1604,58 @@ class ShipItem extends Item {
 			// 艦隊防空設定
 			this.antiAirBonus = Item.getAntiAirBonus(this.id, this.type, this.itype, this.remodel, rawAntiAir)
 		}
+	}
+
+	/**
+	 * 搭載数から航空戦基本火力を取得 キャップ適用
+	 * @static
+	 * @param {ShipItem} item 装備オブジェクト
+	 * @param {number} slot 搭載数
+	 * @returns {number[]} 火力配列
+	 * @memberof ShipItem
+	 */
+	static getFirePower(item, slot) {
+		// 攻撃機前提
+		if (!item.isAttacker || slot < 1) {
+			return [0];
+		}
+
+		// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
+		let baseFire = 0;
+		let itemPower = 0;
+		const fire = [];
+		switch (item.type) {
+			case 8:
+				// 艦攻 雷装を適用
+				itemPower = Item.getBonusTorpedo(item.type, item.remodel) + item.torpedo;
+				// 基本攻撃力: 雷装 × √搭載数 + 25
+				baseFire = itemPower * Math.sqrt(slot) + 25;
+				fire.push(0.8 * baseFire);
+				fire.push(1.5 * baseFire);
+				break;
+			case 7:
+			case 11:
+				// 爆撃機 爆装を適用
+				const baseAntiAir = item.antiAir - item.bonusAntiAir;
+				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
+				// 基本攻撃力: 雷装 × √搭載数 + 25
+				baseFire = itemPower * Math.sqrt(slot) + 25;
+				fire.push(baseFire);
+				break;
+			case 57:
+				// 噴式爆撃機
+				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
+				// 基本攻撃力: 雷装 × √搭載数 + 25
+				baseFire = itemPower * Math.sqrt(slot) + 25;
+				fire.push(baseFire / Math.sqrt(2));
+				break;
+			default:
+				fire.push(0);
+				break;
+		}
+
+		// キャップ値を適用したものを返却
+		return fire.map(v => v > AS_CAP ? Math.floor(AS_CAP + Math.sqrt(v - AS_CAP)) : Math.floor(v));
 	}
 }
 
@@ -1919,6 +2008,10 @@ class Enemy {
 		/** @type {number} */
 		this.antiAir = 0;
 		/** @type {number} */
+		this.hp = 0;
+		/** @type {number} */
+		this.armor = 0;
+		/** @type {number} */
 		this.sumItemAntiAir = 0;
 		/** @type {number} */
 		this.equipmentsAAWeight = 0;
@@ -1960,6 +2053,8 @@ class Enemy {
 			this.type = raw.type;
 			this.name = raw.name;
 			this.antiAir = raw.aa;
+			this.hp = raw.hp;
+			this.armor = raw.armor;
 			this.airPower = 0;
 			this.landBaseAirPower = 0;
 			this.rawSlots = raw.slot.concat();
@@ -8026,24 +8121,12 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		stage2Table = fleet.allStage2;
 	}
 
-	// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
-	const rate = plane.type === 8 ? [0.8, 1.5] : ATTACKERS.includes(plane.type) ? [1] : [0];
-	const remodel = shipInstance.items[slotNo].remodel;
+	// 今回調査する主役
+	const targetItem = shipInstance.items[slotNo];
 
-	let fire = 0;
-	switch (plane.type) {
-		case 8:
-			fire = Item.getBonusTorpedo(plane.type, remodel) + plane.torpedo;
-			break;
-		case 7:
-		case 11:
-		case 57:
-			fire = Item.getBonusBomber(plane.type, remodel, plane.antiAir) + plane.bomber;
-			break;
-		default:
-			break;
+	// st3用敵艦隊を抽出
+	const stage3Enemies = battleInfo.battles[mainBattle].enemies.concat();
 
-	}
 	// 搭載数のない敵艦を全て除外(stage2テーブルは生成済み)
 	for (const info of battleInfo.battles) {
 		info.enemies = info.enemies.filter(v => v.slots.length > 0);
@@ -8122,18 +8205,86 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 		mode: 'index',
 		callbacks: {
 			title: (tooltipItem, data) => {
-				const value = tooltipItem[0].xLabel;
-				if (!value) return `残機数：${value} 機${'\n'}航空戦火力：0`;
-				const af = Math.floor(rate[0] * (fire * Math.sqrt(value) + 25));
-				const af2 = rate.length === 2 ? Math.floor(rate[1] * (fire * Math.sqrt(value) + 25)) : 0;
-				const ap = `航空戦火力：${af}${af2 ? ` or ${af2}` : ''}`
-				return `残機数：${value} 機${'\n' + ap}`;
+				const slot = castInt(tooltipItem[0].xLabel);
+				return `残機数：${slot} 機${'\n'}航空戦火力：${ShipItem.getFirePower(targetItem, slot).join(' or ')}`;
 			},
 			label: (tooltipItem, data) => [`${tooltipItem.yLabel} %`],
 		}
 	}
-	// グラフ描画
-	updateDetailChart(data, '残機数 [機]', tooltips);
+	// グラフ描画、確率分布を取得
+	const actualData = updateDetailChart(data, '残機数 [機]', tooltips);
+
+	// critical有効か？
+	const isCritical = document.getElementById('critical_hit')['checked'];
+	// クリ補正の解決
+	const crBonus = shipInstance.getProfCriticalBonus();
+
+	// 火力分布配列を作成する
+	const powers = [];
+	// 取りうる火力値全部突っ込む
+	let allPowers = [];
+	for (const ad of actualData) {
+		// 基本攻撃力(キャップ前) todo 連合艦隊補正 敵連合時 主力:-10 随伴:-20
+		const baseFire = ShipItem.getFirePower(targetItem, ad.slot);
+
+		// todo 触接補正
+		const contactBonus = 1;
+
+		// todo 特効
+		const shipBonus = 1;
+
+		// 最終攻撃力
+		const lastPower = isCritical ? baseFire.map(v => Math.floor(1.5 * crBonus * v)) : baseFire;
+
+		// 最終攻撃力とその確率を格納していく
+		powers.push({ fire: lastPower, rate: ad.rate });
+
+		allPowers = allPowers.concat(lastPower);
+	}
+
+	// 最大火力
+	const maxPower = getArrayMax(allPowers);
+	// 最低火力
+	const minPower = getArrayMin(allPowers);
+
+	$('#level_cr_bonus').text(crBonus.toFixed(1));
+	$('#fire_power_range').text(`${minPower} ~ ${maxPower}`);
+
+	// 最終戦闘の敵艦毎に攻撃を行った結果を表示
+	let tbodyText = '';
+	for (let i = 0; i < stage3Enemies.length; i++) {
+		const enemy = stage3Enemies[i];
+		const HP = enemy.hp;
+		const armor = enemy.armor;
+		// 最大装甲
+		const maxArmor = armor * 1.3 - 0.6;
+		// 最低装甲
+		const minArmor = armor * 0.7;
+		// 最大ダメージ
+		const maxDamage = Math.floor(maxPower - minArmor);
+		// 最低ダメージ
+		const minDamage = Math.floor(minPower - maxArmor);
+
+		const damageRange = `${minDamage >= 1 ? minDamage : '割合'} ~ ${maxDamage >= 1 ? maxDamage : '割合'}`;
+		const deathRate = 'NaN%';
+		const taihaRate = 'NaN%';
+		const tyuhaRate = 'NaN%';
+		const syohaRate = 'NaN%';
+
+		tbodyText += `
+		<tr>
+			<td><img class="enemy_img_sm" src="../img/enemy/${enemy.id}.png"></td>
+			<td>${HP}</td>
+			<td>${armor}</td>
+			<td>${damageRange}</td>
+			<td>${deathRate}</td>
+			<td>${taihaRate}</td>
+			<td>${tyuhaRate}</td>
+			<td>${syohaRate}</td>
+		</tr>`;
+	}
+	$('#stage3_table_tbody').html(tbodyText);
+
 
 	// 説明表示
 	const ship = SHIP_DATA.find(v => v.id === shipId);
@@ -8143,6 +8294,7 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	$('#land_base_detail_table').addClass('d-none');
 	$('.detail_fire').addClass('d-none').removeClass('d-flex');
 	$('.detail_wave').addClass('d-none').removeClass('d-flex');
+	$('#stage3_table_parent').removeClass('d-none');
 	$('#detail_info').data('mode', 'fleet_slot_detail');
 	$('#detail_info').data('ship_id', shipId);
 	$('#detail_info').data('base_no', shipNo);
@@ -8362,6 +8514,7 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	$('#land_base_detail_table').removeClass('d-none');
 	$('.detail_fire').addClass('d-none').removeClass('d-flex');
 	$('.detail_wave').removeClass('d-none').addClass('d-flex');
+	$('#stage3_table_parent').removeClass('d-none');
 	$('#detail_info').data('mode', 'land_base_detail');
 	$('#detail_info').data('base_no', landBaseNo);
 	$('#detail_info').data('slot_no', slotNo);
@@ -8578,6 +8731,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	$('#land_base_detail_table').addClass('d-none');
 	$('.detail_fire').removeClass('d-none').addClass('d-flex');
 	$('.detail_wave').addClass('d-none').removeClass('d-flex');
+	$('#stage3_table_parent').addClass('d-none');
 	$('#detail_info').data('mode', 'enemy_slot_detail');
 	$('#detail_info').data('base_no', enemyNo);
 	$('#detail_info').data('slot_no', slotNo);
@@ -8633,10 +8787,11 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
  * @param {number[]} data 表示データセット
  * @param {string} xLabelString x軸
  * @param {object} tooltips ツールチップオブジェクト
+ * @returns {{slot: number, rate: number}[]} 各スロットの確率分布
  */
 function updateDetailChart(data, xLabelString, tooltips) {
 	// 描画
-	const xLabels = [], actualData = [], rateData = [];
+	const xLabels = [], actualData = [], rateData = [], returnData = [];
 	const max_i = getArrayMax(data);
 	const min_i = getArrayMin(data);
 	const maxCount = data.length;
@@ -8646,6 +8801,7 @@ function updateDetailChart(data, xLabelString, tooltips) {
 		if (!num) continue;
 		xLabels.push(i);
 		actualData.push((100 * num / maxCount).toFixed(maxCount >= 100000 ? 5 : maxCount >= 10000 ? 4 : maxCount >= 1000 ? 3 : 2));
+		returnData.push({ slot: i, rate: (num / maxCount) });
 		sumRate += 100 * num / maxCount;
 		rateData.push(sumRate.toFixed(1));
 		if (!par50 && sumRate >= 50) par50 = i;
@@ -8730,6 +8886,8 @@ function updateDetailChart(data, xLabelString, tooltips) {
 
 		chartInstance.update();
 	}
+
+	return returnData.concat();
 }
 
 
@@ -14213,6 +14371,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('click', '#btn_calculate_detail', btn_calculate_detail);
 	$('#modal_result_detail').on('change', '#detail_calculate_count', () => $('#btn_calculate_detail').prop('disabled', false));
 	$('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
+	$('#modal_result_detail').on('click', '#critical_hit', btn_calculate_detail);
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
 	$('#modal_result_detail').on('click', '.btn_show_detail:not(.disabled)', function () { btn_show_detail_Clicked($(this)); });
 	$('#modal_result_detail').on('click', '#btn_output_slot_dist', btn_output_slot_dist_Clicked);
