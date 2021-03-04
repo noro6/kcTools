@@ -5,6 +5,7 @@ h1 {
 }
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
+input[type="number"] { text-align: right; }
 
 #main { min-height: 100vh; }
 
@@ -950,10 +951,6 @@ input[type="text"] { font-size: 12px; }
   height: 38px;
   width: 152px;
 }
-.enemy_img_sm {
-  height: 25px;
-  width: 100px;
-}
 
 /* ------------------------------
   一括変更欄 #modal_collectively_setting
@@ -1290,6 +1287,15 @@ input[type="text"] { font-size: 12px; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.enemy_img_sm {
+  height: 26px;
+  width: 104px;
+}
+#ship_bonus {
+  width: 80px;
+}
+
+.w_12 { width: 12%; }
 
 /* ------------------------------
   stage2詳細 #modal_stage2_detail

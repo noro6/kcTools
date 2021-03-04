@@ -3520,39 +3520,83 @@
 						</div>
 						<div class="border-top pt-1 font_size_11" id="detail_warning">注意事項</div>
 					</div>
-					<div class="col-12 col-xl-6 mt-3" id="stage3_table_parent">
-						<div class="h6">航空戦ダメージ計算</div>
-						<div class="d-flex">
+					<div class="col-12 col-xl-6 mt-3 pt-1" id="stage3_table_parent">
+						<div>航空戦ダメージ計算機</div>
+						<div class="d-flex mt-3">
 							<div class="align-self-center">
-								<div>
-									<span>航空戦火力幅：</span>
-									<span id="fire_power_range"></span>
-								</div>
-								<div class="align-self-center">
-									<span>熟練度クリティカル補正：</span>
-									<span id="level_cr_bonus"></span>
+								<div class="font_size_12 font_color_half">搭載数:</div>
+								<div class="d-flex">
+									<input type="number" class="form-control form-control-sm" id="stage3_slot" step="1" min="0" max="99"
+										readonly>
+									<div class="ml-3 align-self-center custom-check">
+										<label class="text-nowrap">
+											<input type="checkbox" id="stage3_all_slot">
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span id="stage3_all_slot_label">搭載数分布の結果を利用</span>
+										</label>
+									</div>
 								</div>
 							</div>
-							<div class="custom-check sm ml-auto align-self-center">
-								<label>
-									<input type="checkbox" id="critical_hit">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>クリティカル</span>
-								</label>
+						</div>
+						<div class="d-flex mt-2">
+							<div class="align-self-center">
+								<div class="font_size_12 font_color_half">触接：</div>
+								<div>
+									<select class="custom-select custom-select-sm" id="contact_bonus">
+										<option value="1" selected>不発</option>
+										<option value="1.12">112%</option>
+										<option value="1.15">117%</option>
+										<option value="1.2">120%</option>
+									</select>
+								</div>
+							</div>
+							<div class="ml-3 align-self-center">
+								<div class="font_size_12 font_color_half">弾薬補正：</div>
+								<div>
+									<select class="custom-select custom-select-sm" id="ammo_bonus">
+										<option value="1" selected>50%以上</option>
+										<option value="0.8">40%</option>
+										<option value="0.6">30%</option>
+										<option value="0.4">20%</option>
+										<option value="0.2">10%</option>
+									</select>
+								</div>
+							</div>
+							<div class="ml-3 align-self-center">
+								<div class="font_size_12 font_color_half">イベ特効：</div>
+								<div class="d-flex">
+									<input type="number" class="align-self-center form-control form-control-sm" id="ship_bonus" min="0" max="999999"
+										step="0.01" maxlength="6">
+									<div class="ml-4 align-self-center custom-check">
+										<label>
+											<input type="checkbox" id="critical_hit">
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span>クリティカル</span>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="d-flex mt-2">
+							<div class="align-self-center">
+								<div>
+									<span>航空戦火力：</span>
+									<span id="fire_power_range"></span>
+								</div>
 							</div>
 						</div>
 						<table class="text-right" id="stage3_table">
 							<thead class="general_thead">
 								<tr>
-									<td class="enemy_img_sm">名称</td>
+									<td class="enemy_img_sm"></td>
 									<td class="w_10">耐久</td>
 									<td class="w_10">装甲</td>
 									<td>ダメージ幅</td>
-									<td class="w_10">撃沈</td>
-									<td class="w_10">大破</td>
-									<td class="w_10">中破</td>
-									<td class="w_10">小破</td>
+									<td class="w_12">撃沈</td>
+									<td class="w_12">大破</td>
+									<td class="w_12">中破</td>
 								</tr>
 							</thead>
 							<tbody id="stage3_table_tbody"></tbody>
@@ -3563,9 +3607,7 @@
 					<div class="font_size_12">計算回数(本画面のみ有効)</div>
 					<div class="d-flex">
 						<select class="custom-select custom-select-sm" id="detail_calculate_count">
-							<option value="1000">1000</option>
-							<option value="5000" selected>5000</option>
-							<option value="10000">10000</option>
+							<option value="10000" selected>10000</option>
 							<option value="20000">20000</option>
 							<option value="50000">50000</option>
 							<option value="100000">100000</option>
