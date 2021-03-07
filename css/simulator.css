@@ -5,6 +5,7 @@ h1 {
 }
 input[type="radio"] { display: none; }
 input[type="text"] { font-size: 12px; }
+input[type="number"] { text-align: right; }
 
 #main { min-height: 100vh; }
 
@@ -1256,18 +1257,40 @@ input[type="text"] { font-size: 12px; }
 /* ------------------------------
   計算詳細 #modal_result_detail
 -------------------------------- */
-#detail_table {
+#modal_result_detail .tab-content > div { 
+  width: 100%;
+} 
+@media (min-width: 1200px) {
+  #result_detail_select { display: none; }
+  #modal_result_detail .modal-dialog { max-width: 1100px; }
+  #modal_result_detail .tab-content > div { 
+    display: block !important;
+    opacity: 1;
+    width: 50%;
+    margin-left: .5rem;
+    margin-right: .5rem;
+  }
+}
+
+#stage3_slot { width: 5em; }
+
+#detail_table,
+#land_base_detail_table,
+#stage3_table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
 }
-#detail_table td { padding: 0.2rem; }
-#land_base_detail_table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-}
+#detail_table td,
 #land_base_detail_table td { padding: 0.2rem; }
+#stage3_table td {
+  transition: 0.2s;
+  border-bottom: 1px rgba(128, 128, 128, 0.4) solid;
+}
+#stage3_table tr:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
 #detail_calculate_count { width: 120px; }
 .detail_plane_row { transition: .2s; }
 .btn_show_detail.selected {
@@ -1287,6 +1310,19 @@ input[type="text"] { font-size: 12px; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.enemy_img_sm {
+  height: 30px;
+  width: 120px;
+}
+.enemy_hp,
+.enemy_armor { width: 50px; }
+#ship_bonus { width: 80px; }
+
+.w_12 { width: 12%; }
+.h_20 { height: 20px; }
+
+#target_enemy { width: 80px; }
+#manual_enemy_id { width: 200px;}
 
 /* ------------------------------
   stage2詳細 #modal_stage2_detail

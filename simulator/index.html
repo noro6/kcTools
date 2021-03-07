@@ -3442,90 +3442,245 @@
 					<h5 class="modal-title">艦載機残数詳細計算</h5>
 					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
-				<div class="modal-body py-1">
-					<fieldset class="border rounded">
-						<legend class="font_size_14 w-auto ml-2 px-1" id="detail_legend">搭載艦情報</legend>
-						<div class="container-fluid px-2 pb-2" id="detail_info"></div>
-					</fieldset>
-					<div class="d-flex mt-1">
-						<div class="align-self-center mx-2 detail_wave">
-							<span>※ 出撃終了後時点の残数です。</span>
-						</div>
-						<div class="align-self-center mx-2 detail_fire">
-							<div class="custom-control custom-radio custom-control-inline">
-								<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
-								<label class="custom-control-label" for="slot_detail">搭載数</label>
+				<div class="modal-body py-2 px-3">
+					<ul class="nav nav-tabs" id="result_detail_select">
+						<li class="nav-item"><a class="nav-link active default_tab" data-toggle="tab"
+								href="#display_graph">残機数分布</a></li>
+						<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#stage3_table_parent">航空戦ダメージ計算機</a>
+						</li>
+					</ul>
+					<div class="tab-content d-flex pt-2">
+						<div class="tab-pane fade show active" id="display_graph">
+							<fieldset class="border rounded">
+								<legend class="font_size_14 w-auto ml-2 px-1" id="detail_legend">搭載艦情報</legend>
+								<div class="container-fluid px-2 pb-2" id="detail_info"></div>
+							</fieldset>
+							<div class="d-flex mt-1">
+								<div class="align-self-center mx-2 detail_wave">
+									<span>※ 出撃終了後時点の残数です。</span>
+								</div>
+								<div class="align-self-center mx-2 detail_fire">
+									<div class="custom-control custom-radio custom-control-inline">
+										<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
+										<label class="custom-control-label" for="slot_detail">搭載数</label>
+									</div>
+									<div class="custom-control custom-radio custom-control-inline detail_fire">
+										<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
+										<label class="custom-control-label" for="fire_detail">航空戦火力</label>
+									</div>
+								</div>
+								<div class="ml-auto">
+									<div class="r_btn" id="btn_output_slot_dist_table" data-toggle="tooltip"
+										title="このスロットの残機数分布データをクリップボードにコピー(表形式)">
+										<i class="fas fa-table"></i>
+									</div>
+								</div>
+								<div class="ml-2">
+									<div class="r_btn" id="btn_output_slot_dist" data-toggle="tooltip"
+										title="このスロットの残機数分布データをクリップボードにコピー(JSON形式)">
+										<i class="fas fa-file-code-o"></i>
+									</div>
+									<textarea class="d-none" id="dist_text"></textarea>
+								</div>
+								<textarea class="d-none" id="dist_text"></textarea>
 							</div>
-							<div class="custom-control custom-radio custom-control-inline detail_fire">
-								<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
-								<label class="custom-control-label" for="fire_detail">航空戦火力</label>
+							<canvas id="detailChart" width="440" height="260"></canvas>
+							<div>
+								<table class="text-right" id="detail_table">
+									<thead class="general_thead">
+										<tr>
+											<td>最大</td>
+											<td>最小</td>
+											<td>上位50%</td>
+											<td>上位10%</td>
+											<td>上位5%</td>
+											<td>上位1%</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td id="detail_max"></td>
+											<td id="detail_min"></td>
+											<td id="detail_50"></td>
+											<td id="detail_90"></td>
+											<td id="detail_95"></td>
+											<td id="detail_99"></td>
+										</tr>
+									</tbody>
+								</table>
+								<table class="text-right" id="land_base_detail_table">
+									<thead class="general_thead">
+										<tr>
+											<td class="text_orange font-weight-bold">攻撃機未帰還機多数!</td>
+											<td class="text_deep_orange font-weight-bold">攻撃隊被害甚大!</td>
+											<td class="text_red font-weight-bold">攻撃隊全滅!</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td id="status_s"></td>
+											<td id="status_m"></td>
+											<td id="status_l"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="border-top pt-1 font_size_11" id="detail_warning">注意事項</div>
+						</div>
+						<div class="mt-1 tab-pane fade" id="stage3_table_parent">
+							<fieldset class="border rounded">
+								<legend class="font_size_14 w-auto ml-2 px-1 d-flex" id="target_plane_data"></legend>
+								<div class="container-fluid px-2 pb-2">
+									<div class="d-flex">
+										<div class="align-self-center">
+											<div class="font_size_12 font_color_half">改修値：</div>
+											<input type="number" class="form-control form-control-sm" id="stage3_remodel" step="1" min="0"
+												max="10">
+										</div>
+										<div class="ml-3 align-self-center">
+											<div class="font_size_12 font_color_half">搭載数：</div>
+											<div class="d-flex">
+												<input type="number" class="form-control form-control-sm" id="stage3_slot" step="1" min="0"
+													max="999" readonly>
+												<div class="ml-3 align-self-center custom-check">
+													<label class="text-nowrap">
+														<input type="checkbox" id="stage3_all_slot" checked>
+														<i class="fas fa-checkbox-unchecked"></i>
+														<i class="fas fa-checkbox-checked"></i>
+														<span id="stage3_all_slot_label">残機数分布の結果を利用</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="d-flex mt-2">
+										<div class="align-self-center">
+											<div class="font_size_12 font_color_half">触接：</div>
+											<div>
+												<select class="custom-select custom-select-sm" id="contact_bonus">
+													<option value="1" selected>不発</option>
+													<option value="1.12">112%</option>
+													<option value="1.17">117%</option>
+													<option value="1.2">120%</option>
+												</select>
+											</div>
+										</div>
+										<div class="ml-3 align-self-center fleet_option">
+											<div class="font_size_12 font_color_half">弾薬補正：</div>
+											<div>
+												<select class="custom-select custom-select-sm" id="ammo_bonus">
+													<option value="1" selected>50%以上</option>
+													<option value="0.8">40%</option>
+													<option value="0.6">30%</option>
+													<option value="0.4">20%</option>
+													<option value="0.2">10%</option>
+												</select>
+											</div>
+										</div>
+										<div class="ml-3 align-self-center fleet_option">
+											<div class="font_size_12 font_color_half ">イベ特効：</div>
+											<input type="number" class="align-self-center form-control form-control-sm" id="ship_bonus"
+												min="0" max="999999" step="0.01" maxlength="6">
+										</div>
+										<div class="align-self-center d-flex mt-3 pt-1">
+											<div class="ml-3 align-self-center custom-check land_base_option">
+												<label>
+													<input type="checkbox" id="enabled_rikutei">
+													<i class="fas fa-checkbox-unchecked"></i>
+													<i class="fas fa-checkbox-checked"></i>
+													<span>二式陸偵</span>
+												</label>
+											</div>
+											<div class="ml-3 align-self-center custom-check land_base_option">
+												<label>
+													<input type="checkbox" id="enabled_rikutei_z">
+													<i class="fas fa-checkbox-unchecked"></i>
+													<i class="fas fa-checkbox-checked"></i>
+													<span>二式陸偵(熟練)</span>
+												</label>
+											</div>
+											<div class="ml-3 align-self-center custom-check">
+												<label>
+													<input type="checkbox" id="critical_hit">
+													<i class="fas fa-checkbox-unchecked"></i>
+													<i class="fas fa-checkbox-checked"></i>
+													<span>クリティカル</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="border-top pt-2 mt-3">
+										<div class="d-flex">
+											<div class="align-self-center">ダメージ計算結果</div>
+											<div class="ml-auto align-self-center font_size_12 font_color_half friend_option">防御側敵艦：</div>
+											<select class="custom-select custom-select-sm friend_option" id="target_enemy"></select>
+										</div>
+									</div>
+									<div class="d-flex" id="manual_enemy">
+										<div class="align-self-center friend_option">
+											<div class="font_size_12 font_color_half">艦種：</div>
+											<div>
+												<select class="custom-select custom-select-sm" id="manual_enemy_type"></select>
+											</div>
+										</div>
+										<div class="ml-3 align-self-center friend_option">
+											<div class="font_size_12 font_color_half">敵艦：</div>
+											<div>
+												<select class="custom-select custom-select-sm" id="manual_enemy_id"></select>
+											</div>
+										</div>
+										<div class="ml-3 mt-3 pt-1 align-self-center custom-check friend_option">
+											<label>
+												<input type="checkbox" id="manual_enemy_union">
+												<i class="fas fa-checkbox-unchecked"></i>
+												<i class="fas fa-checkbox-checked"></i>
+												<span>連合艦隊</span>
+											</label>
+										</div>
+										<div class="my-2 align-self-center custom-check enemy_option">
+											<label>
+												<input type="checkbox" id="hp_1">
+												<i class="fas fa-checkbox-unchecked"></i>
+												<i class="fas fa-checkbox-checked"></i>
+												<span>耐久改修 +1</span>
+											</label>
+										</div>
+										<div class="ml-3 my-2 align-self-center custom-check enemy_option">
+											<label>
+												<input type="checkbox" id="hp_2">
+												<i class="fas fa-checkbox-unchecked"></i>
+												<i class="fas fa-checkbox-checked"></i>
+												<span>耐久改修 +1</span>
+											</label>
+										</div>
+									</div>
+									<table class="text-right mt-1" id="stage3_table">
+										<thead class="general_thead">
+											<tr>
+												<td class="enemy_img_sm"></td>
+												<td class="enemy_hp">耐久</td>
+												<td class="enemy_armor">装甲</td>
+												<td class="pr-1">ダメージ幅</td>
+												<td class="w_12 pr-1">撃沈率</td>
+												<td class="w_12 pr-1">大破率</td>
+												<td class="w_12 pr-1">中破率</td>
+											</tr>
+										</thead>
+										<tbody id="stage3_table_tbody"></tbody>
+									</table>
+								</div>
+							</fieldset>
+							<div class="pt-1 font_size_11">
+								<div>※ 各種損傷状態になり得る確率は、攻撃が命中した場合の数値です。</div>
 							</div>
 						</div>
-						<div class="ml-auto">
-							<div class="r_btn" id="btn_output_slot_dist_table" data-toggle="tooltip"
-								title="このスロットの残機数分布データをクリップボードにコピー(表形式)">
-								<i class="fas fa-table"></i>
-							</div>
-						</div>
-						<div class="ml-2">
-							<div class="r_btn" id="btn_output_slot_dist" data-toggle="tooltip"
-								title="このスロットの残機数分布データをクリップボードにコピー(JSON形式)">
-								<i class="fas fa-file-code-o"></i>
-							</div>
-							<textarea class="d-none" id="dist_text"></textarea>
-						</div>
-						<textarea class="d-none" id="dist_text"></textarea>
 					</div>
-					<canvas id="detailChart" width="440" height="260"></canvas>
-					<div>
-						<table class="text-right" id="detail_table">
-							<thead class="general_thead">
-								<tr>
-									<td>最大</td>
-									<td>最小</td>
-									<td>上位50%</td>
-									<td>上位10%</td>
-									<td>上位5%</td>
-									<td>上位1%</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="detail_max"></td>
-									<td id="detail_min"></td>
-									<td id="detail_50"></td>
-									<td id="detail_90"></td>
-									<td id="detail_95"></td>
-									<td id="detail_99"></td>
-								</tr>
-							</tbody>
-						</table>
-						<table class="text-right" id="land_base_detail_table">
-							<thead class="general_thead">
-								<tr>
-									<td class="text_orange font-weight-bold">攻撃機未帰還機多数!</td>
-									<td class="text_deep_orange font-weight-bold">攻撃隊被害甚大!</td>
-									<td class="text_red font-weight-bold">攻撃隊全滅!</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="status_s"></td>
-									<td id="status_m"></td>
-									<td id="status_l"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="border-top pt-1 font_size_11" id="detail_warning">注意事項</div>
 				</div>
 				<div class="modal-footer">
 					<div class="font_size_12">計算回数(本画面のみ有効)</div>
 					<div class="d-flex">
 						<select class="custom-select custom-select-sm" id="detail_calculate_count">
-							<option value="1000">1000</option>
-							<option value="5000" selected>5000</option>
-							<option value="10000">10000</option>
+							<option value="10000" selected>10000</option>
 							<option value="20000">20000</option>
 							<option value="50000">50000</option>
 							<option value="100000">100000</option>
