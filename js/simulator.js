@@ -1913,7 +1913,7 @@ class LandBaseItem extends Item {
 
 
 	/**
-	 * 65戦隊 × 駆逐時のダメージ個別対応
+	 * 駆逐時のダメージ個別対応
 	 * @static
 	 * @param {LandBaseItem} item
 	 * @param {number} slot
@@ -1924,11 +1924,24 @@ class LandBaseItem extends Item {
 	 */
 	static getFirePower_SP(item, slot, isCritical, criticalBonus) {
 		if (slot <= 0) return 0;
-		// 65戦隊固定 雷装値25として計算
-		let fire = 25 + Item.getBonusTorpedo(item.type, item.remodel);
+
+		let fire = 0;
 		let adj = 0.8;
-		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
-		let p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
+
+		let p = 0;
+		if (item.id === 224) {
+			// 65戦隊固定 雷装値25として計算
+			fire = 25 + Item.getBonusTorpedo(item.type, item.remodel);
+			// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
+			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
+		}
+		else if (item.id === 405) {
+			// Do 217 E-5+Hs293 
+			fire = item.torpedo + Item.getBonusTorpedo(item.type, item.remodel);
+			// キャップ前 1.08倍
+			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25) * 1.08);
+		}
+
 		// キャップ
 		p = softCap(p, 150);
 		if (isCritical) p = Math.floor(p * 1.5 * criticalBonus);
@@ -9108,8 +9121,8 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 	const isLandBase = plane.hasOwnProperty('defenseAirPower');
 	// 陸攻チェック
 	const isLandBaseAttacker = plane.type === 47;
-	// 65戦隊チェック
-	const is65Sentai = plane.id === 224;
+	// 駆逐特効チェック
+	const is65Sentai = plane.id === 224 || plane.id === 405;
 	// 対潜攻撃チェック
 	const enabledASW = isEnemy && enemies.some(v => v.type.includes(18)) && isLandBase && plane.asw >= 7;
 	// 搭載数指定
@@ -9266,6 +9279,7 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 				// 敵が潜水艦で対潜不可なら 表示なし
 				damageRateText += `<td class="text-center" colspan="${damageBorders.length}">対潜攻撃不可</td>`;
 				damageRange = '-';
+				for (const data of damageBorders) data.value = 0;
 				break;
 			}
 
