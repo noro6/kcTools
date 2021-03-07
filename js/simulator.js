@@ -8535,6 +8535,8 @@ function stage3PowerCalculate() {
 			$('.friend_option').addClass('d-none');
 			$('.land_base_option').addClass('d-none');
 			$('.fleet_option').addClass('d-none');
+			document.getElementById('manual_enemy').classList.add('d-flex');
+			document.getElementById('manual_enemy').classList.remove('d-none');
 			$('.enemy_option').removeClass('d-none');
 			enemyStage3PowerCalculate();
 			break;
