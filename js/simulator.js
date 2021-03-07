@@ -1949,6 +1949,38 @@ class LandBaseItem extends Item {
 		const landBaseBonus = 1.8;
 		return p * landBaseBonus;
 	}
+
+	/**
+	 * 戦艦時のダメージ個別対応
+	 * @static
+	 * @param {LandBaseItem} item
+	 * @param {number} slot
+	 * @param {boolean} isCritical
+	 * @param {number} criticalBonus
+	 * @returns {number} 火力
+	 * @memberof LandBaseItem
+	 */
+	static getFirePower_SP2(item, slot, isCritical, criticalBonus) {
+		if (slot <= 0) return 0;
+
+		let fire = 0;
+		let adj = 0.8;
+
+		let p = 0;
+		if (item.id === 406) {
+			// Do 217 K-2 + Fritz-X
+			fire = item.torpedo + Item.getBonusTorpedo(item.type, item.remodel);
+			// キャップ前 1.35倍
+			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25) * 1.35);
+		}
+
+		// キャップ
+		p = softCap(p, 150);
+		if (isCritical) p = Math.floor(p * 1.5 * criticalBonus);
+		// 陸攻補正
+		const landBaseBonus = 1.8;
+		return p * landBaseBonus;
+	}
 }
 
 /**
@@ -9123,6 +9155,8 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 	const isLandBaseAttacker = plane.type === 47;
 	// 駆逐特効チェック
 	const is65Sentai = plane.id === 224 || plane.id === 405;
+	// Fritzチェック
+	const isFritz = plane.id === 406;
 	// 対潜攻撃チェック
 	const enabledASW = isEnemy && enemies.some(v => v.type.includes(18)) && isLandBase && plane.asw >= 7;
 	// 搭載数指定
@@ -9143,7 +9177,7 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 				}
 			}
 			else if (is65Sentai && enemy.type.includes(16)) {
-				// 65戦隊 駆逐特効　仕方ないので火力再計算
+				// 駆逐特効　仕方ないので火力再計算
 				// 指定された搭載数
 				const isCritical = powers[0].isCritical;
 				const crBonus = powers[0].criticalBonus;
@@ -9154,6 +9188,31 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
 					// クリティカル & 陸攻補正を行った攻撃力
 					const basePower = LandBaseItem.getFirePower_SP(plane, targetSlot, isCritical, crBonus);
+					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+					const rate = isAllSlot ? ad.rate : 1;
+					// 陸偵補正 * 触接補正 * 敵連合補正を付与
+					const a = basePower * otherBonus;
+					// 火力とその確率を格納
+					const p = lastPowers.find(v => v.power === a);
+					if (p) p.rate += rate;
+					else lastPowers.push({ power: a, rate: rate });
+
+					// 搭載数指定モードの場合は1回で抜ける
+					if (!isAllSlot) break;
+				}
+			}
+			else if (isFritz && enemy.type.includes(13)) {
+				// 戦艦特効　仕方ないので火力再計算
+				// 指定された搭載数
+				const isCritical = powers[0].isCritical;
+				const crBonus = powers[0].criticalBonus;
+				const otherBonus = powers[0].otherBonus;
+
+				for (const ad of chartSlotDistribution) {
+					// 調査搭載数
+					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
+					// クリティカル & 陸攻補正を行った攻撃力
+					const basePower = LandBaseItem.getFirePower_SP2(plane, targetSlot, isCritical, crBonus);
 					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
 					const rate = isAllSlot ? ad.rate : 1;
 					// 陸偵補正 * 触接補正 * 敵連合補正を付与
@@ -9255,8 +9314,9 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 			{ min: Math.ceil(HP * 0.75), max: HP, value: 0 },
 			{ min: Math.ceil(HP * 0.5), max: Math.ceil(HP * 0.75), value: 0 }
 		];
-
-		let damageRange = `${minDamage >= 1 ? minDamage : '割合'}~${maxDamage >= 1 ? maxDamage : '割合'}`;
+		// 全滅(火力0)があるなら最低ダメージを割合としない
+		const existNone = powers.map(v => v.power).some(v => v <= 0);
+		let damageRange = `${minDamage >= 1 ? minDamage : existNone ? '0' : '割合'}~${maxDamage >= 1 ? maxDamage : '割合'}`;
 		if (!isAllSlot && selectedSlot === 0) damageRange = '-';
 		let damageRateText = '';
 		for (let j = 0; j < damageBorders.length; j++) {
