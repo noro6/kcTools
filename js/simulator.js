@@ -14,6 +14,9 @@ const ITEM_LIST = [];
 
 //　航空戦火力キャップ 170
 const AS_CAP = 170;
+
+// 火力計算用
+const ST3_MAX_SLOT = 999;
 /*==================================
 		グローバル変数
 ==================================*/
@@ -359,6 +362,8 @@ class Ship {
 	constructor(shipNo) {
 		/** @type {number} */
 		this.id = 0;
+		/** @type {number} */
+		this.type = 0;
 		/** @type {string} */
 		this.name = '';
 		/** @type {number} */
@@ -401,6 +406,12 @@ class Ship {
 		this.hunshinRate = 0;
 		/** @type {number} */
 		this.luck = 0;
+		/** @type {number} */
+		this.hp = 0;
+		/** @type {number} */
+		this.armor = 0;
+		/** @type {number} */
+		this.sumItemArmor = 0;
 		/** @type {string} */
 		this.drawTabId = '';
 	}
@@ -1064,6 +1075,10 @@ class Item {
 		this.torpedo = 0;
 		/** @type {number} */
 		this.bomber = 0;
+		/** @type {number} */
+		this.asw = 0;
+		/** @type {number} */
+		this.armor = 0;
 		/** @type {boolean} */
 		this.isFighter = false;
 		/** @type {boolean} */
@@ -1120,6 +1135,8 @@ class Item {
 			this.fire = raw.fire;
 			this.torpedo = raw.torpedo;
 			this.bomber = raw.bomber;
+			this.asw = raw.asw;
+			this.armor = raw.armor;
 			this.isFighter = FIGHTERS.includes(raw.type);
 			this.isAttacker = ATTACKERS.includes(raw.type);
 			this.isRecon = RECONNAISSANCES.includes(raw.type);
@@ -1657,7 +1674,7 @@ class ShipItem extends Item {
 		}
 
 		// キャップ値を適用したものを返却
-		return fire.map(v => Math.floor(v > AS_CAP ? AS_CAP + Math.sqrt(v - AS_CAP) : v));
+		return fire.map(v => Math.floor(softCap(v, AS_CAP)));
 	}
 }
 
@@ -1769,7 +1786,6 @@ class LandBaseItem extends Item {
 
 		const type = Math.abs(plane.type);
 
-		// 実雷装 or 爆装 陸攻は改修係数0.7
 		let fire = 0;
 		// ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)　そのた0
 		let adj = 0;
@@ -1793,8 +1809,6 @@ class LandBaseItem extends Item {
 				// 陸上攻撃機
 				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo;
 				adj = 0.8;
-
-				// todo 65戦隊 & 駆逐 雷装25相当
 				break;
 			case 53:
 				// 大型陸上機
@@ -1808,6 +1822,9 @@ class LandBaseItem extends Item {
 		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
 		let p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
 
+		// キャップ
+		p = softCap(p, AS_CAP);
+
 		if (isCritical) {
 			// クリティカル時
 			p = Math.floor(p * 1.5 * criticalBonus);
@@ -1817,19 +1834,107 @@ class LandBaseItem extends Item {
 		const landBaseBonus = type === 47 ? 1.8 : 1;
 
 		return p * landBaseBonus;
+	}
 
-		// todo 対地
-		// 最終攻撃力 = [[[基本攻撃力 × 基地航空特効(砲台・離島姫) × 爆撃特効(集積地) + 基地航空特効(集積地)] × 爆撃特効(砲台・離島姫)] × クリティカル補正 × 熟練度クリティカル補正] 触接補正 × 陸攻補正 × 陸偵補正 × 敵連合特効
+	/**
+	 * 基地航空隊 対地攻撃力取得
+	 * @static
+	 * @param {LandBaseItem} item
+	 * @param {number} slot
+	 * @param {boolean} isCritical
+	 * @param {number} criticalBonus
+	 * @param {Enemy} enemy
+	 * @memberof LandBaseItem
+	 */
+	static getFirePowerLandBase(item, slot, isCritical, criticalBonus, enemy) {
+		if (slot <= 0) return 0;
+
+		const type = Math.abs(item.type);
+		let fire = 0;
 		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
+		// ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)　そのた0
+		let adj = 0;
+		switch (type) {
+			case 8:
+				// 艦攻
+				fire = Item.getBonusTorpedo(type, item.remodel) + item.torpedo;
+				adj = 1.0;
+				break;
+			case 7:
+			case 11:
+				// 艦爆 水爆
+				fire = Item.getBonusBomber(type, item.remodel, plane.antiAir) + item.bomber;
+				adj = 1.0;
+				break;
+			case 57:
+				fire = Item.getBonusBomber(type, item.remodel, plane.antiAir) + item.bomber;
+				adj = 0.7071;
+				break;
+			case 47:
+				// 陸上攻撃機　大型陸上機　爆装を利用する
+				fire = item.bomber;
+				adj = 0.8;
+				break;
+			default:
+				break;
+		}
 
-		// 陸攻は爆装で
-		// 爆撃特効は艦爆 水爆 陸攻　噴式
-		// 敵の種類		基地航空特効	爆撃特効
-		// 砲台小鬼		×1.6			×1.55
-		// 離島棲姫		×1.18			×1.7
-		// 集積地棲姫	+100			×2.1
+		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
+		let p = adj * (fire * Math.sqrt(1.8 * slot) + 25);
+
+		// 爆撃特効適用対象機体か　艦爆 水爆 陸攻 噴式
+		const isBomber = [7, 11, 47, 53, 57].includes(item.type);
+
+		// 砲台　離島 集積地特効
+		// [[基本攻撃力 × 基地航空特効(砲台・離島姫) × 爆撃特効(集積地) + 基地航空特効(集積地)] × 爆撃特効(砲台・離島姫)]
+		// 基地航空特効(全ての機体)
+		if ([165, 166, 167].includes(enemy.id)) {
+			// 砲台小鬼 基地航空特効 1.6　爆撃特効 1.55
+			p = Math.floor(Math.floor(softCap(p * 1.6, AS_CAP)) * (isBomber ? 1.55 : 1));
+		}
+		else if ([168, 169, 171, 172].includes(enemy.id)) {
+			// 離島棲姫 基地航空特効 1.18　爆撃特効 1.7
+			p = Math.floor(Math.floor(softCap(p * 1.18, AS_CAP)) * (isBomber ? 1.7 : 1));
+		}
+		else if (enemy.name.indexOf('集積地') >= 0) {
+			// 集積地 基地航空特効 +100　爆撃特効 2.1
+			p = Math.floor(softCap(p, AS_CAP) * (isBomber ? 2.1 : 1) + 100);
+		}
+
+		if (isCritical) {
+			// クリティカル時
+			p = Math.floor(p * 1.5 * criticalBonus);
+		}
+
+		// 陸攻補正
+		const landBaseBonus = type === 47 ? 1.8 : 1;
+		return p * landBaseBonus;
+	}
 
 
+	/**
+	 * 65戦隊 × 駆逐時のダメージ個別対応
+	 * @static
+	 * @param {LandBaseItem} item
+	 * @param {number} slot
+	 * @param {boolean} isCritical
+	 * @param {number} criticalBonus
+	 * @returns {number} 火力
+	 * @memberof LandBaseItem
+	 */
+	static getFirePower_SP(item, slot, isCritical, criticalBonus) {
+		if (slot <= 0) return 0;
+		// 65戦隊固定 雷装値25として計算
+		let fire = 25 + Item.getBonusTorpedo(item.type, item.remodel);
+		let adj = 0.8;
+		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
+		let p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
+		// キャップ
+		p = softCap(p, 150);
+		if (isCritical) p = Math.floor(p * 1.5 * criticalBonus);
+		// 陸攻補正
+		const landBaseBonus = 1.8;
+		return p * landBaseBonus;
 	}
 }
 
@@ -2082,7 +2187,7 @@ class Enemy {
 		this.antiAirBonus = 0;
 		/** @type {boolean[]} */
 		this.attackers = [];
-		/** @type {Equipment[]} */
+		/** @type {EnemyItem[]} */
 		this.equipments = [];
 		/** @type {boolean} */
 		this.onlyScout = false;
@@ -2106,7 +2211,7 @@ class Enemy {
 			for (let i = 0; i < raw.eqp.length; i++) {
 				const id = raw.eqp[i];
 				// 装備マスタから取得
-				const equipment = new Equipment(id);
+				const equipment = new EnemyItem(id);
 				// 装備装甲値加算
 				this.sumItemArmor += equipment.armor;
 				// 装備対空加算
@@ -2175,14 +2280,14 @@ class Enemy {
 }
 
 /**
- * 装備品クラス いまは対空砲火用プロパティのみ
- * @class Equipment
+ * 装備品クラス
+ * @class EnemyItem
  */
-class Equipment {
+class EnemyItem {
 	/**
-	 *Creates an instance of Equipment.
+	 *Creates an instance of EnemyItem.
 	 * @param {number} id
-	 * @memberof Equipment
+	 * @memberof EnemyItem
 	 */
 	constructor(id) {
 		/** @type {number} */
@@ -2200,9 +2305,15 @@ class Equipment {
 		/** @type {boolean} */
 		this.isPlane = false;
 		/** @type {boolean} */
+		this.isAttacker = false;
+		/** @type {boolean} */
 		this.isScout = false;
 		/** @type {number} */
 		this.armor = 0;
+		/** @type {number} */
+		this.torpedo = 0;
+		/** @type {number} */
+		this.bomber = 0;
 
 		const raw = ENEMY_ITEM.find(v => v.id === id);
 		if (raw) {
@@ -2212,7 +2323,10 @@ class Equipment {
 			this.itype = raw.itype;
 			this.antiAir = raw.antiAir;
 			this.armor = raw.armor;
+			this.torpedo = raw.torpedo;
+			this.bomber = raw.bomber;
 			this.isPlane = PLANE_TYPE.includes(raw.type);
+			this.isAttacker = ATTACKERS.includes(raw.type);
 			this.isScout = RECONNAISSANCES.includes(raw.type);
 
 			// 加重対空値部品 => 装備対空値 * 装備倍率
@@ -2247,6 +2361,51 @@ class Equipment {
 				this.antiAirBonus = this.antiAir * 0.2;
 			}
 		}
+	}
+
+	/**
+	 * 搭載数から航空戦基本火力を取得 キャップ適用
+	 * @static
+	 * @param {number} slot 搭載数
+	 * @returns {number[]} 火力配列
+	 * @memberof EnemyItem
+	 */
+	getFirePower(slot) {
+		// 攻撃機前提
+		if (!this.isAttacker) {
+			return [0];
+		}
+
+		// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
+		let baseFire = 0;
+		let itemPower = 0;
+		const fire = [];
+		switch (this.type) {
+			case 8:
+				if (slot <= 0) return [0, 0];
+				// 艦攻 雷装を適用
+				itemPower = this.torpedo;
+				// 基本攻撃力: 雷装 × √搭載数 + 25
+				baseFire = itemPower * Math.sqrt(slot) + 25;
+				fire.push(0.8 * baseFire);
+				fire.push(1.5 * baseFire);
+				break;
+			case 7:
+			case 11:
+				if (slot <= 0) return [0];
+				// 爆撃機 爆装を適用
+				itemPower = this.bomber;
+				// 基本攻撃力: 雷装 × √搭載数 + 25
+				baseFire = itemPower * Math.sqrt(slot) + 25;
+				fire.push(baseFire);
+				break;
+			default:
+				fire.push(0);
+				break;
+		}
+
+		// キャップ値を適用したものを返却
+		return fire.map(v => Math.floor(softCap(v, AS_CAP)));
 	}
 }
 
@@ -2367,6 +2526,16 @@ function sFormat(value, label = "") {
 		return o ? o.name : '';
 	}
 	return value % 1 ? Math.floor(value * 10) / 10 : value.toString();
+}
+
+/**
+ * キャップ適用値を返却
+ * @param {number} power キャップ前火力
+ * @param {number} cap キャップ値
+ * @returns {number} キャップ後火力
+ */
+function softCap(power, cap) {
+	return power > cap ? cap + Math.sqrt(power - cap) : power;
 }
 
 /*==================================
@@ -3162,15 +3331,33 @@ function setShipType() {
  */
 function setEnemyType(array) {
 	const parent1 = document.getElementById('enemy_type_select');
+	const parent2 = document.getElementById('manual_enemy_type');
 	for (const v of ENEMY_TYPE) {
 		if (array.includes(v.id)) {
 			const opt = document.createElement('option');
 			opt.value = v.id;
 			opt.textContent = v.name;
 			parent1.appendChild(opt.cloneNode(true));
+
+			const opt2 = document.createElement('option');
+			opt2.value = v.id;
+			opt2.textContent = v.name;
+			parent2.appendChild(opt.cloneNode(true));
 		}
 	}
 	parent1.options[2].selected = true;
+
+	parent1.options[0].selected = true;
+	const type = castInt(document.getElementById('manual_enemy_type').value);
+	const parent = document.getElementById('manual_enemy_id');
+	const enemies = ENEMY_DATA.filter(v => v.type.includes(type));
+	for (const enemy of enemies) {
+		const opt = document.createElement('option');
+		opt.value = enemy.id;
+		opt.textContent = `id: ${enemy.id} ${enemy.name}`;
+		parent.appendChild(opt);
+	}
+	parent.options[0].selected = true;
 }
 
 /**
@@ -8254,11 +8441,11 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	$('#land_base_detail_table').addClass('d-none');
 	$('.detail_fire').addClass('d-none').removeClass('d-flex');
 	$('.detail_wave').addClass('d-none').removeClass('d-flex');
-	$('#stage3_table_parent').removeClass('d-none');
 	$('#detail_info').data('mode', 'fleet_slot_detail');
 	$('#detail_info').data('ship_id', shipId);
 	$('#detail_info').data('base_no', shipNo);
 	$('#detail_info').data('slot_no', slotNo);
+
 	const warningText = `
 		<div>※ グラフ内の航空戦火力はキャップ前でクリティカル、触接補正なし。小数切捨て</div>
 		<div>※ 最終戦闘の航空戦終了時点での残数の分布を表示しています。</div>`;
@@ -8285,10 +8472,14 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 
 		planeText += `
 		<div class="d-flex px-2 py-1 ${slotNo === index ? 'selected' : ''} ${isPlane ? `general_tr btn_show_detail` : 'disabled_detail_slot'}" data-slot_no="${index}">
-			<div class="w_5 align-self-center font_size_11 text-right pr-2">${isPlane ? pl.slot : '-'}</div>
+			<div class="w_5 align-self-center font_size_11 text-right pr-1">${isPlane ? pl.slot : '-'}</div>
 			<div class="${isPlane ? 'w_55' : 'w_90'} d-flex align-self-center font_size_12 pl-0">
 				<img src="../img/type/${p ? `icon${p.itype}` : 'undefined'}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center detail_item_name"><span>${name}</span></div>
+				<div class="align-self-center ml-auto d-flex">
+					${p && pl.remodel ? `<div class="align-self-center text_remodel mr-1">★${pl.remodel}</div>` : ''}
+					${p && pl.level ? `<img class="ml-auto mr-1 h_20" alt="${getProfString(pl.level)}" data-prof="${pl.level}" src="../img/util/prof${pl.level}.png">` : ''}
+				</div>
 			</div>
 			${isPlane ? `<div class="w_40 font_size_11 align-self-center">(${statusText})</div>` : ''}
 		</div>`;
@@ -8304,15 +8495,36 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	$('#detail_info').html(planeText);
 
 	// スロット選択欄の初期化
-	document.getElementById('stage3_slot').readOnly = true;
-	document.getElementById('stage3_all_slot')['checked'] = true;
-
 	const slots = chartSlotDistribution.map(v => v.slot);
+	const maxSlot = getArrayMax(slots);
+	if (document.getElementById('stage3_all_slot')['checked']) {
+		document.getElementById('stage3_slot').value = maxSlot;
+	}
 	document.getElementById('stage3_all_slot_label').textContent =
-		`搭載数分布の結果を利用（${getArrayMin(slots)}機 ~ ${getArrayMax(slots)}機）`;
+		`残機数分布の結果を利用（${getArrayMin(slots)}機 ~ ${maxSlot}機）`;
+
+	// 改修値の初期値
+	document.getElementById('stage3_remodel').value = targetItem.remodel ? targetItem.remodel : 0;
+
+	// 敵艦隊選択欄
+	let enemiesText = '<option value="99">任意</option>';
+	const maxBattle = battleInfo.battles.length - 1;
+	const prevSelectedBattle = castInt(document.getElementById('target_enemy').value, -1);
+	for (let i = 0; i <= maxBattle; i++) {
+		if (prevSelectedBattle === i) {
+			enemiesText += `<option value="${i}" selected>${i + 1}戦目</option>`;
+		}
+		else {
+			enemiesText += `<option value="${i}">${i + 1}戦目</option>`;
+		}
+	}
+	document.getElementById('target_enemy').innerHTML = enemiesText;
+	// 特に初期値がなかったら最終戦闘
+	if (prevSelectedBattle < 0 || prevSelectedBattle > maxBattle) {
+		document.getElementById('target_enemy').value = 99;
+	}
 
 	stage3PowerCalculate();
-
 	return true;
 }
 
@@ -8320,20 +8532,50 @@ function stage3PowerCalculate() {
 	// 計算する対象の取得
 	switch ($('#detail_info').data('mode')) {
 		case "enemy_slot_detail":
+			$('.friend_option').addClass('d-none');
+			$('.land_base_option').addClass('d-none');
+			$('.fleet_option').addClass('d-none');
+			$('.enemy_option').removeClass('d-none');
+			enemyStage3PowerCalculate();
 			break;
 		case "fleet_slot_detail":
-			document.getElementById('ship_bonus').readOnly = false;
-			document.getElementById('ammo_bonus').disabled = false;
+			$('.fleet_option').removeClass('d-none');
+			$('.land_base_option').addClass('d-none');
+			$('.friend_option').removeClass('d-none');
+			$('.enemy_option').addClass('d-none');
 			fleetStage3PowerCalculate();
 			break;
 		case "land_base_detail":
-			document.getElementById('ship_bonus').readOnly = true;
-			document.getElementById('ammo_bonus').disabled = true;
+			$('.fleet_option').addClass('d-none');
+			$('.land_base_option').removeClass('d-none');
+			$('.friend_option').removeClass('d-none');
+			$('.enemy_option').addClass('d-none');
 			landBasePowerCalculate();
 			break;
 		default:
 			break;
 	}
+}
+
+/**
+ * 航空戦計算機　敵艦種選択
+ */
+function manual_enemy_type_Changed() {
+	const type = castInt(document.getElementById('manual_enemy_type').value);
+	const parent = document.getElementById('manual_enemy_id');
+	const enemies = ENEMY_DATA.filter(v => v.type.includes(type));
+
+	parent.innerHTML = '';
+	for (const enemy of enemies) {
+		const opt = document.createElement('option');
+		opt.value = enemy.id;
+		opt.textContent = `id: ${enemy.id} ${enemy.name}`;
+
+		parent.appendChild(opt);
+	}
+
+	parent.options[0].selected = true;
+	stage3PowerCalculate();
 }
 
 /**
@@ -8355,8 +8597,6 @@ function fleetStage3PowerCalculate() {
 	let mainBattle = isDefMode ? 0 : displayBattle;
 	// 例外排除
 	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
-	// st3用敵艦隊を抽出
-	const stage3Enemies = battleInfo.battles[mainBattle].enemies.concat();
 
 	// イベント特効
 	const inp = document.getElementById('ship_bonus').value;
@@ -8375,13 +8615,21 @@ function fleetStage3PowerCalculate() {
 	const powers = [];
 
 	// 指定された搭載数
-	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), 99);
+	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
 	// 全事象
 	const isAllSlot = document.getElementById('stage3_all_slot')['checked'];
 	document.getElementById('stage3_slot').readOnly = isAllSlot;
 	if (!isAllSlot) {
 		document.getElementById('stage3_slot').value = Math.max(selectedSlot, 0);
 	}
+
+	// 改修値の指定がなされている場合
+	const manualRemodel = Math.max(Math.min(castInt(document.getElementById('stage3_remodel').value), 10), 0);
+
+	if (manualRemodel >= 0) {
+		targetItem.remodel = manualRemodel;
+	}
+	document.getElementById('stage3_remodel').value = targetItem.remodel;
 
 	for (const ad of chartSlotDistribution) {
 		// 調査搭載数
@@ -8407,32 +8655,24 @@ function fleetStage3PowerCalculate() {
 		// 搭載数指定モードの場合は1回で抜ける
 		if (!isAllSlot) break;
 	}
-
-	// 最大火力
-	const maxPower = getArrayMax(powers.map(v => v.power));
-	// 最低火力
-	const minPower = getArrayMin(powers.map(v => v.power));
-
-	let rangeText = '';
-	if (minPower === maxPower) {
-		rangeText = Math.floor(minPower);
-	}
-	else if (powers.length === 2 && targetItem.type === 8) {
-		rangeText = `${Math.floor(minPower)} or ${Math.floor(maxPower)}`;
-	}
-	else {
-		rangeText = `${Math.floor(minPower)} ~ ${Math.floor(maxPower)}`;
-	}
-	document.getElementById('fire_power_range').textContent = rangeText;
-
-	if (!targetItem.isAttacker) {
-		document.getElementById('stage3_table_tbody').innerHTML =
-			'<tr><td class="text-center" colspan="7">攻撃しません。</td></tr>';
-		return;
-	}
-
 	// 弾薬補正
 	const ammoBonus = castFloat(document.getElementById('ammo_bonus').value, 1);
+	// st3用敵艦隊を抽出
+	const battle = castInt(document.getElementById('target_enemy').value);
+	let stage3Enemies = [];
+	if (battle === 99) {
+		// 任意敵艦
+		document.getElementById('manual_enemy').classList.add('d-flex');
+		document.getElementById('manual_enemy').classList.remove('d-none');
+
+		const enemyId = castInt(document.getElementById('manual_enemy_id').value);
+		stage3Enemies.push(new Enemy(enemyId));
+	}
+	else {
+		stage3Enemies = battleInfo.battles[battle].enemies.concat();
+		document.getElementById('manual_enemy').classList.remove('d-flex');
+		document.getElementById('manual_enemy').classList.add('d-none');
+	}
 	// 描画
 	drawStage3Result(stage3Enemies, powers, ammoBonus, isAllSlot, targetItem);
 }
@@ -8442,9 +8682,11 @@ function fleetStage3PowerCalculate() {
  * @param {{power: number, rate: number}[]} powers 最終攻撃力分布
  * @param {number} armor 装甲
  * @param {number} ammoRate 弾薬補正値
+ * @param {boolean} isEnemy 敵艦かどうか
+ * @param {number} HP 最大耐久値
  * @returns {{damage: number, rate: number}[]} ダメージ確率分布
  */
-function createDamageDistribution(powers, armor, ammoRate) {
+function createDamageDistribution(powers, armor, ammoRate, isEnemy, HP) {
 	// 各ダメージ値とその確率のdictionary
 	const damageDist = [];
 
@@ -8455,15 +8697,35 @@ function createDamageDistribution(powers, armor, ammoRate) {
 		for (const p of powers) {
 			// 最終ダメージ 0以下は0にする
 			const damage = p.power - tempArmor > 0 ? Math.floor((p.power - tempArmor) * ammoRate) : 0;
-			const rate = step * p.rate;
-			const data = damageDist.find(v => v.damage === damage);
-			if (data) {
-				// あれば加算
-				data.rate += rate;
+			if (damage >= HP && !isEnemy) {
+				// 味方艦隊 撃沈してしまう時ダメージ置換
+				const step2 = 1 / HP;
+				for (let j = 0; j < HP; j++) {
+					// 被ダメージ = [現在HP × 0.5 + 整数乱数(0 ～ 現在HP-1) × 0.3](端数切捨て)
+					const damage2 = Math.floor(HP * 0.5 + j * 0.3);
+					const rate = step * p.rate * step2;
+					const data = damageDist.find(v => v.damage === damage2);
+					if (data) {
+						// あれば加算
+						data.rate += rate;
+					}
+					else {
+						// なければ初期化
+						damageDist.push({ damage: damage2, rate: rate });
+					}
+				}
 			}
 			else {
-				// なければ初期化
-				damageDist.push({ damage: damage, rate: rate });
+				const rate = step * p.rate;
+				const data = damageDist.find(v => v.damage === damage);
+				if (data) {
+					// あれば加算
+					data.rate += rate;
+				}
+				else {
+					// なければ初期化
+					damageDist.push({ damage: damage, rate: rate });
+				}
 			}
 		}
 	}
@@ -8544,14 +8806,12 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 
 				// 出撃第二波
 				if (wave2 === battle) {
-
 					if (wave1 !== wave2) {
 						// 噴式強襲フェーズ
 						doLandBaseJetPhase(landBase, thisBattleInfo);
 					}
 
 					const lbAp = landBase.airPower;
-
 					const eap = thisBattleInfo.getLandBaseAirPower();
 					const airStatusIndex = (lbAp === 0 && eap === 0) ? 0 : getAirStatusIndex(lbAp, eap);
 
@@ -8639,12 +8899,11 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	$('#land_base_detail_table').removeClass('d-none');
 	$('.detail_fire').addClass('d-none').removeClass('d-flex');
 	$('.detail_wave').removeClass('d-none').addClass('d-flex');
-	$('#stage3_table_parent').removeClass('d-none');
 	$('#detail_info').data('mode', 'land_base_detail');
 	$('#detail_info').data('base_no', landBaseNo);
 	$('#detail_info').data('slot_no', slotNo);
 	const warningText = `
-		<div>※ 航空戦火力はクリティカル補正、触接補正なしで対水上艦の場合</div>
+		<div>※ グラフ内の航空戦火力はクリティカル補正、触接補正なしで対水上艦の場合</div>
 		<div>※ 対敵連合補正、陸偵補正については、該当する戦闘、装備であれば有効</div>`;
 	$('#detail_warning').html(warningText);
 
@@ -8670,10 +8929,14 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 
 		planeText += `
 		<div class="d-flex px-2 py-1 ${slotNo === index ? 'selected' : ''} ${p ? `general_tr btn_show_detail` : ''}" data-slot_no="${index}">
-			<div class="w_5 align-self-center font_size_11 text-right pr-2">${pl.slot}</div>
+			<div class="w_5 align-self-center font_size_11 text-right pr-1">${pl.slot}</div>
 			<div class="w_55 d-flex align-self-center font_size_12 pl-0">
 				<img src="../img/type/${p ? `icon${p.itype}` : 'undefined'}.png" class="plane_img_sm align-self-center">
 				<div class="align-self-center detail_item_name"><span>${name}</span></div>
+				<div class="align-self-center ml-auto d-flex">
+					${p && pl.remodel ? `<div class="align-self-center text_remodel mr-1">★${pl.remodel}</div>` : ''}
+					${p && pl.level ? `<img class="ml-auto mr-1 h_20" alt="${getProfString(pl.level)}" data-prof="${pl.level}" src="../img/util/prof${pl.level}.png">` : ''}
+				</div>
 			</div>
 			<div class="w_40 font_size_11 align-self-center">(${statusText})</div>
 		</div>`;
@@ -8684,12 +8947,44 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	$('#detail_info').html(planeText);
 
 	// スロット選択欄の初期化
-	document.getElementById('stage3_slot').readOnly = true;
-	document.getElementById('stage3_all_slot')['checked'] = true;
-
 	const slots = chartSlotDistribution.map(v => v.slot);
+	const maxSlot = getArrayMax(slots);
+	if (document.getElementById('stage3_all_slot')['checked']) {
+		document.getElementById('stage3_slot').value = maxSlot;
+	}
 	document.getElementById('stage3_all_slot_label').textContent =
-		`搭載数分布の結果を利用（${getArrayMin(slots)}機 ~ ${getArrayMax(slots)}機）`;
+		`残機数分布の結果を利用（${getArrayMin(slots)}機 ~ ${maxSlot}機）`;
+
+	// 改修値の初期値
+	document.getElementById('stage3_remodel').value = remodel ? remodel : 0;
+
+	// 二式陸上偵察機が含まれているならON
+	if (planes.some(v => v.id === 311)) {
+		document.getElementById('enabled_rikutei')['checked'] = true;
+	}
+	// 二式陸上偵察機(熟練)が含まれているならON
+	if (planes.some(v => v.id === 312)) {
+		document.getElementById('enabled_rikutei_z')['checked'] = true;
+	}
+
+	// 敵艦隊選択欄
+	let enemiesText = '<option value="99">任意</option>';
+	const maxBattle = battleInfo.battles.length - 1;
+	const prevSelectedBattle = castInt(document.getElementById('target_enemy').value, -1);
+	for (let i = 0; i <= maxBattle; i++) {
+		if (prevSelectedBattle === i) {
+			enemiesText += `<option value="${i}" selected>${i + 1}戦目</option>`;
+		}
+		else {
+			enemiesText += `<option value="${i}">${i + 1}戦目</option>`;
+		}
+	}
+	document.getElementById('target_enemy').innerHTML = enemiesText;
+
+	// 特に初期値がなかったら任意
+	if (prevSelectedBattle < 0 || prevSelectedBattle > maxBattle) {
+		document.getElementById('target_enemy').value = 99;
+	}
 
 	stage3PowerCalculate();
 }
@@ -8713,12 +9008,30 @@ function landBasePowerCalculate() {
 	let mainBattle = isDefMode ? 0 : displayBattle;
 	// 例外排除
 	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
-	// st3用敵艦隊を抽出
-	const stage3Enemies = battleInfo.battles[mainBattle].enemies.concat();
 
+	// st3用敵艦隊を抽出
+	const battle = castInt(document.getElementById('target_enemy').value);
+	let stage3Enemies = [];
+	if (battle === 99) {
+		// 任意敵艦
+		document.getElementById('manual_enemy').classList.add('d-flex');
+		document.getElementById('manual_enemy').classList.remove('d-none');
+
+		const enemyId = castInt(document.getElementById('manual_enemy_id').value);
+		stage3Enemies.push(new Enemy(enemyId));
+	}
+	else {
+		stage3Enemies = battleInfo.battles[battle].enemies.concat();
+		document.getElementById('manual_enemy').classList.remove('d-flex');
+		document.getElementById('manual_enemy').classList.add('d-none');
+	}
+
+	// 連合艦隊かどうか
+	const isUnion = battle === 99 ? document.getElementById('manual_enemy_union')['checked'] : battleInfo.battles[mainBattle].isUnion;
+	// 敵連合艦隊特効
+	const unionBonus = isUnion ? 1.1 : 1;
 	// 触接補正
 	const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
-
 	// critical有効か？
 	const isCritical = document.getElementById('critical_hit')['checked'];
 	// 内部熟練度
@@ -8727,21 +9040,29 @@ function landBasePowerCalculate() {
 	const c = [0, 1, 2, 3, 4, 5, 7, 10][targetItem.level];
 	// 熟練度クリティカル補正
 	const crBonus = 1 + Math.floor(Math.sqrt(innerLevel) + c) / 100;
-
-	// 敵連合艦隊特効
-	const unionBonus = battleInfo.battles[mainBattle].isUnion ? 1.1 : 1;
-
+	// 陸上偵察機ボーナス
+	const rikuteiBonus = document.getElementById('enabled_rikutei_z')['checked'] ? 1.15 :
+		document.getElementById('enabled_rikutei')['checked'] ? 1.125 : 1;
+	// キャップ後ボーナスまとめ
+	const allBonus = rikuteiBonus * unionBonus * contactBonus;
 	// 最終火力の確率分布
 	const powers = [];
-
 	// 指定された搭載数
-	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), 99);
+	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
 	// 全事象
 	const isAllSlot = document.getElementById('stage3_all_slot')['checked'];
 	document.getElementById('stage3_slot').readOnly = isAllSlot;
 	if (!isAllSlot) {
 		document.getElementById('stage3_slot').value = Math.max(selectedSlot, 0);
 	}
+
+	// 改修値の指定がなされている場合
+	const manualRemodel = Math.min(castInt(document.getElementById('stage3_remodel').value), 10);
+
+	if (manualRemodel >= 0) {
+		targetItem.remodel = manualRemodel;
+	}
+	document.getElementById('stage3_remodel').value = targetItem.remodel;
 
 	for (const ad of chartSlotDistribution) {
 		// 調査搭載数
@@ -8752,37 +9073,16 @@ function landBasePowerCalculate() {
 		const rate = isAllSlot ? ad.rate : 1;
 
 		// 陸偵補正 * 触接補正 * 敵連合補正を付与
-		const a = basePower * 1.0 * contactBonus * unionBonus;
+		const a = basePower * allBonus;
 
 		// 火力とその確率を格納
 		const p = powers.find(v => v.power === a);
 		if (p) p.rate += rate;
-		else powers.push({ power: a, rate: rate });
+		else powers.push({ power: a, rate: rate, isCritical: isCritical, criticalBonus: crBonus, otherBonus: allBonus });
 
 		// 搭載数指定モードの場合は1回で抜ける
 		if (!isAllSlot) break;
 	}
-
-	// 最大火力
-	const maxPower = getArrayMax(powers.map(v => v.power));
-	// 最低火力
-	const minPower = getArrayMin(powers.map(v => v.power));
-
-	let rangeText = '';
-	if (minPower === maxPower) {
-		rangeText = Math.floor(minPower);
-	}
-	else {
-		rangeText = `${Math.floor(minPower)} ~ ${Math.floor(maxPower)}`;
-	}
-	document.getElementById('fire_power_range').textContent = rangeText;
-
-	if (!targetItem.isAttacker) {
-		document.getElementById('stage3_table_tbody').innerHTML =
-			'<tr><td class="text-center" colspan="7">攻撃しません。</td></tr>';
-		return;
-	}
-
 	// 弾薬補正 なし
 	const ammoBonus = 1;
 	// 描画
@@ -8792,90 +9092,226 @@ function landBasePowerCalculate() {
 /**
  * 航空戦火力計算結果の表示
  * @param {Enemy[]} enemies 演算、描画する敵艦隊
- * @param {{power: number, rate: number}[]} powers 最終(例外あり)火力確率分布
+ * @param {{power: number, rate: number, isCritical: boolean, criticalBonus: number, otherBonus: number}[]} powers 最終(例外あり)火力確率分布
  * @param {number} ammoBonus 弾薬補正
  * @param {boolean} isAllSlot 残機数分布を使うかフラグ
  * @param {Item} plane 攻撃機機体情報
  */
 function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
-	// 最終戦闘の敵艦毎に攻撃を行った結果を表示
 	let tbodyText = '';
-
 	// 各特殊補正用のフラグをチェック
+	// 防御側が敵艦かどうか => とりあえずequipmentsプロパティを持つかで判定
+	const isEnemy = enemies.length > 0 && enemies[0].hasOwnProperty('equipments');
+	// 基地航空隊フラグ
+	const isLandBase = plane.hasOwnProperty('defenseAirPower');
 	// 陸攻チェック
 	const isLandBaseAttacker = plane.type === 47;
 	// 65戦隊チェック
 	const is65Sentai = plane.id === 224;
+	// 対潜攻撃チェック
+	const enabledASW = isEnemy && enemies.some(v => v.type.includes(18)) && isLandBase && plane.asw >= 7;
+	// 搭載数指定
+	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
 
 	for (let i = 0; i < enemies.length; i++) {
 		const enemy = enemies[i];
+		if (enemy.id <= 0) continue;
 		const armor = enemy.armor + enemy.sumItemArmor;
 
 		// 最終攻撃力火力分布
 		let lastPowers = [];
+		if (isEnemy) {
+			if (isLandBaseAttacker && (enemy.id === 86 || enemy.id === 120)) {
+				// ※ 基地航空隊 空母棲姫特効 (ダイソンとかは補正値不明なのでとりあえず保留)
+				for (const data of powers) {
+					lastPowers.push({ power: data.power * 3.2, rate: data.rate });
+				}
+			}
+			else if (is65Sentai && enemy.type.includes(16)) {
+				// 65戦隊 駆逐特効　仕方ないので火力再計算
+				// 指定された搭載数
+				const isCritical = powers[0].isCritical;
+				const crBonus = powers[0].criticalBonus;
+				const otherBonus = powers[0].otherBonus;
 
-		if (isLandBaseAttacker && (enemy.id === 86 || enemy.id === 120)) {
-			// ※ 基地航空隊 空母棲姫特効 (ダイソンとかは補正値不明なのでとりあえず保留)
-			for (const data of powers) {
-				lastPowers.push({ power: data.power * 3.2, rate: data.rate });
+				for (const ad of chartSlotDistribution) {
+					// 調査搭載数
+					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
+					// クリティカル & 陸攻補正を行った攻撃力
+					const basePower = LandBaseItem.getFirePower_SP(plane, targetSlot, isCritical, crBonus);
+					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+					const rate = isAllSlot ? ad.rate : 1;
+					// 陸偵補正 * 触接補正 * 敵連合補正を付与
+					const a = basePower * otherBonus;
+					// 火力とその確率を格納
+					const p = lastPowers.find(v => v.power === a);
+					if (p) p.rate += rate;
+					else lastPowers.push({ power: a, rate: rate });
+
+					// 搭載数指定モードの場合は1回で抜ける
+					if (!isAllSlot) break;
+				}
+			}
+			else if (isLandBase && enemy.type.includes(2)) {
+				// 基地 対地攻撃 仕方ないので火力再計算
+				// 指定された搭載数
+				const isCritical = powers[0].isCritical;
+				const crBonus = powers[0].criticalBonus;
+				const otherBonus = powers[0].otherBonus;
+
+				for (const ad of chartSlotDistribution) {
+					// 調査搭載数
+					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
+					// クリティカル & 陸攻補正を行った攻撃力
+					const basePower = LandBaseItem.getFirePowerLandBase(plane, targetSlot, isCritical, crBonus, enemy);
+					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+					const rate = isAllSlot ? ad.rate : 1;
+					// 陸偵補正 * 触接補正 * 敵連合補正を付与
+					const a = basePower * 1.0 * otherBonus;
+					// 火力とその確率を格納
+					const p = lastPowers.find(v => v.power === a);
+					if (p) p.rate += rate;
+					else lastPowers.push({ power: a, rate: rate });
+
+					// 搭載数指定モードの場合は1回で抜ける
+					if (!isAllSlot) break;
+				}
+			}
+			else if (enemy.type.includes(18) && enabledASW) {
+				// 基地 対潜攻撃 仕方ないので火力再計算
+				// 指定された搭載数
+				const isCritical = powers[0].isCritical;
+				const crBonus = powers[0].criticalBonus;
+				// 触接補正
+				const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
+				for (const ad of chartSlotDistribution) {
+					// 調査搭載数
+					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
+					// 基本攻撃力 = {対潜 × √(1.8 × 搭載数) + 25} × {A + (0 ~ Bの乱数)}
+					const base = targetSlot > 0 ? plane.asw * Math.sqrt(1.8 * targetSlot) + 25 : 0;
+					// A 対潜10以上で0.7 それ以外0.35
+					const a = plane.asw >= 10 ? 0.7 : 0.35;
+					// B 対潜10以上で0.3、それ以外0.45
+					const bMax = plane.asw >= 10 ? 0.3 : 0.45;
+					// 1事象あたりの確率
+					const rateStep = 1 / (bMax * 100 + 1);
+					// 0.01刻みの乱数と仮定する
+					for (let b = 0; b <= bMax * 100; b++) {
+						// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+						const rate = isAllSlot ? ad.rate * rateStep : rateStep;
+						// 基本攻撃力 = {対潜 × √(1.8 × 搭載数) + 25} × {A + (0 ~ Bの乱数)}（再掲）
+						let basePower = Math.floor(softCap(base * (a + (b / 100)), AS_CAP));
+						// クリティカル補正
+						if (isCritical) basePower = Math.floor(basePower * 1.5 * crBonus);
+						// 陸攻補正 * 触接補正付与
+						const power = basePower * contactBonus * (isLandBaseAttacker ? 1.8 : 1);
+						// 火力とその確率を格納
+						const p = lastPowers.find(v => v.power === power);
+						if (p) p.rate += rate;
+						else lastPowers.push({ power: power, rate: rate });
+					}
+					// 搭載数指定モードの場合は1回で抜ける
+					if (!isAllSlot) break;
+				}
+			}
+			else {
+				// 対水上艦 通常
+				lastPowers = powers.concat();
 			}
 		}
-		else if (is65Sentai && enemy.type.includes(16)) {
-			// 65戦隊 駆逐特効 
-
-		}
 		else {
+			// 防御側味方艦隊 通常
 			lastPowers = powers.concat();
 		}
 
+		// 耐久
+		const HP = enemy.hp;
 		// 各ダメージ分布
-		const damageDist = createDamageDistribution(lastPowers, armor, ammoBonus);
+		const damageDist = createDamageDistribution(lastPowers, armor, ammoBonus, isEnemy, HP);
 		// ダメージ配列のみ抽出
 		const damages = damageDist.map(v => v.damage);
 		// 最低 最大ダメ
 		const minDamage = getArrayMin(damages);
 		const maxDamage = getArrayMax(damages);
 
-		// 耐久
-		const HP = enemy.hp;
 		// 各損傷状態必要ダメージボーダーとその確率 [死, 大, 中, 小]
 		const damageBorders = [
-			HP,
-			Math.ceil(HP * 0.75),
-			Math.ceil(HP * 0.5),
-			// Math.ceil(HP * 0.25)
+			{ min: HP, max: getArrayMax(damageDist.map(v => v.damage)) + 1, value: 0 },
+			{ min: Math.ceil(HP * 0.75), max: HP, value: 0 },
+			{ min: Math.ceil(HP * 0.5), max: Math.ceil(HP * 0.75), value: 0 }
 		];
 
-		const damageRange = `${minDamage >= 1 ? minDamage : '割合'}~${maxDamage >= 1 ? maxDamage : '割合'}`;
-		tbodyText += `
-		<tr>
-			<td><img class="enemy_img_sm" src="../img/enemy/${enemy.id}.png"></td>
-			<td>${HP}</td>
-			<td>${armor}</td>
-			<td>${damageRange}</td>`;
-
+		let damageRange = `${minDamage >= 1 ? minDamage : '割合'}~${maxDamage >= 1 ? maxDamage : '割合'}`;
+		if (!isAllSlot && selectedSlot === 0) damageRange = '-';
+		let damageRateText = '';
 		for (let j = 0; j < damageBorders.length; j++) {
-			const border = damageBorders[j];
+			const obj = damageBorders[j];
+			const borderMin = obj.min;
+			const borderMax = obj.max;
 			// 各損傷状態を満たすボーダーを上回る確率を合計したもの => つまり〇〇率
-			const okPowers = damageDist.filter(v => v.damage >= border).map(v => v.rate);
+			const okPowers = damageDist.filter(v => v.damage >= borderMin && v.damage < borderMax).map(v => v.rate);
 			const rate = okPowers.length === damageDist.length ? 1 : getArraySum(okPowers);
+			obj.value = rate;
+
+
+			if (!plane.isAttacker) {
+				// 非攻撃機
+				damageRateText += `<td>-</td>`;
+				damageRange = '-';
+				continue;
+			}
+			if ((isEnemy && enemy.type.includes(18) && !enabledASW) || (!isEnemy && [13, 14].includes(enemy.type))) {
+				// 敵が潜水艦で対潜不可なら 表示なし
+				damageRateText += `<td class="text-center" colspan="${damageBorders.length}">対潜攻撃不可</td>`;
+				damageRange = '-';
+				break;
+			}
 
 			if (rate === 1 && j === 0 && !isAllSlot) {
 				// 確殺！
-				tbodyText += `<td colspan="${damageBorders.length}" class="text-center text_red">確殺</td>`;
+				damageRateText += `<td colspan="${damageBorders.length}" class="text-center text_red">確殺</td>`;
 				break;
 			}
 			else if (rate === 1) {
-				tbodyText += `<td>100%</td>`;
+				// 100％
+				damageRateText += `<td>100 <span class="font_size_11 font_color_half">%</span></td>`;
 			}
 			else {
-				tbodyText += `<td>${Math.floor(rate * 1000) / 10}%</td>`;
+				const dispRate = Math.floor(rate * 1000) / 10;
+				// 本当に0なら0%　ちょっとでもあるなら0.1に補正
+				damageRateText += `<td>${dispRate === 0 && rate !== 0 ? 0.1 : dispRate} <span class="font_size_11 font_color_half">%</span></td>`;
 			}
 		}
-		tbodyText += '</tr>';
+
+		const taihaRate = Math.floor((damageBorders[0].value + damageBorders[1].value) * 1000) / 10;
+		const tyuhaRate = Math.floor((damageBorders[0].value + damageBorders[1].value + damageBorders[2].value) * 1000) / 10;
+
+		const tooltipText = `
+		<div class='text-left'>
+			<div>${enemy.name}</div>
+			<div class='mt-1 ml-3'>大破以上: ${taihaRate} %</div>
+			<div class='ml-3'>中破以上: ${tyuhaRate} %</div>
+		</div>`;
+
+		tbodyText += `
+		<tr class="stage3_calc_detail" data-toggle="tooltip" data-html="true" title="${tooltipText}">
+			<td class="px-0">
+				<img class="enemy_img_sm" src="../img/${isEnemy ? 'enemy' : 'ship'}/${enemy.id}.png">
+			</td>
+			<td>${HP}</td>
+			<td>${armor}</td>
+			<td>${plane.isAttacker ? damageRange : '-'}</td>
+			${damageRateText}
+		</tr>`;
 	}
 
+	$('.stage3_calc_detail').tooltip('dispose');
 	document.getElementById('stage3_table_tbody').innerHTML = tbodyText;
+	document.getElementById('target_plane_data').innerHTML = `
+		<img src="../img/type/icon${plane.itype}.png" class="plane_img_sm align-self-center">
+		<div class="ml-1 align-self-center detail_item_name"><span class="ml-1">${plane.name}</span></div>`;
+	document.getElementById('stage3_remodel').value = plane.remodel;
+	$('.stage3_calc_detail').tooltip();
 }
 
 /**
@@ -8905,10 +9341,8 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	const planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
 	const plane = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type))[slotNo];
 
-	// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
-	const rate = Math.abs(plane.type) === 8 ? [0.8, 1.5] : !ATTACKERS.includes(plane.type) ? [0] : [1];
-	const fire = Math.abs(plane.type) === 8 ? plane.torpedo : plane.bomber;
-
+	// 今回調査する機体データ
+	const targetItem = new EnemyItem(plane.id);
 	// 搭載表示 or 航空戦火力表示
 	const isSlotDetail = $('#slot_detail').prop('checked');
 
@@ -8972,18 +9406,19 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 				// 敵st1 & st2
 				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
 
+				const slot = targetEnemy.slots[slotNo];
 				if (isSlotDetail) {
 					// 指定した敵とスロットの数を格納
-					data.push(targetEnemy.slots[slotNo]);
+					data.push(slot);
 				}
 				else {
 					// 航空戦火力
-					if (targetEnemy.slots[slotNo]) {
-						data.push(Math.floor(rate[Math.floor(Math.random() * rate.length)] * (fire * Math.sqrt(targetEnemy.slots[slotNo]) + 25)));
+					const powers = targetItem.getFirePower(slot);
+					if (powers.length === 2) {
+						data.push(powers[0]);
+						data.push(powers[1]);
 					}
-					else {
-						data.push(0);
-					}
+					else data.push(powers[0]);
 				}
 			}
 
@@ -9032,9 +9467,8 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 				const value = tooltipItem[0].xLabel;
 				if ($('#slot_detail').prop('checked')) {
 					if (!value) return `残機数：${value} 機${'\n'}航空戦火力：0`;
-					const af = Math.floor(rate[0] * (fire * Math.sqrt(value) + 25));
-					const af2 = rate.length === 2 ? Math.floor(rate[1] * (fire * Math.sqrt(value) + 25)) : 0;
-					const ap = `航空戦火力：${af}${af2 ? ` or ${af2}` : ''}`
+					const a = targetItem.getFirePower(value);
+					const ap = `航空戦火力：${a.join(' or ')}`
 					return `残機数：${value} 機${'\n' + ap}`;
 				}
 				else return `航空戦火力：${value}`;
@@ -9044,13 +9478,12 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	}
 
 	// 描画
-	updateDetailChart(data, label, tooltips);
+	chartSlotDistribution = updateDetailChart(data, label, tooltips);
 
 	// 必要なら説明表示
 	$('#land_base_detail_table').addClass('d-none');
 	$('.detail_fire').removeClass('d-none').addClass('d-flex');
 	$('.detail_wave').addClass('d-none').removeClass('d-flex');
-	$('#stage3_table_parent').addClass('d-none');
 	$('#detail_info').data('mode', 'enemy_slot_detail');
 	$('#detail_info').data('base_no', enemyNo);
 	$('#detail_info').data('slot_no', slotNo);
@@ -9098,6 +9531,151 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 
 	$('#detail_legend').html(detailLegend);
 	$('#detail_info').html(planeText);
+
+	stage3PowerCalculate();
+}
+
+/**
+ * 敵艦隊 航空戦火力計算を行う
+ */
+function enemyStage3PowerCalculate() {
+	const enemyNo = castInt($('#detail_info').data('base_no'));
+	const slotNo = castInt($('#detail_info').data('slot_no'));
+
+	// 味方艦隊オブジェクト取得
+	const fleet = createFleetInstance();
+	// 戦闘情報オブジェクト取得
+	const battleInfo = updateEnemyFleetInfo(false);
+	// 表示戦闘
+	let mainBattle = isDefMode ? 0 : displayBattle;
+	// 例外排除
+	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
+	// 今回の記録用の敵データ
+	const targetEnemy = battleInfo.battles[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.onlyScout)[enemyNo];
+	const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
+	// slotNo は艦載機だけの配列で見ている => 艦載機のみ配列を作る enemy.eqp.filter()
+	const planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
+	const plane = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type))[slotNo];
+
+	// 今回調査する機体データ
+	const targetItem = new EnemyItem(plane.id);
+	// 搭載表示 or 航空戦火力表示
+	const isSlotDetail = $('#slot_detail').prop('checked');
+
+	// 触接補正
+	const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
+
+	// critical有効か？
+	const isCritical = document.getElementById('critical_hit')['checked'];
+	// 熟練度クリティカル補正
+	const crBonus = 1;
+
+	// 最終火力の確率分布
+	const powers = [];
+
+	// 指定された搭載数
+	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
+	// 全事象
+	const isAllSlot = document.getElementById('stage3_all_slot')['checked'];
+	document.getElementById('stage3_slot').readOnly = isAllSlot;
+	if (!isAllSlot) {
+		document.getElementById('stage3_slot').value = Math.max(selectedSlot, 0);
+	}
+
+	// 改修値の指定がなされている場合
+	const manualRemodel = Math.max(Math.min(castInt(document.getElementById('stage3_remodel').value), 10), 0);
+
+	if (manualRemodel >= 0) {
+		targetItem.remodel = manualRemodel;
+	}
+	document.getElementById('stage3_remodel').value = targetItem.remodel;
+
+	if (isSlotDetail) {
+		// 搭載数記録モードなら火力に変換する
+		for (const ad of chartSlotDistribution) {
+			// 調査搭載数
+			const targetSlot = isAllSlot ? ad.slot : selectedSlot;
+			// キャップ後攻撃力
+			const basePower = targetItem.getFirePower(targetSlot);
+			// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
+			const step = 1 / basePower.length;
+			// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+			const rate = isAllSlot ? ad.rate * step : step;
+			for (const power of basePower) {
+				// A = キャップ後攻撃力 * 触接補正
+				let a = power * contactBonus;
+				// クリティカル補正　適用後に切り捨て
+				a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
+
+				// 火力とその確率を格納
+				const p = powers.find(v => v.power === a);
+				if (p) p.rate += rate;
+				else powers.push({ power: a, rate: rate });
+			}
+
+			// 搭載数指定モードの場合は1回で抜ける
+			if (!isAllSlot) break;
+		}
+	}
+	else {
+		// 搭載数指定モードの場合は一回計算して終わる
+		if (!isAllSlot) {
+			// 調査搭載数
+			const targetSlot = selectedSlot;
+			// キャップ後攻撃力
+			const basePower = targetItem.getFirePower(targetSlot);
+			// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
+			const step = 1 / basePower.length;
+			for (const power of basePower) {
+				// A = キャップ後攻撃力 * 触接補正
+				let a = power * contactBonus;
+				// クリティカル補正　適用後に切り捨て
+				a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
+				// 火力とその確率を格納
+				const p = powers.find(v => v.power === a);
+				if (p) p.rate += step;
+				else powers.push({ power: a, rate: step });
+			}
+		}
+		else {
+			// 基本火力値は取り終わっているので最終攻撃力に変換するのみ
+			for (const ad of chartSlotDistribution) {
+				// A = キャップ後攻撃力 * 触接補正
+				let a = ad.slot * contactBonus;
+				// クリティカル補正　適用後に切り捨て
+				a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
+
+				// 火力とその確率を格納
+				const p = powers.find(v => v.power === a);
+				if (p) p.rate += ad.rate;
+				else powers.push({ power: a, rate: ad.rate });
+			}
+		}
+	}
+
+	// 弾薬補正
+	const ammoBonus = 1;
+
+	// 耐久改修
+	const hpBuff1 = document.getElementById('hp_1')['checked'];
+	const hpBuff2 = document.getElementById('hp_2')['checked'];
+	// st3用敵艦隊を抽出
+	let stage3Fleet = fleet.ships.concat();
+	for (const ship of stage3Fleet) {
+		const raw = SHIP_DATA.find(v => v.id === ship.id);
+		if (!raw) continue;
+		// 必要なのは名前 id 艦種 耐久 装甲のみでOK
+		ship.type = raw.type;
+		ship.hp = ship.level >= 100 ? raw.hp2 : raw.hp;
+		if (hpBuff1) ship.hp++;
+		if (hpBuff2) ship.hp++;
+		if (ship.hp >= raw.max_hp) ship.hp = raw.max_hp;
+		ship.armor = raw.max_armor;
+		ship.sumItemArmor = getArraySum(ship.items.map(v => v.armor));
+	}
+
+	// 描画
+	drawStage3Result(stage3Fleet, powers, ammoBonus, isAllSlot, targetItem);
 }
 
 
@@ -14693,10 +15271,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('change', '.custom-radio', btn_calculate_detail);
 	$('#modal_result_detail').on('click', '#critical_hit', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#stage3_all_slot', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#enabled_rikutei', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#enabled_rikutei_z', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#manual_enemy_union', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#hp_1', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#hp_2', stage3PowerCalculate);
 	$('#modal_result_detail').on('change', '#contact_bonus', stage3PowerCalculate);
 	$('#modal_result_detail').on('change', '#ammo_bonus', stage3PowerCalculate);
+	$('#modal_result_detail').on('change', '#target_enemy', stage3PowerCalculate);
+	$('#modal_result_detail').on('change', '#manual_enemy_type', manual_enemy_type_Changed);
+	$('#modal_result_detail').on('change', '#manual_enemy_id', stage3PowerCalculate);
 	$('#modal_result_detail').on('input', '#stage3_slot', stage3PowerCalculate);
 	$('#modal_result_detail').on('input', '#ship_bonus', stage3PowerCalculate);
+	$('#modal_result_detail').on('input', '#stage3_remodel', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
 	$('#modal_result_detail').on('click', '.btn_show_detail:not(.disabled)', function () { btn_show_detail_Clicked($(this)); });
 	$('#modal_result_detail').on('click', '#btn_output_slot_dist', btn_output_slot_dist_Clicked);
