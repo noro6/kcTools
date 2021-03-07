@@ -9283,6 +9283,7 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 			}
 		}
 
+		const deathRate = Math.floor((damageBorders[0].value) * 1000) / 10;
 		const taihaRate = Math.floor((damageBorders[0].value + damageBorders[1].value) * 1000) / 10;
 		const tyuhaRate = Math.floor((damageBorders[0].value + damageBorders[1].value + damageBorders[2].value) * 1000) / 10;
 
@@ -9294,7 +9295,8 @@ function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
 		</div>`;
 
 		tbodyText += `
-		<tr class="stage3_calc_detail" data-toggle="tooltip" data-html="true" title="${tooltipText}">
+		<tr class="stage3_calc_detail ${deathRate >= 90 ? 'tr_death' : taihaRate >= 70 ? 'tr_damaged' : tyuhaRate >= 50 ? 'tr_half_damaged' : ''}"
+			data-toggle="tooltip" data-html="true" title="${tooltipText}">
 			<td class="px-0">
 				<img class="enemy_img_sm" src="../img/${isEnemy ? 'enemy' : 'ship'}/${enemy.id}.png">
 			</td>

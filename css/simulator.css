@@ -1287,9 +1287,13 @@ input[type="number"] { text-align: right; }
   transition: 0.2s;
   border-bottom: 1px rgba(128, 128, 128, 0.4) solid;
 }
-#stage3_table tr:hover {
-  background-color: rgba(128, 128, 128, 0.1);
-}
+#stage3_table tr:hover { background-color: rgba(128, 128, 128, 0.1); }
+#stage3_table tr.tr_death { background-color: rgba(0, 150, 255, 0.075) !important; }
+#stage3_table tr.tr_death:hover { background-color: rgba(0, 150, 255, 0.15) !important; }
+#stage3_table tr.tr_damaged { background-color: rgba(255, 10, 10, 0.075) !important; }
+#stage3_table tr.tr_damaged:hover { background-color: rgba(255, 10, 10, 0.15) !important; }
+#stage3_table tr.tr_half_damaged { background-color: rgba(255, 255, 10, 0.075) !important; }
+#stage3_table tr.tr_half_damaged:hover { background-color: rgba(255, 255, 10, 0.15) !important; }
 
 #detail_calculate_count { width: 120px; }
 .detail_plane_row { transition: .2s; }
