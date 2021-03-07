@@ -1943,7 +1943,7 @@ class LandBaseItem extends Item {
 		}
 
 		// キャップ
-		p = softCap(p, 150);
+		p = softCap(p, AS_CAP);
 		if (isCritical) p = Math.floor(p * 1.5 * criticalBonus);
 		// 陸攻補正
 		const landBaseBonus = 1.8;
@@ -1975,7 +1975,7 @@ class LandBaseItem extends Item {
 		}
 
 		// キャップ
-		p = softCap(p, 150);
+		p = softCap(p, AS_CAP);
 		if (isCritical) p = Math.floor(p * 1.5 * criticalBonus);
 		// 陸攻補正
 		const landBaseBonus = 1.8;
