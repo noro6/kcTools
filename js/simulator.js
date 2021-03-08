@@ -90,6 +90,23 @@ let resultData = {
 	usedSteels: 0
 };
 
+// 航空戦火力計算用設定値
+let aerialSetting = {
+	item: null,
+	a11: 1,
+	contactBonus: 1,
+	isUnion: false,
+	unionBonus: 1,
+	nishikiBonus: 1,
+	isCritical: false,
+	levelCriticalBonus: 1,
+	ammoBonus: 1,
+	isAllSlot: false,
+	manualSlot: -1,
+	manualRemodel: 0,
+	targetEnemies: []
+}
+
 let errorInfo = null;
 
 // 海域情報
@@ -1630,16 +1647,21 @@ class ShipItem extends Item {
 	 * @static
 	 * @param {ShipItem} item 装備オブジェクト
 	 * @param {number} slot 搭載数
+	 * @param {boolean} [isUnion=false] 防御側が連合艦隊
+	 * @param {boolean} [isEscort=false] 防御側が随伴か
 	 * @returns {number[]} 火力配列
 	 * @memberof ShipItem
 	 */
-	static getFirePower(item, slot) {
+	static getFirePower(item, slot, isUnion = false, isEscort = false) {
 		// 攻撃機前提
 		if (!item.isAttacker || slot < 1) {
 			return [0];
 		}
 
-		// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
+		// 航空戦定数: 25　対連合艦隊時に補正(主力: -10, 随伴: -20)
+		const c = 25 + (isUnion ? isEscort ? -20 : -10 : 0);
+
+		// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 航空戦定数)
 		let baseFire = 0;
 		let itemPower = 0;
 		const fire = [];
@@ -1647,8 +1669,7 @@ class ShipItem extends Item {
 			case 8:
 				// 艦攻 雷装を適用
 				itemPower = Item.getBonusTorpedo(item.type, item.remodel) + item.torpedo;
-				// 基本攻撃力: 雷装 × √搭載数 + 25
-				baseFire = itemPower * Math.sqrt(slot) + 25;
+				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(0.8 * baseFire);
 				fire.push(1.5 * baseFire);
 				break;
@@ -1657,15 +1678,13 @@ class ShipItem extends Item {
 				// 爆撃機 爆装を適用
 				const baseAntiAir = item.antiAir - item.bonusAntiAir;
 				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
-				// 基本攻撃力: 雷装 × √搭載数 + 25
-				baseFire = itemPower * Math.sqrt(slot) + 25;
+				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(baseFire);
 				break;
 			case 57:
 				// 噴式爆撃機
 				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
-				// 基本攻撃力: 雷装 × √搭載数 + 25
-				baseFire = itemPower * Math.sqrt(slot) + 25;
+				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(baseFire / Math.sqrt(2));
 				break;
 			default:
@@ -2412,16 +2431,19 @@ class EnemyItem {
 	 * 搭載数から航空戦基本火力を取得 キャップ適用
 	 * @static
 	 * @param {number} slot 搭載数
+	 * @param {boolean} [isUnion=false] 防御側が連合艦隊
+	 * @param {boolean} [isEscort=false] 防御側が随伴か
 	 * @returns {number[]} 火力配列
 	 * @memberof EnemyItem
 	 */
-	getFirePower(slot) {
+	getFirePower(slot, isUnion = false, isEscort = false) {
 		// 攻撃機前提
 		if (!this.isAttacker) {
 			return [0];
 		}
-
-		// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 25)
+		// 航空戦定数: 25　対連合艦隊時に補正(主力: -10, 随伴: -20)
+		const c = 25 + (isUnion ? isEscort ? -20 : -10 : 0);
+		// 航空戦火力式 機体の種類別倍率 × (機体の雷装 or 爆装 × √搭載数 + 航空戦定数)
 		let baseFire = 0;
 		let itemPower = 0;
 		const fire = [];
@@ -2431,7 +2453,7 @@ class EnemyItem {
 				// 艦攻 雷装を適用
 				itemPower = this.torpedo;
 				// 基本攻撃力: 雷装 × √搭載数 + 25
-				baseFire = itemPower * Math.sqrt(slot) + 25;
+				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(0.8 * baseFire);
 				fire.push(1.5 * baseFire);
 				break;
@@ -2441,7 +2463,7 @@ class EnemyItem {
 				// 爆撃機 爆装を適用
 				itemPower = this.bomber;
 				// 基本攻撃力: 雷装 × √搭載数 + 25
-				baseFire = itemPower * Math.sqrt(slot) + 25;
+				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(baseFire);
 				break;
 			default:
@@ -8573,6 +8595,9 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
 	return true;
 }
 
+/**
+ * 航空戦火力計算実行と描画
+ */
 function stage3PowerCalculate() {
 	// 計算する対象の取得
 	switch ($('#detail_info').data('mode')) {
@@ -8580,7 +8605,6 @@ function stage3PowerCalculate() {
 			$('.friend_option').addClass('d-none');
 			$('.land_base_option').addClass('d-none');
 			$('.fleet_option').addClass('d-none');
-			document.getElementById('manual_enemy').classList.add('d-flex');
 			document.getElementById('manual_enemy').classList.remove('d-none');
 			$('.enemy_option').removeClass('d-none');
 			enemyStage3PowerCalculate();
@@ -8605,6 +8629,684 @@ function stage3PowerCalculate() {
 }
 
 /**
+ * 航空戦火力計算に必要な各種補正、設定値の更新(全共通)　バリデーションも行う
+ */
+function updateAerialPowerSetting() {
+	// まずは初期化
+	aerialSetting = {
+		item: null,
+		a11: 1,
+		contactBonus: 1,
+		isUnion: false,
+		unionBonus: 1,
+		nishikiBonus: 1,
+		isCritical: false,
+		levelCriticalBonus: 1,
+		ammoBonus: 1,
+		isAllSlot: false,
+		manualSlot: -1,
+		manualRemodel: 0,
+		targetEnemies: []
+	};
+
+	// イベント特効 6桁でバリデーション
+	const inp = document.getElementById('ship_bonus').value;
+	document.getElementById('ship_bonus').value = inp.length > 6 ? inp.slice(0, 6) : inp;
+	aerialSetting.a11 = castFloat(inp) <= 0 ? 1 : castFloat(inp);
+	// 触接補正
+	aerialSetting.contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
+	// クリティカル有無
+	aerialSetting.isCritical = document.getElementById('critical_hit')['checked'];
+	// 弾薬補正
+	aerialSetting.ammoBonus = castFloat(document.getElementById('ammo_bonus').value, 1);
+	// 全事象で計算をするか
+	aerialSetting.isAllSlot = document.getElementById('stage3_all_slot')['checked'];
+	// 指定搭載数
+	aerialSetting.manualSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
+	// 搭載数設定欄のバリデーションと有効無効
+	document.getElementById('stage3_slot').readOnly = aerialSetting.isAllSlot;
+	if (!aerialSetting.isAllSlot) {
+		document.getElementById('stage3_slot').value = Math.max(aerialSetting.manualSlot, 0);
+	}
+	// 改修値の指定がなされている場合
+	aerialSetting.manualRemodel = Math.max(Math.min(castInt(document.getElementById('stage3_remodel').value), 10), 0);
+	document.getElementById('stage3_remodel').value = aerialSetting.manualRemodel;
+	// 二式陸上偵察機ボーナス
+	aerialSetting.nishikiBonus = document.getElementById('enabled_rikutei_z')['checked'] ? 1.15 : document.getElementById('enabled_rikutei')['checked'] ? 1.125 : 1;
+}
+
+/**
+ * 基地航空隊 航空戦火力計算を行う
+ */
+function landBasePowerCalculate() {
+	const landBaseNo = castInt($('#detail_info').data('base_no'));
+	const slotNo = castInt($('#detail_info').data('slot_no'));
+	// 基地オブジェクト取得
+	const landBaseData = createLandBaseInstance();
+	// 対象の航空隊
+	const landBase = landBaseData.landBases[landBaseNo];
+	// 今回調査する主役
+	const targetItem = landBase.planes[slotNo];
+	// 戦闘情報オブジェクト取得
+	const battleInfo = updateEnemyFleetInfo(false);
+	// 表示戦闘
+	let mainBattle = isDefMode ? 0 : displayBattle;
+	// 例外排除
+	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
+
+	// 設定値の初期化
+	updateAerialPowerSetting();
+	// 対象機体
+	aerialSetting.item = targetItem;
+	// st3用敵艦隊を抽出
+	const battle = castInt(document.getElementById('target_enemy').value);
+	if (battle === 99) {
+		// 任意敵艦
+		document.getElementById('manual_enemy').classList.remove('d-none');
+
+		const enemyId = castInt(document.getElementById('manual_enemy_id').value);
+		aerialSetting.targetEnemies.push(new Enemy(enemyId));
+	}
+	else {
+		aerialSetting.targetEnemies = battleInfo.battles[battle].enemies.concat();
+		document.getElementById('manual_enemy').classList.add('d-none');
+	}
+	// 連合艦隊かどうか
+	const isUnion = battle === 99 ? document.getElementById('manual_enemy_union')['checked'] : battleInfo.battles[mainBattle].isUnion;
+	aerialSetting.isUnion = isUnion;
+	// 敵連合艦隊特効
+	aerialSetting.unionBonus = isUnion ? 1.1 : 1;
+	// 内部熟練度
+	const innerLevel = getInnerProficiency(targetItem.level, targetItem.type);
+	// 熟練度定数C
+	const c = [0, 1, 2, 3, 4, 5, 7, 10][targetItem.level];
+	// 熟練度クリティカル補正
+	aerialSetting.levelCriticalBonus = 1 + Math.floor(Math.sqrt(innerLevel) + c) / 100;
+	// 改修値の指定がなされている場合
+	const manualRemodel = aerialSetting.manualRemodel;
+	if (manualRemodel >= 0) targetItem.remodel = manualRemodel;
+	// 弾薬補正 なし
+	aerialSetting.ammoBonus = 1;
+
+	// 描画
+	drawStage3Result();
+}
+
+/**
+ * 味方艦隊 航空戦火力計算を行う
+ */
+function fleetStage3PowerCalculate() {
+	const shipNo = castInt($('#detail_info').data('base_no'));
+	const slotNo = castInt($('#detail_info').data('slot_no'));
+	// 味方艦隊オブジェクト取得
+	const fleet = createFleetInstance();
+	// 対象の艦娘
+	const shipInstance = fleet.ships[shipNo];
+	// 今回調査する主役
+	const targetItem = shipInstance.items[slotNo];
+	// 戦闘情報オブジェクト取得
+	const battleInfo = updateEnemyFleetInfo(false);
+	// 表示戦闘
+	let mainBattle = isDefMode ? 0 : displayBattle;
+	// 例外排除
+	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
+
+	// 設定値の初期化
+	updateAerialPowerSetting();
+	// 対象機体
+	aerialSetting.item = targetItem;
+	// st3用敵艦隊を抽出
+	const battle = castInt(document.getElementById('target_enemy').value);
+	if (battle === 99) {
+		// 任意敵艦
+		document.getElementById('manual_enemy').classList.remove('d-none');
+		const enemyId = castInt(document.getElementById('manual_enemy_id').value);
+		const enemy = new Enemy(enemyId);
+		// まず連合かどうか
+		aerialSetting.isUnion = document.getElementById('manual_enemy_union')['checked'];
+
+		if (aerialSetting.isUnion) {
+			// 連合の護衛か
+			enemy.isEscort = document.getElementById('manual_union_escort')['checked'];
+			document.getElementById('manual_union_main').parentElement.classList.remove('d-none');
+			document.getElementById('manual_union_escort').parentElement.classList.remove('d-none');
+		}
+		else {
+			// 非連合なら無効化
+			document.getElementById('manual_union_main').parentElement.classList.add('d-none');
+			document.getElementById('manual_union_escort').parentElement.classList.add('d-none');
+		}
+
+		aerialSetting.targetEnemies.push(enemy);
+	}
+	else {
+		aerialSetting.targetEnemies = battleInfo.battles[battle].enemies.concat();
+		document.getElementById('manual_enemy').classList.add('d-none');
+
+		// 敵が連合艦隊か？
+		aerialSetting.isUnion = battleInfo.battles[battle].isUnion;
+	}
+
+	// 熟練度クリティカル補正
+	aerialSetting.levelCriticalBonus = shipInstance.getProfCriticalBonus();
+	// 改修値の指定がなされている場合
+	const manualRemodel = aerialSetting.manualRemodel;
+	if (manualRemodel >= 0) targetItem.remodel = manualRemodel;
+
+	// 描画
+	drawStage3Result();
+}
+
+/**
+ * 敵艦隊 航空戦火力計算を行う
+ */
+function enemyStage3PowerCalculate() {
+	const enemyNo = castInt($('#detail_info').data('base_no'));
+	const slotNo = castInt($('#detail_info').data('slot_no'));
+	// 味方艦隊オブジェクト取得
+	const fleet = createFleetInstance();
+	// 戦闘情報オブジェクト取得
+	const battleInfo = updateEnemyFleetInfo(false);
+	// 表示戦闘
+	let mainBattle = isDefMode ? 0 : displayBattle;
+	// 例外排除
+	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
+	// 今回の記録用の敵データ
+	const targetEnemy = battleInfo.battles[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.onlyScout)[enemyNo];
+	const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
+	// slotNo は艦載機だけの配列で見ている => 艦載機のみ配列を作る enemy.eqp.filter()
+	const planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
+	const plane = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type))[slotNo];
+	// 今回調査する機体データ
+	const targetItem = new EnemyItem(plane.id);
+
+	// 設定値の初期化
+	updateAerialPowerSetting();
+	// 対象機体
+	aerialSetting.item = targetItem;
+	// 弾薬補正 なし
+	aerialSetting.ammoBonus = 1;
+
+	// 耐久改修
+	const hpBuff1 = document.getElementById('hp_1')['checked'];
+	const hpBuff2 = document.getElementById('hp_2')['checked'];
+
+	// st3用敵艦隊を抽出
+	const stage3Fleet = fleet.ships.concat();
+	for (const ship of stage3Fleet) {
+		const raw = SHIP_DATA.find(v => v.id === ship.id);
+		if (!raw) continue;
+		// 必要なのは名前 id 艦種 耐久 装甲のみでOK
+		ship.type = raw.type;
+		ship.hp = ship.level >= 100 ? raw.hp2 : raw.hp;
+		if (hpBuff1) ship.hp++;
+		if (hpBuff2) ship.hp++;
+		if (ship.hp >= raw.max_hp) ship.hp = raw.max_hp;
+		ship.armor = raw.max_armor;
+		ship.sumItemArmor = getArraySum(ship.items.map(v => v.armor));
+	}
+	// 防御艦隊の設定
+	aerialSetting.targetEnemies = stage3Fleet;
+	// 連合艦隊かどうか
+	aerialSetting.isUnion = fleet.isUnion;
+	// 描画
+	drawStage3Result();
+}
+
+/**
+ * 航空戦火力計算結果の表示
+ */
+function drawStage3Result() {
+	/** @type {Enemy[]} */
+	const enemies = aerialSetting.targetEnemies;
+	// 
+	/** @type {Item} 機体 */
+	const plane = aerialSetting.item;
+	// 各特殊補正用のフラグをチェック
+	// 防御側が敵艦かどうか => とりあえずequipmentsプロパティを持つかで判定
+	const isFleet = enemies.length > 0 && enemies[0].hasOwnProperty('equipments');
+	// 基地航空隊フラグ
+	const isLandBase = plane.hasOwnProperty('defenseAirPower');
+	// 陸攻チェック
+	const isLandBaseAttacker = plane.type === 47;
+	// 駆逐特効チェック
+	const hasKuchikuBonus = plane.id === 224 || plane.id === 405;
+	// Fritzチェック
+	const isFritz = plane.id === 406;
+	// 対潜攻撃チェック
+	const enabledASW = isLandBase && enemies.some(v => v.type.includes(18)) && plane.asw >= 7;
+	// 搭載数指定
+	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
+	// 弾薬補正
+	const ammoBonus = aerialSetting.ammoBonus;
+
+	// 全事象でやるかどうか
+	const isAllSlot = aerialSetting.isAllSlot;
+	// 結果表示用
+	let tbodyText = '';
+
+	// 搭載数確率分布
+	const slotDist = chartSlotDistribution;
+
+	for (let i = 0; i < enemies.length; i++) {
+		const enemy = enemies[i];
+		if (enemy.id <= 0) continue;
+		const armor = enemy.armor + enemy.sumItemArmor;
+
+		// 最終攻撃力火力分布
+		let lastPowers = [];
+
+		// 基地航空隊ダメージ計算
+		if (isLandBase) {
+			if (hasKuchikuBonus && enemy.type.includes(16)) {
+				// 基地航空隊 対駆逐艦特効
+				lastPowers = getLandBaseAerialPowersMod(slotDist);
+			}
+			else if (isFritz && enemy.type.includes(13)) {
+				// 基地航空隊 対戦艦特効
+				lastPowers = getLandBaseAerialPowersMod2(slotDist);
+			}
+			else if (enemy.type.includes(2)) {
+				// 基地航空隊 対地攻撃
+				lastPowers = getLandBaseAerialPowersLandBase(slotDist, enemy);
+			}
+			else if (enemy.type.includes(18) && enabledASW) {
+				// 基地航空隊 対潜攻撃
+				lastPowers = getLandBaseASWPower(slotDist);
+			}
+			else if (isLandBaseAttacker && (enemy.id === 86 || enemy.id === 120)) {
+				// 基地航空隊 陸攻 空母棲姫特効(キャップ後3.2倍)
+				lastPowers = getLandBaseAerialPowers(slotDist, 3.2);
+			}
+			else {
+				// 基地航空隊 対水上 通常
+				lastPowers = getLandBaseAerialPowers(slotDist);
+			}
+		}
+		else if (isFleet) {
+			// 味方艦隊 通常
+			lastPowers = getFleetAerialPower(slotDist, enemy);
+		}
+		else {
+			// 敵艦隊（防御側が味方艦隊） 通常
+			lastPowers = getEnemyAerialPowers(slotDist, enemy);
+		}
+
+		// 耐久
+		const HP = enemy.hp;
+		// 各ダメージ分布
+		const damageDist = createDamageDistribution(lastPowers, armor, ammoBonus, isFleet, HP);
+		// ダメージ配列のみ抽出
+		const damages = damageDist.map(v => v.damage);
+		// 最低 最大ダメ
+		const minDamage = getArrayMin(damages);
+		const maxDamage = getArrayMax(damages);
+
+		// 各損傷状態必要ダメージボーダーとその確率 [死, 大, 中, 小]
+		const damageBorders = [
+			{ min: HP, max: getArrayMax(damageDist.map(v => v.damage)) + 1, value: 0 },
+			{ min: Math.ceil(HP * 0.75), max: HP, value: 0 },
+			{ min: Math.ceil(HP * 0.5), max: Math.ceil(HP * 0.75), value: 0 }
+		];
+		// 全滅(火力0)があるなら最低ダメージを割合としない
+		const existNone = lastPowers.map(v => v.power).some(v => v <= 0);
+		let damageRange = `${minDamage >= 1 ? minDamage : existNone ? '0' : '割合'}~${maxDamage >= 1 ? maxDamage : '割合'}`;
+		if (!isAllSlot && selectedSlot === 0) damageRange = '-';
+		let damageRateText = '';
+		for (let j = 0; j < damageBorders.length; j++) {
+			const obj = damageBorders[j];
+			const borderMin = obj.min;
+			const borderMax = obj.max;
+			// 各損傷状態を満たすボーダーを上回る確率を合計したもの => つまり〇〇率
+			const okPowers = damageDist.filter(v => v.damage >= borderMin && v.damage < borderMax).map(v => v.rate);
+			const rate = okPowers.length === damageDist.length ? 1 : getArraySum(okPowers);
+			obj.value = rate;
+
+
+			if (!plane.isAttacker) {
+				// 非攻撃機
+				damageRateText += `<td>-</td>`;
+				damageRange = '-';
+				continue;
+			}
+			if ((isFleet && enemy.type.includes(18) && !enabledASW) || (!isFleet && [13, 14].includes(enemy.type))) {
+				// 敵が潜水艦で対潜不可なら 表示なし
+				damageRateText += `<td class="text-center" colspan="${damageBorders.length}">対潜攻撃不可</td>`;
+				damageRange = '-';
+				for (const data of damageBorders) data.value = 0;
+				break;
+			}
+
+			if (rate === 1 && j === 0 && !isAllSlot) {
+				// 確殺！
+				damageRateText += `<td colspan="${damageBorders.length}" class="text-center text_red">確殺</td>`;
+				break;
+			}
+			else if (rate === 1) {
+				// 100％
+				damageRateText += `<td>100 <span class="font_size_11 font_color_half">%</span></td>`;
+			}
+			else {
+				const dispRate = Math.floor(rate * 1000) / 10;
+				// 本当に0なら0%　ちょっとでもあるなら0.1に補正
+				damageRateText += `<td>${dispRate === 0 && rate !== 0 ? 0.1 : dispRate} <span class="font_size_11 font_color_half">%</span></td>`;
+			}
+		}
+
+		const deathRate = Math.floor((damageBorders[0].value) * 1000) / 10;
+		const taihaRate = Math.floor((damageBorders[0].value + damageBorders[1].value) * 1000) / 10;
+		const tyuhaRate = Math.floor((damageBorders[0].value + damageBorders[1].value + damageBorders[2].value) * 1000) / 10;
+
+		const tooltipText = `
+		<div class='text-left'>
+			<div>${enemy.name}</div>
+			<div class='mt-1 ml-3'>大破以上: ${taihaRate} %</div>
+			<div class='ml-3'>中破以上: ${tyuhaRate} %</div>
+		</div>`;
+
+		tbodyText += `
+		<tr class="stage3_calc_detail ${deathRate >= 90 ? 'tr_death' : taihaRate >= 70 ? 'tr_damaged' : tyuhaRate >= 50 ? 'tr_half_damaged' : ''}"
+			data-toggle="tooltip" data-html="true" title="${tooltipText}">
+			<td class="px-0">
+				<img class="enemy_img_sm" src="../img/${isFleet ? 'enemy' : 'ship'}/${enemy.id}.png">
+			</td>
+			<td>${HP}</td>
+			<td>${armor}</td>
+			<td>${plane.isAttacker ? damageRange : '-'}</td>
+			${damageRateText}
+		</tr>`;
+	}
+
+	$('.stage3_calc_detail').tooltip('dispose');
+	document.getElementById('stage3_table_tbody').innerHTML = tbodyText;
+	document.getElementById('target_plane_data').innerHTML = `
+		<img src="../img/type/icon${plane.itype}.png" class="plane_img_sm align-self-center">
+		<div class="ml-1 align-self-center detail_item_name"><span class="ml-1">${plane.name}</span></div>`;
+	document.getElementById('stage3_remodel').value = plane.remodel;
+	$('.stage3_calc_detail').tooltip();
+}
+
+/**
+ * 基地航空隊 対水上艦航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ * @returns 
+ */
+function getLandBaseAerialPowers(slotDist, afterCapBonus = 1) {
+	/** @type {LandBaseItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	// キャップ後補正まとめ (二式陸偵補正 * 触接補正 * 対連合補正 * キャップ後特殊補正)
+	const allBonus = aerialSetting.nishikiBonus * aerialSetting.contactBonus * aerialSetting.unionBonus * afterCapBonus;
+	const powers = [];
+	for (const dist of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? dist.slot : manualSlot;
+		// クリティカル & 陸攻補正を行った攻撃力
+		const basePower = LandBaseItem.getFirePower(plane.id, slot, plane.remodel, isCritical, crBonus);
+		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+		const rate = isAllSlot ? dist.rate : 1;
+		// 陸偵補正 * 触接補正 * 敵連合補正を付与
+		const a = basePower * allBonus;
+		// 火力とその確率を格納
+		const p = powers.find(v => v.power === a);
+		if (p) p.rate += rate;
+		else powers.push({ power: a, rate: rate });
+
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+	return powers;
+}
+
+/**
+ * 基地航空隊 対駆逐艦 航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ */
+function getLandBaseAerialPowersMod(slotDist, afterCapBonus = 1) {
+	/** @type {LandBaseItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	// キャップ後補正まとめ (二式陸偵補正 * 触接補正 * 対連合補正 * キャップ後特殊補正)
+	const allBonus = aerialSetting.nishikiBonus * aerialSetting.contactBonus * aerialSetting.unionBonus * afterCapBonus;
+	const powers = [];
+	for (const ad of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? ad.slot : manualSlot;
+		// クリティカル & 陸攻補正を行った攻撃力
+		const basePower = LandBaseItem.getFirePower_SP(plane, slot, isCritical, crBonus);
+		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+		const rate = isAllSlot ? ad.rate : 1;
+		// 陸偵補正 * 触接補正 * 敵連合補正を付与
+		const a = basePower * allBonus;
+		// 火力とその確率を格納
+		const p = powers.find(v => v.power === a);
+		if (p) p.rate += rate;
+		else powers.push({ power: a, rate: rate });
+
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+	return powers;
+}
+
+/**
+ * 基地航空隊 対戦艦 航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ */
+function getLandBaseAerialPowersMod2(slotDist, afterCapBonus = 1) {
+	/** @type {LandBaseItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	// キャップ後補正まとめ (二式陸偵補正 * 触接補正 * 対連合補正 * キャップ後特殊補正)
+	const allBonus = aerialSetting.nishikiBonus * aerialSetting.contactBonus * aerialSetting.unionBonus * afterCapBonus;
+	const powers = [];
+	for (const ad of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? ad.slot : manualSlot;
+		// クリティカル & 陸攻補正を行った攻撃力
+		const basePower = LandBaseItem.getFirePower_SP2(plane, slot, isCritical, crBonus);
+		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+		const rate = isAllSlot ? ad.rate : 1;
+		// 陸偵補正 * 触接補正 * 敵連合補正を付与
+		const a = basePower * allBonus;
+		// 火力とその確率を格納
+		const p = powers.find(v => v.power === a);
+		if (p) p.rate += rate;
+		else powers.push({ power: a, rate: rate });
+
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+	return powers;
+}
+
+/**
+ * 基地航空隊 対陸上基地 航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {Enemy} enemy 敵艦
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ */
+function getLandBaseAerialPowersLandBase(slotDist, enemy, afterCapBonus = 1) {
+	/** @type {LandBaseItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	// キャップ後補正まとめ (二式陸偵補正 * 触接補正 * 対連合補正 * キャップ後特殊補正)
+	const allBonus = aerialSetting.nishikiBonus * aerialSetting.contactBonus * aerialSetting.unionBonus * afterCapBonus;
+	const powers = [];
+	for (const ad of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? ad.slot : manualSlot;
+		// クリティカル & 陸攻補正を行った攻撃力
+		const basePower = LandBaseItem.getFirePowerLandBase(plane, slot, isCritical, crBonus, enemy);
+		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+		const rate = isAllSlot ? ad.rate : 1;
+		// 陸偵補正 * 触接補正 * 敵連合補正を付与
+		const a = basePower * allBonus;
+		// 火力とその確率を格納
+		const p = powers.find(v => v.power === a);
+		if (p) p.rate += rate;
+		else powers.push({ power: a, rate: rate });
+
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+	return powers;
+}
+
+/**
+ * 基地航空隊 対潜攻撃 航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ */
+function getLandBaseASWPower(slotDist, afterCapBonus = 1) {
+	/** @type {LandBaseItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	// キャップ後補正まとめ (触接補正 * キャップ後特殊補正)
+	const allBonus = aerialSetting.contactBonus * afterCapBonus;
+	const powers = [];
+	for (const ad of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? ad.slot : manualSlot;
+		// 基本攻撃力 = {対潜 × √(1.8 × 搭載数) + 25} × {A + (0 ~ Bの乱数)}
+		const base = slot > 0 ? plane.asw * Math.sqrt(1.8 * slot) + 25 : 0;
+		// A 対潜10以上で0.7 それ以外0.35
+		const a = plane.asw >= 10 ? 0.7 : 0.35;
+		// B 対潜10以上で0.3、それ以外0.45
+		const bMax = plane.asw >= 10 ? 0.3 : 0.45;
+		// 1事象あたりの確率
+		const rateStep = 1 / (bMax * 100 + 1);
+		// 0.01刻みの乱数と仮定する
+		for (let b = 0; b <= bMax * 100; b++) {
+			// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+			const rate = isAllSlot ? ad.rate * rateStep : rateStep;
+			// 基本攻撃力 = {対潜 × √(1.8 × 搭載数) + 25} × {A + (0 ~ Bの乱数)}（再掲）
+			let basePower = Math.floor(softCap(base * (a + (b / 100)), AS_CAP));
+			// クリティカル補正
+			if (isCritical) basePower = Math.floor(basePower * 1.5 * crBonus);
+			// 陸攻補正 * 触接補正付与
+			const power = basePower * (plane.type === 47 ? 1.8 : 1) * allBonus;
+			// 火力とその確率を格納
+			const p = powers.find(v => v.power === power);
+			if (p) p.rate += rate;
+			else powers.push({ power: power, rate: rate });
+		}
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+	return powers;
+}
+
+/**
+ * 基地航空隊 対陸上基地 航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {Enemy} enemy 敵艦
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ */
+function getFleetAerialPower(slotDist, enemy, afterCapBonus = 1) {
+	/** @type {ShipItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	const isUnion = aerialSetting.isUnion;
+	// キャップ後補正まとめ (触接補正 * イベント特効(a11) * キャップ後特殊補正)
+	const allBonus = aerialSetting.contactBonus * aerialSetting.a11 * afterCapBonus;
+	// 最終火力の確率分布
+	const powers = [];
+	for (const ad of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? ad.slot : manualSlot;
+		// キャップ後攻撃力 todo 連合艦隊補正 敵連合時 主力:-10 随伴:-20
+		const basePower = ShipItem.getFirePower(plane, slot, isUnion, enemy.isEscort);
+		// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
+		const step = 1 / basePower.length;
+		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+		const rate = isAllSlot ? ad.rate * step : step;
+		for (const power of basePower) {
+			// A = キャップ後攻撃力 * 触接補正 * 特効補正
+			let a = power * allBonus;
+			// クリティカル補正　適用後に切り捨て
+			a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
+
+			// 火力とその確率を格納
+			const p = powers.find(v => v.power === a);
+			if (p) p.rate += rate;
+			else powers.push({ power: a, rate: rate });
+		}
+
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+	return powers;
+}
+
+/**
+ * 基地航空隊 対陸上基地 航空戦火力分布を返却
+ * @param {{slot: number, rate: number}[]} slotDist
+ * @param {Enemy} ship 防御側艦娘
+ * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ */
+function getEnemyAerialPowers(slotDist, ship, afterCapBonus = 1) {
+	/** @type {EnemyItem} */
+	const plane = aerialSetting.item;
+	const isCritical = aerialSetting.isCritical;
+	const crBonus = aerialSetting.levelCriticalBonus;
+	const isAllSlot = aerialSetting.isAllSlot;
+	const manualSlot = aerialSetting.manualSlot;
+	const isUnion = aerialSetting.isUnion;
+	// キャップ後補正まとめ (触接補正 * キャップ後特殊補正)
+	const allBonus = aerialSetting.contactBonus * afterCapBonus;
+	// 最終火力の確率分布
+	const powers = [];
+	for (const ad of slotDist) {
+		// 調査搭載数
+		const slot = isAllSlot ? ad.slot : manualSlot;
+		// キャップ後攻撃力
+		const basePower = plane.getFirePower(slot, isUnion, ship.isEscort);
+		// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
+		const step = 1 / basePower.length;
+		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
+		const rate = isAllSlot ? ad.rate * step : step;
+		for (const power of basePower) {
+			// A = キャップ後攻撃力 * 触接補正
+			let a = power * allBonus;
+			// クリティカル補正　適用後に切り捨て
+			a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
+
+			// 火力とその確率を格納
+			const p = powers.find(v => v.power === a);
+			if (p) p.rate += rate;
+			else powers.push({ power: a, rate: rate });
+		}
+
+		// 搭載数指定モードの場合は1回で抜ける
+		if (!isAllSlot) break;
+	}
+
+	return powers;
+}
+
+/**
  * 航空戦計算機　敵艦種選択
  */
 function manual_enemy_type_Changed() {
@@ -8626,110 +9328,11 @@ function manual_enemy_type_Changed() {
 }
 
 /**
- * 味方艦隊 航空戦火力計算を行う
- */
-function fleetStage3PowerCalculate() {
-	const shipNo = castInt($('#detail_info').data('base_no'));
-	const slotNo = castInt($('#detail_info').data('slot_no'));
-
-	// 味方艦隊オブジェクト取得
-	const fleet = createFleetInstance();
-	// 対象の艦娘
-	const shipInstance = fleet.ships[shipNo];
-	// 今回調査する主役
-	const targetItem = shipInstance.items[slotNo];
-	// 戦闘情報オブジェクト取得
-	const battleInfo = updateEnemyFleetInfo(false);
-	// 表示戦闘
-	let mainBattle = isDefMode ? 0 : displayBattle;
-	// 例外排除
-	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
-
-	// イベント特効
-	const inp = document.getElementById('ship_bonus').value;
-	document.getElementById('ship_bonus').value = inp.length > 6 ? inp.slice(0, 6) : inp;
-	const shipBonus = castFloat(inp) <= 0 ? 1 : castFloat(inp);
-
-	// 触接補正
-	const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
-
-	// critical有効か？
-	const isCritical = document.getElementById('critical_hit')['checked'];
-	// 熟練度クリティカル補正
-	const crBonus = shipInstance.getProfCriticalBonus();
-
-	// 最終火力の確率分布
-	const powers = [];
-
-	// 指定された搭載数
-	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
-	// 全事象
-	const isAllSlot = document.getElementById('stage3_all_slot')['checked'];
-	document.getElementById('stage3_slot').readOnly = isAllSlot;
-	if (!isAllSlot) {
-		document.getElementById('stage3_slot').value = Math.max(selectedSlot, 0);
-	}
-
-	// 改修値の指定がなされている場合
-	const manualRemodel = Math.max(Math.min(castInt(document.getElementById('stage3_remodel').value), 10), 0);
-
-	if (manualRemodel >= 0) {
-		targetItem.remodel = manualRemodel;
-	}
-	document.getElementById('stage3_remodel').value = targetItem.remodel;
-
-	for (const ad of chartSlotDistribution) {
-		// 調査搭載数
-		const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-		// キャップ後攻撃力 todo 連合艦隊補正 敵連合時 主力:-10 随伴:-20
-		const basePower = ShipItem.getFirePower(targetItem, targetSlot);
-		// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
-		const step = 1 / basePower.length;
-		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-		const rate = isAllSlot ? ad.rate * step : step;
-		for (const power of basePower) {
-			// A = キャップ後攻撃力 * 触接補正 * 特効補正
-			let a = power * contactBonus * shipBonus;
-			// クリティカル補正　適用後に切り捨て
-			a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
-
-			// 火力とその確率を格納
-			const p = powers.find(v => v.power === a);
-			if (p) p.rate += rate;
-			else powers.push({ power: a, rate: rate });
-		}
-
-		// 搭載数指定モードの場合は1回で抜ける
-		if (!isAllSlot) break;
-	}
-	// 弾薬補正
-	const ammoBonus = castFloat(document.getElementById('ammo_bonus').value, 1);
-	// st3用敵艦隊を抽出
-	const battle = castInt(document.getElementById('target_enemy').value);
-	let stage3Enemies = [];
-	if (battle === 99) {
-		// 任意敵艦
-		document.getElementById('manual_enemy').classList.add('d-flex');
-		document.getElementById('manual_enemy').classList.remove('d-none');
-
-		const enemyId = castInt(document.getElementById('manual_enemy_id').value);
-		stage3Enemies.push(new Enemy(enemyId));
-	}
-	else {
-		stage3Enemies = battleInfo.battles[battle].enemies.concat();
-		document.getElementById('manual_enemy').classList.remove('d-flex');
-		document.getElementById('manual_enemy').classList.add('d-none');
-	}
-	// 描画
-	drawStage3Result(stage3Enemies, powers, ammoBonus, isAllSlot, targetItem);
-}
-
-/**
  * 最終火力と敵艦を渡すと各ダメージ確率分布を返却
  * @param {{power: number, rate: number}[]} powers 最終攻撃力分布
  * @param {number} armor 装甲
  * @param {number} ammoRate 弾薬補正値
- * @param {boolean} isEnemy 敵艦かどうか
+ * @param {boolean} isEnemy 防御側の艦船が敵艦かどうか
  * @param {number} HP 最大耐久値
  * @returns {{damage: number, rate: number}[]} ダメージ確率分布
  */
@@ -9037,362 +9640,6 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 }
 
 /**
- * 基地航空隊 航空戦火力計算を行う
- */
-function landBasePowerCalculate() {
-	const landBaseNo = castInt($('#detail_info').data('base_no'));
-	const slotNo = castInt($('#detail_info').data('slot_no'));
-
-	// 基地オブジェクト取得
-	const landBaseData = createLandBaseInstance();
-	// 対象の航空隊
-	const landBase = landBaseData.landBases[landBaseNo];
-	// 今回調査する主役
-	const targetItem = landBase.planes[slotNo];
-	// 戦闘情報オブジェクト取得
-	const battleInfo = updateEnemyFleetInfo(false);
-	// 表示戦闘
-	let mainBattle = isDefMode ? 0 : displayBattle;
-	// 例外排除
-	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
-
-	// st3用敵艦隊を抽出
-	const battle = castInt(document.getElementById('target_enemy').value);
-	let stage3Enemies = [];
-	if (battle === 99) {
-		// 任意敵艦
-		document.getElementById('manual_enemy').classList.add('d-flex');
-		document.getElementById('manual_enemy').classList.remove('d-none');
-
-		const enemyId = castInt(document.getElementById('manual_enemy_id').value);
-		stage3Enemies.push(new Enemy(enemyId));
-	}
-	else {
-		stage3Enemies = battleInfo.battles[battle].enemies.concat();
-		document.getElementById('manual_enemy').classList.remove('d-flex');
-		document.getElementById('manual_enemy').classList.add('d-none');
-	}
-
-	// 連合艦隊かどうか
-	const isUnion = battle === 99 ? document.getElementById('manual_enemy_union')['checked'] : battleInfo.battles[mainBattle].isUnion;
-	// 敵連合艦隊特効
-	const unionBonus = isUnion ? 1.1 : 1;
-	// 触接補正
-	const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
-	// critical有効か？
-	const isCritical = document.getElementById('critical_hit')['checked'];
-	// 内部熟練度
-	const innerLevel = getInnerProficiency(targetItem.level, targetItem.type);
-	// 熟練度定数C
-	const c = [0, 1, 2, 3, 4, 5, 7, 10][targetItem.level];
-	// 熟練度クリティカル補正
-	const crBonus = 1 + Math.floor(Math.sqrt(innerLevel) + c) / 100;
-	// 陸上偵察機ボーナス
-	const rikuteiBonus = document.getElementById('enabled_rikutei_z')['checked'] ? 1.15 :
-		document.getElementById('enabled_rikutei')['checked'] ? 1.125 : 1;
-	// キャップ後ボーナスまとめ
-	const allBonus = rikuteiBonus * unionBonus * contactBonus;
-	// 最終火力の確率分布
-	const powers = [];
-	// 指定された搭載数
-	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
-	// 全事象
-	const isAllSlot = document.getElementById('stage3_all_slot')['checked'];
-	document.getElementById('stage3_slot').readOnly = isAllSlot;
-	if (!isAllSlot) {
-		document.getElementById('stage3_slot').value = Math.max(selectedSlot, 0);
-	}
-
-	// 改修値の指定がなされている場合
-	const manualRemodel = Math.min(castInt(document.getElementById('stage3_remodel').value), 10);
-
-	if (manualRemodel >= 0) {
-		targetItem.remodel = manualRemodel;
-	}
-	document.getElementById('stage3_remodel').value = targetItem.remodel;
-
-	for (const ad of chartSlotDistribution) {
-		// 調査搭載数
-		const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-		// クリティカル & 陸攻補正を行った攻撃力
-		const basePower = LandBaseItem.getFirePower(targetItem.id, targetSlot, targetItem.remodel, isCritical, crBonus);
-		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-		const rate = isAllSlot ? ad.rate : 1;
-
-		// 陸偵補正 * 触接補正 * 敵連合補正を付与
-		const a = basePower * allBonus;
-
-		// 火力とその確率を格納
-		const p = powers.find(v => v.power === a);
-		if (p) p.rate += rate;
-		else powers.push({ power: a, rate: rate, isCritical: isCritical, criticalBonus: crBonus, otherBonus: allBonus });
-
-		// 搭載数指定モードの場合は1回で抜ける
-		if (!isAllSlot) break;
-	}
-	// 弾薬補正 なし
-	const ammoBonus = 1;
-	// 描画
-	drawStage3Result(stage3Enemies, powers, ammoBonus, isAllSlot, targetItem);
-}
-
-/**
- * 航空戦火力計算結果の表示
- * @param {Enemy[]} enemies 演算、描画する敵艦隊
- * @param {{power: number, rate: number, isCritical: boolean, criticalBonus: number, otherBonus: number}[]} powers 最終(例外あり)火力確率分布
- * @param {number} ammoBonus 弾薬補正
- * @param {boolean} isAllSlot 残機数分布を使うかフラグ
- * @param {Item} plane 攻撃機機体情報
- */
-function drawStage3Result(enemies, powers, ammoBonus, isAllSlot, plane) {
-	let tbodyText = '';
-	// 各特殊補正用のフラグをチェック
-	// 防御側が敵艦かどうか => とりあえずequipmentsプロパティを持つかで判定
-	const isEnemy = enemies.length > 0 && enemies[0].hasOwnProperty('equipments');
-	// 基地航空隊フラグ
-	const isLandBase = plane.hasOwnProperty('defenseAirPower');
-	// 陸攻チェック
-	const isLandBaseAttacker = plane.type === 47;
-	// 駆逐特効チェック
-	const is65Sentai = plane.id === 224 || plane.id === 405;
-	// Fritzチェック
-	const isFritz = plane.id === 406;
-	// 対潜攻撃チェック
-	const enabledASW = isEnemy && enemies.some(v => v.type.includes(18)) && isLandBase && plane.asw >= 7;
-	// 搭載数指定
-	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
-
-	for (let i = 0; i < enemies.length; i++) {
-		const enemy = enemies[i];
-		if (enemy.id <= 0) continue;
-		const armor = enemy.armor + enemy.sumItemArmor;
-
-		// 最終攻撃力火力分布
-		let lastPowers = [];
-		if (isEnemy) {
-			if (isLandBaseAttacker && (enemy.id === 86 || enemy.id === 120)) {
-				// ※ 基地航空隊 空母棲姫特効 (ダイソンとかは補正値不明なのでとりあえず保留)
-				for (const data of powers) {
-					lastPowers.push({ power: data.power * 3.2, rate: data.rate });
-				}
-			}
-			else if (is65Sentai && enemy.type.includes(16)) {
-				// 駆逐特効　仕方ないので火力再計算
-				// 指定された搭載数
-				const isCritical = powers[0].isCritical;
-				const crBonus = powers[0].criticalBonus;
-				const otherBonus = powers[0].otherBonus;
-
-				for (const ad of chartSlotDistribution) {
-					// 調査搭載数
-					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-					// クリティカル & 陸攻補正を行った攻撃力
-					const basePower = LandBaseItem.getFirePower_SP(plane, targetSlot, isCritical, crBonus);
-					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-					const rate = isAllSlot ? ad.rate : 1;
-					// 陸偵補正 * 触接補正 * 敵連合補正を付与
-					const a = basePower * otherBonus;
-					// 火力とその確率を格納
-					const p = lastPowers.find(v => v.power === a);
-					if (p) p.rate += rate;
-					else lastPowers.push({ power: a, rate: rate });
-
-					// 搭載数指定モードの場合は1回で抜ける
-					if (!isAllSlot) break;
-				}
-			}
-			else if (isFritz && enemy.type.includes(13)) {
-				// 戦艦特効　仕方ないので火力再計算
-				// 指定された搭載数
-				const isCritical = powers[0].isCritical;
-				const crBonus = powers[0].criticalBonus;
-				const otherBonus = powers[0].otherBonus;
-
-				for (const ad of chartSlotDistribution) {
-					// 調査搭載数
-					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-					// クリティカル & 陸攻補正を行った攻撃力
-					const basePower = LandBaseItem.getFirePower_SP2(plane, targetSlot, isCritical, crBonus);
-					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-					const rate = isAllSlot ? ad.rate : 1;
-					// 陸偵補正 * 触接補正 * 敵連合補正を付与
-					const a = basePower * otherBonus;
-					// 火力とその確率を格納
-					const p = lastPowers.find(v => v.power === a);
-					if (p) p.rate += rate;
-					else lastPowers.push({ power: a, rate: rate });
-
-					// 搭載数指定モードの場合は1回で抜ける
-					if (!isAllSlot) break;
-				}
-			}
-			else if (isLandBase && enemy.type.includes(2)) {
-				// 基地 対地攻撃 仕方ないので火力再計算
-				// 指定された搭載数
-				const isCritical = powers[0].isCritical;
-				const crBonus = powers[0].criticalBonus;
-				const otherBonus = powers[0].otherBonus;
-
-				for (const ad of chartSlotDistribution) {
-					// 調査搭載数
-					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-					// クリティカル & 陸攻補正を行った攻撃力
-					const basePower = LandBaseItem.getFirePowerLandBase(plane, targetSlot, isCritical, crBonus, enemy);
-					// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-					const rate = isAllSlot ? ad.rate : 1;
-					// 陸偵補正 * 触接補正 * 敵連合補正を付与
-					const a = basePower * 1.0 * otherBonus;
-					// 火力とその確率を格納
-					const p = lastPowers.find(v => v.power === a);
-					if (p) p.rate += rate;
-					else lastPowers.push({ power: a, rate: rate });
-
-					// 搭載数指定モードの場合は1回で抜ける
-					if (!isAllSlot) break;
-				}
-			}
-			else if (enemy.type.includes(18) && enabledASW) {
-				// 基地 対潜攻撃 仕方ないので火力再計算
-				// 指定された搭載数
-				const isCritical = powers[0].isCritical;
-				const crBonus = powers[0].criticalBonus;
-				// 触接補正
-				const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
-				for (const ad of chartSlotDistribution) {
-					// 調査搭載数
-					const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-					// 基本攻撃力 = {対潜 × √(1.8 × 搭載数) + 25} × {A + (0 ~ Bの乱数)}
-					const base = targetSlot > 0 ? plane.asw * Math.sqrt(1.8 * targetSlot) + 25 : 0;
-					// A 対潜10以上で0.7 それ以外0.35
-					const a = plane.asw >= 10 ? 0.7 : 0.35;
-					// B 対潜10以上で0.3、それ以外0.45
-					const bMax = plane.asw >= 10 ? 0.3 : 0.45;
-					// 1事象あたりの確率
-					const rateStep = 1 / (bMax * 100 + 1);
-					// 0.01刻みの乱数と仮定する
-					for (let b = 0; b <= bMax * 100; b++) {
-						// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-						const rate = isAllSlot ? ad.rate * rateStep : rateStep;
-						// 基本攻撃力 = {対潜 × √(1.8 × 搭載数) + 25} × {A + (0 ~ Bの乱数)}（再掲）
-						let basePower = Math.floor(softCap(base * (a + (b / 100)), AS_CAP));
-						// クリティカル補正
-						if (isCritical) basePower = Math.floor(basePower * 1.5 * crBonus);
-						// 陸攻補正 * 触接補正付与
-						const power = basePower * contactBonus * (isLandBaseAttacker ? 1.8 : 1);
-						// 火力とその確率を格納
-						const p = lastPowers.find(v => v.power === power);
-						if (p) p.rate += rate;
-						else lastPowers.push({ power: power, rate: rate });
-					}
-					// 搭載数指定モードの場合は1回で抜ける
-					if (!isAllSlot) break;
-				}
-			}
-			else {
-				// 対水上艦 通常
-				lastPowers = powers.concat();
-			}
-		}
-		else {
-			// 防御側味方艦隊 通常
-			lastPowers = powers.concat();
-		}
-
-		// 耐久
-		const HP = enemy.hp;
-		// 各ダメージ分布
-		const damageDist = createDamageDistribution(lastPowers, armor, ammoBonus, isEnemy, HP);
-		// ダメージ配列のみ抽出
-		const damages = damageDist.map(v => v.damage);
-		// 最低 最大ダメ
-		const minDamage = getArrayMin(damages);
-		const maxDamage = getArrayMax(damages);
-
-		// 各損傷状態必要ダメージボーダーとその確率 [死, 大, 中, 小]
-		const damageBorders = [
-			{ min: HP, max: getArrayMax(damageDist.map(v => v.damage)) + 1, value: 0 },
-			{ min: Math.ceil(HP * 0.75), max: HP, value: 0 },
-			{ min: Math.ceil(HP * 0.5), max: Math.ceil(HP * 0.75), value: 0 }
-		];
-		// 全滅(火力0)があるなら最低ダメージを割合としない
-		const existNone = powers.map(v => v.power).some(v => v <= 0);
-		let damageRange = `${minDamage >= 1 ? minDamage : existNone ? '0' : '割合'}~${maxDamage >= 1 ? maxDamage : '割合'}`;
-		if (!isAllSlot && selectedSlot === 0) damageRange = '-';
-		let damageRateText = '';
-		for (let j = 0; j < damageBorders.length; j++) {
-			const obj = damageBorders[j];
-			const borderMin = obj.min;
-			const borderMax = obj.max;
-			// 各損傷状態を満たすボーダーを上回る確率を合計したもの => つまり〇〇率
-			const okPowers = damageDist.filter(v => v.damage >= borderMin && v.damage < borderMax).map(v => v.rate);
-			const rate = okPowers.length === damageDist.length ? 1 : getArraySum(okPowers);
-			obj.value = rate;
-
-
-			if (!plane.isAttacker) {
-				// 非攻撃機
-				damageRateText += `<td>-</td>`;
-				damageRange = '-';
-				continue;
-			}
-			if ((isEnemy && enemy.type.includes(18) && !enabledASW) || (!isEnemy && [13, 14].includes(enemy.type))) {
-				// 敵が潜水艦で対潜不可なら 表示なし
-				damageRateText += `<td class="text-center" colspan="${damageBorders.length}">対潜攻撃不可</td>`;
-				damageRange = '-';
-				for (const data of damageBorders) data.value = 0;
-				break;
-			}
-
-			if (rate === 1 && j === 0 && !isAllSlot) {
-				// 確殺！
-				damageRateText += `<td colspan="${damageBorders.length}" class="text-center text_red">確殺</td>`;
-				break;
-			}
-			else if (rate === 1) {
-				// 100％
-				damageRateText += `<td>100 <span class="font_size_11 font_color_half">%</span></td>`;
-			}
-			else {
-				const dispRate = Math.floor(rate * 1000) / 10;
-				// 本当に0なら0%　ちょっとでもあるなら0.1に補正
-				damageRateText += `<td>${dispRate === 0 && rate !== 0 ? 0.1 : dispRate} <span class="font_size_11 font_color_half">%</span></td>`;
-			}
-		}
-
-		const deathRate = Math.floor((damageBorders[0].value) * 1000) / 10;
-		const taihaRate = Math.floor((damageBorders[0].value + damageBorders[1].value) * 1000) / 10;
-		const tyuhaRate = Math.floor((damageBorders[0].value + damageBorders[1].value + damageBorders[2].value) * 1000) / 10;
-
-		const tooltipText = `
-		<div class='text-left'>
-			<div>${enemy.name}</div>
-			<div class='mt-1 ml-3'>大破以上: ${taihaRate} %</div>
-			<div class='ml-3'>中破以上: ${tyuhaRate} %</div>
-		</div>`;
-
-		tbodyText += `
-		<tr class="stage3_calc_detail ${deathRate >= 90 ? 'tr_death' : taihaRate >= 70 ? 'tr_damaged' : tyuhaRate >= 50 ? 'tr_half_damaged' : ''}"
-			data-toggle="tooltip" data-html="true" title="${tooltipText}">
-			<td class="px-0">
-				<img class="enemy_img_sm" src="../img/${isEnemy ? 'enemy' : 'ship'}/${enemy.id}.png">
-			</td>
-			<td>${HP}</td>
-			<td>${armor}</td>
-			<td>${plane.isAttacker ? damageRange : '-'}</td>
-			${damageRateText}
-		</tr>`;
-	}
-
-	$('.stage3_calc_detail').tooltip('dispose');
-	document.getElementById('stage3_table_tbody').innerHTML = tbodyText;
-	document.getElementById('target_plane_data').innerHTML = `
-		<img src="../img/type/icon${plane.itype}.png" class="plane_img_sm align-self-center">
-		<div class="ml-1 align-self-center detail_item_name"><span class="ml-1">${plane.name}</span></div>`;
-	document.getElementById('stage3_remodel').value = plane.remodel;
-	$('.stage3_calc_detail').tooltip();
-}
-
-/**
  * 敵スロット撃墜数詳細計算
  */
 function enemySlotDetailCalculate(enemyNo, slotNo) {
@@ -9411,7 +9658,9 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	// 例外排除
 	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
 	// チャート用散布
-	const data = [];
+	const fireData = [];
+	// スロットのデータは絶対とることに
+	const slotData = [];
 	// 今回の記録用の敵データ
 	const targetEnemy = battleInfo.battles[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.onlyScout)[enemyNo];
 	const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
@@ -9485,18 +9734,17 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 				shootDownEnemy(airIndex, enemies, adaptStage2, stage2Table);
 
 				const slot = targetEnemy.slots[slotNo];
-				if (isSlotDetail) {
-					// 指定した敵とスロットの数を格納
-					data.push(slot);
-				}
-				else {
+				// 指定した敵とスロットの数を格納 スロットは絶対とることになった
+				slotData.push(slot);
+
+				if (!isSlotDetail) {
 					// 航空戦火力
 					const powers = targetItem.getFirePower(slot);
 					if (powers.length === 2) {
-						data.push(powers[0]);
-						data.push(powers[1]);
+						fireData.push(powers[0]);
+						fireData.push(powers[1]);
 					}
-					else data.push(powers[0]);
+					else fireData.push(powers[0]);
 				}
 			}
 
@@ -9541,7 +9789,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	const tooltips = {
 		mode: 'index',
 		callbacks: {
-			title: (tooltipItem, data) => {
+			title: (tooltipItem) => {
 				const value = tooltipItem[0].xLabel;
 				if ($('#slot_detail').prop('checked')) {
 					if (!value) return `残機数：${value} 機${'\n'}航空戦火力：0`;
@@ -9551,12 +9799,25 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 				}
 				else return `航空戦火力：${value}`;
 			},
-			label: (tooltipItem, data) => [`${tooltipItem.yLabel} %`],
+			label: (tooltipItem) => [`${tooltipItem.yLabel} %`],
 		}
 	}
 
 	// 描画
-	chartSlotDistribution = updateDetailChart(data, label, tooltips);
+	chartSlotDistribution = updateDetailChart((isSlotDetail ? slotData : fireData), label, tooltips);
+
+	// 搭載数分布に置き換えるべ
+	if (!isSlotDetail) {
+		chartSlotDistribution = [];
+		const max_i = getArrayMax(slotData);
+		const min_i = getArrayMin(slotData);
+		const maxCount = slotData.length;
+		for (let i = min_i; i <= max_i; i++) {
+			const num = slotData.filter(v => v === i).length;
+			if (!num) continue;
+			chartSlotDistribution.push({ slot: i, rate: (num / maxCount) });
+		}
+	}
 
 	// 必要なら説明表示
 	$('#land_base_detail_table').addClass('d-none');
@@ -9612,150 +9873,6 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 
 	stage3PowerCalculate();
 }
-
-/**
- * 敵艦隊 航空戦火力計算を行う
- */
-function enemyStage3PowerCalculate() {
-	const enemyNo = castInt($('#detail_info').data('base_no'));
-	const slotNo = castInt($('#detail_info').data('slot_no'));
-
-	// 味方艦隊オブジェクト取得
-	const fleet = createFleetInstance();
-	// 戦闘情報オブジェクト取得
-	const battleInfo = updateEnemyFleetInfo(false);
-	// 表示戦闘
-	let mainBattle = isDefMode ? 0 : displayBattle;
-	// 例外排除
-	mainBattle = mainBattle < battleInfo.battles.length ? mainBattle : battleInfo.battles.length - 1;
-	// 今回の記録用の敵データ
-	const targetEnemy = battleInfo.battles[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.onlyScout)[enemyNo];
-	const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
-	// slotNo は艦載機だけの配列で見ている => 艦載機のみ配列を作る enemy.eqp.filter()
-	const planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
-	const plane = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type))[slotNo];
-
-	// 今回調査する機体データ
-	const targetItem = new EnemyItem(plane.id);
-	// 搭載表示 or 航空戦火力表示
-	const isSlotDetail = $('#slot_detail').prop('checked');
-
-	// 触接補正
-	const contactBonus = castFloat(document.getElementById('contact_bonus').value, 1);
-
-	// critical有効か？
-	const isCritical = document.getElementById('critical_hit')['checked'];
-	// 熟練度クリティカル補正
-	const crBonus = 1;
-
-	// 最終火力の確率分布
-	const powers = [];
-
-	// 指定された搭載数
-	const selectedSlot = Math.min(castInt(document.getElementById('stage3_slot').value), ST3_MAX_SLOT);
-	// 全事象
-	const isAllSlot = document.getElementById('stage3_all_slot')['checked'];
-	document.getElementById('stage3_slot').readOnly = isAllSlot;
-	if (!isAllSlot) {
-		document.getElementById('stage3_slot').value = Math.max(selectedSlot, 0);
-	}
-
-	// 改修値の指定がなされている場合
-	const manualRemodel = Math.max(Math.min(castInt(document.getElementById('stage3_remodel').value), 10), 0);
-
-	if (manualRemodel >= 0) {
-		targetItem.remodel = manualRemodel;
-	}
-	document.getElementById('stage3_remodel').value = targetItem.remodel;
-
-	if (isSlotDetail) {
-		// 搭載数記録モードなら火力に変換する
-		for (const ad of chartSlotDistribution) {
-			// 調査搭載数
-			const targetSlot = isAllSlot ? ad.slot : selectedSlot;
-			// キャップ後攻撃力
-			const basePower = targetItem.getFirePower(targetSlot);
-			// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
-			const step = 1 / basePower.length;
-			// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-			const rate = isAllSlot ? ad.rate * step : step;
-			for (const power of basePower) {
-				// A = キャップ後攻撃力 * 触接補正
-				let a = power * contactBonus;
-				// クリティカル補正　適用後に切り捨て
-				a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
-
-				// 火力とその確率を格納
-				const p = powers.find(v => v.power === a);
-				if (p) p.rate += rate;
-				else powers.push({ power: a, rate: rate });
-			}
-
-			// 搭載数指定モードの場合は1回で抜ける
-			if (!isAllSlot) break;
-		}
-	}
-	else {
-		// 搭載数指定モードの場合は一回計算して終わる
-		if (!isAllSlot) {
-			// 調査搭載数
-			const targetSlot = selectedSlot;
-			// キャップ後攻撃力
-			const basePower = targetItem.getFirePower(targetSlot);
-			// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
-			const step = 1 / basePower.length;
-			for (const power of basePower) {
-				// A = キャップ後攻撃力 * 触接補正
-				let a = power * contactBonus;
-				// クリティカル補正　適用後に切り捨て
-				a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
-				// 火力とその確率を格納
-				const p = powers.find(v => v.power === a);
-				if (p) p.rate += step;
-				else powers.push({ power: a, rate: step });
-			}
-		}
-		else {
-			// 基本火力値は取り終わっているので最終攻撃力に変換するのみ
-			for (const ad of chartSlotDistribution) {
-				// A = キャップ後攻撃力 * 触接補正
-				let a = ad.slot * contactBonus;
-				// クリティカル補正　適用後に切り捨て
-				a = isCritical ? Math.floor(a * 1.5 * crBonus) : a;
-
-				// 火力とその確率を格納
-				const p = powers.find(v => v.power === a);
-				if (p) p.rate += ad.rate;
-				else powers.push({ power: a, rate: ad.rate });
-			}
-		}
-	}
-
-	// 弾薬補正
-	const ammoBonus = 1;
-
-	// 耐久改修
-	const hpBuff1 = document.getElementById('hp_1')['checked'];
-	const hpBuff2 = document.getElementById('hp_2')['checked'];
-	// st3用敵艦隊を抽出
-	let stage3Fleet = fleet.ships.concat();
-	for (const ship of stage3Fleet) {
-		const raw = SHIP_DATA.find(v => v.id === ship.id);
-		if (!raw) continue;
-		// 必要なのは名前 id 艦種 耐久 装甲のみでOK
-		ship.type = raw.type;
-		ship.hp = ship.level >= 100 ? raw.hp2 : raw.hp;
-		if (hpBuff1) ship.hp++;
-		if (hpBuff2) ship.hp++;
-		if (ship.hp >= raw.max_hp) ship.hp = raw.max_hp;
-		ship.armor = raw.max_armor;
-		ship.sumItemArmor = getArraySum(ship.items.map(v => v.armor));
-	}
-
-	// 描画
-	drawStage3Result(stage3Fleet, powers, ammoBonus, isAllSlot, targetItem);
-}
-
 
 /**
  * グラフ更新 なければ作成
@@ -15352,6 +15469,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('click', '#enabled_rikutei', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#enabled_rikutei_z', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#manual_enemy_union', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#manual_union_main', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#manual_union_escort', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#hp_1', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#hp_2', stage3PowerCalculate);
 	$('#modal_result_detail').on('change', '#contact_bonus', stage3PowerCalculate);
