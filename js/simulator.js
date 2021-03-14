@@ -3421,7 +3421,7 @@ function setEnemyType(array) {
 	for (const enemy of enemies) {
 		const opt = document.createElement('option');
 		opt.value = enemy.id;
-		opt.textContent = `id: ${enemy.id} ${enemy.name}`;
+		opt.textContent = `id: ${enemy.id + 1500} ${enemy.name}`;
 		parent.appendChild(opt);
 	}
 	parent.options[0].selected = true;
@@ -9102,6 +9102,14 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	$('#detail_legend').html(detailLegend);
 	$('#detail_info').html(planeText);
 
+	// スロット選択欄の初期化
+	const maxSlot = getArrayMax(slotData);
+	if (document.getElementById('stage3_all_slot')['checked']) {
+		document.getElementById('stage3_slot').value = maxSlot;
+	}
+	document.getElementById('stage3_all_slot_label').textContent =
+		`残機数分布の結果を利用（${getArrayMin(slotData)}機 ~ ${maxSlot}機）`;
+
 	stage3PowerCalculate();
 }
 
@@ -9222,8 +9230,8 @@ function landBasePowerCalculate() {
 		for (const text of words) {
 			const hits = ENEMY_DATA.filter(v => (v.id + 1500) == text || v.name.indexOf(text) >= 0);
 			for (const enemy of hits) {
-				// 最大11隻先着
-				if (aerialSetting.targetEnemies.length < 12) {
+				// 最大12隻先着 被りなし
+				if (aerialSetting.targetEnemies.length < 12 && !aerialSetting.targetEnemies.some(v => v.id === enemy.id)) {
 					aerialSetting.targetEnemies.push(new Enemy(enemy.id));
 				}
 			}
@@ -9307,8 +9315,8 @@ function fleetStage3PowerCalculate() {
 		for (const text of words) {
 			const hits = ENEMY_DATA.filter(v => (v.id + 1500) == text || v.name.indexOf(text) >= 0);
 			for (const enemy of hits) {
-				// 最大12隻先着
-				if (aerialSetting.targetEnemies.length < 12) {
+				// 最大12隻先着 被りなし
+				if (aerialSetting.targetEnemies.length < 12 && !aerialSetting.targetEnemies.some(v => v.id === enemy.id)) {
 					const enm = new Enemy(enemy.id);
 					enm.isEscort = isEscort;
 					aerialSetting.targetEnemies.push(enm);
@@ -9854,7 +9862,7 @@ function manual_enemy_type_Changed() {
 	for (const enemy of enemies) {
 		const opt = document.createElement('option');
 		opt.value = enemy.id;
-		opt.textContent = `id: ${enemy.id} ${enemy.name}`;
+		opt.textContent = `id: ${enemy.id + 1500} ${enemy.name}`;
 
 		parent.appendChild(opt);
 	}
