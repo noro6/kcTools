@@ -2048,9 +2048,9 @@ const FORBIDDEN_LINK_SHIP_ITEM = [
 	{ shipId: 423, index: [4], itemType: [1, 2, 5, 22], itemIDs: [] },
 	{ shipId: 424, index: [4], itemType: [1, 2, 5], itemIDs: [] },
 	// 夕張改二 5スロットに 主砲系 魚雷系 不可
-	{ shipId: 422, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
-	{ shipId: 423, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
-	{ shipId: 424, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 46], itemIDs: [] },
+	{ shipId: 422, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 40, 46], itemIDs: [] },
+	{ shipId: 423, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 40, 46], itemIDs: [] },
+	{ shipId: 424, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 40, 46], itemIDs: [] },
 	// 能代改二 4スロットに 魚雷系 不可
 	{ shipId: 462, index: [4], itemType: [5, 22], itemIDs: [] },
 ];
@@ -2212,4 +2212,4 @@ const DEFAULT_PLANE_PRESET = [
 const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
-const LATEST_VERSION = '1.12.3.1';
+const LATEST_VERSION = '1.12.3.2';

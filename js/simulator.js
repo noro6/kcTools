@@ -66,6 +66,9 @@ let usedItems = [];
 // 編成済み艦娘
 let usedShip = [];
 
+// 陣形選択
+let selectedFormations = []
+
 // 基地空襲被害を促すアラート
 let needAirRaidAlert = false;
 
@@ -4557,6 +4560,17 @@ function createEnemyInput(count) {
 
 	battleCount = count;
 	displayBattle = count - 1;
+
+	// 陣形の初期化 or スライス
+	const len = selectedFormations.length;
+	if (len <= battleCount) {
+		for (let i = 0; i < battleCount - len; i++) {
+			selectedFormations.push(1);
+		}
+	}
+	else {
+		selectedFormations = selectedFormations.slice(0, battleCount);
+	}
 }
 
 /**
@@ -5424,6 +5438,52 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 			document.getElementById('union_fleet')['checked'] = isUnion;
 		}
 
+		// 陣形　初期値
+		document.getElementById('fleet_formation').value = 1;
+		// 陣形、対空有効設定復帰
+		if (preset.length >= 4 && preset[3]) {
+			// 対空砲火有効化チェック復帰
+			document.getElementById('adapt_stage2')['checked'] = true;
+
+			try {
+				// 配列を前提とする
+				let lastValue = 1;
+				selectedFormations = [];
+				for (const d of preset[3]) {
+					const formationId = castInt(d);
+
+					if (formationId <= 0) {
+						// 陣形IDがない 不適切(対空砲火テーブルの時代の遺産)
+						document.getElementById('adapt_stage2')['checked'] = false;
+						selectedFormations = [];
+						lastValue = 1;
+						break;
+					}
+					else {
+						selectedFormations.push(formationId);
+						lastValue = formationId;
+					}
+				}
+				document.getElementById('fleet_formation').value = lastValue;
+			} catch (error) {
+				// 配列で解決できなかったら ～v1.12.3.1のケース
+				const value = castInt(preset[3]);
+				if (value) {
+					// 埋める
+					selectedFormations = [];
+					for (let i = 0; i < 10; i++) {
+						selectedFormations.push(value);
+					}
+					document.getElementById('adapt_stage2')['checked'] = true;
+					document.getElementById('fleet_formation').value = value;
+				}
+			}
+		}
+		else {
+			document.getElementById('adapt_stage2')['checked'] = false;
+			selectedFormations = [];
+		}
+
 		// 敵艦展開
 		let battle = 1;
 		for (let index = 0; index < preset[2].length; index++) {
@@ -5510,19 +5570,6 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 				}
 			}
 		}
-
-		if (preset.length >= 4 && preset[3]) {
-			// 対空砲火有効化チェック復帰 前verのデータとかグちゃってるけどあんま影響ないのでヨシ！よくない
-			document.getElementById('adapt_stage2')['checked'] = true;
-			const value = castInt(preset[3]);
-			if (value) {
-				document.getElementById('fleet_formation').value = value;
-			}
-		}
-		else {
-			document.getElementById('adapt_stage2')['checked'] = false;
-		}
-
 	} catch (error) {
 		// 全てクリアしておく
 		$('.ohuda_select').val(-1);
@@ -5542,14 +5589,27 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
  */
 function encodePreset() {
 	try {
+
+		// 陣形取得 => ここは計算結果欄で選択されている陣形
+		const formationId = castInt($('#fleet_formation').val());
+		// 表示戦闘
+		const mainBattle = isDefMode ? 0 : displayBattle;
+		// 各戦闘陣形個別の値を更新（更新されるのは表示戦闘のもののみ）
+		if (selectedFormations.length > mainBattle) {
+			selectedFormations[mainBattle] = formationId;
+		}
+		else {
+			// インデックスがおかしい場合はケツ
+			selectedFormations[selectedFormations.length - 1] = formationId;
+		}
 		/*
 			プリセットメモ
-			全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:対空プリセット, 4: 防空モードかどうか], 3:メモ, 4:更新日時]
-				基地: [0:機体群, 1:札群, 2:ターゲット戦闘番号[1-1, 1-2, 2-1, ..., 3-2]]
+			基地: [0:機体群, 1:札群, 2:ターゲット戦闘番号[1-1, 1-2, 2-1, ..., 3-2]]
+			全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:陣形(対空有効無効を兼ねる), 4: 防空モードかどうか], 3:メモ, 4:更新日時]
 				艦隊: [0:id, 1: Item配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合フラグ, 6:運]
 					装備: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 				敵艦: [0:戦闘位置, 1:[敵id配列], 2:マス名, 3:マス種別, 4:陣形, 5:半径]
-				対空: 対空砲火適用有効なら陣形id その他0
+				対空: 対空砲火適用有効なら陣形配列 その他空
 				防空モード: そのまんま boolean
 				防空モード敵艦隊: { 0:[敵id配列], 1:マス種別, 2:陣形 }
 		*/
@@ -5557,7 +5617,7 @@ function encodePreset() {
 			createLandBasePreset(),
 			createFriendFleetPreset(),
 			createEnemyFleetPreset(),
-			document.getElementById('adapt_stage2')['checked'] ? castInt(document.getElementById('fleet_formation').value) : 0,
+			document.getElementById('adapt_stage2')['checked'] ? selectedFormations : null,
 			isDefMode,
 			createAirRaidEnemyFleetPreset()
 		];
@@ -6725,7 +6785,7 @@ function updateFleetView() {
 		node.innerHTML = "";
 	}
 
-	// 陣形欄の制御 => 対空砲火モーダル内と計算結果欄の2つ ようは連合用の陣形の表示処理
+	// 陣形欄の制御 => ようは連合用の陣形の表示処理 対象は対空砲火モーダル内と計算結果欄の2つ
 	$('#fleet_formation').find('option').each((i, e) => {
 		const val = castInt($(e).val());
 		if (fleet.isUnion && val > 10) $(e).removeClass('d-none');
@@ -7932,7 +7992,7 @@ function rateCalculate() {
 	$('#calculate_count').val(maxCount);
 	const fleetLen = fleet.ships.length;
 	const battleInfo = battleData.battles;
-	// 計算する戦闘
+	/** @type {number} 計算する戦闘 初戦0 */
 	let mainBattle = isDefMode ? 0 : displayBattle;
 
 	// 結果格納群
@@ -8144,7 +8204,7 @@ function rateCalculate() {
 
 		// カーソル
 		let resultIndex = 0;
-		// 自艦隊各種スロット清算、補給
+		// 自艦隊各スロット清算、補給
 		for (let i = 0; i < fleetLen; i++) {
 			const ship = fleet.ships[i];
 			if (ship.ignoreSlot) continue;
@@ -13561,6 +13621,12 @@ function btn_more_calc_Clicked() {
  */
 function display_battle_tab_Changed($this) {
 	displayBattle = castInt($this.find('.nav-link').data('disp')) - 1;
+
+	// 陣形を取得して変更
+	if (displayBattle <= selectedFormations.length) {
+		document.getElementById('fleet_formation').value = selectedFormations[displayBattle];
+	}
+
 	calculate(false, false, false);
 }
 
@@ -15332,6 +15398,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				memo: ''
 			};
 			const activePresets = loadLocalStorage('activePresets') || { activeId: "", presets: [] };
+			if (activePresets.presets.filter(v => v.name === '外部データ').length > 5 && Math.floor(Math.random() * 5) === 4) {
+				tabData.name = 'おそとデータ';
+			}
 			activePresets.presets.push(tabData);
 			activePresets.activeId = tabData.id;
 
