@@ -3050,10 +3050,7 @@ function initialize(callback) {
 	document.getElementById('display_final')['checked'] = setting.visibleFinal;
 	document.getElementById('frequent_ship')['checked'] = setting.orderByFrequency;
 
-	// 表示隻数初期化
-	for (const e of document.getElementsByClassName('display_ship_count')) e.value = 2;
-
-	// 味方艦隊複製
+	// 味方艦隊複製 ※ ここ以外について、shipNo_は順番は不問
 	text = $('#shipNo_1').html();
 	$('.ship_tab').each((i, e) => { if (i > 0) $(e).html(text); });
 
@@ -3679,10 +3676,8 @@ function clearShipDiv($div) {
  */
 function clearShipDivAll(displayCount = 2) {
 	$('.ship_tab').each((i, e) => clearShipDiv($(e)));
-	$('.display_ship_count').each((i, e) => {
-		$(e).val(displayCount);
-		display_ship_count_Changed($(e), true);
-	});
+	display_ship_count_Changed($('#friendFleet_item1'), displayCount, true);
+	display_ship_count_Changed($('#friendFleet_item2'), displayCount, true);
 }
 
 /**
@@ -5431,10 +5426,9 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 				else shipCountFleet2 += 1;
 			});
 
-			$('#friendFleet_item1').find('.display_ship_count').val(Math.max(shipCountFleet1, 1));
-			display_ship_count_Changed($('#friendFleet_item1').find('.display_ship_count'), true);
-			$('#friendFleet_item2').find('.display_ship_count').val(Math.max(shipCountFleet2, 1));
-			display_ship_count_Changed($('#friendFleet_item2').find('.display_ship_count'), true);
+			display_ship_count_Changed($('#friendFleet_item1'), Math.max(shipCountFleet1, 1), true);
+			display_ship_count_Changed($('#friendFleet_item2'), Math.max(shipCountFleet2, 1), true);
+
 			document.getElementById('union_fleet')['checked'] = isUnion;
 		}
 
@@ -7000,11 +6994,11 @@ function updateFleetView() {
 	if (fleet.isUnion) {
 		// 第1艦隊
 		fleetSumAP1.textContent = `${fleet.airPower}`;
-		fleetContact1.textContent = `${contactRate.toFixed(1)}%`;
+		fleetContact1.textContent = `${contactRate.toFixed(2)}%`;
 		fleetNightContact1.textContent = `${contactRateN}%`;
 		// 第2艦隊
 		fleetSumAP2.textContent = `${fleet.escortAirPower}`;
-		fleetContact2.textContent = `${contactRate.toFixed(1)}%`;
+		fleetContact2.textContent = `${contactRate.toFixed(2)}%`;
 		fleetNightContact2.textContent = `${contactRateN}%`;
 
 	}
@@ -7712,14 +7706,19 @@ function updateEnemyFleetInfo() {
  * @param {FleetStage2[]} [stage2Tables=[]] 撃墜テーブル
  */
 function shootDownEnemy(index, enemyFleet, adaptStage2 = false, stage2Tables = []) {
-	const max_i = enemyFleet.length;
-
 	// 対空CIの選択
-	const pickRate = Math.random();
-	const tableIndex = stage2Tables.findIndex(v => v.border > pickRate);
-	const stage2 = tableIndex >= 0 ? stage2Tables[tableIndex].table : [];
-	const range = stage2.length;
+	let pickRate = 0;
+	let tableIndex = 0;
+	let stage2 = null;
+	let range = 0;
+	if (adaptStage2) {
+		pickRate = Math.random();
+		tableIndex = stage2Tables.findIndex(v => v.border > pickRate);
+		stage2 = tableIndex >= 0 ? stage2Tables[tableIndex].table : [];
+		range = stage2.length;
+	}
 
+	const max_i = enemyFleet.length;
 	for (let i = 0; i < max_i; i++) {
 		const enemy = enemyFleet[i];
 		const max_j = enemy.slots.length;
@@ -12327,6 +12326,15 @@ function toggleDefenseMode(defMode) {
 }
 
 /**
+ * 艦娘追加ボタン押下時
+ * @param {JQuery} $this
+ */
+function btn_ship_create_Clicked($this) {
+	const count = castInt($this[0].dataset.count);
+	display_ship_count_Changed($this.closest('.friendFleet_tab'), count + 1);
+}
+
+/**
  * 艦娘装備リセットボタン押下時
  * @param {JQuery} $this
  */
@@ -12967,15 +12975,25 @@ function btn_expand_plane_preset_Clicked() {
 
 /**
  * 表示隻数変更時
- * @param {JQuery} $this .display_ship_count
+ * @param {JQuery} $this friendFleet_tab id指定で。
  * @param {boolean} cancelCalculate 計算を行わない場合はtrue
  */
-function display_ship_count_Changed($this, cancelCalculate = false) {
-	const displayCount = $this.val();
-	$this.closest('.friendFleet_tab').find('.ship_tab').each((i, e) => {
+function display_ship_count_Changed($this, displayCount, cancelCalculate = false) {
+	$this.find('.ship_tab').each((i, e) => {
 		if (i < displayCount) $(e).removeClass('d-none');
 		else $(e).addClass('d-none');
 	});
+
+	// 現在地を格納 6隻埋まったら新規追加ボタンは非表示に
+	const $button = $this.find('.btn_ship_create');
+	$button[0].dataset.count = displayCount;
+	if (displayCount >= 6) {
+		$button[0].dataset.count = 6;
+		$button.addClass('d-none');
+	}
+	else {
+		$button.removeClass('d-none');
+	}
 
 	if (!cancelCalculate) calculate(false, true, false);
 }
@@ -13053,7 +13071,21 @@ function ship_name_span_Clicked($this) {
  * @param {JQuery} $this
  */
 function btn_remove_ship_Clicked($this) {
-	clearShipDiv($this.closest('.ship_tab'));
+	const $parentTab = $this.closest('.fleet_tab');
+	const $closedTab = $this.closest('.ship_tab');
+
+	clearShipDiv($closedTab);
+
+	const $btnAdd = $parentTab.find('.btn_ship_create');
+	const count = castInt($btnAdd[0].dataset.count);
+	if (count >= 2) {
+		// ケツに回して非表示にする
+		$closedTab.addClass('d-none');
+		$btnAdd.before($closedTab);
+		$btnAdd.removeClass('d-none');
+		$btnAdd[0].dataset.count = count - 1;
+	}
+
 	calculate(false, true, false);
 }
 
@@ -13118,16 +13150,20 @@ function battle_count_Changed($this) {
 	// 敵入力欄生成
 	createEnemyInput(castInt($this.val()));
 
+	let needAlert = false;
 	// なんらかの出撃基地があれば基地派遣設定ボタンを目立たせる
 	$('#lb_tab_parent').find('.ohuda_select').each((i, e) => {
 		if (castInt($(e).val()) === 2) {
 			$('#btn_lb_target').removeClass('btn-outline-success');
 			$('#btn_lb_target').addClass('btn-outline-danger');
 			$('#lb_target_alert').removeClass('d-none');
+			needAlert = true;
 		}
 	});
 
-	inform_warning('敵艦との交戦回数が変更されました。基地航空隊の派遣先を確認してください。');
+	if (needAlert) {
+		inform_warning('敵艦との交戦回数が変更されました。基地航空隊の派遣先を確認してください。');
+	}
 	calculate(true, false, true);
 }
 
@@ -15462,7 +15498,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_show_contact_rate_lb', function () { btn_show_contact_rate_lb_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_toggle_lb_info', function () { btn_toggle_lb_info_Clicked($(this)); });
 	$('#landBase_content').on('click', '#toggle_def_mode', toggle_def_mode_Checked);
-	$('#friendFleet_content').on('change', '.display_ship_count', function () { display_ship_count_Changed($(this)); });
+	$('#friendFleet_content').on('click', '.btn_ship_create', function () { btn_ship_create_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_remove_ship', function () { btn_remove_ship_Clicked($(this)); });
@@ -15627,6 +15663,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('input', '#stage3_slot', stage3PowerCalculate);
 	$('#modal_result_detail').on('input', '#ship_bonus', stage3PowerCalculate);
 	$('#modal_result_detail').on('input', '#stage3_remodel', stage3PowerCalculate);
+	$('#modal_result_detail').on('focus', 'input[type="number"]:not([readonly])', function () { $(this).select(); });
 	$('#modal_result_detail').on('click', '#show_detail_slot .nav-item', function () { detail_slot_tab_Changed($(this)); });
 	$('#modal_result_detail').on('click', '.btn_show_detail:not(.disabled)', function () { btn_show_detail_Clicked($(this)); });
 	$('#modal_result_detail').on('click', '#btn_output_slot_dist', btn_output_slot_dist_Clicked);
@@ -15812,10 +15849,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			animation: 200,
 			scroll: true,
 			onEnd: function () {
-				// 艦何番目か整合性取る
-				$('.ship_tab').each((i, e) => {
-					$(e).attr('id', 'shipNo_' + (i + 1));
-				});
 				calculate(false, true, false);
 			}
 		});
