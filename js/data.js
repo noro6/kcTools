@@ -2058,6 +2058,9 @@ const FORBIDDEN_LINK_SHIP_ITEM = [
 	{ shipId: 424, index: [5], itemType: [1, 2, 5, 14, 15, 17, 20, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 40, 46], itemIDs: [] },
 	// 能代改二 4スロットに 魚雷系 不可
 	{ shipId: 462, index: [4], itemType: [5, 22], itemIDs: [] },
+	// 矢矧改二 4スロットに 魚雷系 不可
+	{ shipId: 463, index: [4], itemType: [5, 22], itemIDs: [] },
+	{ shipId: 468, index: [4], itemType: [5], itemIDs: [] },
 ];
 
 // 補強増設枠
