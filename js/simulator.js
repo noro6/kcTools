@@ -243,7 +243,7 @@ class Fleet {
 		// 対空CI発動優先ソート用に一時格納
 		for (const ship of this.ships) {
 			for (const cutin of ship.antiAirCutIn) {
-				if (cutin.id >= 39) specialCutin.push(cutin);
+				if (cutin.id >= 34 && cutin.id !== 36) specialCutin.push(cutin);
 				else generalCutin.push(cutin);
 			}
 		}
