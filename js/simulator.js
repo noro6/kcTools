@@ -5696,7 +5696,7 @@ function createFriendFleetPreset() {
 			const plane = [
 				castInt($ce[0].dataset.planeid),
 				castInt($ce.find('.prof_select')[0].dataset.prof),
-				castInt($ce.find('.remodel_value').text()),
+				castInt($ce.find('.remodel_value')[0].textContent),
 				castInt($ce.find('.slot').text()),
 				$(ce).hasClass('expanded_slot') ? -1 : j,
 				($ce.find('.plane_unlock').hasClass('d-none') ? 1 : 0)
@@ -12330,8 +12330,12 @@ function toggleDefenseMode(defMode) {
  * @param {JQuery} $this
  */
 function btn_ship_create_Clicked($this) {
+	const fleet_tab = $this.closest('.friendFleet_tab');
 	const count = castInt($this[0].dataset.count);
-	display_ship_count_Changed($this.closest('.friendFleet_tab'), count + 1);
+	display_ship_count_Changed(fleet_tab, count + 1);
+
+	// 新規追加された最後の入力欄の艦娘選択フォームを開く
+	ship_name_span_Clicked(fleet_tab.find('.ship_tab:not(.d-none):last').find('.ship_name_span'));
 }
 
 /**
