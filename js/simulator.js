@@ -1652,10 +1652,11 @@ class ShipItem extends Item {
 	 * @param {number} slot 搭載数
 	 * @param {boolean} [isUnion=false] 防御側が連合艦隊
 	 * @param {boolean} [isEscort=false] 防御側が随伴か
+	 * @param {boolean} [isJetMode=false] 噴式強襲モードか
 	 * @returns {number[]} 火力配列
 	 * @memberof ShipItem
 	 */
-	static getFirePower(item, slot, isUnion = false, isEscort = false) {
+	static getFirePower(item, slot, isUnion = false, isEscort = false, isJetMode = false) {
 		// 攻撃機前提
 		if (!item.isAttacker || slot < 1) {
 			return [0];
@@ -1668,6 +1669,7 @@ class ShipItem extends Item {
 		let baseFire = 0;
 		let itemPower = 0;
 		const fire = [];
+		const baseAntiAir = item.antiAir - item.bonusAntiAir;
 		switch (item.type) {
 			case 8:
 				// 艦攻 雷装を適用
@@ -1679,7 +1681,6 @@ class ShipItem extends Item {
 			case 7:
 			case 11:
 				// 爆撃機 爆装を適用
-				const baseAntiAir = item.antiAir - item.bonusAntiAir;
 				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
 				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(baseFire);
@@ -1688,7 +1689,14 @@ class ShipItem extends Item {
 				// 噴式爆撃機
 				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
 				baseFire = itemPower * Math.sqrt(slot) + c;
-				fire.push(baseFire / Math.sqrt(2));
+
+				// 噴式強襲モードかどうかで補正
+				if (isJetMode) {
+					fire.push(baseFire);
+				}
+				else {
+					fire.push(baseFire / Math.sqrt(2));
+				}
 				break;
 			default:
 				fire.push(0);
@@ -5696,7 +5704,7 @@ function createFriendFleetPreset() {
 			const plane = [
 				castInt($ce[0].dataset.planeid),
 				castInt($ce.find('.prof_select')[0].dataset.prof),
-				castInt($ce.find('.remodel_value').text()),
+				castInt($ce.find('.remodel_value')[0].textContent),
 				castInt($ce.find('.slot').text()),
 				$(ce).hasClass('expanded_slot') ? -1 : j,
 				($ce.find('.plane_unlock').hasClass('d-none') ? 1 : 0)
@@ -9483,6 +9491,16 @@ function drawStage3Result() {
 	// 弾薬補正
 	const ammoBonus = aerialSetting.ammoBonus;
 
+	// 噴式オプション表示非表示
+	if (isFleet && plane.type === 57) {
+		$('.jet_option').removeClass('d-none');
+	}
+	else {
+		$('.jet_option').addClass('d-none');
+	}
+	// 噴式強襲モードフラグ
+	const isJetMode = isFleet && plane.type === 57 && document.getElementById('jet_phase')['checked'];
+
 	// 全事象でやるかどうか
 	const isAllSlot = aerialSetting.isAllSlot;
 	// 結果表示用
@@ -9528,7 +9546,7 @@ function drawStage3Result() {
 		}
 		else if (isFleet) {
 			// 味方艦隊 通常
-			lastPowers = getFleetAerialPower(slotDist, enemy);
+			lastPowers = getFleetAerialPower(slotDist, enemy, 1, isJetMode);
 		}
 		else {
 			// 敵艦隊（防御側が味方艦隊） 通常
@@ -9823,8 +9841,9 @@ function getLandBaseASWPower(slotDist, afterCapBonus = 1) {
  * @param {{slot: number, rate: number}[]} slotDist
  * @param {Enemy} enemy 敵艦
  * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ * @param {boolean} [isJetMode=false] 噴式強襲モードか
  */
-function getFleetAerialPower(slotDist, enemy, afterCapBonus = 1) {
+function getFleetAerialPower(slotDist, enemy, afterCapBonus = 1, isJetMode = false) {
 	/** @type {ShipItem} */
 	const plane = aerialSetting.item;
 	const isCritical = aerialSetting.isCritical;
@@ -9840,7 +9859,7 @@ function getFleetAerialPower(slotDist, enemy, afterCapBonus = 1) {
 		// 調査搭載数
 		const slot = isAllSlot ? ad.slot : manualSlot;
 		// キャップ後攻撃力 todo 連合艦隊補正 敵連合時 主力:-10 随伴:-20
-		const basePower = ShipItem.getFirePower(plane, slot, isUnion, enemy.isEscort);
+		const basePower = ShipItem.getFirePower(plane, slot, isUnion, enemy.isEscort, isJetMode);
 		// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
 		const step = 1 / basePower.length;
 		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
@@ -12330,8 +12349,12 @@ function toggleDefenseMode(defMode) {
  * @param {JQuery} $this
  */
 function btn_ship_create_Clicked($this) {
+	const fleet_tab = $this.closest('.friendFleet_tab');
 	const count = castInt($this[0].dataset.count);
-	display_ship_count_Changed($this.closest('.friendFleet_tab'), count + 1);
+	display_ship_count_Changed(fleet_tab, count + 1);
+
+	// 新規追加された最後の入力欄の艦娘選択フォームを開く
+	ship_name_span_Clicked(fleet_tab.find('.ship_tab:not(.d-none):last').find('.ship_name_span'));
 }
 
 /**
@@ -15656,6 +15679,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_result_detail').on('click', '#btn_apply_search', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#hp_1', stage3PowerCalculate);
 	$('#modal_result_detail').on('click', '#hp_2', stage3PowerCalculate);
+	$('#modal_result_detail').on('click', '#jet_phase', stage3PowerCalculate);
 	$('#modal_result_detail').on('change', '#contact_bonus', stage3PowerCalculate);
 	$('#modal_result_detail').on('change', '#ammo_bonus', stage3PowerCalculate);
 	$('#modal_result_detail').on('change', '#manual_enemy_type', manual_enemy_type_Changed);
