@@ -9492,14 +9492,14 @@ function drawStage3Result() {
 	const ammoBonus = aerialSetting.ammoBonus;
 
 	// 噴式オプション表示非表示
-	if (isFleet && plane.type === 57) {
+	if (isFleet && !isLandBase && plane.type === 57) {
 		$('.jet_option').removeClass('d-none');
 	}
 	else {
 		$('.jet_option').addClass('d-none');
 	}
 	// 噴式強襲モードフラグ
-	const isJetMode = isFleet && plane.type === 57 && document.getElementById('jet_phase')['checked'];
+	const isJetMode = isFleet && !isLandBase && plane.type === 57 && document.getElementById('jet_phase')['checked'];
 
 	// 全事象でやるかどうか
 	const isAllSlot = aerialSetting.isAllSlot;
