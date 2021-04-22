@@ -1135,7 +1135,9 @@ const SHIP_DATA = [
 	{ id: 1381, api: 281, type: 7, name: "龍驤改", slot: [9, 24, 5, 5], final: 0, orig: 30, ver: 1, range: 1, type2: 32, hp: 45, hp2: 51, max_hp: 53, max_aa: 39, max_armor: 59, luck: 12, max_luck: 59 },
 	{ id: 157, api: 157, type: 7, name: "龍驤改二", slot: [18, 28, 6, 3], final: 1, orig: 30, ver: 2, range: 1, type2: 32, hp: 50, hp2: 57, max_hp: 59, max_aa: 48, max_armor: 62, luck: 15, max_luck: 59 },
 	{ id: 185, api: 185, type: 7, name: "龍鳳", slot: [18, 7, 6], final: 0, orig: 184, ver: 1, range: 1, type2: 51, hp: 39, hp2: 44, max_hp: 46, max_aa: 48, max_armor: 38, luck: 20, max_luck: 69 },
-	{ id: 190, api: 318, type: 7, name: "龍鳳改", slot: [21, 9, 9, 6], final: 1, orig: 184, ver: 2, range: 1, type2: 51, hp: 48, hp2: 54, max_hp: 56, max_aa: 62, max_armor: 57, luck: 24, max_luck: 79 },
+	{ id: 190, api: 318, type: 7, name: "龍鳳改", slot: [21, 9, 9, 6], final: 0, orig: 184, ver: 2, range: 1, type2: 51, hp: 48, hp2: 54, max_hp: 56, max_aa: 62, max_armor: 57, luck: 24, max_luck: 79 },
+	{ id: 483, api: 883, type: 7, name: "龍鳳改二戊", slot: [21, 21, 12, 3], final: 1, orig: 184, ver: 3, range: 2, type2: 51, hp: 61, hp2: 68, max_hp: 70, max_aa: 72, max_armor: 73, luck: 42, max_luck: 98 },
+	{ id: 488, api: 888, type: 7, name: "龍鳳改二", slot: [21, 21, 14, 6], final: 1, orig: 184, ver: 4, range: 2, type2: 51, hp: 63, hp2: 70, max_hp: 72, max_aa: 81, max_armor: 74, luck: 42, max_luck: 98 },
 	{ id: 321, api: 521, type: 7, name: "春日丸", slot: [14, 9], final: 0, orig: 321, ver: 0, range: 1, type2: 75, hp: 36, hp2: 41, max_hp: 43, max_aa: 24, max_armor: 32, luck: 5, max_luck: 39 },
 	{ id: 326, api: 526, type: 7, name: "大鷹", slot: [14, 11, 2], final: 0, orig: 321, ver: 1, range: 1, type2: 76, hp: 37, hp2: 42, max_hp: 44, max_aa: 27, max_armor: 34, luck: 6, max_luck: 44 },
 	{ id: 1460, api: 380, type: 7, name: "大鷹改", slot: [14, 14, 5, 3], final: 0, orig: 321, ver: 2, range: 1, type2: 76, hp: 47, hp2: 53, max_hp: 55, max_aa: 42, max_armor: 52, luck: 9, max_luck: 54 },
@@ -2069,9 +2071,9 @@ const EXPANDED_ITEM_TYPE = [17, 21, 23, 27, 28, 36, 39, 43, 44, 51];
 
 // 補強増設 艦娘指定特別装備枠
 const EXPANDED_SPECIAL_ITEM = [
-	{ itemId: 66, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 501, 503, 504, 506, 508, 509, 662, 663, 668] },
+	{ itemId: 66, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 501, 503, 504, 506, 508, 509, 662, 663, 668, 883, 888] },
 	{ itemId: 71, shipApiIds: [136, 148, 153, 156, 183, 321, 546] },
-	{ itemId: 220, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 501, 503, 504, 506, 508, 509, 662, 663, 668] },
+	{ itemId: 220, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 501, 503, 504, 506, 508, 509, 662, 663, 668, 883, 888] },
 	{ itemId: 275, shipApiIds: [136, 148, 153, 156, 183, 321, 546] },
 	{ itemId: 408, shipApiIds: [621, 626] },
 ];
