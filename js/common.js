@@ -324,6 +324,28 @@ function adaptUpdater() {
 		if (major <= 11 || minor < 1 || (minor === 1 && patch < 1)) {
 			setting.visibleAntiAirStatus = true;
 		}
+
+		if (major <= 11 || minor < 3 || (minor === 3 && patch < 5)) {
+			// 所持艦娘情報変更
+			let shipStock = loadShipStock();
+
+			// 所持数データ num を経験値の配列として変換　Lvは99で初期
+			for (const stockData of shipStock) {
+				if (typeof stockData.num === 'number') {
+					const array = [];
+					for (let i = 0; i < stockData.num; i++) {
+						array.push(1000000);
+					}
+					stockData.num = array;
+					delete stockData.deck;
+				}
+			}
+
+			// 未所持艦娘の情報は保存しない
+			shipStock = shipStock.filter(v => v.num.length > 0);
+
+			saveLocalStorage('shipStock', shipStock);
+		}
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;
@@ -497,22 +519,71 @@ function readDeckBuilder(deck) {
 function readShipJson(input) {
 	try {
 		const jsonData = JSON.parse(input);
-		const shipStock = loadShipStock();
-		// いったん全ての艦娘を0にする
-		for (const v of shipStock) {
-			v.num = 0;
-		}
+		const shipStock = [];
 
 		for (const obj of jsonData) {
 			// 艦娘データかチェック
-			if (!obj.hasOwnProperty('api_ship_id')) return false;
-
-			const shipId = obj.api_ship_id;
-			const stock = shipStock.find(v => v.deck === shipId);
-			if (stock) stock.num++;
+			if (!obj.hasOwnProperty('api_ship_id') || !obj.hasOwnProperty('api_exp')) return false;
+			const ship = SHIP_DATA.find(v => v.api === obj.api_ship_id);
+			// todo 経験値取得
+			const exp = obj.api_exp[0];
+			// マスタにあるデータなら追加
+			if (ship) {
+				const stock = shipStock.find(v => v.id === ship.id);
+				if (stock) {
+					// 既にデータある場合
+					stock.num.push(exp);
+				}
+				else {
+					// 新しくデータ追加
+					shipStock.push({ id: ship.id, num: [exp] });
+				}
+			}
 		}
 
 		shipStock.sort((a, b) => a.id - b.id);
+		// 完全上書き
+		saveLocalStorage('shipStock', shipStock);
+		setting.inStockOnlyShip = true;
+		saveSetting();
+	} catch (error) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * 艦隊分析様Json解析
+ * @param {string} input
+ * @returns {boolean} 失敗時false
+ */
+function readKantaiBunsekiJson(input) {
+	try {
+		const jsonData = JSON.parse(input);
+		const shipStock = [];
+
+		for (const obj of jsonData) {
+			// 艦娘データかチェック
+			if (!obj.hasOwnProperty('id') || !obj.hasOwnProperty('exp')) return false;
+			const ship = SHIP_DATA.find(v => v.api === obj.id);
+			// todo 経験値取得
+			const exp = obj.exp;
+			// マスタにあるデータなら追加
+			if (ship) {
+				const stock = shipStock.find(v => v.id === ship.id);
+				if (stock) {
+					// 既にデータある場合
+					stock.num.push(exp);
+				}
+				else {
+					// 新しくデータ追加
+					shipStock.push({ id: ship.id, num: [exp] });
+				}
+			}
+		}
+
+		shipStock.sort((a, b) => a.id - b.id);
+		// 完全上書き
 		saveLocalStorage('shipStock', shipStock);
 		setting.inStockOnlyShip = true;
 		saveSetting();
@@ -606,30 +677,10 @@ function loadPlaneStock() {
 
 /**
  * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
+ * @returns {[{id: number, num: number[]}]}
  */
 function loadShipStock() {
-	let shipStock = loadLocalStorage('shipStock');
-
-	const ships = SHIP_DATA;
-	if (!shipStock || !shipStock.length) {
-		const initStock = [];
-		for (const ship of ships) {
-			const stock = { id: ship.id, num: 0, deck: ship.api };
-			initStock.push(stock);
-		}
-		shipStock = initStock.concat();
-		saveLocalStorage('shipStock', shipStock);
-	}
-	else if (shipStock.length !== ships.length) {
-		// 追加艦娘チェック
-		for (const ship of ships) {
-			if (!shipStock.find(v => v.id === ship.id)) {
-				shipStock.push({ id: ship.id, num: 0, deck: ship.api });
-				saveLocalStorage('shipStock', shipStock);
-			}
-		}
-	}
-
+	let shipStock = loadLocalStorage('shipStock') || [];
 	return shipStock;
 }
 

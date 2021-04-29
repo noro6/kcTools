@@ -65,10 +65,10 @@
 .dark-theme #presets_container .preset_container:not(.editting):active { background-color: rgba(230, 248, 255, 0.4) !important; }
 .preset_container.new {
   border-top-width: 2px;
-  height: 88px;
+  height: 140px;
 }
 .preset_container .new_body {
-  font-size: 1.1em;
+  font-size: 1.6em;
   text-align: center;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .border_delete {
-  border: none !important;
+  border-top-width: 1px !important;
 }
 .preset_container.editting {
   cursor: default;

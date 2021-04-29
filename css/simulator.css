@@ -353,6 +353,14 @@ input[type="number"] { text-align: right; }
   align-self: center!important;
 }
 
+.no_ship .anti_air_status,
+.no_ship .ship_info {
+  opacity: 0.3;
+}
+.ship_name_span {
+  opacity: 1;
+}
+
 .ap_detail {
   font-size: 11px;
   opacity: 0.8;

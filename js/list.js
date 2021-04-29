@@ -1277,6 +1277,7 @@ function modal_confirm_ok_Clicked() {
     window.localStorage.clear();
     setLocalPresets();
     setTab();
+    window.localStorage.clear();
     $modal.modal('hide');
   }
   else if (confirmType === "sendComment") {
@@ -1531,6 +1532,9 @@ async function btn_url_shorten_Clicked() {
       inform_success('所持装備の反映に成功しました。');
     }
     else if (readShipJson(url)) {
+      inform_success('所持艦娘の反映に成功しました。');
+    }
+    else if (readKantaiBunsekiJson(url)) {
       inform_success('所持艦娘の反映に成功しました。');
     }
     else {
