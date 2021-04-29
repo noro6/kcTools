@@ -934,7 +934,7 @@
 							</div>
 						</div>
 						<div class="fleet_tab">
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_1">
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship" id="shipNo_1">
 								<div class="ship_header">
 									<div class="d-flex">
 										<div class="sortable_handle cur_move mr-2 mb-1 d-none align-self-end">
@@ -949,7 +949,7 @@
 													<i class="fas fa-times"></i>
 												</div>
 											</div>
-											<div class="d-flex font_size_12">
+											<div class="d-flex font_size_12 ship_info">
 												<div class="form_ship_level" data-toggle="tooltip" title="練度を変更する">
 													<span class="font_color_half">Lv: </span>
 													<span class="ship_level">99</span>
@@ -1213,11 +1213,11 @@
 									</div>
 								</div>
 							</div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_2"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_3"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_4"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_5"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_6"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship" id="shipNo_2"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_3"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_4"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_5"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_6"></div>
 							<div class="mx-1 mt-2 flex-grow-1 btn_ship_create no_capture" data-count="2">
 								<span><i class="fas fa-plus"></i> 新規追加</span>
 							</div>
@@ -1251,12 +1251,12 @@
 							</div>
 						</div>
 						<div class="fleet_tab">
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_7"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1" id="shipNo_8"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_9"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_10"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_11"></div>
-							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 d-none" id="shipNo_12"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship" id="shipNo_7"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship" id="shipNo_8"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_9"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_10"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_11"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_12"></div>
 							<div class="mx-1 mt-2 flex-grow-1 btn_ship_create no_capture" data-count="2">
 								<span><i class="fas fa-plus"></i> 新規追加</span>
 							</div>
@@ -2093,6 +2093,10 @@
 							</div>
 							<div class="pt-2 border-top"></div>
 							<div class="d-flex">
+								<div class="ship_exp align-self-center d-none">
+									登録済み艦娘総経験値：
+								</div>
+								<div class="ship_exp align-self-center d-none" id="ship_sum_exp"></div>
 								<button type="button" class="ml-auto btn btn-sm btn-secondary text-nowrap" id="btn_fav_ship_clear">
 									<i class="fas fa-heart stock_fav mr-1"></i>全解除
 								</button>
@@ -2104,7 +2108,7 @@
 								<div>
 									艦隊情報入力サイト
 									<a href="https://kancolle-fleetanalysis.firebaseapp.com/" target="_blank">艦隊分析</a>
-									様と同様の手順で艦娘を一括入力できます。
+									様と同様の手順で艦娘を一括入力できます。同サイト様の「艦隊反映」の項をご覧ください。
 								</div>
 								<div class="d-flex">
 									<div class="form-group mr-1 flex-grow-1">
@@ -2154,7 +2158,7 @@
 								<div>
 									艦隊情報入力サイト
 									<a href="https://kancolle-fleetanalysis.firebaseapp.com/" target="_blank">艦隊分析</a>
-									様と同様の手順で装備を一括入力できます。
+									様と同様の手順で装備を一括入力できます。同サイト様の「装備反映」の項をご覧ください。
 								</div>
 								<div class="d-flex">
 									<div class="form-group mr-1 flex-grow-1">

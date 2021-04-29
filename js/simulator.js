@@ -3600,8 +3600,9 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
  * 第1引数で渡された .ship_tab に第2引数で渡された 艦娘データを挿入する
  * @param {JQuery} $div 艦娘タブ (.ship_tab)
  * @param {number} id 艦娘id
+ * @param {number} [level=99] 練度デフォルト
  */
-function setShipDiv($div, id) {
+function setShipDiv($div, id, level = 99) {
 	const ship = SHIP_DATA.find(v => v.id === id);
 	if (!ship) return;
 	$div[0].dataset.shipid = ship.id;
@@ -3630,7 +3631,8 @@ function setShipDiv($div, id) {
 			$this.find('.slot_select_parent').data('ini', 0);
 		}
 	});
-
+	// 練度
+	$div.find('.ship_level').text(level);
 	// 補強増設表示
 	$div.find('.expanded_slot').removeClass('d-none');
 	// 素対空値
@@ -3644,6 +3646,8 @@ function setShipDiv($div, id) {
 	else {
 		$div.find('.hunshin').addClass('disabled');
 	}
+
+	$div.removeClass('no_ship');
 }
 
 /**
@@ -3676,6 +3680,7 @@ function clearShipDiv($div) {
 	$div.find('.ship_level').text(99);
 	// 噴進弾幕
 	$div.find('.hunshin').addClass('d-none');
+	$div.addClass('no_ship');
 }
 
 /**
@@ -4147,6 +4152,8 @@ function setShipStockTable() {
 	const ships = SHIP_DATA.filter(v => v.id > 0);
 	const shipStock = loadShipStock();
 
+	let sumExp = 0;
+
 	const max_i = ships.length;
 	for (let i = 0; i < max_i; i++) {
 		const ship = ships[i];
@@ -4192,7 +4199,9 @@ function setShipStockTable() {
 		$stockInput.min = 0;
 		$stockInput.max = 99;
 		$stockInput.className = 'form-control form-control-sm stock_td_stock align-self-center';
-		$stockInput.value = stock ? stock.num : 0;
+		$stockInput.value = stock ? stock.num.length : 0;
+
+		if (stock && stock.num.length) sumExp += getArraySum(stock.num);
 
 		$shipDiv.appendChild($album);
 		$shipDiv.appendChild($iconDiv);
@@ -4204,6 +4213,15 @@ function setShipStockTable() {
 
 	target.innerHTML = '';
 	target.appendChild(fragment);
+
+	// 合計経験値が Lv99経験値の倍数でない => インポートしてきたデータ => 総経験値表示OK
+	if (sumExp % LEVEL_BORDERS.find(v => v.lv === 99).req) {
+		document.getElementById('ship_sum_exp').textContent = sumExp.toLocaleString();
+		$('.ship_exp').removeClass('d-none');
+	}
+	else {
+		$('.ship_exp').addClass('d-none');
+	}
 
 	ship_stock_type_select_Changed();
 }
@@ -4370,6 +4388,40 @@ function createShipTable() {
 		ships = ships.filter(v => favorites.includes(v.id));
 	}
 
+	// 所持数モード　複数いるなら増殖
+	if (dispInStock) {
+		for (const stock of shipStock) {
+			if (stock.num.length <= 0) continue;
+
+			stock.num.sort((a, b) => { return a - b });
+			const index = ships.findIndex(v => v.id === stock.id);
+			// 保険
+			if (index < 0) continue;
+
+			const baseShip = ships[index];
+			baseShip.lv = LEVEL_BORDERS.find(v => v.req <= stock.num[0]).lv;
+			baseShip.stock = stock.num.filter(v => v === stock.num[0]).length;
+
+			let doneLv = [baseShip.lv];
+
+			if (stock.num.length >= 2) {
+				for (let i = 1; i < stock.num.length; i++) {
+					const exp = stock.num[i];
+					const lv = LEVEL_BORDERS.find(v => v.req <= stock.num[i]).lv;
+					// 同じレベルの艦はまとめるため追加不要
+					if (doneLv.includes(lv)) continue;
+					doneLv.push(lv);
+
+					// Lv違いの艦娘を生成
+					const newShip = Object.assign({}, baseShip);
+					newShip.lv = lv;
+					newShip.stock = stock.num.filter(v => v === exp).length;
+					ships.splice(index, 0, newShip);
+				}
+			}
+		}
+	}
+
 	// よく使う順ソート
 	if (isFrequent && setting.selectedHistory[1]) {
 		const lst = setting.selectedHistory[1];
@@ -4402,21 +4454,27 @@ function createShipTable() {
 
 	let prevType = 0;
 	let prevType2 = 0;
+	let tempUsedShip = usedShip.concat();
 	for (const ship of ships) {
 		// 残り隻数
-		let shipCount = 0;
+		let shipCount = 1;
 		// 使用済みチェック
 		if (dispInStock && shipStock) {
-			// 所持数
-			const stock = shipStock.find(v => v.id === ship.id);
-			// 編成数
-			const usedNum = usedShip.filter(v => v === ship.id).length;
-			// 初期所持数
-			const stockNumber = stock ? stock.num : 0;
-			// 残り利用可能数計算
-			shipCount = (stockNumber - usedNum) > 0 ? stockNumber - usedNum : 0;
-			// 未所持 または 全て配備済みかつ配備済みは非表示 の場合表示しない
-			if (stockNumber <= 0 || (!dispEquipped && !shipCount)) {
+
+			if (!ship.lv) {
+				// lvの概念がない時点で所持数0なのでサヨナラ
+				continue;
+			}
+
+			if (ship.stock) {
+				// 所持数2以上あり
+				shipCount = ship.stock;
+			}
+
+			// 使用済み一覧にあるかチェック
+			const usedCount = usedShip.filter(v => v.id === ship.id && v.lv === ship.lv).length;
+			shipCount -= usedCount;
+			if (shipCount <= 0 && !dispEquipped) {
 				continue;
 			}
 		}
@@ -4431,6 +4489,7 @@ function createShipTable() {
 			$shipDiv.className = `ship_tr general_tr d-flex ${displayMode === "multi" ? 'tr_multi' : ''}`;
 		}
 		$shipDiv.dataset.shipid = ship.id;
+		$shipDiv.dataset.level = ship.lv ? ship.lv : 99;
 		$shipDiv.id = 'ship_tr_' + ship.id;
 
 		// アイコンラッパー
@@ -4446,10 +4505,19 @@ function createShipTable() {
 		// ID 名称 ラッパー
 		const $infoDiv = document.createElement('div');
 		$infoDiv.className = 'ml-1 align-self-center';
-		// ID
+
+		// IDかLv
 		const $idDiv = document.createElement('div');
 		$idDiv.className = 'text-primary font_size_11';
-		$idDiv.textContent = 'ID : ' + ship.id;
+		if (dispInStock) {
+			// 所持数モードならIDではなくLvで
+			$idDiv.textContent = 'Lv : ' + ship.lv;
+		}
+		else {
+			// 所持数にこだわらないなら艦娘IDで
+			$idDiv.textContent = 'ID : ' + ship.id;
+		}
+
 		// 名称
 		const $nameDiv = document.createElement('div');
 		$nameDiv.className = 'd-flex';
@@ -7452,7 +7520,8 @@ function createFleetInstance() {
 		const shipNo = index + 1;
 
 		const shipId = castInt(node_ship_tab.dataset.shipid);
-		if (shipId) usedShip.push(shipId);
+		const level = castInt(node_ship_tab.getElementsByClassName('ship_level')[0].textContent);
+		if (shipId) usedShip.push({ id: shipId, lv: level });
 		// 非表示 / 無効 なら飛ばす
 		if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].classList.contains('disabled')) continue;
 
@@ -7462,7 +7531,7 @@ function createFleetInstance() {
 		shipInstance.drawTabId = node_ship_tab.id;
 
 		// 練度
-		shipInstance.level = castInt(node_ship_tab.getElementsByClassName('ship_level')[0].textContent);
+		shipInstance.level = level;
 		// 素対空値
 		shipInstance.antiAir = castInt(node_ship_tab.getElementsByClassName('aa')[0].textContent);
 		// 運
@@ -9858,7 +9927,7 @@ function getFleetAerialPower(slotDist, enemy, afterCapBonus = 1, isJetMode = fal
 	for (const ad of slotDist) {
 		// 調査搭載数
 		const slot = isAllSlot ? ad.slot : manualSlot;
-		// キャップ後攻撃力 todo 連合艦隊補正 敵連合時 主力:-10 随伴:-20
+		// キャップ後攻撃力
 		const basePower = ShipItem.getFirePower(plane, slot, isUnion, enemy.isEscort, isJetMode);
 		// キャップ後火力が複数ある場合に確率を分ける => 艦攻なら0.5 他は1
 		const step = 1 / basePower.length;
@@ -13149,7 +13218,8 @@ function has_slot_only_Clicked() {
  */
 function modal_ship_Selected($this) {
 	const shipId = castFloat($this[0].dataset.shipid);
-	setShipDiv($target, shipId);
+	const level = castInt($this[0].dataset.level);
+	setShipDiv($target, shipId, level);
 
 	updateShipSelectedHistory(shipId);
 	$('#modal_ship_select').modal('hide');
@@ -13926,6 +13996,12 @@ function btn_load_ship_json_Clicked() {
 		$('#input_ship_json').removeClass('is-invalid').addClass('is-valid');
 		inform_success('所持艦娘情報を更新しました。');
 	}
+	else if (readKantaiBunsekiJson(inputData)) {
+		setShipStockTable();
+		$('#input_ship_json').val('');
+		$('#input_ship_json').removeClass('is-invalid').addClass('is-valid');
+		inform_success('所持艦娘情報を更新しました。');
+	}
 	else {
 		$('#input_ship_json').addClass('is-invalid').removeClass('is-valid');
 		inform_danger('艦娘情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります。');
@@ -14188,8 +14264,28 @@ function stock_td_stock_Changed($this) {
 
 	const id = castInt($this.parent()[0].dataset.shipid);
 	// 所持数更新
-	const shipStock = loadShipStock();
-	shipStock.find(v => v.id === id).num = input;
+	let shipStock = loadShipStock();
+
+	if (input) {
+		// Lv99で初期化
+		const exp = 1000000;
+
+		const stockData = shipStock.find(v => v.id === id);
+		if (stockData) {
+			stockData.num = [];
+			for (let i = 0; i < input; i++) {
+				stockData.num.push(exp);
+			}
+		}
+		else {
+			shipStock.push({ id: id, num: [exp] });
+		}
+	}
+	else {
+		// 所持0なら削除！
+		shipStock = shipStock.filter(v => v.id !== id);
+	}
+
 	saveLocalStorage('shipStock', shipStock);
 	inform_success('艦娘保有数を更新しました。');
 }
@@ -14932,6 +15028,10 @@ async function btn_url_shorten_Clicked() {
 			inform_success('所持装備の反映に成功しました。');
 		}
 		else if (readShipJson(url)) {
+			setShipStockTable();
+			inform_success('所持艦娘の反映に成功しました。');
+		}
+		else if (readKantaiBunsekiJson(url)) {
 			setShipStockTable();
 			inform_success('所持艦娘の反映に成功しました。');
 		}
