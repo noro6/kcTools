@@ -11884,40 +11884,6 @@ function showEnemyPlaneToolTip($this) {
 }
 
 /**
- * 指定ノードにツールチップを適用し、表示
- * @param {HTMLElement} node 指定DOM
- * @param {string} text 表示内容
- * @param {string} place 表示方向 top | right | left | buttom
- * @param {string} boundary 回り込み window | viewport
- */
-function showTooltip(node, text, place = '', boundary = '') {
-	$(node).tooltip('dispose');
-	node.title = text;
-	node.dataset.toggle = 'tooltip';
-	node.dataset.html = true;
-	node.dataset.trigger = 'manual';
-	if (place) node.dataset.placement = place;
-	if (boundary) node.dataset.boundary = boundary;
-	$(node).tooltip('show');
-}
-
-/**
- * ツールチップ破棄
- * @param {HTMLElement} node 指定DOM
- */
-function hideTooltip(node) {
-	$(node).tooltip('hide');
-	node.removeAttribute('title');
-	delete node.dataset.originalTitle;
-	delete node.dataset.html;
-	delete node.dataset.toggle;
-	delete node.dataset.placement;
-	delete node.dataset.boundary;
-	delete node.dataset.trigger;
-	$(node).tooltip('dispose');
-}
-
-/**
  * 触接詳細制空ラジオ変更
  */
 function contact_detail_redraw() {
@@ -15425,6 +15391,10 @@ function simulatorTab_Clicked($this) {
 		activePresets.presets.push(tabData);
 		activePresets.activeId = tabData.id;
 		saveLocalStorage('activePresets', activePresets);
+
+		// ツールチップがあれば一掃する
+		$('#fleet_tab_container .fleet_tab').tooltip('hide');
+		$('#fleet_tab_container .fleet_tab').tooltip('dispose');
 
 		setTab();
 		expandMainPreset(decodePreset(tabData.history.histories[0]));

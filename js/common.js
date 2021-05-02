@@ -876,6 +876,40 @@ function createDiv(className = '', id = '', textContent = '') {
 	return div;
 }
 
+/**
+ * 指定ノードにツールチップを適用し、表示
+ * @param {HTMLElement} node 指定DOM
+ * @param {string} text 表示内容
+ * @param {string} place 表示方向 top | right | left | buttom
+ * @param {string} boundary 回り込み window | viewport
+ */
+function showTooltip(node, text, place = '', boundary = '') {
+	$(node).tooltip('dispose');
+	node.title = text;
+	node.dataset.toggle = 'tooltip';
+	node.dataset.html = true;
+	node.dataset.trigger = 'manual';
+	if (place) node.dataset.placement = place;
+	if (boundary) node.dataset.boundary = boundary;
+	$(node).tooltip('show');
+}
+
+/**
+ * ツールチップ破棄
+ * @param {HTMLElement} node 指定DOM
+ */
+function hideTooltip(node) {
+	$(node).tooltip('hide');
+	node.removeAttribute('title');
+	delete node.dataset.originalTitle;
+	delete node.dataset.html;
+	delete node.dataset.toggle;
+	delete node.dataset.placement;
+	delete node.dataset.boundary;
+	delete node.dataset.trigger;
+	$(node).tooltip('dispose');
+}
+
 /*==================================
 		タブ操作
 ==================================*/
@@ -922,6 +956,8 @@ function setTab() {
 		name.className = 'align-self-center fleet_name ml-2 flex-grow-1';
 		name.textContent = savedPreset ? savedPreset[1] : tabData.name ? tabData.name : '無題';
 
+		tab.dataset.presetname = name.textContent;
+
 		const name_input = document.createElement('input');
 		name_input.type = 'text';
 		name_input.maxLength = 50;
@@ -944,7 +980,7 @@ function setTab() {
 	if (activePresets.presets.length < 20) {
 		const newTab = createDiv(`d-flex fleet_tab`, 'add_new_tab');
 		newTab.dataset.presetid = '';
-		newTab.title = '新しい編成タブを開く';
+		newTab.dataset.presetname = '新しい編成タブを開く';
 		const newTabPlus = createDiv();
 		newTabPlus.innerHTML = '&#43';
 		newTab.appendChild(newTabPlus);
@@ -975,6 +1011,9 @@ function activeTabChanged($this) {
  */
 function btn_add_new_tab_Clicked() {
 	$('#header .fleet_tab').removeClass('active');
+	// ツールチップがあれば一掃する
+	$('#fleet_tab_container .fleet_tab').tooltip('hide');
+	$('#fleet_tab_container .fleet_tab').tooltip('dispose');
 
 	// アクティブタブのリセット
 	let activePresets = loadLocalStorage('activePresets');
@@ -1014,6 +1053,10 @@ function closeActiveTab($this) {
  * @param {string} id プリセットID
  */
 function closeTab(id) {
+	// ツールチップがあれば一掃する
+	$('#fleet_tab_container .fleet_tab').tooltip('hide');
+	$('#fleet_tab_container .fleet_tab').tooltip('dispose');
+
 	let activePresets = loadLocalStorage('activePresets');
 	activePresets.presets = activePresets.presets.filter(v => v.id !== id);
 
@@ -1187,6 +1230,16 @@ document.addEventListener('DOMContentLoaded', function () {
 			$modal.modal('hide');
 		}
 	});
+	$('#fleet_tab_container').on({
+		mouseenter: function () {
+			const $this = $(this);
+			timer = setTimeout(function () { showTooltip($this[0], $this[0].dataset.presetname); }, 500);
+		},
+		mouseleave: function () {
+			if (timer) clearTimeout(timer);
+			hideTooltip($(this)[0]);
+		}
+	}, '.fleet_tab');
 
 	Sortable.create(document.getElementById('fleet_tab_container'), {
 		animation: 200,
