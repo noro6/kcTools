@@ -1817,6 +1817,7 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
+	{ world: 50, name: "激突！ルンガ沖夜戦(2021春イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -1882,6 +1883,11 @@ const MAP_DATA = [
 	{ area: 492, name: "バレンツ海" },
 	{ area: 493, name: "ノルウェー北岬沖/北極海" },
 	{ area: 494, name: "ルソン島沖/オルモック沖" },
+	{ area: 501, name: "台湾/南沙諸島/比島方面沖" },
+	{ area: 502, name: "ソロモン方面/レンネル島沖" },
+	{ area: 503, name: "タサファロング泊地沖" },
+	{ area: 504, name: "第4海域" },
+	{ area: 505, name: "第5海域" },
 ];
 
 // 基地空襲のある海域
@@ -2413,6 +2419,7 @@ const DEFAULT_PLANE_PRESET = [
 ];
 
 const UNKNOWN_ENEMY = [472, 475];
+// const UNKNOWN_ENEMY = [472, 475, 494, 495, 496, 497, 498, 499];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
 const LATEST_VERSION = '1.12.3.6';
