@@ -2272,6 +2272,8 @@ const FORBIDDEN_LINK_SHIP_ITEM = [
 	// 矢矧改二 4スロットに 魚雷系 不可
 	{ shipId: 463, index: [4], itemType: [5, 22], itemIDs: [] },
 	{ shipId: 468, index: [4], itemType: [5], itemIDs: [] },
+	// Richelieu改 全スロットに 瑞雲系
+	{ shipId: 1472, index: [1, 2, 3, 4, 5], itemType: [], itemIDs: [26, 62, 79, 80, 81, 207, 208, 237, 322, 323, 367, 368, 369] },
 ];
 
 // 補強増設枠
@@ -2444,4 +2446,4 @@ const DEFAULT_PLANE_PRESET = [
 const UNKNOWN_ENEMY = [472, 475, 494, 495, 497];
 const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
 
-const LATEST_VERSION = '1.12.3.6';
+const LATEST_VERSION = '1.12.4';
