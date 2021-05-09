@@ -12646,7 +12646,7 @@ function plane_type_select_Changed($this = null) {
 			dispType = dispType.filter(v => PLANE_TYPE.includes(v));
 		}
 
-		// スロット番号制限チェック 伊勢型改二のため…
+		// スロット番号制限チェック
 		const slotIndex = castInt($target.index());
 		if (slotIndex >= 0) {
 			const forbiddens = FORBIDDEN_LINK_SHIP_ITEM.find(v => v.shipId === ship.id && v.index.includes(slotIndex + 1));
@@ -12675,6 +12675,12 @@ function plane_type_select_Changed($this = null) {
 		// 戦艦系ではない場合、15m二重測距儀+21号電探改二(id:142)を削除する
 		if (![8, 9, 10].includes(ship.type)) {
 			org = org.filter(v => v.id !== 142);
+		}
+
+		// Richelieu改対応
+		if (ship.id === 1472) {
+			const ng = FORBIDDEN_LINK_SHIP_ITEM.find(v => v.shipId === ship.id).itemIDs;
+			org = org.filter(v => !ng.includes(v.id));
 		}
 
 		// 補強増設　特別枠
