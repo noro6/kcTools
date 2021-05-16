@@ -3445,8 +3445,6 @@ function clearPlaneDiv($div) {
 	$div[0].dataset.planeid = '';
 	$div[0].dataset.type = '';
 	$div.find('.plane_img').attr('src', '../img/type/undefined.png').attr('alt', '');
-	$div.find('.cur_move').removeClass('cur_move');
-	$div.find('.drag_handle').removeClass('drag_handle');
 	$div.find('.plane_name_span').text('装備を選択');
 	$div.find('.remodel_select').prop('disabled', true).addClass('remodel_disabled');
 	$div.find('.remodel_value').text(0);
@@ -3548,8 +3546,6 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	$div[0].dataset.type2 = plane.type;
 	$div.find('.plane_name_span').text(plane.name).attr('title', plane.name);
 	$div.find('.plane_img').attr('src', `../img/type/icon${plane.itype}.png`).attr('alt', plane.itype);
-	$div.find('.plane_img').parent().addClass('cur_move drag_handle');
-	$div.find('.plane_name').addClass('drag_handle');
 	$div.find('.btn_remove_plane').removeClass('opacity0');
 
 	// 改修の有効無効設定
@@ -5750,7 +5746,7 @@ function createFriendFleetPreset() {
 	const friendFleetPreset = [];
 	let shipIndex = 0;
 	const isUnion = document.getElementById('union_fleet')['checked'] ? 1 : 0;
-	$('.ship_tab').each((i, e) => {
+	$('.ship_tab:not(.ui-draggable-dragging)').each((i, e) => {
 		// 第2艦隊の開始を検知
 		if (i === 6) shipIndex = 6;
 		// 非表示なら飛ばす
@@ -5928,6 +5924,8 @@ function convertToDeckBuilder_j() {
 			side: "Player",
 			fleetType: $('#union_fleet').prop('checked') ? "CarrierTaskForce" : "Single",
 			fleets: [
+				{ ships: [] },
+				{ ships: [] },
 				{ ships: [] },
 				{ ships: [] },
 			],
@@ -7523,7 +7521,7 @@ function createFleetInstance() {
 		const level = castInt(node_ship_tab.getElementsByClassName('ship_level')[0].textContent);
 		if (shipId) usedShip.push({ id: shipId, lv: level });
 		// 非表示 / 無効 なら飛ばす
-		if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].classList.contains('disabled')) continue;
+		if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].classList.contains('disabled') || node_ship_tab.classList.contains('ui-draggable-dragging')) continue;
 
 		const shipInstance = new Ship(shipNo);
 		shipInstance.id = shipId;
@@ -12442,8 +12440,8 @@ function ship_plane_DragOver($this, ui) {
 	const $original = ui.draggable.closest('.ship_plane');
 	const shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
 	const planeID = castInt($original[0].dataset.planeid);
-	// 挿入先が装備不可だった場合暗くする
-	if (!checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === planeID), castInt($this.index()))) {
+	if (planeID !== 0 && !checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === planeID), castInt($this.index()))) {
+		// 挿入先が装備不可だった場合暗くする
 		ui.helper.stop().animate({ 'opacity': '0.2' }, 100);
 		$this.removeClass('plane_draggable_hover');
 		isOut = true;
@@ -12460,10 +12458,9 @@ function ship_plane_DragOver($this, ui) {
  * @param {*} ui
  */
 function ship_plane_Drop($this, ui) {
-	const $d = ui.draggable;
+	const $original = ui.draggable.closest('.ship_plane');
 	// 機体入れ替え
-	if (ui.draggable.closest('.ship_plane')[0].dataset.planeid) {
-		const $original = ui.draggable.closest('.ship_plane');
+	if ($original.length) {
 		const insertPlane = {
 			id: castInt($original[0].dataset.planeid),
 			remodel: castInt($original.find('.remodel_value')[0].textContent),
@@ -12475,9 +12472,12 @@ function ship_plane_Drop($this, ui) {
 			prof: castInt($this.find('.prof_select')[0].dataset.prof)
 		};
 
-		// 挿入先が装備不可だった場合中止
-		let shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
-		if (!checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === insertPlane.id), castInt($this.index()))) return;
+		// ドロップされた装備が空でないなら
+		if (insertPlane.id > 0) {
+			// 挿入先が装備不可だった場合中止
+			let shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
+			if (!checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === insertPlane.id), castInt($this.index()))) return;
+		}
 
 		// 挿入
 		setPlaneDiv($this, insertPlane);
@@ -15943,15 +15943,41 @@ document.addEventListener('DOMContentLoaded', function () {
 			calculate(true, false, false);
 		}
 	});
-	$('.fleet_tab').each((i, e) => {
-		Sortable.create($(e)[0], {
-			handle: '.sortable_handle',
-			animation: 200,
-			scroll: true,
-			onEnd: function () {
+	$('.ship_tab').draggable({
+		delay: 100,
+		helper: 'clone',
+		handle: '.sortable_handle',
+		zIndex: 1000,
+		start: function (e, ui) {
+
+		},
+		stop: function () {
+
+		}
+	});
+	$('.ship_tab').droppable({
+		accept: ".ship_tab",
+		hoverClass: "ship_tab_hover",
+		tolerance: "pointer",
+		drop: function (e, ui) {
+			// 単純に位置を入れ替えるだけ
+			const insert = ui.draggable;
+			const target = $(this);
+
+			if (insert.length && target.length) {
+				const parentTab = target.parent()[0];
+				// 移動前に、移動元のお隣さんを取得 なければnull
+				const nextNode = insert[0].nextSibling;
+				// まずは移動
+				parentTab.insertBefore(insert[0], target[0]);
+
+				// 元のお隣さんの前に追加
+				parentTab.insertBefore(target[0], nextNode);
+
+				// 念のための再計算
 				calculate(false, true, false);
 			}
-		});
+		}
 	});
 
 	$('.lb_plane').draggable({
