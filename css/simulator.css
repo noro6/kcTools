@@ -408,6 +408,11 @@ input[type="number"] { text-align: right; }
   width: 0px;
 }
 
+.ship_tab.ship_tab_hover {
+  background-color: rgba(0, 153, 255, 0.4) !important;
+  transition: 0.2s;
+}
+
 .btn_ship_create {
   display: flex;
   justify-content: center;
