@@ -968,7 +968,7 @@ const SHIP_DATA = [
 	{ id: 1489, api: 689, type: 2, name: "Johnston改", slot: [0, 0, 0], final: 1, orig: 362, ver: 1, range: 1, type2: 91, hp: 34, hp2: 39, max_hp: 41, max_aa: 90, max_armor: 52, luck: 40, max_luck: 82 },
 	{ id: 396, api: 596, type: 2, name: "Fletcher", slot: [0, 0], final: 0, orig: 396, ver: 0, range: 1, type2: 91, hp: 18, hp2: 22, max_hp: 24, max_aa: 62, max_armor: 20, luck: 30, max_luck: 89 },
 	{ id: 1492, api: 692, type: 2, name: "Fletcher改", slot: [0, 0, 0], final: 0, orig: 396, ver: 1, range: 1, type2: 91, hp: 35, hp2: 40, max_hp: 42, max_aa: 91, max_armor: 52, luck: 40, max_luck: 100 },
-	{ id: 428, api: 628, type: 2, name: "Fletcher改 Mod.2", slot: [0, 0, 0], final: 0, orig: 396, ver: 2, range: 1, type2: 91, hp: 37, hp2: 42, max_hp: 44, max_aa: 92, max_armor: 54, luck: 47, max_luck: 113 },
+	{ id: 428, api: 628, type: 2, name: "Fletcher改 Mod.2", slot: [0, 0, 0], final: 1, orig: 396, ver: 2, range: 1, type2: 91, hp: 37, hp2: 42, max_hp: 44, max_aa: 92, max_armor: 54, luck: 47, max_luck: 113 },
 	{ id: 429, api: 629, type: 2, name: "Fletcher Mk.II", slot: [0, 0, 0], final: 1, orig: 396, ver: 3, range: 1, type2: 91, hp: 38, hp2: 43, max_hp: 45, max_aa: 95, max_armor: 56, luck: 47, max_luck: 113 },
 	{ id: 441, api: 641, type: 2, name: "松", slot: [0, 0], final: 0, orig: 441, ver: 0, range: 1, type2: 101, hp: 14, hp2: 18, max_hp: 20, max_aa: 60, max_armor: 22, luck: 14, max_luck: 58 },
 	{ id: 1702, api: 702, type: 2, name: "松改", slot: [0, 0, 0], final: 1, orig: 441, ver: 1, range: 1, type2: 101, hp: 27, hp2: 31, max_hp: 33, max_aa: 74, max_armor: 55, luck: 18, max_luck: 68 },
