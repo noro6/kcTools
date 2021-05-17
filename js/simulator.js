@@ -3288,6 +3288,37 @@ function initialize(callback) {
 }
 
 /**
+ * 2要素を入れ替えるようなアニメーションを発生させる
+ * callback内で実入れ替え処理をいれること
+ * @param {HTMLElement} insertNode
+ * @param {HTMLElement} targetNode
+ * @param {*} callback
+ * @param {number} [duration=300]
+ */
+function TradeHTMLWithAnimation(insertNode, targetNode, callback, duration = 300) {
+	const orgDuration = insertNode.style.transitionDuration;
+	insertNode.style.transitionDuration = duration + 'ms';
+	targetNode.style.transitionDuration = duration + 'ms';
+	// 挿入先X差分　正なら右に移動
+	const diffX = targetNode.offsetLeft - insertNode.offsetLeft;
+	// 挿入先Y差分 正なら下に移動
+	const diffY = targetNode.offsetTop - insertNode.offsetTop;
+
+	// 見かけの移動を行う
+	insertNode.style.transform = `translate(${diffX}px, ${diffY}px)`;
+	targetNode.style.transform = `translate(${-diffX}px, ${-diffY}px)`;
+
+	setTimeout(function () {
+		insertNode.style.transitionDuration = orgDuration;
+		targetNode.style.transitionDuration = orgDuration;
+		insertNode.style.transform = "";
+		targetNode.style.transform = "";
+
+		callback();
+	}, duration);
+}
+
+/**
  * 機体カテゴリselectタグに、第2引数配列からoptionタグを生成
  * @param {HTMLElement} element 設置する対象の select
  * @param {number[]} array 展開する機体カテゴリid配列
@@ -12300,9 +12331,9 @@ function lb_plane_DragEnd($this) {
 		clearPlaneDiv($plane);
 		$plane.css('opacity', '0.0');
 		isOut = false;
+		calculate(true, false, false);
 	}
 	$plane.animate({ 'opacity': '1.0' }, 500);
-	calculate(true, false, false);
 }
 
 /**
@@ -12325,12 +12356,15 @@ function lb_plane_Drop($this, ui) {
 		slot: castInt($this.find('.slot').text())
 	};
 
-	setLBPlaneDiv($this, insertPlane);
+	TradeHTMLWithAnimation($original[0], $this[0], () => {
+		setLBPlaneDiv($this, insertPlane);
+		// 交換
+		if (!isCtrlPress && !$('#drag_drop_copy').prop('checked')) {
+			setLBPlaneDiv($original, prevPlane);
+		}
 
-	// 交換
-	if (!isCtrlPress && !$('#drag_drop_copy').prop('checked')) {
-		setLBPlaneDiv($original, prevPlane);
-	}
+		calculate(true, false, false);
+	}, 150);
 }
 
 
@@ -12425,10 +12459,9 @@ function ship_plane_DragEnd($this) {
 		clearPlaneDiv($plane);
 		$plane.css('opacity', '0.0');
 		isOut = false;
+		calculate(false, true, false);
 	}
 	$plane.animate({ 'opacity': '1.0' }, 500);
-
-	calculate(false, true, false);
 }
 
 /**
@@ -12479,13 +12512,16 @@ function ship_plane_Drop($this, ui) {
 			if (!checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === insertPlane.id), castInt($this.index()))) return;
 		}
 
-		// 挿入
-		setPlaneDiv($this, insertPlane);
+		TradeHTMLWithAnimation($original[0], $this[0], () => {
+			// 挿入
+			setPlaneDiv($this, insertPlane);
+			if (!isCtrlPress && !$('#drag_drop_copy').prop('checked')) {
+				// 交換を行う
+				setPlaneDiv($original, prevPlane);
+			}
 
-		if (!isCtrlPress && !$('#drag_drop_copy').prop('checked')) {
-			// 交換を行う
-			setPlaneDiv($original, prevPlane);
-		}
+			calculate(false, true, false);
+		}, 150);
 	}
 }
 
@@ -15948,12 +15984,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		helper: 'clone',
 		handle: '.sortable_handle',
 		zIndex: 1000,
-		start: function (e, ui) {
-
-		},
-		stop: function () {
-
-		}
+		start: function (e, ui) { },
+		stop: function () { }
 	});
 	$('.ship_tab').droppable({
 		accept: ".ship_tab",
@@ -15965,17 +15997,23 @@ document.addEventListener('DOMContentLoaded', function () {
 			const target = $(this);
 
 			if (insert.length && target.length) {
+				/** @type {HTMLElement} */
 				const parentTab = target.parent()[0];
+				/** @type {HTMLElement} */
+				const insertNode = insert[0];
+				/** @type {HTMLElement} */
+				const targetNode = target[0];
 				// 移動前に、移動元のお隣さんを取得 なければnull
-				const nextNode = insert[0].nextSibling;
-				// まずは移動
-				parentTab.insertBefore(insert[0], target[0]);
+				const nextNode = insertNode.nextSibling;
 
-				// 元のお隣さんの前に追加
-				parentTab.insertBefore(target[0], nextNode);
-
-				// 念のための再計算
-				calculate(false, true, false);
+				TradeHTMLWithAnimation(insertNode, targetNode, () => {
+					// まずは移動
+					parentTab.insertBefore(insertNode, targetNode);
+					// 元のお隣さんの前に追加
+					parentTab.insertBefore(targetNode, nextNode);
+					// 念のための再計算
+					calculate(false, true, false);
+				});
 			}
 		}
 	});
