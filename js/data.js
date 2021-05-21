@@ -503,6 +503,9 @@ const ITEM_DATA = [
 	{ id: 351, type: 48, itype: 38, name: "試製 秋水", abbr: "", fire: 0, antiAir: 2, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 8, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 1, cost: 4, avoid: 0, range2: 0 },
 	{ id: 352, type: 48, itype: 38, name: "秋水", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 9, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 1, cost: 4, avoid: 0, range2: 0 },
 	{ id: 354, type: 48, itype: 38, name: "Fw190 D-9", abbr: "", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 3, interception: 3, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0, range2: 0 },
+	{ id: 416, type: 48, itype: 38, name: "零式艦戦21型(台南空)", abbr: "", fire: 0, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0, range2: 0 },
+	{ id: 417, type: 48, itype: 38, name: "零式艦戦32型(台南空)", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 4, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 5, cost: 4, avoid: 0, range2: 0 },
+	// { id: 418, type: 48, itype: 38, name: "零式艦戦22型(251空)", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0, range2: 0 },
 	{ id: 311, type: 49, itype: 9, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0, range2: 0 },
 	{ id: 312, type: 49, itype: 9, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0, range2: 0 },
 	{ id: 209, type: 50, itype: 41, name: "彩雲(輸送用分解済)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0 },
@@ -924,6 +927,8 @@ const SHIP_DATA = [
 	{ id: 1495, api: 695, type: 2, name: "秋霜改", slot: [0, 0, 0], final: 1, orig: 425, ver: 1, range: 1, type2: 38, hp: 32, hp2: 37, max_hp: 39, max_aa: 50, max_armor: 49, luck: 12, max_luck: 59 },
 	{ id: 471, api: 671, type: 2, name: "巻波", slot: [0, 0], final: 0, orig: 471, ver: 0, range: 1, type2: 38, hp: 16, hp2: 20, max_hp: 22, max_aa: 46, max_armor: 19, luck: 8, max_luck: 49 },
 	{ id: 1709, api: 709, type: 2, name: "巻波改", slot: [0, 0, 0], final: 1, orig: 471, ver: 1, range: 1, type2: 38, hp: 32, hp2: 37, max_hp: 39, max_aa: 56, max_armor: 49, luck: 9, max_luck: 53 },
+	{ id: 475, api: 675, type: 2, name: "涼波", slot: [0, 0], final: 0, orig: 475, ver: 0, range: 1, type2: 38, hp: 16, hp2: 20, max_hp: 22, max_aa: 41, max_armor: 19, luck: 6, max_luck: 46 },
+	{ id: 1710, api: 710, type: 2, name: "涼波改", slot: [0, 0, 0], final: 1, orig: 475, ver: 1, range: 1, type2: 38, hp: 32, hp2: 37, max_hp: 39, max_aa: 54, max_armor: 48, luck: 7, max_luck: 50 },
 	{ id: 174, api: 174, type: 2, name: "Z1", slot: [0, 0, 0], final: 0, orig: 174, ver: 0, range: 1, type2: 48, hp: 18, hp2: 22, max_hp: 24, max_aa: 42, max_armor: 22, luck: 6, max_luck: 39 },
 	{ id: 1406, api: 310, type: 2, name: "Z1改", slot: [0, 0, 0], final: 0, orig: 174, ver: 1, range: 1, type2: 48, hp: 33, hp2: 38, max_hp: 40, max_aa: 45, max_armor: 45, luck: 12, max_luck: 49 },
 	{ id: 179, api: 179, type: 2, name: "Z1 zwei", slot: [0, 0, 0], final: 1, orig: 174, ver: 2, range: 1, type2: 48, hp: 35, hp2: 40, max_hp: 42, max_aa: 64, max_armor: 53, luck: 15, max_luck: 49 },
@@ -1053,6 +1058,8 @@ const SHIP_DATA = [
 	{ id: 420, api: 620, type: 3, name: "Helena改", slot: [0, 0, 2, 4], final: 1, orig: 415, ver: 1, range: 2, type2: 106, hp: 53, hp2: 60, max_hp: 62, max_aa: 86, max_armor: 69, luck: 13, max_luck: 69 },
 	{ id: 314, api: 514, type: 3, name: "Sheffield", slot: [1, 1, 3], final: 0, orig: 314, ver: 0, range: 2, type2: 108, hp: 38, hp2: 43, max_hp: 45, max_aa: 70, max_armor: 41, luck: 17, max_luck: 79 },
 	{ id: 1705, api: 705, type: 3, name: "Sheffield改", slot: [1, 1, 1, 3], final: 1, orig: 314, ver: 1, range: 2, type2: 108, hp: 52, hp2: 59, max_hp: 61, max_aa: 78, max_armor: 68, luck: 20, max_luck: 98 },
+	{ id: 398, api: 598, type: 3, name: "Honolulu", slot: [0, 1, 3], final: 0, orig: 398, ver: 0, range: 2, type2: 110, hp: 38, hp2: 43, max_hp: 45, max_aa: 70, max_armor: 39, luck: 15, max_luck: 70 },
+	{ id: 1711, api: 711, type: 3, name: "Honolulu改", slot: [0, 0, 2, 4], final: 1, orig: 398, ver: 1, range: 2, type2: 110, hp: 53, hp2: 60, max_hp: 62, max_aa: 80, max_armor: 67, luck: 27, max_luck: 87 },
 	{ id: 97, api: 57, type: 4, name: "大井改", slot: [0, 0], final: 0, orig: 97, ver: 1, range: 2, type2: 4, hp: 32, hp2: 37, max_hp: 39, max_aa: 39, max_armor: 39, luck: 10, max_luck: 49 },
 	{ id: 98, api: 58, type: 4, name: "北上改", slot: [0, 0], final: 0, orig: 98, ver: 1, range: 2, type2: 4, hp: 32, hp2: 37, max_hp: 39, max_aa: 39, max_armor: 39, luck: 15, max_luck: 69 },
 	{ id: 114, api: 118, type: 4, name: "大井改二", slot: [0, 0, 0], final: 1, orig: 114, ver: 2, range: 2, type2: 4, hp: 43, hp2: 49, max_hp: 51, max_aa: 49, max_armor: 63, luck: 13, max_luck: 49 },
@@ -1328,6 +1335,9 @@ const SHIP_DATA = [
 	{ id: 1432, api: 352, type: 22, name: "速吸改", slot: [6, 3, 1], final: 1, orig: 260, ver: 1, range: 1, type2: 60, hp: 48, hp2: 50, max_hp: 50, max_aa: 48, max_armor: 19, luck: 8, max_luck: 44 },
 	{ id: 162, api: 162, type: 22, name: "神威", slot: [0, 0, 0], final: 0, orig: 162, ver: 0, range: 2, type2: 72, hp: 36, hp2: 41, max_hp: 43, max_aa: 24, max_armor: 18, luck: 17, max_luck: 67 },
 	{ id: 300, api: 500, type: 22, name: "神威改母", slot: [1, 1, 1], final: 1, orig: 162, ver: 2, range: 2, type2: 72, hp: 39, hp2: 44, max_hp: 46, max_aa: 34, max_armor: 33, luck: 20, max_luck: 79 },
+	{ id: 408, api: 699, type: 22, name: "宗谷", slot: [0, 0, 0], final: 1, orig: 408, ver: 0, range: 1, type2: 111, hp: 22, hp2: 26, max_hp: 28, max_aa: 32, max_armor: 35, luck: 55, max_luck: 110 },
+	{ id: 445, api: 645, type: 22, name: "宗谷", slot: [0, 0], final: 0, orig: 408, ver: 1, range: 1, type2: 111, hp: 23, hp2: 27, max_hp: 29, max_aa: 0, max_armor: 40, luck: 65, max_luck: 130 },
+	{ id: 450, api: 650, type: 22, name: "宗谷", slot: [1, 2, 3], final: 0, orig: 408, ver: 2, range: 1, type2: 111, hp: 26, hp2: 30, max_hp: 32, max_aa: 0, max_armor: 62, luck: 77, max_luck: 155 },
 ];
 
 const ENEMY_TYPE = [
@@ -1583,6 +1593,12 @@ const ENEMY_DATA = [
 	{ id: 337, type: [1, 13], name: "戦艦仏棲姫-壊 vac. [丙]", slot: [-1, -1, -1, 72, -1], eqp: [577, 577, 559, 574], orig: 1837, hp: 770, aa: 80, armor: 174 },
 	{ id: 338, type: [1, 13], name: "戦艦仏棲姫-壊 vac. [乙]", slot: [-1, -1, -1, 81, -1], eqp: [577, 577, 559, 574], orig: 1838, hp: 770, aa: 84, armor: 214 },
 	{ id: 339, type: [1, 13], name: "戦艦仏棲姫-壊 vac. [甲]", slot: [-1, -1, -1, 96, -1], eqp: [577, 577, 559, 574], orig: 1839, hp: 770, aa: 94, armor: 254 },
+	{ id: 352, type: [1, 20], name: "深海日棲姫 [丙]", slot: [-1, -1, -1, 32, -1], eqp: [589, 589, 590, 571], orig: 0, hp: 888, aa: 88, armor: 200 },
+	{ id: 353, type: [1, 20], name: "深海日棲姫 [乙]", slot: [-1, -1, -1, 64, -1], eqp: [589, 589, 590, 571], orig: 1853, hp: 888, aa: 108, armor: 222 },
+	{ id: 354, type: [1, 20], name: "深海日棲姫 [甲]", slot: [-1, -1, -1, 96, -1], eqp: [589, 589, 590, 571], orig: 1854, hp: 888, aa: 128, armor: 244 },
+	{ id: 355, type: [1, 20], name: "深海日棲姫-壊 [丙]", slot: [-1, -1, -1, 32, -1], eqp: [590, 590, 590, 571], orig: 0, hp: 888, aa: 88, armor: 233 },
+	{ id: 356, type: [1, 20], name: "深海日棲姫-壊 [乙]", slot: [-1, -1, -1, 64, -1], eqp: [590, 590, 590, 571], orig: 0, hp: 888, aa: 108, armor: 255 },
+	{ id: 357, type: [1, 20], name: "深海日棲姫-壊 [甲]", slot: [-1, -1, -1, 96, -1], eqp: [590, 590, 590, 571], orig: 0, hp: 888, aa: 128, armor: 288 },
 	{ id: 358, type: [16], name: "駆逐ニ級改", slot: [-1, -1, -1, -1, -1], eqp: [591, 514, 531], orig: 4, hp: 39, aa: 28, armor: 19 },
 	{ id: 359, type: [16], name: "駆逐ニ級改後期型", slot: [-1, -1, -1, -1, -1], eqp: [591, 514, 531], orig: 4, hp: 49, aa: 48, armor: 39 },
 	{ id: 360, type: [16], name: "駆逐ニ級改後期型elite", slot: [-1, -1, -1, -1, -1], eqp: [591, 514, 531], orig: 4, hp: 49, aa: 58, armor: 49 },
@@ -1711,6 +1727,7 @@ const ENEMY_DATA = [
 	{ id: 495, type: [1, 2], name: "集積地棲姫II-壊 [丁]", slot: [14, 14, 14, 14, -1], eqp: [562, 562, 562, 561], orig: 1995, hp: 480, aa: 60, armor: 44 },
 	{ id: 496, type: [1, 18], name: "潜水棲姫改IIflagship [丁]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 1996, hp: 79, aa: 0, armor: 19 },
 	{ id: 497, type: [1, 11], name: "空母棲姫改", slot: [56, 52, 48, 30, -1], eqp: [581, 582, 583, 583], orig: 1997, hp: 600, aa: 200, armor: 270 },
+	{ id: 498, type: [15], name: "軽巡ト級flagship", slot: [-1, -1, -1, 3, -1], eqp: [550, 550, 603, 611], orig: 0, hp: 73, aa: 68, armor: 69 },
 	{ id: 499, type: [14], name: "重巡リ級IIflagship", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 0, hp: 80, aa: 48, armor: 72 },
 	{ id: 500, type: [1, 14], name: "ルンガ沖重巡棲姫[丙]", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 2000, hp: 670, aa: 67, armor: 167 },
 	{ id: 501, type: [1, 14], name: "ルンガ沖重巡棲姫[乙]", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 2001, hp: 770, aa: 77, armor: 0 },
@@ -1718,6 +1735,15 @@ const ENEMY_DATA = [
 	{ id: 503, type: [1, 14], name: "ルンガ沖重巡棲姫-壊[丙]", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 2003, hp: 670, aa: 67, armor: 222 },
 	{ id: 504, type: [1, 14], name: "ルンガ沖重巡棲姫-壊[乙]", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 2004, hp: 670, aa: 77, armor: 0 },
 	{ id: 505, type: [1, 14], name: "ルンガ沖重巡棲姫-壊[甲]", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 2005, hp: 870, aa: 87, armor: 367 },
+	{ id: 506, type: [1, 15], name: "軽巡新棲姫 [丙]", slot: [-1, -1, -1, 4, -1], eqp: [612, 612, 603, 610], orig: 0, hp: 960, aa: 56, armor: 136 },
+	{ id: 507, type: [1, 15], name: "軽巡新棲姫 [乙]", slot: [-1, -1, -1, 4, -1], eqp: [612, 612, 603, 610], orig: 0, hp: 960, aa: 56, armor: 136 },
+	{ id: 508, type: [1, 15], name: "軽巡新棲姫 [甲]", slot: [-1, -1, -1, 4, -1], eqp: [612, 612, 603, 610], orig: 0, hp: 960, aa: 56, armor: 136 },
+	{ id: 509, type: [1, 15], name: "軽巡新棲姫-壊 [丙]", slot: [-1, -1, -1, 4, -1], eqp: [612, 612, 603, 610], orig: 2009, hp: 960, aa: 66, armor: 226 },
+	{ id: 510, type: [1, 15], name: "軽巡新棲姫-壊 [乙]", slot: [-1, -1, -1, 4, -1], eqp: [612, 612, 603, 610], orig: 0, hp: 960, aa: 66, armor: 226 },
+	{ id: 511, type: [1, 15], name: "軽巡新棲姫-壊 [甲]", slot: [-1, -1, -1, 4, -1], eqp: [612, 612, 603, 610], orig: 0, hp: 960, aa: 66, armor: 226 },
+	{ id: 512, type: [15], name: "軽巡ト級IIelite", slot: [-1, -1, -1, 3, -1], eqp: [550, 550, 603, 610], orig: 0, hp: 63, aa: 48, armor: 56 },
+	{ id: 513, type: [19], name: "輸送ワ級IIelite", slot: [-1, -1, -1, 2, -1], eqp: [591, 591, 603, 610], orig: 0, hp: 480, aa: 33, armor: 55 },
+	{ id: 514, type: [19], name: "輸送ワ級IIflagship", slot: [-1, -1, -1, 2, -1], eqp: [591, 591, 603, 610], orig: 0, hp: 480, aa: 55, armor: 77 },
 ];
 const ENEMY_ITEM = [
 	{ id: 501, type: 1, itype: 1, name: "5inch単装砲", antiAir: 0, torpedo: 0, bomber: 0, armor: 0 },
@@ -1742,6 +1768,7 @@ const ENEMY_ITEM = [
 	{ id: 600, type: 2, itype: 2, name: "深海8inch連装速射砲", antiAir: 2, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 601, type: 2, itype: 2, name: "深海8inch三連装砲 Mk.9", antiAir: 2, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 609, type: 2, itype: 2, name: "深海16inch三連装砲 Mk6", antiAir: 3, torpedo: 0, bomber: 0, armor: 3 },
+	{ id: 612, type: 2, itype: 2, name: "深海6inch三連装主砲 Mk.16", antiAir: 6, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 507, type: 3, itype: 3, name: "14inch連装砲", antiAir: 4, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 508, type: 3, itype: 3, name: "16inch連装砲", antiAir: 4, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 509, type: 3, itype: 3, name: "16inch三連装砲", antiAir: 5, torpedo: 0, bomber: 0, armor: 0 },
@@ -1798,6 +1825,7 @@ const ENEMY_ITEM = [
 	{ id: 564, type: 10, itype: 10, name: "深海水上偵察観測機", antiAir: 2, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 569, type: 10, itype: 10, name: "深海偵察飛行艇", antiAir: 1, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 610, type: 10, itype: 10, name: "深海カモメ水偵", antiAir: 0, torpedo: 0, bomber: 0, armor: 0 },
+	{ id: 611, type: 10, itype: 10, name: "深海海猫水偵", antiAir: 7, torpedo: 0, bomber: 0, armor: 0 },
 	{ id: 554, type: 11, itype: 10, name: "深海水上攻撃機", antiAir: 4, torpedo: 0, bomber: 8, armor: 0 },
 	{ id: 555, type: 11, itype: 10, name: "深海水上攻撃機改", antiAir: 9, torpedo: 0, bomber: 13, armor: 0 },
 	{ id: 571, type: 11, itype: 10, name: "深海水母小鬼機", antiAir: 11, torpedo: 0, bomber: 15, armor: 4 },
@@ -2395,7 +2423,9 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 630, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 24, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 42, 43] },
 	{ apiShip: 634, itemType: [1, 2, 4, 10, 12, 17, 20, 21, 23, 25, 27, 33, 34, 36, 37, 39, 40, 43, 45] },
 	{ apiShip: 639, itemType: [1, 2, 4, 10, 11, 12, 17, 20, 21, 23, 25, 27, 29, 33, 34, 36, 37, 39, 40, 43, 45] },
+	{ apiShip: 645, itemType: [12, 13, 14, 17, 23, 24, 27, 29, 30, 34, 42, 43, 44, 50] },
 	{ apiShip: 646, itemType: [4, 6, 7, 8, 9, 12, 13, 16, 17, 20, 21, 23, 25, 26, 28, 34, 35, 36, 40, 43, 50, 56, 57, 58, 59] },
+	{ apiShip: 650, itemType: [12, 13, 14, 17, 23, 24, 25, 27, 28, 29, 30, 34, 35, 40, 43, 44, 50] },
 	{ apiShip: 651, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 29, 30, 33, 34, 36, 37, 39, 43] },
 	{ apiShip: 652, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 43, 45] },
 	{ apiShip: 656, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 27, 29, 30, 33, 34, 36, 37, 39, 43, 46] },
@@ -2404,6 +2434,7 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 663, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 43, 46] },
 	{ apiShip: 668, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 22, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 43, 45, 46] },
 	{ apiShip: 690, itemType: [1, 2, 4, 10, 11, 12, 13, 14, 16, 17, 20, 21, 22, 23, 24, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 41, 43, 45, 46, 50] },
+	{ apiShip: 699, itemType: [12, 13, 14, 15, 17, 20, 21, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 43, 44, 50] },
 	{ apiShip: 703, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 24, 29, 30, 33, 36, 37, 39, 43] },
 ];
 
@@ -2444,6 +2475,6 @@ const DEFAULT_PLANE_PRESET = [
 ];
 
 const UNKNOWN_ENEMY = [472, 475, 494, 495, 497];
-const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484];
+const ANTIAIR_CUTIN_ENEMY = [166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484, 498, 512, 513, 514];
 
 const LATEST_VERSION = '1.12.5';
