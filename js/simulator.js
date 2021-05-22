@@ -7494,6 +7494,7 @@ function getContactSelectRate(plane) {
 				scout = Math.ceil(scout + 0.1 * remodel);
 				break;
 			case 25:  // 零式水上偵察機
+			case 138:	// 二式大艇
 			case 163:	// Ro.43水偵
 			case 304:	// S9 Osprey
 			case 370:	// Swordfish Mk.II改(水偵型)
