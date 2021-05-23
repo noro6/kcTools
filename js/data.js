@@ -1336,8 +1336,8 @@ const SHIP_DATA = [
 	{ id: 162, api: 162, type: 22, name: "神威", slot: [0, 0, 0], final: 0, orig: 162, ver: 0, range: 2, type2: 72, hp: 36, hp2: 41, max_hp: 43, max_aa: 24, max_armor: 18, luck: 17, max_luck: 67 },
 	{ id: 300, api: 500, type: 22, name: "神威改母", slot: [1, 1, 1], final: 1, orig: 162, ver: 2, range: 2, type2: 72, hp: 39, hp2: 44, max_hp: 46, max_aa: 34, max_armor: 33, luck: 20, max_luck: 79 },
 	{ id: 408, api: 699, type: 22, name: "宗谷", slot: [0, 0, 0], final: 1, orig: 408, ver: 0, range: 1, type2: 111, hp: 22, hp2: 26, max_hp: 28, max_aa: 32, max_armor: 35, luck: 55, max_luck: 110 },
-	{ id: 445, api: 645, type: 22, name: "宗谷", slot: [0, 0], final: 0, orig: 408, ver: 1, range: 1, type2: 111, hp: 23, hp2: 27, max_hp: 29, max_aa: 0, max_armor: 40, luck: 65, max_luck: 130 },
-	{ id: 450, api: 650, type: 22, name: "宗谷", slot: [1, 2, 3], final: 0, orig: 408, ver: 2, range: 1, type2: 111, hp: 26, hp2: 30, max_hp: 32, max_aa: 0, max_armor: 62, luck: 77, max_luck: 155 },
+	{ id: 445, api: 645, type: 22, name: "宗谷", slot: [0, 0], final: 1, orig: 408, ver: 1, range: 1, type2: 111, hp: 23, hp2: 27, max_hp: 29, max_aa: 0, max_armor: 40, luck: 65, max_luck: 130 },
+	{ id: 450, api: 650, type: 22, name: "宗谷", slot: [1, 2, 3], final: 1, orig: 408, ver: 2, range: 1, type2: 111, hp: 26, hp2: 30, max_hp: 32, max_aa: 0, max_armor: 62, luck: 77, max_luck: 155 },
 ];
 
 const ENEMY_TYPE = [
