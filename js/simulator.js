@@ -13476,7 +13476,6 @@ function calculateStage2Detail() {
 	let sumAntiAirBonus = 0;
 	let tableHtml = '';
 	let cutInWarnning = false;
-	const cutInEnemy = [166, 167, 409, 410, 411, 412, 413, 414];
 
 	// 自由入力欄活性化
 	$('#free_modify').find('input').prop('readonly', avoid !== 5);
@@ -13492,7 +13491,7 @@ function calculateStage2Detail() {
 		const rate = Math.floor(slot * battleData.stage2[avoid][0][idx]);
 		const fix = battleData.stage2[avoid][1][idx];
 		const sum = rate + fix;
-		if (cutInEnemy.includes(enemy.id)) cutInWarnning = true;
+		if (ANTIAIR_CUTIN_ENEMY.includes(enemy.id)) cutInWarnning = true;
 		sumAntiAirBonus += enemy.antiAirBonus;
 		tableHtml += `
 		<tr class="${sum >= slot ? 'stage2_table_death' : sum >= (slot / 2) ? 'stage2_table_half' : ''}">
