@@ -3222,6 +3222,8 @@ function initialize(callback) {
 
 	// 連合艦隊チェック初期化
 	$('#union_fleet').prop('checked', false);
+	// 連合艦隊チェック初期化
+	$('#yugeki_fleet').prop('checked', false);
 	// 対空砲火ステ表示チェック初期化
 	$('#visible_anti_air_status').prop('checked', setting.visibleAntiAirStatus);
 	// クリップボード保存
@@ -3394,6 +3396,14 @@ function setPlaneTypeIconSelect(element, withoutAll = false) {
 	}
 
 	element.appendChild(fragment);
+}
+
+/**
+ * 遊撃部隊にチェックが入っていたら7を返すそれ以外6を返すだけのメソッド
+ */
+function getMaxShipCount() {
+	if ($('#yugeki_fleet').prop('checked')) return 7;
+	return 6;
 }
 
 /**
@@ -5453,13 +5463,21 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 		}
 
 		if (isResetFriendFleet) {
-			// 艦娘クリア
-			clearShipDivAll(6);
+			// 連合(:1)　遊撃部隊(:2)チェック
+			let maxShipCount = 6;
+			if (preset[1].length && preset[1][0] && preset[1][0].length >= 6) {
+				// 遊撃部隊フラグがあれば最大7隻に拡張
+				maxShipCount = preset[1][0][5] === 2 ? 7 : 6;
+
+				document.getElementById('union_fleet')['checked'] = preset[1][0][5] === 1;
+				document.getElementById('yugeki_fleet')['checked'] = preset[1][0][5] === 2;
+			}
+
+			clearShipDivAll(maxShipCount);
 			let shipCountFleet1 = 0;
 			let shipCountFleet2 = 0;
-			let isUnion = false;
 			// 艦娘展開
-			$('.ship_tab').each((i, ship_tab) => {
+			$('.ship_tab:not(.d-none)').each((i, ship_tab) => {
 				const ship = preset[1].find(v => v[2] === i);
 				if (!ship) return;
 				const $ship_tab = $(ship_tab);
@@ -5510,11 +5528,6 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 					}
 				}
 
-				// 連合フラグ 1艦でも連合フラグがあれば連合にチェック　混在するのはあり得ないが…
-				if (!isUnion && ship.length >= 6) {
-					isUnion = ship[5];
-				}
-
 				// 運
 				if (ship.length >= 7) {
 					if (ship[6] > 0) {
@@ -5525,14 +5538,12 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 					}
 				}
 
-				if (i < 6) shipCountFleet1 += 1;
+				if (i < maxShipCount) shipCountFleet1 += 1;
 				else shipCountFleet2 += 1;
 			});
 
 			display_ship_count_Changed($('#friendFleet_item1'), Math.max(shipCountFleet1, 1), true);
 			display_ship_count_Changed($('#friendFleet_item2'), Math.max(shipCountFleet2, 1), true);
-
-			document.getElementById('union_fleet')['checked'] = isUnion;
 		}
 
 		// 陣形　初期値
@@ -5775,11 +5786,12 @@ function createLandBasePreset() {
 function createFriendFleetPreset() {
 	// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合かどうか, 6:運]
 	const friendFleetPreset = [];
+	const maxShipCount = getMaxShipCount();
 	let shipIndex = 0;
-	const isUnion = document.getElementById('union_fleet')['checked'] ? 1 : 0;
+	const fleetType = document.getElementById('union_fleet')['checked'] ? 1 : document.getElementById('yugeki_fleet')['checked'] ? 2 : 0;
 	$('.ship_tab:not(.ui-draggable-dragging)').each((i, e) => {
-		// 第2艦隊の開始を検知
-		if (i === 6) shipIndex = 6;
+		// 第2艦隊の開始を検知 遊撃部隊なら7
+		if (i === maxShipCount) shipIndex = maxShipCount;
 		// 非表示なら飛ばす
 		if ($(e).attr('class').includes('d-none')) return;
 
@@ -5790,7 +5802,7 @@ function createFriendFleetPreset() {
 			shipIndex,
 			($(e).find('.ship_disabled').hasClass('disabled') ? 1 : 0),
 			castInt($(e).find('.ship_level').text()),
-			isUnion,
+			fleetType,
 			castInt($(e).find('.ship_luck').text())
 		];
 		$(e).find('.ship_plane:not(.ui-draggable-dragging)').each((j, ce) => {
@@ -5893,6 +5905,7 @@ function convertToDeckBuilder() {
 	try {
 		const fleet = createFriendFleetPreset();
 		const landBase = createLandBasePreset();
+		const fleetBorder = getMaxShipCount();
 		const obj = {
 			version: 4,
 			f1: {},
@@ -5927,8 +5940,8 @@ function convertToDeckBuilder() {
 
 			const s = { id: `${shipData.api}`, lv: ship[4], luck: ship[6], items: items };
 			const shipIndex = ship[2];
-			if (shipIndex < 6) obj.f1["s" + ((shipIndex % 6) + 1)] = s;
-			else obj.f2[`s${(shipIndex % 6) + 1}`] = s;
+			if (shipIndex < fleetBorder) obj.f1["s" + ((shipIndex % fleetBorder) + 1)] = s;
+			else obj.f2[`s${(shipIndex % fleetBorder) + 1}`] = s;
 		}
 
 		return JSON.stringify(obj);
@@ -5948,6 +5961,7 @@ function convertToDeckBuilder_j() {
 	try {
 		const fleet = createFriendFleetPreset();
 		const landBase = createLandBasePreset();
+		const fleetBorder = getMaxShipCount();
 		const obj = {
 			version: 1,
 			name: getActivePreset().name,
@@ -5988,7 +6002,7 @@ function convertToDeckBuilder_j() {
 			if (!shipData) continue;
 
 			const shipIndex = ship[2];
-			const t = obj["fleets"][shipIndex < 6 ? 0 : 1];
+			const t = obj["fleets"][shipIndex < fleetBorder ? 0 : 1];
 
 			// 装備機体群オブジェクト生成
 			const planes = [];
@@ -7529,6 +7543,7 @@ function getContactSelectRate(plane) {
  */
 function createFleetInstance() {
 	let node_ship_tabs = null;
+	const maxShipCount = getMaxShipCount();
 	const fleet = new Fleet();
 
 	// 連合艦隊モードかどうか
@@ -7622,7 +7637,7 @@ function createFleetInstance() {
 		shipInstance.updateAntiAirStatus();
 
 		// 連合設定 かつ 6番目以降
-		shipInstance.isEscort = isUnionFleet && shipNo > 6;
+		shipInstance.isEscort = isUnionFleet && shipNo > maxShipCount;
 
 		// 艦娘が配備されているか　もしくは装備がなんらか1つでもあれば追加
 		if (shipInstance.id > 0 || shipInstance.items.some(v => v.id > 0)) {
@@ -10991,6 +11006,19 @@ function modal_Closed($this) {
 	// いらないオブジェクト参照をやめさせる
 	switch ($this.attr('id')) {
 		case "modal_share":
+			const $output = $('#output_deck');
+			$output.val('');
+			$output.nextAll('.valid-feedback').text('');
+			$output.removeClass('is-invalid').removeClass('is-valid');
+
+			const $outputUrl = $('#output_url');
+			$outputUrl.val('');
+			$outputUrl.nextAll('.valid-feedback').text('');
+			$outputUrl.removeClass('is-invalid').removeClass('is-valid');
+
+			$target = null;
+			calculate();
+			break;
 		case "modal_ship_select":
 		case "modal_plane_select":
 		case "modal_enemy_select":
@@ -12218,9 +12246,10 @@ function updateFleetStage2Table() {
 
 	// 一覧の描画
 	let text = '';
+	const maxShipCount = getMaxShipCount();
 	for (let i = 0; i < fleet.ships.length; i++) {
 		const ship = fleet.ships[i];
-		const shipIndex = ship.shipNo % 6;
+		const shipIndex = ship.shipNo % maxShipCount;
 
 		// 何も入っとらんやんけ
 		if (!minimumValues[i].length || !fixValues[i].length) {
@@ -12240,7 +12269,7 @@ function updateFleetStage2Table() {
 		text += `
 		<tr class="${ship.isEscort ? 'escort_fleet' : 'main_fleet'}">
 			<td class="text-left text-truncate">
-				<span class="font_size_11 ${ship.isEscort ? 'text-primary' : 'text-success'}">${shipIndex > 0 ? shipIndex : 6}.</span>
+				<span class="font_size_11 ${ship.isEscort ? 'text-primary' : 'text-success'}">${shipIndex > 0 ? shipIndex : maxShipCount}.</span>
 				<span>${ship.name}</span>
 			</td>
 			<td class="rate_shoot_down">${Math.floor(ship.rateDown * 10000) / 100} %</td>
@@ -13085,11 +13114,11 @@ function display_ship_count_Changed($this, displayCount, cancelCalculate = false
 		else $(e).addClass('d-none');
 	});
 
-	// 現在地を格納 6隻埋まったら新規追加ボタンは非表示に
+	// 現在地を格納 6隻埋まったら新規追加ボタンは非表示に => 遊撃部隊なら +1
 	const $button = $this.find('.btn_ship_create');
 	$button[0].dataset.count = displayCount;
-	if (displayCount >= 6) {
-		$button[0].dataset.count = 6;
+	if (displayCount >= getMaxShipCount()) {
+		$button[0].dataset.count = getMaxShipCount();
 		$button.addClass('d-none');
 	}
 	else {
@@ -13146,6 +13175,58 @@ function ship_disabled_Changed($this) {
 		$this.addClass('disabled');
 		$this.children().removeClass('fa-eye no_capture').addClass('fa-eye-slash');
 	}
+	calculate(false, true, false);
+}
+
+/**
+ * 連合艦隊チェック変更時
+ */
+function union_fleet_Checked() {
+	const isUnion = $('#union_fleet').prop('checked');
+	if (isUnion && $('#yugeki_fleet').prop('checked')) {
+		$('#yugeki_fleet').prop('checked', false);
+	}
+	// 7隻表示がなされていたら矯正
+	const activeTab = $('.friendFleet_tab.active');
+	const backTab = $('.friendFleet_tab:not(.active)');
+	if (isUnion && activeTab.find('.ship_tab:not(.d-none)').length >= 6) {
+		display_ship_count_Changed(activeTab, 6, true);
+	}
+	if (isUnion && backTab.find('.ship_tab:not(.d-none)').length >= 6) {
+		display_ship_count_Changed(backTab, 6, true);
+	}
+	calculate(false, true, false);
+}
+
+/**
+ * 遊撃部隊チェック変更時
+ */
+function yugeki_fleet_Checked() {
+	const isYugeki = $('#yugeki_fleet').prop('checked');
+	if (isYugeki && $('#union_fleet').prop('checked')) {
+		$('#union_fleet').prop('checked', false);
+	}
+	// 6隻表示埋まっていたら矯正 タブは両方適用する
+	const activeTab = $('.friendFleet_tab.active');
+	const activeCount = activeTab.find('.ship_tab:not(.d-none)').length
+	if (isYugeki && activeCount === 6) {
+		display_ship_count_Changed(activeTab, 7, true);
+	}
+	// 遊撃じゃなくなったら後ろに隠す
+	else if (!isYugeki && activeCount >= 6) {
+		display_ship_count_Changed(activeTab, 6, true);
+	}
+
+	const backTab = $('.friendFleet_tab:not(.active)');
+	const backCount = backTab.find('.ship_tab:not(.d-none)').length
+	if (isYugeki && backCount === 6) {
+		display_ship_count_Changed(backTab, 7, true);
+	}
+	// 遊撃じゃなくなったら後ろに隠す
+	else if (!isYugeki && backCount >= 6) {
+		display_ship_count_Changed(backTab, 6, true);
+	}
+
 	calculate(false, true, false);
 }
 
@@ -15300,8 +15381,10 @@ async function btn_output_url_Clicked() {
  * デッキビルダー形式生成ボタンクリック
  */
 function btn_output_deck_Clicked() {
-	const dataString = convertToDeckBuilder();
 	const $output = $('#output_deck');
+	$output.nextAll('.valid-feedback').text('');
+	$output.removeClass('is-invalid').removeClass('is-valid');
+	const dataString = convertToDeckBuilder();
 	$('#output_deck').val(dataString);
 	if (dataString) {
 		$output.nextAll('.valid-feedback').text('生成しました。上記文字列をクリックするとクリップボードにコピーされます。');
@@ -15641,7 +15724,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on({ mouseenter: function () { $(this).closest('.ship_tab').find('.remove_line').addClass('ready'); }, mouseleave: function () { $(this).closest('.ship_tab').find('.remove_line').removeClass('ready'); }, }, '.btn_reset_ship_plane');
 	$('#friendFleet_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
 	$('#friendFleet_content').on('click', '.ship_disabled', function () { ship_disabled_Changed($(this)); });
-	$('#friendFleet_content').on('click', '#union_fleet', function () { calculate(false, true, false); });
+	$('#friendFleet_content').on('click', '#union_fleet', union_fleet_Checked);
+	$('#friendFleet_content').on('click', '#yugeki_fleet', yugeki_fleet_Checked);
 	$('#friendFleet_content').on('click', '#visible_anti_air_status', visible_anti_air_status_Clicked);
 	$('#friendFleet_content .nav-link[data-toggle="tab"]').on('shown.bs.tab', fleet_select_tab_Clicked);
 	$('#friendFleet_content').on('click', '.plane_lock', function () { plane_lock_Clicked($(this)); });
@@ -15976,6 +16060,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				});
 				$(e).find('.btn_show_contact_rate_lb')[0].dataset.lb = (i + 1);
 			});
+			inform_warning('基地航空隊の入れ替えが行われました。基地航空隊の派遣先を確認してください。');
+			$('#btn_lb_target').removeClass('btn-outline-success');
+			$('#btn_lb_target').addClass('btn-outline-danger');
+			$('#lb_target_alert').removeClass('d-none');
 			calculate(true, false, false);
 		}
 	});

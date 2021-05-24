@@ -394,6 +394,7 @@ function readDeckBuilder(deck) {
 		const obj = JSON.parse(deck);
 		const fleets = [];
 		const landBase = [[], [-1, -1, -1]];
+		let isYugeki = false;
 		let unmanageShip = false;
 		Object.keys(obj).forEach((key) => {
 			const value = obj[key];
@@ -429,10 +430,14 @@ function readDeckBuilder(deck) {
 			if (key.indexOf("f") === 0) {
 				// 艦隊番号
 				const fleetNo = castInt(key.replace('f', '')) - 1;
+				// 第3艦隊以降はここで飛ばしてる
 				if (fleetNo > 1) return;
 
 				// 艦娘の抽出
 				const fleet = [fleetNo, []];
+				if (!isYugeki) {
+					isYugeki = Object.keys(value).length === 7;
+				}
 				Object.keys(value).forEach((s) => {
 					const s_ = value[s];
 					if (!s_ || !s_.hasOwnProperty('items')) return;
@@ -460,7 +465,7 @@ function readDeckBuilder(deck) {
 					}
 
 					// 装備の抽出
-					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + 6 * fleetNo), 0, level, 0, luck];
+					const ship = [shipData.id, [], (castInt(s.replace('s', '')) - 1 + (isYugeki ? 7 : 6) * fleetNo), 0, level, isYugeki ? 2 : 0, luck];
 					Object.keys(s_.items).forEach((i) => {
 						const i_ = s_.items[i];
 						if (!i_ || !i_.hasOwnProperty("id")) return;
