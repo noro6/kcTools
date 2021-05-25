@@ -5910,6 +5910,7 @@ function convertToDeckBuilder() {
 			version: 4,
 			f1: {},
 			f2: {},
+			f3: {},
 			a1: { mode: 0, items: {} },
 			a2: { mode: 0, items: {} },
 			a3: { mode: 0, items: {} }
@@ -5940,8 +5941,12 @@ function convertToDeckBuilder() {
 
 			const s = { id: `${shipData.api}`, lv: ship[4], luck: ship[6], items: items };
 			const shipIndex = ship[2];
-			if (shipIndex < fleetBorder) obj.f1["s" + ((shipIndex % fleetBorder) + 1)] = s;
+			if (shipIndex < fleetBorder) {
+				obj.f1["s" + ((shipIndex % fleetBorder) + 1)] = s;
+				if (fleetBorder === 7) obj.f3["s" + ((shipIndex % fleetBorder) + 1)] = s;
+			}
 			else obj.f2[`s${(shipIndex % fleetBorder) + 1}`] = s;
+
 		}
 
 		return JSON.stringify(obj);
@@ -7562,7 +7567,11 @@ function createFleetInstance() {
 
 	for (let index = 0; index < node_ship_tabs.length; index++) {
 		const node_ship_tab = node_ship_tabs[index];
-		const shipNo = index + 1;
+		let shipNo = index + 1;
+		if (isUnionFleet && shipNo > 6) {
+			// 遊撃部隊追加により、艦配置番号に補正を入れる => 遊撃部隊分の入力欄で艦隊入力欄番号がずれてるので1戻す
+			shipNo -= 1;
+		}
 
 		const shipId = castInt(node_ship_tab.dataset.shipid);
 		const level = castInt(node_ship_tab.getElementsByClassName('ship_level')[0].textContent);
