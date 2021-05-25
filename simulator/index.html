@@ -874,17 +874,23 @@
 			<div class="collapse show collapse_content" id="friendFleet_content">
 				<div class="border-top"></div>
 				<div class="mt-2 mb-1 d-flex">
-					<div class="ml-1 custom-check">
-						<label>
+					<div class="ml-1 custom-check align-self-center">
+						<label data-toggle="tooltip" data-offset="140,0" data-html="true"
+							title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>">
 							<input type="checkbox" id="union_fleet">
 							<i class="fas fa-checkbox-unchecked"></i>
 							<i class="fas fa-checkbox-checked"></i>
 							<span>連合艦隊</span>
 						</label>
 					</div>
-					<div class="ml-2 align-self-center no_capture">
-						<i class="far fa-question-circle-o cur_help" data-toggle="tooltip" data-offset="140,0" data-html="true"
-							title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>"></i>
+					<div class="ml-3 custom-check align-self-center">
+						<label data-toggle="tooltip" data-html="true"
+							title="<div class='text-left'>7隻目の編成が可能になります。</div>">
+							<input type="checkbox" id="yugeki_fleet">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span>遊撃部隊</span>
+						</label>
 					</div>
 					<div class="ml-auto align-self-center custom-check sm no_capture">
 						<label>
@@ -1218,6 +1224,7 @@
 							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_4"></div>
 							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_5"></div>
 							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_6"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_13"></div>
 							<div class="mx-1 mt-2 flex-grow-1 btn_ship_create no_capture" data-count="2">
 								<span><i class="fas fa-plus"></i> 新規追加</span>
 							</div>
@@ -1257,6 +1264,7 @@
 							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_10"></div>
 							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_11"></div>
 							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_12"></div>
+							<div class="ship_tab general_box mx-1 mt-2 p-1 flex-grow-1 no_ship d-none" id="shipNo_14"></div>
 							<div class="mx-1 mt-2 flex-grow-1 btn_ship_create no_capture" data-count="2">
 								<span><i class="fas fa-plus"></i> 新規追加</span>
 							</div>
