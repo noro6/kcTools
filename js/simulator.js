@@ -4491,7 +4491,6 @@ function createShipTable() {
 
 	let prevType = 0;
 	let prevType2 = 0;
-	let tempUsedShip = usedShip.concat();
 	for (const ship of ships) {
 		// 残り隻数
 		let shipCount = 1;
@@ -6591,11 +6590,6 @@ function calculateInit() {
 		node.classList.remove('d-none');
 	}
 
-	// 機体使用数テーブル初期化
-	usedItems = [];
-	// 配備済み艦娘テーブル初期化
-	usedShip = [];
-
 	// 入力データの取得 / 反映
 	updateInputData();
 
@@ -6688,6 +6682,8 @@ function updateInputData() {
 
 	// 基地情報更新
 	if (!inputItems.landBase) {
+		// 艦娘使用機体のみ残して使用機体初期化
+		usedItems = usedItems.filter(v => v.parent === "ship");
 		inputItems.landBase = createLandBaseInstance();
 	}
 	else {
@@ -6697,6 +6693,10 @@ function updateInputData() {
 
 	// 艦隊情報更新
 	if (!inputItems.fleet) {
+		// 配備済み艦娘テーブル初期化
+		usedShip = [];
+		// 基地使用機体のみ残して使用機体初期化
+		usedItems = usedItems.filter(v => v.parent === "lb");
 		inputItems.fleet = createFleetInstance();
 	}
 	else {
@@ -7383,7 +7383,7 @@ function createLandBaseInstance() {
 			let usedData = usedItems.find(v => v.id === plane.id);
 			if (usedData) usedData.num[plane.remodel] += 1;
 			else {
-				usedData = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
+				usedData = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], parent: "lb" };
 				usedData.num[plane.remodel] += 1;
 				usedItems.push(usedData);
 			}
@@ -7636,7 +7636,7 @@ function createFleetInstance() {
 			let usedData = usedItems.find(v => v.id === plane.id);
 			if (usedData) usedData.num[plane.remodel] += 1;
 			else {
-				usedData = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
+				usedData = { id: plane.id, num: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], parent: "ship" };
 				usedData.num[plane.remodel] += 1;
 				usedItems.push(usedData);
 			}
