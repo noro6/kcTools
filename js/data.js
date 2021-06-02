@@ -452,7 +452,7 @@ const ITEM_DATA = [
 	{ id: 126, type: 37, itype: 31, name: "WG42 (Wurfgerat 42)", abbr: "", fire: 1, antiAir: 0, torpedo: 0, bomber: 0, armor: -1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 1 },
 	{ id: 348, type: 37, itype: 31, name: "艦載型 四式20cm対地噴進砲", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: -2, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0 },
 	{ id: 349, type: 37, itype: 31, name: "四式20cm対地噴進砲 集中配備", abbr: "", fire: 1, antiAir: 0, torpedo: 0, bomber: 0, armor: -4, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0 },
-	{ id: 129, type: 39, itype: 32, name: "熟練見張員", abbr: "", fire: 0, antiAir: 1, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 2, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 0 },
+	{ id: 129, type: 39, itype: 32, name: "熟練見張員", abbr: "", fire: 0, antiAir: 1, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 2, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 0 },
 	{ id: 412, type: 39, itype: 32, name: "水雷戦隊 熟練見張員", abbr: "", fire: 0, antiAir: 1, torpedo: 3, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 2, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 2 },
 	{ id: 132, type: 40, itype: 18, name: "零式水中聴音機", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 11, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 1, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0 },
 	{ id: 138, type: 41, itype: 33, name: "二式大艇", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 1, antiBomber: 0, interception: 0, scout: 12, canRemodel: 1, accuracy: 1, avoid2: 0, radius: 20, cost: 25, avoid: 0, range2: 0 },
@@ -906,7 +906,8 @@ const SHIP_DATA = [
 	{ id: 210, api: 410, type: 2, name: "清霜", slot: [0, 0], final: 0, orig: 210, ver: 0, range: 1, type2: 38, hp: 16, hp2: 20, max_hp: 22, max_aa: 39, max_armor: 19, luck: 12, max_luck: 49 },
 	{ id: 1418, api: 325, type: 2, name: "清霜改", slot: [0, 0, 0], final: 1, orig: 210, ver: 1, range: 1, type2: 38, hp: 32, hp2: 37, max_hp: 39, max_aa: 50, max_armor: 49, luck: 13, max_luck: 59 },
 	{ id: 224, api: 424, type: 2, name: "高波", slot: [0, 0], final: 0, orig: 224, ver: 0, range: 1, type2: 38, hp: 16, hp2: 20, max_hp: 22, max_aa: 39, max_armor: 19, luck: 8, max_luck: 44 },
-	{ id: 1425, api: 345, type: 2, name: "高波改", slot: [0, 0, 0], final: 1, orig: 224, ver: 1, range: 1, type2: 38, hp: 32, hp2: 37, max_hp: 39, max_aa: 50, max_armor: 49, luck: 10, max_luck: 57 },
+	{ id: 1425, api: 345, type: 2, name: "高波改", slot: [0, 0, 0], final: 0, orig: 224, ver: 1, range: 1, type2: 38, hp: 32, hp2: 37, max_hp: 39, max_aa: 50, max_armor: 49, luck: 10, max_luck: 57 },
+	{ id: 449, api: 649, type: 2, name: "高波改二", slot: [0, 0, 0], final: 1, orig: 224, ver: 2, range: 1, type2: 38, hp: 33, hp2: 38, max_hp: 40, max_aa: 62, max_armor: 53, luck: 12, max_luck: 72 },
 	{ id: 225, api: 425, type: 2, name: "朝霜", slot: [0, 0], final: 0, orig: 225, ver: 0, range: 1, type2: 38, hp: 16, hp2: 20, max_hp: 22, max_aa: 44, max_armor: 19, luck: 16, max_luck: 59 },
 	{ id: 1424, api: 344, type: 2, name: "朝霜改", slot: [0, 0, 0], final: 0, orig: 225, ver: 1, range: 1, type2: 38, hp: 33, hp2: 38, max_hp: 40, max_aa: 62, max_armor: 51, luck: 18, max_luck: 74 },
 	{ id: 378, api: 578, type: 2, name: "朝霜改二", slot: [0, 0, 0], final: 1, orig: 225, ver: 2, range: 1, type2: 38, hp: 33, hp2: 38, max_hp: 40, max_aa: 72, max_armor: 53, luck: 28, max_luck: 86 },
@@ -2321,7 +2322,7 @@ const EXPANDED_SPECIAL_ITEM = [
 	{ itemId: 220, shipApiIds: [137, 138, 139, 140, 154, 182, 184, 187, 305, 306, 307, 314, 343, 356, 465, 488, 501, 503, 504, 506, 508, 509, 662, 663, 668, 883, 888] },
 	{ itemId: 275, shipApiIds: [136, 148, 153, 156, 183, 321, 546] },
 	{ itemId: 408, shipApiIds: [621, 626] },
-	{ itemId: 413, shipApiIds: [21, 22, 23, 24, 25, 53, 54, 55, 56, 57, 58, 99, 100, 101, 113, 114, 118, 119, 137, 138, 139, 140, 141, 146, 158, 159, 160, 183, 200, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 289, 290, 305, 306, 307, 314, 321, 330, 346, 357, 421, 422, 423, 487, 488, 532, 537, 542, 543, 547, 652, 657, 662, 663, 668] },
+	{ itemId: 413, shipApiIds: [21, 22, 23, 24, 25, 53, 54, 55, 56, 57, 58, 99, 100, 101, 113, 114, 118, 119, 137, 138, 139, 140, 141, 146, 158, 159, 160, 183, 200, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 289, 290, 305, 306, 307, 314, 321, 330, 346, 357, 421, 422, 423, 487, 488, 532, 537, 542, 543, 547, 649, 652, 657, 662, 663, 668] },
 ];
 
 // 特定の艦娘が特別に装備できるやつ
@@ -2432,6 +2433,7 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 639, itemType: [1, 2, 4, 10, 11, 12, 17, 20, 21, 23, 25, 27, 29, 33, 34, 36, 37, 39, 40, 43, 45] },
 	{ apiShip: 645, itemType: [12, 13, 14, 17, 23, 24, 27, 29, 30, 34, 42, 43, 44, 50] },
 	{ apiShip: 646, itemType: [4, 6, 7, 8, 9, 12, 13, 16, 17, 20, 21, 23, 25, 26, 28, 34, 35, 36, 40, 43, 50, 56, 57, 58, 59] },
+	{ apiShip: 649, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 27, 29, 30, 33, 34, 36, 37, 39, 43] },
 	{ apiShip: 650, itemType: [12, 13, 14, 17, 23, 24, 25, 27, 28, 29, 30, 34, 35, 40, 43, 44, 50] },
 	{ apiShip: 651, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 29, 30, 33, 34, 36, 37, 39, 43] },
 	{ apiShip: 652, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 43, 45] },
