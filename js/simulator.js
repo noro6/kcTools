@@ -8799,8 +8799,9 @@ function fleetSlotDetailCalculate(shipNo, slotNo, shipId = 0) {
  * 基地航空隊詳細計算
  * @param {number} landBaseNo 基地航空隊番号
  * @param {number} slotNo スロット番号
+ * @param {boolean} autoForcus スロット自動選択
  */
-function landBaseDetailCalculate(landBaseNo, slotNo) {
+function landBaseDetailCalculate(landBaseNo, slotNo, autoForcus = false) {
 	// 事前計算テーブルチェック
 	setPreCalculateTable();
 	// 基地オブジェクト取得
@@ -8818,6 +8819,11 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 	const planes = landBaseData.landBases[landBaseNo].planes;
 	// 元の全機数
 	let suppliedSlot = 0;
+
+	// 攻撃機を探索 なければ第1スロット
+	if (autoForcus && slotNo === 0 && !ATTACKERS.includes(planes[slotNo].type) && planes.some(v => ATTACKERS.includes(v.type))) {
+		slotNo = planes.findIndex(v => ATTACKERS.includes(v.type));
+	}
 
 	// 有効なスロットかチェック & 元の全機数チェック
 	for (let index = 0; index < planes.length; index++) {
@@ -9048,13 +9054,21 @@ function landBaseDetailCalculate(landBaseNo, slotNo) {
 		document.getElementById('target_enemy').value = 99;
 	}
 
+	// 初回起動
+	if (autoForcus && (prevSelectedBattle < 0 || prevSelectedBattle > maxBattle)) {
+		document.getElementById('target_enemy').value = landBaseData.landBases[landBaseNo].target[0];
+	}
+
 	stage3PowerCalculate();
 }
 
 /**
  * 敵スロット撃墜数詳細計算
+ * @param {number} enemyNo
+ * @param {number} slotNo
+ * @param {boolean} autoForcus スロット自動選択
  */
-function enemySlotDetailCalculate(enemyNo, slotNo) {
+function enemySlotDetailCalculate(enemyNo, slotNo, autoForcus = false) {
 	// 事前計算テーブルチェック
 	setPreCalculateTable();
 	// 基地オブジェクト取得
@@ -9077,8 +9091,14 @@ function enemySlotDetailCalculate(enemyNo, slotNo) {
 	const targetEnemy = battleInfo.battles[mainBattle].enemies.filter(v => v.slots.length > 0 && !v.onlyScout)[enemyNo];
 	const enemy = ENEMY_DATA.find(v => v.id === targetEnemy.id);
 	// slotNo は艦載機だけの配列で見ている => 艦載機のみ配列を作る enemy.eqp.filter()
-	const planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
-	const plane = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type))[slotNo];
+	let planes = enemy.eqp.map(v => ENEMY_ITEM.find(x => x.id === v));
+	planes = planes.filter(v => FIGHTERS.includes(v.type) || ATTACKERS.includes(v.type));
+
+	// 攻撃機があるなら自動補正
+	if (autoForcus && !ATTACKERS.includes(planes[slotNo].type) && planes.some(v => ATTACKERS.includes(v.type))) {
+		slotNo = planes.findIndex(v => ATTACKERS.includes(v.type));
+	}
+	const plane = planes[slotNo];
 
 	// 今回調査する機体データ
 	const targetItem = new EnemyItem(plane.id);
@@ -9706,12 +9726,14 @@ function drawStage3Result() {
 			const rate = okPowers.length === damageDist.length ? 1 : getArraySum(okPowers);
 			obj.value = rate;
 
-
+			// 非攻撃機
 			if (!plane.isAttacker) {
-				// 非攻撃機
-				damageRateText += `<td>-</td>`;
-				damageRange = '-';
-				continue;
+				// 敗者復活(敵が潜水かつ対潜可能)
+				if (isFleet && (!enemy.type.includes(18) || !enabledASW)) {
+					damageRateText += `<td>-</td>`;
+					damageRange = '-';
+					continue;
+				}
 			}
 			if ((isFleet && enemy.type.includes(18) && !enabledASW) || (!isFleet && [13, 14].includes(enemy.type))) {
 				// 敵が潜水艦で対潜不可なら 表示なし
@@ -9947,7 +9969,9 @@ function getLandBaseASWPower(slotDist, afterCapBonus = 1) {
 			// クリティカル補正
 			if (isCritical) basePower = Math.floor(basePower * 1.5 * crBonus);
 			// 陸攻補正 * 触接補正付与
-			const power = basePower * (plane.type === 47 ? 1.8 : 1) * allBonus;
+			let power = basePower * (plane.type === 47 ? 1.8 : 1) * allBonus;
+			// 水上偵察機攻撃力 0 補正
+			if (RECONNAISSANCES.includes(plane.type)) power = 1;
 			// 火力とその確率を格納
 			const p = powers.find(v => v.power === power);
 			if (p) p.rate += rate;
@@ -11050,6 +11074,7 @@ function modal_Closed($this) {
 				chartInstance.destroy();
 				chartInstance = null;
 				chartSlotDistribution = null;
+				document.getElementById('target_enemy').value = -1;
 			}, 80);
 			break;
 		case "modal_contact_detail":
@@ -13904,8 +13929,35 @@ function display_result_Changed() {
  */
 function land_base_detail_Clicked($this) {
 	// 詳細計算対象の取得
-	landBaseDetailCalculate(castInt($this.data('base_no')), 0);
+	landBaseDetailCalculate(castInt($this.data('base_no')), 0, true);
 	$('#modal_result_detail').modal('show');
+}
+
+/**
+ * 基地計算結果詳細展開
+ * @param {JQuery} $this
+ */
+function land_base_bar_Clicked($this) {
+	const $bar = $this.find('.result_bar');
+	const rowIndex = castInt($bar.attr('id').replace('result_bar_', ''));
+	// 詳細計算対象の取得
+	landBaseDetailCalculate(castInt($('#rate_row_' + rowIndex).data('base_no')), 0, true);
+	$('#modal_result_detail').modal('show');
+}
+
+/**
+ * 基地計算結果詳細展開
+ * @param {JQuery} $this
+ */
+function simple_lb_progress_Clicked($this) {
+	const id = $this.closest('.lb_tab').attr('id');
+	const rowIndex = castInt(id.replace('lb_item', '')) - 1;
+	// 0: → 0 1: → 2 2: → 4
+	const $tr = $('#rate_row_' + (rowIndex * 2));
+	if ($tr.length) {
+		landBaseDetailCalculate(castInt($tr.data('base_no')), 0, true);
+		$('#modal_result_detail').modal('show');
+	}
 }
 
 /**
@@ -13935,7 +13987,7 @@ function enemy_slot_Clicked($this) {
 	// 詳細計算対象の取得
 	const enemyNo = castInt($this.closest('tr')[0].dataset.rowindex);
 	const slot = castInt($this.closest('tr')[0].dataset.slot);
-	enemySlotDetailCalculate(enemyNo, slot);
+	enemySlotDetailCalculate(enemyNo, slot, true);
 	$('#modal_result_detail').modal('show');
 }
 
@@ -15116,6 +15168,8 @@ async function btn_url_shorten_Clicked() {
 		const preset = readDeckBuilder(url);
 		if (preset) {
 			expandMainPreset(preset, preset[0][0].length > 0, true, false);
+			// 対空砲火を有効にする
+			document.getElementById('adapt_stage2')['checked'] = true;
 			calculate();
 			inform_success('編成の反映に成功しました。');
 		}
@@ -15345,6 +15399,9 @@ function btn_load_deck_Clicked() {
 		expandMainPreset(preset, preset[0][0].length > 0, true, false);
 		$('#input_deck').removeClass('is-invalid').addClass('is-valid');
 		inform_success('編成の読み込みに成功しました。');
+
+		// 対空砲火を有効にする
+		document.getElementById('adapt_stage2')['checked'] = true;
 	}
 	else {
 		$('#input_deck').addClass('is-invalid').removeClass('is-valid');
@@ -15610,6 +15667,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				const deck = readDeckBuilder(params.predeck);
 				if (deck) {
 					expandMainPreset(deck, deck[0][0].length > 0, true, false);
+					// 対空砲火を有効にする
+					document.getElementById('adapt_stage2')['checked'] = true;
 				}
 			}
 
@@ -15725,6 +15784,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_show_contact_rate_lb', function () { btn_show_contact_rate_lb_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_toggle_lb_info', function () { btn_toggle_lb_info_Clicked($(this)); });
 	$('#landBase_content').on('click', '#toggle_def_mode', toggle_def_mode_Checked);
+	$('#landBase_content').on('click', '.simple_lb_progress', function () { simple_lb_progress_Clicked($(this)) });
 	$('#friendFleet_content').on('click', '.btn_ship_create', function () { btn_ship_create_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
@@ -15761,6 +15821,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#result_content').on('click', '#display_setting .custom-check', display_result_Changed);
 	$('#result_content').on('click', '#shoot_down_table_tbody tr', function () { fleet_slot_Clicked($(this)); });
 	$('#result_content').on('click', '#rate_table .land_base_detail', function () { land_base_detail_Clicked($(this)); });
+	$('#result_content').on('click', '#result_bar .progress_area', function () { land_base_bar_Clicked($(this)); });
 	$('#result_content').on('click', '#enemy_shoot_down_tbody .td_detail_slot', function () { enemy_slot_Clicked($(this)); });
 	$('#result_content').on('click', '.btn_antiair_input', btn_antiair_input_Clicked);
 	$('#result_content').on('click', '#adapt_stage2', function () { calculate(false, true, false); });
