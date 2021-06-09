@@ -15707,7 +15707,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('input', '.slot_input', function () { slot_input_Changed($(this)); });
 	$('#main').on('input', '.slot_range', function () { slot_range_Changed($(this)); });
 	$('#main').on('click', '.remodel_item', function () { $(this).addClass('remodel_item_selected'); });
-	$('#main').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#main').on('click', '.btn_plane_preset', function () { btn_plane_preset_Clicked($(this)); });
 	$('#main').on('click', '.btn_capture', function () { btn_capture_Clicked($(this)); });
 	$('#main').on('click', '.btn_reset_content', function () { btn_reset_content_Clicked($(this)); });
@@ -15725,6 +15724,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_show_contact_rate_lb', function () { btn_show_contact_rate_lb_Clicked($(this)); });
 	$('#landBase_content').on('click', '.btn_toggle_lb_info', function () { btn_toggle_lb_info_Clicked($(this)); });
 	$('#landBase_content').on('click', '#toggle_def_mode', toggle_def_mode_Checked);
+	$('#landBase_content').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#landBase_content').on('touchend', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#friendFleet_content').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#friendFleet_content').on('touchend', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_ship_create', function () { btn_ship_create_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
