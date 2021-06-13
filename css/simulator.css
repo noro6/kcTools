@@ -196,6 +196,11 @@ input[type="number"] { text-align: right; }
   基地航空隊関連 #landBase
 ----------------------------------- */
 .lb_tab { max-width: 460px; }
+
+.simple_lb_progress {
+  cursor: pointer;
+}
+
 @media (min-width: 1400px) {
   #main:not(.reduced) .lb_tab_main {
     padding-right: .3rem;
