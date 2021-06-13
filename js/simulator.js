@@ -1200,6 +1200,10 @@ class Item {
 				const isLbAtaccker = LB_ATTACKERS.includes(this.type);
 				this.fuel = Math.ceil(this.slot * (isLbAtaccker ? 1.5 : this.type === 53 ? 2.0 : 1.0));
 				this.ammo = isLbAtaccker ? Math.floor(this.slot * 0.7) : this.type === 53 ? this.slot * 2 : Math.ceil(this.slot * 0.6);
+				if (this.type === 41) {
+					this.fuel = this.slot * 3;
+					this.ammo = this.slot;
+				}
 				this.bauxite = this.cost * (this.isRecon ? 4 : this.type === 53 ? 9 : 18);
 				this.steel = this.type === 57 ? Math.round(this.slot * this.cost * 0.2) : 0;
 
@@ -9737,14 +9741,14 @@ function drawStage3Result() {
 				// 敗者復活(敵が潜水かつ対潜可能)
 				if (isFleet && (!enemy.type.includes(18) || !enabledASW)) {
 					damageRateText += `<td>-</td>`;
-					damageRange = '-';
+					damageRange = '';
 					continue;
 				}
 			}
 			if ((isFleet && enemy.type.includes(18) && !enabledASW) || (!isFleet && [13, 14].includes(enemy.type))) {
 				// 敵が潜水艦で対潜不可なら 表示なし
 				damageRateText += `<td class="text-center" colspan="${damageBorders.length}">対潜攻撃不可</td>`;
-				damageRange = '-';
+				damageRange = '';
 				for (const data of damageBorders) data.value = 0;
 				break;
 			}
@@ -9784,7 +9788,7 @@ function drawStage3Result() {
 			</td>
 			<td>${HP}</td>
 			<td>${armor}</td>
-			<td>${plane.isAttacker ? damageRange : '-'}</td>
+			<td>${damageRange ? damageRange : '-'}</td>
 			${damageRateText}
 		</tr>`;
 	}
@@ -13946,7 +13950,7 @@ function land_base_detail_Clicked($this) {
 function land_base_bar_Clicked($this) {
 	const $bar = $this.find('.result_bar');
 	const rowIndex = castInt($bar.attr('id').replace('result_bar_', ''));
-	if(rowIndex < 7) {
+	if (rowIndex < 7) {
 		// 詳細計算対象の取得
 		landBaseDetailCalculate(castInt($('#rate_row_' + rowIndex).data('base_no')), 0, true);
 		$('#modal_result_detail').modal('show');
@@ -15773,7 +15777,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('input', '.slot_input', function () { slot_input_Changed($(this)); });
 	$('#main').on('input', '.slot_range', function () { slot_range_Changed($(this)); });
 	$('#main').on('click', '.remodel_item', function () { $(this).addClass('remodel_item_selected'); });
-	$('#main').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#main').on('click', '.btn_plane_preset', function () { btn_plane_preset_Clicked($(this)); });
 	$('#main').on('click', '.btn_capture', function () { btn_capture_Clicked($(this)); });
 	$('#main').on('click', '.btn_reset_content', function () { btn_reset_content_Clicked($(this)); });
@@ -15792,6 +15795,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.btn_toggle_lb_info', function () { btn_toggle_lb_info_Clicked($(this)); });
 	$('#landBase_content').on('click', '#toggle_def_mode', toggle_def_mode_Checked);
 	$('#landBase_content').on('click', '.simple_lb_progress', function () { simple_lb_progress_Clicked($(this)) });
+	$('#landBase_content').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#landBase_content').on('touchend', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#friendFleet_content').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#friendFleet_content').on('touchend', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_ship_create', function () { btn_ship_create_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_reset_ship_plane', function () { btn_reset_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_name_span', function () { ship_name_span_Clicked($(this)); });
