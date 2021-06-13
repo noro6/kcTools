@@ -3298,6 +3298,11 @@ function initialize(callback) {
  * @param {number} [duration=300]
  */
 function TradeHTMLWithAnimation(insertNode, targetNode, callback, duration = 300) {
+
+	if (isCtrlPress) {
+		callback();
+		return;
+	}
 	const orgDuration = insertNode.style.transitionDuration;
 	insertNode.style.transitionDuration = duration + 'ms';
 	targetNode.style.transitionDuration = duration + 'ms';
@@ -7186,6 +7191,7 @@ function updateEnemyView() {
 
 	for (let i = 0; i < battleInfo.battles.length; i++) {
 		const battle = battleInfo.battles[i];
+		sumAntiAirBonus = 0;
 
 		let enemyNo = 0;
 		for (const enemy of battle.enemies) {
@@ -13940,9 +13946,11 @@ function land_base_detail_Clicked($this) {
 function land_base_bar_Clicked($this) {
 	const $bar = $this.find('.result_bar');
 	const rowIndex = castInt($bar.attr('id').replace('result_bar_', ''));
-	// 詳細計算対象の取得
-	landBaseDetailCalculate(castInt($('#rate_row_' + rowIndex).data('base_no')), 0, true);
-	$('#modal_result_detail').modal('show');
+	if(rowIndex < 7) {
+		// 詳細計算対象の取得
+		landBaseDetailCalculate(castInt($('#rate_row_' + rowIndex).data('base_no')), 0, true);
+		$('#modal_result_detail').modal('show');
+	}
 }
 
 /**
@@ -13951,9 +13959,8 @@ function land_base_bar_Clicked($this) {
  */
 function simple_lb_progress_Clicked($this) {
 	const id = $this.closest('.lb_tab').attr('id');
-	const rowIndex = castInt(id.replace('lb_item', '')) - 1;
-	// 0: → 0 1: → 2 2: → 4
-	const $tr = $('#rate_row_' + (rowIndex * 2));
+	const rowIndex = castInt(id.replace('lb_item', ''));
+	const $tr = $('#rate_row_' + (rowIndex * 2 - 1));
 	if ($tr.length) {
 		landBaseDetailCalculate(castInt($tr.data('base_no')), 0, true);
 		$('#modal_result_detail').modal('show');
