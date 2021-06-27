@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?8joryn') format('truetype'),
-    url('fonts/icons.woff?8joryn') format('woff'),
-    url('fonts/icons.svg?8joryn#icons') format('svg');
+    url('fonts/icons.ttf?yjsm5h') format('truetype'),
+    url('fonts/icons.woff?yjsm5h') format('woff'),
+    url('fonts/icons.svg?yjsm5h#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -180,11 +180,17 @@
 .fa-mouse-pointer:before {
   content: "\f245";
 }
+.fa-balance-scale:before {
+  content: "\f24e";
+}
 .fa-commenting:before {
   content: "\f27a";
 }
 .fa-question-circle-o:before {
   content: "\f29c";
+}
+.fa-book:before {
+  content: "\e91f";
 }
 .fa-folder1:before {
   content: "\e92f";

@@ -654,6 +654,7 @@ function decodePreset(input) {
 
 /**
  * 機体在庫読み込み　未定義の場合は初期化したものを返却
+ * @returns {[{id: number, num: number[]}]}
  */
 function loadPlaneStock() {
 	let planeStock = loadLocalStorage('planeStock');

@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="../fonts/style.css">
 	<link rel="stylesheet" href="../css/common.min.css">
 	<link rel="stylesheet" href="../css/simulator.min.css">
-	<script src="../js/common.min.js"></script>
+	<script src="../js/common.js"></script>
 	<script async src="../js/html2canvas.min.js"></script>
 	<script defer src="../js/jquery-3.5.1.min.js"></script>
 	<script defer src="../js/jquery-ui.min.js"></script>
@@ -31,7 +31,7 @@
 	<script defer src="../js/chart.min.js"></script>
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
-	<script defer src="../js/simulator.min.js"></script>
+	<script defer src="../js/simulator.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -83,7 +83,12 @@
 				<span class="d-none d-lg-inline">編成をツイート</span>
 				<span class="d-lg-none">Tweet</span>
 			</div>
-			<div class="tool_item" id="btn_auto_expand" data-toggle="tooltip" title="制空値を指定し、おまかせで艦載機を配備します。">
+			<div class="tool_item" id="btn_reference" data-toggle="tooltip" title="おまけのページです。">
+				<i class="fas fa-book"></i>
+				<span class="d-none d-lg-inline">おまけ</span>
+				<span class="d-lg-none">おまけ</span>
+			</div>
+			<div class="d-none tool_item" id="btn_auto_expand" data-toggle="tooltip" title="制空値を指定し、おまかせで艦載機を配備します。">
 				<i class="fas fa-bolt"></i>
 				<span class="d-none d-lg-inline">おまかせ配備</span>
 				<span class="d-lg-none">おまかせ</span>
@@ -874,7 +879,16 @@
 			<div class="collapse show collapse_content" id="friendFleet_content">
 				<div class="border-top"></div>
 				<div class="mt-2 mb-1 d-flex">
-					<div class="ml-1 custom-check align-self-center">
+					<div class="align-self-center d-flex">
+						<div class="align-self-center">司令部Lv：</div>
+						<div class="align-self-center">
+							<input type="number" min="1" max="120" value="120" class="form-control form-control-sm" id="admin_lv">
+						</div>
+						<div class="align-self-center">
+							<span class="d-none" id="admin_lv_capture">120</span>
+						</div>
+					</div>
+					<div class="ml-3 custom-check align-self-center">
 						<label data-toggle="tooltip" data-offset="140,0" data-html="true"
 							title="<div class='text-left'>第二艦隊を連合艦隊第二艦隊として扱うかどうかを切り替えます。</div><div class='text-left'>チェックが外されている場合、表示されている艦隊のみが計算対象になります。</div>">
 							<input type="checkbox" id="union_fleet">
@@ -884,8 +898,7 @@
 						</label>
 					</div>
 					<div class="ml-3 custom-check align-self-center">
-						<label data-toggle="tooltip" data-html="true"
-							title="<div class='text-left'>7隻目の編成が可能になります。</div>">
+						<label data-toggle="tooltip" data-html="true" title="<div class='text-left'>7隻目の編成が可能になります。</div>">
 							<input type="checkbox" id="yugeki_fleet">
 							<i class="fas fa-checkbox-unchecked"></i>
 							<i class="fas fa-checkbox-checked"></i>
@@ -919,7 +932,7 @@
 								<span class="fleet_ap">0</span>
 							</div>
 							<div class="ml-3 align-self-center">
-								<span class="font_color_half">触接: </span>
+								<span class="font_color_half">触接率: </span>
 								<span class="contact_start_rate">0.0%</span>
 							</div>
 							<div class="ml-1 align-self-center btn_show_contact_rate no_capture">
@@ -930,13 +943,42 @@
 								<span class="font_color_half">夜間触接: </span>
 								<span class="night_contact_rate">0.0%</span>
 							</div>
-							<div class="ml-3 align-self-center">
-								<span class="font_color_half">艦隊防空: </span>
-								<span class="fleet_anti_air">0.0%</span>
-							</div>
-							<div class="ml-3 align-self-center btn_antiair_input no_capture">
+							<div class="mx-3 align-self-center btn_antiair_input no_capture">
 								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
 								<span class="font_size_12">対空砲火性能確認</span>
+							</div>
+							<div class="d-flex">
+								<div class="ml-2 align-self-center">
+									<span class="font_color_half">索敵: </span>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 1">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">1</div>
+									<div class="ml-1 fleet_scout1 align-self-end"></div>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 2">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">2</div>
+									<div class="ml-1 fleet_scout2 align-self-end"></div>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 3">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">3</div>
+									<div class="ml-1 fleet_scout3 align-self-end"></div>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 4">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">4</div>
+									<div class="ml-1 fleet_scout4 align-self-end"></div>
+								</div>
 							</div>
 						</div>
 						<div class="fleet_tab">
@@ -1009,6 +1051,9 @@
 											<i class="fas fa-trash-o"></i>
 										</div>
 										<span class="d-none aa">0</span>
+										<span class="d-none scout">0</span>
+										<span class="d-none max_scout">0</span>
+										<span class="d-none min_scout">0</span>
 									</div>
 								</div>
 								<div class="ship_planes px-1 pb-1">
@@ -1231,7 +1276,7 @@
 						</div>
 					</div>
 					<div class="tab-pane fade friendFleet_tab container-fluid px-0" id="friendFleet_item2">
-						<div class="d-flex">
+						<div class="d-flex flex-wrap">
 							<div class="ml-2 align-self-center">
 								<span class="font_color_half">総制空値: </span>
 								<span class="fleet_ap">0</span>
@@ -1248,13 +1293,42 @@
 								<span class="font_color_half">夜間触接: </span>
 								<span class="night_contact_rate">0.0%</span>
 							</div>
-							<div class="ml-3 align-self-center">
-								<span class="font_color_half">艦隊防空: </span>
-								<span class="fleet_anti_air">0.0%</span>
-							</div>
 							<div class="ml-3 align-self-center btn_antiair_input no_capture">
 								<img src="../img/type/type21.png" class="img-size-20" alt="aa">
 								<span class="font_size_12">対空砲火性能確認</span>
+							</div>
+							<div class="d-flex">
+								<div class="ml-2 align-self-center">
+									<span class="font_color_half">索敵: </span>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 1">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">1</div>
+									<div class="ml-1 fleet_scout1 align-self-end"></div>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 2">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">2</div>
+									<div class="ml-1 fleet_scout2 align-self-end"></div>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 3">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">3</div>
+									<div class="ml-1 fleet_scout3 align-self-end"></div>
+								</div>
+								<div class="ml-2 align-self-center d-flex" data-toggle="tooltip" title="判定式(33)　分岐点係数: 4">
+									<div class="align-self-center">
+										<img src="../img/type/icon11.png" class="img-size-20">
+									</div>
+									<div class="font_color_half font_size_11 align-self-end">4</div>
+									<div class="ml-1 fleet_scout4 align-self-end"></div>
+								</div>
 							</div>
 						</div>
 						<div class="fleet_tab">
@@ -2239,7 +2313,7 @@
 			<div class="collapse collapse_content" id="config_content">
 				<div class="border-top"></div>
 				<div class="my-3 mx-2 px-2 py-2 general_box">
-					<div class="h6"><i class="fas fa-mouse mr-2"></i>操作設定</div>
+					<div class="h6"><i class="fas fa-mouse-pointer mr-2"></i>操作設定</div>
 					<div class="ml-3 custom-check">
 						<label>
 							<input type="checkbox" id="drag_drop_copy">
@@ -2876,6 +2950,11 @@
 											<div class="align-self-center ml-1">
 												<span id="enemy_pattern_anti_air">0</span>
 											</div>
+											<div class="ml-3 font_color_half align-self-center" id="enemy_pattern_radius_parent">
+												半径:</div>
+											<div class="align-self-center ml-1">
+												<span id="enemy_pattern_radius">0</span>
+											</div>
 										</div>
 										<div class="d-none" id="enemy_display_mode_parent">
 											<div class="font_color_half">表示:</div>
@@ -3094,12 +3173,20 @@
 					</div>
 					<div class="border-top mb-3"></div>
 					<div class="h6">外部サイトへ展開</div>
-					<div class="px-2 font_size_12">
+					<div class="px-2">
 						下記のサイト様にて、現在の編成を開きます。
 					</div>
-					<div class="mt-1 d-flex justify-content-center">
-						<button type="button" class="btn btn-sm btn-success mx-3" id="open_deckBuilder">デッキビルダーで開く</button>
-						<button type="button" class="btn btn-sm btn-info mx-3" id="open_jervis">作戦室 Jervis orで開く</button>
+					<div class="my-3 px-2 custom-check">
+						<label class="text-nowrap">
+							<input type="checkbox" id="without_disabled_ship">
+							<i class="fas fa-checkbox-unchecked"></i>
+							<i class="fas fa-checkbox-checked"></i>
+							<span id="stage3_all_slot_label">計算対象外の艦娘は出力しない</span>
+						</label>
+					</div>
+					<div class="d-flex px-2">
+						<button type="button" class="btn btn-sm btn-success" id="open_deckBuilder">デッキビルダーで開く</button>
+						<button type="button" class="btn btn-sm btn-info ml-3" id="open_jervis">作戦室 Jervis orで開く</button>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -3169,152 +3256,6 @@
 				<div class="modal-footer">
 					<div class="ml-auto">
 						<button type="button" class="btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
-							閉じる
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="modal_auto_expand" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content mt-5">
-				<div class="modal-header">
-					<h5 class="modal-title">おまかせ艦載機配備</h5>
-					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
-				</div>
-				<div class="modal-body">
-					<div>
-						<div class="h6">形式</div>
-						<div class="pl-3 d-flex" id="auto_battle_mode">
-							<div class="custom-control custom-radio align-self-center">
-								<input type="radio" id="mode_1" name="auto_lb_mode" class="custom-control-input" checked>
-								<label class="custom-control-label" for="mode_1">出撃</label>
-							</div>
-							<div class="ml-3 custom-control custom-radio align-self-center">
-								<input type="radio" id="mode_2" name="auto_lb_mode" class="custom-control-input">
-								<label class="custom-control-label" for="mode_2">防空(通常)</label>
-							</div>
-							<div class="ml-3 custom-control custom-radio align-self-center">
-								<input type="radio" id="mode_3" name="auto_lb_mode" class="custom-control-input">
-								<label class="custom-control-label" for="mode_3">防空(対重爆)</label>
-							</div>
-						</div>
-					</div>
-					<div class="mt-4">
-						<div class="h6">配備対象</div>
-						<div class="pl-3 d-flex" id="expand_target">
-							<div class="mr-2 custom-check">
-								<label>
-									<input type="checkbox" id="auto_land_base_1">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>第1基地航空隊</span>
-								</label>
-							</div>
-							<div class="mr-2 custom-check">
-								<label>
-									<input type="checkbox" id="auto_land_base_2">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>第2基地航空隊</span>
-								</label>
-							</div>
-							<div class="mr-2 custom-check">
-								<label>
-									<input type="checkbox" id="auto_land_base_3">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>第3基地航空隊</span>
-								</label>
-							</div>
-							<div class="mr-2 custom-check">
-								<label>
-									<input type="checkbox" id="auto_fleet">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>本隊</span>
-								</label>
-							</div>
-						</div>
-					</div>
-					<div class="mt-4">
-						<div class="d-flex">
-							<div class="h6">
-								目標制空値
-							</div>
-							<div class="ml-2 mt-0_5 font_size_12 cur_help" data-toggle="tooltip" data-html="true"
-								title="目標値をなるべく満たすように機体が配備されます。<br>所持機体や搭載数等によっては、目標値を満たせない場合があります。">
-								<i class="far fa-question-circle-o"></i>
-							</div>
-						</div>
-						<div class="pl-3">
-							<input type="number" class="form-control form-control-sm" id="dest_ap" value="100" min="0" max="9999">
-						</div>
-					</div>
-					<div class="mt-4" id="dest_range_parent">
-						<div class="d-flex">
-							<div class="h6">
-								半径
-							</div>
-							<div class="ml-2 mt-0_5 font_size_12 cur_help" data-toggle="tooltip"
-								title="搭載する機体を、設定した半径を満たす機体のみに制限します(基地航空隊のみ)">
-								<i class="far fa-question-circle-o"></i>
-							</div>
-						</div>
-						<div class="pl-3 d-flex">
-							<input type="number" class="form-control form-control-sm align-self-center" id="dest_range" value="1"
-								min="0" max="20" disabled>
-							<div class="ml-2 align-self-center">以上の機体</div>
-						</div>
-					</div>
-					<div class="mt-4" id="details_parent">
-						<div class="h6">詳細設定</div>
-						<div class="pl-3">
-							<div class="custom-check my-1">
-								<label>
-									<input type="checkbox" id="allow_fighter">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>基地航空隊に艦上戦闘機の搭載を許容する</span>
-								</label>
-							</div>
-							<div class="custom-check my-1">
-								<label>
-									<input type="checkbox" id="no_FBA">
-									<i class="fas fa-checkbox-unchecked"></i>
-									<i class="fas fa-checkbox-checked"></i>
-									<span>空母系に艦爆を搭載させない</span>
-								</label>
-							</div>
-						</div>
-					</div>
-					<div class="mt-4 py-2 border-top font_size_11">
-						<div>※簡易制空ボーダー計算機</div>
-						<div class="pl-3">敵制空値を入力すると、各制空状態に必要な制空値を計算できます。</div>
-						<div class="pl-3 d-flex">
-							<div class="align-self-center">敵制空値：</div>
-							<input type="number" class="align-self-center form-control form-control-sm" id="simple_enemy_ap" value="0"
-								min="0" max="9999">
-							<div class="align-self-center ml-2 font_size_14">
-								<i class="fas fa-long-arrow-alt-right"></i>
-							</div>
-							<div class="align-self-center ml-2">確保：<span id="border_0">0</span></div>
-							<div class="align-self-center ml-2">優勢：<span id="border_1">0</span></div>
-							<div class="align-self-center ml-2">拮抗：<span id="border_2">0</span></div>
-							<div class="align-self-center ml-2">劣勢：<span id="border_3">0</span></div>
-						</div>
-					</div>
-					<div class="alert alert-success px-1 py-1 font_size_12 d-none" id="alert_auto_expand">
-						おまかせ配備あらーと
-					</div>
-				</div>
-				<div class="modal-footer">
-					<div class="ml-auto">
-						<button type="button" class="btn btn-sm btn-primary" id="btn_start_auto_expand">
-							おまかせ配備開始
-						</button>
-						<button type="button" class="ml-3 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">
 							閉じる
 						</button>
 					</div>
@@ -4494,6 +4435,156 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-sm btn-success btn_commit_preset">保存</button>
 					<button type="button" class="ml-2 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_reference" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">おまけのページ</h5>
+					<p class="close cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body">
+					<div>こんなデータ見れると便利じゃね？と思うものを掲載するページです。ご要望お待ちしております。</div>
+					<div class="my-2" id="reference_index">
+						<ul>
+							<li><a href="#avoid_planes">対空射撃回避持ち機体一覧</a></li>
+							<li><a href="#anti_air_ranking">機体別対空値ランキング</a></li>
+							<li><a href="#fucking_enemies">深海棲艦 対空おばけランキング</a></li>
+						</ul>
+					</div>
+					<div class="px-3 pb-4 border-top" id="reference_body">
+						<div class="pt-3" id="avoid_planes">
+							<div class="d-flex">
+								<h6>対空射撃回避持ち機体一覧</h6>
+								<div class="ml-auto"><a href="#reference_index">目次へ</a></div>
+							</div>
+							<div class="px-3">
+								<table id="avoid_plane_table">
+									<thead class="general_thead">
+										<tr>
+											<td>機体名</td>
+											<td>区分</td>
+											<td>加重対空補正</td>
+											<td>艦隊防空補正</td>
+											<td>詳細</td>
+										</tr>
+									</thead>
+									<tbody id="avoid_plane_table_tbody"></tbody>
+								</table>
+								<div class="mt-1 font_size_12">※ 噴式爆撃機はさらに航空戦Stage1被撃墜数が0.6倍</div>
+							</div>
+						</div>
+						<div class="pt-5" id="anti_air_ranking">
+							<div class="d-flex">
+								<h6>機体別対空値ランキング</h6>
+								<div class="ml-auto"><a href="#reference_index">目次へ</a></div>
+							</div>
+							<div class="px-3">
+								<details class="px-3">
+									<summary id="anti_air_ranking_normal" class="font_size_16">出撃部門</summary>
+									<div class="pt-1">基地航空隊や艦娘に搭載した場合の性能のランキングです。</div>
+									<div class="font_size_12">※ 九六式艦戦未満の性能はランク外です。</div>
+									<div class="font_size_12">※ 制空値は搭載数18、熟練度MAXの数値です。</div>
+									<div class="mt-3 mb-2 custom-check align-self-center">
+										<label>
+											<input type="checkbox" id="anti_air_ranking_normal_registed">
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span>登録済みの装備でランク付け</span>
+										</label>
+									</div>
+									<table>
+										<thead class="general_thead">
+											<tr>
+												<td>順位</td>
+												<td>機体名称</td>
+												<td>半径</td>
+												<td>実対空値</td>
+												<td>制空値(18機)</td>
+												<td>詳細</td>
+											</tr>
+										</thead>
+										<tbody id="plane_aa_ranking_table_tbody"></tbody>
+									</table>
+								</details>
+								<details class="mt-3 px-3">
+									<summary id="anti_air_ranking_defense" class="font_size_16">防空部門</summary>
+									<div class="pt-1">基地航空隊 防空時のランキングです。戦闘機系が対象です。</div>
+									<div class="mt-3 mb-2 custom-check align-self-center">
+										<label>
+											<input type="checkbox" id="anti_air_ranking_defense_registed">
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span>登録済みの装備でランク付け</span>
+										</label>
+									</div>
+									<table>
+										<thead class="general_thead">
+											<tr>
+												<td>順位</td>
+												<td>機体名称</td>
+												<td>対爆</td>
+												<td>実対空値</td>
+												<td>制空値(18機)</td>
+												<td>詳細</td>
+											</tr>
+										</thead>
+										<tbody id="plane_defense_ranking_table_tbody"></tbody>
+									</table>
+								</details>
+							</div>
+						</div>
+						<div class="pt-5" id="fucking_enemies">
+							<div class="d-flex">
+								<h6>深海棲艦 対空おばけランキング</h6>
+								<div class="ml-auto"><a href="#reference_index">目次へ</a></div>
+							</div>
+							<div class="px-3">
+								<details class="px-3">
+									<summary>長いので折り畳み</summary>
+									<div class="pt-1">対空砲火性能の高い敵艦のランキングです。攻略時に見かけたら気を付けましょう。</div>
+									<div>※ 撃墜数は単艦、単縦陣、射撃回避なしの場合の数値です。</div>
+									<div>※ <span class="special_item">緑文字の敵艦</span>は対空CIを発動可能です。</div>
+									<table id="fucking_enemie_table">
+										<thead class="general_thead">
+											<tr>
+												<td>順位</td>
+												<td>敵艦</td>
+												<td>固定撃墜(機)</td>
+												<td>割合撃墜(%)</td>
+												<td>艦隊防空</td>
+												<td>加重対空値</td>
+											</tr>
+										</thead>
+										<tbody id="fucking_enemie_table_tbody"></tbody>
+									</table>
+									<div class="d-flex mt-2">
+										<details>
+											<summary>100位 ～ 最下位</summary>
+											<table id="fucking_enemie_table_zako">
+												<thead class="general_thead">
+													<tr>
+														<td>順位</td>
+														<td>敵艦</td>
+														<td>固定撃墜(機)</td>
+														<td>割合撃墜(%)</td>
+														<td>艦隊防空</td>
+														<td>加重対空値</td>
+													</tr>
+												</thead>
+												<tbody id="fucking_enemie_table_zako_tbody"></tbody>
+											</table>
+										</details>
+										<div class="ml-auto"><a href="#reference_index">目次へ</a></div>
+									</div>
+								</details>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

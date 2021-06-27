@@ -1496,14 +1496,6 @@ input[type="number"] { text-align: right; }
 
 
 /* ------------------------------
-  オートモード #auto_expand
--------------------------------- */
-#simple_enemy_ap { width: 80px; }
-#dest_range { width: 120px; }
-#dest_ap { width: 120px; }
-
-
-/* ------------------------------
   サイトについて #site_information
 -------------------------------- */
 .text_existTooltip {
@@ -1569,6 +1561,26 @@ input[type="number"] { text-align: right; }
   resize: none;
 }
 
+
+/* ------------------------------
+  編成メモ欄 #modal_preset_memo
+-------------------------------- */
+#modal_reference table tr:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+#modal_reference table td {
+  text-align: right;
+  padding: 0.15rem 0.4rem;
+  border: 1px rgba(128, 128, 128, 0.502) solid;
+}
+#modal_reference thead td {
+  text-align: center;
+  font-size: 12px;
+  padding: 0.3rem 0.6rem;
+}
+#modal_reference table td.left_border {
+  border-left: 2px rgba(128, 128, 128, 0.502) solid;
+}
 
 /* ------------------------------
   画面固定ボタン
