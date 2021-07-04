@@ -187,7 +187,7 @@ input[type="number"] { text-align: right; }
   cursor: pointer;
   color: #006eff;
 }
-.dark-theme .dummy_a { color: #009aff; }
+.dark-theme .dummy_a { color: rgb(255, 180, 81); }
 .dummy_a:hover {
   text-decoration: underline;
 }
@@ -1587,7 +1587,7 @@ input[type="number"] { text-align: right; }
 -------------------------------- */
 #fixed_btns {
   position:fixed;
-  bottom: 10px;
+  bottom: 60px;
   margin-left: calc(100% - 46px);
   font-size: 20px;
 }

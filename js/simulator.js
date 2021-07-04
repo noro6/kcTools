@@ -3533,8 +3533,7 @@ function initialize(callback) {
 		const ids = [];
 		let appendedIds = [];
 		const contents = [];
-		// フッター退避
-		const footer = $('#main_footer');
+
 		$main.find('.contents').each((i, e) => {
 			ids.push($(e).attr('id'));
 			contents.push($(e))
@@ -3551,9 +3550,6 @@ function initialize(callback) {
 				appendedIds.push(id);
 			}
 		}
-
-		// フッター戻し
-		$main.append(footer);
 
 		// 挿入されていないコンテンツを拾い、setting.contentsOrderを修正
 		if (ids.length !== appendedIds.length) {
