@@ -187,7 +187,7 @@ input[type="number"] { text-align: right; }
   cursor: pointer;
   color: #006eff;
 }
-.dark-theme .dummy_a { color: rgb(255, 180, 81); }
+.dark-theme .dummy_a { color: rgb(86, 180, 255); }
 .dummy_a:hover {
   text-decoration: underline;
 }
