@@ -3533,7 +3533,7 @@ function initialize(callback) {
 		const ids = [];
 		let appendedIds = [];
 		const contents = [];
-
+		const $footer = $('#footer_info');
 		$main.find('.contents').each((i, e) => {
 			ids.push($(e).attr('id'));
 			contents.push($(e))
@@ -3551,6 +3551,7 @@ function initialize(callback) {
 			}
 		}
 
+		$main.append($footer);
 		// 挿入されていないコンテンツを拾い、setting.contentsOrderを修正
 		if (ids.length !== appendedIds.length) {
 			for (const id of ids) {
