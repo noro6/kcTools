@@ -31,7 +31,7 @@
 	<script defer src="../js/chart.min.js"></script>
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
-	<script defer src="../js/simulator.min.js"></script>
+	<script defer src="../js/simulator.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -1041,7 +1041,10 @@
 											<span class="ap">0</span>
 											<span class="ap_detail"></span>
 										</div>
-										<div class="ml-auto align-self-end ship_disabled btn_icon">
+										<div class="ml-auto align-self-end btn_ship_toggle btn_icon" data-reserve-id="">
+											<i class="fas fa-loop no_capture"></i>
+										</div>
+										<div class="ml-2 align-self-end ship_disabled btn_icon">
 											<i class="fas fa-eye no_capture"></i>
 										</div>
 										<div class="ml-2 align-self-end btn_preset btn_plane_preset btn_icon no_capture">
@@ -1853,7 +1856,7 @@
 			</div>
 		</div>
 
-		<div class="contents my-4 py-1 mx-auto" id="result">
+		<div class="contents my-4 pt-1 mx-auto" id="result">
 			<div class="my-2 mx-2 d-flex flex-wrap">
 				<div class="h5 mb-0 align-self-center">
 					<span class="content_title align-middle">計算結果</span>
@@ -1873,7 +1876,7 @@
 			</div>
 			<div class="collapse show collapse_content" id="result_content">
 				<div class="mx-2 border-top"></div>
-				<div id="result_grid" class="pb-lg-2 pb-xl-3">
+				<div id="result_grid">
 					<div class="mt-2 px-lg-2 px-xl-3" id="shoot_down_table_content">
 						<div class="alert alert-info mb-0 px-2 py-2 font_size_12 no_capture" id="calculate_confirm">
 							<span>出撃<span class="mx-1" id="prev_calculate_count"></span>回分の計算結果が表示されています。→</span>
@@ -2032,8 +2035,8 @@
 							</div>
 							<div class="mb-3 general_box p-2 pt-1" id="enemy_shoot_down_table_parent">
 								<div class="font_size_14 d-flex flex-wrap mb-1">
-									<div class="drag_handle cur_move align-self-center">
-										<span>敵艦隊の搭載数</span>
+									<div class="align-self-center">
+										<span class="drag_handle cur_move">敵艦隊の搭載数</span>
 										<span id="enemy_slot_result_mode">（本隊航空戦 stage1 後）</span>
 									</div>
 									<div class="ml-auto d-flex" id="result_stage2_setting">
@@ -2084,10 +2087,10 @@
 									</span>
 								</div>
 							</div>
-							<div class="general_box p-2" id="enemy_ap_dist_table_parent">
+							<div class="mb-3 general_box p-2" id="enemy_ap_dist_table_parent">
 								<div class="font_size_14 mb-1">
-									<div class="drag_handle cur_move">
-										<span>敵艦隊の制空値分布</span>
+									<div>
+										<span class="drag_handle cur_move">敵艦隊の制空値分布</span>
 									</div>
 								</div>
 								<table class="text-right w-100" id="enemy_ap_dist_table">
@@ -2610,6 +2613,7 @@
 									<option value="cost">コスト</option>
 									<option value="land_base_power">基地火力</option>
 									<option value="avoid">射撃回避</option>
+									<option value="grow">熟練成長</option>
 								</select>
 							</div>
 						</div>
@@ -4438,6 +4442,28 @@
 					<div class="my-2">
 						<div class="mb-1">プレビュー：</div>
 						<div id="preset_memo_view" class="border p-2"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-sm btn-success btn_commit_preset">保存</button>
+					<button type="button" class="ml-2 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_ship_reserve" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">艦娘一時置き場</h5>
+					<p class="close cur_pointer cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body py-2">
+					<div class="my-2">
+						展開する艦娘を選択してください。
+					</div>
+					<div class="my-2" id="reserve_list">
 					</div>
 				</div>
 				<div class="modal-footer">

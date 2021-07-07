@@ -115,6 +115,10 @@ let errorInfo = null;
 // 海域情報
 let ENEMY_PATTERN = [];
 
+// 裏で保持用
+/** @type {Ship[]} */
+let reserveList = [];
+
 /**
  * 計算用入力データオブジェクトクラス
  * @class InputData
@@ -2336,6 +2340,8 @@ class ItemDetail extends Item {
 		this.antiAirWeight = 0;
 		/** @type {number} */
 		this.antiAirBonus = 0;
+		/** @type {number} */
+		this.grow = 0;
 	}
 
 	/**
@@ -3104,6 +3110,7 @@ function updateItemList() {
 				itemInstance.asw = item.asw;
 				itemInstance.armor = item.armor;
 				itemInstance.range2 = item.range2;
+				itemInstance.grow = item.grow;
 
 				// 基礎ステータスの加算と改修によるボーナス値を設定
 				itemInstance.setAllStatus();
@@ -3125,6 +3132,7 @@ function updateItemList() {
 		buffer.asw = item.asw;
 		buffer.armor = item.armor;
 		buffer.range2 = item.range2;
+		buffer.grow = item.grow;
 
 		// 基礎ステータスの加算と改修によるボーナス値を設定
 		buffer.setAllStatus();
@@ -3231,6 +3239,37 @@ function getProfString(remodel) {
 			return ">>";
 	}
 	return "";
+}
+
+/**
+ * 成長定数から所要戦闘回数を返却
+ * @param {number} grow 成長定数
+ * @returns {string} 所要戦闘回数文字列
+ */
+function getRequiredgBattleCountString(grow) {
+	// 求ム計算式
+	switch (grow) {
+		case 1:
+			return "-";
+		case 2:
+			return "100戦";
+		case 3:
+			return "57 ~ 75戦";
+		case 4:
+			return "39 ~ 47戦";
+		case 5:
+			return "31 ~ 40戦";
+		case 6:
+			return "25 ~ 31戦";
+		case 7:
+			return "20 ~ 28戦";
+		case 8:
+			return "18 ~ 23戦";
+		case 9:
+			return "16 ~ 20戦";
+		default:
+			return "不明";
+	}
 }
 
 /**
@@ -3907,9 +3946,9 @@ function setLBPlaneDiv($div, lbPlane = { id: 0, slot: 0, remodel: 0 }) {
 }
 
 /**
- * 第1引数で渡された xx_plane に第2引数の機体オブジェクト（{id, prof, remodel} 指定）を搭載する
+ * 第1引数で渡された xx_plane に第2引数の機体オブジェクト（{id, remodel, prof} 指定）を搭載する
  * @param {JQuery} $div xx_planeを指定。xxは現状 ship または lb
- * @param {Object} inputPlane 機体オブジェクト（{id, prof, remodel} 指定）
+ * @param {Object} inputPlane 機体オブジェクト（{id, remodel, prof} 指定）
  * @param {boolean} canEditSlot 搭載数の変更を許可するかどうか
  * @returns {boolean} 搭載が成功したかどうか
  */
@@ -5155,9 +5194,9 @@ function initializeEnemyTable() {
 
 /**
  * 敵一覧テーブルを描画
- * @param {number[]} type カテゴリで絞る場合のカテゴリ配列 type[0] === 0 は全て選択時
  */
-function createEnemyTable(type) {
+function createEnemyTable() {
+	const type = castInt($('#enemy_type_select').val())
 	const modal = document.getElementById('modal_enemy_select').getElementsByClassName('modal-dialog')[0];
 	const tbody = document.getElementById('enemy_tbody');
 	const displayMode = modal.querySelector('.toggle_display_type.selected').dataset.mode;
@@ -5186,7 +5225,7 @@ function createEnemyTable(type) {
 		else tr.classList.remove('enemy_tr_multi');
 
 		// 艦種で絞る
-		if ((type[0] !== 0 && !isContain(type, enemy.type)) || (searchWord && !enemy.name.includes(searchWord))) {
+		if ((type !== 0 && !enemy.type.includes(type)) || (searchWord && !enemy.name.includes(searchWord))) {
 			tr.classList.add('d-none');
 			tr.classList.remove('d-flex');
 		}
@@ -5198,7 +5237,7 @@ function createEnemyTable(type) {
 
 	// 複数表示時カテゴリ分け表示
 	if (displayMode === "multi") {
-		if (type[0] === 0) {
+		if (type === 0) {
 			for (const e of tbody.getElementsByClassName('divide_line')) {
 				e.classList.add('d-flex');
 				e.classList.remove('d-none');
@@ -11561,6 +11600,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 	const bScoutText = bScout ? `<span class="ml-1 text_remodel">(+${bScout.toFixed(2)})</span>` : '';
 	const avoid = raw.avoid > 0 ? AVOID_TYPE.find(v => v.id === raw.avoid) : null;
 	const selectRate = item.selectRate.length ? item.selectRate.map(v => (100 * v).toFixed(0) + '%') : null;
+	const growing = PLANE_TYPE.includes(raw.type) ? getRequiredgBattleCountString(raw.grow) : null;
 
 	const text = `
 	<div class="text-left m-1 item_tooltip">
@@ -11593,6 +11633,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 		${item.antiAirBonus ? `<div class="font_size_12">艦隊防空: ${item.antiAirBonus.toFixed(2)}</div>` : ''}
 		${item.isJet && item.slot ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${Math.round(item.slot * item.cost * 0.2)}` : ''}
 		${selectRate && selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
+		${growing ? `<div class="font_size_12">熟練度<img class="img-size-16" alt=">>" src="../img/util/prof7.png">まで: ${growing}</div>` : ''}
 	</div>`;
 
 	return text.trim();
@@ -12920,6 +12961,109 @@ function fleet_select_tab_Clicked() {
 }
 
 /**
+ * 艦娘トグルクリック
+ * @param {JQuery} $this
+ */
+function btn_ship_toggle_Clicked($this) {
+	hideTooltip($this[0]);
+
+	const shipTab = $this.closest('.ship_tab');
+
+	// 裏で保持しているidとトグルする
+	const reservedId = $this[0].dataset.reservedId;
+	// 元々入っていたデータを検索
+	const reservedShip = reserveList.find(v => v.shipNo === reservedId);
+
+	// 今の情報を一意shipNoを付けて一部格納
+	const currentShip = new Ship(getUniqueId());
+	currentShip.id = castInt(shipTab[0].dataset.shipid);
+	currentShip.level = castInt(shipTab.find('.ship_level').text());
+	currentShip.luck = castInt(shipTab.find('.ship_luck').text());
+
+	shipTab.find('.ship_plane:not(.ui-draggable-dragging)').each((j, e) => {
+		const $e = $(e);
+		const item = new ShipItem(castInt($e[0].dataset.planeid),
+			castInt($e.find('.slot').text()),
+			castInt($e.find('.remodel_value')[0].textContent),
+			castInt($e.find('.prof_select')[0].dataset.prof)
+		);
+		item.slotNo = j;
+		if (!$e.hasClass('d-none')) {
+			currentShip.items.push(item);
+		}
+	});
+
+	// 復帰したデータは消す
+	if (reservedShip) {
+		reserveList = reserveList.filter(v => v.shipNo !== reservedShip.shipNo);
+	}
+
+	if (!reserveList.length) {
+		// 現行情報をアップロード
+		reserveList.push(currentShip);
+		// 現行のidを保持
+		$this[0].dataset.reservedId = currentShip.shipNo;
+		inform_success('一時保存されました。');
+		// 選ぶ対象がないのでクリア
+		clearShipDiv(shipTab);
+
+		return;
+	}
+
+	// 現行の情報を登録する前にリストを展開
+	setReserveShipList();
+
+	// 現行情報をアップロード
+	reserveList.push(currentShip);
+	// 現行のidを保持
+	$this[0].dataset.reservedId = currentShip.shipNo;
+
+	$('#modal_ship_reserve').modal('show');
+}
+
+/**
+ * 一時置き場欄の描画
+ */
+function setReserveShipList() {
+	const table = document.createDocumentFragment();
+	for (const ship of reserveList) {
+		const raw = SHIP_DATA.find(v => v.id === ship.id);
+		let itemText = '';
+		for (let i = 0; i < ship.items.length; i++) {
+			const item = ship.items[i];
+			itemText += `
+				<div class="d-flex">
+					<div class="ml-1 align-self-center">
+						<img src="../img/type/${item.itype ? `icon${item.itype}` : 'undefined'}.png" alt="${item.itype}" class="img-size-30">
+					</div>
+					<div class="ml-1 align-self-center reserve_long_text">${item.name}</div>
+					${(item.remodel ? `<div class="align-self-center reserve_remodel"><i class="text_remodel fas fa-star"></i><span class="text_remodel">+${item.remodel}</span></div>` : '')}
+				</div>`;
+		}
+
+		const text = `<div class="d-flex">
+			<div class="align-self-center">${raw ? `<img src="../img/ship/${raw.id}.png" class="ship_img mr-1">` : ''}</div>
+			<div class="align-self-center">
+				<div class="font_size_11">ID: ${raw ? raw.id : '-'}</div>
+				<div class="d-flex">
+					<div class="reserve_long_text">${raw ? raw.name : '艦娘未指定'}</div>
+				</div>
+			</div>
+		</div>
+		<div class="mt-1">
+			${itemText}
+		</div>`;
+
+		const div = createDiv('reserve_ship general_tr m-1 p-2');
+		div.innerHTML = text;
+		table.appendChild(div);
+	}
+
+	document.getElementById('reserve_list').innerHTML = '';
+	document.getElementById('reserve_list').appendChild(table);
+}
+
+/**
  * 艦娘無効クリック
  * @param {JQuery} $this
  */
@@ -13199,7 +13343,7 @@ function btn_reset_battle_Clicked($this) {
  */
 function enemy_word_TextChanged() {
 	if (timer !== false) clearTimeout(timer);
-	timer = setTimeout(function () { createEnemyTable([castInt($('#enemy_type_select').val())]); }, 250);
+	timer = setTimeout(function () { createEnemyTable(); }, 250);
 }
 
 /**
@@ -15241,6 +15385,9 @@ function simulatorTab_Clicked($this) {
 		expandMainPreset(decodePreset(tabData.history.histories[0]));
 		calculate();
 	}
+
+	// 裏で保持してるやつらは破棄
+	reserveList = [];
 }
 
 /**
@@ -15770,6 +15917,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on('click', '.btn_remove_plane', function () { btn_remove_ship_plane_Clicked($(this)); });
 	$('#friendFleet_content').on({ mouseenter: function () { $(this).closest('.ship_tab').find('.remove_line').addClass('ready'); }, mouseleave: function () { $(this).closest('.ship_tab').find('.remove_line').removeClass('ready'); }, }, '.btn_reset_ship_plane');
 	$('#friendFleet_content').on('click', '.prof_item', function () { proficiency_Changed($(this)); });
+	$('#friendFleet_content').on('click', '.btn_ship_toggle', function () { btn_ship_toggle_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.ship_disabled', function () { ship_disabled_Changed($(this)); });
 	$('#friendFleet_content').on('click', '#union_fleet', union_fleet_Checked);
 	$('#friendFleet_content').on('click', '#yugeki_fleet', yugeki_fleet_Checked);
@@ -15864,7 +16012,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_ship_select').on('input', '#ship_word', ship_word_TextChanged);
 	$('#modal_enemy_select').on('click', '.modal-body .enemy', function () { modal_enemy_Selected($(this)); });
 	$('#modal_enemy_select').on('click', '.btn_remove', function () { modal_enemy_select_btn_remove($(this)); });
-	$('#modal_enemy_select').on('change', '#enemy_type_select', function () { createEnemyTable([castInt($(this).val())]); });
+	$('#modal_enemy_select').on('click', '.toggle_display_type', createEnemyTable);
+	$('#modal_enemy_select').on('change', '#enemy_type_select', createEnemyTable);
 	$('#modal_enemy_select').on('input', '#enemy_word', enemy_word_TextChanged);
 	$('#modal_enemy_pattern').on('show.bs.modal', modal_enemy_pattern_Shown);
 	$('#modal_enemy_pattern').on('click', '.node_tr', function () { node_tr_Clicked($(this)); });
@@ -16023,6 +16172,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		mouseenter: function () { showTooltip($(this)[0], "閉じる"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.btn_remove_ship');
+	$('#friendFleet_content').on({
+		mouseenter: function () { showTooltip($(this)[0], "一時保存された艦娘を展開します。"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.btn_ship_toggle');
 	$('#enemyFleet_content').on({
 		mouseenter: function () { showEnemyStatusToolTip($(this)); },
 		mouseleave: function () { hideTooltip($(this)[0]); }

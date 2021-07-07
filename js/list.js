@@ -223,10 +223,17 @@ function setPresets(presets, isLocal = true) {
     }
 
     // プリセヘッダー
-    const preset_header = createDiv('preset_header ' + (enabledSortable ? 'sortable_handle' : ''));
+    const preset_header = createDiv('preset_header');
     container.appendChild(preset_header);
 
     const preset_body = createDiv('preset_body d-flex mx-2');
+
+    if (enabledSortable) {
+      const sortableHandle = createDiv('mt-4 sortable_handle_parent align-self-center');
+      sortableHandle.innerHTML = '<i class="sortable_handle fa-menu2"></i>'
+      preset_body.appendChild(sortableHandle);
+    }
+
     const abstract = createDiv('mr-2 preset_abstract flex-grow-1');
     // 編成名
     abstract.appendChild(createDiv('preset_name', '', preset[1]));
@@ -402,7 +409,14 @@ function setPresets(presets, isLocal = true) {
     Sortable.create(document.getElementById('preset_sortable_container'), {
       animation: 200,
       handle: '.sortable_handle',
+      onStart: function () {
+        document.getElementById('header').classList.add('d-none');
+        document.getElementById('main_footer').classList.add('d-none');
+      },
       onEnd: function () {
+        document.getElementById('header').classList.remove('d-none');
+        document.getElementById('main_footer').classList.remove('d-none');
+
         const oldPresets = loadLocalStorage('presets');
         const newPresets = [];
         for (const c of document.getElementsByClassName('preset_container')) {
@@ -422,7 +436,13 @@ function setPresets(presets, isLocal = true) {
       Sortable.create(document.getElementById('folder' + folder.id), {
         animation: 200,
         handle: '.sortable_handle',
+        onStart: function () {
+          document.getElementById('header').classList.add('d-none');
+          document.getElementById('main_footer').classList.add('d-none');
+        },
         onEnd: function () {
+          document.getElementById('header').classList.remove('d-none');
+          document.getElementById('main_footer').classList.remove('d-none');
           const oldPresets = loadLocalStorage('presets');
           const newPresets = [];
           for (const c of document.getElementsByClassName('preset_container')) {
@@ -443,7 +463,13 @@ function setPresets(presets, isLocal = true) {
     Sortable.create(document.getElementById('foldersParent'), {
       animation: 200,
       handle: '.handle',
+      onStart: function () {
+        document.getElementById('header').classList.add('d-none');
+        document.getElementById('main_footer').classList.add('d-none');
+      },
       onEnd: function () {
+        document.getElementById('header').classList.remove('d-none');
+        document.getElementById('main_footer').classList.remove('d-none');
         const folders = setting.presetFolders;
         const newFolders = [];
         for (const c of document.getElementsByClassName('folder_header')) {
