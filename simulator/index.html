@@ -31,7 +31,7 @@
 	<script defer src="../js/chart.min.js"></script>
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
-	<script defer src="../js/simulator.js"></script>
+	<script defer src="../js/simulator.min.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -1042,7 +1042,7 @@
 											<span class="ap_detail"></span>
 										</div>
 										<div class="ml-auto align-self-end btn_ship_toggle btn_icon" data-reserve-id="">
-											<i class="fas fa-loop no_capture"></i>
+											<i class="fas fa-exchange no_capture"></i>
 										</div>
 										<div class="ml-2 align-self-end ship_disabled btn_icon">
 											<i class="fas fa-eye no_capture"></i>
@@ -4456,18 +4456,26 @@
 		<div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">艦娘一時置き場</h5>
+					<h5 class="modal-title">艦娘保留リスト</h5>
 					<p class="close cur_pointer cur_pointer" data-dismiss="modal"><span>&times;</span></p>
 				</div>
 				<div class="modal-body py-2">
-					<div class="my-2">
-						展開する艦娘を選択してください。
+					<div class="d-flex">
+						<div class="align-self-center">現在の入力情報</div>
+						<div class="align-self-center ml-4">
+							<button type="button" class="btn btn-sm btn-outline-info" id="btn_add_reserve">保留リストに追加</button>
+						</div>
 					</div>
-					<div class="my-2" id="reserve_list">
+					<div class="mt-2" id="current_ship_info_parent">
+						<div class="align-self-center border p-1" id="current_ship_info"></div>
+					</div>
+					<div class="my-3 border-top"></div>
+					<div>保留艦娘一覧<span class="font_size_11 ml-3">※クリックで展開します。</span></div>
+					<div class="mt-2" id="reserve_list">
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-sm btn-success btn_commit_preset">保存</button>
+					<button type="button" class="btn btn-sm btn-outline-danger btn_reset">全リセット</button>
 					<button type="button" class="ml-2 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">閉じる</button>
 				</div>
 			</div>
@@ -4487,6 +4495,7 @@
 						<ul>
 							<li><a href="#avoid_planes">対空射撃回避持ち機体一覧</a></li>
 							<li><a href="#anti_air_ranking">機体別対空値ランキング</a></li>
+							<li><a href="#recover_planes">機体別熟練度上昇速度一覧</a></li>
 							<li><a href="#fucking_enemies">深海棲艦 対空おばけランキング</a></li>
 						</ul>
 					</div>
@@ -4570,6 +4579,56 @@
 										<tbody id="plane_defense_ranking_table_tbody"></tbody>
 									</table>
 								</details>
+							</div>
+						</div>
+						<div class="pt-5" id="recover_planes">
+							<div class="d-flex">
+								<h6>機体別熟練度上昇速度一覧</h6>
+								<div class="ml-auto"><a href="#reference_index">目次へ</a></div>
+							</div>
+							<div class="px-3">
+								<div class="pt-1">
+									<span>熟練度0(無印)から熟練度最大(</span>
+									<img class="img-size-18_lock" alt=">>" src="../img/util/prof7.png">
+									<span>)までに必要な戦闘回数の一覧です。</span>
+								</div>
+								<div class="my-2 d-flex" id="recover_planes_checkes">
+									<div class="align-self-center">表示：</div>
+									<div class="ml-2 align-self-center custom-check">
+										<label>
+											<input type="checkbox" id="recover_planes_fighter">
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span>戦闘機系</span>
+										</label>
+									</div>
+									<div class="ml-2 align-self-center custom-check">
+										<label>
+											<input type="checkbox" id="recover_planes_attacker" checked>
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span>攻撃機系</span>
+										</label>
+									</div>
+									<div class="ml-2 align-self-center custom-check">
+										<label>
+											<input type="checkbox" id="recover_planes_scouter">
+											<i class="fas fa-checkbox-unchecked"></i>
+											<i class="fas fa-checkbox-checked"></i>
+											<span>偵察機系</span>
+										</label>
+									</div>
+								</div>
+								<table id="recover_plane_table">
+									<thead class="general_thead">
+										<tr>
+											<td>所要戦闘回数</td>
+											<td>機体名称</td>
+											<td>詳細</td>
+										</tr>
+									</thead>
+									<tbody id="recover_plane_table_tbody"></tbody>
+								</table>
 							</div>
 						</div>
 						<div class="pt-5" id="fucking_enemies">

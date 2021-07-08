@@ -117,7 +117,10 @@ let ENEMY_PATTERN = [];
 
 // 裏で保持用
 /** @type {Ship[]} */
-let reserveList = [];
+let reserveList = null;
+
+/** @type {Ship} */
+let currentReserved = null;
 
 /**
  * 計算用入力データオブジェクトクラス
@@ -2810,22 +2813,6 @@ function shuffleArray(array) {
 }
 
 /**
- * 指定したinputのvalueをクリップボードにコピー
- * @param {JQuery} $this inputタグ id 持ち限定
- * @returns {boolean} 成功したらtrue
- */
-function copyInputTextToClipboard($this) {
-	try {
-		if (!$this.attr('id')) return false;
-		const t = document.getElementById($this.attr('id'));
-		t.select();
-		return document.execCommand('copy');
-	} catch (error) {
-		return false;
-	}
-}
-
-/**
  * 数値配列の合計値を返却(処理速度優先)
  * @param {number[]} array 数値配列
  * @returns {number} 合計値
@@ -3449,6 +3436,12 @@ function initialize(callback) {
 				ENEMY_DATA[index] = enemy;
 			}
 		}
+	}
+
+	// 保留リスト復帰
+	reserveList = loadSessionStorage('reserve_list');
+	if (!reserveList) {
+		reserveList = [];
 	}
 
 	// 装備一覧データソース初期化
@@ -6230,7 +6223,7 @@ function createLandBasePreset() {
  * @returns {Array} 艦隊プリセット
  */
 function createFriendFleetPreset() {
-	// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合かどうか, 6:運]
+	// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:(通常0 連合1 遊撃2) , 6:運]
 	const friendFleetPreset = [];
 	const maxShipCount = getMaxShipCount();
 	let shipIndex = 0;
@@ -6241,7 +6234,7 @@ function createFriendFleetPreset() {
 		// 非表示なら飛ばす
 		if ($(e).attr('class').includes('d-none')) return;
 
-		// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合かどうか, 6:運]
+		// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:(通常0 連合1 遊撃2), 6:運]
 		const ship = [
 			castInt($(e)[0].dataset.shipid),
 			[],
@@ -6339,160 +6332,6 @@ function createAirRaidEnemyFleetPreset() {
 	});
 
 	return enemyFleetPreset;
-}
-
-/**
- * 指定プリセットをデッキビルダーフォーマットに変換
- * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
- * デッキフォーマット {version: 4.2, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
- * @returns {string} デッキビルダー形式データ
- */
-function convertToDeckBuilder() {
-	try {
-		const fleet = createFriendFleetPreset();
-		const landBase = createLandBasePreset();
-		const fleetBorder = getMaxShipCount();
-		const withoutDisabledShip = document.getElementById('without_disabled_ship')['checked'];
-		const obj = {
-			version: 4,
-			hqlv: castInt($('#admin_lv').val()),
-			f1: {},
-			f2: {},
-			f3: {},
-			a1: { mode: 0, items: {} },
-			a2: { mode: 0, items: {} },
-			a3: { mode: 0, items: {} }
-		};
-
-		// 基地データ
-		for (const plane of landBase[0]) {
-			obj[`a${Math.floor(plane[4] / 4) + 1}`].items[`i${Math.floor(plane[4] % 4) + 1}`] = { id: plane[0], rf: plane[2], mas: plane[1] };
-		}
-		for (let index = 0; index < landBase[1].length; index++) {
-			const mode = landBase[1][index];
-			obj[`a${index + 1}`].mode = mode > 0 ? 1 : mode === 0 ? 2 : 0;
-		}
-
-		// 艦隊データ
-		for (let index = 0; index < fleet.length; index++) {
-			const ship = fleet[index];
-			const shipData = SHIP_DATA.find(v => v.id === ship[0]);
-			if (!shipData) continue;
-			if (withoutDisabledShip && ship[3]) continue;
-
-			// 装備機体群オブジェクト生成
-			const items = { i1: null, i2: null, i3: null, i4: null, i5: null };
-			for (const item of ship[1]) {
-				const i = { id: item[0], rf: item[2], mas: item[1] };
-				const index = item[4] >= 0 ? item[4] + 1 : 'x';
-				items[`i${index}`] = i;
-			}
-
-			const s = { id: `${shipData.api}`, lv: ship[4], luck: ship[6], items: items };
-			const shipIndex = ship[2];
-			if (shipIndex < fleetBorder) {
-				obj.f1["s" + ((shipIndex % fleetBorder) + 1)] = s;
-				if (fleetBorder === 7) obj.f3["s" + ((shipIndex % fleetBorder) + 1)] = s;
-			}
-			else obj.f2[`s${(shipIndex % fleetBorder) + 1}`] = s;
-		}
-
-		return JSON.stringify(obj);
-	} catch (error) {
-		return "";
-	}
-}
-
-
-/**
- * 指定プリセットをデッキビルダーフォーマットに変換 作戦室用
- * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
- * デッキフォーマット {version: 1, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
- * @returns {string} デッキビルダー形式データ
- */
-function convertToDeckBuilder_j() {
-	try {
-		const fleet = createFriendFleetPreset();
-		const landBase = createLandBasePreset();
-		const fleetBorder = getMaxShipCount();
-		const withoutDisabledShip = document.getElementById('without_disabled_ship')['checked'];
-		const obj = {
-			version: 1,
-			name: getActivePreset().name,
-			hqLevel: castInt($('#admin_lv').val()),
-			side: "Player",
-			fleetType: $('#union_fleet').prop('checked') ? "CarrierTaskForce" : "Single",
-			fleets: [
-				{ ships: [] },
-				{ ships: [] },
-				{ ships: [] },
-				{ ships: [] },
-			],
-			landBase: [
-				{ slots: [], equipments: [null, null, null, null] },
-				{ slots: [], equipments: [null, null, null, null] },
-				{ slots: [], equipments: [null, null, null, null] }
-			],
-		};
-
-		// 基地データ
-		for (let i = 0; i < landBase[0].length; i++) {
-			const plane = landBase[0][i];
-			const t = obj["landBase"][Math.floor(plane[4] / 4)];
-			const index = Math.floor(plane[4] % 4);
-			t['slots'][index] = plane[3];
-			t['equipments'][index] = {
-				masterId: plane[0],
-				improvement: plane[2],
-				proficiency: getInnerProficiency(plane[1], ITEM_DATA.find(v => v.id === plane[0]).type)
-			};
-		}
-
-		// 艦隊データ
-		for (let i = 0; i < fleet.length; i++) {
-			const ship = fleet[i];
-			const shipData = SHIP_DATA.find(v => v.id === ship[0]);
-			if (!shipData) continue;
-
-			const shipIndex = ship[2];
-			const t = obj["fleets"][shipIndex < fleetBorder ? 0 : 1];
-
-			// 装備機体群オブジェクト生成
-			const planes = [];
-			const insData = { masterId: shipData.api, level: ship[4], slots: [], increased: { luck: ship[6] - shipData.luck }, equipments: planes };
-
-			for (let j = 0; j < shipData.slot.length; j++) {
-				let insSlot = shipData.slot.length > j ? shipData.slot[j] : 0;
-				if (ship[1].find(v => v[4] === j)) {
-					insSlot = ship[1].find(v => v[4] === j)[3];
-				}
-				insData.slots.push(insSlot);
-			}
-
-			for (let i = 0; i < shipData.slot.length + 1; i++) {
-				const item = ship[1].find(v => v[4] === (i >= shipData.slot.length ? -1 : i));
-				if (item) {
-					planes.push({
-						masterId: item[0],
-						improvement: item[2],
-						proficiency: getInnerProficiency(item[1], ITEM_DATA.find(v => v.id === item[0]).type)
-					});
-				}
-				else {
-					planes.push({ masterId: 0, improvement: 0, proficiency: 0 });
-				}
-			}
-
-			// 計算外を省くにチェックがはいってない or 無効になってないなら追加
-			if (!withoutDisabledShip || !ship[3]) {
-				t['ships'].push(insData);
-			}
-		}
-
-		return JSON.stringify(obj);
-	} catch (error) {
-		return "";
-	}
 }
 
 /**
@@ -10851,6 +10690,11 @@ function modal_Closed($this) {
 			}
 			confirmType = null;
 			break;
+		case "modal_ship_reserve":
+			currentReserved = null;
+			$target = null;
+			calculate(false, true, false);
+			break;
 		case "modal_reference":
 			window.history.replaceState(null, null, location.pathname);
 		default:
@@ -11633,7 +11477,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 		${item.antiAirBonus ? `<div class="font_size_12">艦隊防空: ${item.antiAirBonus.toFixed(2)}</div>` : ''}
 		${item.isJet && item.slot ? `<div class="font_size_12">鋼材消費 (噴式強襲発生時): ${Math.round(item.slot * item.cost * 0.2)}` : ''}
 		${selectRate && selectRate.length ? `<div class="font_size_12">触接選択率(確保時): ${selectRate[0]}</div>` : ''}
-		${growing ? `<div class="font_size_12">熟練度<img class="img-size-16" alt=">>" src="../img/util/prof7.png">まで: ${growing}</div>` : ''}
+		${growing ? `<div class="font_size_12">熟練度<img class="img-size-18_lock" alt=">>" src="../img/util/prof7.png">まで: ${growing}</div>` : ''}
 	</div>`;
 
 	return text.trim();
@@ -12961,18 +12805,12 @@ function fleet_select_tab_Clicked() {
 }
 
 /**
- * 艦娘トグルクリック
+ * 艦娘保留クリック
  * @param {JQuery} $this
  */
 function btn_ship_toggle_Clicked($this) {
 	hideTooltip($this[0]);
-
 	const shipTab = $this.closest('.ship_tab');
-
-	// 裏で保持しているidとトグルする
-	const reservedId = $this[0].dataset.reservedId;
-	// 元々入っていたデータを検索
-	const reservedShip = reserveList.find(v => v.shipNo === reservedId);
 
 	// 今の情報を一意shipNoを付けて一部格納
 	const currentShip = new Ship(getUniqueId());
@@ -12993,74 +12831,158 @@ function btn_ship_toggle_Clicked($this) {
 		}
 	});
 
-	// 復帰したデータは消す
-	if (reservedShip) {
-		reserveList = reserveList.filter(v => v.shipNo !== reservedShip.shipNo);
-	}
-
-	if (!reserveList.length) {
-		// 現行情報をアップロード
-		reserveList.push(currentShip);
-		// 現行のidを保持
-		$this[0].dataset.reservedId = currentShip.shipNo;
-		inform_success('一時保存されました。');
-		// 選ぶ対象がないのでクリア
-		clearShipDiv(shipTab);
-
-		return;
-	}
-
-	// 現行の情報を登録する前にリストを展開
-	setReserveShipList();
-
-	// 現行情報をアップロード
-	reserveList.push(currentShip);
-	// 現行のidを保持
-	$this[0].dataset.reservedId = currentShip.shipNo;
-
+	// 保留リストを展開
+	$target = shipTab;
+	setReserveShipList(currentShip);
 	$('#modal_ship_reserve').modal('show');
 }
 
 /**
- * 一時置き場欄の描画
+ * 保留リストの再度描画
+ * @param {Ship} currentShip
  */
-function setReserveShipList() {
+function setReserveShipList(currentShip) {
+	// 現行データ描画
+	document.getElementById('current_ship_info').innerHTML = createReserveShipHtml(currentShip, false);
+
+	// 保留リスト追加ボタン表示制御
+	if (currentShip.id < 1 && currentShip.items.filter(v => v.id > 0).length === 0) {
+		// 空データならボタン無効化
+		document.getElementById('btn_add_reserve')['disabled'] = true;
+	}
+	else {
+		if (reserveList.find(v => v.shipNo === currentShip.shipNo)) {
+			// 既に追加済みならボタン無効化
+			document.getElementById('btn_add_reserve')['disabled'] = true;
+		}
+		else {
+			// ボタンを有効化し、保留リスト待機状態に
+			document.getElementById('btn_add_reserve')['disabled'] = false;
+			currentReserved = currentShip;
+		}
+	}
+
+	// 保留リスト描画
 	const table = document.createDocumentFragment();
 	for (const ship of reserveList) {
-		const raw = SHIP_DATA.find(v => v.id === ship.id);
-		let itemText = '';
-		for (let i = 0; i < ship.items.length; i++) {
-			const item = ship.items[i];
-			itemText += `
-				<div class="d-flex">
-					<div class="ml-1 align-self-center">
-						<img src="../img/type/${item.itype ? `icon${item.itype}` : 'undefined'}.png" alt="${item.itype}" class="img-size-30">
-					</div>
-					<div class="ml-1 align-self-center reserve_long_text">${item.name}</div>
-					${(item.remodel ? `<div class="align-self-center reserve_remodel"><i class="text_remodel fas fa-star"></i><span class="text_remodel">+${item.remodel}</span></div>` : '')}
-				</div>`;
-		}
-
-		const text = `<div class="d-flex">
-			<div class="align-self-center">${raw ? `<img src="../img/ship/${raw.id}.png" class="ship_img mr-1">` : ''}</div>
-			<div class="align-self-center">
-				<div class="font_size_11">ID: ${raw ? raw.id : '-'}</div>
-				<div class="d-flex">
-					<div class="reserve_long_text">${raw ? raw.name : '艦娘未指定'}</div>
-				</div>
-			</div>
-		</div>
-		<div class="mt-1">
-			${itemText}
-		</div>`;
-
 		const div = createDiv('reserve_ship general_tr m-1 p-2');
-		div.innerHTML = text;
+		div.dataset.reservedId = ship.shipNo;
+		div.innerHTML = createReserveShipHtml(ship);
 		table.appendChild(div);
 	}
 
 	document.getElementById('reserve_list').innerHTML = '';
 	document.getElementById('reserve_list').appendChild(table);
+
+	// 更新
+	saveSessionStorage('reserve_list', reserveList);
+}
+
+/**
+ * ShipクラスからそれっぽいHTMLを生成
+ * @param {Ship} ship 展開対象Shipクラス
+ * @param {boolean} [enabledRemoveButton=true] リスト削除ボタンいるか要らないか
+ * @returns {string} 
+ */
+function createReserveShipHtml(ship, enabledRemoveButton = true) {
+
+	if (ship.updateAirPower) {
+		ship.updateAirPower();
+	}
+	const raw = SHIP_DATA.find(v => v.id === ship.id);
+	let itemText = '';
+	for (let i = 0; i < ship.items.length; i++) {
+		const item = ship.items[i];
+		itemText += `
+			<div class="d-flex">
+				<div class="ml-1 align-self-center">
+					<img src="../img/type/${item.itype ? `icon${item.itype}` : 'undefined'}.png" alt="${item.itype}" class="img-size-30">
+				</div>
+				<div class="ml-1 align-self-center reserve_long_text">${item.name}</div>
+				${(item.remodel ? `<div class="align-self-center reserve_remodel"><i class="text_remodel fas fa-star"></i><span class="text_remodel">+${item.remodel}</span></div>` : '')}
+			</div>`;
+	}
+
+	return `<div class="d-flex">
+		<div class="align-self-center">${raw ? `<img src="../img/ship/${raw.id}.png" class="ship_img mr-1">` : ''}</div>
+		<div class="align-self-center flex-grow-1">
+			<div class="font_size_11">
+				<span class=" text-primary">Lv: ${ship.level}</span>
+				${ship.airPower ? `<span class="ml-2">制空値: ${ship.airPower}</span>` : ''}
+			</div>
+			<div class="d-flex">
+				<div class="reserve_long_text">${raw ? raw.name : '艦娘未指定'}</div>
+			</div>
+		</div>
+		${enabledRemoveButton ? '<div class="btn_remove_reserve btn_icon"><i class="fas fa-times"></i></div>' : ''}
+		</div>
+	</div>
+	<div class="mt-1">
+		${itemText}
+	</div>`;
+}
+
+/**
+ * 保留リストに追加
+ */
+function btn_add_reserve_Clicked() {
+	if (currentReserved) {
+		reserveList.push(currentReserved);
+		inform_success('保留リストに追加されました。');
+		// 再構築
+		setReserveShipList(currentReserved);
+	}
+}
+
+/**
+ * 保留艦娘クリック
+ * @param {JQuery} $this
+ */
+function reserve_ship_Clicked($this) {
+	const key = $this[0].dataset.reservedId;
+
+	const ship = reserveList.find(v => v.shipNo === key);
+	if (ship && $target.hasClass('ship_tab')) {
+		// クリックされた情報を復帰して閉じる
+		setShipDiv($target, ship.id, ship.level);
+
+		$target.find('.ship_plane:not(.ui-draggable-dragging)').each((j, e) => {
+			const item = ship.items.find(v => v.slotNo === j);
+			if (item) {
+				setPlaneDiv($(e), { id: item.id, remodel: item.remodel, prof: item.level, slot: item.slot }, true);
+			}
+		});
+	}
+
+	$('#modal_ship_reserve').modal('hide');
+}
+
+/**
+ * 保留艦娘削除クリック
+ * @param {JQuery} $this
+ */
+function btn_remove_reserve_Clicked($this, e) {
+	e.stopPropagation();
+
+	hideTooltip($this[0]);
+	const key = $this.closest('.reserve_ship')[0].dataset.reservedId;
+
+	if (reserveList.find(v => v.shipNo === key)) {
+		reserveList = reserveList.filter(v => v.shipNo !== key);
+		inform_success('保留リストから削除しました。');
+		// 再構築
+		setReserveShipList(currentReserved);
+	}
+}
+
+/**
+ * 保留リスト全リセット
+ */
+function btn_reset_reserve_Clicked() {
+	reserveList = [];
+	inform_success('保留リスト情報をリセットしました。');
+	// 再構築
+	setReserveShipList(currentReserved);
 }
 
 /**
@@ -15322,7 +15244,11 @@ function btn_output_deck_Clicked() {
 	const $output = $('#output_deck');
 	$output.nextAll('.valid-feedback').text('');
 	$output.removeClass('is-invalid').removeClass('is-valid');
-	const dataString = convertToDeckBuilder();
+
+	const fleet = createFriendFleetPreset();
+	const landBase = createLandBasePreset();
+	const withoutDisabledShip = document.getElementById('without_disabled_ship')['checked'];
+	const dataString = convertToDeckBuilder(fleet, landBase, withoutDisabledShip);
 	$('#output_deck').val(dataString);
 	if (dataString) {
 		$output.nextAll('.valid-feedback').text('生成しました。上記文字列をクリックするとクリップボードにコピーされます。');
@@ -15335,14 +15261,20 @@ function btn_output_deck_Clicked() {
  * デッキビルダーサイト展開クリック
  */
 function open_deckBuilder() {
-	window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuilder());
+	const fleet = createFriendFleetPreset();
+	const landBase = createLandBasePreset();
+	const withoutDisabledShip = document.getElementById('without_disabled_ship')['checked'];
+	window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuilder(fleet, landBase, withoutDisabledShip));
 }
 
 /**
  * 作戦室展開クリック
  */
 function open_Jervis() {
-	window.open('https://kcjervis.github.io/jervis/?operation-json=' + convertToDeckBuilder_j());
+	const fleet = createFriendFleetPreset();
+	const landBase = createLandBasePreset();
+	const withoutDisabledShip = document.getElementById('without_disabled_ship')['checked'];
+	window.open('https://kcjervis.github.io/jervis/?operation-json=' + convertToDeckBuilder_j(fleet, landBase, withoutDisabledShip));
 }
 
 /**
@@ -15385,9 +15317,6 @@ function simulatorTab_Clicked($this) {
 		expandMainPreset(decodePreset(tabData.history.histories[0]));
 		calculate();
 	}
-
-	// 裏で保持してるやつらは破棄
-	reserveList = [];
 }
 
 /**
@@ -15457,6 +15386,9 @@ function initializeReference() {
 	createAirPowerRanking();
 	createDefenceRanking();
 
+	// 練度上昇
+	createRecoverPlaneTable();
+
 	// 敵艦のランキング
 	createFuckingEnemiesRanking();
 }
@@ -15483,7 +15415,7 @@ function createAvoidPlaneTable() {
 
 			const td1 = document.createElement('td');
 			td1.className = 'text-left';
-			td1.innerHTML = `<img class="plane_img_sm" src="../img/type/type${plane.type}.png">
+			td1.innerHTML = `<img class="plane_img_sm" src="../img/type/icon${plane.itype}.png">
 				<span class="ml-1">${plane.name}</span>`;
 			tr.appendChild(td1);
 
@@ -15502,7 +15434,9 @@ function createAvoidPlaneTable() {
 
 			const td5 = document.createElement('td');
 			td5.innerHTML = `<a href="${encodeWikiURL(plane.name)}" target="_blank">wiki</a>`;
+			td5.className = 'text-center';
 			tr.appendChild(td5);
+
 
 			fragment.appendChild(tr);
 		}
@@ -15584,7 +15518,7 @@ function createAirPowerRanking() {
 				<td>${plane.radius}</td>
 				${i === 0 ? `<td rowspan="${obj.count}">${plane.actualAntiAir}</td>` : ''}
 				${i === 0 ? `<td rowspan="${obj.count}">${plane.airPower}</td>` : ''}
-				<td><a href="${encodeWikiURL(plane.name)}" target="_blank">wiki</a></td>`;
+				<td class="text-center"><a href="${encodeWikiURL(plane.name)}" target="_blank">wiki</a></td>`;
 
 			fragment.appendChild(tr);
 			rank++;
@@ -15657,7 +15591,7 @@ function createDefenceRanking() {
 				<td>${plane.antiBomber}</td>
 				${i === 0 ? `<td rowspan="${obj.count}">${plane.antiAir + plane.interception + 2.0 * plane.antiBomber}</td>` : ''}
 				${i === 0 ? `<td rowspan="${obj.count}">${plane.defenseAirPower}</td>` : ''}
-				<td><a href="${encodeWikiURL(plane.name)}" target="_blank">wiki</a></td>`;
+				<td class="text-center"><a href="${encodeWikiURL(plane.name)}" target="_blank">wiki</a></td>`;
 			fragment.appendChild(tr);
 			rank++;
 		}
@@ -15754,6 +15688,69 @@ function createFuckingEnemiesRanking() {
 	document.getElementById('fucking_enemie_table_zako_tbody').innerHTML = '';
 	document.getElementById('fucking_enemie_table_tbody').appendChild(fragment);
 	document.getElementById('fucking_enemie_table_zako_tbody').appendChild(fragment2);
+}
+
+/**
+ * 熟練度上昇速度機体一覧
+ */
+function createRecoverPlaneTable() {
+	const fragment = document.createDocumentFragment();
+	let planes = ITEM_DATA.filter(v => PLANE_TYPE.includes(v.type));
+	if (!document.getElementById('recover_planes_fighter')['checked']) {
+		planes = planes.filter(v => !FIGHTERS.includes(v.type));
+	}
+	if (!document.getElementById('recover_planes_attacker')['checked']) {
+		planes = planes.filter(v => !ATTACKERS.includes(v.type));
+	}
+	if (!document.getElementById('recover_planes_scouter')['checked']) {
+		planes = planes.filter(v => !RECONNAISSANCES.includes(v.type));
+	}
+
+	planes.sort((a, b) => {
+		if (a.grow === b.grow) {
+			return a.type - b.type;
+		}
+		return a.grow - b.grow;
+	});
+
+	const levels = [];
+	for (let c = 15; c > 0; c--) {
+		const group = planes.filter(v => v.grow === c);
+		if (group.length) {
+			levels.push({ c: c, planes: group });
+		}
+	}
+
+	for (const data of levels) {
+		for (let i = 0; i < data.planes.length; i++) {
+			const plane = data.planes[i];
+			const tr = document.createElement('tr');
+
+			if (i === 0) {
+				const td1 = document.createElement('td');
+				td1.textContent = getRequiredgBattleCountString(data.c);
+				td1.className = 'text-center';
+				td1.rowSpan = data.planes.length;
+				tr.appendChild(td1);
+			}
+
+			const td2 = document.createElement('td');
+			td2.className = 'text-left';
+			td2.innerHTML = `<img class="plane_img_sm" src="../img/type/icon${plane.itype}.png">
+				<span class="ml-1">${plane.name}</span>`;
+			tr.appendChild(td2);
+
+			const td3 = document.createElement('td');
+			td3.innerHTML = `<a href="${encodeWikiURL(plane.name)}" target="_blank">wiki</a>`;
+			td3.className = 'text-center';
+			tr.appendChild(td3);
+
+			fragment.appendChild(tr);
+		}
+	}
+
+	document.getElementById('recover_plane_table_tbody').innerHTML = '';
+	document.getElementById('recover_plane_table_tbody').appendChild(fragment);
 }
 
 /**
@@ -16125,8 +16122,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#fixed_btns').on('click', '.sub_btn.go_back', function () { window.location.href = '../list/'; });
 	$('#modal_preset_memo').on('input', '#preset_memo', function () { preset_memo_Changed($(this)); });
 	$('#modal_preset_memo').on('click', '.btn_commit_preset', function () { btn_commit_preset_memo_Clicked($(this)); });
+	$('#modal_ship_reserve').on('click', '#btn_add_reserve', btn_add_reserve_Clicked);
+	$('#modal_ship_reserve').on('click', '.reserve_ship', function () { reserve_ship_Clicked($(this)) });
+	$('#modal_ship_reserve').on('click', '.btn_remove_reserve', function (e) { btn_remove_reserve_Clicked($(this), e) });
+	$('#modal_ship_reserve').on('click', '.btn_reset', btn_reset_reserve_Clicked);
 	$('#modal_reference').on('click', '#anti_air_ranking_normal_registed', createAirPowerRanking);
 	$('#modal_reference').on('click', '#anti_air_ranking_defense_registed', createDefenceRanking);
+	$('#modal_reference').on('click', '#recover_planes_checkes .custom-check', createRecoverPlaneTable);
 	$('#btn_save_preset').click(btn_save_preset_Clicked);
 	$('#btn_save_preset_sub').click(btn_save_preset_sub_Clicked);
 	$('#btn_reference').click(btn_reference_Clicked);
@@ -16173,9 +16175,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.btn_remove_ship');
 	$('#friendFleet_content').on({
-		mouseenter: function () { showTooltip($(this)[0], "一時保存された艦娘を展開します。"); },
+		mouseenter: function () { showTooltip($(this)[0], "艦娘保留リストの登録や削除、保留リストからの展開を行います。"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.btn_ship_toggle');
+	$('#modal_ship_reserve').on({
+		mouseenter: function () { showTooltip($(this)[0], "艦娘保留リストから削除します。"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.btn_remove_reserve');
 	$('#enemyFleet_content').on({
 		mouseenter: function () { showEnemyStatusToolTip($(this)); },
 		mouseleave: function () { hideTooltip($(this)[0]); }

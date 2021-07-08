@@ -313,6 +313,14 @@ function setPresets(presets, isLocal = true) {
       btn_edit.innerHTML = '<i class="fas fa-pencil"></i>';
       btns.appendChild(btn_edit);
 
+      // 編成共有ボタン
+      const btn_share = createDiv('ml-2 r_btn btn_share');
+      btn_share.dataset.toggle = 'tooltip';
+      btn_share.dataset.offset = '-50%';
+      btn_share.title = '編成の共有を行います。';
+      btn_share.innerHTML = '<i class="fas fa-share-alt"></i>';
+      btns.appendChild(btn_share);
+
       // 編成コピーボタン
       const btn_copy = createDiv('ml-2 r_btn btn_copy');
       btn_copy.dataset.toggle = 'tooltip';
@@ -1036,6 +1044,28 @@ function public_preset_Clicked($this) {
 }
 
 /**
+ * 編成共有
+ * @param {JqueryDomObject} $this クリック要素
+ */
+function btn_share_Clicked($this, e) {
+  e.stopPropagation();
+
+  const presets = loadLocalStorage('presets');
+  const presetId = $this.closest('.preset_container')[0].dataset.presetid;
+
+  const preset = presets ? presets.find(v => v[0] === presetId) : null;
+
+  if (!preset) {
+    // ないことはない
+    inform_danger('対象の編成データが見つかりませんでした。');
+    return;
+  }
+
+  $('#modal_share')[0].dataset.presetId = $this.closest('.preset_container')[0].dataset.presetid;
+  $('#modal_share').modal('show');
+}
+
+/**
  * 編成複製展開
  * @param {JqueryDomObject} $this クリック要素
  */
@@ -1680,6 +1710,201 @@ function confirm_tab_close_Clicked() {
 }
 
 /**
+ * 共有データ文字列欄クリック時
+ * @param {JQuery} $this
+ */
+function output_data_Clicked($this) {
+  if (!$this.hasClass('is-valid')) return;
+  if (copyInputTextToClipboard($this)) {
+    inform_success('クリップボードにコピーしました。')
+  }
+}
+
+/**
+ * 共有リンク生成ボタンクリック
+ */
+async function btn_output_url_Clicked() {
+  try {
+    const preset = getModalSharePreset();
+
+    const $output = $('#output_url');
+    const url = 'https://noro6.github.io/kcTools/?d=' + preset[2];
+    let shortURL = url;
+    let result = false;
+    await postURLData(url)
+      .then(json => {
+        if (json.error || !json.shortLink) console.log(json);
+        else {
+          result = true;
+          shortURL = json.shortLink;
+        }
+      })
+      .catch(error => console.error(error));
+
+    if (result) {
+      $output.val(shortURL);
+      $output.nextAll('.valid-feedback').text('生成しました。上記URLをクリックするとクリップボードにコピーされます。');
+      $output.removeClass('is-invalid').addClass('is-valid');
+    }
+    else {
+      $output.nextAll('.valid-feedback').text('生成に失敗しました。');
+      $output.addClass('is-invalid').removeClass('is-valid');
+    }
+  } catch (error) {
+    $('#output_url').addClass('is-invalid').removeClass('is-valid');
+    return;
+  }
+}
+
+/**
+ * デッキビルダー形式生成ボタンクリック
+ */
+function btn_output_deck_Clicked() {
+  const $output = $('#output_deck');
+  $output.nextAll('.valid-feedback').text('');
+  $output.removeClass('is-invalid').removeClass('is-valid');
+
+  const preset = getModalSharePreset();
+
+  if (preset) {
+    const decodedPreset = decodePreset(preset[2]);
+    const landBase = decodedPreset[0];
+    const fleet = decodedPreset[1];
+    const dataString = convertToDeckBuilder(fleet, landBase);
+
+    $('#output_deck').val(dataString);
+    if (dataString) {
+      $output.nextAll('.valid-feedback').text('生成しました。上記文字列をクリックするとクリップボードにコピーされます。');
+      $output.removeClass('is-invalid').addClass('is-valid');
+    }
+    else $output.addClass('is-invalid').removeClass('is-valid');
+  }
+
+}
+
+/**
+ * デッキビルダーサイト展開クリック
+ */
+function open_deckBuilder() {
+  const preset = getModalSharePreset();
+  if (preset) {
+    const decodedPreset = decodePreset(preset[2]);
+    const landBase = decodedPreset[0];
+    const fleet = decodedPreset[1];
+    window.open('http://kancolle-calc.net/deckbuilder.html?predeck=' + convertToDeckBuilder(fleet, landBase));
+  }
+}
+
+/**
+ * 作戦室展開クリック
+ */
+function open_Jervis() {
+  const preset = getModalSharePreset();
+  if (preset) {
+    const decodedPreset = decodePreset(preset[2]);
+    const landBase = decodedPreset[0];
+    const fleet = decodedPreset[1];
+    window.open('https://kcjervis.github.io/jervis/?operation-json=' + convertToDeckBuilder_j(fleet, landBase));
+  }
+}
+
+/**
+ * 共有モーダル展開準備中の編成presetを返却
+ * @returns なければnull
+ */
+function getModalSharePreset() {
+  const presets = loadLocalStorage('presets');
+  const presetId = $('#modal_share')[0].dataset.presetId;
+  const preset = presets ? presets.find(v => v[0] === presetId) : null;
+  if (!preset) {
+    // ないことはない
+    inform_danger('対象の編成データが見つかりませんでした。');
+    return null;
+  }
+  return preset;
+}
+
+/**
+ * データひっこぬき
+ */
+function btn_output_presets_Clicked() {
+  const data = loadLocalStorage('presets');
+  if (data) {
+    document.getElementById('presets_data_output').value = JSON.stringify(data);
+    inform_success('出力しました。');
+  }
+}
+
+/**
+ * 共有データ文字列欄クリック時
+ * @param {JQuery} $this
+ */
+function presets_data_output_Clicked($this) {
+  if (!$this[0].value.trim()) {
+    return;
+  }
+  if (copyInputTextToClipboard($this)) {
+    inform_success('クリップボードにコピーしました。');
+  }
+}
+
+/**
+ * データ復元
+ */
+function btn_load_presets_Clicked() {
+  // 問題が起きたとき用に
+  const oldPresets = loadLocalStorage('presets');
+
+  try {
+    const input = document.getElementById('presets_data_input').value.trim();
+    const presets = JSON.parse(input);
+
+    const newPresets = [];
+
+    // データ構造 最低限チェック
+    for (const preset of presets) {
+      // 最低項目3つ [id, name, body, memo, date, folder]
+      if (preset.length < 3) {
+        throw "項目数不備エラー";
+      }
+      // 一度復元してみる
+      JSON.parse(b64_to_utf8(preset[2]));
+
+      const newPreset = [preset[0], preset[1], preset[2], "", formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss'), 0];
+      if (preset.length === 6) {
+        newPreset[3] = preset[3];
+        newPreset[4] = preset[4];
+        newPreset[5] = preset[5];
+      }
+      else if (preset.length === 5) {
+        newPreset[3] = preset[3];
+        newPreset[4] = preset[4];
+      }
+      else if (preset.length === 4) {
+        newPreset[3] = preset[3];
+      }
+
+      newPresets.push(newPreset);
+    }
+
+    // 問題ナシ　復元
+    saveLocalStorage('presets', newPresets);
+    inform_success('復元が完了しました。');
+
+    document.getElementById('presets_data_input').value = "";
+
+    setLocalPresets();
+
+  } catch (error) {
+    if (oldPresets) {
+      // 戻す
+      saveLocalStorage('presets', oldPresets);
+    }
+    inform_danger('復元に失敗しました。編成データの復元を中止しました。');
+  }
+}
+
+/**
  * イベントの登録
  */
 document.addEventListener('DOMContentLoaded', function () {
@@ -1706,6 +1931,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#presets_container').on('click', '.btn_edit_start', function (e) { btn_edit_start_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_commit', function (e) { btn_commit_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_rollback', function (e) { btn_rollback_Clicked($(this), e); });
+  $('#presets_container').on('click', '.btn_share', function (e) { btn_share_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_copy', function (e) { btn_copy_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_move_folder', function (e) { btn_move_folder_Clicked($(this), e); });
   $('#presets_container').on('click', '.btn_delete', function (e) { btn_delete_Clicked($(this), e); });
@@ -1723,8 +1949,23 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#site_board').on('input', '#comment_text', comment_text_Changed);
   $('#site_board').on('click', '.comment_index', function () { comment_index_Clicked($(this)) });
   $('#config_content').on('click', '#confirm_tab_close', confirm_tab_close_Clicked);
+  $('#config_content').on('click', '#btn_output_presets', btn_output_presets_Clicked);
+  $('#config_content').on('focus', '#presets_data_output', function () { $(this).select(); });
+  $('#config_content').on('click', '#presets_data_output', function () { presets_data_output_Clicked($(this)); });
+  $('#config_content').on('click', '#btn_load_presets', btn_load_presets_Clicked);
+  $('#config_content').on('focus', '#presets_data_input', function () { $(this).select(); });
   $('#config_content').on('click', '#btn_reset_localStorage', btn_reset_localStorage_Clicked);
   $('#btn_url_shorten').click(btn_url_shorten_Clicked);
   $('#modal_confirm').on('click', '.btn_ok', modal_confirm_ok_Clicked);
   $('#modal_folder_confirm').on('click', '.btn_ok', modal_folder_confirm_ok_Clicked);
+  $('#modal_share').on('click', '.btn_output_url', btn_output_url_Clicked);
+  $('#modal_share').on('click', '.btn_output_deck', btn_output_deck_Clicked);
+  $('#modal_share').on('focus', '#output_url', function () { $(this).select(); });
+  $('#modal_share').on('focus', '#output_deck', function () { $(this).select(); });
+  $('#modal_share').on('input', '#output_url', function () { $(this).removeClass('is-valid'); });
+  $('#modal_share').on('input', '#output_deck', function () { $(this).removeClass('is-valid'); });
+  $('#modal_share').on('click', '#output_url', function () { output_data_Clicked($(this)); });
+  $('#modal_share').on('click', '#output_deck', function () { output_data_Clicked($(this)); });
+  $('#modal_share').on('click', '#open_deckBuilder', open_deckBuilder);
+  $('#modal_share').on('click', '#open_jervis', open_Jervis);
 });

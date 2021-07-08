@@ -292,3 +292,9 @@
   align-self: center!important;
 }
 .comment_content { white-space: pre-wrap; }
+
+#presets_data_input,
+#presets_data_output {
+  resize: none;
+  overflow: hidden;
+}
