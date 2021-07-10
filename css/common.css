@@ -584,9 +584,9 @@ h1 {
 }
 
 #custom_alert_body {
-  padding: .25rem 1rem;
+  padding: .3rem 1.5rem;
   border-radius: 2em;
-  animation: inform 3.2s ease-in-out forwards;
+  animation: inform 4s ease-in-out forwards;
 }
 @keyframes inform {
   0% {
@@ -603,7 +603,7 @@ h1 {
   }
 }
 .dark-theme #custom_alert_body.alert-success {
-  background-color: rgba(20, 100, 40, 0.85);
+  background-color: rgba(26, 126, 51, 0.85);
 }
 .dark-theme #custom_alert_body.alert-warning {
   background-color: rgba(128, 120, 20, 0.85);

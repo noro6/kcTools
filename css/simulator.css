@@ -39,7 +39,10 @@ input[type="number"] { text-align: right; }
 .bg-hover { background-color: rgba(128, 128, 128, 0.05); }
 .sortable_handle { cursor: move; }
 .cur_help { cursor: help; }
-
+.img-size-18_lock {
+  width: auto;
+  height: 18px;
+}
 .img-size-18 {
   width: 18px;
   height: auto;
@@ -1561,9 +1564,55 @@ input[type="number"] { text-align: right; }
   resize: none;
 }
 
+/* ------------------------------
+  保留リスト #modal_reserve_ship
+-------------------------------- */
+#current_ship_info_parent,
+#reserve_list {
+  grid-template-columns: 1fr;
+  display: grid;
+  margin: 5rem 1rem;
+}
+@media (min-width: 992px) {
+  #current_ship_info_parent,
+  #reserve_list {
+    grid-template-columns: 1fr 1fr;
+    margin: 0;
+  }
+}
+@media (min-width: 1200px) {
+  #current_ship_info_parent,
+  #reserve_list {
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 0;
+  }
+}
+
+#current_ship_info,
+.reserve_ship {
+  border-radius: .25rem;
+  border: 1px solid #dee2e6;
+}
+.dark-theme #current_ship_info,
+.dark-theme .reserve_ship { border: 1px #6c757d solid; }
+.reserve_ship:hover {
+  border-color: rgb(98, 197, 255);
+}
+.dark-theme .reserve_ship:hover {
+  border-color: #ccc;
+}
+.reserve_long_text {
+  -ms-flex-positive: 1!important;
+  flex-grow: 1!important;
+  width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.reserve_remodel { width: 40px; }
 
 /* ------------------------------
-  編成メモ欄 #modal_preset_memo
+  おまけ #modal_reference
 -------------------------------- */
 #modal_reference table tr:hover {
   background-color: rgba(128, 128, 128, 0.1);

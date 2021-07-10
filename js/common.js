@@ -754,6 +754,198 @@ function b64_to_utf8(input) {
 }
 
 /**
+ * 指定したinputのvalueをクリップボードにコピー
+ * @param {JQuery} $this inputタグ id 持ち限定
+ * @returns {boolean} 成功したらtrue
+ */
+function copyInputTextToClipboard($this) {
+	try {
+		if (!$this.attr('id')) return false;
+		const t = document.getElementById($this.attr('id'));
+		t.select();
+		return document.execCommand('copy');
+	} catch (error) {
+		return false;
+	}
+}
+
+/**
+ * 指定プリセットをデッキビルダーフォーマットに変換
+ * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
+ * デッキフォーマット {version: 4.2, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
+ * @returns {string} デッキビルダー形式データ
+ */
+function convertToDeckBuilder(fleet, landBase, withoutDisabledShip = false) {
+	try {
+		const obj = {
+			version: 4,
+			hqlv: castInt($('#admin_lv').val()),
+			f1: {},
+			f2: {},
+			f3: {},
+			a1: { mode: 0, items: {} },
+			a2: { mode: 0, items: {} },
+			a3: { mode: 0, items: {} }
+		};
+
+		// 基地データ
+		for (const plane of landBase[0]) {
+			obj[`a${Math.floor(plane[4] / 4) + 1}`].items[`i${Math.floor(plane[4] % 4) + 1}`] = { id: plane[0], rf: plane[2], mas: plane[1] };
+		}
+		for (let index = 0; index < landBase[1].length; index++) {
+			const mode = landBase[1][index];
+			obj[`a${index + 1}`].mode = mode > 0 ? 1 : mode === 0 ? 2 : 0;
+		}
+
+		// 艦隊データ
+		const fleetBorder = fleet.length && fleet[0].length >= 6 && fleet[0][5] === 2 ? 7 : 6;
+		for (let index = 0; index < fleet.length; index++) {
+			const ship = fleet[index];
+			const shipData = SHIP_DATA.find(v => v.id === ship[0]);
+			if (!shipData) continue;
+			if (withoutDisabledShip && ship[3]) continue;
+
+			// 装備機体群オブジェクト生成
+			const items = { i1: null, i2: null, i3: null, i4: null, i5: null };
+			for (const item of ship[1]) {
+				const i = { id: item[0], rf: item[2], mas: item[1] };
+				const index = item[4] >= 0 ? item[4] + 1 : 'x';
+				items[`i${index}`] = i;
+			}
+
+			const s = { id: `${shipData.api}`, lv: ship[4], luck: ship[6], items: items };
+			const shipIndex = ship[2];
+			if (shipIndex < fleetBorder) {
+				obj.f1["s" + ((shipIndex % fleetBorder) + 1)] = s;
+				if (fleetBorder === 7) obj.f3["s" + ((shipIndex % fleetBorder) + 1)] = s;
+			}
+			else obj.f2[`s${(shipIndex % fleetBorder) + 1}`] = s;
+		}
+
+		return JSON.stringify(obj);
+	} catch (error) {
+		return "";
+	}
+}
+
+
+/**
+ * 指定プリセットをデッキビルダーフォーマットに変換 作戦室用
+ * デッキフォーマット {version: 4, f1: {s1: {id: '100', items:{i1:{id:1, rf: 4, mas:7},{i2:{id:3, rf: 0}}...,ix:{id:43}}}, s2:{}...},...}（2017/2/3更新）
+ * デッキフォーマット {version: 1, f1: {}, s2:{}...}, a1:{mode:1, items:{i1:{id:1, rf: 4, mas:7}}}（2019/12/5更新）
+ * @returns {string} デッキビルダー形式データ
+ */
+function convertToDeckBuilder_j(fleet, landBase, withoutDisabledShip = false) {
+	try {
+		const obj = {
+			version: 1,
+			name: getActivePreset().name,
+			hqLevel: castInt($('#admin_lv').val()),
+			side: "Player",
+			fleetType: $('#union_fleet').prop('checked') ? "CarrierTaskForce" : "Single",
+			fleets: [
+				{ ships: [] },
+				{ ships: [] },
+				{ ships: [] },
+				{ ships: [] },
+			],
+			landBase: [
+				{ slots: [], equipments: [null, null, null, null] },
+				{ slots: [], equipments: [null, null, null, null] },
+				{ slots: [], equipments: [null, null, null, null] }
+			],
+		};
+
+		// 基地データ
+		for (let i = 0; i < landBase[0].length; i++) {
+			const plane = landBase[0][i];
+			const t = obj["landBase"][Math.floor(plane[4] / 4)];
+			const index = Math.floor(plane[4] % 4);
+			t['slots'][index] = plane[3];
+			t['equipments'][index] = {
+				masterId: plane[0],
+				improvement: plane[2],
+				proficiency: getProf(plane[1], ITEM_DATA.find(v => v.id === plane[0]).type)
+			};
+		}
+
+		// 艦隊データ
+		const fleetBorder = fleet.length && fleet[0].length >= 6 && fleet[0][5] === 2 ? 7 : 6;
+		for (let i = 0; i < fleet.length; i++) {
+			const ship = fleet[i];
+			const shipData = SHIP_DATA.find(v => v.id === ship[0]);
+			if (!shipData) continue;
+
+			const shipIndex = ship[2];
+			const t = obj["fleets"][shipIndex < fleetBorder ? 0 : 1];
+
+			// 装備機体群オブジェクト生成
+			const planes = [];
+			const insData = { masterId: shipData.api, level: ship[4], slots: [], increased: { luck: ship[6] - shipData.luck }, equipments: planes };
+
+			for (let j = 0; j < shipData.slot.length; j++) {
+				let insSlot = shipData.slot.length > j ? shipData.slot[j] : 0;
+				if (ship[1].find(v => v[4] === j)) {
+					insSlot = ship[1].find(v => v[4] === j)[3];
+				}
+				insData.slots.push(insSlot);
+			}
+
+			for (let i = 0; i < shipData.slot.length + 1; i++) {
+				const item = ship[1].find(v => v[4] === (i >= shipData.slot.length ? -1 : i));
+				if (item) {
+					planes.push({
+						masterId: item[0],
+						improvement: item[2],
+						proficiency: getProf(item[1], ITEM_DATA.find(v => v.id === item[0]).type)
+					});
+				}
+				else {
+					planes.push({ masterId: 0, improvement: 0, proficiency: 0 });
+				}
+			}
+
+			// 計算外を省くにチェックがはいってない or 無効になってないなら追加
+			if (!withoutDisabledShip || !ship[3]) {
+				t['ships'].push(insData);
+			}
+		}
+
+		return JSON.stringify(obj);
+	} catch (error) {
+		return "";
+	}
+}
+
+/**
+ * 低い方の内部熟練度を返す　設定次第で最大は120になる
+ * @param {number} level 熟練度レベル
+ * @param {number} type 機体カテゴリ
+ */
+function getProf(level, type) {
+	switch (level) {
+		case 7:
+			return setting.initialProf120.includes(Math.abs(type)) ? 120 : 100;
+		case 0:
+			return 0;
+		case 1:
+			return 10;
+		case 2:
+			return 25;
+		case 3:
+			return 40;
+		case 4:
+			return 55;
+		case 5:
+			return 70;
+		case 6:
+			return 85;
+		default:
+			return 0;
+	}
+}
+
+/**
  * urlパラメータ読み込み
  * @returns パラメータ配列
  */
