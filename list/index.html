@@ -111,7 +111,7 @@
 			<div class="d-flex flex-wrap">
 				<h1>制空権シミュレータ</h1>
 				<div class="d-flex align-self-center">
-					<div class="font_size_18 ml-2 align-self-center">v1.12.7</div>
+					<div class="font_size_18 ml-2 align-self-center">v1.12.8</div>
 					<div class="ml-2 version_detail align-self-center" data-toggle="tooltip" data-placement="right"
 						data-offset="0,5" title="変更内容を確認"><i class="fas fa-file-text"></i>
 					</div>
@@ -256,7 +256,30 @@
 						<div class="theme_select" id="deep_blue_theme">深海</div>
 					</div>
 				</div>
-				<div class="m-3 border-top"></div>
+				<div class="mx-3 mt-4">
+					<div>データ連携：</div>
+					<div class="mx-3">
+						<div>
+							<div>本サイトに保存された編成を退避、復元するためのデータを引っこ抜きます。</div>
+							<div>出力された文字列を下手に触るとデータが復元できなくなるので、分かる方以外は書き換えないようにしてください。</div>
+						</div>
+						<div class="d-flex">
+							<button type="button" class="btn btn-sm btn-info text-nowrap" id="btn_output_presets">出力</button>
+							<textarea class="form-control form-control-sm ml-2" id="presets_data_output" readonly rows="1"></textarea>
+						</div>
+					</div>
+					<div class="m-3 border-top"></div>
+					<div class="mx-3">
+						<div>上記の出力機能で出力された文字列から、編成を復元します。</div>
+						<div class="text-danger font_size_16">復元を行うと、現在保存されている編成データは復元されるデータによって全て上書きされます。</div>
+						<div class="d-flex">
+							<button type="button" class="btn btn-sm btn-info text-nowrap" id="btn_load_presets">復元</button>
+							<textarea class="form-control form-control-sm ml-2" id="presets_data_input" rows="1"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="mx-3 mt-3 border-top"></div>
+				<div class="mx-3 mt-1 mb-3 border-top"></div>
 				<div class="m-3">
 					<div>データ完全削除：</div>
 					<div class="mx-3">
@@ -318,7 +341,7 @@
 					</div>
 					<div class="my-4" id="manual">
 						<p class="h6">使い方</p>
-						<div>簡単な使い方や機能は下記の動画で紹介しています。</div>
+						<div>簡単な使い方や機能は下記の動画で紹介しています。(※だいぶ古いですが)</div>
 						<div class="px-3 mt-3">
 							<div>■ ニコニコ動画版<a href="https://www.nicovideo.jp/watch/sm36478882" target="_blank">こちら</a></div>
 						</div>
@@ -401,7 +424,7 @@
 					<div class="my-4">
 						<p class="h6">免責事項</p>
 						<div class="pl-3">
-							本サイトの計算結果によって受けた利益・損害その他あらゆる事象について一切の責任を負いません。
+							本サイトの情報、計算結果によって受けた利益・損害その他あらゆる事象について一切の責任を負いません。
 						</div>
 					</div>
 					<div class="my-4">
@@ -710,6 +733,64 @@
 					<div class="ml-2">
 						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">キャンセル</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_share" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">編成データの共有</h5>
+					<p class="close cur_pointer cur_pointer" data-dismiss="modal"><span>&times;</span></p>
+				</div>
+				<div class="modal-body pt-2">
+					<div class="h6">共有データ生成</div>
+					<div class="px-2 font_size_12">
+						<div>
+							現在の入力情報を共有するURLの生成や、<a href="http://kancolle-calc.net/deckbuilder.html"
+								target="_blank">艦隊シミュレーター＆デッキビルダー</a>フォーマットの文字列を生成します。
+						</div>
+						<div class="mt-1">
+							<div>共有URL :</div>
+							<div class="d-flex">
+								<div class="mr-1">
+									<button type="button" class="ml-auto btn btn-sm btn-info btn_output_url">生成</button>
+								</div>
+								<div class="form-group ml-auto flex-grow-1">
+									<input type="text" class="form-control" id="output_url" readonly>
+									<div class="invalid-feedback">共有URLの生成に失敗しました。</div>
+									<div class="valid-feedback">生成しました。上記URLをクリックするとクリップボードにコピーされます。</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<div>デッキビルダー形式 :</div>
+							<div class="d-flex">
+								<div class="mr-1">
+									<button type="button" class="ml-auto btn btn-sm btn-info btn_output_deck">生成</button>
+								</div>
+								<div class="form-group ml-auto flex-grow-1">
+									<input type="text" class="form-control" id="output_deck" readonly>
+									<div class="invalid-feedback">出力に失敗しました。</div>
+									<div class="valid-feedback">生成しました。上記文字列をクリックするとクリップボードにコピーされます。</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="border-top mb-3"></div>
+					<div class="h6">外部サイトへ展開</div>
+					<div class="px-2">
+						下記のサイト様に編成を出力します。
+					</div>
+					<div class="mt-2 d-flex px-2">
+						<button type="button" class="btn btn-sm btn-success" id="open_deckBuilder">デッキビルダーで開く</button>
+						<button type="button" class="btn btn-sm btn-info ml-3" id="open_jervis">作戦室 Jervis orで開く</button>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">閉じる</button>
 				</div>
 			</div>
 		</div>

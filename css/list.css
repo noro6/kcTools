@@ -138,13 +138,11 @@
   text-align: right;
   height: 8px;
 }
-.preset_header.sortable_handle{
-  border-top: 5px solid #dee2e6;
-  border-right: 5px solid #dee2e6;
-  border-bottom: 5px solid transparent;
-  border-left: 5px solid transparent;
-  margin-left: auto;
+.sortable_handle_parent .sortable_handle{
   transition: 0.2s;
+  font-size: 25px;
+  opacity: .3;
+  margin-right: .5rem;
   cursor: move;
 }
 .dark-theme .preset_header {
@@ -294,3 +292,9 @@
   align-self: center!important;
 }
 .comment_content { white-space: pre-wrap; }
+
+#presets_data_input,
+#presets_data_output {
+  resize: none;
+  overflow: hidden;
+}
