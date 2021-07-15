@@ -2036,7 +2036,7 @@ const LB_ATTACKERS = [47, 53];
 const ROCKETS = [350, 351, 352];
 
 // 対地可能
-const TAICHI = [64, 148, 233, 277, 305, 306, 319];
+const TAICHI = [64, 148, 233, 277, 305, 306, 319, 320, 391, 392, 420, 421];
 
 // 射撃回避
 const AVOID_TYPE = [
