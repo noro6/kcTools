@@ -5849,7 +5849,7 @@ function uploadMainPreset(preset) {
  * 指定したidのプリセットデータを展開する
  * @param {Object} preset 展開対象プリセット(デコード済)
  * @param {boolean} isResetLandBase データ未指定の際、基地航空隊をリセットする
- * @param {boolean} isResetFriendFleet データ未指定の際、艦隊をリセットする
+ * @param {boolean} isResetFriendFleet 艦隊を書き換えるかどうか
  * @param {boolean} isResetEnemyFleet データ未指定の際、敵艦隊をリセットする
  */
 function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = true, isResetEnemyFleet = true) {
@@ -10697,6 +10697,10 @@ function modal_Closed($this) {
 			break;
 		case "modal_reference":
 			window.history.replaceState(null, null, location.pathname);
+			break;
+		case "modal_include_selector":
+			loadedDeckBuilders = [];
+			break;
 		default:
 			break;
 	}
@@ -14945,6 +14949,8 @@ async function btn_url_shorten_Clicked() {
 	const textbox = document.getElementById('input_url');
 	const url = textbox.value.trim();
 
+	hideTooltip($(button)[0]);
+
 	if (button.classList.contains('shortening')) return;
 	button.classList.add('shortening');
 	button.textContent = '短縮中';
@@ -14965,7 +14971,9 @@ async function btn_url_shorten_Clicked() {
 			// 対空砲火を有効にする
 			document.getElementById('adapt_stage2')['checked'] = true;
 			calculate();
-			inform_success('編成の反映に成功しました。');
+			if (showDeckSelector()) {
+				inform_success('編成の反映に成功しました。');
+			}
 		}
 		// 所持装備チェック
 		else if (readEquipmentJson(url)) {
@@ -15192,10 +15200,13 @@ function btn_load_deck_Clicked() {
 	if (preset) {
 		expandMainPreset(preset, preset[0][0].length > 0, true, false);
 		$('#input_deck').removeClass('is-invalid').addClass('is-valid');
-		inform_success('編成の読み込みに成功しました。');
-
 		// 対空砲火を有効にする
 		document.getElementById('adapt_stage2')['checked'] = true;
+
+		if (showDeckSelector()) {
+			inform_success('編成の反映に成功しました。');
+		}
+
 	}
 	else {
 		$('#input_deck').addClass('is-invalid').removeClass('is-valid');
@@ -15370,6 +15381,118 @@ function fleet_name_input_Changed($this) {
 	else {
 		inform_warning('保存されていないデータの名称変更はできません。');
 	}
+}
+
+/**
+ * 取り込み編成選択画面表示
+ */
+function showDeckSelector() {
+	if (loadedDeckBuilders && loadedDeckBuilders.length <= 2) {
+		return true;
+	}
+
+	const fragment = document.createDocumentFragment();
+	for (let i = 0; i < loadedDeckBuilders.length; i++) {
+		const fleetNo = loadedDeckBuilders[i][0];
+		const fleet = loadedDeckBuilders[i][1];
+
+		const fleetRow = createDiv('fleet_selectable general_tr m-1 p-2');
+		if (fleetNo < 2) {
+			fleetRow.classList.add('selected');
+		}
+		if (loadedDeckBuilders.length >= 3 && fleetNo >= 2) {
+			fleetRow.classList.add('disabled');
+		}
+		fleetRow.dataset.dataIndex = i;
+		const header = createDiv('deck_header ml-1 d-flex');
+
+		const checkBox = createDiv('align-self-center');
+		checkBox.innerHTML = `<i class="fas fa-checkbox-unchecked"></i><i class="fas fa-checkbox-checked"></i>`;
+		header.appendChild(checkBox);
+
+		const fleetNoDiv = createDiv('ml-2 align-self-center');
+		fleetNoDiv.textContent = `第${fleetNo + 1}艦隊`;
+		header.appendChild(fleetNoDiv);
+		fleetRow.appendChild(header);
+
+		const bodyDiv = createDiv('d-flex flex-wrap mt-1');
+		for (let j = 0; j < fleet.length; j++) {
+			const ship = fleet[j];
+			if (ship[0] > 0) {
+				const ship_img = document.createElement('img');
+				ship_img.className = 'ship_image';
+				ship_img.width = 100;
+				ship_img.height = 25;
+				ship_img.src = `../img/ship/${ship[0]}.png`;
+				bodyDiv.appendChild(ship_img);
+			}
+		}
+		fleetRow.appendChild(bodyDiv);
+		fragment.appendChild(fleetRow);
+	}
+
+	document.getElementById('deck_list').innerHTML = '';
+	document.getElementById('deck_list').appendChild(fragment);
+
+	document.getElementById('btn_include_deck')['disabled'] = false;
+	$('#modal_include_selector').modal('show');
+
+	return false;
+}
+
+/**
+ * タブの入力欄からフォーカスアウトしたとき -> 編成名変更す
+ * @param {JQuery} $this
+ */
+function fleet_selectable_Clicked($this) {
+	let $selected = $('.fleet_selectable.selected');
+
+	if ($this.hasClass('selected')) {
+		$this.removeClass('selected');
+		$('.fleet_selectable.disabled').removeClass('disabled');
+	}
+	else if ($selected.length < 2) {
+		$this.addClass('selected');
+	}
+
+	// 再度選択個数判定
+	$selected = $('.fleet_selectable.selected');
+	document.getElementById('btn_include_deck')['disabled'] = $selected.length === 0 || $selected.length > 2;
+
+	// もう選択できないっぽくする
+	if ($selected.length >= 2) {
+		$('.fleet_selectable:not(.selected)').addClass('disabled');
+	}
+}
+
+/**
+ * 選択されているデッキを取り込む
+ */
+function btn_include_deck_Clicked() {
+	const deck = [];
+	let fleetNo = 0;
+	$('.fleet_selectable.selected').each((i, e) => {
+		const index = castInt(e.dataset.dataIndex, -1);
+		if (index >= 0 && index < loadedDeckBuilders.length) {
+			const data = loadedDeckBuilders[index];
+			const ships = data[1];
+			const isUgeki = ships.length && ships[0].length >= 5 && ships[0][6] === 2
+			const start = (isUgeki ? 7 : 6) * fleetNo++;
+			// 配属位置を置き換える 単純に連番でIKEYA
+			for (let j = 0; j < ships.length; j++) {
+				// 艦隊: [0:id, 1: Item配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合フラグ, 6:運]
+				const ship = ships[j];
+				ship[2] = start + j;
+				deck.push(ship);
+			}
+		}
+	});
+
+	expandMainPreset([[], deck, []], false, true, false);
+	calculate(false, true, false);
+
+	inform_success('選択された編成データを取り込みました。');
+	$('#modal_include_selector').modal('hide');
 }
 
 /*==================================
@@ -15850,6 +15973,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			setTab();
 		}
 		calculate();
+		showDeckSelector();
 	});
 
 	// イベント貼り付け
@@ -16126,6 +16250,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_ship_reserve').on('click', '.reserve_ship', function () { reserve_ship_Clicked($(this)) });
 	$('#modal_ship_reserve').on('click', '.btn_remove_reserve', function (e) { btn_remove_reserve_Clicked($(this), e) });
 	$('#modal_ship_reserve').on('click', '.btn_reset', btn_reset_reserve_Clicked);
+	$('#modal_include_selector').on('click', '.fleet_selectable', function () { fleet_selectable_Clicked($(this)); });
+	$('#modal_include_selector').on('click', '#btn_include_deck', btn_include_deck_Clicked);
 	$('#modal_reference').on('click', '#anti_air_ranking_normal_registed', createAirPowerRanking);
 	$('#modal_reference').on('click', '#anti_air_ranking_defense_registed', createDefenceRanking);
 	$('#modal_reference').on('click', '#recover_planes_checkes .custom-check', createRecoverPlaneTable);
@@ -16138,6 +16264,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#btn_redo').click(btn_redo_Clicked);
 	$('#input_url').click(function () { $(this).select(); });
 	$('#btn_url_shorten').click(btn_url_shorten_Clicked);
+	$('#tool_bar').on({
+		mouseenter: function () { showTooltip($(this)[0], "デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や所持艦娘情報の反映が可能です。"); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '#btn_url_shorten');
 	$('#landBase_content').on({
 		mouseenter: function () { showItemToolTip($(this).parent(), true); },
 		mouseleave: function () { hideTooltip($(this).parent()[0]); }
