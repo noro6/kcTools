@@ -1611,6 +1611,55 @@ input[type="number"] { text-align: right; }
 }
 .reserve_remodel { width: 40px; }
 
+
+/* ------------------------------
+  取り込み選択 #modal_deck_selector
+-------------------------------- */
+.fleet_selectable {
+  border-radius: .25rem;
+  border: 1px solid #dee2e6;
+  transition: all .3s cubic-bezier(0.2, 1, 0.2, 1);
+  user-select: none;
+}
+.dark-theme .fleet_selectable { border: 1px #6c757d solid; }
+
+.fleet_selectable:hover { border-color: rgb(98, 197, 255); }
+.dark-theme .fleet_selectable:hover { border-color: #ccc; }
+
+.fleet_selectable.selected {
+  border-color: rgb(98, 197, 255);
+  box-shadow: inset 0 0 20px rgba(98, 197, 255, 0.4), 0 0 20px rgba(98, 197, 255, 0.1);
+  text-shadow: 2px 2px 3px #fff;
+  background-color: rgba(109, 214, 255, 0.2);
+}
+.dark-theme .fleet_selectable.selected {
+  border-color: #ccc;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.1);
+  text-shadow: 2px 2px 3px #000;
+  background-color: rgba(230, 248, 255, 0.15);
+}
+
+.fleet_selectable i {
+  opacity: 0.5;
+  font-size: 1.2em;
+}
+.fleet_selectable i.fa-checkbox-unchecked { display: inline; }
+.fleet_selectable i.fa-checkbox-checked { display: none; }
+
+.fleet_selectable.selected i.fa-checkbox-unchecked { display: none; }
+.fleet_selectable.selected i.fa-checkbox-checked {
+  display: inline;
+  color: rgb(0, 154, 255);
+  opacity: 1;
+}
+.dark-theme .fleet_selectable.selected i.fa-checkbox-checked { color: rgb(56, 135, 255); }
+
+.fleet_selectable.disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.fleet_selectable .ship_image { margin: 0.15rem; }
+
 /* ------------------------------
   おまけ #modal_reference
 -------------------------------- */

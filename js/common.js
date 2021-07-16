@@ -4,6 +4,9 @@ let setting = null;
 // 確認モーダルのモード
 let confirmType = null;
 
+// デッキビルダーで読み込んだ艦隊全容
+let loadedDeckBuilders = [];
+
 /*==================================
 		Web Storage
 ==================================*/
@@ -396,6 +399,8 @@ function readDeckBuilder(deck) {
 		const landBase = [[], [-1, -1, -1]];
 		let isYugeki = false;
 		let unmanageShip = false;
+
+		loadedDeckBuilders = [];
 		Object.keys(obj).forEach((key) => {
 			const value = obj[key];
 			if (key === "version" || !value) return;
@@ -430,9 +435,6 @@ function readDeckBuilder(deck) {
 			if (key.indexOf("f") === 0) {
 				// 艦隊番号
 				const fleetNo = castInt(key.replace('f', '')) - 1;
-				// 第3艦隊以降はここで飛ばしてる
-				if (fleetNo > 1) return;
-
 				// 艦娘の抽出
 				const fleet = [fleetNo, []];
 				if (!isYugeki) {
@@ -501,10 +503,15 @@ function readDeckBuilder(deck) {
 					fleet[1].push(ship);
 				});
 				fleets.push(fleet);
+
+				// 何らかの情報があれば追加
+				if (fleet[1].some(v => v[0] > 0 || v[1].some(w => w[0] > 0))) {
+					loadedDeckBuilders.push(fleet.concat());
+				}
 			}
 		});
 
-		// 第1、第2艦隊のみに絞る
+		// いったん第1、第2艦隊のみに絞って返却
 		const fleet1 = fleets.find(v => v[0] === 0)[1];
 		if (fleets.length >= 2) {
 			const fleet2 = fleets.find(v => v[0] === 1)[1];

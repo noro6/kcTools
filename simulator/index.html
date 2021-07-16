@@ -103,8 +103,7 @@
 				<textarea class="form-control form-control-dark" id="input_url"
 					placeholder="デッキビルダー文字列, 短縮したいURL等..."></textarea>
 			</div>
-			<div class="d-none d-md-block ml-auto tool_item px-2" id="btn_url_shorten" data-toggle="tooltip"
-				title="デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や所持艦娘情報の反映が可能です。">
+			<div class="d-none d-md-block ml-auto tool_item px-2" id="btn_url_shorten">
 				<span>読み込み</span>
 			</div>
 			<div class="d-none d-xl-flex tool_item" id="reduced_display">
@@ -4477,6 +4476,26 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-sm btn-outline-danger btn_reset">全リセット</button>
 					<button type="button" class="ml-2 btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_include_selector" tabindex="-1" data-backdrop="static">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">取り込み艦隊選択</h5>
+				</div>
+				<div class="modal-body">
+					<div>第1艦隊、及び第2艦隊以外の編成情報が検出されました。</div>
+					<div>取り込む編成を選択し、取り込みボタンを押してください。</div>
+					<div id="deck_list"></div>
+				</div>
+				<div class="modal-footer">
+					<div class="ml-auto">
+						<button type="button" id="btn_include_deck" class="btn btn-sm btn-info">取り込み</button>
+					</div>
 				</div>
 			</div>
 		</div>
