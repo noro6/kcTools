@@ -118,3 +118,41 @@
 .sum_count {
    opacity: 0.6;
 }
+
+#img_plane_card {
+   width: 240px;
+   height: 240px;
+}
+#edit_item_status_container,
+#edit_item_name_parent {
+   color: rgb(255, 255, 255);
+   background-color: rgb(50, 50, 50);
+   border: 1px solid rgb(196, 169, 87);
+   padding: 0.25rem 0.5rem;
+}
+#edit_item_status_container{
+   padding: 0.5rem 0.5rem;
+}
+#edit_item_status_parent {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+}
+#edit_item_name,
+#edit_item_type_name,
+.edit_item_status {
+   color: rgb(196, 169, 87);
+}
+.edit_item_status {
+   display: flex;
+}
+.edit_item_status span {
+   display: inline-block;
+   margin-left: 0.5rem;
+   width: 48px;
+   text-align: right;
+   color: rgb(255, 255, 255);
+}
+#edit_item_type{
+   height: 24px;
+   width: auto;
+}

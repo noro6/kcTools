@@ -1294,11 +1294,6 @@ input[type="number"] { text-align: right; }
 .plane_status_interception { width: 33%; }
 .plane_status_anti_bomber { width: 33%; }
 .plane_status_avoid { width: 33%; }
-
-.img_plane_card {
-  width: 240px;
-  height: 240px;
-}
 .stock_num { width: 74px; }
 #stock_sum { width: 168px; }
 
