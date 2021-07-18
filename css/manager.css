@@ -1,0 +1,120 @@
+.item_type_img {
+   height: 32px;
+   width: auto;   
+}
+.item_icon {
+   height: 28px;
+   width: auto;
+}
+
+#item_list {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   row-gap: 0.5rem;
+   column-gap: 0.5rem;
+ }
+ @media (min-width: 760px) {
+   #item_list {
+     grid-template-columns: 1fr 1fr 1fr;
+   }
+ }
+ @media (min-width: 1100px) {
+   #item_list {
+     grid-template-columns: 1fr 1fr 1fr 1fr;
+   }
+ }
+ @media (min-width: 1600px) {
+   #item_list {
+     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+   }
+ }
+ @media (min-width: 2000px) {
+   #item_list {
+     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+   }
+ }
+ @media (min-width: 2120px) {
+   #item_list {
+     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+   }
+ }
+
+.type_content {
+   padding: 0.5rem;
+}
+
+.item_type_header {
+   padding-bottom: 0.5rem;
+   border-bottom: 1px solid #999;
+}
+.item_type_header div,
+.item_header div,
+.item_detail div {
+   align-self: center;
+}
+
+.item_container {
+   cursor: pointer;
+   border-bottom: 1px solid #999;
+   text-shadow: none;
+   transition: all .6s cubic-bezier(0.2, 1, 0.2, 1);
+}
+.item_container:hover {
+   background-color: rgba(128, 128, 128, 0.1);
+}
+
+.dark-theme .item_type_header,
+.dark-theme .item_container {
+   border-color: #ccc;
+}
+.item_container.no_item {
+   padding-top: 0.25rem;
+   padding-bottom: 0.25rem;
+}
+.item_container.no_item .item_name {
+   opacity: 0.6;
+}
+
+.item_header {
+   display: flex;
+   padding-right: 0.5rem;
+}
+.item_name {
+   margin-left: 0.25rem;
+   -ms-flex-positive: 1!important;
+   flex-grow: 1!important;
+   width: 1px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.item_detail {
+   display: flex;
+   margin-left: auto;
+   width: 100px;
+   border-top: 1px solid rgba(128, 128, 128, 0.25);
+   padding-right: 0.5rem;
+}
+.dark-theme .item_detail{
+   border-top: 1px solid rgba(204, 204, 204, 0.25);
+}
+
+.text_remodel {
+   color: rgb(0, 175, 175);
+}
+.item_remodel {
+   margin-left: auto;
+   width: 40px;
+}
+.text_count {
+   width: 36px;
+   text-align: right;
+   color: rgb(0, 102, 255);
+}
+.dark-theme .text_count {
+   color: rgb(0, 162, 255);
+}
+.sum_count {
+   opacity: 0.6;
+}
