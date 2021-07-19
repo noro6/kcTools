@@ -283,6 +283,11 @@
    -ms-flex-pack: justify;
    justify-content: space-around;
 }
+#edit_item_status_parent::after{
+   content:"";
+   display: block;
+   width:45%;
+}
 #edit_item_name,
 #edit_item_type_name,
 .edit_item_status {
@@ -291,7 +296,7 @@
 #edit_item_name {
    font-size: 1.3em;
 }
-.edit_item_status {
+.edit_item_status:not(.d-none) {
    margin: 0.2rem 0;
    padding: 0.25rem 0.5rem;
    display: flex;

@@ -166,9 +166,41 @@ function item_container_Clicked($this) {
    document.getElementById('edit_item_accracy').textContent = item.accuracy;
    document.getElementById('edit_item_avoid').textContent = item.avoid2;
    document.getElementById('edit_item_scout').textContent = item.scout;
-   document.getElementById('edit_item_antiBomber').textContent = item.antiBomber;
-   document.getElementById('edit_item_interception').textContent = item.interception;
-   document.getElementById('edit_item_radius').textContent = item.radius;
+
+   const range = RANGES.find(v => v.id === item.range2);
+   if (range && range.id > 0) {
+      document.getElementById('edit_item_range').textContent = range.name;
+      document.getElementById('edit_item_range').parentElement.classList.remove('d-none');
+   }
+   else {
+      document.getElementById('edit_item_range').textContent = range.name;
+      document.getElementById('edit_item_range').parentElement.classList.add('d-none');
+   }
+   if (item.radius) {
+      document.getElementById('edit_item_radius').textContent = item.radius;
+      document.getElementById('edit_item_radius').parentElement.classList.remove('d-none');
+   }
+   else {
+      document.getElementById('edit_item_radius').parentElement.classList.add('d-none');
+   }
+   if (item.antiBomber) {
+      document.getElementById('edit_item_antiBomber').textContent = item.antiBomber;
+      document.getElementById('edit_item_antiBomber').parentElement.classList.remove('d-none');
+      document.getElementById('edit_item_accracy').parentElement.classList.add('d-none');
+   }
+   else {
+      document.getElementById('edit_item_antiBomber').parentElement.classList.add('d-none');
+      document.getElementById('edit_item_accracy').parentElement.classList.remove('d-none');
+   }
+   if (item.interception) {
+      document.getElementById('edit_item_interception').textContent = item.interception;
+      document.getElementById('edit_item_interception').parentElement.classList.remove('d-none');
+      document.getElementById('edit_item_avoid').parentElement.classList.add('d-none');
+   }
+   else {
+      document.getElementById('edit_item_interception').parentElement.classList.add('d-none');
+      document.getElementById('edit_item_avoid').parentElement.classList.remove('d-none');
+   }
 
    let sumStock = 0;
    for (let remodel = 0; remodel <= 10; remodel++) {
