@@ -1,9 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
+   document.getElementById('fleet_tab_container').classList.add('d-none');
+   document.getElementById('fleet_tab_container').classList.remove('d-flex');
    // トップページへ
    document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
+
    $('#item_list').on('click', '.item_container', function () { item_container_Clicked($(this)); });
+   $('#modal_item_edit').on('blur', 'input', function () { item_stock_Leaved($(this)); });
+   $('#modal_item_edit').on('input', 'input', function () { item_stock_Changed($(this)); });
+   $('#modal_item_edit').on('click', '#btn_reset_item_stock', btn_reset_item_stock_Clicked);
 
    refreshItemList();
+
+   // モーダル初期化
+   $('.modal').modal();
 });
 
 /**
@@ -135,23 +144,19 @@ function refreshItemList() {
  * @param {*} $this
  */
 function item_container_Clicked($this) {
-
    const itemId = castInt($this[0].dataset.itemId);
    const item = ITEM_DATA.find(v => v.id === itemId);
+   const stock = loadPlaneStock().find(v => v.id === itemId);
 
    if (!item) {
       inform_danger('装備取得に失敗しました。');
       return;
    }
 
-   const type = ITEM_API_TYPE.find(v => v.id === item.type);
-
    document.getElementById('edit_item_id').textContent = 'No.' + ('000' + item.id).slice(-3);
    document.getElementById('edit_item_name').textContent = item.name;
    document.getElementById('img_plane_card').src = `../img/plane/${item.id}.png`;
    document.getElementById('img_plane_card').alt = item.id;
-   document.getElementById('edit_item_type').src = `../img/type/icon${item.itype}.png`;
-   document.getElementById('edit_item_type_name').textContent = type ? type.name : '-';
    document.getElementById('edit_item_fire').textContent = item.fire;
    document.getElementById('edit_item_antiAir').textContent = item.antiAir;
    document.getElementById('edit_item_torpedo').textContent = item.torpedo;
@@ -165,5 +170,77 @@ function item_container_Clicked($this) {
    document.getElementById('edit_item_interception').textContent = item.interception;
    document.getElementById('edit_item_radius').textContent = item.radius;
 
-   $('#modal_item_edit').modal('show');
+   let sumStock = 0;
+   for (let remodel = 0; remodel <= 10; remodel++) {
+      if (item.canRemodel && remodel > 0) {
+         document.getElementById('remodel_' + remodel)['disabled'] = false;
+      }
+      else if (remodel > 0) {
+         document.getElementById('remodel_' + remodel)['disabled'] = true;
+      }
+
+      if (stock && stock.num[remodel]) {
+         document.getElementById('remodel_' + remodel).value = stock.num[remodel];
+         sumStock += stock.num[remodel];
+      }
+      else {
+         document.getElementById('remodel_' + remodel).value = '';
+      }
+   }
+   document.getElementById('remodel_all').value = sumStock;
+
+   $('#modal_item_edit').modal('open');
+}
+
+/**
+ * 装備所持変更欄　所持数入力欄フォーカスアウト
+ * @param {*} $this
+ */
+function item_stock_Leaved($this) {
+   const input = castInt($this.val());
+
+   if (input <= 0) {
+      $this.val('');
+   }
+   else if (input >= 99) {
+      $this.val(99);
+   }
+
+   let sumStock = 0;
+   $('#item_stock_inputs input[type="number"]').each((i, e) => {
+      sumStock += castInt($(e).val());
+   });
+   document.getElementById('remodel_all').value = sumStock;
+}
+
+/**
+ * 装備所持変更欄　所持数入力欄入力時
+ * @param {*} $this
+ */
+function item_stock_Changed($this) {
+   const input = castInt($this.val());
+
+   if (input < 0) {
+      $this.val(0);
+   }
+   else if (input >= 99) {
+      $this.val(99);
+   }
+
+   let sumStock = 0;
+   $('#item_stock_inputs input[type="number"]').each((i, e) => {
+      sumStock += castInt($(e).val());
+   });
+
+   document.getElementById('remodel_all').value = sumStock;
+}
+
+/**
+ * 所持装備数リセット押下時
+ */
+function btn_reset_item_stock_Clicked() {
+   $('#item_stock_inputs input[type="number"]').each((i, e) => {
+      $(e).val('');
+   });
+   document.getElementById('remodel_all').value = 0;
 }

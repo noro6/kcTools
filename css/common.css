@@ -156,6 +156,7 @@ h1 {
 .dark-theme .text-primary { color: #20c0ff !important; }
 .dark-theme .modal-content .text-primary { color: #20c0ff !important; }
 .dark-theme .modal-content .close { color: #ccc !important; }
+.dark-theme .modal-footer,
 .dark-theme .modal-content { background-color: rgb(45, 45, 52); }
 .deep_blue_theme .modal-content { background-color: rgb(15, 25, 42); }
 .modal-content-red { background-color: rgb(50, 20, 20); }
