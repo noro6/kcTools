@@ -14,6 +14,7 @@
 	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="../favicon.ico">
+	<link rel="stylesheet" href="../css/nouislider.min.css" />
 	<link rel="stylesheet" href="../css/materialize.min.css" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 	<link rel="stylesheet" href="../fonts/style.css">
@@ -25,6 +26,7 @@
 	<script defer src="../js/lz-string.js"></script>
 	<script defer src="../js/data.js"></script>
 	<script defer src="../js/manager.js"></script>
+	<script defer src="../js/nouislider.min.js"></script>
 	<script defer src="../js/materialize.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
@@ -56,50 +58,11 @@
 		<div class="d-flex" id="tool_bar">
 			<div class="tool_item" id="btn_top">
 				<i class="fas fa-list-ul"></i>
+				トップページへ
 			</div>
-			<div class="tool_item disabled" id="btn_save_preset">
-				<i class="fas fa-save"></i>
-				<span class="d-none d-md-inline">編成保存</span>
-				<span class="d-md-none">保存</span>
-			</div>
-			<div class="tool_item disabled" id="btn_save_preset_sub">
-				<i class="fas fa-copy"></i>
-				<span class="d-none d-sm-inline">別名保存</span>
-				<span class="d-sm-none">別名</span>
-			</div>
-			<div class="tool_item disabled" id="btn_share">
-				<i class="fas fa-share-alt"></i>
-				<span class="d-none d-md-inline">編成共有</span>
-				<span class="d-md-none">共有</span>
-			</div>
-			<div class="tool_item disabled" id="btn_twitter">
-				<i class="fab fa-twitter"></i>
-				<span class="d-none d-lg-inline">編成をツイート</span>
-				<span class="d-lg-none">Tweet</span>
-			</div>
-			<div class="tool_item disabled" id="btn_reference">
-				<i class="fas fa-book"></i>
-				<span class="d-none d-lg-inline">おまけ</span>
-				<span class="d-lg-none">おまけ</span>
-			</div>
-			<div class="d-none tool_item disabled" id="btn_auto_expand">
-				<i class="fas fa-bolt"></i>
-				<span class="d-none d-lg-inline">おまかせ配備</span>
-				<span class="d-lg-none">おまかせ</span>
-			</div>
-			<div class="tool_item disabled" id="btn_undo">
-				<i class="fas fa-undo"></i>
-			</div>
-			<div class="tool_item disabled" id="btn_redo">
-				<i class="fas fa-repeat"></i>
-			</div>
-			<div class="d-none d-md-block flex-grow-1 mr-1" id="url_shortener">
-				<textarea class="form-control form-control-dark" id="input_url"
-					placeholder="デッキビルダー文字列, 短縮したいURL等..."></textarea>
-			</div>
-			<div class="d-none d-md-block ml-auto tool_item" id="btn_url_shorten" data-toggle="tooltip"
-				title="デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や所持艦娘情報の反映が可能です。">
-				<span>読み込み</span>
+			<div class="tool_item" id="btn_share">
+				<i class="fas fa-calculator"></i>
+				制空計算ページへ
 			</div>
 		</div>
 		<div class="d-flex" id="fleet_tab_container"></div>
@@ -107,40 +70,206 @@
 	</div>
 	<div class="px-2 mx-2" id="main">
 		<div class="d-flex mx-auto pt-2">
-			<div class="d-flex flex-wrap">
+			<div class="d-flex">
 				<div class="font_size_18">制空権シミュレータ</div>
 				<div class="d-flex align-self-center">
 					<div class="ml-3 align-self-center">所持装備 &amp; 艦娘管理</div>
 				</div>
 			</div>
 		</div>
-		<div class="contents my-4 px-2 py-1 mx-auto" id="ships_content">
-			<div class="my-2 d-flex">
-				<div class="h6 mb-0 align-self-center"><span class="content_title align-middle">所持艦娘管理</span>
-				</div>
-				<div class="ml-auto rounded-circle r_btn" data-toggle="collapse" data-target="#ship_management">
-					<i class="fas fa-chevron-up"></i>
-				</div>
-			</div>
-			<div class="collapse show collapse_content" id="ship_management">
-				<div class="border-top"></div>
-				<div id="ship_list">
 
-				</div>
+		<div class="contents px-2 py-2 mt-4 mx-auto">
+			<div>
+				<ul class="tabs">
+					<li class="tab"><a class="waves-effect waves-blue active" href="#ships_content">艦娘一覧</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#ships_reader">艦娘反映</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#items_content">装備一覧</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#items_reader">装備反映</a></li>
+				</ul>
 			</div>
-		</div>
-		<div class="contents my-4 px-2 py-1 mx-auto" id="items_content">
-			<div class="my-2 d-flex">
-				<div class="h6 mb-0 align-self-center"><span class="content_title align-middle">所持装備管理</span>
+			<div class="border-top px-2 py-2">
+				<div id="ships_content">
+					<div class="d-flex flex-wrap" id="ship_list"></div>
 				</div>
-				<div class="ml-auto rounded-circle r_btn" data-toggle="collapse" data-target="#item_management">
-					<i class="fas fa-chevron-up"></i>
+				<div id="ships_reader">
+					<div class="general_box">
+						<div>1. 艦これにログイン後、画面上で右クリックし、コンテキストメニューから「検証」を選択</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial1.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>2. ウインドウが開くので、「Console」タブを開き、「Clear console」ボタンを押下</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial2.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>3. consoleに「this.KCS」と入力してEnterを押下、表示されたオブジェクトについて矢印を選択して内容を展開</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial3.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>4. 4つあるオブジェクトのなかで、内容が「{__esModule: true, default: ƒ}」となっているオブジェクトを探す</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial4.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>5. 4で見つけたオブジェクトのうち、「default」まで展開したときに中に「model」が存在するものを探す</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial5.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>6. 「model」が存在する方の「default」の上で右クリックし、「Store function as global variable」（なければ「Store as global
+							variable」）を選択</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial6.jpg">
+						</div>
+						<div>選択すると、下記のように「temp1」と出てきます。もし、temp2など数字が違っている場合、次の手順7.の注意事項欄を見てください。</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial6_2.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
+						<div class="general_box px-2 py-2">
+							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.ship._map).map(([, v])
+							=> {
+							return {'id': v._o.api_ship_id,
+							'lv': v._o.api_lv, 'locked': v._o.api_locked, 'st': v._o.api_kyouka , 'exp': v._o.api_exp} }).filter(v =>
+							v.locked), ['id', 'lv', 'st', 'exp']))
+						</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial7.jpg">
+						</div>
+						<div class="warning_box">
+							<div>注意事項</div>
+							<div class="mt-1">
+								手順6.「Store function as global variable」を選択した際に出てくる「<span class="text_warning">temp○○</span>」と、
+								上記JavaScript内の「<span class="text_warning">temp○○</span>」は一致させる必要があります。
+							</div>
+							<div>
+								手順通りやるとtemp1となりますが、手順6.で例えば「temp2」と出てきていたら、JavaScriptコードの「temp1」の部分を「temp2」と自分で書き換えて実行してください。
+							</div>
+							<div class="tutorial_img">
+								<img class="materialboxed" src="../img/tutorial/tutorial7_2.jpg">
+							</div>
+						</div>
+					</div>
+					<div class="general_box">
+						<div>8. 下記の艦娘反映エリアに、手順7.でコピーされた艦隊情報を貼り付けて「所持艦娘反映」を押下</div>
+						<div class="row mt-3 mb-0">
+							<div class="input-field col s12">
+								<textarea id="ship_json_input" class="materialize-textarea"></textarea>
+								<label for="ship_json_input">艦娘反映エリア</label>
+							</div>
+						</div>
+						<div id="btn_read_ship_container">
+							<button type="button" class="waves-effect waves-light btn-large blue darken-3"
+								id="btn_read_ship">所持艦娘反映</button>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="collapse show collapse_content" id="item_management">
-				<div class="border-top"></div>
-				<div class="my-2" id="item_list">
-
+				<div id="items_reader">
+					<div class="general_box">
+						<div>1. 手順1.～手順6.までは、「艦隊反映」と全く同じ手順です。手順6.まではそちらをご覧ください。</div>
+					</div>
+					<div class="general_box">
+						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
+						<div class="general_box px-2 py-2">
+							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.slot._map).map(([, v]) =>
+							{ return {'id':
+							v._o.api_slotitem_id, 'lv': v._o.api_level, 'locked': v._o.api_locked} }).filter(v => v.locked), ['id',
+							'lv']))
+						</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial7_i.jpg">
+						</div>
+						<div class="warning_box">
+							<div>注意事項</div>
+							<div class="mt-1">
+								手順6.「Store function as global variable」を選択した際に出てくる「<span class="text_warning">temp○○</span>」と、
+								上記JavaScript内の「<span class="text_warning">temp○○</span>」は一致させる必要があります。
+							</div>
+							<div>
+								手順通りやるとtemp1となりますが、手順6.で例えば「temp5」と出てきていたら、JavaScriptコードの「temp1」の部分を「temp5」と自分で書き換えて実行してください。
+							</div>
+							<div class="tutorial_img">
+								<img class="materialboxed" src="../img/tutorial/tutorial7_2i.jpg">
+							</div>
+						</div>
+					</div>
+					<div class="general_box">
+						<div>8. 下記の装備反映エリアに装備情報を貼り付けて「所持装備反映」を押下</div>
+						<div class="row mt-3 mb-0">
+							<div class="input-field col s12">
+								<textarea id="item_json_input" class="materialize-textarea"></textarea>
+								<label for="item_json_input">装備反映エリア</label>
+							</div>
+						</div>
+						<div id="btn_read_item_container">
+							<button type="button" class="waves-effect waves-light btn-large blue darken-3"
+								id="btn_read_item">所持装備反映</button>
+						</div>
+					</div>
+				</div>
+				<div id="items_content">
+					<div class="general_box">
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"><i class="fa-filter"></i>フィルター</div>
+								<div class="collapsible-body" id="items_filter">
+									<div class="border-top mb-4 ml-2 pl-1 pt-4">
+										<label class="filter_checkbox">
+											<input type="checkbox" id="no_item_invisible" />
+											<span>在庫がない装備を非表示にする</span>
+										</label>
+									</div>
+									<div class="row">
+										<div class="input-field col s12 l6" id="enabled_types_container">
+											<select class="icons" multiple id="enabled_types">
+												<option value="1" data-icon="../img/type/type1-alt.png">主砲</option>
+												<option value="4" data-icon="../img/type/type21-alt.png">副砲, 機銃</option>
+												<option value="5" data-icon="../img/type/type5-alt.png">魚雷</option>
+												<option value="6" data-icon="../img/type/type6-alt.png">艦戦</option>
+												<option value="7" data-icon="../img/type/type7-alt.png">攻撃機</option>
+												<option value="10" data-icon="../img/type/type10-alt.png">艦偵, 水上機</option>
+												<option value="12" data-icon="../img/type/type12-alt.png">電探</option>
+												<option value="14" data-icon="../img/type/type14-alt.png">ソナー, 爆雷</option>
+												<option value="24" data-icon="../img/type/type24-alt.png">輸送, 上陸用舟艇</option>
+												<option value="47" data-icon="../img/type/type47-alt.png">陸上機</option>
+												<option value="99" data-icon="../img/type/type17-alt.png">その他</option>
+											</select>
+											<label>表示カテゴリ（大分類）</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="remodel_min" type="number" max="10" min="0" value="0">
+														<label for="remodel_min">改修下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="remodel_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="remodel_max" type="number" max="10" min="0" value="10">
+														<label for="remodel_max">改修上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item_list"></div>
 				</div>
 			</div>
 		</div>
@@ -273,7 +402,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="waves-effect waves-light btn-small" id="btn_save_item">所持数更新</button>
-				<button type="button" class="waves-effect waves-light btn-small red" id="btn_reset_item_stock">リセット</button>
+				<button type="button" class="waves-effect waves-light btn-small red" id="btn_reset_item_stock">全て破棄</button>
 			</div>
 		</div>
 	</div>

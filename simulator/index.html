@@ -31,7 +31,7 @@
 	<script defer src="../js/chart.min.js"></script>
 	<script defer src="../js/chartjs-plugin-datalabels.min.js"></script>
 	<script defer src="../js/data.js"></script>
-	<script defer src="../js/simulator.min.js"></script>
+	<script defer src="../js/simulator.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
 	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
@@ -2150,114 +2150,8 @@
 				</div>
 			</div>
 			<div class="collapse collapse_content" id="stock_management_content">
-				<div class="border-top container-fluid">
-					<div class="row">
-						<div class="col-12 col-lg-6 pt-2 px-2" id="ship_stock">
-							<div class="h6 d-lg-none">所持艦娘設定</div>
-							<div class="d-flex mb-2">
-								<div class="input-group input-group-sm" id="ship_type_select_parent">
-									<div class="input-group-prepend">
-										<span class="input-group-text">艦種</span>
-									</div>
-									<select class="custom-select custom-select-sm" id="ship_stock_type_select"></select>
-								</div>
-								<div class="ml-2 input-group input-group-sm stock_word_parent">
-									<div class="input-group-prepend"><span class="input-group-text">検索</span></div>
-									<input type="text" class="form-control form-control-sm" id="ship_stock_word" maxlength="30">
-								</div>
-							</div>
-							<div class="custom_table" id="ship_stock_table">
-								<div class="d-flex scroll_thead">
-									<div class="stock_td_id align-self-center">No.</div>
-									<div class="stock_td_name flex-grow-1 align-self-center">艦娘名</div>
-									<div class="stock_td_fav align-self-center">お気に入り</div>
-									<div class="stock_td_stock align-self-center">所持数</div>
-								</div>
-								<div id="ship_stock_tbody"></div>
-							</div>
-							<div class="pt-2 border-top"></div>
-							<div class="d-flex">
-								<div class="ship_exp align-self-center d-none">
-									登録済み艦娘総経験値：
-								</div>
-								<div class="ship_exp align-self-center d-none" id="ship_sum_exp"></div>
-								<button type="button" class="ml-auto btn btn-sm btn-secondary text-nowrap" id="btn_fav_ship_clear">
-									<i class="fas fa-heart stock_fav mr-1"></i>全解除
-								</button>
-								<button type="button" class="ml-2 btn btn-sm btn-secondary text-nowrap" id="btn_ship_stock_all_clear">
-									全艦娘解体
-								</button>
-							</div>
-							<div class="my-2">
-								<div>
-									艦隊情報入力サイト
-									<a href="https://kancolle-fleetanalysis.firebaseapp.com/" target="_blank">艦隊分析</a>
-									様と同様の手順で艦娘を一括入力できます。同サイト様の「艦隊反映」の項をご覧ください。
-								</div>
-								<div class="d-flex">
-									<div class="form-group mr-1 flex-grow-1">
-										<textarea class="form-control form-control-sm font_size_12" id="input_ship_json"
-											placeholder="艦娘情報を入力"></textarea>
-									</div>
-									<div class="ml-auto">
-										<button type="button" class="ml-auto btn btn-sm btn-success text-nowrap" id="btn_load_ship_json"
-											disabled>反映</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-12 col-lg-6 pt-2 px-2" id="plane_stock">
-							<div class="h6 d-lg-none">所持装備設定</div>
-							<div class="d-flex mb-2">
-								<div class="input-group input-group-sm" id="plane_type_select_parent">
-									<div class="input-group-prepend">
-										<span class="input-group-text">種別</span>
-									</div>
-									<select class="custom-select custom-select-sm" id="stock_type_select"></select>
-								</div>
-								<div class="ml-2 input-group input-group-sm stock_word_parent">
-									<div class="input-group-prepend"><span class="input-group-text">検索</span></div>
-									<input type="text" class="form-control form-control-sm" id="stock_word" maxlength="30">
-								</div>
-							</div>
-							<div class="custom_table" id="plane_stock_table">
-								<div class="d-flex scroll_thead">
-									<div class="stock_td_type align-self-center">種別</div>
-									<div class="stock_td_name flex-grow-1 align-self-center">装備名</div>
-									<div class="stock_td_fav align-self-center">お気に入り</div>
-									<div class="stock_td_stock align-self-center">全体所持数</div>
-								</div>
-								<div id="plane_stock_tbody"></div>
-							</div>
-							<div class="pt-2 border-top"></div>
-							<div class="d-flex">
-								<button type="button" class="ml-auto btn btn-sm btn-secondary text-nowrap" id="btn_fav_clear">
-									<i class="fas fa-heart stock_fav mr-1"></i>全解除
-								</button>
-								<button type="button" class="ml-2 btn btn-sm btn-secondary text-nowrap" id="btn_stock_all_clear">
-									全装備破棄
-								</button>
-							</div>
-							<div class="my-2">
-								<div>
-									艦隊情報入力サイト
-									<a href="https://kancolle-fleetanalysis.firebaseapp.com/" target="_blank">艦隊分析</a>
-									様と同様の手順で装備を一括入力できます。同サイト様の「装備反映」の項をご覧ください。
-								</div>
-								<div class="d-flex">
-									<div class="form-group mr-1 flex-grow-1">
-										<textarea class="form-control form-control-sm font_size_12" id="input_equipment_json"
-											placeholder="装備情報を入力"></textarea>
-									</div>
-									<div class="ml-auto">
-										<button type="button" class="ml-auto btn btn-sm btn-success text-nowrap"
-											id="btn_load_equipment_json" disabled>反映</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				<div class="border-top mb-3"></div>
+				<a href="../manager/index.html">管理ページに移転しました。</a>
 			</div>
 		</div>
 

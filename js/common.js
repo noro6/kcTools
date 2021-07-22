@@ -534,21 +534,50 @@ function readShipJson(input) {
 		const shipStock = [];
 
 		for (const obj of jsonData) {
+			let id = 0;
+			const detail = { lv: 0, exp: 0, st: [], area: -1 };
+
 			// 艦娘データかチェック
-			if (!obj.hasOwnProperty('api_ship_id') || !obj.hasOwnProperty('api_exp')) return false;
-			const ship = SHIP_DATA.find(v => v.api === obj.api_ship_id);
-			// todo 経験値取得
-			const exp = obj.api_exp[0];
-			// マスタにあるデータなら追加
+			if (obj.hasOwnProperty('api_ship_id') && obj.hasOwnProperty('api_lv') && obj.hasOwnProperty('api_exp') && obj.hasOwnProperty('api_kyouka')) {
+				id = castInt(obj.api_ship_id);
+				detail.lv = castInt(obj.api_lv);
+				/** 経験値　[0]=累積, [1]=次のレベルまで, [2]=経験値バー割合 */
+				detail.exp = obj.api_exp;
+				/** 近代化改修状態　[0]=火力, [1]=雷装, [2]=対空, [3]=装甲, [4]=運, [5]=耐久, [6]=対潜 */
+				detail.st = obj.api_kyouka;
+			}
+			else if (obj.hasOwnProperty('id') && obj.hasOwnProperty('lv') && obj.hasOwnProperty('st') && obj.hasOwnProperty('exp')) {
+				id = castInt(obj.id);
+				detail.lv = castInt(obj.lv);
+				/** 経験値　[0]=累積, [1]=次のレベルまで, [2]=経験値バー割合 */
+				detail.exp = obj.exp[0];
+				/** 近代化改修状態　[0]=火力, [1]=雷装, [2]=対空, [3]=装甲, [4]=運, [5]=耐久, [6]=対潜 */
+				detail.st = obj.st;
+			}
+			else {
+				// データ形式があってない
+				return false;
+			}
+
+			// 札？
+			if (obj.hasOwnProperty('api_sally_area')) {
+				detail.area = obj.api_sally_area;
+			}
+			else if (obj.hasOwnProperty('area')) {
+				detail.area = obj.area;
+			}
+
+			const ship = SHIP_DATA.find(v => v.api === id);
+			// マスタにあるデータなら処理する
 			if (ship) {
 				const stock = shipStock.find(v => v.id === ship.id);
 				if (stock) {
 					// 既にデータある場合
-					stock.num.push(exp);
+					stock.details.push(detail);
 				}
 				else {
 					// 新しくデータ追加
-					shipStock.push({ id: ship.id, num: [exp] });
+					shipStock.push({ id: ship.id, details: [detail] });
 				}
 			}
 		}
@@ -578,7 +607,6 @@ function readKantaiBunsekiJson(input) {
 			// 艦娘データかチェック
 			if (!obj.hasOwnProperty('id') || !obj.hasOwnProperty('exp')) return false;
 			const ship = SHIP_DATA.find(v => v.api === obj.id);
-			// todo 経験値取得
 			const exp = obj.exp;
 			// マスタにあるデータなら追加
 			if (ship) {
@@ -620,13 +648,21 @@ function readEquipmentJson(input) {
 
 		for (const obj of jsonData) {
 			// 装備データかチェック
-			if (!obj.hasOwnProperty('api_slotitem_id')) return false;
-			if (!obj.hasOwnProperty('api_level')) return false;
-
-			const planeId = obj.api_slotitem_id;
-			const remodel = obj.api_level;
-			const stock = planeStock.find(v => v.id === planeId);
-			if (stock) stock.num[remodel]++;
+			if (obj.hasOwnProperty('api_slotitem_id') && obj.hasOwnProperty('api_level')) {
+				const planeId = obj.api_slotitem_id;
+				const remodel = obj.api_level;
+				const stock = planeStock.find(v => v.id === planeId);
+				if (stock) stock.num[remodel]++;
+			}
+			else if (obj.hasOwnProperty('id') && obj.hasOwnProperty('lv')) {
+				const planeId = obj.id;
+				const remodel = obj.lv;
+				const stock = planeStock.find(v => v.id === planeId);
+				if (stock) stock.num[remodel]++;
+			}
+			else {
+				return false;
+			}
 		}
 
 		planeStock.sort((a, b) => a.id - b.id);
@@ -690,7 +726,7 @@ function loadPlaneStock() {
 
 /**
  * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
- * @returns {[{id: number, num: number[]}]}
+ * @returns {[{id: number, details: {lv: number, exp: number, st: number[], area: number}[]}]}
  */
 function loadShipStock() {
 	let shipStock = loadLocalStorage('shipStock') || [];

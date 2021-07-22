@@ -5,6 +5,29 @@
    right: 0;
    z-index: 1090;
 }
+#custom_alert_wraper {
+   top: 90%;
+}
+.flex-wrap {
+   flex-wrap: wrap;
+}
+
+.alert-danger {
+   color: #721c24;
+   background-color: #f8d7da;
+   border-color: #f5c6cb;
+}
+.alert-warning {
+   color: #856404;
+   background-color: #fff3cd;
+   border-color: #ffeeba;
+}
+.alert-success {
+   color: #155724;
+   background-color: #d4edda;
+   border-color: #c3e6cb;
+}
+
 .d-flex {
    display: -ms-flexbox;
    display: flex;
@@ -32,6 +55,10 @@
    -ms-flex-item-align: center!important;
    align-self: center!important;
 }
+.align-items-center {
+   -ms-flex-align: center!important;
+   align-items: center!important;
+}
 .flex-grow-1 {
    -ms-flex-positive: 1;
    flex-grow: 1;
@@ -40,10 +67,16 @@
    -ms-flex-pack: justify;
    justify-content: space-between;
 }
+.justify-content-center {
+   -ms-flex-pack: justify;
+   justify-content: center;
+}
 .ml-auto,
 .mx-auto { margin-left: auto; }
 .mr-auto,
 .mx-auto { margin-right: auto; }
+.my-0,
+.mt-0 { margin-top: 0; }
 .my-1,
 .mt-1 { margin-top: 0.25rem; }
 .my-2,
@@ -52,6 +85,8 @@
 .mt-3 { margin-top: 1rem; }
 .my-4,
 .mt-4 { margin-top: 1.5rem; }
+.my-0,
+.mb-0 { margin-bottom: 0; }
 .my-1,
 .mb-1 { margin-bottom: 0.25rem; }
 .my-2,
@@ -60,6 +95,8 @@
 .mb-3 { margin-bottom: 1rem; }
 .my-4,
 .mb-4 { margin-bottom: 1.5rem; }
+.mx-0,
+.ml-0 { margin-left: 0; }
 .mx-1,
 .ml-1 { margin-left: 0.25rem; }
 .mx-2,
@@ -68,6 +105,8 @@
 .ml-3 { margin-left: 1rem; }
 .mx-4,
 .ml-4 { margin-left: 1.5rem; }
+.mx-0,
+.mr-0 { margin-right: 0; }
 .mx-1,
 .mr-1 { margin-right: 0.25rem; }
 .mx-2,
@@ -112,11 +151,100 @@
    border-top: 1px solid #dee2e6;
 }
 
+input[type="number"] {
+   text-align: right;
+}
+
 #main {
    margin-top: 0.5rem;
 }
 
-.dark-theme .input-field input {
+[type="checkbox"]+span:not(.lever),
+.dropdown-content li [type="checkbox"]+span:not(.lever) {
+   color: #555;
+}
+.dark-theme [type="checkbox"]+span:not(.lever),
+.dark-theme .dropdown-content li [type="checkbox"]+span:not(.lever) {
+   color: #ccc;
+}
+
+.dark-theme .dropdown-content {
+   background-color: #222;
+}
+.dark-theme .dropdown-content li label {
+   color: #ccc;
+}
+.dark-theme [type="checkbox"]+span:not(.lever):before,
+.dark-theme .dropdown-content li [type="checkbox"]+span:not(.lever):before {
+   border-color: #888;
+}
+.dark-theme [type="checkbox"]:checked+span:not(.lever),
+.dark-theme .dropdown-content li [type="checkbox"]:checked+span:not(.lever) {
+   color: #eee;
+}
+.dark-theme [type="checkbox"]:checked+span:not(.lever):before,
+.dark-theme .dropdown-content li [type="checkbox"]:checked+span:not(.lever):before {
+   border-top-color: transparent;
+   border-left-color: transparent;
+   border-bottom-color: #41ffec;
+   border-right-color: #41ffec;
+}
+.dark-theme .select-wrapper .caret {
+   fill: #ccc;
+}
+
+.collapsible-header,
+.collapsible-body,
+.tabs {
+  background-color: transparent;
+}
+.collapsible-body {
+   padding: 0rem 1rem 1rem 1rem;
+}
+
+.waves-effect.waves-blue .waves-ripple {
+   background-color: rgba(0, 140, 255, 0.7);
+}
+
+.tabs .tab a{
+   color:#555;
+   background-color: transparent!important;
+}
+.tabs .tab a:hover {
+   color:#000;
+   background-color: rgba(200, 200, 200, 0.05)!important;
+}
+.tabs .tab a.active {
+   background-color: rgba(200, 200, 200, 0.1)!important;
+   color:#333;
+}
+.tabs .indicator {
+   background-color:rgb(0, 140, 255);
+}
+
+.dark-theme .tabs .tab a {
+   color: #ccc;
+}
+.dark-theme .tabs .tab a:hover {
+   color: #fff;
+   background-color: rgba(255, 255, 255, 0.05)!important;
+}
+.dark-theme .tabs .tab a.active {
+   color: #eee;
+   background-color: rgba(255, 255, 255, 0.1)!important;
+}
+
+.collapsible,
+.collapsible-header,
+.collapsible-body {
+   border: none;
+}
+.collapsible-header i {
+   margin-right: 0.25rem;
+}
+
+.dark-theme .input-field input,
+.dark-theme textarea {
    color: #eee;
 }
 .dark-theme .input-field input:disabled+label {
@@ -127,7 +255,134 @@
    border-color: #9e9e9e;
 }
 
+/* ------------------------------
+   一覧反映手順
+-------------------------------- */
+#ships_reader .general_box,
+#items_reader .general_box {
+   max-width: 1200px;
+   margin: 1.5rem auto;
+   padding: 1rem 1rem;
+}
+#ship_json_input,
+#item_json_input {
+   max-height: 45px;
+}
+#btn_read_ship_container,
+#btn_read_item_container {
+   max-width: 200px;
+   margin: 0 auto;
+}
+.text_warning { color: rgb(255, 0, 0); }
+.dark-theme .text_warning { color: rgb(255, 255, 0); }
+.warning_box {
+   border-radius: 0.25rem;
+   border: 2px solid rgb(218, 183, 80);
+   padding: 0.5rem 1rem;
+}
+.dark-theme .warning_box {
+   border-color: rgb(196, 169, 87);
+}
+.tutorial_img {
+   max-width: 80%;
+   margin: 1.5rem auto;
+   text-align: center;
+}
+.tutorial_img img{
+   max-width: 100%;
+   height: auto;
+}
 
+
+/* ------------------------------
+   艦娘一覧
+-------------------------------- */
+#ship_list .general_box {
+   margin: 0.5rem;
+}
+.ship_type_header {
+   font-size: 1.3em;
+   border-bottom: 1px solid #64b4ff;
+   padding: 0.5rem;
+   margin-bottom: 1rem;
+}
+.ship_type_body {
+   display: flex;
+   flex-wrap: wrap;
+}
+.ship_container {
+   margin: 0.25rem 0.5rem;
+}
+.ship_container.no_ship img {
+   filter: grayscale(60%);
+}
+.version_container {
+   margin-bottom: 0.25rem;
+}
+.version_ship_name {
+   font-size: 1.2em;
+   align-self: center;
+}
+.version_ship_stock {
+   font-size: 0.9em;
+   margin-left: auto;
+   align-self: flex-end;
+}
+.version_header {
+   border-bottom: 1px solid #888;
+}
+.version_header .ship_img_div,
+.version_header img {
+   height: 60px;
+   width: 240px;
+}
+.detail_container {
+   display: flex;
+   justify-content: space-between;
+   padding: 0.1rem 0.25rem 0.1rem 0;
+   border-bottom: 1px solid #888;
+   cursor: pointer;
+   transition: 0.05s;
+}
+.detail_container.lv_max2 {
+   color: #000;
+   background-color: rgba(131, 220, 255, 0.753);
+}
+.detail_container.lv_100 {
+   color: #000;
+   background-color: rgba(255, 131, 131, 0.753);
+}
+.detail_container.lv_max {
+   color: #000;
+   background-color: rgba(131, 255, 131, 0.753);
+}
+.detail_container.no_ship {
+   color: #000;
+   padding: 0.1rem 0;
+   background-color: rgba(128, 128, 128, 0.5);
+}
+.detail_container.no_ship div { margin: 0 auto; }
+.detail_container:hover {
+   color: #000;
+   background-color: rgba(255, 242, 128, 0.753);
+}
+.detail_container div {
+   align-self: center;
+}
+.ship_lv {
+   font-size: 1.1em;
+   width: 42px;
+   text-align: right;
+}
+.sally_area,
+.sally_area img {
+   height: auto;
+   width: 47px;
+}
+
+/* ------------------------------
+  装備一覧
+-------------------------------- */
 #item_list {
    display: grid;
    grid-template-columns: 1fr 1fr;
