@@ -43,6 +43,23 @@ document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('btn_read_ship').addEventListener('click', btn_read_ship_Clicked);
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
 
+
+   //　艦娘関連
+   $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
+
+   $('#modal_ship_edit').on('change', '.version_radio', version_Changed);
+   $('#modal_ship_edit').on('blur', '#ship_level', function () { ship_input_Leaved($(this)); });
+   $('#modal_ship_edit').on('input', '#ship_level', function () { ship_input_Changed($(this)); });
+   $('#modal_ship_edit').on('blur', '#ship_luck', function () { ship_input_Leaved($(this)); });
+   $('#modal_ship_edit').on('input', '#ship_luck', function () { ship_input_Changed($(this)); });
+   $('#modal_ship_edit').on('input', '#ship_level_range', function () { ship_level_range_Changed($(this)); });
+   $('#modal_ship_edit').on('input', '#ship_luck_range', function () { ship_luck_range_Changed($(this)); });
+   $('#modal_ship_edit').on('click', '#btn_level_99', btn_level_99_Clicked);
+   $('#modal_ship_edit').on('click', '.selectable_area_banner', function () { area_banner_Clicked($(this)); });
+   $('#modal_ship_edit').on('click', '#btn_create_ship', btn_create_ship_Clicked);
+   $('#modal_ship_edit').on('click', '#btn_update_ship', btn_update_ship_Clicked);
+   $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
+
    // 装備関連
    $('#items_filter').on('input', 'input[type="number"]', setRemodelSlider);
    $('#items_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
@@ -93,7 +110,7 @@ function initShipList() {
          const versions = SHIP_DATA.filter(v => v.orig === ship.orig);
          if (!versions.length) break;
 
-         const shipContainer = createDiv('ship_container');
+         const shipContainer = createDiv('ship_container general_box');
          versions.sort((a, b) => b.ver - a.ver);
          let done = false;
          for (const ver of versions) {
@@ -123,15 +140,43 @@ function initShipList() {
                for (let i = 0; i < stock.details.length; i++) {
                   const detail = stock.details[i];
                   const detailContainer = createDiv('detail_container');
+                  detailContainer.dataset.shipId = ver.id;
+                  detailContainer.dataset.uniqueId = detail.id;
 
                   if (detail.lv === 175) detailContainer.classList.add('lv_max2');
                   else if (detail.lv > 99) detailContainer.classList.add('lv_100');
                   else if (detail.lv === 99) detailContainer.classList.add('lv_max');
 
+                  let asw = 0;
+                  if (detail.lv === 99 && ver.max_asw > 0) {
+                     // Lv99ステ
+                     asw = ver.max_asw;
+                  }
+                  else if (ver.max_asw > 0) {
+                     // Lv99以外 算出可能な場合
+                     asw = Math.floor((ver.max_asw - ver.asw) * (detail.lv / 99) + ver.asw);
+                  }
+                  else {
+                     // 算出不可
+                     asw = 0;
+                  }
+
                   detailContainer.innerHTML = `
-                  <div class="ship_lv">${detail.lv}</div>
-                  <div>HP ${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}</div>
-                  <div>運 ${ver.luck + detail.st[4]}</div>
+                  <div class="d-flex">
+                     <div class="ship_lv">${detail.lv}</div>
+                  </div>
+                  <div class="d-flex">
+                     <div class="detail_ship_label_img"><img src="../img/util/status_hp.png"></div>
+                     <div class="detail_ship_status">${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}</div>
+                  </div>
+                  <div class="d-flex">
+                     <div class="detail_ship_label_img"><img src="../img/util/status_asw.png"></div>
+                     <div class="detail_ship_status">${asw > 0 ? asw + detail.st[6] : '-'}</div>
+                  </div>
+                  <div class="d-flex">
+                     <div class="detail_ship_label_img"><img src="../img/util/status_luck.png"></div>
+                     <div class="detail_ship_status">${ver.luck + detail.st[4]}</div>
+                  </div>
                   ${detail.area < 1 ? '<div class="sally_area"></div>' : `<div class="sally_area"><img src="../img/util/area${detail.area}.png"></div>`}`;
                   verContainer.appendChild(detailContainer);
                }
@@ -141,6 +186,8 @@ function initShipList() {
             else if (!done) {
                // 完全に未所持
                const detailContainer = createDiv('detail_container no_ship');
+               detailContainer.dataset.shipId = ver.id;
+               detailContainer.dataset.uniqueId = -1;
                detailContainer.innerHTML = `<div>新規登録</div>`;
                shipContainer.classList.add('no_ship');
                verContainer.appendChild(detailContainer);
@@ -338,6 +385,333 @@ function filterItemList() {
       }
    }
 }
+
+/**
+ * 艦娘一覧内　クリック
+ * @param {*} $this
+ */
+function ship_detail_container_Clicked($this) {
+   const stocks = loadShipStock();
+   const shipId = castInt($this[0].dataset.shipId);
+   const uniqueId = castInt($this[0].dataset.uniqueId);
+   const raw = SHIP_DATA.find(v => v.id === shipId);
+   if (!raw) return;
+
+   const versions = SHIP_DATA.filter(v => v.orig === raw.orig).sort((a, b) => a.ver - b.ver);
+   // 改装段階リスト
+   const fragment = document.createDocumentFragment();
+
+   const ship_selector = createDiv('version_selector d-flex');
+
+   const img_container = createDiv('version_img_container');
+   const ship_img = document.createElement('img');
+   ship_img.src = `../img/ship/${shipId}.png`;
+   ship_img.alt = raw.name;
+   img_container.appendChild(ship_img)
+   ship_selector.appendChild(img_container);
+
+   const selectors_container = createDiv('align-self-center d-flex flex-wrap');
+   for (const ship of versions) {
+      const select_container = createDiv('')
+
+      const version_select = document.createElement('label');
+      version_select.className = 'ml-2';
+      version_select.dataset.shipId = ship.id;
+      version_select.innerHTML = `
+      <input class="with-gap version_radio" name="version" type="radio" ${(ship.id === shipId) ? 'checked' : ''} data-ship-id="${ship.id}"/>
+      <span>${ship.name}</span>`;
+
+      select_container.appendChild(version_select);
+      selectors_container.appendChild(select_container);
+   }
+   ship_selector.appendChild(selectors_container);
+
+   fragment.appendChild(ship_selector);
+
+   const list = document.getElementById('ship_version_list')
+   list.innerHTML = ''
+   list.appendChild(fragment);
+
+   document.getElementById('ship_luck_range').max = raw.max_luck;
+   document.getElementById('ship_luck').max = raw.max_luck;
+   document.getElementById('ship_luck_range').min = raw.luck;
+   document.getElementById('ship_luck').min = raw.luck;
+   document.getElementById('ship_remodel_hp').value = '';
+   document.getElementById('ship_remodel_asw').value = '';
+   $('.selectable_area_banner.selected').removeClass('selected');
+
+   if (uniqueId > 0) {
+      const stock = stocks.find(v => v.id === shipId && v.details.some(x => x.id === uniqueId));
+      if (stock) {
+         const detail = stock.details.find(v => v.id === uniqueId);
+         document.getElementById('ship_luck').value = raw.luck + detail.st[4];
+         document.getElementById('ship_luck_range').value = raw.luck + detail.st[4];
+         if (detail.st[5]) document.getElementById('ship_remodel_hp').value = detail.st[5];
+         if (detail.st[6]) document.getElementById('ship_remodel_asw').value = detail.st[6];
+
+         document.getElementById('modal_ship_edit').dataset.editShipId = uniqueId;
+
+         if ($(`.selectable_area_banner[data-area="${detail.area}"`).length) {
+            $(`.selectable_area_banner[data-area="${detail.area}"`).addClass('selected');
+         }
+
+         document.getElementById('btn_update_ship')['disabled'] = false;
+         document.getElementById('btn_delete_ship')['disabled'] = false;
+      }
+   }
+   else {
+      document.getElementById('ship_luck').value = raw.luck;
+      document.getElementById('ship_luck_range').value = raw.luck;
+
+      document.getElementById('btn_update_ship')['disabled'] = true;
+      document.getElementById('btn_delete_ship')['disabled'] = true;
+   }
+
+   $('#modal_ship_edit').modal('open');
+}
+
+/**
+ * 艦娘入力欄 改装状態変更
+ */
+function version_Changed() {
+   const shipId = castInt($('#modal_ship_edit').find('.version_radio:checked')[0].dataset.shipId);
+   const ship = SHIP_DATA.find(v => v.id === shipId);
+   if (ship) {
+      $('.version_img_container').find('img').attr('src', `../img/ship/${ship.id}.png`);
+      $('.version_img_container').find('img').attr('alt', ship.name);
+   }
+}
+
+
+/**
+ * 艦娘練度 フォーカスアウト
+ * @param {*} $this
+ */
+function ship_input_Leaved($this) {
+   const max = castInt($this.attr('max'));
+   const min = castInt($this.attr('min'));
+   let input = castInt($this.val());
+
+   if (input < min) {
+      input = min;
+      $this.val(min);
+      $this.next().addClass('active');
+   }
+   else if (input >= max) {
+      input = max;
+      $this.val(max);
+   }
+   document.getElementById($this.attr('id') + '_range').value = input;
+}
+
+/**
+ * 艦娘練度 入力欄入力時
+ * @param {*} $this
+ */
+function ship_input_Changed($this) {
+   const max = castInt($this.attr('max'));
+   const min = castInt($this.attr('min'));
+   let input = castInt($this.val());
+
+   if (input < min) {
+      input = min;
+      $this.val('');
+   }
+   else if (input >= max) {
+      input = max;
+      $this.val(max);
+   }
+   document.getElementById($this.attr('id') + '_range').value = input;
+}
+
+/**
+ * 99レベルにするだけ
+ */
+function btn_level_99_Clicked() {
+   document.getElementById('ship_level').value = 99;
+   document.getElementById('ship_level_range').value = 99;
+}
+
+/**
+ * 艦娘練度バー 入力欄入力時
+ * @param {*} $this
+ */
+function ship_level_range_Changed($this) {
+   document.getElementById('ship_level').value = castInt($this.val());
+}
+
+/**
+ * 艦娘運バー 入力欄入力時
+ * @param {*} $this
+ */
+function ship_luck_range_Changed($this) {
+   document.getElementById('ship_luck').value = castInt($this.val());
+}
+
+/**
+ * 艦娘 お札クリック
+ * @param {*} $this
+ */
+function area_banner_Clicked($this) {
+   if ($this.hasClass('selected')) {
+      $this.removeClass('selected');
+   }
+   else {
+      $('.selectable_area_banner').removeClass('selected');
+      $this.addClass('selected');
+   }
+}
+
+/**
+ * 艦娘 着任クリック
+ */
+function btn_create_ship_Clicked() {
+   const shipId = castInt($('#modal_ship_edit').find('.version_radio:checked')[0].dataset.shipId);
+   const raw = SHIP_DATA.find(v => v.id === shipId);
+   const lv = castInt(document.getElementById('ship_level').value);
+   const exp = LEVEL_BORDERS.find(v => v.lv === lv).req;
+   const luck = castInt(document.getElementById('ship_luck').value) - raw.luck;
+   const hp = castInt(document.getElementById('ship_remodel_hp').value);
+   const asw = castInt(document.getElementById('ship_remodel_asw').value);
+   const selectedArea = $('.selectable_area_banner.selected');
+   const area = selectedArea.length ? castInt(selectedArea[0].dataset.area) : -1;
+
+   const stockShips = loadShipStock();
+
+   // 新しいid(最大値+1)
+   const newUniqueId = stockShips.reduce((acc, v) => {
+      for (const detail of v.details) {
+         if (acc <= detail.id) acc = detail.id + 1;
+      }
+      return acc;
+   }, 0);
+
+   const newStock = stockShips.find(v => v.id === shipId);
+   const newDetail = { id: newUniqueId, lv: lv, exp: exp, st: [0, 0, 0, 0, luck, hp, asw], area: area };
+
+   if (newStock) {
+      newStock.details.push(newDetail);
+   }
+   else {
+      stockShips.push({ id: shipId, details: [newDetail] });
+   }
+
+   document.getElementById('modal_ship_edit').dataset.editShipId = newUniqueId;
+   document.getElementById('btn_update_ship')['disabled'] = false;
+   document.getElementById('btn_delete_ship')['disabled'] = false;
+
+   saveLocalStorage('shipStock', stockShips);
+   inform_success(raw.name + 'が着任しました。');
+   initShipList();
+}
+
+/**
+ * 艦娘 更新クリック
+ */
+function btn_update_ship_Clicked() {
+   const shipId = castInt($('#modal_ship_edit').find('.version_radio:checked')[0].dataset.shipId);
+   const uniqueId = castInt(document.getElementById('modal_ship_edit').dataset.editShipId);
+
+   const newRaw = SHIP_DATA.find(v => v.id === shipId);
+   const lv = castInt(document.getElementById('ship_level').value);
+   const exp = LEVEL_BORDERS.find(v => v.lv === lv).req;
+   const luck = castInt(document.getElementById('ship_luck').value) - newRaw.luck;
+   const hp = castInt(document.getElementById('ship_remodel_hp').value);
+   const asw = castInt(document.getElementById('ship_remodel_asw').value);
+   const selectedArea = $('.selectable_area_banner.selected');
+   const area = selectedArea.length ? castInt(selectedArea[0].dataset.area) : -1;
+
+   if (uniqueId > 0) {
+      let stockShips = loadShipStock();
+      const oldStockIndex = stockShips.findIndex(v => v.details.some(x => x.id === uniqueId));
+      if (oldStockIndex >= 0) {
+         const oldStock = stockShips[oldStockIndex];
+         if (oldStock.id !== shipId) {
+            // 改装状態が変わったため削除
+            oldStock.details = oldStock.details.filter(v => v.id !== uniqueId);
+
+            // 明細がまだあるか？
+            if (oldStock.details.length) {
+               stockShips[oldStockIndex] = oldStock;
+            }
+            else {
+               // 全明細が消えたのでヘッダーも消す
+               stockShips = stockShips.filter(v => v.id !== oldStock.id);
+            }
+
+            // 新しいid(最大値+1)
+            const newUniqueId = stockShips.reduce((acc, v) => {
+               for (const detail of v.details) {
+                  if (acc <= detail.id) acc = detail.id + 1;
+               }
+               return acc;
+            }, 0);
+
+            // 新しい方のヘッダーがあるかチェック
+            const newStock = stockShips.find(v => v.id === shipId);
+            const newDetail = { id: newUniqueId, lv: lv, exp: exp, st: [0, 0, 0, 0, luck, hp, asw], area: area };
+            if (newStock) {
+               newStock.details.push(newDetail);
+            }
+            else {
+               stockShips.push({ id: shipId, details: [newDetail] });
+            }
+         }
+         else {
+            //　改装状態据え置き ステータスの更新のみ
+            const oldDetail = oldStock.details.find(v => v.id === uniqueId);
+            if (oldDetail.lv !== lv) {
+               oldDetail.lv = lv;
+               oldDetail.exp = exp;
+            }
+            oldDetail.st[4] = luck;
+            oldDetail.st[5] = hp;
+            oldDetail.st[6] = asw;
+            oldDetail.area = area;
+         }
+      }
+
+      saveLocalStorage('shipStock', stockShips);
+      inform_success('更新されました。');
+      // 再描画
+      initShipList();
+   }
+}
+
+/**
+ * 艦娘 除籍クリック
+ */
+function btn_delete_ship_Clicked() {
+   const uniqueId = castInt(document.getElementById('modal_ship_edit').dataset.editShipId);
+
+   if (uniqueId > 0) {
+      let stockShips = loadShipStock();
+      const stockIndex = stockShips.findIndex(v => v.details.some(x => x.id === uniqueId));
+      if (stockIndex >= 0) {
+         const stock = stockShips[stockIndex];
+         // 削除
+         stock.details = stock.details.filter(v => v.id !== uniqueId);
+         if (stock.details.length) {
+            stockShips[stockIndex] = stock;
+         }
+         else {
+            // 明細が全部消えたならヘッダも消す
+            stockShips = stockShips.filter(v => v.id !== stock.id);
+         }
+
+         saveLocalStorage('shipStock', stockShips);
+         inform_success('除籍されました。');
+         // 再描画
+         initShipList();
+      }
+      else {
+         inform_success('除籍に失敗しました。既に除籍されています。');
+      }
+   }
+   $('#modal_ship_edit').modal('close');
+}
+
+
 
 /**
  * 装備一覧内　装備クリック

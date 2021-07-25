@@ -328,26 +328,10 @@ function adaptUpdater() {
 			setting.visibleAntiAirStatus = true;
 		}
 
-		if (major <= 11 || minor < 3 || (minor === 3 && patch < 5)) {
-			// 所持艦娘情報変更
-			let shipStock = loadShipStock();
-
-			// 所持数データ num を経験値の配列として変換　Lvは99で初期
-			for (const stockData of shipStock) {
-				if (typeof stockData.num === 'number') {
-					const array = [];
-					for (let i = 0; i < stockData.num; i++) {
-						array.push(1000000);
-					}
-					stockData.num = array;
-					delete stockData.deck;
-				}
-			}
-
-			// 未所持艦娘の情報は保存しない
-			shipStock = shipStock.filter(v => v.num.length > 0);
-
-			saveLocalStorage('shipStock', shipStock);
+		// ～　v1.12.9
+		if (major <= 11 || minor < 9) {
+			// 所持艦娘情報破棄
+			deleteLocalStorage('shipStock');
 		}
 	}
 
@@ -533,16 +517,17 @@ function readShipJson(input) {
 		const jsonData = JSON.parse(input);
 		const shipStock = [];
 
+		let uniqueId = 1;
 		for (const obj of jsonData) {
 			let id = 0;
-			const detail = { lv: 0, exp: 0, st: [], area: -1 };
+			const detail = { id: uniqueId++, lv: 0, exp: 0, st: [], area: -1 };
 
 			// 艦娘データかチェック
 			if (obj.hasOwnProperty('api_ship_id') && obj.hasOwnProperty('api_lv') && obj.hasOwnProperty('api_exp') && obj.hasOwnProperty('api_kyouka')) {
 				id = castInt(obj.api_ship_id);
 				detail.lv = castInt(obj.api_lv);
 				/** 経験値　[0]=累積, [1]=次のレベルまで, [2]=経験値バー割合 */
-				detail.exp = obj.api_exp;
+				detail.exp = obj.api_exp[0];
 				/** 近代化改修状態　[0]=火力, [1]=雷装, [2]=対空, [3]=装甲, [4]=運, [5]=耐久, [6]=対潜 */
 				detail.st = obj.api_kyouka;
 			}
@@ -559,7 +544,7 @@ function readShipJson(input) {
 				return false;
 			}
 
-			// 札？
+			// 札
 			if (obj.hasOwnProperty('api_sally_area')) {
 				detail.area = obj.api_sally_area;
 			}
@@ -726,7 +711,7 @@ function loadPlaneStock() {
 
 /**
  * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
- * @returns {[{id: number, details: {lv: number, exp: number, st: number[], area: number}[]}]}
+ * @returns {[{id: number, details: {id: number, lv: number, exp: number, st: number[], area: number}[]}]}
  */
 function loadShipStock() {
 	let shipStock = loadLocalStorage('shipStock') || [];

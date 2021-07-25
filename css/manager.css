@@ -8,6 +8,13 @@
 #custom_alert_wraper {
    top: 90%;
 }
+.modal { max-height: 90%; }
+.dark-theme .modal { background-color: rgb(45, 45, 52); }
+.dark-theme .btn-small:disabled,
+.dark-theme .btn-small[disabled]{
+   background-color: rgb(103, 103, 119)!important;
+}
+
 .flex-wrap {
    flex-wrap: wrap;
 }
@@ -159,13 +166,18 @@ input[type="number"] {
    margin-top: 0.5rem;
 }
 
+[type="radio"]+span:not(.lever),
 [type="checkbox"]+span:not(.lever),
 .dropdown-content li [type="checkbox"]+span:not(.lever) {
    color: #555;
 }
+.dark-theme [type="radio"]+span:not(.lever),
 .dark-theme [type="checkbox"]+span:not(.lever),
 .dark-theme .dropdown-content li [type="checkbox"]+span:not(.lever) {
    color: #ccc;
+}
+.dark-theme input[type="range"] {
+   border-color: rgb(45, 45, 52);
 }
 
 .dark-theme .dropdown-content {
@@ -178,6 +190,7 @@ input[type="number"] {
 .dark-theme .dropdown-content li [type="checkbox"]+span:not(.lever):before {
    border-color: #888;
 }
+.dark-theme [type="radio"]:checked+span:not(.lever),
 .dark-theme [type="checkbox"]:checked+span:not(.lever),
 .dark-theme .dropdown-content li [type="checkbox"]:checked+span:not(.lever) {
    color: #eee;
@@ -297,7 +310,7 @@ input[type="number"] {
 /* ------------------------------
    艦娘一覧
 -------------------------------- */
-#ship_list .general_box {
+#ship_list > .general_box {
    margin: 0.5rem;
 }
 .ship_type_header {
@@ -311,7 +324,8 @@ input[type="number"] {
    flex-wrap: wrap;
 }
 .ship_container {
-   margin: 0.25rem 0.5rem;
+   margin: 0.25rem;
+   padding: 0.25rem 0.5rem 0 0.5rem;
 }
 .ship_container.no_ship img {
    filter: grayscale(60%);
@@ -361,6 +375,10 @@ input[type="number"] {
    padding: 0.1rem 0;
    background-color: rgba(128, 128, 128, 0.5);
 }
+.dark-theme .detail_container.no_ship {
+   color: #fff;
+   padding: 0.1rem 0;
+}
 .detail_container.no_ship div { margin: 0 auto; }
 .detail_container:hover {
    color: #000;
@@ -369,15 +387,48 @@ input[type="number"] {
 .detail_container div {
    align-self: center;
 }
+.detail_ship_label_img,
+.detail_ship_label_img img {
+   height: 16px;
+   width: auto;
+}
 .ship_lv {
    font-size: 1.1em;
-   width: 42px;
+   width: 32px;
    text-align: right;
+}
+.detail_ship_status {
+   margin-left: 0.25rem;
 }
 .sally_area,
 .sally_area img {
    height: auto;
-   width: 47px;
+   width: 32px;
+}
+
+#modal_ship_edit {
+   max-width: 600px;
+}
+#ship_status_inputs .input-field {
+   margin-top: 0px;
+   margin-bottom: 0px;
+}
+.version_img_container,
+.version_img_container img {
+   width: 200px;
+   height: 50px;
+}
+
+.selectable_area_banner {
+   cursor: pointer;
+   opacity: 0.3;
+   transition: 0.1s;
+}
+.selectable_area_banner:hover {
+   opacity: 0.6;
+}
+.selectable_area_banner.selected {
+   opacity: 1;
 }
 
 /* ------------------------------

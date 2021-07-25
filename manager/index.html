@@ -136,11 +136,9 @@
 					<div class="general_box">
 						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
 						<div class="general_box px-2 py-2">
-							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.ship._map).map(([, v])
-							=> {
-							return {'id': v._o.api_ship_id,
-							'lv': v._o.api_lv, 'locked': v._o.api_locked, 'st': v._o.api_kyouka , 'exp': v._o.api_exp} }).filter(v =>
-							v.locked), ['id', 'lv', 'st', 'exp']))
+							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.ship._map).map(([,v])
+							=> {return {'id': v._o.api_ship_id,'lv': v._o.api_lv, 'locked': v._o.api_locked, 'st': v._o.api_kyouka ,
+							'exp': v._o.api_exp}}).filter(v => v.locked), ['id', 'lv', 'st', 'exp']))
 						</div>
 						<div class="tutorial_img">
 							<img class="materialboxed" src="../img/tutorial/tutorial7.jpg">
@@ -180,10 +178,9 @@
 					<div class="general_box">
 						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
 						<div class="general_box px-2 py-2">
-							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.slot._map).map(([, v]) =>
-							{ return {'id':
-							v._o.api_slotitem_id, 'lv': v._o.api_level, 'locked': v._o.api_locked} }).filter(v => v.locked), ['id',
-							'lv']))
+							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.slot._map).map(([,v]) =>
+							{ return {'id':　v._o.api_slotitem_id, 'lv': v._o.api_level, 'locked': v._o.api_locked} }).filter(v =>
+							v.locked), ['id','lv']))
 						</div>
 						<div class="tutorial_img">
 							<img class="materialboxed" src="../img/tutorial/tutorial7_i.jpg">
@@ -276,6 +273,70 @@
 
 		<div class="border-top mx-auto mt-4 pt-3 font_size_12">
 			著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。
+		</div>
+
+		<div class="modal" id="modal_ship_edit">
+			<div class="modal-content">
+				<div class="pb-1">改装状態</div>
+				<div class="px-1" id="ship_version_list">
+				</div>
+				<div class="mt-3 border-top" id="ship_status_inputs">
+					<div class="pt-2">艦娘ステータス</div>
+					<div class="mt-4 px-2 d-flex justify-content-between">
+						<div class="align-self-center">
+							<div class="input-field">
+								<input id="ship_level" type="number" min="1" max="175" value="99">
+								<label for="ship_level">練度(Lv)</label>
+							</div>
+						</div>
+						<div class="mx-3 align-self-center flex-grow-1">
+							<div class="range-field"><input type="range" id="ship_level_range" min="1" max="175" value="99" /></div>
+						</div>
+						<div class="align-self-center">
+							<button type="button" class="waves-effect waves-light btn-small" id="btn_level_99">Lv.99</button>
+						</div>
+					</div>
+					<div class="mt-4 mb-0 row">
+						<div class="input-field col s6">
+							<input id="ship_remodel_hp" type="number" min="0" max="2">
+							<label for="ship_remodel_hp">耐久改修</label>
+						</div>
+						<div class="input-field col s6">
+							<input id="ship_remodel_asw" type="number" min="0" max="9">
+							<label for="ship_remodel_asw">対潜改修</label>
+						</div>
+					</div>
+					<div class="mt-4 px-2 d-flex justify-content-between">
+						<div class="align-self-center">
+							<div class="input-field">
+								<input id="ship_luck" type="number" min="1" max="999" value="0">
+								<label for="ship_luck">運</label>
+							</div>
+						</div>
+						<div class="ml-3 align-self-center flex-grow-1">
+							<div class="range-field">
+								<input type="range" id="ship_luck_range" min="1" max="999" value="0" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="border-top mt-3">
+					<div class="py-3">出撃海域</div>
+					<div class="px-3 d-flex flex-wrap justify-content-between">
+						<div class="selectable_area_banner" data-area="1"><img src="../img/util/area1.png"></div>
+						<div class="selectable_area_banner" data-area="2"><img src="../img/util/area2.png"></div>
+						<div class="selectable_area_banner" data-area="3"><img src="../img/util/area3.png"></div>
+						<div class="selectable_area_banner" data-area="4"><img src="../img/util/area4.png"></div>
+						<div class="selectable_area_banner" data-area="5"><img src="../img/util/area5.png"></div>
+						<div class="selectable_area_banner" data-area="6"><img src="../img/util/area6.png"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="waves-effect waves-light btn-small" id="btn_create_ship">着任</button>
+				<button type="button" class="waves-effect waves-light btn-small blue" id="btn_update_ship">更新</button>
+				<button type="button" class="waves-effect waves-light btn-small red" id="btn_delete_ship">除籍</button>
+			</div>
 		</div>
 
 		<div class="modal" id="modal_item_edit">
