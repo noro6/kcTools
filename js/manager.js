@@ -15,24 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
    // 画像
    $('.materialboxed').materialbox();
 
-   const slider = document.getElementById('remodel_range');
-   noUiSlider.create(slider, {
-      start: [0, 10],
-      connect: true,
-      step: 1,
-      orientation: 'horizontal',
-      range: { 'min': 0, 'max': 10 },
-      format: {
-         to: (value) => castInt(value),
-         from: (value) => castInt(value)
-      }
-   });
-   slider.noUiSlider.on('update.one', (value) => {
-      document.getElementById('remodel_min').value = value[0];
-      document.getElementById('remodel_max').value = value[1];
-   });
-   slider.noUiSlider.on('change.one', initItemList);
-
    document.getElementById('fleet_tab_container').classList.add('d-none');
    document.getElementById('fleet_tab_container').classList.remove('d-flex');
    // トップページへ
@@ -43,8 +25,29 @@ document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('btn_read_ship').addEventListener('click', btn_read_ship_Clicked);
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
 
-
    //　艦娘関連
+   const levelSlider = document.getElementById('level_range');
+   noUiSlider.create(levelSlider, {
+      start: [1, 175],
+      connect: true,
+      step: 1,
+      orientation: 'horizontal',
+      range: { 'min': 1, 'max': 175 },
+      format: {
+         to: (value) => castInt(value),
+         from: (value) => castInt(value)
+      }
+   });
+   levelSlider.noUiSlider.on('slide.one', (value) => {
+      document.getElementById('level_min').value = value[0];
+      document.getElementById('level_max').value = value[1];
+   });
+   levelSlider.noUiSlider.on('change.one', filterShipList);
+   $('#ships_filter').on('input', 'input[type="number"]', setLevelSlider);
+   $('#ships_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
+   $('#ships_filter').on('change', '#enabled_ship_types', filterShipList);
+   $('#ships_filter').on('change', '#no_ship_invisible', filterShipList);
+
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
 
    $('#modal_ship_edit').on('change', '.version_radio', version_Changed);
@@ -61,10 +64,27 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
 
    // 装備関連
+   const slider = document.getElementById('remodel_range');
+   noUiSlider.create(slider, {
+      start: [0, 10],
+      connect: true,
+      step: 1,
+      orientation: 'horizontal',
+      range: { 'min': 0, 'max': 10 },
+      format: {
+         to: (value) => castInt(value),
+         from: (value) => castInt(value)
+      }
+   });
+   slider.noUiSlider.on('slide.one', (value) => {
+      document.getElementById('remodel_min').value = value[0];
+      document.getElementById('remodel_max').value = value[1];
+   });
+   slider.noUiSlider.on('change.one', filterItemList);
    $('#items_filter').on('input', 'input[type="number"]', setRemodelSlider);
    $('#items_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
    $('#items_filter').on('change', '#enabled_types_container', filterItemList);
-   $('#items_filter').on('change', '#no_item_invisible', initItemList);
+   $('#items_filter').on('change', '#no_item_invisible', filterItemList);
 
    $('#item_list').on('click', '.item_container', function () { item_container_Clicked($(this)); });
 
@@ -84,19 +104,12 @@ document.addEventListener('DOMContentLoaded', function () {
 function initShipList() {
    // 所持装備
    const stockShips = loadShipStock();
-
-   // 表示条件
-   // const noItemInvisible = document.getElementById('no_item_invisible')['checked'];
-   // const remodelMin = castInt(document.getElementById('remodel_min').value);
-   // const remodelMax = castInt(document.getElementById('remodel_max').value);
-   // const visibleTypes = $('#enabled_types').formSelect('getSelectedValues').map(v => castInt(v));
-
    //　もう表示した艦娘
    const doneShipId = [];
 
    const fragment = document.createDocumentFragment();
    for (const ctype of API_CTYPE) {
-      const container = createDiv('my-3 px-2 py-2 general_box');
+      const container = createDiv('my-3 px-2 py-2 general_box ship_type_container');
 
       const header = createDiv('ship_type_header');
       header.textContent = ctype.name;
@@ -123,6 +136,7 @@ function initShipList() {
             doneShipId.push(ver.api);
 
             const verContainer = createDiv('version_container');
+            verContainer.dataset.shipType = ver.type;
             const verHeader = createDiv('version_header');
             verHeader.innerHTML = `
             <div class="d-flex">
@@ -163,21 +177,21 @@ function initShipList() {
 
                   detailContainer.innerHTML = `
                   <div class="d-flex">
-                     <div class="ship_lv">${detail.lv}</div>
+                     <div class="ship_lv" data-level="${detail.lv}">${detail.lv}</div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_hp.png"></div>
-                     <div class="detail_ship_status">${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}</div>
+                     <div class="detail_ship_status remodel_hp" data-remodel-hp="${detail.st[5]}">${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}</div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_asw.png"></div>
-                     <div class="detail_ship_status">${asw > 0 ? asw + detail.st[6] : '-'}</div>
+                     <div class="detail_ship_status remodel_asw" data-remodel-asw="${detail.st[6]}">${asw > 0 ? asw + detail.st[6] : '-'}</div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_luck.png"></div>
-                     <div class="detail_ship_status">${ver.luck + detail.st[4]}</div>
+                     <div class="detail_ship_status remodel_luck" data-remodel-luck="${detail.st[4]}">${ver.luck + detail.st[4]}</div>
                   </div>
-                  ${detail.area < 1 ? '<div class="sally_area"></div>' : `<div class="sally_area"><img src="../img/util/area${detail.area}.png"></div>`}`;
+                  ${detail.area < 1 ? '<div class="sally_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}.png"></div>`}`;
                   verContainer.appendChild(detailContainer);
                }
                done = true;
@@ -212,6 +226,93 @@ function initShipList() {
 
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').appendChild(fragment);
+
+   filterShipList();
+}
+
+/**
+ * 艦娘フィルターによる表示物変更
+ */
+function filterShipList() {
+   // 表示条件
+   const noShipInvisible = document.getElementById('no_ship_invisible')['checked'];
+   const levelMin = castInt(document.getElementById('level_min').value);
+   const levelMax = castInt(document.getElementById('level_max').value);
+   const visibleTypes = $('#enabled_ship_types').formSelect('getSelectedValues').map(v => castInt(v));
+
+   const containers = document.getElementsByClassName('ship_type_container');
+   for (const container of containers) {
+      for (const origParent of container.getElementsByClassName('ship_container')) {
+         for (const verParent of container.getElementsByClassName('version_container')) {
+            if (visibleTypes.length && !visibleTypes.includes(castInt(verParent.dataset.shipType))) {
+               verParent.classList.add('d-none');
+               continue;
+            }
+            else {
+               verParent.classList.remove('d-none');
+            }
+
+            for (const detail of verParent.getElementsByClassName('detail_container')) {
+               if (noShipInvisible && detail.classList.contains('no_ship')) {
+                  detail.classList.add('d-none');
+                  continue;
+               }
+               else if (detail.classList.contains('no_ship')) {
+                  detail.classList.remove('d-none');
+                  continue;
+               }
+
+               const lv = castInt(detail.getElementsByClassName('ship_lv')[0].dataset.level);
+               const remodelLuck = castInt(detail.getElementsByClassName('remodel_luck')[0].dataset.remodelLuck);
+               const remodelHp = castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.remodelHp);
+               const remodelAsw = castInt(detail.getElementsByClassName('remodel_asw')[0].dataset.remodelAsw);
+
+               if (lv < levelMin || lv > levelMax) {
+                  detail.classList.add('d-none');
+               }
+               else {
+                  detail.classList.remove('d-none');
+               }
+            }
+            if ($(verParent).find('.detail_container:not(.d-none)').length) {
+               // 子に非表示でない者が1件でもあれば表示
+               verParent.classList.remove('d-none');
+            }
+            else {
+               // 子がないので非表示
+               verParent.classList.add('d-none');
+            }
+         }
+
+         if ($(origParent).find('.version_container:not(.d-none)').length) {
+            // 子に非表示でない者が1件でもあれば表示
+            origParent.classList.remove('d-none');
+         }
+         else {
+            // 子がないので非表示
+            origParent.classList.add('d-none');
+         }
+      }
+
+      if ($(container).find('.ship_container:not(.d-none)').length) {
+         // 子に非表示でない者が1件でもあれば表示
+         container.classList.remove('d-none');
+      }
+      else {
+         // 子がないので非表示
+         container.classList.add('d-none');
+      }
+   }
+}
+
+/**
+ * 表示Lv直接入力
+ */
+function setLevelSlider() {
+   const min = castInt(document.getElementById('level_min').value);
+   const max = castInt(document.getElementById('level_max').value);
+   document.getElementById('level_range').noUiSlider.set([min, min > max ? min : max]);
+   filterShipList();
 }
 
 /**
@@ -288,17 +389,8 @@ function initItemList() {
    // 所持装備
    const stockItems = loadPlaneStock();
 
-   // 表示条件
-   const noItemInvisible = document.getElementById('no_item_invisible')['checked'];
-   const remodelMin = castInt(document.getElementById('remodel_min').value);
-   const remodelMax = castInt(document.getElementById('remodel_max').value);
-   const visibleTypes = $('#enabled_types').formSelect('getSelectedValues').map(v => castInt(v));
-
    const fragment = document.createDocumentFragment();
    for (const type of ITEM_TYPES_LIST) {
-      if (visibleTypes.length && !visibleTypes.includes(type.type2)) {
-         continue;
-      }
       const container = createDiv('type_content general_box');
       container.dataset.type2Id = type.type2;
 
@@ -327,7 +419,7 @@ function initItemList() {
          const stock = stockItems.find(v => v.id === item.id);
          // 明細行(改修値とともに)
          if (stock && stock.num.some(v => v > 0)) {
-            for (let remodel = remodelMax; remodel >= remodelMin; remodel--) {
+            for (let remodel = 10; remodel >= 0; remodel--) {
                const count = stock.num[remodel];
                if (count) {
                   sumCount += count;
@@ -336,6 +428,7 @@ function initItemList() {
 
                   const remodel_div = createDiv('text_remodel item_remodel');
                   remodel_div.textContent = '★+' + remodel;
+                  remodel_div.dataset.remodel = remodel;
                   item_detail.appendChild(remodel_div);
 
                   const count_div = createDiv('text_count');
@@ -357,9 +450,7 @@ function initItemList() {
 
          item_container.prepend(item_header);
 
-         if (sumCount || !noItemInvisible) {
-            container.appendChild(item_container);
-         }
+         container.appendChild(item_container);
       }
 
       fragment.appendChild(container);
@@ -367,21 +458,61 @@ function initItemList() {
 
    document.getElementById('item_list').innerHTML = '';
    document.getElementById('item_list').appendChild(fragment);
+
+   filterItemList();
 }
 
 /**
- * 装備種別で表示装備をフィルタリング
+ * 艦娘フィルターによる表示物変更
  */
 function filterItemList() {
+   // 表示条件
+   const noItemInvisible = document.getElementById('no_item_invisible')['checked'];
+   const remodelMin = castInt(document.getElementById('remodel_min').value);
+   const remodelMax = castInt(document.getElementById('remodel_max').value);
    const visibleTypes = $('#enabled_types').formSelect('getSelectedValues').map(v => castInt(v));
-   const containers = document.getElementsByClassName('type_content');
 
+   const containers = document.getElementsByClassName('type_content');
    for (const container of containers) {
       if (visibleTypes.length && !visibleTypes.includes(castInt(container.dataset.type2Id))) {
          container.classList.add('d-none');
+         continue;
       }
       else {
          container.classList.remove('d-none');
+      }
+
+      for (const itemContainer of container.getElementsByClassName('item_container')) {
+         if (noItemInvisible && itemContainer.classList.contains('no_item')) {
+            itemContainer.classList.add('d-none');
+            continue;
+         }
+         for (const detail of itemContainer.getElementsByClassName('item_detail')) {
+            const remodel = castInt(detail.getElementsByClassName('item_remodel')[0].dataset.remodel);
+            if (remodel < remodelMin || remodel > remodelMax) {
+               detail.classList.add('d-none');
+            }
+            else {
+               detail.classList.remove('d-none');
+            }
+         }
+         if (!$(itemContainer).find('.item_detail').length || $(itemContainer).find('.item_detail:not(.d-none)').length) {
+            // 子に非表示でない者が1件でもあれば表示
+            itemContainer.classList.remove('d-none');
+         }
+         else {
+            // 子がないので非表示
+            itemContainer.classList.add('d-none');
+         }
+      }
+
+      if ($(container).find('.item_container:not(.d-none)').length) {
+         // 子に非表示でない者が1件でもあれば表示
+         container.classList.remove('d-none');
+      }
+      else {
+         // 子がないので非表示
+         container.classList.add('d-none');
       }
    }
 }
@@ -879,7 +1010,7 @@ function setRemodelSlider() {
    const min = castInt(document.getElementById('remodel_min').value);
    const max = castInt(document.getElementById('remodel_max').value);
    document.getElementById('remodel_range').noUiSlider.set([min, min > max ? min : max]);
-   initItemList();
+   filterItemList();
 }
 
 /**

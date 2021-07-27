@@ -89,6 +89,67 @@
 			</div>
 			<div class="border-top px-2 py-2">
 				<div id="ships_content">
+					<div class="general_box mx-2">
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"><i class="fa-filter"></i>フィルター</div>
+								<div class="collapsible-body" id="ships_filter">
+									<div class="border-top mb-4 mx-2 pl-1 pt-4">
+										<label class="filter_checkbox">
+											<input type="checkbox" id="no_ship_invisible" />
+											<span>未着任の艦を非表示にする</span>
+										</label>
+									</div>
+									<div class="row">
+										<div class="input-field col s12 l6" id="enabled_ship_types_container">
+											<select multiple id="enabled_ship_types">
+												<option value="8">高速戦艦</option>
+												<option value="9">戦艦</option>
+												<option value="10">航空戦艦</option>
+												<option value="11">正規空母</option>
+												<option value="18">装甲空母</option>
+												<option value="7">軽空母</option>
+												<option value="16">水上機母艦</option>
+												<option value="20">潜水母艦</option>
+												<option value="22">補給艦</option>
+												<option value="19">工作艦</option>
+												<option value="5">重巡洋艦</option>
+												<option value="6">航空巡洋艦</option>
+												<option value="4">重雷装巡洋艦</option>
+												<option value="3">軽巡洋艦</option>
+												<option value="21">練習巡洋艦</option>
+												<option value="2">駆逐艦</option>
+												<option value="1">海防艦</option>
+												<option value="14">潜水空母</option>
+												<option value="13">潜水艦</option>
+												<option value="17">揚陸艦</option>
+											</select>
+											<label>表示艦種</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="level_min" type="number" max="175" min="1" value="1">
+														<label for="level_min">Lv下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="level_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="level_max" type="number" max="175" min="1" value="175">
+														<label for="level_max">Lv上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
 					<div class="d-flex flex-wrap" id="ship_list"></div>
 				</div>
 				<div id="ships_reader">
@@ -222,7 +283,7 @@
 									<div class="border-top mb-4 ml-2 pl-1 pt-4">
 										<label class="filter_checkbox">
 											<input type="checkbox" id="no_item_invisible" />
-											<span>在庫がない装備を非表示にする</span>
+											<span>未所持の装備を非表示にする</span>
 										</label>
 									</div>
 									<div class="row">
