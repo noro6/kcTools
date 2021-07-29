@@ -4223,38 +4223,6 @@ function drawEnemyGradeColor(enemyName) {
 	return enemyName;
 }
 
-
-/**
- * ステータスヘッダー用の変換関数
- * @param {*} text
- * @returns
- */
-function convertHeaderText(text) {
-	if (text === "default") text = "カテゴリ";
-	else if (text === "history") text = "よく使う";
-	else if (text === "id") text = "図鑑No";
-	else if (text === "antiAir") text = "対空";
-	else if (text === "battleAntiAir") text = "出撃対空";
-	else if (text === "defenseAntiAir") text = "防空対空";
-	else if (text === "antiAirWeight") text = "加重対空";
-	else if (text === "antiAirBonus") text = "艦隊防空";
-	else if (text === "fire") text = "火力";
-	else if (text === "torpedo") text = "雷装";
-	else if (text === "bomber") text = "爆装";
-	else if (text === "accuracy") text = "命中";
-	else if (text === "scout") text = "索敵";
-	else if (text === "asw") text = "対潜";
-	else if (text === "antiBomber") text = "対爆";
-	else if (text === "interception") text = "迎撃";
-	else if (text === "radius") text = "半径";
-	else if (text === "cost") text = "コスト";
-	else if (text === "avoid") text = "射撃回避";
-	else if (text === "avoid2") text = "回避";
-	else if (text === "armor") text = "装甲";
-	else if (text === "land_base_power") text = "基地火力";
-	return text;
-}
-
 /**
  * 機体一覧に plans 配列から値を展開
  * @param {ItemDetail[]} items

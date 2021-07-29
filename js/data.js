@@ -1785,10 +1785,10 @@ const ENEMY_DATA = [
 	{ id: 491, type: [1, 16], name: "深海竹棲姫-壊 [丙]", slot: [-1, -1, -1, -1, -1], eqp: [606, 607, 541, 603], orig: 1991, hp: 880, aa: 120, armor: 245 },
 	{ id: 492, type: [1, 16], name: "深海竹棲姫-壊 [乙]", slot: [-1, -1, -1, -1, -1], eqp: [606, 607, 541, 603], orig: 1992, hp: 880, aa: 140, armor: 305 },
 	{ id: 493, type: [1, 16], name: "深海竹棲姫-壊 [甲]", slot: [-1, -1, -1, -1, -1], eqp: [606, 607, 541, 603], orig: 1993, hp: 880, aa: 160, armor: 365 },
-	{ id: 494, type: [1, 2], name: "集積地棲姫II [丁]", slot: [9, 9, 9, 9, -1], eqp: [562, 561, 561, 561], orig: 1994, hp: 480, aa: 50, armor: 30 },
-	{ id: 495, type: [1, 2], name: "集積地棲姫II-壊 [丁]", slot: [14, 14, 14, 14, -1], eqp: [562, 562, 562, 561], orig: 1995, hp: 480, aa: 60, armor: 44 },
+	{ id: 494, type: [1, 2], name: "集積地棲姫II [丁]", slot: [8, 8, 8, 8, -1], eqp: [561, 561, 561, 561], orig: 1994, hp: 480, aa: 50, armor: 30 },
+	{ id: 495, type: [1, 2], name: "集積地棲姫II-壊 [丁]", slot: [10, 10, 10, 10, -1], eqp: [562, 561, 561, 561], orig: 1995, hp: 480, aa: 60, armor: 44 },
 	{ id: 496, type: [1, 18], name: "潜水棲姫改IIflagship [丁]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 1996, hp: 79, aa: 0, armor: 19 },
-	{ id: 497, type: [1, 11], name: "空母棲姫改 [丁]", slot: [56, 52, 48, 30, -1], eqp: [581, 557, 558, 583], orig: 1997, hp: 500, aa: 168, armor: 130 },
+	{ id: 497, type: [1, 11], name: "空母棲姫改 [丁]", slot: [48, 36, 35, 35, -1], eqp: [581, 557, 558, 583], orig: 1997, hp: 500, aa: 130, armor: 150 },
 	{ id: 498, type: [15], name: "軽巡ト級flagship", slot: [-1, -1, -1, 3, -1], eqp: [550, 550, 603, 611], orig: 0, hp: 73, aa: 68, armor: 69 },
 	{ id: 499, type: [14], name: "重巡リ級IIflagship", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 0, hp: 80, aa: 48, armor: 72 },
 	{ id: 500, type: [1, 14], name: "ルンガ沖重巡棲姫[丙]", slot: [-1, -1, -1, 4, -1], eqp: [601, 601, 593, 610], orig: 2000, hp: 670, aa: 67, armor: 167 },
@@ -2538,7 +2538,7 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const UNKNOWN_ENEMY = [472, 475, 494, 495, 497];
+const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484, 498, 512, 513, 514];
 
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';

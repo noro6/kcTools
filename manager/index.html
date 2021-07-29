@@ -64,6 +64,13 @@
 				<i class="fas fa-calculator"></i>
 				制空計算ページへ
 			</div>
+			<div class="flex-grow-1 ml-3 mx-1" id="url_shortener">
+				<textarea class="form-control-dark" id="input_url"
+					placeholder="ここに艦隊反映コードや装備反映コードを入力し、右の読み込みボタンを押してもOKです"></textarea>
+			</div>
+			<div class="ml-auto tool_item px-2" id="btn_url_shorten">
+				<span>読み込み</span>
+			</div>
 		</div>
 		<div class="d-flex" id="fleet_tab_container"></div>
 		<script>setTab()</script>
@@ -92,7 +99,9 @@
 					<div class="general_box mx-2">
 						<ul class="collapsible">
 							<li>
-								<div class="collapsible-header"><i class="fa-filter"></i>フィルター</div>
+								<div class="collapsible-header">
+									<i class="fa-filter"></i>フィルタ / 表示設定
+								</div>
 								<div class="collapsible-body" id="ships_filter">
 									<div class="border-top mb-4 mx-2 pl-1 pt-4">
 										<label class="filter_checkbox">
@@ -144,6 +153,83 @@
 													</div>
 												</div>
 											</div>
+										</div>
+										<div class="input-field col s12 l6">
+											<select multiple id="ship_remodel_hps">
+												<option value="1">+1</option>
+												<option value="2">+2</option>
+											</select>
+											<label>耐久改修</label>
+										</div>
+										<div class="input-field col s12 l6">
+											<select multiple id="ship_remodel_awses">
+												<option value="1">+1</option>
+												<option value="2">+2</option>
+												<option value="3">+3</option>
+												<option value="4">+4</option>
+												<option value="5">+5</option>
+												<option value="6">+6</option>
+												<option value="7">+7</option>
+												<option value="8">+8</option>
+												<option value="9">+9</option>
+											</select>
+											<label>対潜改修</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="luck_min" type="number" max="200" min="0" value="0">
+														<label for="luck_min">運下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="luck_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="luck_max" type="number" max="200" min="0" value="200">
+														<label for="luck_max">運上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col s12 l6 d-flex flex-wrap">
+											<div class="filter_area mx-2" data-area="1"><img src="../img/util/area1.png"></div>
+											<div class="filter_area mx-2" data-area="2"><img src="../img/util/area2.png"></div>
+											<div class="filter_area mx-2" data-area="3"><img src="../img/util/area3.png"></div>
+											<div class="filter_area mx-2" data-area="4"><img src="../img/util/area4.png"></div>
+											<div class="filter_area mx-2" data-area="5"><img src="../img/util/area5.png"></div>
+											<div class="filter_area mx-2" data-area="6"><img src="../img/util/area6.png"></div>
+										</div>
+									</div>
+									<div class="border-top mb-2"></div>
+									<div class="d-flex">
+										<div class="align-self-center pb-4">
+											<div>表示形式</div>
+											<div class="d-flex">
+												<div class="mx-3 align-self-center">
+													<label>
+														<input class="with-gap" id="ship_table" name="display" type="radio" />
+														<span>一覧表示</span>
+													</label>
+												</div>
+												<div class="mx-3 align-self-center">
+													<label>
+														<input class="with-gap" id="ship_legacy" name="display" type="radio" checked />
+														<span>艦隊分析</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="ml-4 input-field align-self-center">
+											<select id="ships_sort">
+												<option value="1">母港</option>
+												<option value="hp">耐久</option>
+												<option value="asw">対潜</option>
+												<option value="area">出撃海域</option>
+											</select>
+											<label>ソート</label>
 										</div>
 									</div>
 								</div>
@@ -197,9 +283,10 @@
 					<div class="general_box">
 						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
 						<div class="general_box px-2 py-2">
-							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.ship._map).map(([,v])
-							=> {return {'id': v._o.api_ship_id,'lv': v._o.api_lv, 'locked': v._o.api_locked, 'st': v._o.api_kyouka ,
-							'exp': v._o.api_exp}}).filter(v => v.locked), ['id', 'lv', 'st', 'exp']))
+							copy(JSON.stringify(Object.entries(<span
+								class="text_warning">temp1</span>.model.ship._map).map(([,v])=>{return{'id': v._o.api_ship_id,'lv':
+							v._o.api_lv,'locked': v._o.api_locked,'st':
+							v._o.api_kyouka,'exp':v._o.api_exp,'area':v._o.api_sally_area}}).filter(v=>v.locked),['id','lv','st','exp','area']))
 						</div>
 						<div class="tutorial_img">
 							<img class="materialboxed" src="../img/tutorial/tutorial7.jpg">
@@ -239,9 +326,9 @@
 					<div class="general_box">
 						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
 						<div class="general_box px-2 py-2">
-							copy(JSON.stringify(Object.entries(<span class="text_warning">temp1</span>.model.slot._map).map(([,v]) =>
-							{ return {'id':　v._o.api_slotitem_id, 'lv': v._o.api_level, 'locked': v._o.api_locked} }).filter(v =>
-							v.locked), ['id','lv']))
+							copy(JSON.stringify(Object.entries(<span
+								class="text_warning">temp1</span>.model.slot._map).map(([,v])=>{return {'id':v._o.api_slotitem_id,'lv':
+							v._o.api_level,'locked':v._o.api_locked}}).filter(v=>v.locked),['id','lv']))
 						</div>
 						<div class="tutorial_img">
 							<img class="materialboxed" src="../img/tutorial/tutorial7_i.jpg">
@@ -278,7 +365,7 @@
 					<div class="general_box">
 						<ul class="collapsible">
 							<li>
-								<div class="collapsible-header"><i class="fa-filter"></i>フィルター</div>
+								<div class="collapsible-header"><i class="fa-filter"></i>フィルタ</div>
 								<div class="collapsible-body" id="items_filter">
 									<div class="border-top mb-4 ml-2 pl-1 pt-4">
 										<label class="filter_checkbox">

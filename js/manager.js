@@ -1,4 +1,4 @@
-/** @type {{type: number, type2: number, name: string, items: any[]}[]} */
+/** @type {{type: number, type2: number, name: string, items: any[], sort: string[]}[]} */
 let ITEM_TYPES_LIST = [];
 
 let timer = null;
@@ -24,15 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
    document.getElementById('btn_read_ship').addEventListener('click', btn_read_ship_Clicked);
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
+   document.getElementById('btn_url_shorten').addEventListener('click', btn_url_shorten_Clicked);
 
    //　艦娘関連
    const levelSlider = document.getElementById('level_range');
    noUiSlider.create(levelSlider, {
-      start: [1, 175],
-      connect: true,
-      step: 1,
-      orientation: 'horizontal',
-      range: { 'min': 1, 'max': 175 },
+      start: [1, 175], range: { 'min': 1, 'max': 175 }, connect: true, step: 1, orientation: 'horizontal',
       format: {
          to: (value) => castInt(value),
          from: (value) => castInt(value)
@@ -43,10 +40,28 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('level_max').value = value[1];
    });
    levelSlider.noUiSlider.on('change.one', filterShipList);
-   $('#ships_filter').on('input', 'input[type="number"]', setLevelSlider);
+
+   const luckSlider = document.getElementById('luck_range');
+   noUiSlider.create(luckSlider, {
+      start: [0, 200], range: { 'min': 0, 'max': 200 }, connect: true, step: 1, orientation: 'horizontal',
+      format: {
+         to: (value) => castInt(value),
+         from: (value) => castInt(value)
+      }
+   });
+   luckSlider.noUiSlider.on('slide.one', (value) => {
+      document.getElementById('luck_min').value = value[0];
+      document.getElementById('luck_max').value = value[1];
+   });
+   luckSlider.noUiSlider.on('change.one', filterShipList);
+   $('#ships_filter').on('input', '#level_max', setLevelSlider);
+   $('#ships_filter').on('input', '#level_min', setLevelSlider);
+   $('#ships_filter').on('input', '#luck_max', setLuckSlider);
+   $('#ships_filter').on('input', '#luck_min', setLuckSlider);
    $('#ships_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
-   $('#ships_filter').on('change', '#enabled_ship_types', filterShipList);
+   $('#ships_filter').on('change', 'select', filterShipList);
    $('#ships_filter').on('change', '#no_ship_invisible', filterShipList);
+   $('#ships_filter').on('click', '.filter_area', function () { filter_area_Clicked($(this)); });
 
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
 
@@ -66,11 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
    // 装備関連
    const slider = document.getElementById('remodel_range');
    noUiSlider.create(slider, {
-      start: [0, 10],
-      connect: true,
-      step: 1,
-      orientation: 'horizontal',
-      range: { 'min': 0, 'max': 10 },
+      start: [0, 10], range: { 'min': 0, 'max': 10 }, connect: true, step: 1, orientation: 'horizontal',
       format: {
          to: (value) => castInt(value),
          from: (value) => castInt(value)
@@ -87,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#items_filter').on('change', '#no_item_invisible', filterItemList);
 
    $('#item_list').on('click', '.item_container', function () { item_container_Clicked($(this)); });
+   $('#item_list').on('change', '.item_type_sort_container', function (e) { item_sort_Changed($(this), e); });
 
    $('#modal_item_edit').on('blur', 'input', function () { item_stock_Leaved($(this)); });
    $('#modal_item_edit').on('input', 'input', function () { item_stock_Changed($(this)); });
@@ -99,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 /**
- * 現在取る臆されている艦娘情報から所持艦娘一覧を再構築
+ * 現在登録されている艦娘情報から所持艦娘一覧を再構築
  */
 function initShipList() {
    // 所持装備
@@ -189,7 +201,7 @@ function initShipList() {
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_luck.png"></div>
-                     <div class="detail_ship_status remodel_luck" data-remodel-luck="${detail.st[4]}">${ver.luck + detail.st[4]}</div>
+                     <div class="detail_ship_status remodel_luck" data-luck="${ver.luck + detail.st[4]}">${ver.luck + detail.st[4]}</div>
                   </div>
                   ${detail.area < 1 ? '<div class="sally_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}.png"></div>`}`;
                   verContainer.appendChild(detailContainer);
@@ -231,6 +243,21 @@ function initShipList() {
 }
 
 /**
+ * 現在登録されている艦娘情報から所持艦娘一覧を再構築　テーブル形式
+ */
+function initShipListTable() {
+   // 所持装備
+   const stockShips = loadShipStock();
+   //　もう表示した艦娘
+   const doneShipId = [];
+
+   const fragment = document.createDocumentFragment();
+
+   document.getElementById('ship_list').innerHTML = '';
+   document.getElementById('ship_list').appendChild(fragment);
+}
+
+/**
  * 艦娘フィルターによる表示物変更
  */
 function filterShipList() {
@@ -238,7 +265,15 @@ function filterShipList() {
    const noShipInvisible = document.getElementById('no_ship_invisible')['checked'];
    const levelMin = castInt(document.getElementById('level_min').value);
    const levelMax = castInt(document.getElementById('level_max').value);
+   const luckMin = castInt(document.getElementById('luck_min').value);
+   const luckMax = castInt(document.getElementById('luck_max').value);
    const visibleTypes = $('#enabled_ship_types').formSelect('getSelectedValues').map(v => castInt(v));
+   const remodelHps = $('#ship_remodel_hps').formSelect('getSelectedValues').map(v => castInt(v));
+   const remodelAwses = $('#ship_remodel_awses').formSelect('getSelectedValues').map(v => castInt(v));
+   const areas = [];
+   $('.filter_area.selected').each((i, e) => {
+      areas.push(castInt($(e)[0].dataset.area));
+   });
 
    const containers = document.getElementsByClassName('ship_type_container');
    for (const container of containers) {
@@ -263,11 +298,29 @@ function filterShipList() {
                }
 
                const lv = castInt(detail.getElementsByClassName('ship_lv')[0].dataset.level);
-               const remodelLuck = castInt(detail.getElementsByClassName('remodel_luck')[0].dataset.remodelLuck);
+               const luck = castInt(detail.getElementsByClassName('remodel_luck')[0].dataset.luck);
                const remodelHp = castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.remodelHp);
                const remodelAsw = castInt(detail.getElementsByClassName('remodel_asw')[0].dataset.remodelAsw);
+               const area = castInt(detail.getElementsByClassName('sally_area')[0].dataset.area);
 
+               // Lv条件
                if (lv < levelMin || lv > levelMax) {
+                  detail.classList.add('d-none');
+               }
+               // 運改修条件
+               else if (luck < luckMin || luck > luckMax) {
+                  detail.classList.add('d-none');
+               }
+               // 耐久改修条件
+               else if (remodelHps.length && !remodelHps.includes(remodelHp)) {
+                  detail.classList.add('d-none');
+               }
+               // 対潜改修条件
+               else if (remodelAwses.length && !remodelAwses.includes(remodelAsw)) {
+                  detail.classList.add('d-none');
+               }
+               // 出撃海域条件
+               else if (areas.length && !areas.includes(area)) {
                   detail.classList.add('d-none');
                }
                else {
@@ -306,6 +359,15 @@ function filterShipList() {
 }
 
 /**
+ * 艦娘フィルタ　札クリック
+ * @param {*} $this
+ */
+function filter_area_Clicked($this) {
+   $this.toggleClass('selected');
+   filterShipList();
+}
+
+/**
  * 表示Lv直接入力
  */
 function setLevelSlider() {
@@ -316,78 +378,130 @@ function setLevelSlider() {
 }
 
 /**
+ * 表示運直接入力
+ */
+function setLuckSlider() {
+   const min = castInt(document.getElementById('luck_min').value);
+   const max = castInt(document.getElementById('luck_max').value);
+   document.getElementById('luck_range').noUiSlider.set([min, min > max ? min : max]);
+   filterShipList();
+}
+
+function initItemTypes() {
+   ITEM_TYPES_LIST = ITEM_API_TYPE.map(function (v) {
+      const type = v.id;
+      if ([13, 22, 26, 28, 32, 33, 40, 42, 46].includes(type)) return { type: -99 };
+      const data = { type: type, type2: 99, name: v.name, items: [], sort: [] };
+
+      if (type === 5) {
+         // 魚雷に特殊潜航艇、潜水艦魚雷を含める
+         data.name = '魚雷 / 特殊潜航艇';
+         data.type2 = type;
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 22 || i.type === 32);
+         data.sort = ['torpedo'];
+      }
+      else if (type === 12) {
+         // 小型電探に大型電探を含める
+         data.name = '電探';
+         data.type2 = type;
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 13);
+         data.sort = ['scout', 'accuracy'];
+      }
+      else if (type === 14) {
+         // 小型ソナーに大型ソナーを含める
+         data.name = 'ソナー';
+         data.type2 = type;
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 40);
+         data.sort = ['asw'];
+      }
+      else if (type === 24) {
+         // 大発系 / 内火艇
+         data.type2 = type;
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 46);
+      }
+      else if (type === 25) {
+         // オートジャイロ / 哨戒機
+         data.type2 = type;
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 26);
+         data.sort = ['asw'];
+      }
+      else if (type === 27) {
+         // 小バルジに大バルジを含める
+         data.name = '追加装甲(中型 / 大型)';
+         data.type2 = type;
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 28);
+         data.sort = ['armor'];
+      }
+      else if (type === 29) {
+         // 探照灯 / 照明弾 / 大型探照灯
+         data.name = '探照灯 / 照明弾';
+         data.items = ITEM_DATA.filter(i => i.type === type || i.type === 33 || i.type === 42);
+      }
+      else {
+         // その他
+         data.items = ITEM_DATA.filter(i => i.type === type);
+         if (type === 1 || type === 2 || type === 3) {
+            data.type2 = 1; // 大分類 主砲
+            data.sort = ['fire', 'accuracy'];
+         }
+         else if (type === 4 || type === 21) {
+            data.type2 = 4; // 大分類 副砲, 機銃
+            data.sort = ['fire', 'antiAir', 'accuracy'];
+         }
+         else if (type === 14 || type === 15) {
+            data.type2 = 14; // 大分類 対潜装備
+            data.sort = ['asw'];
+         }
+         else if (type === 6) data.type2 = 6; // 大分類 艦戦
+         else if (type === 7 || type === 8 || type === 57) data.type2 = 7; // 大分類 攻撃機
+         else if (type === 9 || type === 10 || type === 11 || type === 41 || type === 45) data.type2 = 10; // 大分類 艦偵, 水上機
+         else if (type === 24 || type === 30 || type === 46) data.type2 = 24; // 大分類 大発系
+         else if (type === 37) data.type2 = 37; // 大分類 対地装備
+         else if (type === 47 || type === 48 || type === 49 || type === 53) data.type2 = 47; // 大分類 艦偵, 陸上機
+      }
+
+      // ソート項目付与
+      if (FIGHTERS.includes(data.type)) {
+         data.sort.push('antiAir');
+         if (data.type > 47) {
+            data.sort.push('interception');
+            data.sort.push('antiBomber');
+         }
+      }
+      if (data.type === 8 || data.type === 47) {
+         data.sort.push('torpedo');
+      }
+      if (ATTACKERS.includes(data.type)) {
+         data.sort.push('bomber');
+         data.sort.push('antiAir');
+      }
+      if (RECONNAISSANCES.includes(data.type)) {
+         data.sort.push('scout');
+      }
+      if (PLANE_TYPE.includes(data.type)) {
+         data.sort.push('radius');
+      }
+
+      data.items.sort((a, b) => a.type - b.type);
+      return data;
+   });
+
+   ITEM_TYPES_LIST = ITEM_TYPES_LIST.filter(v => v.type >= 0);
+}
+
+/**
  * 現在登録されている装備情報から所持装備一覧を再構築
  */
 function initItemList() {
    if (!ITEM_TYPES_LIST.length) {
-      ITEM_TYPES_LIST = ITEM_API_TYPE.map(function (v) {
-         const type = v.id;
-         if ([13, 22, 26, 28, 32, 33, 40, 42, 46].includes(type)) return { type: -99 };
-         const data = { type: type, type2: 99, name: v.name, items: [] };
-
-         if (type === 5) {
-            // 魚雷に特殊潜航艇、潜水艦魚雷を含める
-            data.name = '魚雷 / 特殊潜航艇';
-            data.type2 = type;
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 22 || i.type === 32);
-         }
-         else if (type === 12) {
-            // 小型電探に大型電探を含める
-            data.name = '電探';
-            data.type2 = type;
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 13);
-         }
-         else if (type === 14) {
-            // 小型ソナーに大型ソナーを含める
-            data.name = 'ソナー';
-            data.type2 = type;
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 40);
-         }
-         else if (type === 24) {
-            // 大発系 / 内火艇
-            data.type2 = type;
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 46);
-         }
-         else if (type === 25) {
-            // オートジャイロ / 哨戒機
-            data.type2 = type;
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 26);
-         }
-         else if (type === 27) {
-            // 小バルジに大バルジを含める
-            data.name = '追加装甲(中型 / 大型)';
-            data.type2 = type;
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 28);
-         }
-         else if (type === 29) {
-            // 探照灯 / 照明弾 / 大型探照灯
-            data.name = '探照灯 / 照明弾';
-            data.items = ITEM_DATA.filter(i => i.type === type || i.type === 33 || i.type === 42);
-         }
-         else {
-            // その他
-            data.items = ITEM_DATA.filter(i => i.type === type);
-            if (type === 1 || type === 2 || type === 3) data.type2 = 1; // 大分類 主砲
-            else if (type === 4 || type === 21) data.type2 = 4; // 大分類 副砲, 機銃
-            else if (type === 6) data.type2 = 6; // 大分類 艦戦
-            else if (type === 7 || type === 8 || type === 57) data.type2 = 7; // 大分類 攻撃機
-            else if (type === 9 || type === 10 || type === 11 || type === 41 || type === 45) data.type2 = 10; // 大分類 艦偵, 水上機
-            else if (type === 14 || type === 15) data.type2 = 14; // 大分類 艦偵, 水上機
-            else if (type === 24 || type === 30 || type === 46) data.type2 = 24; // 大分類 大発系
-            else if (type === 24 || type === 30 || type === 46) data.type2 = 24; // 大分類 対地装備
-            else if (type === 37) data.type2 = 37; // 大分類 対地装備
-            else if (type === 47 || type === 48 || type === 49 || type === 53) data.type2 = 47; // 大分類 艦偵, 陸上機
-         }
-
-         data.items.sort((a, b) => a.type - b.type);
-         return data;
-      });
-
-      ITEM_TYPES_LIST = ITEM_TYPES_LIST.filter(v => v.type >= 0);
+      initItemTypes();
    }
 
    // 所持装備
    const stockItems = loadPlaneStock();
+
+   // selectいったん除去
+   $('.item_type_sort').formSelect('destroy');
 
    const fragment = document.createDocumentFragment();
    for (const type of ITEM_TYPES_LIST) {
@@ -395,13 +509,26 @@ function initItemList() {
       container.dataset.type2Id = type.type2;
 
       const header = createDiv('item_type_header d-flex');
-      header.innerHTML = `<div><img src="../img/type/type${type.type}.png" class="item_type_img" alt="${type.name}"></div>
-      <div class="ml-2">${type.name}</div>`;
+      header.innerHTML = `
+      <div><img src="../img/type/type${type.type}${type.type === 17 ? '-alt2' : ''}.png" class="item_type_img" alt="${type.name}"></div>
+      <div class="ml-2">${type.name}</div>
+      <div class="ml-auto"><i class="fa-sort-amount-desc"></i></div>
+      <div class="input-field ml-2 item_type_sort_container">
+         <select class="item_type_sort">
+            <option value="id">図鑑</option>
+            ${type.sort.length ? type.sort.map(v => `<option value="${v}">${convertHeaderText(v)}</option>`).join('') : ''}
+         </select>
+      </div>`;
       container.appendChild(header);
 
       for (const item of type.items) {
          const item_container = createDiv('item_container');
          item_container.dataset.itemId = item.id;
+         if (type.sort.length) {
+            for (const key of type.sort) {
+               item_container.dataset[key] = item[key];
+            }
+         }
 
          const item_header = createDiv('item_header');
          const img = document.createElement('img');
@@ -460,6 +587,8 @@ function initItemList() {
    document.getElementById('item_list').appendChild(fragment);
 
    filterItemList();
+
+   $('.item_type_sort').formSelect();
 }
 
 /**
@@ -514,6 +643,29 @@ function filterItemList() {
          // 子がないので非表示
          container.classList.add('d-none');
       }
+   }
+}
+
+/**
+ * 装備ソート変更時
+ * @param {*} $this
+ */
+function item_sort_Changed($this, e) {
+   /** @type {HTMLElement} */
+   const parent = $this.closest('.type_content')[0];
+   const items = parent.getElementsByClassName('item_container');
+   const containers = Array.prototype.slice.call(items);
+
+   const sortKey = `${e.target.value}`;
+   if (sortKey === 'id') {
+      // 図鑑は昇順
+      containers.sort((a, b) => castInt(a.dataset.itemId) - castInt(b.dataset.itemId));
+   }
+   else {
+      containers.sort((a, b) => castInt(b.dataset[sortKey]) - castInt(a.dataset[sortKey]));
+   }
+   for (var i = 0; i < containers.length; i++) {
+      parent.appendChild(parent.removeChild(containers[i]))
    }
 }
 
@@ -1055,4 +1207,33 @@ function btn_read_item_Clicked() {
    else {
       inform_danger('装備情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります');
    }
+}
+
+/**
+ * URL短縮ボタンクリック
+ */
+async function btn_url_shorten_Clicked() {
+   const button = document.getElementById('btn_url_shorten');
+   const textbox = document.getElementById('input_url');
+   const url = textbox.value.trim();
+   textbox.value = "";
+
+   // 所持装備チェック
+   if (readEquipmentJson(url)) {
+      initItemList();
+      inform_success('所持装備の反映に成功しました。');
+   }
+   else if (readShipJson(url)) {
+      initShipList();
+      inform_success('所持艦娘の反映に成功しました。');
+   }
+   else if (readKantaiBunsekiJson(url)) {
+      initShipList();
+      inform_success('所持艦娘の反映に成功しました。');
+   }
+   else {
+      inform_danger('入力値の読み込みに失敗しました。');
+   }
+
+   button.textContent = '読み込み';
 }
