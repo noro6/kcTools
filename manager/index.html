@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8">
+	<title>制空権シミュレータ</title>
+	<meta name="description"
+		content="「艦これ」の制空権に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊の制空削りや敵艦隊の対空砲火による撃墜を考慮した制空計算や全滅率の試算、防空時の制空計算に対応しています。" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="@noro_006" />
+	<meta property="og:url" content="https://noro6.github.io/kcTools/" />
+	<meta property="og:title" content="制空権シミュレータ" />
+	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
+	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="stylesheet" href="../css/nouislider.min.css" />
+	<link rel="stylesheet" href="../css/materialize.min.css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+	<link rel="stylesheet" href="../fonts/style.css">
+	<link rel="stylesheet" href="../css/common.min.css">
+	<link rel="stylesheet" href="../css/manager.min.css">
+	<script src="../js/common.js"></script>
+	<script defer src="../js/jquery-3.5.1.min.js"></script>
+	<script defer src="../js/sortable.js"></script>
+	<script defer src="../js/lz-string.js"></script>
+	<script defer src="../js/data.js"></script>
+	<script defer src="../js/manager.js"></script>
+	<script defer src="../js/nouislider.min.js"></script>
+	<script defer src="../js/materialize.js"></script>
+	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+	<script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-152888142-2');
+	</script>
+</head>
+
+<body>
+	<script>
+		let s = JSON.parse(window.localStorage.getItem('setting'));
+		mainColor = "#000000";
+		if (s && s.hasOwnProperty('themeColor')) {
+			let theme = s.themeColor;
+			if (theme === 'dark_theme' || theme === 'dark_gradient_theme' || theme === 'deep_blue_theme') {
+				mainColor = "#e0e0e0";
+				document.body.classList.add('dark-theme');
+				document.body.style.color = mainColor;
+			}
+			document.body.classList.add(theme);
+		}
+	</script>
+	<div id="custom_alert_wraper" class="d-flex justify-content-center align-items-center"></div>
+	<div id="header">
+		<div class="d-flex" id="tool_bar">
+			<div class="tool_item" id="btn_top">
+				<i class="fas fa-list-ul"></i>
+				トップページへ
+			</div>
+			<div class="tool_item" id="btn_share">
+				<i class="fas fa-calculator"></i>
+				制空計算ページへ
+			</div>
+			<div class="flex-grow-1 mx-1" id="url_shortener">
+				<textarea class="form-control-dark" id="input_url"
+					placeholder="ここに艦隊反映コードや装備反映コードを入力し、右の読み込みボタンを押してもOKです"></textarea>
+			</div>
+			<div class="ml-auto tool_item px-2" id="btn_url_shorten">
+				<span>読み込み</span>
+			</div>
+		</div>
+		<div class="d-flex" id="fleet_tab_container"></div>
+		<script>setTab()</script>
+	</div>
+	<div class="px-2 mx-2" id="main">
+		<div class="d-flex mx-auto pt-2">
+			<div class="d-flex">
+				<div class="font_size_18">制空権シミュレータ</div>
+				<div class="d-flex align-self-center">
+					<div class="ml-3 align-self-center">所持装備 &amp; 艦娘管理</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="contents px-2 py-2 mt-4 mx-auto">
+			<div>
+				<ul class="tabs">
+					<li class="tab"><a class="waves-effect waves-blue active" href="#ships_content">艦娘一覧</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#items_content">装備一覧</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#ships_reader">艦娘反映</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#items_reader">装備反映</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#others">その他</a></li>
+				</ul>
+			</div>
+			<div class="border-top px-2 py-2">
+				<div id="ships_content">
+					<div class="general_box">
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header">
+									<i class="fa-filter"></i>フィルタ / 表示設定
+								</div>
+								<div class="collapsible-body" id="ships_filter">
+									<div class="border-top mb-4 mx-2 pl-1 pt-4">
+										<label class="filter_checkbox">
+											<input type="checkbox" id="no_ship_invisible" />
+											<span>未着任の艦を非表示にする</span>
+										</label>
+									</div>
+									<div class="row">
+										<div class="input-field col s12 l6" id="enabled_ship_types_container">
+											<select multiple id="enabled_ship_types">
+												<option value="8">高速戦艦</option>
+												<option value="9">戦艦</option>
+												<option value="10">航空戦艦</option>
+												<option value="11">正規空母</option>
+												<option value="18">装甲空母</option>
+												<option value="7">軽空母</option>
+												<option value="16">水上機母艦</option>
+												<option value="20">潜水母艦</option>
+												<option value="22">補給艦</option>
+												<option value="19">工作艦</option>
+												<option value="5">重巡洋艦</option>
+												<option value="6">航空巡洋艦</option>
+												<option value="4">重雷装巡洋艦</option>
+												<option value="3">軽巡洋艦</option>
+												<option value="21">練習巡洋艦</option>
+												<option value="2">駆逐艦</option>
+												<option value="1">海防艦</option>
+												<option value="14">潜水空母</option>
+												<option value="13">潜水艦</option>
+												<option value="17">揚陸艦</option>
+											</select>
+											<label>表示艦種</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="level_min" type="number" max="175" min="1" value="1">
+														<label for="level_min">Lv下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="level_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="level_max" type="number" max="175" min="1" value="175">
+														<label for="level_max">Lv上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="input-field col s12 l6">
+											<select multiple id="ship_remodel_hps">
+												<option value="1">+1</option>
+												<option value="2">+2</option>
+											</select>
+											<label>耐久改修</label>
+										</div>
+										<div class="input-field col s12 l6">
+											<select multiple id="ship_remodel_awses">
+												<option value="1">+1</option>
+												<option value="2">+2</option>
+												<option value="3">+3</option>
+												<option value="4">+4</option>
+												<option value="5">+5</option>
+												<option value="6">+6</option>
+												<option value="7">+7</option>
+												<option value="8">+8</option>
+												<option value="9">+9</option>
+											</select>
+											<label>対潜改修</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="luck_min" type="number" max="200" min="0" value="0">
+														<label for="luck_min">運下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="luck_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="luck_max" type="number" max="200" min="0" value="200">
+														<label for="luck_max">運上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col s12 l6 d-flex flex-wrap">
+											<div class="filter_area mx-2 selected" data-area="1"><img src="../img/util/area1.png"></div>
+											<div class="filter_area mx-2 selected" data-area="2"><img src="../img/util/area2.png"></div>
+											<div class="filter_area mx-2 selected" data-area="3"><img src="../img/util/area3.png"></div>
+											<div class="filter_area mx-2 selected" data-area="4"><img src="../img/util/area4.png"></div>
+											<div class="filter_area mx-2 selected" data-area="5"><img src="../img/util/area5.png"></div>
+											<div class="filter_area mx-2 selected" data-area="6"><img src="../img/util/area6.png"></div>
+											<div class="filter_area mx-2 selected align-self-center no_area waves-effect waves-light"
+												data-area="0">
+												札なし
+											</div>
+										</div>
+									</div>
+									<div class="border-top mb-2"></div>
+									<div class="d-flex">
+										<div class="align-self-center pb-4">
+											<div>表示形式</div>
+											<div class="d-flex">
+												<div class="mx-3 align-self-center">
+													<label>
+														<input class="with-gap" id="ship_table" name="display" type="radio" checked />
+														<span>一覧表示</span>
+													</label>
+												</div>
+												<div class="mx-3 align-self-center">
+													<label>
+														<input class="with-gap" id="ship_legacy" name="display" type="radio" />
+														<span>艦隊分析</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="ml-4 input-field align-self-center d-none" id="ships_sort_container">
+											<select id="ships_sort">
+												<option value="port">母港</option>
+												<option value="hp">耐久</option>
+												<option value="asw">対潜</option>
+												<option value="area">出撃海域</option>
+											</select>
+											<label>ソート</label>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="d-flex flex-wrap" id="ship_list">
+						<div class="mx-auto" id="pre_loader">
+							<div class="mx-auto preloader-wrapper big active">
+								<div class="spinner-layer spinner-blue-only">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle"></div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="items_content">
+					<div class="general_box">
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"><i class="fa-filter"></i>フィルタ</div>
+								<div class="collapsible-body" id="items_filter">
+									<div class="border-top mb-4 ml-2 pl-1 pt-4">
+										<label class="filter_checkbox">
+											<input type="checkbox" id="no_item_invisible" />
+											<span>未所持の装備を非表示にする</span>
+										</label>
+									</div>
+									<div class="row">
+										<div class="input-field col s12 l6" id="enabled_types_container">
+											<select class="icons" multiple id="enabled_types">
+												<option value="1" data-icon="../img/type/type1-alt.png">主砲</option>
+												<option value="4" data-icon="../img/type/type21-alt.png">副砲, 機銃</option>
+												<option value="5" data-icon="../img/type/type5-alt.png">魚雷</option>
+												<option value="6" data-icon="../img/type/type6-alt.png">艦戦</option>
+												<option value="7" data-icon="../img/type/type7-alt.png">攻撃機</option>
+												<option value="10" data-icon="../img/type/type10-alt.png">艦偵, 水上機</option>
+												<option value="12" data-icon="../img/type/type12-alt.png">電探</option>
+												<option value="14" data-icon="../img/type/type14-alt.png">ソナー, 爆雷</option>
+												<option value="24" data-icon="../img/type/type24-alt.png">輸送, 上陸用舟艇</option>
+												<option value="47" data-icon="../img/type/type47-alt.png">陸上機</option>
+												<option value="99" data-icon="../img/type/type17-alt.png">その他</option>
+											</select>
+											<label>表示カテゴリ（大分類）</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="remodel_min" type="number" max="10" min="0" value="0">
+														<label for="remodel_min">改修下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="remodel_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="remodel_max" type="number" max="10" min="0" value="10">
+														<label for="remodel_max">改修上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item_list"></div>
+				</div>
+				<div id="ships_reader">
+					<div class="general_box">
+						<div>1. 艦これにログイン後、画面上で右クリックし、コンテキストメニューから「検証」を選択</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial1.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>2. ウインドウが開くので、「Console」タブを開き、「Clear console」ボタンを押下</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial2.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>3. consoleに「this.KCS」と入力してEnterを押下、表示されたオブジェクトについて矢印を選択して内容を展開</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial3.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>4. 4つあるオブジェクトのなかで、内容が「{__esModule: true, default: ƒ}」となっているオブジェクトを探す</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial4.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>5. 4で見つけたオブジェクトのうち、「default」まで展開したときに中に「model」が存在するものを探す</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial5.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>6. 「model」が存在する方の「default」の上で右クリックし、「Store function as global variable」（なければ「Store as global
+							variable」）を選択</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial6.jpg">
+						</div>
+						<div>選択すると、下記のように「temp1」と出てきます。もし、temp2など数字が違っている場合、次の手順7.の注意事項欄を見てください。</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial6_2.jpg">
+						</div>
+					</div>
+					<div class="general_box">
+						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
+						<div class="general_box px-2 py-2">
+							copy(JSON.stringify(Object.entries(<span
+								class="text_warning">temp1</span>.model.ship._map).map(([,v])=>{return{'id': v._o.api_ship_id,'lv':
+							v._o.api_lv,'locked': v._o.api_locked,'st':
+							v._o.api_kyouka,'exp':v._o.api_exp,'area':v._o.api_sally_area}}).filter(v=>v.locked),['id','lv','st','exp','area']))
+						</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial7.jpg">
+						</div>
+						<div class="warning_box">
+							<div>注意事項</div>
+							<div class="mt-1">
+								手順6.「Store function as global variable」を選択した際に出てくる「<span class="text_warning">temp○○</span>」と、
+								上記JavaScript内の「<span class="text_warning">temp○○</span>」は一致させる必要があります。
+							</div>
+							<div>
+								手順通りやるとtemp1となりますが、手順6.で例えば「temp2」と出てきていたら、JavaScriptコードの「temp1」の部分を「temp2」と自分で書き換えて実行してください。
+							</div>
+							<div class="tutorial_img">
+								<img class="materialboxed" src="../img/tutorial/tutorial7_2.jpg">
+							</div>
+						</div>
+					</div>
+					<div class="general_box">
+						<div>8. 下記の艦娘反映エリアに、手順7.でコピーされた艦隊情報を貼り付けて「所持艦娘反映」を押下</div>
+						<div class="row mt-3 mb-0">
+							<div class="input-field col s12">
+								<textarea id="ship_json_input" class="materialize-textarea"></textarea>
+								<label for="ship_json_input">艦娘反映エリア</label>
+							</div>
+						</div>
+						<div id="btn_read_ship_container">
+							<button type="button" class="waves-effect waves-light btn-large blue darken-3"
+								id="btn_read_ship">所持艦娘反映</button>
+						</div>
+					</div>
+				</div>
+				<div id="items_reader">
+					<div class="general_box">
+						<div>1. 手順1.～手順6.までは、「艦隊反映」と全く同じ手順です。手順6.まではそちらをご覧ください。</div>
+					</div>
+					<div class="general_box">
+						<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
+						<div class="general_box px-2 py-2">
+							copy(JSON.stringify(Object.entries(<span
+								class="text_warning">temp1</span>.model.slot._map).map(([,v])=>{return {'id':v._o.api_slotitem_id,'lv':
+							v._o.api_level,'locked':v._o.api_locked}}).filter(v=>v.locked),['id','lv']))
+						</div>
+						<div class="tutorial_img">
+							<img class="materialboxed" src="../img/tutorial/tutorial7_i.jpg">
+						</div>
+						<div class="warning_box">
+							<div>注意事項</div>
+							<div class="mt-1">
+								手順6.「Store function as global variable」を選択した際に出てくる「<span class="text_warning">temp○○</span>」と、
+								上記JavaScript内の「<span class="text_warning">temp○○</span>」は一致させる必要があります。
+							</div>
+							<div>
+								手順通りやるとtemp1となりますが、手順6.で例えば「temp5」と出てきていたら、JavaScriptコードの「temp1」の部分を「temp5」と自分で書き換えて実行してください。
+							</div>
+							<div class="tutorial_img">
+								<img class="materialboxed" src="../img/tutorial/tutorial7_2i.jpg">
+							</div>
+						</div>
+					</div>
+					<div class="general_box">
+						<div>8. 下記の装備反映エリアに装備情報を貼り付けて「所持装備反映」を押下</div>
+						<div class="row mt-3 mb-0">
+							<div class="input-field col s12">
+								<textarea id="item_json_input" class="materialize-textarea"></textarea>
+								<label for="item_json_input">装備反映エリア</label>
+							</div>
+						</div>
+						<div id="btn_read_item_container">
+							<button type="button" class="waves-effect waves-light btn-large blue darken-3"
+								id="btn_read_item">所持装備反映</button>
+						</div>
+					</div>
+				</div>
+				<div id="others">
+					<div class="my-4">
+						<button type="button" class="waves-effect waves-light btn btn-falt"
+							id="btn_kantai_sarashi">艦隊晒し用コード出力</button>
+					</div>
+					<div class="input-field">
+						<textarea id="kantai_sarashi" class="materialize-textarea" readonly></textarea>
+						<label for="kantai_sarashi">艦隊晒し用コード(艦娘)</label>
+					</div>
+					<div class="input-field">
+						<textarea id="kantai_sarashi_item" class="materialize-textarea" readonly></textarea>
+						<label for="kantai_sarashi_item">艦隊晒し用コード(装備)</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="border-top mx-auto mt-4 pt-3 font_size_12">
+			著作権法第32条に基づき画像を引用し、著作権は権利者様へ帰属します。権利者様側からの画像等の削除の依頼や警告には速やかに対処いたします。
+		</div>
+
+		<div class="modal" id="modal_ship_edit">
+			<div class="modal-content">
+				<div class="pb-1">改装状態</div>
+				<div class="px-1" id="ship_version_list">
+				</div>
+				<div class="mt-3 border-top" id="ship_status_inputs">
+					<div class="pt-2">艦娘ステータス</div>
+					<div class="mt-4 px-2 d-flex justify-content-between">
+						<div class="align-self-center">
+							<div class="input-field">
+								<input id="ship_level" type="number" min="1" max="175" value="99">
+								<label for="ship_level">練度(Lv)</label>
+							</div>
+						</div>
+						<div class="mx-3 align-self-center flex-grow-1">
+							<div class="range-field"><input type="range" id="ship_level_range" min="1" max="175" value="99" /></div>
+						</div>
+						<div class="align-self-center">
+							<button type="button" class="waves-effect waves-light btn-small" id="btn_level_99">Lv.99</button>
+						</div>
+					</div>
+					<div class="mt-4 mb-0 row">
+						<div class="input-field col s6">
+							<input id="ship_remodel_hp" type="number" min="0" max="2">
+							<label for="ship_remodel_hp">耐久改修</label>
+						</div>
+						<div class="input-field col s6">
+							<input id="ship_remodel_asw" type="number" min="0" max="9">
+							<label for="ship_remodel_asw">対潜改修</label>
+						</div>
+					</div>
+					<div class="mt-4 px-2 d-flex justify-content-between">
+						<div class="align-self-center">
+							<div class="input-field">
+								<input id="ship_luck" type="number" min="1" max="999" value="0">
+								<label for="ship_luck">運</label>
+							</div>
+						</div>
+						<div class="ml-3 align-self-center flex-grow-1">
+							<div class="range-field">
+								<input type="range" id="ship_luck_range" min="1" max="999" value="0" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="border-top mt-3">
+					<div class="py-3">出撃海域</div>
+					<div class="px-3 d-flex flex-wrap justify-content-between">
+						<div class="selectable_area_banner" data-area="1"><img src="../img/util/area1.png"></div>
+						<div class="selectable_area_banner" data-area="2"><img src="../img/util/area2.png"></div>
+						<div class="selectable_area_banner" data-area="3"><img src="../img/util/area3.png"></div>
+						<div class="selectable_area_banner" data-area="4"><img src="../img/util/area4.png"></div>
+						<div class="selectable_area_banner" data-area="5"><img src="../img/util/area5.png"></div>
+						<div class="selectable_area_banner" data-area="6"><img src="../img/util/area6.png"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="waves-effect waves-light btn-small" id="btn_create_ship">着任</button>
+				<button type="button" class="waves-effect waves-light btn-small blue" id="btn_update_ship">更新</button>
+				<button type="button" class="waves-effect waves-light btn-small red" id="btn_delete_ship">除籍</button>
+			</div>
+		</div>
+
+		<div class="modal" id="modal_item_edit">
+			<div class="modal-content">
+				<div id="edit_item_info">
+					<div id="edit_item_name_parent">
+						<div id="edit_item_id">No.000</div>
+						<div id="edit_item_name">名前</div>
+					</div>
+					<div class="d-flex mt-2">
+						<div class="flex-grow-1 mr-2" id="edit_item_status_container">
+							<div id="edit_item_status_parent">
+								<div class="edit_item_status">
+									<div>火力</div>
+									<div class="edit_item_status_value" id="edit_item_fire">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>対空</div>
+									<div class="edit_item_status_value" id="edit_item_antiAir">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>雷装</div>
+									<div class="edit_item_status_value" id="edit_item_torpedo">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>爆装</div>
+									<div class="edit_item_status_value" id="edit_item_bomber">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>命中</div>
+									<div class="edit_item_status_value" id="edit_item_accracy">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>索敵</div>
+									<div class="edit_item_status_value" id="edit_item_scout">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>回避</div>
+									<div class="edit_item_status_value" id="edit_item_avoid">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>対潜</div>
+									<div class="edit_item_status_value" id="edit_item_asw">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>装甲</div>
+									<div class="edit_item_status_value" id="edit_item_armor">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>対爆</div>
+									<div class="edit_item_status_value" id="edit_item_antiBomber">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>迎撃</div>
+									<div class="edit_item_status_value" id="edit_item_interception">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>半径</div>
+									<div class="edit_item_status_value" id="edit_item_radius">0</div>
+								</div>
+								<div class="edit_item_status">
+									<div>射程</div>
+									<div class="edit_item_status_value" id="edit_item_range">0</div>
+								</div>
+							</div>
+						</div>
+						<div class="ml-auto" id="img_plane_card_parent">
+							<img src="../img/plane/100.png" id="img_plane_card">
+						</div>
+					</div>
+				</div>
+				<div class="mt-3">
+					<div class="row" id="item_stock_inputs">
+						<div class="input-field col s3 m2">
+							<input id="remodel_0" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_0">改修なし</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_1" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_1">★+1</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_2" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_2">★+2</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_3" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_3">★+3</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_4" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_4">★+4</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_5" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_5">★+5</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_6" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_6">★+6</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_7" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_7">★+7</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_8" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_8">★+8</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_9" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_9">★+9</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_10" type="number" max="99" min="0" placeholder="0">
+							<label for="remodel_10">★MAX</label>
+						</div>
+						<div class="input-field col s3 m2">
+							<input id="remodel_all" type="text" disabled value="0">
+							<label for="remodel_all">合計</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="waves-effect waves-light btn-small" id="btn_save_item">所持数更新</button>
+				<button type="button" class="waves-effect waves-light btn-small red" id="btn_reset_item_stock">全て破棄</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="main_footer">
+		<div class="d-none d-lg-block">
+			<span>本サイトに関する質問・要望・バグ報告・感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">お題箱</a>へ。</span>
+			<span class="ml-1">その他、作者へのご連絡は<a href="https://twitter.com/noro_006" target="_blank">Twitter</a>までお願いします。</span>
+			<span class="ml-1">カンパ等ご支援は<a href="https://www.amazon.jp/hz/wishlist/ls/1OX9QVZF828GD?ref_=wl_share"
+					target="_blank">こちら</a>から。</span>
+		</div>
+		<div class="d-lg-none">
+			<span>要望・バグ報告：<a href="https://odaibako.net/u/noro_006" target="_blank">お題箱</a></span>
+			<span class="ml-2">連絡先：<a href="https://twitter.com/noro_006" target="_blank">Twitter</a></span>
+			<span class="ml-2">カンパ：<a href="https://www.amazon.jp/hz/wishlist/ls/1OX9QVZF828GD?ref_=wl_share"
+					target="_blank">こちら</a></span>
+		</div>
+	</div>
+</body>
+
+</html>
