@@ -1,3 +1,7 @@
+body {
+   overflow-y: scroll!important;
+}
+
 #header {
    position: fixed;
    top: 0;
@@ -271,6 +275,11 @@ input[type="number"] {
    border-color: #9e9e9e;
 }
 
+#pre_loader {
+   margin-top: 20vh;
+   height: 60vh;
+}
+
 /* ------------------------------
    一覧反映手順
 -------------------------------- */
@@ -314,7 +323,7 @@ input[type="number"] {
    艦娘一覧
 -------------------------------- */
 #ship_list > .general_box {
-   margin: 0.5rem;
+   margin-right: 1rem;
 }
 .ship_type_header {
    font-size: 1.3em;
@@ -435,6 +444,133 @@ input[type="number"] {
 .filter_area.selected,
 .selectable_area_banner.selected {
    opacity: 1;
+}
+.filter_area.no_area {
+   border: 3px solid rgba(128, 128, 128, 0.6);
+   -ms-writing-mode: tb-rl;
+   writing-mode: vertical-rl;
+   padding: 0.6rem 0.3rem;
+   border-radius: 0.25rem;
+   margin-left: 1rem;
+   transform: rotate(15deg);
+}
+
+.ship_table_tr {
+   margin-left: 0.5rem;
+   margin-right: 0.5rem;
+   padding: 1rem 1rem;
+}
+.ship_table_tr.header {
+   position: -webkit-sticky;
+   position: sticky;
+   top: 32px;
+   padding: 0.5rem 0.25rem;
+   background-color: #eee;
+   border-top: 1px solid rgba(128, 128, 128, 0.5);
+   border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+   z-index: 2;
+}
+.dark-theme .ship_table_tr.header {
+   background-color: #3c3c44;
+}
+.ship_table_tr.header .ship_table_td_name {
+   text-align: center;
+}
+.ship_table_tr:not(.header) {
+   border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+   cursor: pointer;
+   padding: 0.15rem 0.25rem;
+}
+.ship_table_tr.lv175 {
+   background-color: rgba(131, 220, 255, 0.3);
+}
+.ship_table_tr.lv100 {
+   background-color: rgba(255, 131, 131, 0.3);
+}
+.ship_table_tr.lv99 {
+   background-color: rgba(131, 255, 131, 0.3);
+}
+.ship_table_tr:not(.header):hover {
+   background-color: rgba(128, 128, 128, 0.05);
+}
+.ship_table_tr.lv175:hover {
+   background-color: rgba(131, 220, 255, 0.5);
+}
+.ship_table_tr.lv100:hover {
+   background-color: rgba(255, 131, 131, 0.5);
+}
+.ship_table_tr.lv99:hover {
+   background-color: rgba(131, 255, 131, 0.5);
+}
+.dark-theme .ship_table_tr.lv175 {
+   background-color: rgba(131, 220, 255, 0.1);
+}
+.dark-theme .ship_table_tr.lv100 {
+   background-color: rgba(255, 131, 131, 0.1);
+}
+.dark-theme .ship_table_tr.lv99 {
+   background-color: rgba(131, 255, 131, 0.1);
+}
+.dark-theme .ship_table_tr.lv175:hover {
+   background-color: rgba(131, 220, 255, 0.15);
+}
+.dark-theme .ship_table_tr.lv100:hover {
+   background-color: rgba(255, 131, 131, 0.15);
+}
+.dark-theme .ship_table_tr.lv99:hover {
+   background-color: rgba(131, 255, 131, 0.15);
+}
+.ship_table_tr.no_ship {
+   opacity: 0.7;
+   background-color: rgba(43, 43, 43, 0.2);
+}
+.ship_table_tr.no_ship:hover {
+   opacity: 0.7;
+   background-color: rgba(43, 43, 43, 0.25);
+}
+.dark-theme .ship_table_tr.no_ship {
+   background-color: rgba(0, 0, 0, 0.2);
+}
+.dark-theme .ship_table_tr.no_ship:hover {
+   background-color: rgba(0, 0, 0, 0.4);
+}
+.ship_table_tr.no_ship img {
+   filter: grayscale(60%);
+}
+
+.ship_table_tr > div {
+   width: 8%;
+   align-self: center;
+}
+.ship_table_tr > .ship_table_td_status {
+   text-align: right;
+}
+
+.ship_table_tr .ship_table_td_name {
+   width: 44%;
+   min-width: 200px;
+}
+@media (min-width: 992px) {
+   .ship_table_tr > div {
+      width: 10%;
+   }
+   .ship_table_tr .ship_table_td_name {
+      width: 30%;
+   }
+}
+.ship_table_td_image {
+   position: relative;
+   height: 50px;
+}
+.ship_table_td_image img {
+   width: 200px;
+   height: 50px;
+}
+.ship_table_td_image .area_banner {
+   position: absolute;
+   right: 0px;
+   height: 50px;
+   width: auto;
 }
 
 /* ------------------------------
@@ -645,4 +781,10 @@ input[type="number"] {
 }
 #item_stock_inputs {
    margin-bottom: 0px;
+}
+
+#kantai_sarashi,
+#kantai_sarashi_item {
+   min-height: 100px;
+   max-height: 100px;
 }

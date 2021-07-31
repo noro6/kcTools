@@ -124,6 +124,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
 	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
 	if (!setting.hasOwnProperty('visibleFixedMenu')) setting.visibleFixedMenu = true;
+	if (!setting.hasOwnProperty('managerViewMode')) setting.managerViewMode = 'table';
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -1517,4 +1518,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			saveLocalStorage('activePresets', sorted);
 		}
 	});
+
+	$('#header').on('click', '#btn_goto_manager', function () { window.location.href = '../manager/'; });
 });

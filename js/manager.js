@@ -2,8 +2,11 @@
 let ITEM_TYPES_LIST = [];
 
 let timer = null;
-
 document.addEventListener('DOMContentLoaded', function () {
+
+   document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
+   document.getElementById('ship_table')['checked'] = setting.managerViewMode === 'table';
+
    // モーダル初期化
    $('.modal').modal();
    // タブ初期化
@@ -62,8 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('change', 'select', filterShipList);
    $('#ships_filter').on('change', '#no_ship_invisible', filterShipList);
    $('#ships_filter').on('click', '.filter_area', function () { filter_area_Clicked($(this)); });
+   $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
+   $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
 
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
+   $('#ship_list').on('click', '.ship_table_tr:not(.header)', function () { ship_detail_container_Clicked($(this)); });
 
    $('#modal_ship_edit').on('change', '.version_radio', version_Changed);
    $('#modal_ship_edit').on('blur', '#ship_level', function () { ship_input_Leaved($(this)); });
@@ -105,8 +111,11 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_item_edit').on('click', '#btn_save_item', btn_save_item_stock_Clicked);
    $('#modal_item_edit').on('click', '#btn_reset_item_stock', btn_reset_item_stock_Clicked);
 
-   initShipList();
+   $('#others').on('click', 'textarea', function () { $(this).select(); });
+   $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
+
    initItemList();
+   initShipList();
 });
 
 
@@ -114,6 +123,20 @@ document.addEventListener('DOMContentLoaded', function () {
  * 現在登録されている艦娘情報から所持艦娘一覧を再構築
  */
 function initShipList() {
+   if (document.getElementById('ship_table')['checked']) {
+      // document.getElementById('ships_sort_container').classList.remove('d-none');
+      initShipListTable();
+      filterShipListTable();
+      setting.managerViewMode = 'table';
+      saveSetting();
+      return;
+   }
+
+   setting.managerViewMode = 'legacy';
+   saveSetting();
+
+   document.getElementById('ships_sort_container').classList.add('d-none');
+
    // 所持装備
    const stockShips = loadShipStock();
    //　もう表示した艦娘
@@ -121,7 +144,7 @@ function initShipList() {
 
    const fragment = document.createDocumentFragment();
    for (const ctype of API_CTYPE) {
-      const container = createDiv('my-3 px-2 py-2 general_box ship_type_container');
+      const container = createDiv('my-2 px-2 py-2 general_box ship_type_container');
 
       const header = createDiv('ship_type_header');
       header.textContent = ctype.name;
@@ -214,7 +237,13 @@ function initShipList() {
                const detailContainer = createDiv('detail_container no_ship');
                detailContainer.dataset.shipId = ver.id;
                detailContainer.dataset.uniqueId = -1;
-               detailContainer.innerHTML = `<div>新規登録</div>`;
+               detailContainer.innerHTML = `<div>新規登録</div>
+               <div class="ship_lv d-none" data-level="1"></div>
+               <div class="remodel_hp d-none" data-remodel-hp="0"></div>
+               <div class="remodel_asw d-none" data-remodel-asw="0"></div>
+               <div class="remodel_luck d-none" data-luck="${ver.luck}"></div>
+               <div class="sally_area d-none" data-area="0"></div>
+               `;
                shipContainer.classList.add('no_ship');
                verContainer.appendChild(detailContainer);
                shipContainer.appendChild(verContainer);
@@ -237,6 +266,7 @@ function initShipList() {
    }
 
    document.getElementById('ship_list').innerHTML = '';
+   document.getElementById('ship_list').classList.add('d-flex');
    document.getElementById('ship_list').appendChild(fragment);
 
    filterShipList();
@@ -246,14 +276,206 @@ function initShipList() {
  * 現在登録されている艦娘情報から所持艦娘一覧を再構築　テーブル形式
  */
 function initShipListTable() {
+   const sortKey = document.getElementById('ships_sort').value;
    // 所持装備
    const stockShips = loadShipStock();
-   //　もう表示した艦娘
-   const doneShipId = [];
-
    const fragment = document.createDocumentFragment();
+   let defaultIndex = 0;
+   // ヘッダー
+   const header = createDiv('ship_table_tr d-flex header');
+   header.innerHTML = `<div class="ship_table_td_name">艦娘</div>
+   <div class="ship_table_td_status">Lv.</div>
+   <div class="ship_table_td_status">耐久</div>
+   <div class="ship_table_td_status">運</div>
+   <div class="ship_table_td_status">対潜</div>
+   <div class="ship_table_td_status">命中項</div>
+   <div class="ship_table_td_status">回避項</div>
+   <div class="ship_table_td_status">CI項</div>`;
+   fragment.appendChild(header);
+
+   let baseShips = [];
+
+   switch (sortKey) {
+      case "port":
+         for (const ctype of API_CTYPE) {
+            baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
+         }
+         break;
+      default:
+         for (const ctype of API_CTYPE) {
+            baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
+         }
+         break;
+   }
+
+   for (const ship of baseShips) {
+      const stock = stockShips.find(v => v.id === ship.id);
+
+      if (stock && stock.details.length) {
+         stock.details.sort((a, b) => b.lv - a.lv);
+         for (const detail of stock.details) {
+            const luck = ship.luck + detail.st[4];
+
+            const tr = createDiv('ship_table_tr d-flex');
+            tr.dataset.shipId = ship.id;
+            tr.dataset.shipType = ship.type;
+            tr.dataset.uniqueId = detail.id;
+            tr.dataset.level = detail.lv;
+            tr.dataset.luck = luck;
+            tr.dataset.remodelHp = detail.st[5];
+            tr.dataset.remodelAsw = detail.st[6];
+            tr.dataset.area = detail.area;
+            tr.dataset.index = defaultIndex++;
+
+            if (detail.lv === 175) tr.classList.add('lv175');
+            else if (detail.lv > 99) tr.classList.add('lv100');
+            else if (detail.lv === 99) tr.classList.add('lv99');
+
+            const tdImage = createDiv('ship_table_td_name d-flex flex-wrap');
+            tdImage.innerHTML = `
+               <div class="align-self-center ship_table_td_image mr-1">
+                  <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
+                  ${detail.area >= 0 ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
+               </div>
+               <div class="align-self-center">${ship.name}</div>`;
+            tr.appendChild(tdImage);
+
+            const tdLevel = createDiv('ship_table_td_status');
+            tdLevel.textContent = detail.lv;
+            tr.appendChild(tdLevel);
+
+            const tdHP = createDiv('ship_table_td_status');
+            tdHP.textContent = ship.hp + detail.st[5];
+            tr.appendChild(tdHP);
+
+            const tdLuck = createDiv('ship_table_td_status');
+            tdLuck.textContent = luck;
+            tr.appendChild(tdLuck);
+
+            let asw = 0;
+            if (detail.lv === 99 && ship.max_asw > 0) asw = ship.max_asw;
+            else if (ship.max_asw > 0) asw = Math.floor((ship.max_asw - ship.asw) * (detail.lv / 99) + ship.asw);
+            else asw = 0;
+            const tdAsw = createDiv('ship_table_td_status');
+            tdAsw.textContent = asw + detail.st[6];
+            tr.appendChild(tdAsw);
+
+            // 命中項(ステータス部分のみ)
+            const tdAccuracy = createDiv('ship_table_td_status');
+            tdAccuracy.textContent = Math.floor(2 * Math.sqrt(detail.lv) + 1.5 * Math.sqrt(luck));
+            tr.appendChild(tdAccuracy);
+
+            let avoid = 0;
+            if (detail.lv === 99 && ship.max_avoid > 0) avoid = ship.max_avoid;
+            else if (ship.max_avoid > 0) avoid = Math.floor((ship.max_avoid - ship.avoid) * (detail.lv / 99) + ship.avoid);
+            else avoid = 0;
+
+            // 回避項(ステータス部分のみ)
+            const tdAvoid = createDiv('ship_table_td_status');
+            const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
+            if (baseAvoid >= 65) {
+               tdAvoid.textContent = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
+            }
+            else if (baseAvoid >= 45) {
+               tdAvoid.textContent = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
+            }
+            else {
+               tdAvoid.textContent = baseAvoid;
+            }
+            tr.appendChild(tdAvoid);
+
+            // CI項(ステータス部分のみ)
+            const tdCI = createDiv('ship_table_td_status');
+            if (luck >= 50) {
+               tdCI.textContent = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(detail.lv));
+            }
+            else {
+               tdCI.textContent = Math.floor(15 + luck + 0.75 * Math.sqrt(detail.lv));
+            }
+            tr.appendChild(tdCI);
+            fragment.appendChild(tr);
+         }
+      }
+      else if (ship.ver === 0) {
+         // 新規登録用フォームが必要かチェック
+         const versions = SHIP_DATA.filter(v => v.orig === ship.id).map(v => v.id);
+         if (stockShips.find(v => versions.includes(v.id) && v.details.length)) {
+            continue;
+         }
+
+         const tr = createDiv('ship_table_tr d-flex no_ship');
+         const luck = ship.luck;
+         tr.dataset.shipId = ship.id;
+         tr.dataset.shipType = ship.type;
+         tr.dataset.uniqueId = '';
+         tr.dataset.level = 1;
+         tr.dataset.luck = ship.luck;
+         tr.dataset.remodelHp = 0;
+         tr.dataset.remodelAsw = 0;
+         tr.dataset.area = 0;
+         tr.dataset.orig = ship.id;
+         tr.dataset.index = defaultIndex++;
+
+         const tdImage = createDiv('ship_table_td_name d-flex flex-wrap');
+         tdImage.innerHTML = `
+            <div class="align-self-center ship_table_td_image mr-1">
+               <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
+            </div>
+            <div class="align-self-center">${ship.name}</div>`;
+         tr.appendChild(tdImage);
+
+         const tdLevel = createDiv('ship_table_td_status');
+         tdLevel.textContent = 1;
+         tr.appendChild(tdLevel);
+
+         const tdHP = createDiv('ship_table_td_status');
+         tdHP.textContent = ship.hp;
+         tr.appendChild(tdHP);
+
+         const tdLuck = createDiv('ship_table_td_status');
+         tdLuck.textContent = luck;
+         tr.appendChild(tdLuck);
+
+         const tdAsw = createDiv('ship_table_td_status');
+         tdAsw.textContent = ship.asw ? ship.asw : 0;
+         tr.appendChild(tdAsw);
+
+         // 命中項(ステータス部分のみ)
+         const tdAccuracy = createDiv('ship_table_td_status');
+         tdAccuracy.textContent = Math.floor(2 * Math.sqrt(1) + 1.5 * Math.sqrt(luck));
+         tr.appendChild(tdAccuracy);
+
+         const avoid = ship.avoid ? ship.avoid : 0;
+         // 回避項(ステータス部分のみ)
+         const tdAvoid = createDiv('ship_table_td_status');
+         const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
+         if (baseAvoid >= 65) {
+            tdAvoid.textContent = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
+         }
+         else if (baseAvoid >= 45) {
+            tdAvoid.textContent = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
+         }
+         else {
+            tdAvoid.textContent = baseAvoid;
+         }
+         tr.appendChild(tdAvoid);
+
+         // CI項(ステータス部分のみ)
+         const tdCI = createDiv('ship_table_td_status');
+         if (luck >= 50) {
+            tdCI.textContent = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(1));
+         }
+         else {
+            tdCI.textContent = Math.floor(15 + luck + 0.75 * Math.sqrt(1));
+         }
+         tr.appendChild(tdCI);
+
+         fragment.appendChild(tr);
+      }
+   }
 
    document.getElementById('ship_list').innerHTML = '';
+   document.getElementById('ship_list').classList.remove('d-flex');
    document.getElementById('ship_list').appendChild(fragment);
 }
 
@@ -261,6 +483,10 @@ function initShipListTable() {
  * 艦娘フィルターによる表示物変更
  */
 function filterShipList() {
+   if (document.getElementById('ship_table')['checked']) {
+      filterShipListTable();
+      return;
+   }
    // 表示条件
    const noShipInvisible = document.getElementById('no_ship_invisible')['checked'];
    const levelMin = castInt(document.getElementById('level_min').value);
@@ -292,10 +518,6 @@ function filterShipList() {
                   detail.classList.add('d-none');
                   continue;
                }
-               else if (detail.classList.contains('no_ship')) {
-                  detail.classList.remove('d-none');
-                  continue;
-               }
 
                const lv = castInt(detail.getElementsByClassName('ship_lv')[0].dataset.level);
                const luck = castInt(detail.getElementsByClassName('remodel_luck')[0].dataset.luck);
@@ -320,7 +542,7 @@ function filterShipList() {
                   detail.classList.add('d-none');
                }
                // 出撃海域条件
-               else if (areas.length && !areas.includes(area)) {
+               else if (!areas.includes(area)) {
                   detail.classList.add('d-none');
                }
                else {
@@ -354,6 +576,70 @@ function filterShipList() {
       else {
          // 子がないので非表示
          container.classList.add('d-none');
+      }
+   }
+}
+
+/**
+ * 艦娘フィルターによる表示物変更
+ */
+function filterShipListTable() {
+   // 表示条件
+   const noShipInvisible = document.getElementById('no_ship_invisible')['checked'];
+   const levelMin = castInt(document.getElementById('level_min').value);
+   const levelMax = castInt(document.getElementById('level_max').value);
+   const luckMin = castInt(document.getElementById('luck_min').value);
+   const luckMax = castInt(document.getElementById('luck_max').value);
+   const visibleTypes = $('#enabled_ship_types').formSelect('getSelectedValues').map(v => castInt(v));
+   const remodelHps = $('#ship_remodel_hps').formSelect('getSelectedValues').map(v => castInt(v));
+   const remodelAwses = $('#ship_remodel_awses').formSelect('getSelectedValues').map(v => castInt(v));
+   const areas = [];
+   $('.filter_area.selected').each((i, e) => {
+      const area = castInt($(e)[0].dataset.area);
+      areas.push(area);
+      if (area === 0) areas.push(-1);
+   });
+
+   const trs = document.getElementsByClassName('ship_table_tr');
+   for (const tr of trs) {
+      if (tr.classList.contains('header')) {
+         continue;
+      }
+      const shipType = castInt(tr.dataset.shipType);
+      const lv = castInt(tr.dataset.level);
+      const luck = castInt(tr.dataset.luck);
+      const remodelHp = castInt(tr.dataset.remodelHp);
+      const remodelAsw = castInt(tr.dataset.remodelAsw);
+      const area = castInt(tr.dataset.area);
+
+      if (visibleTypes.length && !visibleTypes.includes(castInt(shipType))) {
+         tr.classList.add('d-none');
+      }
+      // Lv条件
+      else if (lv < levelMin || lv > levelMax) {
+         tr.classList.add('d-none');
+      }
+      // 運改修条件
+      else if (luck < luckMin || luck > luckMax) {
+         tr.classList.add('d-none');
+      }
+      // 耐久改修条件
+      else if (remodelHps.length && !remodelHps.includes(remodelHp)) {
+         tr.classList.add('d-none');
+      }
+      // 対潜改修条件
+      else if (remodelAwses.length && !remodelAwses.includes(remodelAsw)) {
+         tr.classList.add('d-none');
+      }
+      // 出撃海域条件
+      else if (!areas.includes(area)) {
+         tr.classList.add('d-none');
+      }
+      else if (noShipInvisible && tr.classList.contains('no_ship')) {
+         tr.classList.add('d-none');
+      }
+      else {
+         tr.classList.remove('d-none');
       }
    }
 }
@@ -715,6 +1001,8 @@ function ship_detail_container_Clicked($this) {
    list.innerHTML = ''
    list.appendChild(fragment);
 
+   document.getElementById('ship_level').value = 1;
+   document.getElementById('ship_level_range').value = 1;
    document.getElementById('ship_luck_range').max = raw.max_luck;
    document.getElementById('ship_luck').max = raw.max_luck;
    document.getElementById('ship_luck_range').min = raw.luck;
@@ -727,6 +1015,8 @@ function ship_detail_container_Clicked($this) {
       const stock = stocks.find(v => v.id === shipId && v.details.some(x => x.id === uniqueId));
       if (stock) {
          const detail = stock.details.find(v => v.id === uniqueId);
+         document.getElementById('ship_level').value = detail.lv;
+         document.getElementById('ship_level_range').value = detail.lv;
          document.getElementById('ship_luck').value = raw.luck + detail.st[4];
          document.getElementById('ship_luck_range').value = raw.luck + detail.st[4];
          if (detail.st[5]) document.getElementById('ship_remodel_hp').value = detail.st[5];
@@ -762,6 +1052,16 @@ function version_Changed() {
    if (ship) {
       $('.version_img_container').find('img').attr('src', `../img/ship/${ship.id}.png`);
       $('.version_img_container').find('img').attr('alt', ship.name);
+
+      document.getElementById('ship_luck_range').min = ship.luck;
+      document.getElementById('ship_luck_range').max = ship.max_luck;
+      document.getElementById('ship_luck').min = ship.luck;
+      document.getElementById('ship_luck').max = ship.max_luck;
+      const value = castInt(document.getElementById('ship_luck').value);
+      if (value < ship.luck || value > ship.max_luck) {
+         document.getElementById('ship_luck').value = ship.luck;
+         document.getElementById('ship_luck_range').value = ship.luck;
+      }
    }
 }
 
@@ -1210,9 +1510,9 @@ function btn_read_item_Clicked() {
 }
 
 /**
- * URL短縮ボタンクリック
+ * 読み込みクリック
  */
-async function btn_url_shorten_Clicked() {
+function btn_url_shorten_Clicked() {
    const button = document.getElementById('btn_url_shorten');
    const textbox = document.getElementById('input_url');
    const url = textbox.value.trim();
@@ -1236,4 +1536,51 @@ async function btn_url_shorten_Clicked() {
    }
 
    button.textContent = '読み込み';
+}
+
+/**
+ * 艦隊晒し用コード変換
+ */
+function getKantaiSarashi() {
+   let success = false;
+   const shipStock = loadShipStock();
+   if (shipStock && shipStock.length) {
+      const text = []
+      for (const stock of shipStock) {
+         const ship = SHIP_DATA.find(v => v.id === stock.id);
+         for (const detail of stock.details) {
+            const nextLvObj = LEVEL_BORDERS.find(v => v.lv === (detail.lv + 1));
+            const nextExp = nextLvObj ? nextLvObj.req - detail.exp : 0;
+            text.push(`{"id":${ship.api},"lv":${detail.lv},"st":[${detail.st.join(',')}],"exp":[${detail.exp},${nextExp},${0}]}`);
+         }
+      }
+
+      document.getElementById('kantai_sarashi').value = "[" + text.join(',') + "]";
+      document.getElementById('kantai_sarashi').nextElementSibling.classList.add('active');
+      success = true;
+   }
+
+   const itemStock = loadPlaneStock();
+   if (itemStock && itemStock.length) {
+      const text = []
+      for (const item of itemStock) {
+         for (let remodel = 0; remodel < item.num.length; remodel++) {
+            const stock = item.num[remodel];
+            for (let i = 0; i < stock; i++) {
+               text.push(`{"id":${item.id},"lv"${remodel}}`);
+            }
+         }
+      }
+
+      document.getElementById('kantai_sarashi_item').value = "[" + text.join(',') + "]";
+      document.getElementById('kantai_sarashi_item').nextElementSibling.classList.add('active');
+      success = true;
+   }
+
+   if (success) {
+      inform_success('出力しました。');
+   }
+   else {
+      inform_success('出力に失敗しました。艦娘、装備の反映を行ってください。');
+   }
 }

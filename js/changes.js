@@ -1647,7 +1647,19 @@ let CHANGE_LOG = [
 				content: "Gambier Bay Mk.IIを追加しました。FR-1 Fireballを追加しました。"
 			},
 		],
+	},
+	{
+		id: "1.12.9", changes: [
+			{
+				type: 0, title: "所持艦娘 装備管理ページを新設しました。",
+				content: "シミュレータ内で計算に使用する<a href='../manager/'>艦娘、装備を管理するページ</a>を新設しました。今後、艦娘や装備の登録情報の管理はこちらから行ってください。"
+			},
+			{
+				type: 1, title: "新装備を追加しました。",
+				content: "Fulmar(戦闘偵察/熟練)、Barracuda 2種を追加しました。"
+			},
+		],
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/7/16";
+const LAST_UPDATE_DATE = "2021/7/31";

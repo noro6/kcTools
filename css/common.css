@@ -367,7 +367,8 @@ h1 {
 #btn_top {
   padding: 0.5rem 0.75rem !important;
 }
-#tool_bar .fa-save {
+#tool_bar .fa-save,
+#tool_bar .fa-wrench {
   color: rgb(255, 255, 255);
 }
 #tool_bar .fa-share-alt {
@@ -388,6 +389,7 @@ h1 {
 #btn_redo:hover,
 #btn_undo:hover,
 #btn_url_shorten:hover,
+#btn_goto_manager:hover,
 #reduced_display:hover,
 #reduced_display.checked {
   box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.6);

@@ -18,8 +18,8 @@
 	<link rel="stylesheet" href="../css/materialize.min.css" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 	<link rel="stylesheet" href="../fonts/style.css">
-	<link rel="stylesheet" href="../css/common.css">
-	<link rel="stylesheet" href="../css/manager.css">
+	<link rel="stylesheet" href="../css/common.min.css">
+	<link rel="stylesheet" href="../css/manager.min.css">
 	<script src="../js/common.js"></script>
 	<script defer src="../js/jquery-3.5.1.min.js"></script>
 	<script defer src="../js/sortable.js"></script>
@@ -64,7 +64,7 @@
 				<i class="fas fa-calculator"></i>
 				制空計算ページへ
 			</div>
-			<div class="flex-grow-1 ml-3 mx-1" id="url_shortener">
+			<div class="flex-grow-1 mx-1" id="url_shortener">
 				<textarea class="form-control-dark" id="input_url"
 					placeholder="ここに艦隊反映コードや装備反映コードを入力し、右の読み込みボタンを押してもOKです"></textarea>
 			</div>
@@ -89,14 +89,15 @@
 			<div>
 				<ul class="tabs">
 					<li class="tab"><a class="waves-effect waves-blue active" href="#ships_content">艦娘一覧</a></li>
-					<li class="tab"><a class="waves-effect waves-blue" href="#ships_reader">艦娘反映</a></li>
 					<li class="tab"><a class="waves-effect waves-blue" href="#items_content">装備一覧</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#ships_reader">艦娘反映</a></li>
 					<li class="tab"><a class="waves-effect waves-blue" href="#items_reader">装備反映</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#others">その他</a></li>
 				</ul>
 			</div>
 			<div class="border-top px-2 py-2">
 				<div id="ships_content">
-					<div class="general_box mx-2">
+					<div class="general_box">
 						<ul class="collapsible">
 							<li>
 								<div class="collapsible-header">
@@ -195,12 +196,16 @@
 											</div>
 										</div>
 										<div class="col s12 l6 d-flex flex-wrap">
-											<div class="filter_area mx-2" data-area="1"><img src="../img/util/area1.png"></div>
-											<div class="filter_area mx-2" data-area="2"><img src="../img/util/area2.png"></div>
-											<div class="filter_area mx-2" data-area="3"><img src="../img/util/area3.png"></div>
-											<div class="filter_area mx-2" data-area="4"><img src="../img/util/area4.png"></div>
-											<div class="filter_area mx-2" data-area="5"><img src="../img/util/area5.png"></div>
-											<div class="filter_area mx-2" data-area="6"><img src="../img/util/area6.png"></div>
+											<div class="filter_area mx-2 selected" data-area="1"><img src="../img/util/area1.png"></div>
+											<div class="filter_area mx-2 selected" data-area="2"><img src="../img/util/area2.png"></div>
+											<div class="filter_area mx-2 selected" data-area="3"><img src="../img/util/area3.png"></div>
+											<div class="filter_area mx-2 selected" data-area="4"><img src="../img/util/area4.png"></div>
+											<div class="filter_area mx-2 selected" data-area="5"><img src="../img/util/area5.png"></div>
+											<div class="filter_area mx-2 selected" data-area="6"><img src="../img/util/area6.png"></div>
+											<div class="filter_area mx-2 selected align-self-center no_area waves-effect waves-light"
+												data-area="0">
+												札なし
+											</div>
 										</div>
 									</div>
 									<div class="border-top mb-2"></div>
@@ -210,21 +215,21 @@
 											<div class="d-flex">
 												<div class="mx-3 align-self-center">
 													<label>
-														<input class="with-gap" id="ship_table" name="display" type="radio" />
+														<input class="with-gap" id="ship_table" name="display" type="radio" checked />
 														<span>一覧表示</span>
 													</label>
 												</div>
 												<div class="mx-3 align-self-center">
 													<label>
-														<input class="with-gap" id="ship_legacy" name="display" type="radio" checked />
+														<input class="with-gap" id="ship_legacy" name="display" type="radio" />
 														<span>艦隊分析</span>
 													</label>
 												</div>
 											</div>
 										</div>
-										<div class="ml-4 input-field align-self-center">
+										<div class="ml-4 input-field align-self-center d-none" id="ships_sort_container">
 											<select id="ships_sort">
-												<option value="1">母港</option>
+												<option value="port">母港</option>
 												<option value="hp">耐久</option>
 												<option value="asw">対潜</option>
 												<option value="area">出撃海域</option>
@@ -236,7 +241,78 @@
 							</li>
 						</ul>
 					</div>
-					<div class="d-flex flex-wrap" id="ship_list"></div>
+					<div class="d-flex flex-wrap" id="ship_list">
+						<div class="mx-auto" id="pre_loader">
+							<div class="mx-auto preloader-wrapper big active">
+								<div class="spinner-layer spinner-blue-only">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle"></div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="items_content">
+					<div class="general_box">
+						<ul class="collapsible">
+							<li>
+								<div class="collapsible-header"><i class="fa-filter"></i>フィルタ</div>
+								<div class="collapsible-body" id="items_filter">
+									<div class="border-top mb-4 ml-2 pl-1 pt-4">
+										<label class="filter_checkbox">
+											<input type="checkbox" id="no_item_invisible" />
+											<span>未所持の装備を非表示にする</span>
+										</label>
+									</div>
+									<div class="row">
+										<div class="input-field col s12 l6" id="enabled_types_container">
+											<select class="icons" multiple id="enabled_types">
+												<option value="1" data-icon="../img/type/type1-alt.png">主砲</option>
+												<option value="4" data-icon="../img/type/type21-alt.png">副砲, 機銃</option>
+												<option value="5" data-icon="../img/type/type5-alt.png">魚雷</option>
+												<option value="6" data-icon="../img/type/type6-alt.png">艦戦</option>
+												<option value="7" data-icon="../img/type/type7-alt.png">攻撃機</option>
+												<option value="10" data-icon="../img/type/type10-alt.png">艦偵, 水上機</option>
+												<option value="12" data-icon="../img/type/type12-alt.png">電探</option>
+												<option value="14" data-icon="../img/type/type14-alt.png">ソナー, 爆雷</option>
+												<option value="24" data-icon="../img/type/type24-alt.png">輸送, 上陸用舟艇</option>
+												<option value="47" data-icon="../img/type/type47-alt.png">陸上機</option>
+												<option value="99" data-icon="../img/type/type17-alt.png">その他</option>
+											</select>
+											<label>表示カテゴリ（大分類）</label>
+										</div>
+										<div class="col s12 l6 align-self-center">
+											<div class="d-flex">
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="remodel_min" type="number" max="10" min="0" value="0">
+														<label for="remodel_min">改修下限</label>
+													</div>
+												</div>
+												<div class="mx-3 align-self-center flex-grow-1">
+													<div id="remodel_range"></div>
+												</div>
+												<div class="align-self-center">
+													<div class="input-field">
+														<input id="remodel_max" type="number" max="10" min="0" value="10">
+														<label for="remodel_max">改修上限</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div id="item_list"></div>
 				</div>
 				<div id="ships_reader">
 					<div class="general_box">
@@ -361,60 +437,19 @@
 						</div>
 					</div>
 				</div>
-				<div id="items_content">
-					<div class="general_box">
-						<ul class="collapsible">
-							<li>
-								<div class="collapsible-header"><i class="fa-filter"></i>フィルタ</div>
-								<div class="collapsible-body" id="items_filter">
-									<div class="border-top mb-4 ml-2 pl-1 pt-4">
-										<label class="filter_checkbox">
-											<input type="checkbox" id="no_item_invisible" />
-											<span>未所持の装備を非表示にする</span>
-										</label>
-									</div>
-									<div class="row">
-										<div class="input-field col s12 l6" id="enabled_types_container">
-											<select class="icons" multiple id="enabled_types">
-												<option value="1" data-icon="../img/type/type1-alt.png">主砲</option>
-												<option value="4" data-icon="../img/type/type21-alt.png">副砲, 機銃</option>
-												<option value="5" data-icon="../img/type/type5-alt.png">魚雷</option>
-												<option value="6" data-icon="../img/type/type6-alt.png">艦戦</option>
-												<option value="7" data-icon="../img/type/type7-alt.png">攻撃機</option>
-												<option value="10" data-icon="../img/type/type10-alt.png">艦偵, 水上機</option>
-												<option value="12" data-icon="../img/type/type12-alt.png">電探</option>
-												<option value="14" data-icon="../img/type/type14-alt.png">ソナー, 爆雷</option>
-												<option value="24" data-icon="../img/type/type24-alt.png">輸送, 上陸用舟艇</option>
-												<option value="47" data-icon="../img/type/type47-alt.png">陸上機</option>
-												<option value="99" data-icon="../img/type/type17-alt.png">その他</option>
-											</select>
-											<label>表示カテゴリ（大分類）</label>
-										</div>
-										<div class="col s12 l6 align-self-center">
-											<div class="d-flex">
-												<div class="align-self-center">
-													<div class="input-field">
-														<input id="remodel_min" type="number" max="10" min="0" value="0">
-														<label for="remodel_min">改修下限</label>
-													</div>
-												</div>
-												<div class="mx-3 align-self-center flex-grow-1">
-													<div id="remodel_range"></div>
-												</div>
-												<div class="align-self-center">
-													<div class="input-field">
-														<input id="remodel_max" type="number" max="10" min="0" value="10">
-														<label for="remodel_max">改修上限</label>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</li>
-						</ul>
+				<div id="others">
+					<div class="my-4">
+						<button type="button" class="waves-effect waves-light btn btn-falt"
+							id="btn_kantai_sarashi">艦隊晒し用コード出力</button>
 					</div>
-					<div id="item_list"></div>
+					<div class="input-field">
+						<textarea id="kantai_sarashi" class="materialize-textarea" readonly></textarea>
+						<label for="kantai_sarashi">艦隊晒し用コード(艦娘)</label>
+					</div>
+					<div class="input-field">
+						<textarea id="kantai_sarashi_item" class="materialize-textarea" readonly></textarea>
+						<label for="kantai_sarashi_item">艦隊晒し用コード(装備)</label>
+					</div>
 				</div>
 			</div>
 		</div>
