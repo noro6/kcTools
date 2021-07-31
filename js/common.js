@@ -124,6 +124,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
 	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
 	if (!setting.hasOwnProperty('visibleFixedMenu')) setting.visibleFixedMenu = true;
+	if (!setting.hasOwnProperty('managerViewMode')) setting.managerViewMode = 'table';
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -328,26 +329,10 @@ function adaptUpdater() {
 			setting.visibleAntiAirStatus = true;
 		}
 
-		if (major <= 11 || minor < 3 || (minor === 3 && patch < 5)) {
-			// 所持艦娘情報変更
-			let shipStock = loadShipStock();
-
-			// 所持数データ num を経験値の配列として変換　Lvは99で初期
-			for (const stockData of shipStock) {
-				if (typeof stockData.num === 'number') {
-					const array = [];
-					for (let i = 0; i < stockData.num; i++) {
-						array.push(1000000);
-					}
-					stockData.num = array;
-					delete stockData.deck;
-				}
-			}
-
-			// 未所持艦娘の情報は保存しない
-			shipStock = shipStock.filter(v => v.num.length > 0);
-
-			saveLocalStorage('shipStock', shipStock);
+		// ～　v1.12.9
+		if (major <= 11 || minor < 9) {
+			// 所持艦娘情報破棄
+			deleteLocalStorage('shipStock');
 		}
 	}
 
@@ -533,22 +518,52 @@ function readShipJson(input) {
 		const jsonData = JSON.parse(input);
 		const shipStock = [];
 
+		let uniqueId = 1;
 		for (const obj of jsonData) {
+			let id = 0;
+			const detail = { id: uniqueId++, lv: 0, exp: 0, st: [], area: -1 };
+
 			// 艦娘データかチェック
-			if (!obj.hasOwnProperty('api_ship_id') || !obj.hasOwnProperty('api_exp')) return false;
-			const ship = SHIP_DATA.find(v => v.api === obj.api_ship_id);
-			// todo 経験値取得
-			const exp = obj.api_exp[0];
-			// マスタにあるデータなら追加
+			if (obj.hasOwnProperty('api_ship_id') && obj.hasOwnProperty('api_lv') && obj.hasOwnProperty('api_exp') && obj.hasOwnProperty('api_kyouka')) {
+				id = castInt(obj.api_ship_id);
+				detail.lv = castInt(obj.api_lv);
+				/** 経験値　[0]=累積, [1]=次のレベルまで, [2]=経験値バー割合 */
+				detail.exp = obj.api_exp[0];
+				/** 近代化改修状態　[0]=火力, [1]=雷装, [2]=対空, [3]=装甲, [4]=運, [5]=耐久, [6]=対潜 */
+				detail.st = obj.api_kyouka;
+			}
+			else if (obj.hasOwnProperty('id') && obj.hasOwnProperty('lv') && obj.hasOwnProperty('st') && obj.hasOwnProperty('exp')) {
+				id = castInt(obj.id);
+				detail.lv = castInt(obj.lv);
+				/** 経験値　[0]=累積, [1]=次のレベルまで, [2]=経験値バー割合 */
+				detail.exp = obj.exp[0];
+				/** 近代化改修状態　[0]=火力, [1]=雷装, [2]=対空, [3]=装甲, [4]=運, [5]=耐久, [6]=対潜 */
+				detail.st = obj.st;
+			}
+			else {
+				// データ形式があってない
+				return false;
+			}
+
+			// 札
+			if (obj.hasOwnProperty('api_sally_area')) {
+				detail.area = obj.api_sally_area;
+			}
+			else if (obj.hasOwnProperty('area')) {
+				detail.area = obj.area;
+			}
+
+			const ship = SHIP_DATA.find(v => v.api === id);
+			// マスタにあるデータなら処理する
 			if (ship) {
 				const stock = shipStock.find(v => v.id === ship.id);
 				if (stock) {
 					// 既にデータある場合
-					stock.num.push(exp);
+					stock.details.push(detail);
 				}
 				else {
 					// 新しくデータ追加
-					shipStock.push({ id: ship.id, num: [exp] });
+					shipStock.push({ id: ship.id, details: [detail] });
 				}
 			}
 		}
@@ -578,7 +593,6 @@ function readKantaiBunsekiJson(input) {
 			// 艦娘データかチェック
 			if (!obj.hasOwnProperty('id') || !obj.hasOwnProperty('exp')) return false;
 			const ship = SHIP_DATA.find(v => v.api === obj.id);
-			// todo 経験値取得
 			const exp = obj.exp;
 			// マスタにあるデータなら追加
 			if (ship) {
@@ -620,13 +634,21 @@ function readEquipmentJson(input) {
 
 		for (const obj of jsonData) {
 			// 装備データかチェック
-			if (!obj.hasOwnProperty('api_slotitem_id')) return false;
-			if (!obj.hasOwnProperty('api_level')) return false;
-
-			const planeId = obj.api_slotitem_id;
-			const remodel = obj.api_level;
-			const stock = planeStock.find(v => v.id === planeId);
-			if (stock) stock.num[remodel]++;
+			if (obj.hasOwnProperty('api_slotitem_id') && obj.hasOwnProperty('api_level')) {
+				const planeId = obj.api_slotitem_id;
+				const remodel = obj.api_level;
+				const stock = planeStock.find(v => v.id === planeId);
+				if (stock) stock.num[remodel]++;
+			}
+			else if (obj.hasOwnProperty('id') && obj.hasOwnProperty('lv') && !obj.hasOwnProperty('st')) {
+				const planeId = obj.id;
+				const remodel = obj.lv;
+				const stock = planeStock.find(v => v.id === planeId);
+				if (stock) stock.num[remodel]++;
+			}
+			else {
+				return false;
+			}
 		}
 
 		planeStock.sort((a, b) => a.id - b.id);
@@ -690,7 +712,7 @@ function loadPlaneStock() {
 
 /**
  * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
- * @returns {[{id: number, num: number[]}]}
+ * @returns {[{id: number, details: {id: number, lv: number, exp: number, st: number[], area: number}[]}]}
  */
 function loadShipStock() {
 	let shipStock = loadLocalStorage('shipStock') || [];
@@ -774,6 +796,37 @@ function copyInputTextToClipboard($this) {
 	} catch (error) {
 		return false;
 	}
+}
+
+/**
+ * ステータスヘッダー用の変換関数
+ * @param {*} text
+ * @returns
+ */
+function convertHeaderText(text) {
+	if (text === "default") text = "カテゴリ";
+	else if (text === "history") text = "よく使う";
+	else if (text === "id") text = "図鑑No";
+	else if (text === "antiAir") text = "対空";
+	else if (text === "battleAntiAir") text = "出撃対空";
+	else if (text === "defenseAntiAir") text = "防空対空";
+	else if (text === "antiAirWeight") text = "加重対空";
+	else if (text === "antiAirBonus") text = "艦隊防空";
+	else if (text === "fire") text = "火力";
+	else if (text === "torpedo") text = "雷装";
+	else if (text === "bomber") text = "爆装";
+	else if (text === "accuracy") text = "命中";
+	else if (text === "scout") text = "索敵";
+	else if (text === "asw") text = "対潜";
+	else if (text === "antiBomber") text = "対爆";
+	else if (text === "interception") text = "迎撃";
+	else if (text === "radius") text = "半径";
+	else if (text === "cost") text = "コスト";
+	else if (text === "avoid") text = "射撃回避";
+	else if (text === "avoid2") text = "回避";
+	else if (text === "armor") text = "装甲";
+	else if (text === "land_base_power") text = "基地火力";
+	return text;
 }
 
 /**
@@ -1465,4 +1518,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			saveLocalStorage('activePresets', sorted);
 		}
 	});
+
+	$('#header').on('click', '#btn_goto_manager', function () { window.location.href = '../manager/'; });
 });
