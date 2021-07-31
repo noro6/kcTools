@@ -946,7 +946,7 @@ function item_sort_Changed($this, e) {
 function ship_detail_container_Clicked($this) {
    const stocks = loadShipStock();
    const shipId = castInt($this[0].dataset.shipId);
-   const uniqueId = castInt($this[0].dataset.uniqueId);
+   const uniqueId = castInt($this[0].dataset.uniqueId, -1);
    const raw = SHIP_DATA.find(v => v.id === shipId);
    if (!raw) return;
 
@@ -995,7 +995,7 @@ function ship_detail_container_Clicked($this) {
    document.getElementById('ship_remodel_asw').value = '';
    $('.selectable_area_banner.selected').removeClass('selected');
 
-   if (uniqueId > 0) {
+   if (uniqueId >= 0) {
       const stock = stocks.find(v => v.id === shipId && v.details.some(x => x.id === uniqueId));
       if (stock) {
          const detail = stock.details.find(v => v.id === uniqueId);
@@ -1014,6 +1014,13 @@ function ship_detail_container_Clicked($this) {
 
          document.getElementById('btn_update_ship')['disabled'] = false;
          document.getElementById('btn_delete_ship')['disabled'] = false;
+      }
+      else {
+         document.getElementById('ship_luck').value = raw.luck;
+         document.getElementById('ship_luck_range').value = raw.luck;
+
+         document.getElementById('btn_update_ship')['disabled'] = true;
+         document.getElementById('btn_delete_ship')['disabled'] = true;
       }
    }
    else {
@@ -1251,29 +1258,27 @@ function btn_update_ship_Clicked() {
 function btn_delete_ship_Clicked() {
    const uniqueId = castInt(document.getElementById('modal_ship_edit').dataset.editShipId);
 
-   if (uniqueId > 0) {
-      let stockShips = loadShipStock();
-      const stockIndex = stockShips.findIndex(v => v.details.some(x => x.id === uniqueId));
-      if (stockIndex >= 0) {
-         const stock = stockShips[stockIndex];
-         // 削除
-         stock.details = stock.details.filter(v => v.id !== uniqueId);
-         if (stock.details.length) {
-            stockShips[stockIndex] = stock;
-         }
-         else {
-            // 明細が全部消えたならヘッダも消す
-            stockShips = stockShips.filter(v => v.id !== stock.id);
-         }
-
-         saveLocalStorage('shipStock', stockShips);
-         inform_success('除籍されました。');
-         // 再描画
-         initShipList();
+   let stockShips = loadShipStock();
+   const stockIndex = stockShips.findIndex(v => v.details.some(x => x.id === uniqueId));
+   if (stockIndex >= 0) {
+      const stock = stockShips[stockIndex];
+      // 削除
+      stock.details = stock.details.filter(v => v.id !== uniqueId);
+      if (stock.details.length) {
+         stockShips[stockIndex] = stock;
       }
       else {
-         inform_success('除籍に失敗しました。既に除籍されています。');
+         // 明細が全部消えたならヘッダも消す
+         stockShips = stockShips.filter(v => v.id !== stock.id);
       }
+
+      saveLocalStorage('shipStock', stockShips);
+      inform_success('除籍されました。');
+      // 再描画
+      initShipList();
+   }
+   else {
+      inform_success('除籍に失敗しました。既に除籍されています。');
    }
    $('#modal_ship_edit').modal('close');
 }
