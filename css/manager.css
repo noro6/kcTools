@@ -568,8 +568,9 @@ input[type="number"] {
 }
 .ship_table_td_image .area_banner {
    position: absolute;
-   right: 0px;
-   height: 50px;
+   top: -5px;
+   left: 38px;
+   height: 60px;
    width: auto;
 }
 

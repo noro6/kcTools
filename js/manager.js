@@ -2,6 +2,9 @@
 let ITEM_TYPES_LIST = [];
 
 let timer = null;
+
+const FINAL_SHIPS = SHIP_DATA.filter(v => v.final);
+
 document.addEventListener('DOMContentLoaded', function () {
 
    document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
@@ -153,7 +156,7 @@ function initShipList() {
       const ctypeBody = createDiv('ship_type_body');
 
       // 艦型で検索し、いったん最終改造状態のみ取得
-      const ships = SHIP_DATA.filter(v => v.type2 === ctype.id && v.final);
+      const ships = FINAL_SHIPS.filter(v => v.type2 === ctype.id);
       for (const ship of ships) {
          const versions = SHIP_DATA.filter(v => v.orig === ship.orig);
          if (!versions.length) break;
@@ -196,19 +199,8 @@ function initShipList() {
                   else if (detail.lv > 99) detailContainer.classList.add('lv_100');
                   else if (detail.lv === 99) detailContainer.classList.add('lv_max');
 
-                  let asw = 0;
-                  if (detail.lv === 99 && ver.max_asw > 0) {
-                     // Lv99ステ
-                     asw = ver.max_asw;
-                  }
-                  else if (ver.max_asw > 0) {
-                     // Lv99以外 算出可能な場合
-                     asw = Math.floor((ver.max_asw - ver.asw) * (detail.lv / 99) + ver.asw);
-                  }
-                  else {
-                     // 算出不可
-                     asw = 0;
-                  }
+                  // 対潜値算出
+                  const asw = getLevelStatus(detail.lv, ver.max_asw, ver.asw);
 
                   detailContainer.innerHTML = `
                   <div class="d-flex">
@@ -262,12 +254,11 @@ function initShipList() {
       if (container.getElementsByClassName('version_container').length) {
          fragment.appendChild(container);
       }
-
    }
 
    document.getElementById('ship_list').innerHTML = '';
-   document.getElementById('ship_list').classList.add('d-flex');
    document.getElementById('ship_list').appendChild(fragment);
+   document.getElementById('ship_list').classList.add('d-flex');
 
    filterShipList();
 }
@@ -352,10 +343,7 @@ function initShipListTable() {
             tdLuck.textContent = luck;
             tr.appendChild(tdLuck);
 
-            let asw = 0;
-            if (detail.lv === 99 && ship.max_asw > 0) asw = ship.max_asw;
-            else if (ship.max_asw > 0) asw = Math.floor((ship.max_asw - ship.asw) * (detail.lv / 99) + ship.asw);
-            else asw = 0;
+            const asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw);
             const tdAsw = createDiv('ship_table_td_status');
             tdAsw.textContent = asw + detail.st[6];
             tr.appendChild(tdAsw);
@@ -365,11 +353,7 @@ function initShipListTable() {
             tdAccuracy.textContent = Math.floor(2 * Math.sqrt(detail.lv) + 1.5 * Math.sqrt(luck));
             tr.appendChild(tdAccuracy);
 
-            let avoid = 0;
-            if (detail.lv === 99 && ship.max_avoid > 0) avoid = ship.max_avoid;
-            else if (ship.max_avoid > 0) avoid = Math.floor((ship.max_avoid - ship.avoid) * (detail.lv / 99) + ship.avoid);
-            else avoid = 0;
-
+            const avoid = getLevelStatus(detail.lv, ship.max_avoid, ship.avoid);
             // 回避項(ステータス部分のみ)
             const tdAvoid = createDiv('ship_table_td_status');
             const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
@@ -1582,5 +1566,26 @@ function getKantaiSarashi() {
    }
    else {
       inform_success('出力に失敗しました。艦娘、装備の反映を行ってください。');
+   }
+}
+
+/**
+ * レベルによる上昇のステータスを取得
+ * @param {number} lv レベル
+ * @param {number} max Lv99時のステータス
+ * @param {number} min 初期値
+ * @returns
+ */
+function getLevelStatus(lv, max, min) {
+   if (lv === 99 && max > 0) {
+      return max;
+   }
+   else if (max > 0) {
+      // Lv99以外 算出可能な場合
+      return Math.floor((max - min) * (lv / 99) + min);
+   }
+   else {
+      // 算出不可
+      return 0;
    }
 }
