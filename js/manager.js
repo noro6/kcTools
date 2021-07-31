@@ -747,7 +747,7 @@ function initExpTable() {
       tr.appendChild(tdSumExp);
 
       const tdAvgExp = document.createElement('td');
-      tdAvgExp.textContent = count ? Number(sumExp / count).toLocaleString() : 0;
+      tdAvgExp.textContent = count ? Number(Math.floor(sumExp / count)).toLocaleString() : 0;
       tr.appendChild(tdAvgExp);
 
       const tdExpRate = document.createElement('td');
@@ -785,7 +785,7 @@ function initExpTable() {
    tr.appendChild(tdSumExp);
 
    const tdAvgExp = document.createElement('td');
-   tdAvgExp.textContent = allCount ? Number(allSumExp / allCount).toLocaleString() : 0;
+   tdAvgExp.textContent = allCount ? Number(Math.floor(allSumExp / allCount)).toLocaleString() : 0;
    tr.appendChild(tdAvgExp);
 
    const tdExpRate = document.createElement('td');
