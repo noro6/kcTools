@@ -1381,7 +1381,7 @@ function item_stock_Leaved($this) {
    }
 
    let sumStock = 0;
-   $('#item_stock_inputs input[type="number"]').each((i, e) => {
+   $('#item_stock_inputs input[type="number"]:not(#remodel_all)').each((i, e) => {
       sumStock += castInt($(e).val());
    });
    document.getElementById('remodel_all').value = sumStock;
@@ -1402,7 +1402,7 @@ function item_stock_Changed($this) {
    }
 
    let sumStock = 0;
-   $('#item_stock_inputs input[type="number"]').each((i, e) => {
+   $('#item_stock_inputs input[type="number"]:not(#remodel_all)').each((i, e) => {
       sumStock += castInt($(e).val());
    });
 
