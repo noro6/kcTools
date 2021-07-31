@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
    $('.modal').modal();
    // タブ初期化
    $('.tabs').tabs();
+   $('#ship_content_tabs').tabs('select', 'ship_view');
+   $('#item_content_tabs').tabs('select', 'item_view');
    // 折り畳み初期化
    $('.collapsible').collapsible();
    // select初期化
@@ -71,6 +73,8 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
    $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
 
+   $('#ship_content_tabs').on('click', 'a[href="#ship_exp"]', initExpTable);
+
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
    $('#ship_list').on('click', '.ship_table_tr:not(.header)', function () { ship_detail_container_Clicked($(this)); });
 
@@ -86,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_ship_edit').on('click', '#btn_create_ship', btn_create_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_update_ship', btn_update_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
+
 
    // 装備関連
    const slider = document.getElementById('remodel_range');
@@ -626,6 +631,177 @@ function filterShipListTable() {
          tr.classList.remove('d-none');
       }
    }
+}
+
+/**
+ * 経験値テーブル初期化
+ */
+function initExpTable() {
+   const shipStock = loadShipStock();
+
+   let allMaxLv = 0;
+   let allMinLv = 175;
+   let allSumLv = 0;
+   let allSumExp = 0;
+   let allCount = 0;
+
+   const fragment = document.createDocumentFragment();
+   for (const type of SHIP_TYPE_RE) {
+
+      // 艦種拡張
+      let dispType = [];
+      switch (type.id) {
+         case 103:
+            // 軽巡級
+            dispType = [3, 4];
+            break;
+         case 105:
+            // 重巡級
+            dispType = [5, 6];
+            break;
+         case 108:
+            //戦艦級
+            dispType = [8, 9, 10];
+            break;
+         case 111:
+            // 航空母艦
+            dispType = [7, 11, 18];
+            break;
+         case 114:
+            // 潜水艦
+            dispType = [13, 14];
+            break;
+         case 116:
+            // 補助艦艇
+            dispType = [1, 16, 17, 19, 20, 21, 22];
+            break;
+         case 11:
+            // 正規空母(大画面)
+            dispType = [11, 18];
+            break;
+         case 8:
+            // 戦艦(大画面)
+            dispType = [8, 9];
+            break;
+         case 117:
+            // 補助艦艇(大画面)
+            dispType = [1, 17, 19, 20, 21, 22];
+            break;
+         default:
+            dispType.push(type.id);
+            break;
+      }
+
+      let maxLv = 0;
+      let minLv = 175;
+      let sumLv = 0;
+      let sumExp = 0;
+      let count = 0;
+
+      const shipIds = SHIP_DATA.filter(v => dispType.includes(v.type)).map(v => v.id);
+      const targetStocks = shipStock.filter(v => shipIds.includes(v.id));
+      for (const stock of targetStocks) {
+         for (const detail of stock.details) {
+            count++;
+            sumLv += detail.lv;
+            sumExp += detail.exp;
+            if (maxLv < detail.lv) maxLv = detail.lv;
+            if (minLv > detail.lv) minLv = detail.lv;
+
+            allCount++;
+            allSumLv += detail.lv;
+            allSumExp += detail.exp;
+            if (allMaxLv < detail.lv) allMaxLv = detail.lv;
+            if (allMinLv > detail.lv) allMinLv = detail.lv;
+         }
+      }
+
+      const tr = document.createElement('tr');
+      tr.className = 'type_tr';
+
+      const tdName = document.createElement('td');
+      tdName.className = 'td_name';
+      tdName.textContent = type.name;
+      tr.appendChild(tdName);
+
+      const tdCount = document.createElement('td');
+      tdCount.textContent = count;
+      tr.appendChild(tdCount);
+
+      const tdMaxLevel = document.createElement('td');
+      tdMaxLevel.textContent = maxLv;
+      tr.appendChild(tdMaxLevel);
+
+      const tdMinLevel = document.createElement('td');
+      tdMinLevel.textContent = count ? minLv : 0;
+      tr.appendChild(tdMinLevel);
+
+      const tdAvgLevel = document.createElement('td');
+      tdAvgLevel.textContent = count ? (sumLv / count).toFixed(1) : 0;
+      tr.appendChild(tdAvgLevel);
+
+      const tdSumExp = document.createElement('td');
+      tdSumExp.className = 'td_sum_exp';
+      tdSumExp.dataset.exp = sumExp;
+      tdSumExp.textContent = Number(sumExp).toLocaleString();
+      tr.appendChild(tdSumExp);
+
+      const tdAvgExp = document.createElement('td');
+      tdAvgExp.textContent = count ? Number(sumExp / count).toLocaleString() : 0;
+      tr.appendChild(tdAvgExp);
+
+      const tdExpRate = document.createElement('td');
+      tdExpRate.className = 'td_exp_rate';
+      tdExpRate.textContent = 100;
+      tr.appendChild(tdExpRate);
+
+      fragment.appendChild(tr);
+   }
+
+   const tr = document.createElement('tr');
+   const tdName = document.createElement('td');
+   tdName.className = 'td_name';
+   tdName.textContent = '合計';
+   tr.appendChild(tdName);
+
+   const tdCount = document.createElement('td');
+   tdCount.textContent = allCount;
+   tr.appendChild(tdCount);
+
+   const tdMaxLevel = document.createElement('td');
+   tdMaxLevel.textContent = allMaxLv;
+   tr.appendChild(tdMaxLevel);
+
+   const tdMinLevel = document.createElement('td');
+   tdMinLevel.textContent = allCount ? allMinLv : 0;
+   tr.appendChild(tdMinLevel);
+
+   const tdAvgLevel = document.createElement('td');
+   tdAvgLevel.textContent = allCount ? (allSumLv / allCount).toFixed(1) : 0;
+   tr.appendChild(tdAvgLevel);
+
+   const tdSumExp = document.createElement('td');
+   tdSumExp.textContent = Number(allSumExp).toLocaleString();
+   tr.appendChild(tdSumExp);
+
+   const tdAvgExp = document.createElement('td');
+   tdAvgExp.textContent = allCount ? Number(allSumExp / allCount).toLocaleString() : 0;
+   tr.appendChild(tdAvgExp);
+
+   const tdExpRate = document.createElement('td');
+   tdExpRate.textContent = '-';
+   tr.appendChild(tdExpRate);
+
+   fragment.appendChild(tr);
+
+   document.getElementById('ship_exp_tbody').innerHTML = '';
+   document.getElementById('ship_exp_tbody').appendChild(fragment);
+
+   $('#ship_exp_tbody .type_tr').each((i, e) => {
+      const sumExp = castInt($(e).find('.td_sum_exp')[0].dataset.exp);
+      const rate = 100 * sumExp / allSumExp;
+      $(e).find('.td_exp_rate').text((rate).toFixed(1) + '%');
+   });
 }
 
 /**
