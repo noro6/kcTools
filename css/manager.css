@@ -789,3 +789,19 @@ input[type="number"] {
    min-height: 100px;
    max-height: 100px;
 }
+
+#ship_exp_table {
+   margin-left: auto;
+   margin-right: auto;
+   max-width: 1600px;
+}
+.dark-theme #ship_exp_table tr {
+   border-color: rgba(128, 128, 128, 0.5);
+}
+#ship_exp_table td {
+   padding: 0.75rem 1rem;
+   text-align: right;
+}
+#ship_exp_table .td_name {
+   text-align: left;
+}
