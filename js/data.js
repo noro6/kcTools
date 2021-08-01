@@ -601,6 +601,7 @@ const API_CTYPE = [
 	{ id: 50, name: "大鯨型", sort: 2 },
 	{ id: 60, name: "改風早型", sort: 1 },
 	{ id: 49, name: "工作艦", sort: 1 },
+	{ id: 111, name: "PL107 南極観測船", sort: 999 },
 	{ id: 7, name: "古鷹型", sort: 1 },
 	{ id: 13, name: "青葉型", sort: 2 },
 	{ id: 29, name: "妙高型", sort: 3 },
