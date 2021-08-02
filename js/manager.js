@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
    $('#others').on('click', 'input[type="text"]', function () { $(this).select(); });
    $('#others').on('click', 'textarea', function () { $(this).select(); });
-   $('#others').on('click', '#btn_share_fleet', createSharedURL);
+   $('#others').on('click', '#btn_share_fleet', debug_);
    $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
 
    const params = getUrlParams();
@@ -1821,7 +1821,7 @@ function getKantaiSarashi() {
 /**
  * 共有用URL生成
  */
-async function createSharedURL() {
+async function debug_() {
    if (readOnlyMode) {
       inform_danger('現在、閲覧モードのため本機能は利用できません');
       return;
