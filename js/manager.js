@@ -341,7 +341,7 @@ function initShipListTable() {
             tr.appendChild(tdLevel);
 
             const tdHP = createDiv('ship_table_td_status');
-            tdHP.textContent = ship.hp + detail.st[5];
+            tdHP.textContent = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
             tr.appendChild(tdHP);
 
             const tdLuck = createDiv('ship_table_td_status');
