@@ -3,10 +3,15 @@ let ITEM_TYPES_LIST = [];
 
 let timer = null;
 
+let readOnlyMode = false;
+/** @type {{id: number, details: {id: number, lv: number, exp: number, st: number[], area: number }[]}[]} */
+let readOnlyShips = [];
+/** @type {{id: number, num: number[]}[]} */
+let readOnlyItems = [];
+
 const FINAL_SHIPS = SHIP_DATA.filter(v => v.final);
 
 document.addEventListener('DOMContentLoaded', function () {
-
    document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
    document.getElementById('ship_table')['checked'] = setting.managerViewMode === 'table';
 
@@ -91,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_ship_edit').on('click', '#btn_update_ship', btn_update_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
 
-
    // 装備関連
    const slider = document.getElementById('remodel_range');
    noUiSlider.create(slider, {
@@ -119,11 +123,62 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_item_edit').on('click', '#btn_save_item', btn_save_item_stock_Clicked);
    $('#modal_item_edit').on('click', '#btn_reset_item_stock', btn_reset_item_stock_Clicked);
 
+   $('#others').on('click', 'input[type="text"]', function () { $(this).select(); });
    $('#others').on('click', 'textarea', function () { $(this).select(); });
+   $('#others').on('click', '#btn_share_fleet', debug_);
    $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
 
-   initItemList();
-   initShipList();
+   const params = getUrlParams();
+   if (params.hasOwnProperty("id")) {
+      try {
+         const ref = firebase.database().ref('/stocks/' + params.id);
+         ref.once('value').then((snapshot) => {
+            const stock = snapshot.val();
+            if (stock.ships && stock.items) {
+               const ships = JSON.parse(b64_to_utf8(stock.ships));
+               const items = JSON.parse(b64_to_utf8(stock.items));
+
+               // 整合性チェック -艦娘
+               if (ships && ships.length && ships.some(v => v.id && v.details && v.details.length)) {
+                  readOnlyShips = ships;
+               }
+               else {
+                  readOnlyShips = [];
+               }
+
+               // 整合性チェック -装備
+               if (items && items.length && items.some(v => v.id && v.num && v.num.length)) {
+                  readOnlyItems = items;
+               }
+               else if (!readOnlyShips.length) {
+                  // 艦娘、装備情報共に整合しない場合は失敗とする
+                  inform_warning('艦娘、装備情報が存在しませんでした。パラメータが違うか、データが削除されています');
+               }
+
+               if (readOnlyShips && readOnlyItems) {
+                  document.getElementById('readonly_mode').classList.remove('d-none');
+                  readOnlyMode = true;
+               }
+            }
+            else {
+               inform_warning('艦娘、装備情報が存在しませんでした。パラメータが違うか、データが削除されています');
+            }
+            ref.off();
+
+            initItemList();
+            initShipList();
+         });
+      } catch (error) {
+         // データ読込失敗(データ削除済 or 適当なID)
+         initItemList();
+         initShipList();
+      }
+   }
+   else {
+      initItemList();
+      initShipList();
+   }
+   $('#readonly_mode').on('click', 'button', quitReadonlyMode);
 });
 
 
@@ -146,7 +201,7 @@ function initShipList() {
    document.getElementById('ships_sort_container').classList.add('d-none');
 
    // 所持装備
-   const stockShips = loadShipStock();
+   const stockShips = readOnlyMode ? readOnlyShips : loadShipStock();
    //　もう表示した艦娘
    const doneShipId = [];
 
@@ -275,7 +330,7 @@ function initShipList() {
 function initShipListTable() {
    const sortKey = document.getElementById('ships_sort').value;
    // 所持装備
-   const stockShips = loadShipStock();
+   const stockShips = readOnlyMode ? readOnlyShips : loadShipStock();
    const fragment = document.createDocumentFragment();
    let defaultIndex = 0;
    // ヘッダー
@@ -638,7 +693,7 @@ function filterShipListTable() {
  * 経験値テーブル初期化
  */
 function initExpTable() {
-   const shipStock = loadShipStock();
+   const shipStock = readOnlyMode ? readOnlyShips : loadShipStock();
 
    let allMaxLv = 0;
    let allMinLv = 175;
@@ -945,7 +1000,7 @@ function initItemList() {
    }
 
    // 所持装備
-   const stockItems = loadPlaneStock();
+   const stockItems = readOnlyMode ? readOnlyItems : loadPlaneStock();
 
    // selectいったん除去
    $('.item_type_sort').formSelect('destroy');
@@ -1121,6 +1176,10 @@ function item_sort_Changed($this, e) {
  * @param {*} $this
  */
 function ship_detail_container_Clicked($this) {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため更新はできません');
+      return;
+   }
    const stocks = loadShipStock();
    const shipId = castInt($this[0].dataset.shipId);
    const uniqueId = castInt($this[0].dataset.uniqueId, -1);
@@ -1352,7 +1411,7 @@ function btn_create_ship_Clicked() {
    document.getElementById('btn_delete_ship')['disabled'] = false;
 
    saveLocalStorage('shipStock', stockShips);
-   inform_success(raw.name + 'が着任しました。');
+   inform_success(raw.name + 'が着任しました');
    initShipList();
 }
 
@@ -1421,7 +1480,7 @@ function btn_update_ship_Clicked() {
       }
 
       saveLocalStorage('shipStock', stockShips);
-      inform_success('更新されました。');
+      inform_success('更新されました');
       // 再描画
       initShipList();
    }
@@ -1448,12 +1507,12 @@ function btn_delete_ship_Clicked() {
       }
 
       saveLocalStorage('shipStock', stockShips);
-      inform_success('除籍されました。');
+      inform_success('除籍されました');
       // 再描画
       initShipList();
    }
    else {
-      inform_success('除籍に失敗しました。既に除籍されています。');
+      inform_success('除籍に失敗しました。既に除籍されています');
    }
    $('#modal_ship_edit').modal('close');
 }
@@ -1465,12 +1524,17 @@ function btn_delete_ship_Clicked() {
  * @param {*} $this
  */
 function item_container_Clicked($this) {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため更新はできません');
+      return;
+   }
+
    const itemId = castInt($this[0].dataset.itemId);
    const item = ITEM_DATA.find(v => v.id === itemId);
    const stock = loadPlaneStock().find(v => v.id === itemId);
 
    if (!item) {
-      inform_danger('装備取得に失敗しました。');
+      inform_danger('装備取得に失敗しました');
       return;
    }
 
@@ -1605,7 +1669,7 @@ function btn_save_item_stock_Clicked() {
 
    planeStock.find(v => v.id === planeId).num = numArray;
    saveLocalStorage('planeStock', planeStock);
-   inform_success('所持数を更新しました。');
+   inform_success('所持数を更新しました');
    initItemList();
 }
 
@@ -1642,11 +1706,11 @@ function btn_read_ship_Clicked() {
    else if (readShipJson(inputData)) {
       initShipList();
       textBox.value = '';
-      inform_success('所持装備情報を更新しました');
+      inform_success('所持艦娘情報を更新しました');
    }
    else if (readKantaiBunsekiJson(inputData)) {
       textBox.value = '';
-      inform_success('所持装備情報を更新しました');
+      inform_success('所持艦娘情報を更新しました');
    }
    else {
       inform_danger('艦娘情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります');
@@ -1685,18 +1749,18 @@ function btn_url_shorten_Clicked() {
    // 所持装備チェック
    if (readEquipmentJson(url)) {
       initItemList();
-      inform_success('所持装備の反映に成功しました。');
+      inform_success('所持装備の反映に成功しました');
    }
    else if (readShipJson(url)) {
       initShipList();
-      inform_success('所持艦娘の反映に成功しました。');
+      inform_success('所持艦娘の反映に成功しました');
    }
    else if (readKantaiBunsekiJson(url)) {
       initShipList();
-      inform_success('所持艦娘の反映に成功しました。');
+      inform_success('所持艦娘の反映に成功しました');
    }
    else {
-      inform_danger('入力値の読み込みに失敗しました。');
+      inform_danger('入力値の読み込みに失敗しました');
    }
 
    button.textContent = '読み込み';
@@ -1706,6 +1770,11 @@ function btn_url_shorten_Clicked() {
  * 艦隊晒し用コード変換
  */
 function getKantaiSarashi() {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため本機能は利用できません');
+      return;
+   }
+
    let success = false;
    const shipStock = loadShipStock();
    if (shipStock && shipStock.length) {
@@ -1725,7 +1794,7 @@ function getKantaiSarashi() {
    }
 
    const itemStock = loadPlaneStock();
-   if (itemStock && itemStock.length) {
+   if (itemStock && itemStock.length && itemStock.some(v => v.num.some(x => x > 0))) {
       const text = []
       for (const item of itemStock) {
          for (let remodel = 0; remodel < item.num.length; remodel++) {
@@ -1742,11 +1811,74 @@ function getKantaiSarashi() {
    }
 
    if (success) {
-      inform_success('出力しました。');
+      inform_success('出力しました');
    }
    else {
-      inform_success('出力に失敗しました。艦娘、装備の反映を行ってください。');
+      inform_warning('出力に失敗しました。艦娘、装備の反映を行ってください');
    }
+}
+
+/**
+ * 共有用URL生成
+ */
+async function debug_() {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため本機能は利用できません');
+      return;
+   }
+   const shipStock = loadShipStock();
+   const itemStock = loadPlaneStock();
+
+   let shipsData = null;
+   let itemsData = null;
+   // base64圧縮
+   if (shipStock && shipStock.length) {
+      shipsData = utf8_to_b64(JSON.stringify(shipStock));
+   }
+   if (itemStock && itemStock.length && itemStock.some(v => v.num.some(x => x > 0))) {
+      itemsData = utf8_to_b64(JSON.stringify(itemStock));
+   }
+
+   if (!shipsData && !itemsData) {
+      inform_danger('艦娘、装備情報が登録されていません');
+      return;
+   }
+
+   const newStock = {
+      ships: shipsData,
+      items: itemsData,
+      createdAt: formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss')
+   };
+
+   const ref = firebase.database().ref('stocks')
+   const newStockRef = ref.push();
+   let stockId = '';
+   await newStockRef.set(newStock, (error) => {
+      console.log(error);
+      if (error) {
+         inform_danger('共有URLの発行に失敗しました');
+         document.getElementById('share_url').value = '';
+      }
+      else {
+         stockId = newStockRef.key;
+      }
+      newStockRef.off();
+   });
+
+   await postURLData('https://noro6.github.io/kcTools/manager/?id=' + stockId)
+      .then(json => {
+         if (json.error || !json.shortLink) {
+            inform_danger('共有URLの発行に失敗しました');
+         }
+         else {
+            document.getElementById('share_url').value = json.shortLink;
+            document.getElementById('share_url').nextElementSibling.classList.add('active');
+            inform_success('共有URLの発行に成功しました');
+         }
+      })
+      .catch(error => {
+         inform_danger('共有URLの発行に失敗しました');
+      });
 }
 
 /**
@@ -1768,4 +1900,17 @@ function getLevelStatus(lv, max, min) {
       // 算出不可
       return 0;
    }
+}
+
+/**
+ * 閲覧専用モードの終了
+ */
+function quitReadonlyMode() {
+   $('#readonly_mode').addClass('d-none');
+   readOnlyMode = false;
+   readOnlyShips = null;
+   readOnlyItems = null;
+   initShipList();
+   initItemList();
+   inform_success('閲覧モードを終了しました');
 }

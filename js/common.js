@@ -711,7 +711,7 @@ function loadPlaneStock() {
 }
 
 /**
- * 艦娘在庫読み込み　未定義の場合は初期化したものを返却
+ * 艦娘在庫読み込み　未定義の場合は空の配列
  * @returns {[{id: number, details: {id: number, lv: number, exp: number, st: number[], area: number}[]}]}
  */
 function loadShipStock() {

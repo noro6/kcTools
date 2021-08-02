@@ -273,7 +273,7 @@ function setPresets(presets, isLocal = true) {
 
     // メモ表示用
     const memo = createDiv(`preset_memo_view border mt-1 px-1 py-1 ${preset[3] ? '' : 'd-none'}`, '');
-    memo.innerHTML = AutoLink(preset[3]);
+    memo.textContent = AutoLink(preset[3]);
     abstract.appendChild(memo);
 
     // メモ編集用
