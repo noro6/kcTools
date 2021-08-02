@@ -1854,12 +1854,13 @@ async function debug_() {
    const newStockRef = ref.push();
    let stockId = '';
    await newStockRef.set(newStock, (error) => {
-      console.log(error);
       if (error) {
+         console.log(error);
          inform_danger('共有URLの発行に失敗しました');
          document.getElementById('share_url').value = '';
       }
       else {
+         console.log('ご協力ありがとうございました！');
          stockId = newStockRef.key;
       }
       newStockRef.off();
