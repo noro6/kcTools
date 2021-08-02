@@ -194,6 +194,7 @@ function initShipList() {
             verContainer.appendChild(verHeader);
 
             if (stock && stock.details.length) {
+               stock.details.sort((a, b) => b.lv - a.lv);
                for (let i = 0; i < stock.details.length; i++) {
                   const detail = stock.details[i];
                   const detailContainer = createDiv('detail_container');
