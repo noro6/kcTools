@@ -14464,9 +14464,6 @@ async function btn_url_shorten_Clicked() {
 		else if (readShipJson(url)) {
 			inform_success('所持艦娘の反映に成功しました。');
 		}
-		else if (readKantaiBunsekiJson(url)) {
-			inform_success('所持艦娘の反映に成功しました。');
-		}
 		else {
 			inform_danger('入力値の読み込みに失敗しました。');
 		}

@@ -568,6 +568,7 @@ h1 {
   background-color: rgb(42, 42, 44);
   box-shadow: 0 0 10px rgb(29, 29, 29);
   text-align: center;
+  z-index: 5;
 }
 #main_footer a { color: rgb(86, 180, 255); }
 

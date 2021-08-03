@@ -580,46 +580,6 @@ function readShipJson(input) {
 }
 
 /**
- * 艦隊分析様Json解析
- * @param {string} input
- * @returns {boolean} 失敗時false
- */
-function readKantaiBunsekiJson(input) {
-	try {
-		const jsonData = JSON.parse(input);
-		const shipStock = [];
-
-		for (const obj of jsonData) {
-			// 艦娘データかチェック
-			if (!obj.hasOwnProperty('id') || !obj.hasOwnProperty('exp')) return false;
-			const ship = SHIP_DATA.find(v => v.api === obj.id);
-			const exp = obj.exp;
-			// マスタにあるデータなら追加
-			if (ship) {
-				const stock = shipStock.find(v => v.id === ship.id);
-				if (stock) {
-					// 既にデータある場合
-					stock.num.push(exp);
-				}
-				else {
-					// 新しくデータ追加
-					shipStock.push({ id: ship.id, num: [exp] });
-				}
-			}
-		}
-
-		shipStock.sort((a, b) => a.id - b.id);
-		// 完全上書き
-		saveLocalStorage('shipStock', shipStock);
-		setting.inStockOnlyShip = true;
-		saveSetting();
-	} catch (error) {
-		return false;
-	}
-	return true;
-}
-
-/**
  * 指定文字列を読み込み、planeStockに反映させる　失敗時false
  * @param {string} input
  */
@@ -1095,6 +1055,7 @@ function inform_custom_alert(content, mode) {
  */
 function formatDate(date, format) {
 	format = format.replace(/yyyy/g, date.getFullYear());
+	format = format.replace(/yy/g, date.getFullYear() % 100);
 	format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
 	format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2));
 	format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2));
