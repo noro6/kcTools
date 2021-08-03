@@ -137,22 +137,47 @@ document.addEventListener('DOMContentLoaded', function () {
             if (stock.ships && stock.items) {
                const ships = JSON.parse(b64_to_utf8(stock.ships));
                const items = JSON.parse(b64_to_utf8(stock.items));
+               readOnlyShips = [];
+               readOnlyItems = [];
 
                // 整合性チェック -艦娘
-               if (ships && ships.length && ships.some(v => v.id && v.details && v.details.length)) {
-                  readOnlyShips = ships;
-               }
-               else {
-                  readOnlyShips = [];
+               if (ships && ships.length) {
+                  // 圧縮状態から展開
+                  for (const ship of ships) {
+                     const details = ship[1];
+                     if (details.length && !details.find(v => v.length !== 5)) {
+                        const shipStock = {
+                           id: ship[0],
+                           details: details.map(v => {
+                              return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4] }
+                           })
+                        };
+                        readOnlyShips.push(shipStock);
+                     }
+                  }
                }
 
                // 整合性チェック -装備
-               if (items && items.length && items.some(v => v.id && v.num && v.num.length)) {
-                  readOnlyItems = items;
+               if (items && items.length) {
+                  // 圧縮状態から展開
+                  for (const item of items) {
+                     const itemStock = { id: item[0], num: [] };
+                     for (let remodel = 0; remodel <= 10; remodel++) {
+                        if (item[1] && remodel < item[1].length) {
+                           itemStock.num.push(item[1][remodel]);
+                        }
+                        else {
+                           itemStock.num.push(0);
+                        }
+                     }
+                     readOnlyItems.push(itemStock);
+                  }
                }
                else if (!readOnlyShips.length) {
                   // 艦娘、装備情報共に整合しない場合は失敗とする
-                  inform_warning('艦娘、装備情報が存在しませんでした。パラメータが違うか、データが削除されています');
+                  inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+                  readOnlyShips = null;
+                  readOnlyItems = null;
                }
 
                if (readOnlyShips && readOnlyItems) {
@@ -161,7 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
                }
             }
             else {
-               inform_warning('艦娘、装備情報が存在しませんでした。パラメータが違うか、データが削除されています');
+               inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+               readOnlyShips = null;
+               readOnlyItems = null;
             }
             ref.off();
 
@@ -170,8 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
          });
       } catch (error) {
          // データ読込失敗(データ削除済 or 適当なID)
-         initItemList();
-         initShipList();
+         inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+         quitReadonlyMode();
       }
    }
    else {
@@ -186,6 +213,9 @@ document.addEventListener('DOMContentLoaded', function () {
  * 現在登録されている艦娘情報から所持艦娘一覧を再構築
  */
 function initShipList() {
+   document.getElementById('btn_kantai_sarashi_parent').classList.remove('d-none');
+   document.getElementById('kantai_sarashi_parent').classList.add('d-none');
+
    if (document.getElementById('ship_table')['checked']) {
       // document.getElementById('ships_sort_container').classList.remove('d-none');
       initShipListTable();
@@ -995,6 +1025,9 @@ function initItemTypes() {
  * 現在登録されている装備情報から所持装備一覧を再構築
  */
 function initItemList() {
+   document.getElementById('btn_kantai_sarashi_parent').classList.remove('d-none');
+   document.getElementById('kantai_sarashi_parent').classList.add('d-none');
+
    if (!ITEM_TYPES_LIST.length) {
       initItemTypes();
    }
@@ -1708,10 +1741,6 @@ function btn_read_ship_Clicked() {
       textBox.value = '';
       inform_success('所持艦娘情報を更新しました');
    }
-   else if (readKantaiBunsekiJson(inputData)) {
-      textBox.value = '';
-      inform_success('所持艦娘情報を更新しました');
-   }
    else {
       inform_danger('艦娘情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります');
    }
@@ -1741,7 +1770,6 @@ function btn_read_item_Clicked() {
  * 読み込みクリック
  */
 function btn_url_shorten_Clicked() {
-   const button = document.getElementById('btn_url_shorten');
    const textbox = document.getElementById('input_url');
    const url = textbox.value.trim();
    textbox.value = "";
@@ -1755,28 +1783,17 @@ function btn_url_shorten_Clicked() {
       initShipList();
       inform_success('所持艦娘の反映に成功しました');
    }
-   else if (readKantaiBunsekiJson(url)) {
-      initShipList();
-      inform_success('所持艦娘の反映に成功しました');
-   }
    else {
       inform_danger('入力値の読み込みに失敗しました');
    }
-
-   button.textContent = '読み込み';
 }
 
 /**
- * 艦隊晒し用コード変換
+ * 艦隊分析スプレ用コード変換
  */
 function getKantaiSarashi() {
-   if (readOnlyMode) {
-      inform_danger('現在、閲覧モードのため本機能は利用できません');
-      return;
-   }
-
    let success = false;
-   const shipStock = loadShipStock();
+   const shipStock = readOnlyMode ? readOnlyShips : loadShipStock();
    if (shipStock && shipStock.length) {
       const text = []
       for (const stock of shipStock) {
@@ -1793,14 +1810,14 @@ function getKantaiSarashi() {
       success = true;
    }
 
-   const itemStock = loadPlaneStock();
+   const itemStock = readOnlyMode ? readOnlyItems : loadPlaneStock();
    if (itemStock && itemStock.length && itemStock.some(v => v.num.some(x => x > 0))) {
       const text = []
       for (const item of itemStock) {
          for (let remodel = 0; remodel < item.num.length; remodel++) {
             const stock = item.num[remodel];
             for (let i = 0; i < stock; i++) {
-               text.push(`{"id":${item.id},"lv"${remodel}}`);
+               text.push(`{"id":${item.id},"lv":${remodel}}`);
             }
          }
       }
@@ -1811,11 +1828,27 @@ function getKantaiSarashi() {
    }
 
    if (success) {
+      document.getElementById('btn_kantai_sarashi_parent').classList.add('d-none');
+      document.getElementById('kantai_sarashi_parent').classList.remove('d-none');
       inform_success('出力しました');
    }
    else {
       inform_warning('出力に失敗しました。艦娘、装備の反映を行ってください');
    }
+}
+
+/**
+ * 数値配列の合計値を返却(処理速度優先)
+ * @param {number[]} array 数値配列
+ * @returns {number} 合計値
+ */
+function getArraySum(array) {
+   let sum = 0;
+   let i = array.length;
+   while (i--) {
+      sum += array[i];
+   }
+   return sum;
 }
 
 /**
@@ -1829,25 +1862,67 @@ async function debug_() {
    const shipStock = loadShipStock();
    const itemStock = loadPlaneStock();
 
+   document.getElementById('btn_share_fleet_process').classList.remove('d-none');
+   document.getElementById('btn_share_fleet_parent').classList.add('d-none');
+   document.getElementById('btn_share_fleet')['disabled'] = true;
+
    let shipsData = null;
    let itemsData = null;
-   // base64圧縮
+
+   // 圧縮処理
    if (shipStock && shipStock.length) {
-      shipsData = utf8_to_b64(JSON.stringify(shipStock));
+      // 情報圧縮
+      const postShips = [];
+      for (const data of shipStock) {
+         if (!data.details.length) {
+            continue;
+         }
+         const postShip = [data.id, []];
+         for (const detail of data.details) {
+            // id, Lv, 経験値, 改修値, 海域の順
+            postShip[1].push([detail.id, detail.lv, detail.exp, detail.st, detail.area]);
+         }
+         postShips.push(postShip);
+      }
+
+      shipsData = utf8_to_b64(JSON.stringify(postShips));
    }
    if (itemStock && itemStock.length && itemStock.some(v => v.num.some(x => x > 0))) {
-      itemsData = utf8_to_b64(JSON.stringify(itemStock));
+      // 情報圧縮
+      const postItems = [];
+      for (const item of itemStock) {
+         let postItem = [item.id, []];
+         let sum = getArraySum(item.num);
+         if (sum) {
+            for (const count of item.num) {
+               sum -= count;
+               postItem[1].push(count);
+
+               // 全体所持数格納し終わったらその時点で終了
+               if (sum <= 0) break;
+            }
+         }
+         else {
+            postItem = [item.id];
+         }
+
+         postItems.push(postItem);
+      }
+      itemsData = utf8_to_b64(JSON.stringify(postItems));
    }
 
    if (!shipsData && !itemsData) {
       inform_danger('艦娘、装備情報が登録されていません');
+      document.getElementById('btn_share_fleet_process').classList.add('d-none');
+      document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
+      document.getElementById('btn_share_fleet')['disabled'] = false;
       return;
    }
 
    const newStock = {
       ships: shipsData,
       items: itemsData,
-      createdAt: formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss')
+      createdAt: formatDate(new Date(), 'yy/MM/dd')
    };
 
    const ref = firebase.database().ref('stocks')
@@ -1870,15 +1945,24 @@ async function debug_() {
       .then(json => {
          if (json.error || !json.shortLink) {
             inform_danger('共有URLの発行に失敗しました');
+            document.getElementById('btn_share_fleet_process').classList.add('d-none');
+            document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
+            document.getElementById('btn_share_fleet')['disabled'] = false;
          }
          else {
             document.getElementById('share_url').value = json.shortLink;
             document.getElementById('share_url').nextElementSibling.classList.add('active');
+            document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.remove('d-none');
+
+            document.getElementById('btn_share_fleet_process').classList.add('d-none');
             inform_success('共有URLの発行に成功しました');
          }
       })
       .catch(error => {
          inform_danger('共有URLの発行に失敗しました');
+         document.getElementById('btn_share_fleet_process').classList.add('d-none');
+         document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
+         document.getElementById('btn_share_fleet')['disabled'] = false;
       });
 }
 

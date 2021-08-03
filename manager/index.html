@@ -228,20 +228,13 @@
 												</div>
 											</div>
 											<div class="col s12 l6 d-flex flex-wrap">
-												<div class="filter_area mx-2 selected" data-area="1"><img
-														src="../img/util/area1.png"></div>
-												<div class="filter_area mx-2 selected" data-area="2"><img
-														src="../img/util/area2.png"></div>
-												<div class="filter_area mx-2 selected" data-area="3"><img
-														src="../img/util/area3.png"></div>
-												<div class="filter_area mx-2 selected" data-area="4"><img
-														src="../img/util/area4.png"></div>
-												<div class="filter_area mx-2 selected" data-area="5"><img
-														src="../img/util/area5.png"></div>
-												<div class="filter_area mx-2 selected" data-area="6"><img
-														src="../img/util/area6.png"></div>
-												<div
-													class="filter_area mx-2 selected align-self-center no_area waves-effect waves-light"
+												<div class="filter_area mx-2 selected" data-area="1"><img src="../img/util/area1.png"></div>
+												<div class="filter_area mx-2 selected" data-area="2"><img src="../img/util/area2.png"></div>
+												<div class="filter_area mx-2 selected" data-area="3"><img src="../img/util/area3.png"></div>
+												<div class="filter_area mx-2 selected" data-area="4"><img src="../img/util/area4.png"></div>
+												<div class="filter_area mx-2 selected" data-area="5"><img src="../img/util/area5.png"></div>
+												<div class="filter_area mx-2 selected" data-area="6"><img src="../img/util/area6.png"></div>
+												<div class="filter_area mx-2 selected align-self-center no_area waves-effect waves-light"
 													data-area="0">
 													札なし
 												</div>
@@ -254,8 +247,7 @@
 												<div class="d-flex">
 													<div class="mx-3 align-self-center">
 														<label>
-															<input class="with-gap" id="ship_table" name="display" type="radio"
-																checked />
+															<input class="with-gap" id="ship_table" name="display" type="radio" checked />
 															<span>一覧表示</span>
 														</label>
 													</div>
@@ -373,8 +365,7 @@
 							<div class="warning_box">
 								<div>注意事項</div>
 								<div class="mt-1">
-									手順6.「Store function as global variable」を選択した際に出てくる「<span
-										class="text_warning">temp○○</span>」と、
+									手順6.「Store function as global variable」を選択した際に出てくる「<span class="text_warning">temp○○</span>」と、
 									上記JavaScript内の「<span class="text_warning">temp○○</span>」は一致させる必要があります。
 								</div>
 								<div>
@@ -481,8 +472,7 @@
 							<div class="warning_box">
 								<div>注意事項</div>
 								<div class="mt-1">
-									手順6.「Store function as global variable」を選択した際に出てくる「<span
-										class="text_warning">temp○○</span>」と、
+									手順6.「Store function as global variable」を選択した際に出てくる「<span class="text_warning">temp○○</span>」と、
 									上記JavaScript内の「<span class="text_warning">temp○○</span>」は一致させる必要があります。
 								</div>
 								<div>
@@ -510,19 +500,35 @@
 				</div>
 				<div id="others">
 					<div class="d-none general_box py-4 px-4 my-3">
-						<div class="mt-3">
+						<div>
 							自分の艦隊、装備情報を他の人に見てもらうためのURLを発行します。
 						</div>
 						<div>
 							発行された情報は閲覧専用です。発行されたURLを他人に公開しても、自分の艦娘や装備情報が書き換えられてしまうことはありません。
 						</div>
-						<div class="mt-1">
-							<button type="button" class="waves-effect waves-light btn blue"
-								id="btn_share_fleet">共有URL発行</button>
+						<div class="mt-1" id="btn_share_fleet_parent">
+							<button type="button" class="waves-effect waves-light btn blue" id="btn_share_fleet">共有URL発行</button>
 						</div>
-						<div class="input-field">
+						<div class="d-none input-field">
 							<input type="text" id="share_url" readonly></textarea>
 							<label for="share_url">共有URL</label>
+						</div>
+						<div class="d-none" id="btn_share_fleet_process">
+							<div class="ml-3">
+								<div class="mx-auto preloader-wrapper big active">
+									<div class="spinner-layer spinner-blue-only">
+										<div class="circle-clipper left">
+											<div class="circle"></div>
+										</div>
+										<div class="gap-patch">
+											<div class="circle"></div>
+										</div>
+										<div class="circle-clipper right">
+											<div class="circle"></div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="general_box py-4 px-4 my-3">
@@ -530,21 +536,21 @@
 							より詳細な分析を行いたい場合は、その他外部サイト様のご利用もお勧めしています。
 						</div>
 						<div>
-							下記のボタンより、<a
-								href="https://docs.google.com/spreadsheets/d/1NuLlff6EXM0XQ_qNHP9lEOosbwHXamaVNJb72M7ZLoY"
+							下記のボタンより、<a href="https://docs.google.com/spreadsheets/d/1NuLlff6EXM0XQ_qNHP9lEOosbwHXamaVNJb72M7ZLoY"
 								target="_blank">艦隊分析スプレッドシート</a>用コードを生成できますので、例えばこちらのご利用などを検討してください。
 						</div>
-						<div class="mb-4 mt-1">
-							<button type="button" class="waves-effect waves-light btn"
-								id="btn_kantai_sarashi">艦隊分析用コード出力</button>
+						<div id="btn_kantai_sarashi_parent">
+							<button type="button" class="waves-effect waves-light btn" id="btn_kantai_sarashi">艦隊分析用コード出力</button>
 						</div>
-						<div class="input-field">
-							<textarea id="kantai_sarashi" class="materialize-textarea" readonly></textarea>
-							<label for="kantai_sarashi">艦隊分析用コード(艦娘)</label>
-						</div>
-						<div class="input-field">
-							<textarea id="kantai_sarashi_item" class="materialize-textarea" readonly></textarea>
-							<label for="kantai_sarashi_item">艦隊分析用コード(装備)</label>
+						<div class="d-none" id="kantai_sarashi_parent">
+							<div class="input-field">
+								<textarea id="kantai_sarashi" class="materialize-textarea" readonly></textarea>
+								<label for="kantai_sarashi">艦隊分析用コード(艦娘)</label>
+							</div>
+							<div class="input-field">
+								<textarea id="kantai_sarashi_item" class="materialize-textarea" readonly></textarea>
+								<label for="kantai_sarashi_item">艦隊分析用コード(装備)</label>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -752,8 +758,7 @@
 	<div id="main_footer">
 		<div class="d-none d-lg-block">
 			<span>本サイトに関する質問・要望・バグ報告・感想などは<a href="https://odaibako.net/u/noro_006" target="_blank">お題箱</a>へ。</span>
-			<span class="ml-1">その他、作者へのご連絡は<a href="https://twitter.com/noro_006"
-					target="_blank">Twitter</a>までお願いします。</span>
+			<span class="ml-1">その他、作者へのご連絡は<a href="https://twitter.com/noro_006" target="_blank">Twitter</a>までお願いします。</span>
 			<span class="ml-1">カンパ等ご支援は<a href="https://www.amazon.jp/hz/wishlist/ls/1OX9QVZF828GD?ref_=wl_share"
 					target="_blank">こちら</a>から。</span>
 		</div>
