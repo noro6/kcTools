@@ -464,7 +464,7 @@ input[type="number"] {
    position: -webkit-sticky;
    position: sticky;
    top: 32px;
-   padding: 0.5rem 0.25rem;
+   padding: 0;
    background-color: #eee;
    border-top: 1px solid rgba(128, 128, 128, 0.5);
    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
@@ -474,7 +474,8 @@ input[type="number"] {
    background-color: #3c3c44;
 }
 .ship_table_tr.header .ship_table_td_name {
-   text-align: center;
+   text-align: left;
+   padding-left: 1rem;
 }
 .ship_table_tr:not(.header) {
    border-bottom: 1px solid rgba(128, 128, 128, 0.25);
@@ -544,6 +545,36 @@ input[type="number"] {
 }
 .ship_table_tr > .ship_table_td_status {
    text-align: right;
+}
+.ship_table_tr.header > .ship_table_td_status {
+   cursor: pointer;
+   padding: 1rem 1rem 1rem 0;
+   transition: 0.2s;
+   position: relative;
+   user-select: none;
+}
+.ship_table_tr.header > .ship_table_td_status:hover {
+   background-color: rgba(192, 192, 192, 0.4);
+}
+.dark-theme .ship_table_tr.header > .ship_table_td_status:hover {
+   background-color: rgba(128, 128, 128, 0.4);
+   text-shadow: 2px 2px 3px #000;
+}
+.ship_table_tr.header > .ship_table_td_status.selected::after {
+   content: "";
+   position: absolute;
+   top: 50%;
+   right: 0;
+   transform: translate(0, -4px);
+   border: 5px solid transparent;
+   border-top: 8px solid #000;
+   transition: 0.2s;
+}
+.ship_table_tr.header > .ship_table_td_status.selected.asc::after {
+   transform: rotate(180deg) translate(0, 10px);
+}
+.dark-theme .ship_table_tr.header > .ship_table_td_status.selected::after {
+   border-top-color: #ccc;
 }
 
 .ship_table_tr .ship_table_td_name {

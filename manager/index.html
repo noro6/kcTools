@@ -72,11 +72,18 @@
 		<div class="d-flex" id="tool_bar">
 			<div class="tool_item" id="btn_top">
 				<i class="fas fa-list-ul"></i>
-				トップページへ
+				<span class="d-none d-lg-inline">トップページへ</span>
+				<span class="d-lg-none">TOP</span>
 			</div>
 			<div class="tool_item" id="btn_share">
 				<i class="fas fa-calculator"></i>
-				制空計算ページへ
+				<span class="d-none d-lg-inline">制空計算ページへ</span>
+				<span class="d-lg-none">制空計算ページ</span>
+			</div>
+			<div class="tool_item" id="btn_twitter">
+				<i class="fab fa-twitter"></i>
+				<span class="d-none d-lg-inline">艦隊情報をツイート</span>
+				<span class="d-lg-none">Tweet</span>
 			</div>
 			<div class="flex-grow-1 mx-1" id="url_shortener">
 				<textarea class="form-control-dark" id="input_url"
@@ -115,7 +122,7 @@
 				<ul class="tabs" id="content_tabs">
 					<li class="tab"><a class="waves-effect waves-blue active" href="#ships_content">艦娘</a></li>
 					<li class="tab"><a class="waves-effect waves-blue" href="#items_content">装備</a></li>
-					<li class="tab"><a class="waves-effect waves-blue" href="#others">その他</a></li>
+					<li class="tab"><a class="waves-effect waves-blue" href="#others">共有</a></li>
 				</ul>
 			</div>
 			<div class="border-top px-2 py-4">
@@ -499,7 +506,7 @@
 					</div>
 				</div>
 				<div id="others">
-					<div class="d-none general_box py-4 px-4 my-3">
+					<div class="general_box py-4 px-4 my-3">
 						<div>
 							自分の艦隊、装備情報を他の人に見てもらうためのURLを発行します。
 						</div>

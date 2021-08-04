@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
    // シミュページへ
    document.getElementById('btn_share').addEventListener('click', () => { window.location.href = '../simulator/'; });
+   // Tweet
+   document.getElementById('btn_twitter').addEventListener('click', btn_twitter_Clicked);
 
    document.getElementById('btn_read_ship').addEventListener('click', btn_read_ship_Clicked);
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
    $('#ship_list').on('click', '.ship_table_tr:not(.header)', function () { ship_detail_container_Clicked($(this)); });
+   $('#ship_list').on('click', '.header .ship_table_td_status', function () { ship_header_table_tr_Clicked($(this)); });
 
    $('#modal_ship_edit').on('change', '.version_radio', version_Changed);
    $('#modal_ship_edit').on('blur', '#ship_level', function () { ship_input_Leaved($(this)); });
@@ -128,84 +131,16 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#others').on('click', '#btn_share_fleet', debug_);
    $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
 
+   $('#readonly_mode').on('click', 'button', quitReadonlyMode);
+
    const params = getUrlParams();
    if (params.hasOwnProperty("id")) {
-      try {
-         const ref = firebase.database().ref('/stocks/' + params.id);
-         ref.once('value').then((snapshot) => {
-            const stock = snapshot.val();
-            if (stock.ships && stock.items) {
-               const ships = JSON.parse(b64_to_utf8(stock.ships));
-               const items = JSON.parse(b64_to_utf8(stock.items));
-               readOnlyShips = [];
-               readOnlyItems = [];
-
-               // 整合性チェック -艦娘
-               if (ships && ships.length) {
-                  // 圧縮状態から展開
-                  for (const ship of ships) {
-                     const details = ship[1];
-                     if (details.length && !details.find(v => v.length !== 5)) {
-                        const shipStock = {
-                           id: ship[0],
-                           details: details.map(v => {
-                              return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4] }
-                           })
-                        };
-                        readOnlyShips.push(shipStock);
-                     }
-                  }
-               }
-
-               // 整合性チェック -装備
-               if (items && items.length) {
-                  // 圧縮状態から展開
-                  for (const item of items) {
-                     const itemStock = { id: item[0], num: [] };
-                     for (let remodel = 0; remodel <= 10; remodel++) {
-                        if (item[1] && remodel < item[1].length) {
-                           itemStock.num.push(item[1][remodel]);
-                        }
-                        else {
-                           itemStock.num.push(0);
-                        }
-                     }
-                     readOnlyItems.push(itemStock);
-                  }
-               }
-               else if (!readOnlyShips.length) {
-                  // 艦娘、装備情報共に整合しない場合は失敗とする
-                  inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
-                  readOnlyShips = null;
-                  readOnlyItems = null;
-               }
-
-               if (readOnlyShips && readOnlyItems) {
-                  document.getElementById('readonly_mode').classList.remove('d-none');
-                  readOnlyMode = true;
-               }
-            }
-            else {
-               inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
-               readOnlyShips = null;
-               readOnlyItems = null;
-            }
-            ref.off();
-
-            initItemList();
-            initShipList();
-         });
-      } catch (error) {
-         // データ読込失敗(データ削除済 or 適当なID)
-         inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
-         quitReadonlyMode();
-      }
+      readURLData(params.id);
    }
    else {
       initItemList();
       initShipList();
    }
-   $('#readonly_mode').on('click', 'button', quitReadonlyMode);
 });
 
 
@@ -366,13 +301,13 @@ function initShipListTable() {
    // ヘッダー
    const header = createDiv('ship_table_tr d-flex header');
    header.innerHTML = `<div class="ship_table_td_name">艦娘</div>
-   <div class="ship_table_td_status">Lv.</div>
-   <div class="ship_table_td_status">耐久</div>
-   <div class="ship_table_td_status">運</div>
-   <div class="ship_table_td_status">対潜</div>
-   <div class="ship_table_td_status">命中項</div>
-   <div class="ship_table_td_status">回避項</div>
-   <div class="ship_table_td_status">CI項</div>`;
+   <div class="ship_table_td_status" data-sortkey="level">Lv.</div>
+   <div class="ship_table_td_status" data-sortkey="hp">耐久</div>
+   <div class="ship_table_td_status" data-sortkey="luck">運</div>
+   <div class="ship_table_td_status" data-sortkey="asw">対潜</div>
+   <div class="ship_table_td_status" data-sortkey="accuracy">命中項</div>
+   <div class="ship_table_td_status" data-sortkey="avoid">回避項</div>
+   <div class="ship_table_td_status" data-sortkey="ci">CI項</div>`;
    fragment.appendChild(header);
 
    let baseShips = [];
@@ -390,6 +325,8 @@ function initShipListTable() {
          break;
    }
 
+   const tbody = document.createElement('div');
+   tbody.id = 'ship_table_tbody';
    for (const ship of baseShips) {
       const stock = stockShips.find(v => v.id === ship.id);
 
@@ -427,7 +364,9 @@ function initShipListTable() {
             tr.appendChild(tdLevel);
 
             const tdHP = createDiv('ship_table_td_status');
-            tdHP.textContent = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
+            const hpValue = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
+            tdHP.textContent = hpValue;
+            tr.dataset.hp = hpValue;
             tr.appendChild(tdHP);
 
             const tdLuck = createDiv('ship_table_td_status');
@@ -437,38 +376,47 @@ function initShipListTable() {
             const asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw);
             const tdAsw = createDiv('ship_table_td_status');
             tdAsw.textContent = asw + detail.st[6];
+            tr.dataset.asw = asw + detail.st[6];
             tr.appendChild(tdAsw);
 
             // 命中項(ステータス部分のみ)
             const tdAccuracy = createDiv('ship_table_td_status');
-            tdAccuracy.textContent = Math.floor(2 * Math.sqrt(detail.lv) + 1.5 * Math.sqrt(luck));
+            const accuracyValue = Math.floor(2 * Math.sqrt(detail.lv) + 1.5 * Math.sqrt(luck));
+            tdAccuracy.textContent = accuracyValue;
+            tr.dataset.accuracy = accuracyValue;
             tr.appendChild(tdAccuracy);
 
             const avoid = getLevelStatus(detail.lv, ship.max_avoid, ship.avoid);
             // 回避項(ステータス部分のみ)
             const tdAvoid = createDiv('ship_table_td_status');
             const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
+            let avoidValue = baseAvoid;
             if (baseAvoid >= 65) {
-               tdAvoid.textContent = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
+               avoidValue = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
             }
             else if (baseAvoid >= 45) {
-               tdAvoid.textContent = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
+               avoidValue = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
             }
-            else {
-               tdAvoid.textContent = baseAvoid;
-            }
+
+            tdAvoid.textContent = avoidValue;
+            tr.dataset.avoid = avoidValue;
             tr.appendChild(tdAvoid);
 
             // CI項(ステータス部分のみ)
             const tdCI = createDiv('ship_table_td_status');
+            let ciValue = 0;
             if (luck >= 50) {
-               tdCI.textContent = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(detail.lv));
+               ciValue = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(detail.lv));
             }
             else {
-               tdCI.textContent = Math.floor(15 + luck + 0.75 * Math.sqrt(detail.lv));
+               ciValue = Math.floor(15 + luck + 0.75 * Math.sqrt(detail.lv));
             }
+            tdCI.textContent = ciValue;
+            tr.dataset.ci = ciValue;
             tr.appendChild(tdCI);
-            fragment.appendChild(tr);
+
+
+            tbody.appendChild(tr);
          }
       }
       else if (ship.ver === 0) {
@@ -505,6 +453,7 @@ function initShipListTable() {
 
          const tdHP = createDiv('ship_table_td_status');
          tdHP.textContent = ship.hp;
+         tr.dataset.hp = ship.hp;
          tr.appendChild(tdHP);
 
          const tdLuck = createDiv('ship_table_td_status');
@@ -513,42 +462,49 @@ function initShipListTable() {
 
          const tdAsw = createDiv('ship_table_td_status');
          tdAsw.textContent = ship.asw ? ship.asw : 0;
+         tr.dataset.asw = ship.asw ? ship.asw : 0;
          tr.appendChild(tdAsw);
 
          // 命中項(ステータス部分のみ)
          const tdAccuracy = createDiv('ship_table_td_status');
-         tdAccuracy.textContent = Math.floor(2 * Math.sqrt(1) + 1.5 * Math.sqrt(luck));
+         const accuracyValue = Math.floor(2 * Math.sqrt(1) + 1.5 * Math.sqrt(luck));
+         tdAccuracy.textContent = accuracyValue;
+         tr.dataset.accuracy = accuracyValue;
          tr.appendChild(tdAccuracy);
 
          const avoid = ship.avoid ? ship.avoid : 0;
          // 回避項(ステータス部分のみ)
          const tdAvoid = createDiv('ship_table_td_status');
          const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
+         let avoidValue = baseAvoid;
          if (baseAvoid >= 65) {
-            tdAvoid.textContent = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
+            avoidValue = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
          }
          else if (baseAvoid >= 45) {
-            tdAvoid.textContent = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
+            avoidValue = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
          }
-         else {
-            tdAvoid.textContent = baseAvoid;
-         }
+         tdAvoid.textContent = avoidValue;
+         tr.dataset.avoid = avoidValue;
          tr.appendChild(tdAvoid);
 
          // CI項(ステータス部分のみ)
          const tdCI = createDiv('ship_table_td_status');
+         let ciValue = 0;
          if (luck >= 50) {
-            tdCI.textContent = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(1));
+            ciValue = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(1));
          }
          else {
-            tdCI.textContent = Math.floor(15 + luck + 0.75 * Math.sqrt(1));
+            ciValue = Math.floor(15 + luck + 0.75 * Math.sqrt(1));
          }
+         tdCI.textContent = ciValue;
+         tr.dataset.ci = ciValue;
          tr.appendChild(tdCI);
 
-         fragment.appendChild(tr);
+         tbody.appendChild(tr);
       }
    }
 
+   fragment.appendChild(tbody);
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').classList.remove('d-flex');
    document.getElementById('ship_list').appendChild(fragment);
@@ -1205,6 +1161,39 @@ function item_sort_Changed($this, e) {
 }
 
 /**
+ * 艦娘テーブル ヘッダークリック時(ソートする)
+ * @param {*} $this
+ */
+function ship_header_table_tr_Clicked($this) {
+   // デフォルトのソート項目
+   let sortKey = 'index';
+   let isAsc = true;
+   if ($this.hasClass('asc')) {
+      $this.removeClass('asc selected');
+   }
+   else if ($this.hasClass('desc')) {
+      $this.removeClass('desc');
+      $this.addClass('asc');
+      sortKey = $this[0].dataset.sortkey;
+   }
+   else {
+      $('.header .ship_table_td_status').removeClass('desc asc selected');
+      $this.addClass('desc selected');
+      sortKey = $this[0].dataset.sortkey;
+      isAsc = false;
+   }
+
+   const parent = document.getElementById('ship_table_tbody');
+   const trs = parent.getElementsByClassName('ship_table_tr');
+   const containers = Array.prototype.slice.call(trs);
+
+   containers.sort((a, b) => (isAsc ? -1 : 1) * (castInt(b.dataset[sortKey]) - castInt(a.dataset[sortKey])));
+   for (var i = 0; i < containers.length; i++) {
+      parent.appendChild(parent.removeChild(containers[i]))
+   }
+}
+
+/**
  * 艦娘一覧内　クリック
  * @param {*} $this
  */
@@ -1852,22 +1841,16 @@ function getArraySum(array) {
 }
 
 /**
- * 共有用URL生成
+ * 艦隊装備情報の一意keyを取得 失敗時null
+ * @returns
  */
-async function debug_() {
-   if (readOnlyMode) {
-      inform_danger('現在、閲覧モードのため本機能は利用できません');
-      return;
-   }
+async function requestURLKey() {
    const shipStock = loadShipStock();
    const itemStock = loadPlaneStock();
 
-   document.getElementById('btn_share_fleet_process').classList.remove('d-none');
-   document.getElementById('btn_share_fleet_parent').classList.add('d-none');
-   document.getElementById('btn_share_fleet')['disabled'] = true;
-
-   let shipsData = null;
-   let itemsData = null;
+   let shipsData = '';
+   let itemsData = '';
+   let key = null;
 
    // 圧縮処理
    if (shipStock && shipStock.length) {
@@ -1913,57 +1896,191 @@ async function debug_() {
 
    if (!shipsData && !itemsData) {
       inform_danger('艦娘、装備情報が登録されていません');
-      document.getElementById('btn_share_fleet_process').classList.add('d-none');
-      document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
-      document.getElementById('btn_share_fleet')['disabled'] = false;
-      return;
+      return key;
    }
 
-   const newStock = {
-      ships: shipsData,
-      items: itemsData,
-      createdAt: formatDate(new Date(), 'yy/MM/dd')
-   };
-
-   const ref = firebase.database().ref('stocks')
-   const newStockRef = ref.push();
-   let stockId = '';
-   await newStockRef.set(newStock, (error) => {
+   const db = firebase.database().ref('stocks')
+   const newRef = db.push();
+   await newRef.set({ ships: shipsData, items: itemsData, date: formatDate(new Date(), 'yy/MM/dd') }, (error) => {
       if (error) {
          console.log(error);
          inform_danger('共有URLの発行に失敗しました');
-         document.getElementById('share_url').value = '';
       }
       else {
-         console.log('ご協力ありがとうございました！');
-         stockId = newStockRef.key;
+         key = newRef.key;
       }
-      newStockRef.off();
+      newRef.off();
    });
 
-   await postURLData('https://noro6.github.io/kcTools/manager/?id=' + stockId)
+   return key;
+}
+
+/**
+ * 共有用URL生成
+ */
+async function debug_() {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため本機能は利用できません');
+      return;
+   }
+   // 連打できないように
+   document.getElementById('btn_share_fleet_process').classList.remove('d-none');
+   document.getElementById('btn_share_fleet_parent').classList.add('d-none');
+   document.getElementById('btn_share_fleet')['disabled'] = true;
+
+   const key = await requestURLKey();
+   if (!key) {
+      // 終わり
+      enabledShareButton();
+      return;
+   }
+
+   await postURLData('https://noro6.github.io/kcTools/manager/?id=' + key)
       .then(json => {
          if (json.error || !json.shortLink) {
             inform_danger('共有URLの発行に失敗しました');
-            document.getElementById('btn_share_fleet_process').classList.add('d-none');
-            document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
-            document.getElementById('btn_share_fleet')['disabled'] = false;
+            enabledShareButton();
          }
          else {
             document.getElementById('share_url').value = json.shortLink;
             document.getElementById('share_url').nextElementSibling.classList.add('active');
             document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.remove('d-none');
-
             document.getElementById('btn_share_fleet_process').classList.add('d-none');
             inform_success('共有URLの発行に成功しました');
          }
       })
       .catch(error => {
          inform_danger('共有URLの発行に失敗しました');
-         document.getElementById('btn_share_fleet_process').classList.add('d-none');
-         document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
-         document.getElementById('btn_share_fleet')['disabled'] = false;
+         enabledShareButton();
       });
+}
+
+/**
+ * 共有発行ボタン活性化セット
+ */
+function enabledShareButton() {
+   document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
+   document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.add('d-none');
+   document.getElementById('btn_share_fleet_process').classList.add('d-none');
+   document.getElementById('btn_share_fleet')['disabled'] = false;
+}
+
+/**
+ * Twitter共有
+ */
+async function btn_twitter_Clicked() {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため本機能は利用できません');
+      return;
+   }
+
+   // 連打できないように
+   if (document.getElementById('btn_twitter').classList.contains('disabled')) {
+      return;
+   }
+   document.getElementById('btn_twitter').classList.add('disabled');
+
+   // key取得
+   const key = await requestURLKey();
+   if (!key) {
+      document.getElementById('btn_twitter').classList.remove('disabled');
+      return;
+   }
+
+   const url = 'https://noro6.github.io/kcTools/manager/?id=' + key;
+   let shortURL = url;
+   let result = false;
+
+   await postURLData(url).then(json => {
+      if (json.error || !json.shortLink) console.log(json);
+      else {
+         result = true;
+         shortURL = json.shortLink;
+      }
+   }).catch(error => console.error(error));
+
+   if (result) {
+      window.open('https://twitter.com/share?url=' + shortURL);
+   }
+   else {
+      document.getElementById('btn_twitter').classList.remove('disabled');
+      inform_danger('共有URLの生成に失敗しました。');
+   }
+}
+
+/**
+ * URLデータ内idから外部情報を展開
+ */
+function readURLData(id) {
+   try {
+      const ref = firebase.database().ref('/stocks/' + id);
+      ref.once('value').then((snapshot) => {
+         const stock = snapshot.val();
+         readOnlyShips = [];
+         readOnlyItems = [];
+
+         // 整合性チェック -艦娘
+         if (stock.ships) {
+            const ships = JSON.parse(b64_to_utf8(stock.ships));
+            if (ships && ships.length) {
+               // 圧縮状態から展開
+               for (const ship of ships) {
+                  const details = ship[1];
+                  if (!details.length || details.find(v => v.length !== 5)) {
+                     // データ形式があわないためスキップ
+                     continue;
+                  }
+                  // データ展開
+                  readOnlyShips.push({
+                     id: ship[0],
+                     details: details.map(v => {
+                        return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4] }
+                     })
+                  });
+               }
+            }
+         }
+
+         // 整合性チェック -装備
+         if (stock.items) {
+            const items = JSON.parse(b64_to_utf8(stock.items));
+            if (items && items.length) {
+               // 圧縮状態から展開
+               for (const item of items) {
+                  const itemStock = { id: item[0], num: [] };
+                  // 改修0～MAX毎の個数格納
+                  for (let remodel = 0; remodel <= 10; remodel++) {
+                     if (item[1] && remodel < item[1].length) {
+                        itemStock.num.push(item[1][remodel]);
+                     }
+                     else {
+                        itemStock.num.push(0);
+                     }
+                  }
+                  readOnlyItems.push(itemStock);
+               }
+            }
+         }
+
+         if ((!stock.ships || !readOnlyShips.length) && (!stock.items || !readOnlyItems.length)) {
+            // 両データとも0件
+            inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+         }
+         else {
+            document.getElementById('readonly_mode').classList.remove('d-none');
+            readOnlyMode = true;
+         }
+
+         ref.off();
+
+         initItemList();
+         initShipList();
+      });
+   } catch (error) {
+      // データ読込失敗(データ削除済 or 適当なID)
+      inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+      quitReadonlyMode();
+   }
 }
 
 /**
