@@ -2855,18 +2855,6 @@ function getArrayMin(array) {
 }
 
 /**
- * RGBに変換
- * @param {string} hex
- */
-function hexToRGB(hex) {
-	if (hex.slice(0, 1) == "#") hex = hex.slice(1);
-	if (hex.length == 3) hex = hex.slice(0, 1) + hex.slice(0, 1) + hex.slice(1, 2) + hex.slice(1, 2) + hex.slice(2, 3) + hex.slice(2, 3);
-	return [hex.slice(0, 2), hex.slice(2, 4), hex.slice(4, 6)].map(function (str) {
-		return parseInt(str, 16);
-	});
-}
-
-/**
  * ステータス表示用のフォーマット
  * 小数以下があれば第1位のみ表示 第2位以下は切り捨てる
  * 対空射撃回避の場合はマスタから文字列取得

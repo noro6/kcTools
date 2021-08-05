@@ -85,6 +85,7 @@ body {
    -ms-flex-pack: justify!important;
    justify-content: center!important;
 }
+.text-center { text-align: center; }
 .ml-auto,
 .mx-auto { margin-left: auto; }
 .mr-auto,
@@ -809,7 +810,7 @@ input[type="number"] {
 }
 
 #modal_item_edit .modal-content {
-   padding: 1rem 1rem 0 1rem; 
+   padding: 1rem 1rem 0 1rem;
 }
 #item_stock_inputs {
    margin-bottom: 0px;
@@ -835,4 +836,23 @@ input[type="number"] {
 }
 #ship_exp_table .td_name {
    text-align: left;
+}
+
+#exp_radar_parent,
+#exp_rate_chart_parent {
+   position: relative;
+   width: 100%;
+   height: 450px;
+}
+#exp_radar_container,
+#exp_rate_chart_container {
+   margin-top: 1rem;
+   padding: 1rem;
+   width: 100%;
+}
+@media (min-width: 992px) {
+   #exp_radar_container,
+   #exp_rate_chart_container {
+      width: 49.5%;
+   }
 }
