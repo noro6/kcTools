@@ -2065,17 +2065,21 @@ function btn_read_item_Clicked() {
 function btn_url_shorten_Clicked() {
    const textbox = document.getElementById('input_url');
    const url = textbox.value.trim();
-   textbox.value = "";
 
+   if (!url) {
+      return;
+   }
    // 所持装備チェック
-   if (readEquipmentJson(url)) {
+   else if (readEquipmentJson(url)) {
       initItemList();
       inform_success('所持装備の反映に成功しました');
+      textbox.value = "";
    }
    else if (readShipJson(url)) {
       initShipList();
       initExpTable();
       inform_success('所持艦娘の反映に成功しました');
+      textbox.value = "";
    }
    else {
       inform_danger('入力値の読み込みに失敗しました');
