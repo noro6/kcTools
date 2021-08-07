@@ -85,6 +85,10 @@
 				<span class="d-none d-lg-inline">艦隊情報をツイート</span>
 				<span class="d-lg-none">Tweet</span>
 			</div>
+			<div class="d-none tool_item" id="btn_exit_readonly">
+				<i class="fas pt-1 pl-1 fa-exit"></i>
+				<span>閲覧モード終了</span>
+			</div>
 			<div class="flex-grow-1 mx-1" id="url_shortener">
 				<textarea class="form-control-dark" id="input_url"
 					placeholder="ここに艦隊反映コードや装備反映コードを入力し、右の読み込みボタンを押してもOKです"></textarea>
@@ -697,10 +701,21 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="waves-effect waves-light btn-small" id="btn_create_ship">着任</button>
-				<button type="button" class="waves-effect waves-light btn-small blue" id="btn_update_ship">更新</button>
-				<button type="button" class="waves-effect waves-light btn-small red" id="btn_delete_ship">除籍</button>
+			<div class="modal-footer d-flex">
+				<div class="mr-auto align-self-center ml-3" id="toggle_fav_ship">
+					<i class="fa-heart"></i>
+					<span id="remove_favorite" class="d-none">お気に入り解除</span>
+					<span id="add_favorite">お気に入り追加</span>
+				</div>
+				<div class="mr-2">
+					<button type="button" class="waves-effect waves-light btn-small" id="btn_create_ship">着任</button>
+				</div>
+				<div class="mr-2">
+					<button type="button" class="waves-effect waves-light btn-small blue" id="btn_update_ship">更新</button>
+				</div>
+				<div class="mr-2">
+					<button type="button" class="waves-effect waves-light btn-small red" id="btn_delete_ship">除籍</button>
+				</div>
 			</div>
 		</div>
 
@@ -826,9 +841,18 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="waves-effect waves-light btn-small" id="btn_save_item">所持数更新</button>
-				<button type="button" class="waves-effect waves-light btn-small red" id="btn_reset_item_stock">全て破棄</button>
+			<div class="modal-footer d-flex">
+				<div class="mr-auto align-self-center ml-3" id="toggle_fav_item">
+					<i class="fa-heart"></i>
+					<span id="remove_fav_item" class="d-none">お気に入り解除</span>
+					<span id="add_fav_item">お気に入り追加</span>
+				</div>
+				<div class="mr-2">
+					<button type="button" class="waves-effect waves-light btn-small" id="btn_save_item">所持数更新</button>
+				</div>
+				<div class="mr-2">
+					<button type="button" class="waves-effect waves-light btn-small red" id="btn_reset_item_stock">全て破棄</button>
+				</div>
 			</div>
 		</div>
 	</div>
