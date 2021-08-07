@@ -482,7 +482,7 @@ function initShipListTable() {
          tr.appendChild(tdImage);
 
          const tdLevel = createDiv('ship_table_td_status');
-         tdLevel.textContent = 1;
+         tdLevel.textContent = '-';
          tr.appendChild(tdLevel);
 
          const tdHP = createDiv('ship_table_td_status');
@@ -495,43 +495,27 @@ function initShipListTable() {
          tr.appendChild(tdLuck);
 
          const tdAsw = createDiv('ship_table_td_status');
-         tdAsw.textContent = ship.asw ? ship.asw : 0;
+         tdAsw.textContent = '-';
          tr.dataset.asw = ship.asw ? ship.asw : 0;
          tr.appendChild(tdAsw);
 
          // 命中項(ステータス部分のみ)
          const tdAccuracy = createDiv('ship_table_td_status');
-         const accuracyValue = Math.floor(2 * Math.sqrt(1) + 1.5 * Math.sqrt(luck));
-         tdAccuracy.textContent = accuracyValue;
-         tr.dataset.accuracy = accuracyValue;
+         tdAccuracy.textContent = '-';
+         tr.dataset.accuracy = 0;
          tr.appendChild(tdAccuracy);
 
          const avoid = ship.avoid ? ship.avoid : 0;
          // 回避項(ステータス部分のみ)
          const tdAvoid = createDiv('ship_table_td_status');
-         const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
-         let avoidValue = baseAvoid;
-         if (baseAvoid >= 65) {
-            avoidValue = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
-         }
-         else if (baseAvoid >= 45) {
-            avoidValue = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
-         }
-         tdAvoid.textContent = avoidValue;
-         tr.dataset.avoid = avoidValue;
+         tdAvoid.textContent = '-';
+         tr.dataset.avoid = 0;
          tr.appendChild(tdAvoid);
 
          // CI項(ステータス部分のみ)
          const tdCI = createDiv('ship_table_td_status');
-         let ciValue = 0;
-         if (luck >= 50) {
-            ciValue = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(1));
-         }
-         else {
-            ciValue = Math.floor(15 + luck + 0.75 * Math.sqrt(1));
-         }
-         tdCI.textContent = ciValue;
-         tr.dataset.ci = ciValue;
+         tdCI.textContent = '-';
+         tr.dataset.ci = 0;
          tr.appendChild(tdCI);
 
          tbody.appendChild(tr);
