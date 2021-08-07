@@ -290,6 +290,9 @@ input[type="number"] {
    color: rgb(134, 134, 134);
 }
 .fav .fa-heart {
+   color: #ff7171;
+}
+.dark-theme .fav .fa-heart {
    color: #d15c5c;
 }
 
@@ -898,4 +901,9 @@ input[type="number"] {
 }
 #ship_exp_ranking_table .td_name {
    text-align: left;
+}
+
+#modal_ship_remove_confirm {
+   width: 400px;
+   top: 35%!important;
 }
