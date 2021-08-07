@@ -11,8 +11,12 @@ let readOnlyItems = [];
 
 let expChart = null;
 let expRadarChart = null;
+let expStackChart = null;
 
 const FINAL_SHIPS = SHIP_DATA.filter(v => v.final);
+const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
+   return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }
+});
 
 document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
@@ -120,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ship_exp').on('input', '#exp_range_max', setExpRangeSlider);
    $('#ship_exp').on('change', '#without_lv1', initExpTable);
    $('#ship_exp').on('click', '#btn_exp_range_manual', () => {
+      // 集計対象手動に切り替え
       document.getElementById('without_lv1')['checked'] = false;
       document.getElementById('exp_range_simple').classList.add('d-none');
       document.getElementById('exp_range_simple').classList.remove('d-flex');
@@ -719,6 +724,7 @@ function setExpRangeSlider() {
  */
 function initExpTable() {
    const shipStock = readOnlyMode ? readOnlyShips : loadShipStock();
+   const isDark = document.body.classList.contains('dark-theme');
    const isManual = document.getElementById('exp_range_manual').classList.contains('d-flex');
    const withoutLevel1 = document.getElementById('without_lv1')['checked'];
    let lvRangeMin = castInt(document.getElementById('exp_range_min').value);
@@ -735,12 +741,25 @@ function initExpTable() {
 
    const fragment = document.createDocumentFragment();
 
-   // レーダー用データ [0: 最大Lv, 1: 最小Lv, 2:平均Lv] にする予定
+   // レーダーチャート用カテゴリ別カラーテーブル
+   const barColors = isDark ? ["rgba(255, 80, 80, 0.5)", "rgba(170, 80, 255, 0.5)", "rgba(80, 80, 255, 0.5)", "rgba(80, 180, 255, 0.5)", "rgba(80, 255, 255, 0.5)", "rgba(80, 255, 80, 0.5)", "rgba(255, 255, 80, 0.5)", "rgba(255, 180, 80, 0.5)"] :
+      ["rgba(200, 0, 0, 0.5)", "rgba(100, 0, 200, 0.5)", "rgba(0, 0, 200, 0.5)", "rgba(0, 100, 200, 0.5)", "rgba(0, 200, 200, 0.5)", "rgba(0, 200, 0, 0.5)", "rgba(200, 200, 0, 0.5)", "rgba(200, 100, 0, 0.5)"];
+   const barBorderColors = isDark ? ["rgb(255, 80, 80)", "rgb(170, 80, 255)", "rgb(80, 80, 255)", "rgb(80, 180, 255)", "rgb(80, 255, 255)", "rgb(80, 255, 80)", "rgb(255, 255, 80)", "rgb(255, 180, 80)", "rgb(255, 255, 153)", "rgb(255, 204, 153)", "rgb(255, 153, 153)"] :
+      ["rgb(200, 0, 0)", "rgb(100, 0, 200)", "rgb(0, 0, 200)", "rgb(0, 100, 200)", "rgb(0, 200, 100)", "rgb(0, 200, 0)", "rgb(200, 200, 0)", "rgb(200, 100, 0)"];
+   // 積み上げ棒グラフ用
+   const stackedDataset = [];
+
+   // レーダー用データ
    const maxLvs = [];
    const minLvs = [];
    const midLvs = [];
    const avgLvs = [];
-   for (const type of SHIP_TYPE_REV2) {
+
+   // 艦娘別取得経験値ランカー
+   const expRanking = FIRST_SHIPS.map(v => { return { id: v.id, versions: v.versions, sumExp: 0 } });
+
+   for (let idx = 0; idx < SHIP_TYPE_REV2.length; idx++) {
+      const type = SHIP_TYPE_REV2[idx];
       // 艦種拡張
       let dispType = [];
       switch (type.id) {
@@ -780,9 +799,18 @@ function initExpTable() {
       let count = 0;
       let all = [];
 
+      const newStackedData = {
+         label: type.name,
+         backgroundColor: barColors[idx],
+         borderColor: barBorderColors[idx],
+         borderWidth: 0,
+         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      };
+
       const shipIds = SHIP_DATA.filter(v => dispType.includes(v.type)).map(v => v.id);
       const targetStocks = shipStock.filter(v => shipIds.includes(v.id));
       for (const stock of targetStocks) {
+         let shipSumExp = 0;
          for (const detail of stock.details) {
             const level = detail.lv;
             if (isManual && (level < lvRangeMin || level > lvRangeMax)) {
@@ -795,6 +823,8 @@ function initExpTable() {
             count++;
             sumLv += level;
             sumExp += detail.exp;
+            shipSumExp += detail.exp;
+
             all.push(level);
             allLvs.push(level);
             if (maxLv < level) maxLv = level;
@@ -805,12 +835,17 @@ function initExpTable() {
             allSumExp += detail.exp;
             if (allMaxLv < level) allMaxLv = level;
             if (allMinLv > level) allMinLv = level;
+
+            newStackedData.data[17 - Math.floor(level / 10)] += 1;
+         }
+
+         const expRankData = expRanking.find(v => v.versions.includes(stock.id));
+         if (expRankData) {
+            expRankData.sumExp += shipSumExp;
          }
       }
 
       const tr = document.createElement('tr');
-      tr.className = 'type_tr';
-
       const tdName = document.createElement('td');
       tdName.className = 'td_name';
       tdName.textContent = type.name;
@@ -858,11 +893,25 @@ function initExpTable() {
 
       // レーダー用データ格納
       maxLvs.push(maxLv);
-      minLvs.push(minLv);
+      minLvs.push(count ? minLv : 0);
       midLvs.push(midLv)
       avgLvs.push(count ? Math.floor(sumLv / count) : 0);
+
+      stackedDataset.push(newStackedData);
    }
 
+   document.getElementById('ship_exp_tbody').innerHTML = '';
+   document.getElementById('ship_exp_tbody').appendChild(fragment);
+
+   const expChartData = [];
+   $('#ship_exp_tbody tr').each((i, e) => {
+      const sumExp = castInt($(e).find('.td_sum_exp')[0].dataset.exp);
+      const rate = allSumExp ? 100 * sumExp / allSumExp : 0;
+      $(e).find('.td_exp_rate').text((rate).toFixed(1) + '%');
+      expChartData.push(rate.toFixed(2));
+   });
+
+   const footFragment = document.createDocumentFragment();
    const tr = document.createElement('tr');
    const tdName = document.createElement('td');
    tdName.className = 'td_name';
@@ -903,21 +952,11 @@ function initExpTable() {
    tdExpRate.textContent = '-';
    tr.appendChild(tdExpRate);
 
-   fragment.appendChild(tr);
-
-   document.getElementById('ship_exp_tbody').innerHTML = '';
-   document.getElementById('ship_exp_tbody').appendChild(fragment);
-
-   const expChartData = [];
-   $('#ship_exp_tbody .type_tr').each((i, e) => {
-      const sumExp = castInt($(e).find('.td_sum_exp')[0].dataset.exp);
-      const rate = allSumExp ? 100 * sumExp / allSumExp : 0;
-      $(e).find('.td_exp_rate').text((rate).toFixed(1) + '%');
-      expChartData.push(rate.toFixed(2));
-   });
+   footFragment.appendChild(tr);
+   document.getElementById('ship_exp_tfoot').innerHTML = '';
+   document.getElementById('ship_exp_tfoot').appendChild(footFragment);
 
    // チャート処理
-   const isDark = document.body.classList.contains('dark-theme');
    const textColor = "rgba(" + hexToRGB(mainColor).join(',') + ", 0.8)";
    const expRateChart = document.getElementById('exp_rate_chart');
    const typeLabels = SHIP_TYPE_REV2.map(v => v.name);
@@ -928,8 +967,8 @@ function initExpTable() {
             labels: typeLabels,
             datasets: [{
                data: expChartData,
-               backgroundColor: ["rgba(255, 103, 204, 0.4)", "rgba(255, 153, 255, 0.4)", "rgba(204, 204, 255, 0.4)", "rgba(153, 204, 255, 0.4)", "rgba(102, 204, 255, 0.4)", "rgba(102, 255, 255, 0.4)", "rgba(153, 255, 204, 0.4)", "rgba(153, 255, 153, 0.4)", "rgba(255, 255, 153, 0.4)", "rgba(255, 204, 153, 0.4)", "rgba(255, 153, 153, 0.4)"],
-               borderColor: ["rgb(255, 103, 204)", "rgb(255, 153, 255)", "rgb(204, 204, 255)", "rgb(153, 204, 255)", "rgb(102, 204, 255)", "rgb(102, 255, 255)", "rgb(153, 255, 204)", "rgb(153, 255, 153)", "rgb(255, 255, 153)", "rgb(255, 204, 153)", "rgb(255, 153, 153)"],
+               backgroundColor: "rgba(80, 200, 255, 0.2)",
+               borderColor: "rgb(80, 200, 255)",
                borderWidth: 2
             }]
          },
@@ -938,7 +977,7 @@ function initExpTable() {
             maintainAspectRatio: false,
             scales: {
                xAxes: [{
-                  scaleLabel: { display: true, labelString: '経験値割合 [%]', fontColor: textColor, fontSize: 10 },
+                  scaleLabel: { display: true, labelString: '経験値割合 [%]', fontColor: textColor, fontSize: 12 },
                   gridLines: { color: "rgba(128, 128, 128, 0.2)" },
                   ticks: { fontColor: textColor, fontSize: 10, stepSize: 5 }
                }],
@@ -981,8 +1020,8 @@ function initExpTable() {
                label: radarDatasetLabels[0],
                data: maxLvs,
                fill: false,
-               borderColor: isDark ? "rgb(64, 200, 255)" : "rgb(128, 128, 255)",
-               borderWidth: 1
+               borderColor: isDark ? "rgb(64, 200, 255)" : "rgb(64, 128, 200)",
+               borderWidth: 1,
             },
             {
                label: radarDatasetLabels[1],
@@ -996,7 +1035,7 @@ function initExpTable() {
                label: radarDatasetLabels[2],
                data: midLvs,
                fill: false,
-               borderColor: "rgb(0, 255, 0)",
+               borderColor: "rgb(0, 200, 0)",
                borderWidth: 1
             },
             {
@@ -1034,6 +1073,78 @@ function initExpTable() {
 
       expRadarChart.update();
    }
+
+   const stackChartArea = document.getElementById('exp_stacked_chart');
+   const stackedLvLabels = [];
+   for (let i = 170; i >= 0; i -= 10) {
+      stackedLvLabels.push((i ? i : 1) + '~');
+   }
+   if (!expStackChart) {
+      expStackChart = new Chart(stackChartArea, {
+         type: "horizontalBar",
+         data: {
+            labels: stackedLvLabels,
+            datasets: stackedDataset
+         },
+         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+               xAxes: [{
+                  stacked: true,
+                  scaleLabel: { display: true, labelString: '艦娘数 [隻]', fontColor: textColor, fontSize: 12 },
+                  gridLines: { color: "rgba(128, 128, 128, 0.2)" },
+                  ticks: { fontColor: textColor, fontSize: 10, stepSize: 10 }
+               }],
+               yAxes: [{
+                  stacked: true,
+                  ticks: { fontColor: textColor },
+                  gridLines: { display: false }
+               }],
+            },
+            legend: { position: 'bottom', labels: { fontColor: textColor } },
+            tooltips: {
+               filter: (item) => (item.xLabel > 0)
+            }
+         }
+      });
+   }
+   else {
+      expStackChart.data.datasets = stackedDataset;
+      expStackChart.update();
+   }
+
+   const expRankingFragment = document.createDocumentFragment();
+   expRanking.sort((a, b) => b.sumExp - a.sumExp);
+
+   for (let rank = 0; rank < expRanking.length; rank++) {
+      if (rank === 10) break;
+      const data = expRanking[rank];
+      const tr = document.createElement('tr');
+
+      const tdRank = document.createElement('td');
+      tdRank.className = 'td_name';
+      tdRank.textContent = rank + 1;
+      tr.appendChild(tdRank);
+
+      const tdName = document.createElement('td');
+      tdName.className = 'td_name';
+      const raw = SHIP_DATA.find(v => v.id === data.id);
+      tdName.textContent = raw ? raw.name : '不明';
+      tr.appendChild(tdName);
+
+      const tdSumExp = document.createElement('td');
+      tdSumExp.textContent = Number(data.sumExp).toLocaleString();
+      tr.appendChild(tdSumExp);
+
+      const tdExpRate = document.createElement('td');
+      tdExpRate.textContent = allCount ? (100 * data.sumExp / allSumExp).toFixed(1) + '%' : '-';
+      tr.appendChild(tdExpRate);
+
+      expRankingFragment.appendChild(tr);
+   }
+   document.getElementById('ship_exp_ranking_tbody').innerHTML = '';
+   document.getElementById('ship_exp_ranking_tbody').appendChild(expRankingFragment);
 }
 
 /**
@@ -1963,6 +2074,7 @@ function btn_url_shorten_Clicked() {
    }
    else if (readShipJson(url)) {
       initShipList();
+      initExpTable();
       inform_success('所持艦娘の反映に成功しました');
    }
    else {
@@ -2094,7 +2206,7 @@ async function requestURLKey() {
 
    const db = firebase.database().ref('stocks')
    const newRef = db.push();
-   await newRef.set({ ships: shipsData, items: itemsData, date: formatDate(new Date(), 'yy/MM/dd') }, (error) => {
+   await newRef.set({ ships: shipsData, items: itemsData, date: formatDate(new Date(), 'yy/MM/dd HH:mm:ss') }, (error) => {
       if (error) {
          console.log(error);
          inform_danger('共有URLの発行に失敗しました');
@@ -2128,7 +2240,7 @@ async function debug_() {
       return;
    }
 
-   await postURLData('https://noro6.github.io/kcTools/manager/?id=' + key)
+   await postURLData(MYURL + 'manager/?id=' + key)
       .then(json => {
          if (json.error || !json.shortLink) {
             inform_danger('共有URLの発行に失敗しました');
@@ -2180,7 +2292,7 @@ async function btn_twitter_Clicked() {
       return;
    }
 
-   const url = 'https://noro6.github.io/kcTools/manager/?id=' + key;
+   const url = MYURL + 'manager/?id=' + key;
    let shortURL = url;
    let result = false;
 
@@ -2307,5 +2419,6 @@ function quitReadonlyMode() {
    readOnlyItems = null;
    initShipList();
    initItemList();
+   initExpTable();
    inform_success('閲覧モードを終了しました');
 }

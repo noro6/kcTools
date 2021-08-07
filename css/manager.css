@@ -50,16 +50,6 @@ body {
 .d-block { display: block!important; }
 .d-inline { display: inline!important; }
 .d-inline-block { display: inline-block!important; }
-@media (min-width: 576px) {
-   .d-sm-block { display: block!important; }
-   .d-sm-inline { display: inline!important; }
-   .d-sm-none { display: none!important; }
-}
-@media (min-width: 768px) {
-   .d-md-block { display: block!important; }
-   .d-md-inline { display: inline!important; }
-   .d-md-none { display: none!important; }
-}
 @media (min-width: 992px) {
    .d-lg-block { display: block!important; }
    .d-lg-inline { display: inline!important; }
@@ -172,6 +162,7 @@ input[type="number"] {
 
 #main {
    margin-top: 0.5rem;
+   min-height: 88vh;
 }
 
 [type="radio"]+span:not(.lever),
@@ -474,6 +465,9 @@ input[type="number"] {
 .dark-theme .ship_table_tr.header {
    background-color: #3c3c44;
 }
+.dark-theme.deep_blue_theme .ship_table_tr.header {
+   background-color: #272f49;
+}
 .ship_table_tr.header .ship_table_td_name {
    text-align: left;
    padding-left: 1rem;
@@ -505,22 +499,22 @@ input[type="number"] {
    background-color: rgba(131, 255, 131, 0.5);
 }
 .dark-theme .ship_table_tr.lv175 {
-   background-color: rgba(131, 220, 255, 0.1);
+   background-color: rgba(131, 220, 255, 0.2);
 }
 .dark-theme .ship_table_tr.lv100 {
-   background-color: rgba(255, 131, 131, 0.1);
+   background-color: rgba(255, 131, 131, 0.2);
 }
 .dark-theme .ship_table_tr.lv99 {
-   background-color: rgba(131, 255, 131, 0.1);
+   background-color: rgba(131, 255, 131, 0.2);
 }
 .dark-theme .ship_table_tr.lv175:hover {
-   background-color: rgba(131, 220, 255, 0.15);
+   background-color: rgba(131, 220, 255, 0.25);
 }
 .dark-theme .ship_table_tr.lv100:hover {
-   background-color: rgba(255, 131, 131, 0.15);
+   background-color: rgba(255, 131, 131, 0.25);
 }
 .dark-theme .ship_table_tr.lv99:hover {
-   background-color: rgba(131, 255, 131, 0.15);
+   background-color: rgba(131, 255, 131, 0.25);
 }
 .ship_table_tr.no_ship {
    opacity: 0.7;
@@ -611,14 +605,9 @@ input[type="number"] {
 -------------------------------- */
 #item_list {
    display: grid;
-   grid-template-columns: 1fr 1fr;
+   grid-template-columns: 1fr 1fr 1fr;
    row-gap: 0.5rem;
    column-gap: 0.5rem;
- }
- @media (min-width: 760px) {
-   #item_list {
-     grid-template-columns: 1fr 1fr 1fr;
-   }
  }
  @media (min-width: 1100px) {
    #item_list {
@@ -822,12 +811,8 @@ input[type="number"] {
    max-height: 100px;
 }
 
-#ship_exp_table {
-   margin-left: auto;
-   margin-right: auto;
-   max-width: 1600px;
-}
-.dark-theme #ship_exp_table tr {
+.dark-theme #ship_exp_table tr,
+.dark-theme #ship_exp_ranking_table tr {
    border-color: rgba(128, 128, 128, 0.5);
 }
 #ship_exp_table td {
@@ -837,22 +822,37 @@ input[type="number"] {
 #ship_exp_table .td_name {
    text-align: left;
 }
+#ship_exp_tbody tr:hover,
+#ship_exp_tfoot tr:hover,
+#ship_exp_ranking_table tbody tr:hover {
+   background-color: rgba(178, 178, 178, 0.1);
+}
+#ship_exp_tfoot tr {
+   border: none;
+}
 
-#exp_radar_parent,
-#exp_rate_chart_parent {
+#chart_area .chart_container {
    position: relative;
    width: 100%;
    height: 450px;
 }
-#exp_radar_container,
-#exp_rate_chart_container {
+#chart_area #exp_stacked_chart_container {
+   height: 600px;
+}
+#chart_area > div {
    margin-top: 1rem;
    padding: 1rem;
    width: 100%;
 }
 @media (min-width: 992px) {
-   #exp_radar_container,
-   #exp_rate_chart_container {
+   #chart_area > div{
       width: 49.5%;
    }
+}
+
+#ship_exp_ranking_table td {
+   text-align: right;
+}
+#ship_exp_ranking_table .td_name {
+   text-align: left;
 }

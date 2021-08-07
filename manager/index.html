@@ -3,16 +3,15 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>制空権シミュレータ</title>
+	<title>艦娘 装備管理 | 制空権シミュレータ</title>
 	<meta name="description"
 		content="「艦これ」の制空権に関する計算およびシミュレーションを行うサイトです。道中での被撃墜、基地航空隊の制空削りや敵艦隊の対空砲火による撃墜を考慮した制空計算や全滅率の試算、防空時の制空計算に対応しています。" />
-	<meta name="viewport" content="width=device-width" />
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content="@noro_006" />
 	<meta property="og:url" content="https://noro6.github.io/kcTools/manager/" />
 	<meta property="og:type" content="article" />
-	<meta property="og:title" content="艦娘 装備管理 -制空権シミュレータ" />
-	<meta property="og:description" content="道中での被撃墜や、基地での敵機撃墜を考慮した制空権争いに関するシミュレーションが行えます。" />
+	<meta property="og:title" content="艦娘 装備管理 | 制空権シミュレータ" />
+	<meta property="og:description" content="所持している艦娘や装備の登録、簡単な分析、他の人への共有が可能です。登録された艦娘や装備は制空計算ページでも利用できます。" />
 	<meta property="og:site_name" content="制空権シミュレータ" />
 	<meta property="og:image" content="https://noro6.github.io/kcTools/img/util/card.png" />
 	<link rel="icon" href="../favicon.ico">
@@ -21,7 +20,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 	<link rel="stylesheet" href="../fonts/style.css">
 	<link rel="stylesheet" href="../css/common.min.css">
-	<link rel="stylesheet" href="../css/manager.css">
+	<link rel="stylesheet" href="../css/manager.min.css">
 	<script src="https://www.gstatic.com/firebasejs/8.8.1/firebase.js"></script>
 	<script src="../js/common.js"></script>
 	<script src="../js/jquery-3.5.1.min.js"></script>
@@ -330,7 +329,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="general_box">
+						<div class="general_box px-3">
 							<table id="ship_exp_table">
 								<thead>
 									<tr>
@@ -346,25 +345,50 @@
 									</tr>
 								</thead>
 								<tbody id="ship_exp_tbody"></tbody>
+								<tfoot id="ship_exp_tfoot"></tfoot>
 							</table>
 						</div>
-						<div class="d-flex flex-wrap justify-content-between">
-							<div class="general_box" id="exp_rate_chart_container">
-								<div id="exp_rate_chart_parent">
+						<div class="d-flex flex-wrap justify-content-between" id="chart_area">
+							<div class="general_box">
+								<div class="text-center">艦種別経験値割合</div>
+								<div class="chart_container">
 									<canvas id="exp_rate_chart"></canvas>
 								</div>
 							</div>
-							<div class="general_box" id="exp_radar_container">
-								<div id="exp_radar_parent">
+							<div class="general_box">
+								<div class="text-center">艦種別Lv帯分析</div>
+								<div class="chart_container">
 									<canvas id="exp_radar_chart"></canvas>
 								</div>
 								<div class="text-center font_size_11">&uarr;クリックで表示/非表示切り替え</div>
+							</div>
+							<div class="general_box">
+								<div class="text-center">艦種別Lv</div>
+								<div class="chart_container" id="exp_stacked_chart_container">
+									<canvas id="exp_stacked_chart"></canvas>
+								</div>
+								<div class="text-center font_size_11">&uarr;クリックで表示/非表示切り替え</div>
+							</div>
+							<div class="general_box">
+								<div class="text-center mb-4">経験値取得艦娘ランキング</div>
+								<table id="ship_exp_ranking_table">
+									<thead>
+										<tr>
+											<td class="td_name">#</td>
+											<td class="td_name">艦娘</td>
+											<td>総経験値</td>
+											<td>経験値割合</td>
+										</tr>
+									</thead>
+									<tbody id="ship_exp_ranking_tbody"></tbody>
+								</table>
 							</div>
 						</div>
 					</div>
 					<div id="ships_reader">
 						<div class="general_box">
 							<div>1. 艦これにログイン後、画面上で右クリックし、コンテキストメニューから「検証」を選択</div>
+							<div>※ 以降、反映手順については、PC版ブラウザ『Google Chrome』における説明となっています。</div>
 							<div class="tutorial_img">
 								<img class="materialboxed" src="../img/tutorial/tutorial1.jpg">
 							</div>
@@ -510,7 +534,7 @@
 					</div>
 					<div id="items_reader">
 						<div class="general_box">
-							<div>1. 手順1.～手順6.までは、「艦隊反映」と全く同じ手順です。手順6.まではそちらをご覧ください。</div>
+							<div>1. 手順1.～手順6.までは、「艦娘 &gt; 反映」に記載のものと全く同じ手順ですのでそちらをご覧ください。</div>
 						</div>
 						<div class="general_box">
 							<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>

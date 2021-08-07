@@ -1725,7 +1725,7 @@ async function btn_output_url_Clicked() {
     const preset = getModalSharePreset();
 
     const $output = $('#output_url');
-    const url = 'https://noro6.github.io/kcTools/?d=' + preset[2];
+    const url = MYURL + '?d=' + preset[2];
     let shortURL = url;
     let result = false;
     await postURLData(url)
