@@ -18,6 +18,9 @@ const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
    return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }
 });
 
+let shipSortKey = '';
+let isAscShip = false;
+
 document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
    document.getElementById('ship_table')['checked'] = setting.managerViewMode === 'table';
@@ -102,10 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_ship_edit').on('input', '#ship_luck_range', function () { ship_luck_range_Changed($(this)); });
    $('#modal_ship_edit').on('click', '#btn_level_99', btn_level_99_Clicked);
    $('#modal_ship_edit').on('click', '.selectable_area_banner', function () { area_banner_Clicked($(this)); });
+   $('#modal_ship_edit').on('click', '#toggle_fav_ship', function () { ship_fav_Clicked($(this)) });
    $('#modal_ship_edit').on('click', '#btn_create_ship', btn_create_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_update_ship', btn_update_ship_Clicked);
-   $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
-   $('#modal_ship_edit').on('click', '#toggle_fav_ship', function () { ship_fav_Clicked($(this)) });
+   $('#modal_ship_edit').on('click', '#btn_delete_ship', () => { $('#modal_ship_remove_confirm').modal('open'); });
+   $('#modal_ship_remove_confirm').on('click', '#btn_delete_ship_commit', btn_delete_ship_Clicked);
+   $('#modal_ship_remove_confirm').on('click', '.cancel', () => { $('#modal_ship_remove_confirm').modal('close'); });
 
 
    // 経験値関連
@@ -195,6 +200,10 @@ function initShipList() {
       filterShipListTable();
       setting.managerViewMode = 'table';
       saveSetting();
+
+      if (shipSortKey && shipSortKey !== 'index') {
+         sortShipTable(shipSortKey, isAscShip);
+      }
       return;
    }
 
@@ -1468,6 +1477,10 @@ function ship_header_table_tr_Clicked($this) {
    // デフォルトのソート項目
    let sortKey = 'index';
    let isAsc = true;
+
+   shipSortKey = 'index';
+   isAscShip = true;
+
    if ($this.hasClass('asc')) {
       $this.removeClass('asc selected');
    }
@@ -1475,15 +1488,30 @@ function ship_header_table_tr_Clicked($this) {
       $this.removeClass('desc');
       $this.addClass('asc');
       sortKey = $this[0].dataset.sortkey;
+      shipSortKey = $this[0].dataset.sortkey;
    }
    else {
       $('.header .ship_table_td_status').removeClass('desc asc selected');
       $this.addClass('desc selected');
       sortKey = $this[0].dataset.sortkey;
+      shipSortKey = $this[0].dataset.sortkey;
       isAsc = false;
+      isAscShip = false;
    }
 
+   sortShipTable(sortKey, isAsc);
+}
+
+/**
+ * 艦娘テーブルをソート
+ * @param {string} sortKey 
+ * @param {boolean} isAsc 
+ */
+function sortShipTable(sortKey, isAsc) {
    const parent = document.getElementById('ship_table_tbody');
+   if (!parent) {
+      return;
+   }
    const trs = parent.getElementsByClassName('ship_table_tr');
    const containers = Array.prototype.slice.call(trs);
 
@@ -1857,6 +1885,7 @@ function btn_delete_ship_Clicked() {
    else {
       inform_success('除籍に失敗しました。既に除籍されています');
    }
+   $('#modal_ship_remove_confirm').modal('close');
    $('#modal_ship_edit').modal('close');
 }
 
