@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('btn_share').addEventListener('click', () => { window.location.href = '../simulator/'; });
    // Tweet
    document.getElementById('btn_twitter').addEventListener('click', btn_twitter_Clicked);
+   // 閲覧モード終了
+   document.getElementById('btn_exit_readonly').addEventListener('click', quitReadonlyMode);
 
    document.getElementById('btn_read_ship').addEventListener('click', btn_read_ship_Clicked);
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
@@ -103,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_ship_edit').on('click', '#btn_create_ship', btn_create_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_update_ship', btn_update_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
+   $('#modal_ship_edit').on('click', '#toggle_fav_ship', function () { ship_fav_Clicked($(this)) });
 
 
    // 経験値関連
@@ -159,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_item_edit').on('input', 'input', function () { item_stock_Changed($(this)); });
    $('#modal_item_edit').on('click', '#btn_save_item', btn_save_item_stock_Clicked);
    $('#modal_item_edit').on('click', '#btn_reset_item_stock', btn_reset_item_stock_Clicked);
+   $('#modal_item_edit').on('click', '#toggle_fav_item', function () { item_fav_Clicked($(this)) });
 
    $('#others').on('click', 'input[type="text"]', function () { $(this).select(); });
    $('#others').on('click', 'textarea', function () { $(this).select(); });
@@ -494,26 +498,34 @@ function initShipListTable() {
          tdLuck.textContent = luck;
          tr.appendChild(tdLuck);
 
-         const tdAsw = createDiv('ship_table_td_status');
-         tdAsw.textContent = '-';
+         const noShipStatusArea = createDiv('no_ship_area d-flex');
+         const tdNoStatusLine = createDiv('ml-4 ship_table_td_line');
+         noShipStatusArea.appendChild(tdNoStatusLine);
+
+         const tdNoStatus = createDiv('text-center mx-3');
+         tdNoStatus.textContent = '未所持';
+         noShipStatusArea.appendChild(tdNoStatus);
+
+         const tdNoStatusLine2 = createDiv('ship_table_td_line');
+         noShipStatusArea.appendChild(tdNoStatusLine2);
+         tr.appendChild(noShipStatusArea);
+
+         const tdAsw = createDiv('ship_table_td_status d-none');
+         tdAsw.textContent = '';
          tr.dataset.asw = ship.asw ? ship.asw : 0;
          tr.appendChild(tdAsw);
 
-         // 命中項(ステータス部分のみ)
-         const tdAccuracy = createDiv('ship_table_td_status');
-         tdAccuracy.textContent = '-';
+         const tdAccuracy = createDiv('ship_table_td_status d-none');
+         tdAccuracy.textContent = '';
          tr.dataset.accuracy = 0;
          tr.appendChild(tdAccuracy);
 
-         const avoid = ship.avoid ? ship.avoid : 0;
-         // 回避項(ステータス部分のみ)
-         const tdAvoid = createDiv('ship_table_td_status');
+         const tdAvoid = createDiv('ship_table_td_status d-none');
          tdAvoid.textContent = '-';
          tr.dataset.avoid = 0;
          tr.appendChild(tdAvoid);
 
-         // CI項(ステータス部分のみ)
-         const tdCI = createDiv('ship_table_td_status');
+         const tdCI = createDiv('ship_table_td_status d-none');
          tdCI.textContent = '-';
          tr.dataset.ci = 0;
          tr.appendChild(tdCI);
@@ -1577,6 +1589,16 @@ function ship_detail_container_Clicked($this) {
       document.getElementById('btn_delete_ship')['disabled'] = true;
    }
 
+   if (setting.favoriteShip.includes(shipId)) {
+      document.getElementById('toggle_fav_ship').classList.add('fav');
+      document.getElementById('add_favorite').classList.add('d-none');
+      document.getElementById('remove_favorite').classList.remove('d-none');
+   }
+   else {
+      document.getElementById('toggle_fav_ship').classList.remove('fav');
+      document.getElementById('add_favorite').classList.remove('d-none');
+      document.getElementById('remove_favorite').classList.add('d-none');
+   }
    $('#modal_ship_edit').modal('open');
 }
 
@@ -1598,6 +1620,17 @@ function version_Changed() {
       if (value < ship.luck || value > ship.max_luck) {
          document.getElementById('ship_luck').value = ship.luck;
          document.getElementById('ship_luck_range').value = ship.luck;
+      }
+
+      if (setting.favoriteShip.includes(shipId)) {
+         document.getElementById('toggle_fav_ship').classList.add('fav');
+         document.getElementById('add_favorite').classList.add('d-none');
+         document.getElementById('remove_favorite').classList.remove('d-none');
+      }
+      else {
+         document.getElementById('toggle_fav_ship').classList.remove('fav');
+         document.getElementById('add_favorite').classList.remove('d-none');
+         document.getElementById('remove_favorite').classList.add('d-none');
       }
    }
 }
@@ -1916,6 +1949,17 @@ function item_container_Clicked($this) {
       }
    }
    document.getElementById('remodel_all').value = sumStock;
+
+   if (setting.favoritePlane.includes(itemId)) {
+      document.getElementById('toggle_fav_item').classList.add('fav');
+      document.getElementById('add_fav_item').classList.add('d-none');
+      document.getElementById('remove_fav_item').classList.remove('d-none');
+   }
+   else {
+      document.getElementById('toggle_fav_item').classList.remove('fav');
+      document.getElementById('add_fav_item').classList.remove('d-none');
+      document.getElementById('remove_fav_item').classList.add('d-none');
+   }
 
    $('#modal_item_edit').modal('open');
 }
@@ -2361,6 +2405,7 @@ function readURLData(id) {
          }
          else {
             document.getElementById('readonly_mode').classList.remove('d-none');
+            document.getElementById('btn_exit_readonly').classList.remove('d-none');
             readOnlyMode = true;
          }
 
@@ -2401,7 +2446,8 @@ function getLevelStatus(lv, max, min) {
  * 閲覧専用モードの終了
  */
 function quitReadonlyMode() {
-   $('#readonly_mode').addClass('d-none');
+   document.getElementById('readonly_mode').classList.add('d-none');
+   document.getElementById('btn_exit_readonly').classList.add('d-none');
    readOnlyMode = false;
    readOnlyShips = null;
    readOnlyItems = null;
@@ -2409,4 +2455,52 @@ function quitReadonlyMode() {
    initItemList();
    initExpTable();
    inform_success('閲覧モードを終了しました');
+}
+
+/**
+ * お気に入りクリック 艦載機
+ * @param {JQuery} $this
+ */
+function item_fav_Clicked($this) {
+   const itemId = castInt(document.getElementById('edit_item_id').dataset.itemId);
+   if ($this.hasClass('fav')) {
+      // お気に入り解除
+      setting.favoritePlane = setting.favoritePlane.filter(v => v !== itemId);
+      $this.removeClass('fav');
+      document.getElementById('add_fav_item').classList.remove('d-none');
+      document.getElementById('remove_fav_item').classList.add('d-none');
+   }
+   else {
+      // お気に入り登録
+      setting.favoritePlane.push(itemId);
+      $this.addClass('fav');
+      document.getElementById('add_fav_item').classList.add('d-none');
+      document.getElementById('remove_fav_item').classList.remove('d-none');
+   }
+
+   saveSetting();
+}
+
+/**
+ * お気に入りクリック 艦娘
+ * @param {JQuery} $this
+ */
+function ship_fav_Clicked($this) {
+   const shipId = castInt($('#modal_ship_edit').find('.version_radio:checked')[0].dataset.shipId);
+   if ($this.hasClass('fav')) {
+      // お気に入り解除
+      setting.favoriteShip = setting.favoriteShip.filter(v => v !== shipId);
+      $this.removeClass('fav');
+      document.getElementById('add_favorite').classList.remove('d-none');
+      document.getElementById('remove_favorite').classList.add('d-none');
+   }
+   else {
+      // お気に入り登録
+      setting.favoriteShip.push(shipId);
+      $this.addClass('fav');
+      document.getElementById('add_favorite').classList.add('d-none');
+      document.getElementById('remove_favorite').classList.remove('d-none');
+   }
+
+   saveSetting();
 }

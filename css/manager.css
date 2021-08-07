@@ -15,6 +15,8 @@ body {
 .dark-theme .btn-small[disabled]{
    background-color: rgb(103, 103, 119)!important;
 }
+#btn_exit_readonly:hover { box-shadow: inset 0 0 20px rgba(221, 221, 221, 0.5); }
+
 #input_url {
    outline: none;
    display: block;
@@ -272,6 +274,25 @@ input[type="number"] {
    height: 60vh;
 }
 
+#toggle_fav_ship,
+#toggle_fav_item {
+   cursor: pointer;
+   opacity: 0.6;
+   transition: 0.2s;
+}
+#toggle_fav_ship.fav,
+#toggle_fav_item.fav {
+   opacity: 1;
+}
+
+.fa-heart {
+   font-size: 16px;
+   color: rgb(134, 134, 134);
+}
+.fav .fa-heart {
+   color: #d15c5c;
+}
+
 /* ------------------------------
    一覧反映手順
 -------------------------------- */
@@ -525,10 +546,10 @@ input[type="number"] {
    background-color: rgba(43, 43, 43, 0.25);
 }
 .dark-theme .ship_table_tr.no_ship {
-   background-color: rgba(0, 0, 0, 0.2);
+   background-color: rgba(0, 0, 0, 1);
 }
 .dark-theme .ship_table_tr.no_ship:hover {
-   background-color: rgba(0, 0, 0, 0.4);
+   background-color: rgb(15, 15, 15);
 }
 .ship_table_tr.no_ship img {
    filter: grayscale(60%);
@@ -576,6 +597,11 @@ input[type="number"] {
    width: 44%;
    min-width: 200px;
 }
+.ship_table_tr .no_ship_area {
+   padding-left: 1rem;
+   padding-right: 1rem;
+   width: 32%;
+}
 @media (min-width: 992px) {
    .ship_table_tr > div {
       width: 10%;
@@ -583,7 +609,19 @@ input[type="number"] {
    .ship_table_tr .ship_table_td_name {
       width: 30%;
    }
+   .ship_table_tr .no_ship_area {
+      width: 40%;
+   }
 }
+
+.ship_table_tr .no_ship_area .ship_table_td_line {
+   align-self: center;
+   height: 2px;
+   background-color: #ccc;
+   -ms-flex-positive: 1;
+   flex-grow: 1;
+}
+
 .ship_table_td_image {
    position: relative;
    height: 50px;
@@ -743,6 +781,11 @@ input[type="number"] {
 .dark-theme #edit_item_name_parent,
 .dark-theme #edit_item_status_container {
    background-color: transparent;
+   border-width: 1px;
+}
+.dark-theme #edit_item_name_parent,
+.dark-theme #edit_item_status_container {
+   background-color: rgb(35, 35, 45);
    border-width: 1px;
 }
 
