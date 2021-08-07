@@ -1965,4 +1965,12 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#modal_share').on('click', '#output_deck', function () { output_data_Clicked($(this)); });
   $('#modal_share').on('click', '#open_deckBuilder', open_deckBuilder);
   $('#modal_share').on('click', '#open_jervis', open_Jervis);
+
 });
+
+window.onpageshow = function () {
+  if (document.getElementById('search_preset').value) {
+    document.getElementById('search_preset').value = '';
+    setLocalPresets();
+  }
+};
