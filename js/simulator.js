@@ -1646,16 +1646,16 @@ class Item {
 	/**
 	 * カテゴリ、改修値からボーナス爆装値を返却
 	 * @static
+	 * @param {number} id id
 	 * @param {number} type カテゴリコード
 	 * @param {number} remodel 改修値
-	 * @param {number} antiAir 対空値
 	 * @returns {number} ボーナス爆装値
 	 * @memberof Item
 	 */
-	static getBonusBomber(type, remodel, antiAir = 0) {
+	static getBonusBomber(id, type, remodel) {
 		let bonus = 0;
-		// 艦爆
-		if (type === 7 && antiAir <= 2) {
+		// 艦爆 (爆戦以外)
+		if (type === 7 && id !== 60 && id !== 154 && id !== 219) {
 			bonus = 0.2 * remodel;
 		}
 		// 水爆
@@ -1972,13 +1972,13 @@ class ShipItem extends Item {
 			case 7:
 			case 11:
 				// 爆撃機 爆装を適用
-				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
+				itemPower = Item.getBonusBomber(item.id, item.type, item.remodel) + item.bomber;
 				baseFire = itemPower * Math.sqrt(slot) + c;
 				fire.push(baseFire);
 				break;
 			case 57:
 				// 噴式爆撃機
-				itemPower = Item.getBonusBomber(item.type, item.remodel, baseAntiAir) + item.bomber;
+				itemPower = Item.getBonusBomber(item.type, item.remodel) + item.bomber;
 				baseFire = itemPower * Math.sqrt(slot) + c;
 
 				// 噴式強襲モードかどうかで補正
@@ -2119,11 +2119,11 @@ class LandBaseItem extends Item {
 			case 7:
 			case 11:
 				// 艦爆 水爆
-				fire = Item.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
+				fire = Item.getBonusBomber(id, type, remodel) + plane.bomber;
 				adj = 1.0;
 				break;
 			case 57:
-				fire = Item.getBonusBomber(type, remodel, plane.antiAir) + plane.bomber;
+				fire = Item.getBonusBomber(id, type, remodel) + plane.bomber;
 				adj = 0.7071;
 				break;
 			case 47:
@@ -2184,11 +2184,11 @@ class LandBaseItem extends Item {
 			case 7:
 			case 11:
 				// 艦爆 水爆
-				fire = Item.getBonusBomber(type, item.remodel, plane.antiAir) + item.bomber;
+				fire = Item.getBonusBomber(item.id, type, item.remodel) + item.bomber;
 				adj = 1.0;
 				break;
 			case 57:
-				fire = Item.getBonusBomber(type, item.remodel, plane.antiAir) + item.bomber;
+				fire = Item.getBonusBomber(item.id, type, item.remodel) + item.bomber;
 				adj = 0.7071;
 				break;
 			case 47:
@@ -2364,7 +2364,7 @@ class ItemDetail extends Item {
 			// ボーナス雷装
 			this.torpedo += Item.getBonusTorpedo(this.type, this.remodel);
 			// ボーナス爆装
-			this.bomber += Item.getBonusBomber(this.type, this.remodel, this.antiAir);
+			this.bomber += Item.getBonusBomber(this.id, this.type, this.remodel);
 			// ボーナス対潜
 			this.asw += Item.getBonusASW(this.id, this.type, this.remodel, this.antiAir);
 			// ボーナス索敵
@@ -2852,18 +2852,6 @@ function getArrayMin(array) {
 		if (array[i] < min) min = array[i];
 	}
 	return min;
-}
-
-/**
- * RGBに変換
- * @param {string} hex
- */
-function hexToRGB(hex) {
-	if (hex.slice(0, 1) == "#") hex = hex.slice(1);
-	if (hex.length == 3) hex = hex.slice(0, 1) + hex.slice(0, 1) + hex.slice(1, 2) + hex.slice(1, 2) + hex.slice(2, 3) + hex.slice(2, 3);
-	return [hex.slice(0, 2), hex.slice(2, 4), hex.slice(4, 6)].map(function (str) {
-		return parseInt(str, 16);
-	});
 }
 
 /**
@@ -11225,7 +11213,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 	const bScout = Item.getBonusScout(type, remodel);
 	const bTorpedo = Item.getBonusTorpedo(type, remodel);
 	const bAccuracy = Item.getBonusAccuracy(itemId, type, remodel);
-	const bBomber = Item.getBonusBomber(type, remodel, raw.antiAir);
+	const bBomber = Item.getBonusBomber(itemId, type, remodel);
 	const bASW = Item.getBonusASW(itemId, type, remodel, raw.antiAir);
 	const rangeObj = RANGES.find(v => v.id === raw.range2);
 	const rangeText = raw.range2 && rangeObj ? rangeObj.name : '';
@@ -14340,7 +14328,7 @@ function btn_reference_Clicked() {
  * メニュー「Twitter」ボタンクリック
  */
 async function btn_twitter_Clicked() {
-	const url = 'https://noro6.github.io/kcTools/?d=' + encodePreset();
+	const url = MYURL + '?d=' + encodePreset();
 	let shortURL = url;
 	let result = false;
 	await postURLData(url)
@@ -14695,7 +14683,7 @@ function btn_load_deck_Clicked() {
 async function btn_output_url_Clicked() {
 	try {
 		const $output = $('#output_url');
-		const url = 'https://noro6.github.io/kcTools/?d=' + encodePreset();
+		const url = MYURL + '?d=' + encodePreset();
 		let shortURL = url;
 		let result = false;
 		await postURLData(url)

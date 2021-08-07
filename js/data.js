@@ -546,6 +546,16 @@ const SHIP_TYPE_RE = [
 	{ id: 16, name: "水上機母艦" },
 	{ id: 117, name: "補助艦艇" },
 ];
+const SHIP_TYPE_REV2 = [
+	{ id: 108, name: "戦艦" },
+	{ id: 11, name: "正規空母" },
+	{ id: 7, name: "軽空母" },
+	{ id: 105, name: "重巡級" },
+	{ id: 103, name: "軽巡級" },
+	{ id: 2, name: "駆逐艦" },
+	{ id: 114, name: "潜水艦" },
+	{ id: 116, name: "補助艦艇" },
+];
 const API_SHIP_TYPE = [
 	{ id: 1, name: "海防艦", sort: 15 },
 	{ id: 2, name: "駆逐艦", sort: 14 },
@@ -2546,5 +2556,6 @@ const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484, 498, 512, 513, 514];
 
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
+const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.9';
+const LATEST_VERSION = '1.12.10';

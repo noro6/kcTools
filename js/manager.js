@@ -9,7 +9,14 @@ let readOnlyShips = [];
 /** @type {{id: number, num: number[]}[]} */
 let readOnlyItems = [];
 
+let expChart = null;
+let expRadarChart = null;
+let expStackChart = null;
+
 const FINAL_SHIPS = SHIP_DATA.filter(v => v.final);
+const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
+   return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }
+});
 
 document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
@@ -34,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('btn_top').addEventListener('click', () => { window.location.href = '../list/'; });
    // シミュページへ
    document.getElementById('btn_share').addEventListener('click', () => { window.location.href = '../simulator/'; });
+   // Tweet
+   document.getElementById('btn_twitter').addEventListener('click', btn_twitter_Clicked);
 
    document.getElementById('btn_read_ship').addEventListener('click', btn_read_ship_Clicked);
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
@@ -78,10 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
    $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
 
-   $('#ship_content_tabs').on('click', 'a[href="#ship_exp"]', initExpTable);
-
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
    $('#ship_list').on('click', '.ship_table_tr:not(.header)', function () { ship_detail_container_Clicked($(this)); });
+   $('#ship_list').on('click', '.header .ship_table_td_status', function () { ship_header_table_tr_Clicked($(this)); });
 
    $('#modal_ship_edit').on('change', '.version_radio', version_Changed);
    $('#modal_ship_edit').on('blur', '#ship_level', function () { ship_input_Leaved($(this)); });
@@ -95,6 +103,35 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#modal_ship_edit').on('click', '#btn_create_ship', btn_create_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_update_ship', btn_update_ship_Clicked);
    $('#modal_ship_edit').on('click', '#btn_delete_ship', btn_delete_ship_Clicked);
+
+
+   // 経験値関連
+   const expRangeSlider = document.getElementById('exp_range');
+   noUiSlider.create(expRangeSlider, {
+      start: [1, 175], range: { 'min': 1, 'max': 175 }, connect: true, step: 1, orientation: 'horizontal',
+      format: {
+         to: (value) => castInt(value),
+         from: (value) => castInt(value)
+      }
+   });
+   expRangeSlider.noUiSlider.on('slide.one', (value) => {
+      document.getElementById('exp_range_min').value = value[0];
+      document.getElementById('exp_range_max').value = value[1];
+   });
+   expRangeSlider.noUiSlider.on('change.one', initExpTable);
+   $('#ship_content_tabs').on('click', 'a[href="#ship_exp"]', initExpTable);
+   $('#ship_exp').on('input', '#exp_range_min', setExpRangeSlider);
+   $('#ship_exp').on('input', '#exp_range_max', setExpRangeSlider);
+   $('#ship_exp').on('change', '#without_lv1', initExpTable);
+   $('#ship_exp').on('click', '#btn_exp_range_manual', () => {
+      // 集計対象手動に切り替え
+      document.getElementById('without_lv1')['checked'] = false;
+      document.getElementById('exp_range_simple').classList.add('d-none');
+      document.getElementById('exp_range_simple').classList.remove('d-flex');
+      document.getElementById('exp_range_manual').classList.add('d-flex');
+      document.getElementById('exp_range_manual').classList.remove('d-none');
+      initExpTable();
+   });
 
    // 装備関連
    const slider = document.getElementById('remodel_range');
@@ -128,84 +165,16 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#others').on('click', '#btn_share_fleet', debug_);
    $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
 
+   $('#readonly_mode').on('click', 'button', quitReadonlyMode);
+
    const params = getUrlParams();
    if (params.hasOwnProperty("id")) {
-      try {
-         const ref = firebase.database().ref('/stocks/' + params.id);
-         ref.once('value').then((snapshot) => {
-            const stock = snapshot.val();
-            if (stock.ships && stock.items) {
-               const ships = JSON.parse(b64_to_utf8(stock.ships));
-               const items = JSON.parse(b64_to_utf8(stock.items));
-               readOnlyShips = [];
-               readOnlyItems = [];
-
-               // 整合性チェック -艦娘
-               if (ships && ships.length) {
-                  // 圧縮状態から展開
-                  for (const ship of ships) {
-                     const details = ship[1];
-                     if (details.length && !details.find(v => v.length !== 5)) {
-                        const shipStock = {
-                           id: ship[0],
-                           details: details.map(v => {
-                              return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4] }
-                           })
-                        };
-                        readOnlyShips.push(shipStock);
-                     }
-                  }
-               }
-
-               // 整合性チェック -装備
-               if (items && items.length) {
-                  // 圧縮状態から展開
-                  for (const item of items) {
-                     const itemStock = { id: item[0], num: [] };
-                     for (let remodel = 0; remodel <= 10; remodel++) {
-                        if (item[1] && remodel < item[1].length) {
-                           itemStock.num.push(item[1][remodel]);
-                        }
-                        else {
-                           itemStock.num.push(0);
-                        }
-                     }
-                     readOnlyItems.push(itemStock);
-                  }
-               }
-               else if (!readOnlyShips.length) {
-                  // 艦娘、装備情報共に整合しない場合は失敗とする
-                  inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
-                  readOnlyShips = null;
-                  readOnlyItems = null;
-               }
-
-               if (readOnlyShips && readOnlyItems) {
-                  document.getElementById('readonly_mode').classList.remove('d-none');
-                  readOnlyMode = true;
-               }
-            }
-            else {
-               inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
-               readOnlyShips = null;
-               readOnlyItems = null;
-            }
-            ref.off();
-
-            initItemList();
-            initShipList();
-         });
-      } catch (error) {
-         // データ読込失敗(データ削除済 or 適当なID)
-         inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
-         quitReadonlyMode();
-      }
+      readURLData(params.id);
    }
    else {
       initItemList();
       initShipList();
    }
-   $('#readonly_mode').on('click', 'button', quitReadonlyMode);
 });
 
 
@@ -366,13 +335,13 @@ function initShipListTable() {
    // ヘッダー
    const header = createDiv('ship_table_tr d-flex header');
    header.innerHTML = `<div class="ship_table_td_name">艦娘</div>
-   <div class="ship_table_td_status">Lv.</div>
-   <div class="ship_table_td_status">耐久</div>
-   <div class="ship_table_td_status">運</div>
-   <div class="ship_table_td_status">対潜</div>
-   <div class="ship_table_td_status">命中項</div>
-   <div class="ship_table_td_status">回避項</div>
-   <div class="ship_table_td_status">CI項</div>`;
+   <div class="ship_table_td_status" data-sortkey="level">Lv.</div>
+   <div class="ship_table_td_status" data-sortkey="hp">耐久</div>
+   <div class="ship_table_td_status" data-sortkey="luck">運</div>
+   <div class="ship_table_td_status" data-sortkey="asw">対潜</div>
+   <div class="ship_table_td_status" data-sortkey="accuracy">命中項</div>
+   <div class="ship_table_td_status" data-sortkey="avoid">回避項</div>
+   <div class="ship_table_td_status" data-sortkey="ci">CI項</div>`;
    fragment.appendChild(header);
 
    let baseShips = [];
@@ -390,6 +359,8 @@ function initShipListTable() {
          break;
    }
 
+   const tbody = document.createElement('div');
+   tbody.id = 'ship_table_tbody';
    for (const ship of baseShips) {
       const stock = stockShips.find(v => v.id === ship.id);
 
@@ -427,7 +398,9 @@ function initShipListTable() {
             tr.appendChild(tdLevel);
 
             const tdHP = createDiv('ship_table_td_status');
-            tdHP.textContent = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
+            const hpValue = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
+            tdHP.textContent = hpValue;
+            tr.dataset.hp = hpValue;
             tr.appendChild(tdHP);
 
             const tdLuck = createDiv('ship_table_td_status');
@@ -437,38 +410,47 @@ function initShipListTable() {
             const asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw);
             const tdAsw = createDiv('ship_table_td_status');
             tdAsw.textContent = asw + detail.st[6];
+            tr.dataset.asw = asw + detail.st[6];
             tr.appendChild(tdAsw);
 
             // 命中項(ステータス部分のみ)
             const tdAccuracy = createDiv('ship_table_td_status');
-            tdAccuracy.textContent = Math.floor(2 * Math.sqrt(detail.lv) + 1.5 * Math.sqrt(luck));
+            const accuracyValue = Math.floor(2 * Math.sqrt(detail.lv) + 1.5 * Math.sqrt(luck));
+            tdAccuracy.textContent = accuracyValue;
+            tr.dataset.accuracy = accuracyValue;
             tr.appendChild(tdAccuracy);
 
             const avoid = getLevelStatus(detail.lv, ship.max_avoid, ship.avoid);
             // 回避項(ステータス部分のみ)
             const tdAvoid = createDiv('ship_table_td_status');
             const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
+            let avoidValue = baseAvoid;
             if (baseAvoid >= 65) {
-               tdAvoid.textContent = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
+               avoidValue = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
             }
             else if (baseAvoid >= 45) {
-               tdAvoid.textContent = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
+               avoidValue = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
             }
-            else {
-               tdAvoid.textContent = baseAvoid;
-            }
+
+            tdAvoid.textContent = avoidValue;
+            tr.dataset.avoid = avoidValue;
             tr.appendChild(tdAvoid);
 
             // CI項(ステータス部分のみ)
             const tdCI = createDiv('ship_table_td_status');
+            let ciValue = 0;
             if (luck >= 50) {
-               tdCI.textContent = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(detail.lv));
+               ciValue = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(detail.lv));
             }
             else {
-               tdCI.textContent = Math.floor(15 + luck + 0.75 * Math.sqrt(detail.lv));
+               ciValue = Math.floor(15 + luck + 0.75 * Math.sqrt(detail.lv));
             }
+            tdCI.textContent = ciValue;
+            tr.dataset.ci = ciValue;
             tr.appendChild(tdCI);
-            fragment.appendChild(tr);
+
+
+            tbody.appendChild(tr);
          }
       }
       else if (ship.ver === 0) {
@@ -505,6 +487,7 @@ function initShipListTable() {
 
          const tdHP = createDiv('ship_table_td_status');
          tdHP.textContent = ship.hp;
+         tr.dataset.hp = ship.hp;
          tr.appendChild(tdHP);
 
          const tdLuck = createDiv('ship_table_td_status');
@@ -513,42 +496,49 @@ function initShipListTable() {
 
          const tdAsw = createDiv('ship_table_td_status');
          tdAsw.textContent = ship.asw ? ship.asw : 0;
+         tr.dataset.asw = ship.asw ? ship.asw : 0;
          tr.appendChild(tdAsw);
 
          // 命中項(ステータス部分のみ)
          const tdAccuracy = createDiv('ship_table_td_status');
-         tdAccuracy.textContent = Math.floor(2 * Math.sqrt(1) + 1.5 * Math.sqrt(luck));
+         const accuracyValue = Math.floor(2 * Math.sqrt(1) + 1.5 * Math.sqrt(luck));
+         tdAccuracy.textContent = accuracyValue;
+         tr.dataset.accuracy = accuracyValue;
          tr.appendChild(tdAccuracy);
 
          const avoid = ship.avoid ? ship.avoid : 0;
          // 回避項(ステータス部分のみ)
          const tdAvoid = createDiv('ship_table_td_status');
          const baseAvoid = Math.floor(avoid + Math.sqrt(2 * luck));
+         let avoidValue = baseAvoid;
          if (baseAvoid >= 65) {
-            tdAvoid.textContent = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
+            avoidValue = Math.floor(55 + 2 * Math.sqrt(baseAvoid - 65));
          }
          else if (baseAvoid >= 45) {
-            tdAvoid.textContent = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
+            avoidValue = Math.floor(40 + 3 * Math.sqrt(baseAvoid - 40));
          }
-         else {
-            tdAvoid.textContent = baseAvoid;
-         }
+         tdAvoid.textContent = avoidValue;
+         tr.dataset.avoid = avoidValue;
          tr.appendChild(tdAvoid);
 
          // CI項(ステータス部分のみ)
          const tdCI = createDiv('ship_table_td_status');
+         let ciValue = 0;
          if (luck >= 50) {
-            tdCI.textContent = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(1));
+            ciValue = Math.floor(65 + Math.sqrt(luck - 50) + 0.8 * Math.sqrt(1));
          }
          else {
-            tdCI.textContent = Math.floor(15 + luck + 0.75 * Math.sqrt(1));
+            ciValue = Math.floor(15 + luck + 0.75 * Math.sqrt(1));
          }
+         tdCI.textContent = ciValue;
+         tr.dataset.ci = ciValue;
          tr.appendChild(tdCI);
 
-         fragment.appendChild(tr);
+         tbody.appendChild(tr);
       }
    }
 
+   fragment.appendChild(tbody);
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').classList.remove('d-flex');
    document.getElementById('ship_list').appendChild(fragment);
@@ -720,20 +710,56 @@ function filterShipListTable() {
 }
 
 /**
+ * 経験値テーブル集計対象変更時
+ */
+function setExpRangeSlider() {
+   const min = castInt(document.getElementById('exp_range_min').value);
+   const max = castInt(document.getElementById('exp_range_max').value);
+   document.getElementById('exp_range').noUiSlider.set([min, min > max ? min : max]);
+   initExpTable();
+}
+
+/**
  * 経験値テーブル初期化
  */
 function initExpTable() {
    const shipStock = readOnlyMode ? readOnlyShips : loadShipStock();
+   const isDark = document.body.classList.contains('dark-theme');
+   const isManual = document.getElementById('exp_range_manual').classList.contains('d-flex');
+   const withoutLevel1 = document.getElementById('without_lv1')['checked'];
+   let lvRangeMin = castInt(document.getElementById('exp_range_min').value);
+   let lvRangeMax = castInt(document.getElementById('exp_range_max').value);
+   lvRangeMax = lvRangeMax > 175 || lvRangeMax < 1 ? 175 : lvRangeMax;
+   lvRangeMin = lvRangeMin > lvRangeMax || lvRangeMin < 1 ? 1 : lvRangeMin;
 
    let allMaxLv = 0;
    let allMinLv = 175;
    let allSumLv = 0;
    let allSumExp = 0;
    let allCount = 0;
+   let allLvs = [];
 
    const fragment = document.createDocumentFragment();
-   for (const type of SHIP_TYPE_RE) {
 
+   // レーダーチャート用カテゴリ別カラーテーブル
+   const barColors = isDark ? ["rgba(255, 80, 80, 0.5)", "rgba(170, 80, 255, 0.5)", "rgba(80, 80, 255, 0.5)", "rgba(80, 180, 255, 0.5)", "rgba(80, 255, 255, 0.5)", "rgba(80, 255, 80, 0.5)", "rgba(255, 255, 80, 0.5)", "rgba(255, 180, 80, 0.5)"] :
+      ["rgba(200, 0, 0, 0.5)", "rgba(100, 0, 200, 0.5)", "rgba(0, 0, 200, 0.5)", "rgba(0, 100, 200, 0.5)", "rgba(0, 200, 200, 0.5)", "rgba(0, 200, 0, 0.5)", "rgba(200, 200, 0, 0.5)", "rgba(200, 100, 0, 0.5)"];
+   const barBorderColors = isDark ? ["rgb(255, 80, 80)", "rgb(170, 80, 255)", "rgb(80, 80, 255)", "rgb(80, 180, 255)", "rgb(80, 255, 255)", "rgb(80, 255, 80)", "rgb(255, 255, 80)", "rgb(255, 180, 80)", "rgb(255, 255, 153)", "rgb(255, 204, 153)", "rgb(255, 153, 153)"] :
+      ["rgb(200, 0, 0)", "rgb(100, 0, 200)", "rgb(0, 0, 200)", "rgb(0, 100, 200)", "rgb(0, 200, 100)", "rgb(0, 200, 0)", "rgb(200, 200, 0)", "rgb(200, 100, 0)"];
+   // 積み上げ棒グラフ用
+   const stackedDataset = [];
+
+   // レーダー用データ
+   const maxLvs = [];
+   const minLvs = [];
+   const midLvs = [];
+   const avgLvs = [];
+
+   // 艦娘別取得経験値ランカー
+   const expRanking = FIRST_SHIPS.map(v => { return { id: v.id, versions: v.versions, sumExp: 0 } });
+
+   for (let idx = 0; idx < SHIP_TYPE_REV2.length; idx++) {
+      const type = SHIP_TYPE_REV2[idx];
       // 艦種拡張
       let dispType = [];
       switch (type.id) {
@@ -745,33 +771,21 @@ function initExpTable() {
             // 重巡級
             dispType = [5, 6];
             break;
-         case 108:
-            //戦艦級
-            dispType = [8, 9, 10];
-            break;
-         case 111:
-            // 航空母艦
-            dispType = [7, 11, 18];
-            break;
          case 114:
             // 潜水艦
             dispType = [13, 14];
             break;
+         case 11:
+            // 正規空母
+            dispType = [11, 18];
+            break;
+         case 108:
+            // 戦艦
+            dispType = [8, 9, 10];
+            break;
          case 116:
             // 補助艦艇
             dispType = [1, 16, 17, 19, 20, 21, 22];
-            break;
-         case 11:
-            // 正規空母(大画面)
-            dispType = [11, 18];
-            break;
-         case 8:
-            // 戦艦(大画面)
-            dispType = [8, 9];
-            break;
-         case 117:
-            // 補助艦艇(大画面)
-            dispType = [1, 17, 19, 20, 21, 22];
             break;
          default:
             dispType.push(type.id);
@@ -783,28 +797,55 @@ function initExpTable() {
       let sumLv = 0;
       let sumExp = 0;
       let count = 0;
+      let all = [];
+
+      const newStackedData = {
+         label: type.name,
+         backgroundColor: barColors[idx],
+         borderColor: barBorderColors[idx],
+         borderWidth: 0,
+         data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      };
 
       const shipIds = SHIP_DATA.filter(v => dispType.includes(v.type)).map(v => v.id);
       const targetStocks = shipStock.filter(v => shipIds.includes(v.id));
       for (const stock of targetStocks) {
+         let shipSumExp = 0;
          for (const detail of stock.details) {
+            const level = detail.lv;
+            if (isManual && (level < lvRangeMin || level > lvRangeMax)) {
+               continue;
+            }
+            else if (level === 1 && withoutLevel1) {
+               continue;
+            }
+
             count++;
-            sumLv += detail.lv;
+            sumLv += level;
             sumExp += detail.exp;
-            if (maxLv < detail.lv) maxLv = detail.lv;
-            if (minLv > detail.lv) minLv = detail.lv;
+            shipSumExp += detail.exp;
+
+            all.push(level);
+            allLvs.push(level);
+            if (maxLv < level) maxLv = level;
+            if (minLv > level) minLv = level;
 
             allCount++;
-            allSumLv += detail.lv;
+            allSumLv += level;
             allSumExp += detail.exp;
-            if (allMaxLv < detail.lv) allMaxLv = detail.lv;
-            if (allMinLv > detail.lv) allMinLv = detail.lv;
+            if (allMaxLv < level) allMaxLv = level;
+            if (allMinLv > level) allMinLv = level;
+
+            newStackedData.data[17 - Math.floor(level / 10)] += 1;
+         }
+
+         const expRankData = expRanking.find(v => v.versions.includes(stock.id));
+         if (expRankData) {
+            expRankData.sumExp += shipSumExp;
          }
       }
 
       const tr = document.createElement('tr');
-      tr.className = 'type_tr';
-
       const tdName = document.createElement('td');
       tdName.className = 'td_name';
       tdName.textContent = type.name;
@@ -821,6 +862,13 @@ function initExpTable() {
       const tdMinLevel = document.createElement('td');
       tdMinLevel.textContent = count ? minLv : 0;
       tr.appendChild(tdMinLevel);
+
+      all.sort();
+      const half = Math.floor(all.length / 2);
+      const tdMidLevel = document.createElement('td');
+      const midLv = count ? count % 2 ? all[half] : Math.floor((all[half - 1] + all[half]) / 2) : 0;
+      tdMidLevel.textContent = midLv;
+      tr.appendChild(tdMidLevel);
 
       const tdAvgLevel = document.createElement('td');
       tdAvgLevel.textContent = count ? (sumLv / count).toFixed(1) : 0;
@@ -842,8 +890,28 @@ function initExpTable() {
       tr.appendChild(tdExpRate);
 
       fragment.appendChild(tr);
+
+      // レーダー用データ格納
+      maxLvs.push(maxLv);
+      minLvs.push(count ? minLv : 0);
+      midLvs.push(midLv)
+      avgLvs.push(count ? Math.floor(sumLv / count) : 0);
+
+      stackedDataset.push(newStackedData);
    }
 
+   document.getElementById('ship_exp_tbody').innerHTML = '';
+   document.getElementById('ship_exp_tbody').appendChild(fragment);
+
+   const expChartData = [];
+   $('#ship_exp_tbody tr').each((i, e) => {
+      const sumExp = castInt($(e).find('.td_sum_exp')[0].dataset.exp);
+      const rate = allSumExp ? 100 * sumExp / allSumExp : 0;
+      $(e).find('.td_exp_rate').text((rate).toFixed(1) + '%');
+      expChartData.push(rate.toFixed(2));
+   });
+
+   const footFragment = document.createDocumentFragment();
    const tr = document.createElement('tr');
    const tdName = document.createElement('td');
    tdName.className = 'td_name';
@@ -862,6 +930,12 @@ function initExpTable() {
    tdMinLevel.textContent = allCount ? allMinLv : 0;
    tr.appendChild(tdMinLevel);
 
+   allLvs.sort();
+   const half = Math.floor(allLvs.length / 2);
+   const tdMidLevel = document.createElement('td');
+   tdMidLevel.textContent = allCount ? allCount % 2 ? allLvs[half] : Math.floor((allLvs[half - 1] + allLvs[half]) / 2) : 0;
+   tr.appendChild(tdMidLevel);
+
    const tdAvgLevel = document.createElement('td');
    tdAvgLevel.textContent = allCount ? (allSumLv / allCount).toFixed(1) : 0;
    tr.appendChild(tdAvgLevel);
@@ -878,16 +952,199 @@ function initExpTable() {
    tdExpRate.textContent = '-';
    tr.appendChild(tdExpRate);
 
-   fragment.appendChild(tr);
+   footFragment.appendChild(tr);
+   document.getElementById('ship_exp_tfoot').innerHTML = '';
+   document.getElementById('ship_exp_tfoot').appendChild(footFragment);
 
-   document.getElementById('ship_exp_tbody').innerHTML = '';
-   document.getElementById('ship_exp_tbody').appendChild(fragment);
+   // チャート処理
+   const textColor = "rgba(" + hexToRGB(mainColor).join(',') + ", 0.8)";
+   const expRateChart = document.getElementById('exp_rate_chart');
+   const typeLabels = SHIP_TYPE_REV2.map(v => v.name);
+   if (!expChart) {
+      expChart = new Chart(expRateChart, {
+         type: "horizontalBar",
+         data: {
+            labels: typeLabels,
+            datasets: [{
+               data: expChartData,
+               backgroundColor: "rgba(80, 200, 255, 0.2)",
+               borderColor: "rgb(80, 200, 255)",
+               borderWidth: 2
+            }]
+         },
+         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+               xAxes: [{
+                  scaleLabel: { display: true, labelString: '経験値割合 [%]', fontColor: textColor, fontSize: 12 },
+                  gridLines: { color: "rgba(128, 128, 128, 0.2)" },
+                  ticks: { fontColor: textColor, fontSize: 10, stepSize: 5 }
+               }],
+               yAxes: [{
+                  ticks: { fontColor: textColor },
+                  gridLines: { display: false }
+               }],
+            },
+            legend: { display: false }
+         }
+      });
+   }
+   else {
+      expChart.data.datasets[0].data = expChartData;
+      expChart.update();
+   }
 
-   $('#ship_exp_tbody .type_tr').each((i, e) => {
-      const sumExp = castInt($(e).find('.td_sum_exp')[0].dataset.exp);
-      const rate = 100 * sumExp / allSumExp;
-      $(e).find('.td_exp_rate').text((rate).toFixed(1) + '%');
-   });
+   const gridColor = "rgba(" + hexToRGB(mainColor).join(',') + ", 0.25)";
+   const ctx = document.getElementById('exp_radar_chart');
+   const radarDatasetLabels = ['最大Lv', '最小Lv', '中央Lv', '平均Lv'];
+   if (!expRadarChart) {
+      const tooltips = {
+         callbacks: {
+            title: (tooltipItem) => {
+               return 'Lv: ' + tooltipItem[0].value;
+
+            },
+            label: (tooltipItem) => {
+               const index = tooltipItem ? castInt(tooltipItem.index) : 0;
+               return index < typeLabels.length ? typeLabels[index] : '';
+            }
+         }
+      }
+
+      expRadarChart = new Chart(ctx, {
+         type: "radar",
+         data: {
+            labels: typeLabels,
+            datasets: [{
+               label: radarDatasetLabels[0],
+               data: maxLvs,
+               fill: false,
+               borderColor: isDark ? "rgb(64, 200, 255)" : "rgb(64, 128, 200)",
+               borderWidth: 1,
+            },
+            {
+               label: radarDatasetLabels[1],
+               data: minLvs,
+               fill: false,
+               borderColor: "rgb(255, 64, 64)",
+               borderWidth: 1,
+               hidden: true
+            },
+            {
+               label: radarDatasetLabels[2],
+               data: midLvs,
+               fill: false,
+               borderColor: "rgb(0, 200, 0)",
+               borderWidth: 1
+            },
+            {
+               label: radarDatasetLabels[3],
+               data: avgLvs,
+               fill: false,
+               borderColor: "rgb(255, 128, 0)",
+               borderWidth: 1
+            }]
+         },
+         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { position: 'bottom', labels: { fontColor: textColor } },
+            scale: {
+               pointLabels: { fontColor: textColor },
+               ticks: {
+                  min: 0,
+                  max: isManual ? lvRangeMax : 175,
+                  stepSize: 50, fontColor: textColor, backdropColor: 'rgba(128, 128, 128, 0)'
+               },
+               angleLines: { display: true, color: gridColor },
+               gridLines: { display: true, color: gridColor }
+            },
+            tooltips: tooltips
+         }
+      });
+   }
+   else {
+      expRadarChart.data.datasets[0].data = maxLvs;
+      expRadarChart.data.datasets[1].data = minLvs;
+      expRadarChart.data.datasets[2].data = midLvs;
+      expRadarChart.data.datasets[3].data = avgLvs;
+      expRadarChart.options.scale.ticks.max = isManual ? lvRangeMax : 175;
+
+      expRadarChart.update();
+   }
+
+   const stackChartArea = document.getElementById('exp_stacked_chart');
+   const stackedLvLabels = [];
+   for (let i = 170; i >= 0; i -= 10) {
+      stackedLvLabels.push((i ? i : 1) + '~');
+   }
+   if (!expStackChart) {
+      expStackChart = new Chart(stackChartArea, {
+         type: "horizontalBar",
+         data: {
+            labels: stackedLvLabels,
+            datasets: stackedDataset
+         },
+         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+               xAxes: [{
+                  stacked: true,
+                  scaleLabel: { display: true, labelString: '艦娘数 [隻]', fontColor: textColor, fontSize: 12 },
+                  gridLines: { color: "rgba(128, 128, 128, 0.2)" },
+                  ticks: { fontColor: textColor, fontSize: 10, stepSize: 10 }
+               }],
+               yAxes: [{
+                  stacked: true,
+                  ticks: { fontColor: textColor },
+                  gridLines: { display: false }
+               }],
+            },
+            legend: { position: 'bottom', labels: { fontColor: textColor } },
+            tooltips: {
+               filter: (item) => (item.xLabel > 0)
+            }
+         }
+      });
+   }
+   else {
+      expStackChart.data.datasets = stackedDataset;
+      expStackChart.update();
+   }
+
+   const expRankingFragment = document.createDocumentFragment();
+   expRanking.sort((a, b) => b.sumExp - a.sumExp);
+
+   for (let rank = 0; rank < expRanking.length; rank++) {
+      if (rank === 10) break;
+      const data = expRanking[rank];
+      const tr = document.createElement('tr');
+
+      const tdRank = document.createElement('td');
+      tdRank.className = 'td_name';
+      tdRank.textContent = rank + 1;
+      tr.appendChild(tdRank);
+
+      const tdName = document.createElement('td');
+      tdName.className = 'td_name';
+      const raw = SHIP_DATA.find(v => v.id === data.id);
+      tdName.textContent = raw ? raw.name : '不明';
+      tr.appendChild(tdName);
+
+      const tdSumExp = document.createElement('td');
+      tdSumExp.textContent = Number(data.sumExp).toLocaleString();
+      tr.appendChild(tdSumExp);
+
+      const tdExpRate = document.createElement('td');
+      tdExpRate.textContent = allCount ? (100 * data.sumExp / allSumExp).toFixed(1) + '%' : '-';
+      tr.appendChild(tdExpRate);
+
+      expRankingFragment.appendChild(tr);
+   }
+   document.getElementById('ship_exp_ranking_tbody').innerHTML = '';
+   document.getElementById('ship_exp_ranking_tbody').appendChild(expRankingFragment);
 }
 
 /**
@@ -919,6 +1176,9 @@ function setLuckSlider() {
    filterShipList();
 }
 
+/**
+ * 装備種別初期化
+ */
 function initItemTypes() {
    ITEM_TYPES_LIST = ITEM_API_TYPE.map(function (v) {
       const type = v.id;
@@ -1199,6 +1459,39 @@ function item_sort_Changed($this, e) {
    else {
       containers.sort((a, b) => castInt(b.dataset[sortKey]) - castInt(a.dataset[sortKey]));
    }
+   for (var i = 0; i < containers.length; i++) {
+      parent.appendChild(parent.removeChild(containers[i]))
+   }
+}
+
+/**
+ * 艦娘テーブル ヘッダークリック時(ソートする)
+ * @param {*} $this
+ */
+function ship_header_table_tr_Clicked($this) {
+   // デフォルトのソート項目
+   let sortKey = 'index';
+   let isAsc = true;
+   if ($this.hasClass('asc')) {
+      $this.removeClass('asc selected');
+   }
+   else if ($this.hasClass('desc')) {
+      $this.removeClass('desc');
+      $this.addClass('asc');
+      sortKey = $this[0].dataset.sortkey;
+   }
+   else {
+      $('.header .ship_table_td_status').removeClass('desc asc selected');
+      $this.addClass('desc selected');
+      sortKey = $this[0].dataset.sortkey;
+      isAsc = false;
+   }
+
+   const parent = document.getElementById('ship_table_tbody');
+   const trs = parent.getElementsByClassName('ship_table_tr');
+   const containers = Array.prototype.slice.call(trs);
+
+   containers.sort((a, b) => (isAsc ? -1 : 1) * (castInt(b.dataset[sortKey]) - castInt(a.dataset[sortKey])));
    for (var i = 0; i < containers.length; i++) {
       parent.appendChild(parent.removeChild(containers[i]))
    }
@@ -1781,6 +2074,7 @@ function btn_url_shorten_Clicked() {
    }
    else if (readShipJson(url)) {
       initShipList();
+      initExpTable();
       inform_success('所持艦娘の反映に成功しました');
    }
    else {
@@ -1852,22 +2146,16 @@ function getArraySum(array) {
 }
 
 /**
- * 共有用URL生成
+ * 艦隊装備情報の一意keyを取得 失敗時null
+ * @returns
  */
-async function debug_() {
-   if (readOnlyMode) {
-      inform_danger('現在、閲覧モードのため本機能は利用できません');
-      return;
-   }
+async function requestURLKey() {
    const shipStock = loadShipStock();
    const itemStock = loadPlaneStock();
 
-   document.getElementById('btn_share_fleet_process').classList.remove('d-none');
-   document.getElementById('btn_share_fleet_parent').classList.add('d-none');
-   document.getElementById('btn_share_fleet')['disabled'] = true;
-
-   let shipsData = null;
-   let itemsData = null;
+   let shipsData = '';
+   let itemsData = '';
+   let key = null;
 
    // 圧縮処理
    if (shipStock && shipStock.length) {
@@ -1913,57 +2201,191 @@ async function debug_() {
 
    if (!shipsData && !itemsData) {
       inform_danger('艦娘、装備情報が登録されていません');
-      document.getElementById('btn_share_fleet_process').classList.add('d-none');
-      document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
-      document.getElementById('btn_share_fleet')['disabled'] = false;
-      return;
+      return key;
    }
 
-   const newStock = {
-      ships: shipsData,
-      items: itemsData,
-      createdAt: formatDate(new Date(), 'yy/MM/dd')
-   };
-
-   const ref = firebase.database().ref('stocks')
-   const newStockRef = ref.push();
-   let stockId = '';
-   await newStockRef.set(newStock, (error) => {
+   const db = firebase.database().ref('stocks')
+   const newRef = db.push();
+   await newRef.set({ ships: shipsData, items: itemsData, date: formatDate(new Date(), 'yy/MM/dd HH:mm:ss') }, (error) => {
       if (error) {
          console.log(error);
          inform_danger('共有URLの発行に失敗しました');
-         document.getElementById('share_url').value = '';
       }
       else {
-         console.log('ご協力ありがとうございました！');
-         stockId = newStockRef.key;
+         key = newRef.key;
       }
-      newStockRef.off();
+      newRef.off();
    });
 
-   await postURLData('https://noro6.github.io/kcTools/manager/?id=' + stockId)
+   return key;
+}
+
+/**
+ * 共有用URL生成
+ */
+async function debug_() {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため本機能は利用できません');
+      return;
+   }
+   // 連打できないように
+   document.getElementById('btn_share_fleet_process').classList.remove('d-none');
+   document.getElementById('btn_share_fleet_parent').classList.add('d-none');
+   document.getElementById('btn_share_fleet')['disabled'] = true;
+
+   const key = await requestURLKey();
+   if (!key) {
+      // 終わり
+      enabledShareButton();
+      return;
+   }
+
+   await postURLData(MYURL + 'manager/?id=' + key)
       .then(json => {
          if (json.error || !json.shortLink) {
             inform_danger('共有URLの発行に失敗しました');
-            document.getElementById('btn_share_fleet_process').classList.add('d-none');
-            document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
-            document.getElementById('btn_share_fleet')['disabled'] = false;
+            enabledShareButton();
          }
          else {
             document.getElementById('share_url').value = json.shortLink;
             document.getElementById('share_url').nextElementSibling.classList.add('active');
             document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.remove('d-none');
-
             document.getElementById('btn_share_fleet_process').classList.add('d-none');
             inform_success('共有URLの発行に成功しました');
          }
       })
       .catch(error => {
          inform_danger('共有URLの発行に失敗しました');
-         document.getElementById('btn_share_fleet_process').classList.add('d-none');
-         document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
-         document.getElementById('btn_share_fleet')['disabled'] = false;
+         enabledShareButton();
       });
+}
+
+/**
+ * 共有発行ボタン活性化セット
+ */
+function enabledShareButton() {
+   document.getElementById('btn_share_fleet_parent').classList.remove('d-none');
+   document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.add('d-none');
+   document.getElementById('btn_share_fleet_process').classList.add('d-none');
+   document.getElementById('btn_share_fleet')['disabled'] = false;
+}
+
+/**
+ * Twitter共有
+ */
+async function btn_twitter_Clicked() {
+   if (readOnlyMode) {
+      inform_danger('現在、閲覧モードのため本機能は利用できません');
+      return;
+   }
+
+   // 連打できないように
+   if (document.getElementById('btn_twitter').classList.contains('disabled')) {
+      return;
+   }
+   document.getElementById('btn_twitter').classList.add('disabled');
+
+   // key取得
+   const key = await requestURLKey();
+   if (!key) {
+      document.getElementById('btn_twitter').classList.remove('disabled');
+      return;
+   }
+
+   const url = MYURL + 'manager/?id=' + key;
+   let shortURL = url;
+   let result = false;
+
+   await postURLData(url).then(json => {
+      if (json.error || !json.shortLink) console.log(json);
+      else {
+         result = true;
+         shortURL = json.shortLink;
+      }
+   }).catch(error => console.error(error));
+
+   if (result) {
+      window.open('https://twitter.com/share?url=' + shortURL);
+   }
+   else {
+      document.getElementById('btn_twitter').classList.remove('disabled');
+      inform_danger('共有URLの生成に失敗しました。');
+   }
+}
+
+/**
+ * URLデータ内idから外部情報を展開
+ */
+function readURLData(id) {
+   try {
+      const ref = firebase.database().ref('/stocks/' + id);
+      ref.once('value').then((snapshot) => {
+         const stock = snapshot.val();
+         readOnlyShips = [];
+         readOnlyItems = [];
+
+         // 整合性チェック -艦娘
+         if (stock && stock.ships) {
+            const ships = JSON.parse(b64_to_utf8(stock.ships));
+            if (ships && ships.length) {
+               // 圧縮状態から展開
+               for (const ship of ships) {
+                  const details = ship[1];
+                  if (!details.length || details.find(v => v.length !== 5)) {
+                     // データ形式があわないためスキップ
+                     continue;
+                  }
+                  // データ展開
+                  readOnlyShips.push({
+                     id: ship[0],
+                     details: details.map(v => {
+                        return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4] }
+                     })
+                  });
+               }
+            }
+         }
+
+         // 整合性チェック -装備
+         if (stock && stock.items) {
+            const items = JSON.parse(b64_to_utf8(stock.items));
+            if (items && items.length) {
+               // 圧縮状態から展開
+               for (const item of items) {
+                  const itemStock = { id: item[0], num: [] };
+                  // 改修0～MAX毎の個数格納
+                  for (let remodel = 0; remodel <= 10; remodel++) {
+                     if (item[1] && remodel < item[1].length) {
+                        itemStock.num.push(item[1][remodel]);
+                     }
+                     else {
+                        itemStock.num.push(0);
+                     }
+                  }
+                  readOnlyItems.push(itemStock);
+               }
+            }
+         }
+
+         if (!stock || ((!stock.ships || !readOnlyShips.length) && (!stock.items || !readOnlyItems.length))) {
+            // 両データとも0件
+            inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+         }
+         else {
+            document.getElementById('readonly_mode').classList.remove('d-none');
+            readOnlyMode = true;
+         }
+
+         ref.off();
+
+         initItemList();
+         initShipList();
+      });
+   } catch (error) {
+      // データ読込失敗(データ削除済 or 適当なID)
+      inform_warning('艦娘、装備情報の復元ができませんでした。パラメータが違うか、データが削除されています');
+      quitReadonlyMode();
+   }
 }
 
 /**
@@ -1997,5 +2419,6 @@ function quitReadonlyMode() {
    readOnlyItems = null;
    initShipList();
    initItemList();
+   initExpTable();
    inform_success('閲覧モードを終了しました');
 }
