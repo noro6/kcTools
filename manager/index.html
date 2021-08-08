@@ -148,13 +148,21 @@
 									</div>
 									<div class="collapsible-body" id="ships_filter">
 										<div class="border-top mb-4 mx-2 pl-1 pt-4">
-											<label class="filter_checkbox">
+											<label class="filter_checkbox mr-4">
 												<input type="checkbox" id="no_ship_invisible" />
-												<span>未着任の艦を非表示にする</span>
+												<span>未着任艦非表示</span>
+											</label>
+											<label class="filter_checkbox mr-4">
+												<input type="checkbox" id="ok_daihatsu" />
+												<span>大発搭載可</span>
+											</label>
+											<label class="filter_checkbox">
+												<input type="checkbox" id="ok_naikatei" />
+												<span>内火艇搭載可</span>
 											</label>
 										</div>
 										<div class="row">
-											<div class="input-field col s12 l6" id="enabled_ship_types_container">
+											<div class="input-field col s12 l6">
 												<select multiple id="enabled_ship_types">
 													<option value="8">高速戦艦</option>
 													<option value="9">戦艦</option>
@@ -218,6 +226,20 @@
 													<option value="9">+9</option>
 												</select>
 												<label>対潜改修</label>
+											</div>
+											<div class="input-field col s12 l6">
+												<select multiple id="enabled_ship_country">
+													<option value="1">ドイツ</option>
+													<option value="2">イタリア</option>
+													<option value="3">アメリカ</option>
+													<option value="4">イギリス</option>
+													<option value="5">フランス</option>
+													<option value="6">ソ連</option>
+													<option value="7">スウェーデン</option>
+													<option value="8">オランダ</option>
+													<option value="9">オーストラリア</option>
+												</select>
+												<label>表示海外艦</label>
 											</div>
 											<div class="col s12 l6 align-self-center">
 												<div class="d-flex">
@@ -612,6 +634,11 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="mt-4">
+							<div>発行履歴</div>
+							<div class="d-flex flex-wrap" id="created_url_list"></div>
+						</div>
 					</div>
 					<div class="general_box py-4 px-4 my-3">
 						<div>
@@ -863,6 +890,20 @@
 			<div class="mt-3 d-flex text-center justify-content-center">
 				<div class="mx-3">
 					<button type="button" class="waves-effect waves-light btn-small red" id="btn_delete_ship_commit">除籍する</button>
+				</div>
+				<div class="mx-3">
+					<button type="button" class="waves-effect waves-light btn-small grey darken-1 cancel">やっぱやめとく</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="modal_url_remove_confirm">
+		<div class="modal-content text-center">
+			<div> 本当に削除しますか？</div>
+			<div class="mt-3 d-flex text-center justify-content-center">
+				<div class="mx-3">
+					<button type="button" class="waves-effect waves-light btn-small red" id="btn_delete_url_commit">削除する</button>
 				</div>
 				<div class="mx-3">
 					<button type="button" class="waves-effect waves-light btn-small grey darken-1 cancel">やっぱやめとく</button>

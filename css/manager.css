@@ -903,6 +903,7 @@ input[type="number"] {
    text-align: left;
 }
 
+#modal_url_remove_confirm,
 #modal_ship_remove_confirm {
    width: 400px;
    top: 35%!important;
