@@ -125,6 +125,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
 	if (!setting.hasOwnProperty('visibleFixedMenu')) setting.visibleFixedMenu = true;
 	if (!setting.hasOwnProperty('managerViewMode')) setting.managerViewMode = 'table';
+	if (!setting.hasOwnProperty('createdURLs')) setting.createdURLs = [];
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
@@ -762,7 +763,7 @@ function copyInputTextToClipboard($this) {
  * RGBに変換
  * @param {string} hex
  */
- function hexToRGB(hex) {
+function hexToRGB(hex) {
 	if (hex.slice(0, 1) == "#") hex = hex.slice(1);
 	if (hex.length == 3) hex = hex.slice(0, 1) + hex.slice(0, 1) + hex.slice(1, 2) + hex.slice(1, 2) + hex.slice(2, 3) + hex.slice(2, 3);
 	return [hex.slice(0, 2), hex.slice(2, 4), hex.slice(4, 6)].map(function (str) {

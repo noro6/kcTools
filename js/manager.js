@@ -18,6 +18,13 @@ const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
    return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }
 });
 
+const OK_DAIHATSU_TYPE = LINK_SHIP_ITEM.filter(v => v.e_type.includes(24)).map(v => v.type);
+const OK_NAIKATEI_TYPE = LINK_SHIP_ITEM.filter(v => v.e_type.includes(46)).map(v => v.type);
+const OK_DAIHATSU_SHIP = SPECIAL_LINK_SHIP_ITEM.filter(v => v.itemType.includes(24)).map(v => v.apiShip);
+const OK_NAIKATEI_SHIP = SPECIAL_LINK_SHIP_ITEM.filter(v => v.itemType.includes(46)).map(v => v.apiShip);
+
+const COUNTRY_ARRAY = [[], DEU, ITA, USA, GBR, FRA, RUS, SWE, NLD, AUS];
+
 let shipSortKey = '';
 let isAscShip = false;
 
@@ -88,6 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
    $('#ships_filter').on('change', 'select', filterShipList);
    $('#ships_filter').on('change', '#no_ship_invisible', filterShipList);
+   $('#ships_filter').on('change', '#ok_daihatsu', filterShipList);
+   $('#ships_filter').on('change', '#ok_naikatei', filterShipList);
    $('#ships_filter').on('click', '.filter_area', function () { filter_area_Clicked($(this)); });
    $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
    $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
@@ -171,10 +180,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
    $('#others').on('click', 'input[type="text"]', function () { $(this).select(); });
    $('#others').on('click', 'textarea', function () { $(this).select(); });
-   $('#others').on('click', '#btn_share_fleet', debug_);
+   $('#others').on('click', '#btn_share_fleet', createSharedURL);
    $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
 
    $('#readonly_mode').on('click', 'button', quitReadonlyMode);
+   $('#content_tabs').on('click', 'a[href="#others"]', initURLs);
+   $('#created_url_list').on('click', '.btn_link', function () { location.href = $(this)[0].dataset.url; });
+   $('#created_url_list').on('click', '.btn_delete_url', function () { btn_delete_url_Clicked($(this)); });
+   $('#modal_url_remove_confirm').on('click', '#btn_delete_url_commit', btn_delete_url_commit_Clicked);
+   $('#modal_url_remove_confirm').on('click', '.cancel', () => { $('#modal_url_remove_confirm').modal('close'); });
 
    const params = getUrlParams();
    if (params.hasOwnProperty("id")) {
@@ -247,6 +261,7 @@ function initShipList() {
 
             const verContainer = createDiv('version_container');
             verContainer.dataset.shipType = ver.type;
+            verContainer.dataset.shipType2 = ver.type2;
             const verHeader = createDiv('version_header');
             verHeader.innerHTML = `
             <div class="d-flex">
@@ -266,6 +281,7 @@ function initShipList() {
                   const detail = stock.details[i];
                   const detailContainer = createDiv('detail_container');
                   detailContainer.dataset.shipId = ver.id;
+                  detailContainer.dataset.shipApi = ver.api;
                   detailContainer.dataset.uniqueId = detail.id;
 
                   if (detail.lv === 175) detailContainer.classList.add('lv_max2');
@@ -384,7 +400,9 @@ function initShipListTable() {
 
             const tr = createDiv('ship_table_tr d-flex');
             tr.dataset.shipId = ship.id;
+            tr.dataset.shipApi = ship.api;
             tr.dataset.shipType = ship.type;
+            tr.dataset.shipType2 = ship.type2;
             tr.dataset.uniqueId = detail.id;
             tr.dataset.level = detail.lv;
             tr.dataset.luck = luck;
@@ -476,7 +494,9 @@ function initShipListTable() {
          const tr = createDiv('ship_table_tr d-flex no_ship');
          const luck = ship.luck;
          tr.dataset.shipId = ship.id;
+         tr.dataset.shipApi = ship.api;
          tr.dataset.shipType = ship.type;
+         tr.dataset.shipType2 = ship.type2;
          tr.dataset.uniqueId = '';
          tr.dataset.level = 1;
          tr.dataset.luck = ship.luck;
@@ -570,14 +590,36 @@ function filterShipList() {
    $('.filter_area.selected').each((i, e) => {
       areas.push(castInt($(e)[0].dataset.area));
    });
+   const okDaihatsu = document.getElementById('ok_daihatsu')['checked'];
+   const okNaikatei = document.getElementById('ok_naikatei')['checked'];
+   const visibleCountries = $('#enabled_ship_country').formSelect('getSelectedValues').map(v => castInt(v));
 
    const containers = document.getElementsByClassName('ship_type_container');
    for (const container of containers) {
       for (const origParent of container.getElementsByClassName('ship_container')) {
          for (const verParent of container.getElementsByClassName('version_container')) {
-            if (visibleTypes.length && !visibleTypes.includes(castInt(verParent.dataset.shipType))) {
+            const typeId = castInt(verParent.dataset.shipType);
+            const shipType2 = castInt(verParent.dataset.shipType2);
+            if (visibleTypes.length && !visibleTypes.includes(typeId)) {
                verParent.classList.add('d-none');
                continue;
+            }
+            else if (visibleCountries.length) {
+               let exist = false;
+               for (const value of visibleCountries) {
+                  if (COUNTRY_ARRAY[castInt(value)].includes(shipType2)) {
+                     exist = true;
+                     break;
+                  }
+               }
+
+               if (exist) {
+                  verParent.classList.remove('d-none');
+               }
+               else {
+                  verParent.classList.add('d-none');
+                  continue;
+               }
             }
             else {
                verParent.classList.remove('d-none');
@@ -589,6 +631,7 @@ function filterShipList() {
                   continue;
                }
 
+               const api = castInt(detail.dataset.shipApi);
                const lv = castInt(detail.getElementsByClassName('ship_lv')[0].dataset.level);
                const luck = castInt(detail.getElementsByClassName('remodel_luck')[0].dataset.luck);
                const remodelHp = castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.remodelHp);
@@ -613,6 +656,14 @@ function filterShipList() {
                }
                // 出撃海域条件
                else if (!areas.includes(area)) {
+                  detail.classList.add('d-none');
+               }
+               // 大発条件
+               else if (okDaihatsu && !OK_DAIHATSU_TYPE.includes(typeId) && !OK_DAIHATSU_SHIP.includes(api)) {
+                  detail.classList.add('d-none');
+               }
+               // 内火艇条件
+               else if (okNaikatei && !OK_NAIKATEI_TYPE.includes(typeId) && !OK_NAIKATEI_SHIP.includes(api)) {
                   detail.classList.add('d-none');
                }
                else {
@@ -663,26 +714,32 @@ function filterShipListTable() {
    const visibleTypes = $('#enabled_ship_types').formSelect('getSelectedValues').map(v => castInt(v));
    const remodelHps = $('#ship_remodel_hps').formSelect('getSelectedValues').map(v => castInt(v));
    const remodelAwses = $('#ship_remodel_awses').formSelect('getSelectedValues').map(v => castInt(v));
+   const visibleCountries = $('#enabled_ship_country').formSelect('getSelectedValues').map(v => castInt(v));
+
    const areas = [];
    $('.filter_area.selected').each((i, e) => {
       const area = castInt($(e)[0].dataset.area);
       areas.push(area);
       if (area === 0) areas.push(-1);
    });
+   const okDaihatsu = document.getElementById('ok_daihatsu')['checked'];
+   const okNaikatei = document.getElementById('ok_naikatei')['checked'];
 
    const trs = document.getElementsByClassName('ship_table_tr');
    for (const tr of trs) {
       if (tr.classList.contains('header')) {
          continue;
       }
+      const api = castInt(tr.dataset.shipApi);
       const shipType = castInt(tr.dataset.shipType);
+      const shipType2 = castInt(tr.dataset.shipType2);
       const lv = castInt(tr.dataset.level);
       const luck = castInt(tr.dataset.luck);
       const remodelHp = castInt(tr.dataset.remodelHp);
       const remodelAsw = castInt(tr.dataset.remodelAsw);
       const area = castInt(tr.dataset.area);
 
-      if (visibleTypes.length && !visibleTypes.includes(castInt(shipType))) {
+      if (visibleTypes.length && !visibleTypes.includes(shipType)) {
          tr.classList.add('d-none');
       }
       // Lv条件
@@ -707,6 +764,30 @@ function filterShipListTable() {
       }
       else if (noShipInvisible && tr.classList.contains('no_ship')) {
          tr.classList.add('d-none');
+      }
+      // 大発条件
+      else if (okDaihatsu && !OK_DAIHATSU_TYPE.includes(shipType) && !OK_DAIHATSU_SHIP.includes(api)) {
+         tr.classList.add('d-none');
+      }
+      // 内火艇条件
+      else if (okNaikatei && !OK_NAIKATEI_TYPE.includes(shipType) && !OK_NAIKATEI_SHIP.includes(api)) {
+         tr.classList.add('d-none');
+      }
+      else if (visibleCountries.length) {
+         let exist = false;
+         for (const value of visibleCountries) {
+            if (COUNTRY_ARRAY[castInt(value)].includes(shipType2)) {
+               exist = true;
+               break;
+            }
+         }
+
+         if (exist) {
+            tr.classList.remove('d-none');
+         }
+         else {
+            tr.classList.add('d-none');
+         }
       }
       else {
          tr.classList.remove('d-none');
@@ -1218,14 +1299,13 @@ function initItemTypes() {
       }
       else if (type === 25) {
          // オートジャイロ / 哨戒機
-         data.type2 = type;
+         data.type2 = 10;
          data.items = ITEM_DATA.filter(i => i.type === type || i.type === 26);
          data.sort = ['asw'];
       }
       else if (type === 27) {
          // 小バルジに大バルジを含める
          data.name = '追加装甲(中型 / 大型)';
-         data.type2 = type;
          data.items = ITEM_DATA.filter(i => i.type === type || i.type === 28);
          data.sort = ['armor'];
       }
@@ -1253,7 +1333,6 @@ function initItemTypes() {
          else if (type === 7 || type === 8 || type === 57) data.type2 = 7; // 大分類 攻撃機
          else if (type === 9 || type === 10 || type === 11 || type === 41 || type === 45) data.type2 = 10; // 大分類 艦偵, 水上機
          else if (type === 24 || type === 30 || type === 46) data.type2 = 24; // 大分類 大発系
-         else if (type === 37) data.type2 = 37; // 大分類 対地装備
          else if (type === 47 || type === 48 || type === 49 || type === 53) data.type2 = 47; // 大分類 艦偵, 陸上機
       }
 
@@ -1271,6 +1350,7 @@ function initItemTypes() {
       if (ATTACKERS.includes(data.type)) {
          data.sort.push('bomber');
          data.sort.push('antiAir');
+         data.sort.push('asw');
       }
       if (RECONNAISSANCES.includes(data.type)) {
          data.sort.push('scout');
@@ -1890,7 +1970,6 @@ function btn_delete_ship_Clicked() {
 }
 
 
-
 /**
  * 装備一覧内　装備クリック
  * @param {*} $this
@@ -2284,7 +2363,7 @@ async function requestURLKey() {
 /**
  * 共有用URL生成
  */
-async function debug_() {
+async function createSharedURL() {
    if (readOnlyMode) {
       inform_danger('現在、閲覧モードのため本機能は利用できません');
       return;
@@ -2313,6 +2392,12 @@ async function debug_() {
             document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.remove('d-none');
             document.getElementById('btn_share_fleet_process').classList.add('d-none');
             inform_success('共有URLの発行に成功しました');
+
+            if (setting.createdURLs) {
+               setting.createdURLs.push({ key: getUniqueId(), url: json.shortLink, date: formatDate(new Date(), 'yy/MM/dd HH:mm:ss') });
+               saveSetting();
+               initURLs();
+            }
          }
       })
       .catch(error => {
@@ -2329,6 +2414,71 @@ function enabledShareButton() {
    document.getElementById('btn_share_fleet_parent').nextElementSibling.classList.add('d-none');
    document.getElementById('btn_share_fleet_process').classList.add('d-none');
    document.getElementById('btn_share_fleet')['disabled'] = false;
+}
+
+/**
+ * 発行URLリスト
+ */
+function initURLs() {
+   if (!setting.createdURLs) {
+      return;
+   }
+
+   const fragment = document.createDocumentFragment();
+   for (const data of setting.createdURLs) {
+      const box = createDiv('general_box px-3 py-2 mx-2 my-2 d-flex');
+      const titleBody = createDiv('align-self-center');
+      titleBody.textContent = '20' + data.date + 'の編成';
+      box.appendChild(titleBody);
+
+      const linkbuttonBody = createDiv('align-self-center ml-3');
+      const linkbutton = document.createElement('button');
+      linkbutton.className = 'waves-effect waves-light btn-small btn_link';
+      linkbutton.textContent = '展開';
+      linkbutton.dataset.url = data.url;
+      linkbuttonBody.appendChild(linkbutton);
+      box.appendChild(linkbuttonBody);
+
+      const buttonBody = createDiv('align-self-center ml-2');
+      const button = document.createElement('button');
+      button.className = 'waves-effect waves-light btn-small red btn_delete_url';
+      button.dataset.uniqueId = data.key;
+      button.textContent = '削除';
+      buttonBody.appendChild(button);
+
+      box.appendChild(buttonBody);
+      fragment.appendChild(box);
+   }
+
+   document.getElementById('created_url_list').innerHTML = '';
+   document.getElementById('created_url_list').appendChild(fragment);
+}
+
+/**
+ * URL削除クリック
+ * @param {*} $this
+ */
+function btn_delete_url_Clicked($this) {
+   const key = $this[0].dataset.uniqueId;
+
+   if (setting.createdURLs && setting.createdURLs.find(v => v.key === key)) {
+      document.getElementById('btn_delete_url_commit').dataset.key = key;
+      $('#modal_url_remove_confirm').modal('open');
+   }
+}
+
+/**
+ * URL削除クリック
+ */
+function btn_delete_url_commit_Clicked() {
+   const uniqueId = document.getElementById('btn_delete_url_commit').dataset.key;
+   setting.createdURLs = setting.createdURLs.filter(v => v.key !== uniqueId);
+   saveSetting();
+   initURLs();
+
+   inform_success('削除しました');
+
+   $('#modal_url_remove_confirm').modal('close');
 }
 
 /**
@@ -2366,6 +2516,13 @@ async function btn_twitter_Clicked() {
    }).catch(error => console.error(error));
 
    if (result) {
+
+      if (setting.createdURLs) {
+         setting.createdURLs.push({ key: getUniqueId(), url: shortURL, date: formatDate(new Date(), 'yy/MM/dd HH:mm:ss') });
+         saveSetting();
+         initURLs();
+      }
+
       window.open('https://twitter.com/share?url=' + shortURL);
    }
    else {
