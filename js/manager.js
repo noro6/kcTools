@@ -297,15 +297,21 @@ function initShipList() {
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_hp.png"></div>
-                     <div class="detail_ship_status remodel_hp" data-remodel-hp="${detail.st[5]}">${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}</div>
+                     <div class="detail_ship_status remodel_hp ${(detail.st[5] ? 'status_up' : '')}" data-remodel-hp="${detail.st[5]}">
+                        ${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}
+                     </div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_asw.png"></div>
-                     <div class="detail_ship_status remodel_asw" data-remodel-asw="${detail.st[6]}">${asw > 0 ? asw + detail.st[6] : '-'}</div>
+                     <div class="detail_ship_status remodel_asw ${(detail.st[6] ? 'status_up' : '')}" data-remodel-asw="${detail.st[6]}">
+                        ${asw > 0 ? asw + detail.st[6] : '-'}
+                     </div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_luck.png"></div>
-                     <div class="detail_ship_status remodel_luck" data-luck="${ver.luck + detail.st[4]}">${ver.luck + detail.st[4]}</div>
+                     <div class="detail_ship_status remodel_luck ${(detail.st[4] ? 'status_up' : '')}" data-luck="${ver.luck + detail.st[4]}">
+                        ${ver.luck + detail.st[4]}
+                     </div>
                   </div>
                   ${detail.area < 1 ? '<div class="sally_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}.png"></div>`}`;
                   verContainer.appendChild(detailContainer);
@@ -428,18 +434,18 @@ function initShipListTable() {
             tdLevel.textContent = detail.lv;
             tr.appendChild(tdLevel);
 
-            const tdHP = createDiv('ship_table_td_status');
+            const tdHP = createDiv('ship_table_td_status ' + (detail.st[5] ? 'status_up' : ''));
             const hpValue = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
             tdHP.textContent = hpValue;
             tr.dataset.hp = hpValue;
             tr.appendChild(tdHP);
 
-            const tdLuck = createDiv('ship_table_td_status');
+            const tdLuck = createDiv('ship_table_td_status ' + (detail.st[4] ? 'status_up' : ''));
             tdLuck.textContent = luck;
             tr.appendChild(tdLuck);
 
             const asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw);
-            const tdAsw = createDiv('ship_table_td_status');
+            const tdAsw = createDiv('ship_table_td_status ' + (detail.st[6] ? 'status_up' : ''));
             tdAsw.textContent = asw + detail.st[6];
             tr.dataset.asw = asw + detail.st[6];
             tr.appendChild(tdAsw);

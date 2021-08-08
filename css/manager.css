@@ -44,6 +44,10 @@ body {
    border-color: #c3e6cb;
 }
 
+.status_up {
+   font-weight: bold;
+}
+
 .d-flex {
    display: -ms-flexbox;
    display: flex;
