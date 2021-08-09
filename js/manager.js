@@ -955,7 +955,7 @@ function initExpTable() {
       tdMinLevel.textContent = count ? minLv : 0;
       tr.appendChild(tdMinLevel);
 
-      all.sort();
+      all.sort(((a, b) => a - b));
       const half = Math.floor(all.length / 2);
       const tdMidLevel = document.createElement('td');
       const midLv = count ? count % 2 ? all[half] : Math.floor((all[half - 1] + all[half]) / 2) : 0;
@@ -1022,7 +1022,7 @@ function initExpTable() {
    tdMinLevel.textContent = allCount ? allMinLv : 0;
    tr.appendChild(tdMinLevel);
 
-   allLvs.sort();
+   allLvs.sort(((a, b) => a - b));
    const half = Math.floor(allLvs.length / 2);
    const tdMidLevel = document.createElement('td');
    tdMidLevel.textContent = allCount ? allCount % 2 ? allLvs[half] : Math.floor((allLvs[half - 1] + allLvs[half]) / 2) : 0;
