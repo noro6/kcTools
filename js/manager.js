@@ -857,7 +857,7 @@ function initExpTable() {
       switch (type.id) {
          case 103:
             // 軽巡級
-            dispType = [3, 4];
+            dispType = [3, 4, 21];
             break;
          case 105:
             // 重巡級
@@ -877,7 +877,7 @@ function initExpTable() {
             break;
          case 116:
             // 補助艦艇
-            dispType = [1, 16, 17, 19, 20, 21, 22];
+            dispType = [1, 16, 17, 19, 20, 22];
             break;
          default:
             dispType.push(type.id);
