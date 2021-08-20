@@ -640,6 +640,22 @@
 							<div class="d-flex flex-wrap" id="created_url_list"></div>
 						</div>
 					</div>
+
+					<div class="general_box py-4 px-4 my-3">
+						<div>
+							下記のボタンより、<a href="http://kancolle-calc.net/kanmusu_list.html" target="_blank">艦隊晒しページ(仮)</a>用コードを生成できます。
+						</div>
+						<div id="btn_kantai_sarashi_parent">
+							<button type="button" class="waves-effect waves-light btn" id="btn_kantai_sarashi">艦隊晒し用コード出力</button>
+						</div>
+						<div class="d-none" id="kantai_sarashi_parent">
+							<div class="input-field">
+								<textarea id="kantai_sarashi_code" class="materialize-textarea" readonly></textarea>
+								<label for="kantai_sarashi_code">艦隊晒し用コード</label>
+							</div>
+						</div>
+					</div>
+
 					<div class="general_box py-4 px-4 my-3">
 						<div>
 							より詳細な分析を行いたい場合は、その他外部サイト様のご利用もお勧めしています。
@@ -648,17 +664,17 @@
 							下記のボタンより、<a href="https://docs.google.com/spreadsheets/d/1NuLlff6EXM0XQ_qNHP9lEOosbwHXamaVNJb72M7ZLoY"
 								target="_blank">艦隊分析スプレッドシート</a>用コードを生成できますので、例えばこちらのご利用などを検討してください。
 						</div>
-						<div id="btn_kantai_sarashi_parent">
-							<button type="button" class="waves-effect waves-light btn" id="btn_kantai_sarashi">艦隊分析用コード出力</button>
+						<div id="btn_kan_bunseki_parent">
+							<button type="button" class="waves-effect waves-light btn" id="btn_kan_bunseki">艦隊分析用コード出力</button>
 						</div>
-						<div class="d-none" id="kantai_sarashi_parent">
+						<div class="d-none" id="kan_bunseki_parent">
 							<div class="input-field">
-								<textarea id="kantai_sarashi" class="materialize-textarea" readonly></textarea>
-								<label for="kantai_sarashi">艦隊分析用コード(艦娘)</label>
+								<textarea id="kan_bunseki_code" class="materialize-textarea" readonly></textarea>
+								<label for="kan_bunseki_code">艦隊分析用コード(艦娘)</label>
 							</div>
 							<div class="input-field">
-								<textarea id="kantai_sarashi_item" class="materialize-textarea" readonly></textarea>
-								<label for="kantai_sarashi_item">艦隊分析用コード(装備)</label>
+								<textarea id="kan_bunseki_code_item" class="materialize-textarea" readonly></textarea>
+								<label for="kan_bunseki_code_item">艦隊分析用コード(装備)</label>
 							</div>
 						</div>
 					</div>

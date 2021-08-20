@@ -855,8 +855,9 @@ input[type="number"] {
    margin-bottom: 0px;
 }
 
-#kantai_sarashi,
-#kantai_sarashi_item {
+#kantai_sarashi_code,
+#kan_bunseki_code,
+#kan_bunseki_code_item {
    min-height: 100px;
    max-height: 100px;
 }

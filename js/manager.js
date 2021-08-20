@@ -181,7 +181,8 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#others').on('click', 'input[type="text"]', function () { $(this).select(); });
    $('#others').on('click', 'textarea', function () { $(this).select(); });
    $('#others').on('click', '#btn_share_fleet', createSharedURL);
-   $('#others').on('click', '#btn_kantai_sarashi', getKantaiSarashi);
+   $('#others').on('click', '#btn_kan_bunseki', outputKantaiBunsekiCode);
+   $('#others').on('click', '#btn_kantai_sarashi', outputKantaiSarashiCode);
 
    $('#readonly_mode').on('click', 'button', quitReadonlyMode);
    $('#content_tabs').on('click', 'a[href="#others"]', initURLs);
@@ -205,6 +206,8 @@ document.addEventListener('DOMContentLoaded', function () {
  * 現在登録されている艦娘情報から所持艦娘一覧を再構築
  */
 function initShipList() {
+   document.getElementById('btn_kan_bunseki_parent').classList.remove('d-none');
+   document.getElementById('kan_bunseki_parent').classList.add('d-none');
    document.getElementById('btn_kantai_sarashi_parent').classList.remove('d-none');
    document.getElementById('kantai_sarashi_parent').classList.add('d-none');
 
@@ -1376,8 +1379,8 @@ function initItemTypes() {
  * 現在登録されている装備情報から所持装備一覧を再構築
  */
 function initItemList() {
-   document.getElementById('btn_kantai_sarashi_parent').classList.remove('d-none');
-   document.getElementById('kantai_sarashi_parent').classList.add('d-none');
+   document.getElementById('btn_kan_bunseki_parent').classList.remove('d-none');
+   document.getElementById('kan_bunseki_parent').classList.add('d-none');
 
    if (!ITEM_TYPES_LIST.length) {
       initItemTypes();
@@ -2229,9 +2232,49 @@ function btn_url_shorten_Clicked() {
 }
 
 /**
+ * 艦隊晒し用コード出力
+ */
+function outputKantaiSarashiCode() {
+   let success = false;
+   const shipStock = readOnlyMode ? readOnlyShips : loadShipStock();
+   if (shipStock && shipStock.length) {
+      const text = []
+
+      for (const ship of FIRST_SHIPS) {
+         const stocks = shipStock.filter(v => ship.versions.includes(v.id));
+         const origRaw = SHIP_DATA.find(v => v.id === ship.id);
+         if (stocks && origRaw) {
+            let textDetails = [];
+            for (const stock of stocks) {
+               const raw = SHIP_DATA.find(v => v.id === stock.id);
+               if (stock && stock.details.length && raw) {
+                  textDetails.push(`${stock.details.map(v => `${v.lv}.${raw.ver + 1}`).join(',')}`);
+               }
+            }
+
+            text.push(origRaw.api + ':' + textDetails.join(','));
+         }
+      }
+
+      document.getElementById('kantai_sarashi_code').value = ".2|" + text.join('|');
+      document.getElementById('kantai_sarashi_code').nextElementSibling.classList.add('active');
+      success = true;
+   }
+
+   if (success) {
+      document.getElementById('btn_kantai_sarashi_parent').classList.add('d-none');
+      document.getElementById('kantai_sarashi_parent').classList.remove('d-none');
+      inform_success('出力しました');
+   }
+   else {
+      inform_warning('出力に失敗しました。艦娘の反映を行ってください');
+   }
+}
+
+/**
  * 艦隊分析スプレ用コード変換
  */
-function getKantaiSarashi() {
+function outputKantaiBunsekiCode() {
    let success = false;
    const shipStock = readOnlyMode ? readOnlyShips : loadShipStock();
    if (shipStock && shipStock.length) {
@@ -2245,8 +2288,8 @@ function getKantaiSarashi() {
          }
       }
 
-      document.getElementById('kantai_sarashi').value = "[" + text.join(',') + "]";
-      document.getElementById('kantai_sarashi').nextElementSibling.classList.add('active');
+      document.getElementById('kan_bunseki_code').value = "[" + text.join(',') + "]";
+      document.getElementById('kan_bunseki_code').nextElementSibling.classList.add('active');
       success = true;
    }
 
@@ -2262,14 +2305,14 @@ function getKantaiSarashi() {
          }
       }
 
-      document.getElementById('kantai_sarashi_item').value = "[" + text.join(',') + "]";
-      document.getElementById('kantai_sarashi_item').nextElementSibling.classList.add('active');
+      document.getElementById('kan_bunseki_code_item').value = "[" + text.join(',') + "]";
+      document.getElementById('kan_bunseki_code_item').nextElementSibling.classList.add('active');
       success = true;
    }
 
    if (success) {
-      document.getElementById('btn_kantai_sarashi_parent').classList.add('d-none');
-      document.getElementById('kantai_sarashi_parent').classList.remove('d-none');
+      document.getElementById('btn_kan_bunseki_parent').classList.add('d-none');
+      document.getElementById('kan_bunseki_parent').classList.remove('d-none');
       inform_success('出力しました');
    }
    else {
