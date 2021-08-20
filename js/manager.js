@@ -2244,15 +2244,17 @@ function outputKantaiSarashiCode() {
          const stocks = shipStock.filter(v => ship.versions.includes(v.id));
          const origRaw = SHIP_DATA.find(v => v.id === ship.id);
          if (stocks && origRaw) {
-            let textDetails = [];
+            const levels = [];
             for (const stock of stocks) {
                const raw = SHIP_DATA.find(v => v.id === stock.id);
                if (stock && stock.details.length && raw) {
-                  textDetails.push(`${stock.details.map(v => `${v.lv}.${raw.ver + 1}`).join(',')}`);
+                  for (const detail of stock.details) {
+                     levels.push({ lv: detail.lv, ver: raw.ver + 1 });
+                  }
                }
             }
-
-            text.push((origRaw.api === 699 ? 645 : origRaw.api) + ':' + textDetails.join(','));
+            levels.sort((a, b) => b.lv - a.lv);
+            text.push((origRaw.api === 699 ? 645 : origRaw.api) + ':' + levels.map(v => `${v.lv}.${v.ver}`).join(','));
          }
       }
 
