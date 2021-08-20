@@ -2558,4 +2558,4 @@ const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 4
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.10.1';
+const LATEST_VERSION = '1.12.10.2';

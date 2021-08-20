@@ -1699,7 +1699,15 @@ let CHANGE_LOG = [
 				content: "所持装備一覧において、フィルタ「その他」「艦偵、水上機」選択時に表示されない装備があった問題を修正しました。"
 			},
 		],
+	},
+	{
+		id: "1.12.10.2", changes: [
+			{
+				type: 0, title: "<a href='http://kancolle-calc.net/kanmusu_list.html' target='_blank'>艦隊晒しページ(仮)</a>コード変換機能を追加しました。",
+				content: "艦隊管理ページの『共有』タブに追加されています。出力されたコードをコピーしたのち艦隊晒しページ(仮)へ移動し、変換ボタン右の入力欄にコードを打ち込み、変換ボタンを押すと反映できます。"
+			}
+		],
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/8/11";
+const LAST_UPDATE_DATE = "2021/8/20";
