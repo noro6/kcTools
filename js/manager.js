@@ -13,6 +13,8 @@ let expChart = null;
 let expRadarChart = null;
 let expStackChart = null;
 
+const MAX_AREA = 4;
+
 const FINAL_SHIPS = SHIP_DATA.filter(v => v.final);
 const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
    return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }
@@ -316,7 +318,7 @@ function initShipList() {
                         ${ver.luck + detail.st[4]}
                      </div>
                   </div>
-                  ${detail.area < 1 ? '<div class="sally_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}.png"></div>`}`;
+                  ${detail.area < 1 || detail.area > MAX_AREA ? '<div class="sally_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}.png"></div>`}`;
                   verContainer.appendChild(detailContainer);
                }
                done = true;
@@ -428,7 +430,7 @@ function initShipListTable() {
             tdImage.innerHTML = `
                <div class="align-self-center ship_table_td_image mr-1">
                   <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
-                  ${detail.area >= 0 ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
+                  ${detail.area >= 0 && detail.area <= MAX_AREA ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
                </div>
                <div class="align-self-center">${ship.name}</div>`;
             tr.appendChild(tdImage);
