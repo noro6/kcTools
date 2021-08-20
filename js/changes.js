@@ -1703,8 +1703,8 @@ let CHANGE_LOG = [
 	{
 		id: "1.12.10.2", changes: [
 			{
-				type: 0, title: "<a href='http://kancolle-calc.net/kanmusu_list.html' target='_blank'>艦隊晒しページ(仮)</a>コード変換機能を追加しました。",
-				content: "艦隊管理ページの『共有』タブに追加されています。出力されたコードをコピーしたのち艦隊晒しページ(仮)へ移動し、変換ボタン右の入力欄にコードを打ち込み、変換ボタンを押すと反映できます。"
+				type: 0, title: "<a href='http://kancolle-calc.net/kanmusu_list.html' target='_blank'>艦隊晒しページ(仮)</a>で開ける機能を追加しました。",
+				content: "艦隊管理ページの『共有』タブに追加されています。出力ボタンを押すと、リンクを生成します。"
 			}
 		],
 	}

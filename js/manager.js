@@ -2252,7 +2252,7 @@ function outputKantaiSarashiCode() {
                }
             }
 
-            text.push(origRaw.api + ':' + textDetails.join(','));
+            text.push((origRaw.api === 699 ? 645 : origRaw.api) + ':' + textDetails.join(','));
          }
       }
 
