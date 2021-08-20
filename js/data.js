@@ -1832,7 +1832,7 @@ const ENEMY_DATA = [
 	{ id: 512, type: [15], name: "軽巡ト級IIelite", slot: [-1, -1, -1, 3, -1], eqp: [550, 550, 603, 610], orig: 0, hp: 63, aa: 48, armor: 56 },
 	{ id: 513, type: [19], name: "輸送ワ級IIelite", slot: [-1, -1, -1, 3, -1], eqp: [591, 591, 603, 610], orig: 0, hp: 480, aa: 33, armor: 55 },
 	{ id: 514, type: [19], name: "輸送ワ級IIflagship", slot: [-1, -1, -1, 4, -1], eqp: [602, 602, 603, 611], orig: 0, hp: 480, aa: 55, armor: 77 },
-	{ id: 515, type: [1, 2], name: "集積地棲姫II vac. [丁]", slot: [-1, -1, -1, 64, -1], eqp: [565, 565, 580, 562], orig: 0, hp: 720, aa: 80, armor: 138 },
+	{ id: 515, type: [1, 2], name: "集積地棲姫II vac. [丁]", slot: [-1, -1, -1, 32, -1], eqp: [565, 565, 580, 561], orig: 2015, hp: 440, aa: 44, armor: 22 },
 	{ id: 516, type: [1, 2], name: "集積地棲姫II vac. [丙]", slot: [-1, -1, -1, 64, -1], eqp: [565, 565, 580, 562], orig: 2016, hp: 1200, aa: 66, armor: 133 },
 	{ id: 517, type: [1, 2], name: "集積地棲姫II vac. [乙]", slot: [-1, -1, -1, 88, -1], eqp: [565, 565, 580, 562], orig: 2017, hp: 3200, aa: 77, armor: 166 },
 	{ id: 518, type: [1, 2], name: "集積地棲姫II vac. [甲]", slot: [-1, -1, -1, 98, -1], eqp: [565, 565, 580, 562], orig: 2018, hp: 4800, aa: 99, armor: 199 },
