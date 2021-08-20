@@ -31,6 +31,7 @@
 	<script src="../js/nouislider.min.js"></script>
 	<script src="../js/materialize.js"></script>
 	<script src="../js/manager.js"></script>
+	<script src="../js/shared.js"></script>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152888142-2"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -643,16 +644,13 @@
 
 					<div class="general_box py-4 px-4 my-3">
 						<div>
-							下記のボタンより、<a href="http://kancolle-calc.net/kanmusu_list.html" target="_blank">艦隊晒しページ(仮)</a>用コードを生成できます。
+							下記のボタンより、艦隊晒しページ(仮)で開けるURLを生成します。
 						</div>
 						<div id="btn_kantai_sarashi_parent">
 							<button type="button" class="waves-effect waves-light btn" id="btn_kantai_sarashi">艦隊晒し用コード出力</button>
 						</div>
-						<div class="d-none" id="kantai_sarashi_parent">
-							<div class="input-field">
-								<textarea id="kantai_sarashi_code" class="materialize-textarea" readonly></textarea>
-								<label for="kantai_sarashi_code">艦隊晒し用コード</label>
-							</div>
+						<div class="d-none mt-3" id="kantai_sarashi_link_parent">
+							<a href="#" target="_blank" id="kantai_sarashi_link">艦隊晒しページ(仮)で開く</a>
 						</div>
 					</div>
 

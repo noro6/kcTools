@@ -209,7 +209,7 @@ function initShipList() {
    document.getElementById('btn_kan_bunseki_parent').classList.remove('d-none');
    document.getElementById('kan_bunseki_parent').classList.add('d-none');
    document.getElementById('btn_kantai_sarashi_parent').classList.remove('d-none');
-   document.getElementById('kantai_sarashi_parent').classList.add('d-none');
+   document.getElementById('kantai_sarashi_link_parent').classList.add('d-none');
 
    if (document.getElementById('ship_table')['checked']) {
       // document.getElementById('ships_sort_container').classList.remove('d-none');
@@ -2256,14 +2256,14 @@ function outputKantaiSarashiCode() {
          }
       }
 
-      document.getElementById('kantai_sarashi_code').value = ".2|" + text.join('|');
-      document.getElementById('kantai_sarashi_code').nextElementSibling.classList.add('active');
+      const result = ".2|" + text.join('|');
+      document.getElementById('kantai_sarashi_link').href = 'http://kancolle-calc.net/kanmusu_list.html?data=' + encode64(result);
       success = true;
    }
 
    if (success) {
       document.getElementById('btn_kantai_sarashi_parent').classList.add('d-none');
-      document.getElementById('kantai_sarashi_parent').classList.remove('d-none');
+      document.getElementById('kantai_sarashi_link_parent').classList.remove('d-none');
       inform_success('出力しました');
    }
    else {
