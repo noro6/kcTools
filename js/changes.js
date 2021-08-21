@@ -1703,6 +1703,10 @@ let CHANGE_LOG = [
 	{
 		id: "1.12.10.2", changes: [
 			{
+				type: 0, title: "2021夏イベント 対応",
+				content: "確認できた敵編成から順次追加していきます。今後、強編成等が確認された場合は編成が変わる可能性があります。"
+			},
+			{
 				type: 0, title: "<a href='http://kancolle-calc.net/kanmusu_list.html' target='_blank'>艦隊晒しページ(仮)</a>で開ける機能を追加しました。",
 				content: "艦隊管理ページの『共有』タブに追加されています。出力ボタンを押すと、リンクを生成します。"
 			}
@@ -1710,4 +1714,4 @@ let CHANGE_LOG = [
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/8/20";
+const LAST_UPDATE_DATE = "2021/8/21";
