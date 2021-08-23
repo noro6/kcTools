@@ -213,6 +213,8 @@ function initShipList() {
    document.getElementById('btn_kantai_sarashi_parent').classList.remove('d-none');
    document.getElementById('kantai_sarashi_link_parent').classList.add('d-none');
 
+   enabledShareButton();
+
    if (document.getElementById('ship_table')['checked']) {
       // document.getElementById('ships_sort_container').classList.remove('d-none');
       initShipListTable();
