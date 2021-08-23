@@ -385,7 +385,7 @@ input[type="number"] {
 .detail_container {
    display: flex;
    justify-content: space-between;
-   padding: 0.1rem 0.25rem 0.1rem 0;
+   padding-right: 0.25rem;
    border-bottom: 1px solid #888;
    cursor: pointer;
    transition: 0.05s;
@@ -432,10 +432,12 @@ input[type="number"] {
 .detail_ship_status {
    margin-left: 0.25rem;
 }
-.sally_area,
+.sally_area:not(.no_area),
 .sally_area img {
-   height: auto;
-   width: 32px;
+   -ms-flex-item-align:end!important;
+   align-self:flex-end!important;
+   height: 40px;
+   width: 36px;
 }
 
 #modal_ship_edit {
