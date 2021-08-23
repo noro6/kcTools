@@ -432,12 +432,14 @@ input[type="number"] {
 .detail_ship_status {
    margin-left: 0.25rem;
 }
+.sally_area {
+   width: 36px;
+}
 .sally_area:not(.no_area),
 .sally_area img {
    -ms-flex-item-align:end!important;
    align-self:flex-end!important;
    height: 40px;
-   width: 36px;
 }
 
 #modal_ship_edit {
