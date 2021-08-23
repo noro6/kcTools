@@ -1386,6 +1386,8 @@ function initItemList() {
    document.getElementById('btn_kan_bunseki_parent').classList.remove('d-none');
    document.getElementById('kan_bunseki_parent').classList.add('d-none');
 
+   enabledShareButton();
+
    if (!ITEM_TYPES_LIST.length) {
       initItemTypes();
    }
