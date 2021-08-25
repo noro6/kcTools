@@ -1714,4 +1714,4 @@ let CHANGE_LOG = [
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/8/23";
+const LAST_UPDATE_DATE = "2021/8/26";
