@@ -3311,6 +3311,11 @@ function checkInvalidPlane(shipID, item, slotIndex = -1) {
 		if (item.id === 142) {
 			return (ship.type === 8 || ship.type === 9 || ship.type === 10);
 		}
+
+		// 51cm砲は長門型改以上か大和型のみ
+		if (item.id === 128 || item.id === 281) {
+			return ship.type2 === 37 || (ship.type2 === 19 && ship.ver > 0);
+		}
 	}
 
 	// 特定艦娘 特殊装備カテゴリ取得
@@ -12172,6 +12177,10 @@ function plane_type_select_Changed($this = null) {
 		// 戦艦系ではない場合、15m二重測距儀+21号電探改二(id:142)を削除する
 		if (![8, 9, 10].includes(ship.type)) {
 			org = org.filter(v => v.id !== 142);
+		}
+		else if (!(ship.type2 === 19 && ship.ver > 0) && ship.type2 !== 37) {
+			// 長門型改 or 大和型以外の戦艦から51砲2種を削除
+			org = org.filter(v => v.id !== 128 && v.id !== 281);
 		}
 
 		// Richelieu改対応
