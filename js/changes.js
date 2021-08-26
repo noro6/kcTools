@@ -1709,9 +1709,13 @@ let CHANGE_LOG = [
 			{
 				type: 0, title: "<a href='http://kancolle-calc.net/kanmusu_list.html' target='_blank'>艦隊晒しページ(仮)</a>で開ける機能を追加しました。",
 				content: "艦隊管理ページの『共有』タブに追加されています。出力ボタンを押すと、リンクを生成します。"
-			}
+			},
+			{
+				type: 2, title: "不具合の修正を行いました。",
+				content: "51cm砲が誰でも積めるようになっていた件を修正しました。"
+			},
 		],
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/8/26";
+const LAST_UPDATE_DATE = "2021/8/27";
