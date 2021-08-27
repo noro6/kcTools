@@ -15009,7 +15009,8 @@ function createAirPowerRanking() {
 	}
 
 	planes2.sort((a, b) => {
-		if (b.actualAntiAir !== a.actualAntiAir) return b.actualAntiAir - a.actualAntiAir;
+		if (b.airPower !== a.airPower) return b.airPower - a.airPower;
+		else if (b.actualAntiAir !== a.actualAntiAir) return b.actualAntiAir - a.actualAntiAir;
 		return b.radius - a.radius;
 	});
 
@@ -15017,19 +15018,19 @@ function createAirPowerRanking() {
 	let rank = 1;
 
 	const ranks = [];
-	const maxAA = getArrayMax(planes2.map(v => v.actualAntiAir));
+	const maxAp = getArrayMax(planes2.map(v => v.airPower));
 
 	// 順位とタイの個数計算
-	for (let antiAir = maxAA * 10; antiAir > 0; antiAir--) {
-		const hit = planes2.filter(v => (v.actualAntiAir * 10) === antiAir).length;
+	for (let ap = maxAp; ap > 0; ap--) {
+		const hit = planes2.filter(v => v.airPower === ap).length;
 		if (hit > 0) {
-			ranks.push({ rank: rank++, antiAir: antiAir / 10, count: hit });
+			ranks.push({ rank: rank++, airPower: ap, count: hit });
 		}
 	}
 
 	rank = 1;
 	for (const obj of ranks) {
-		const rankerPlanes = planes2.filter(v => v.actualAntiAir === obj.antiAir);
+		const rankerPlanes = planes2.filter(v => v.airPower === obj.airPower);
 		for (let i = 0; i < rankerPlanes.length; i++) {
 			const plane = rankerPlanes[i];
 			const planeNames = `
