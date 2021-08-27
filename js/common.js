@@ -384,7 +384,10 @@ function readDeckBuilder(deck) {
 		const fleets = [];
 		const landBase = [[], [-1, -1, -1]];
 		let isYugeki = false;
-		let unmanageShip = false;
+
+		if (!Object.keys(obj).length || !(obj.a1 || obj.a2 || obj.a3 || obj.f1 || obj.f2 || obj.f3 || obj.f4)) {
+			return null;
+		}
 
 		loadedDeckBuilders = [];
 		Object.keys(obj).forEach((key) => {
@@ -498,13 +501,25 @@ function readDeckBuilder(deck) {
 		});
 
 		// いったん第1、第2艦隊のみに絞って返却
-		const fleet1 = fleets.find(v => v[0] === 0)[1];
-		if (fleets.length >= 2) {
-			const fleet2 = fleets.find(v => v[0] === 1)[1];
-			const marge = fleet1.concat(fleet2);
-			return [landBase, marge, []];
+		if (fleets.length) {
+			let fleetAll = [];
+
+			const fleet1 = fleets.find(v => v[0] === 0);
+			const fleet1Body = fleet1 ? fleet1[1] : null;
+			if (fleet1Body) {
+				fleetAll = fleetAll.concat(fleet1Body);
+			}
+
+			const fleet2 = fleets.find(v => v[0] === 1);
+			const fleet2Body = fleet2 ? fleet2[1] : null;
+			if (fleet2Body) {
+				fleetAll = fleetAll.concat(fleet2Body);
+			}
+
+			if (landBase)
+				return [landBase, fleetAll, []];
 		}
-		else return [landBase, fleet1, []];
+		else return [landBase, [], []];
 	} catch (error) {
 		return null;
 	}
@@ -518,6 +533,10 @@ function readShipJson(input) {
 	try {
 		const jsonData = JSON.parse(input);
 		const shipStock = [];
+
+		if (!jsonData.length) {
+			return false;
+		}
 
 		let uniqueId = 1;
 		for (const obj of jsonData) {
@@ -574,10 +593,10 @@ function readShipJson(input) {
 		saveLocalStorage('shipStock', shipStock);
 		setting.inStockOnlyShip = true;
 		saveSetting();
+		return true;
 	} catch (error) {
 		return false;
 	}
-	return true;
 }
 
 /**
@@ -588,6 +607,11 @@ function readEquipmentJson(input) {
 	try {
 		const jsonData = JSON.parse(input);
 		const planeStock = loadPlaneStock();
+
+		if (!jsonData.length) {
+			return false;
+		}
+
 		// いったん全ての装備を0にする
 		for (const v of planeStock) {
 			v.num = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -616,10 +640,10 @@ function readEquipmentJson(input) {
 		saveLocalStorage('planeStock', planeStock);
 		setting.inStockOnly = true;
 		saveSetting();
+		return true;
 	} catch (error) {
 		return false;
 	}
-	return true;
 }
 
 /*==================================
