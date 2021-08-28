@@ -432,7 +432,7 @@ function initShipListTable() {
             tdImage.innerHTML = `
                <div class="align-self-center ship_table_td_image mr-1">
                   <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
-                  ${detail.area >= 0 && detail.area <= MAX_AREA ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
+                  ${detail.area > 0 && detail.area <= MAX_AREA ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
                </div>
                <div class="align-self-center">${ship.name}</div>`;
             tr.appendChild(tdImage);
