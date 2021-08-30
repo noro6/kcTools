@@ -13,8 +13,6 @@ let expChart = null;
 let expRadarChart = null;
 let expStackChart = null;
 
-const MAX_AREA = 4;
-
 const FINAL_SHIPS = SHIP_DATA.filter(v => v.final);
 const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
    return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }

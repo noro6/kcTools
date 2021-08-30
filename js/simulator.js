@@ -4002,15 +4002,26 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
  * 第1引数で渡された .ship_tab に第2引数で渡された 艦娘データを挿入する
  * @param {JQuery} $div 艦娘タブ (.ship_tab)
  * @param {number} id 艦娘id
- * @param {number} [level=99] 練度デフォルト
+ * @param {number} [level=99] 練度 デフォルト99
+ * @param {number} [area=0] 出撃海域 デフォ0
  */
-function setShipDiv($div, id, level = 99) {
+function setShipDiv($div, id, level = 99, area = 0) {
 	const ship = SHIP_DATA.find(v => v.id === id);
 	if (!ship) return;
 	$div[0].dataset.shipid = ship.id;
 	$div[0].dataset.shiptype = ship.type;
 	$div[0].dataset.shiptype2 = ship.type2;
 	$div.find('.ship_img').attr('src', `../img/ship/${id}.png`);
+	if (area > 0 && area <= MAX_AREA) {
+		$div.find('.ship_area_img').attr('src', `../img/util/area${area}.png`);
+		$div.find('.ship_area_img').removeClass('d-none');
+		// 海域
+		$div.find('.area').text(area);
+	}
+	else {
+		$div.find('.ship_area_img').addClass('d-none');
+		$div.find('.area').text(0);
+	}
 	$div.find('.sortable_handle').removeClass('d-none');
 	$div.find('.ship_name_span').text(ship.name);
 	$div.find('.ship_plane').each((i, e) => {
@@ -4638,25 +4649,31 @@ function createShipTable() {
 			if (index < 0) continue;
 
 			const baseShip = ships[index];
-			baseShip.lv = stock.details[0].lv;
-			baseShip.stock = stock.details.filter(v => v.lv === baseShip.lv).length;
+			const baseLv = stock.details[0].lv;
+			const baseArea = stock.details[0].area <= MAX_AREA ? stock.details[0].area : 0;
 
-			let doneLv = [baseShip.lv];
+			baseShip.lv = baseLv;
+			baseShip.area = baseArea;
+			baseShip.stock = stock.details.filter(v => v.lv === baseLv && v.area === baseArea).length;
+
+			let doneLv = [{ lv: baseLv, area: baseArea }];
 
 			if (stock.details.length >= 2) {
 				for (let i = 1; i < stock.details.length; i++) {
 					const lv = stock.details[i].lv;
-					// 同じレベルの艦はまとめるため追加不要
-					if (doneLv.includes(lv)) continue;
+					const area = stock.details[i].area <= MAX_AREA ? stock.details[i].area : 0;
+					// 同じレベルかつ札の艦はまとめるため追加不要
+					if (doneLv.find(v => v.lv === lv && v.area === area)) continue;
 
 					// Lv違いの艦娘を生成
 					const newShip = Object.assign({}, baseShip);
 					newShip.lv = lv;
-					newShip.stock = stock.details.filter(v => v.lv === lv).length;
+					newShip.area = area;
+					newShip.stock = stock.details.filter(v => v.lv === lv && v.area === area).length;
 					ships.splice(index, 0, newShip);
 
 					// このレベルは配置済み
-					doneLv.push(lv);
+					doneLv.push({ lv: lv, area: area });
 				}
 			}
 		}
@@ -4710,8 +4727,8 @@ function createShipTable() {
 				shipCount = ship.stock;
 			}
 
-			// 使用済み一覧にあるかチェック
-			const usedCount = usedShip.filter(v => v.id === ship.id && v.lv === ship.lv).length;
+			// 使用済み一覧にあるかチェック ブラックリスト方式で所持数を減らす
+			const usedCount = usedShip.filter(v => v.id === ship.id && v.lv === ship.lv && v.area === ship.area).length;
 			shipCount -= usedCount;
 			if (shipCount <= 0 && !dispEquipped) {
 				continue;
@@ -4729,6 +4746,7 @@ function createShipTable() {
 		}
 		$shipDiv.dataset.shipid = ship.id;
 		$shipDiv.dataset.level = ship.lv ? ship.lv : 99;
+		$shipDiv.dataset.area = ship.area > 0 ? ship.area : 0;
 		$shipDiv.id = 'ship_tr_' + ship.id;
 
 		// アイコンラッパー
@@ -4740,6 +4758,13 @@ function createShipTable() {
 		img.height = imgHeight;
 		img.src = `../img/ship/${ship.id}.png`;
 		$iconDiv.appendChild(img);
+		if (dispInStock && ship.area > 0) {
+			$iconDiv.classList.add('exist_area');
+			const areaImg = document.createElement('img');
+			areaImg.className = 'area_banner';
+			areaImg.src = `../img/util/area${ship.area}.png`;
+			$iconDiv.appendChild(areaImg);
+		}
 
 		// ID 名称 ラッパー
 		const $infoDiv = document.createElement('div');
@@ -5698,7 +5723,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 				if (!ship) return;
 				const $ship_tab = $(ship_tab);
 				// 艦娘設置
-				setShipDiv($ship_tab, ship[0]);
+				setShipDiv($ship_tab, ship[0], 99, (ship.length >= 8 && ship[7] ? ship[7] : 0));
 
 				// 機体設置
 				$ship_tab.find('.ship_plane').each((j, e) => {
@@ -5938,7 +5963,7 @@ function encodePreset() {
 			プリセットメモ
 			基地: [0:機体群, 1:札群, 2:ターゲット戦闘番号[1-1, 1-2, 2-1, ..., 3-2]]
 			全体: [0:id, 1:名前, 2:[0:基地プリセット, 1:艦隊プリセット, 2:敵艦プリセット, 3:陣形(対空有効無効を兼ねる), 4: 防空モードかどうか, 5: 防空時敵艦隊, 6: 司令部レベル], 3:メモ, 4:更新日時]
-				艦隊: [0:id, 1: Item配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合フラグ, 6:運]
+				艦隊: [0:id, 1: Item配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:連合フラグ, 6:運, 7:海域]
 					装備: [0:id, 1:熟練, 2:改修値, 3:搭載数, 4:スロット位置, 5: スロットロック(任意、ロック済みtrue]
 				敵艦: [0:戦闘位置, 1:[敵id配列], 2:マス名, 3:マス種別, 4:陣形, 5:半径]
 				対空: 対空砲火適用有効なら陣形配列 その他空
@@ -6009,7 +6034,7 @@ function createLandBasePreset() {
  * @returns {Array} 艦隊プリセット
  */
 function createFriendFleetPreset() {
-	// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:(通常0 連合1 遊撃2) , 6:運]
+	// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:(通常0 連合1 遊撃2) , 6:運, 7:海域]
 	const friendFleetPreset = [];
 	const maxShipCount = getMaxShipCount();
 	let shipIndex = 0;
@@ -6020,7 +6045,7 @@ function createFriendFleetPreset() {
 		// 非表示なら飛ばす
 		if ($(e).attr('class').includes('d-none')) return;
 
-		// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:(通常0 連合1 遊撃2), 6:運]
+		// 艦隊: [0:id, 1: plane配列, 2: 配属位置, 3:無効フラグ, 4:練度, 5:(通常0 連合1 遊撃2), 6:運, 7:海域]
 		const ship = [
 			castInt($(e)[0].dataset.shipid),
 			[],
@@ -6028,7 +6053,8 @@ function createFriendFleetPreset() {
 			($(e).find('.ship_disabled').hasClass('disabled') ? 1 : 0),
 			castInt($(e).find('.ship_level').text()),
 			fleetType,
-			castInt($(e).find('.ship_luck').text())
+			castInt($(e).find('.ship_luck').text()),
+			castInt($(e).find('.area').text())
 		];
 		$(e).find('.ship_plane:not(.ui-draggable-dragging)').each((j, ce) => {
 			const $ce = $(ce);
@@ -7658,7 +7684,8 @@ function createFleetInstance() {
 
 		const shipId = castInt(node_ship_tab.dataset.shipid);
 		const level = castInt(node_ship_tab.getElementsByClassName('ship_level')[0].textContent);
-		if (shipId) usedShip.push({ id: shipId, lv: level });
+		const area = castInt(node_ship_tab.getElementsByClassName('area')[0].textContent);
+		if (shipId) usedShip.push({ id: shipId, lv: level, area: area });
 		// 非表示 / 無効 なら飛ばす
 		if (node_ship_tab.classList.contains('d-none') || node_ship_tab.getElementsByClassName('ship_disabled')[0].classList.contains('disabled') || node_ship_tab.classList.contains('ui-draggable-dragging')) continue;
 
@@ -12930,7 +12957,8 @@ function has_slot_only_Clicked() {
 function modal_ship_Selected($this) {
 	const shipId = castFloat($this[0].dataset.shipid);
 	const level = castInt($this[0].dataset.level);
-	setShipDiv($target, shipId, level);
+	const area = castInt($this[0].dataset.area);
+	setShipDiv($target, shipId, level, area);
 
 	updateShipSelectedHistory(shipId);
 	$('#modal_ship_select').modal('hide');

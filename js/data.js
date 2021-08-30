@@ -2597,10 +2597,12 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
+const MAX_AREA = 4;
+
 const UNKNOWN_ENEMY = [472, 475, 523, 524, 525, 526, 527, 528];
 const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484, 498, 512, 513, 514];
 
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.10.2';
+const LATEST_VERSION = '1.12.11';
