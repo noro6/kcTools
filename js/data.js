@@ -700,6 +700,7 @@ const API_CTYPE = [
 	{ id: 67, name: "Queen Elizabeth級", sort: 999 },
 	{ id: 88, name: "Nelson級", sort: 999 },
 	{ id: 78, name: "Ark Royal級", sort: 999 },
+	{ id: 112, name: "Illustrious級", sort: 999 },
 	{ id: 108, name: "Town級", sort: 999 },
 	{ id: 82, name: "J級", sort: 999 },
 
@@ -1379,8 +1380,8 @@ const SHIP_DATA = [
 	{ id: 153, api: 153, type: 18, name: "大鳳", slot: [18, 18, 18, 7], final: 0, orig: 153, ver: 0, range: 1, type2: 43, hp: 67, hp2: 74, max_hp: 76, max_aa: 79, max_armor: 79, luck: 2, max_luck: 19, scout: 47, max_scout: 74, asw: 0, max_asw: 0, avoid: 33, max_avoid: 57 },
 	{ id: 156, api: 156, type: 18, name: "大鳳改", slot: [30, 24, 24, 8], final: 1, orig: 153, ver: 1, range: 1, type2: 43, hp: 70, hp2: 78, max_hp: 80, max_aa: 86, max_armor: 84, luck: 4, max_luck: 39, scout: 50, max_scout: 77, asw: 0, max_asw: 0, avoid: 34, max_avoid: 59 },
 	{ id: 350, api: 550, type: 18, name: "Saratoga Mk.II Mod.2", slot: [37, 24, 19, 13], final: 1, orig: 233, ver: 3, range: 2, type2: 69, hp: 89, hp2: 97, max_hp: 99, max_aa: 94, max_armor: 88, luck: 40, max_luck: 93, scout: 56, max_scout: 95, asw: 0, max_asw: 0, avoid: 26, max_avoid: 56 },
-	// { id: 485, api: 885, type: 18, name: "Victorious", slot: [14, 14, 12, 9], final: 0, orig: 485, ver: 0, range: 1, type2: 112, hp: 59, hp2: 66, max_hp: 68, max_aa: 77, max_armor: 80, luck: 10, max_luck: 90, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
-	// { id: 1713, api: 713, type: 18, name: "Victorious改", slot: [18, 18, 19, 2], final: 1, orig: 485, ver: 1, range: 2, type2: 112, hp: 74, hp2: 82, max_hp: 84, max_aa: 84, max_armor: 85, luck: 22, max_luck: 110, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 485, api: 885, type: 18, name: "Victorious", slot: [14, 14, 12, 9], final: 0, orig: 485, ver: 0, range: 1, type2: 112, hp: 59, hp2: 66, max_hp: 68, max_aa: 77, max_armor: 80, luck: 10, max_luck: 90, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 1713, api: 713, type: 18, name: "Victorious改", slot: [18, 18, 19, 2], final: 1, orig: 485, ver: 1, range: 2, type2: 112, hp: 74, hp2: 82, max_hp: 84, max_aa: 84, max_armor: 85, luck: 22, max_luck: 110, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
 	{ id: 182, api: 182, type: 19, name: "明石", slot: [0, 0, 0], final: 0, orig: 182, ver: 0, range: 1, type2: 49, hp: 39, hp2: 44, max_hp: 46, max_aa: 24, max_armor: 19, luck: 10, max_luck: 39, scout: 1, max_scout: 5, asw: 0, max_asw: 0, avoid: 8, max_avoid: 29 },
 	{ id: 187, api: 187, type: 19, name: "明石改", slot: [0, 0, 0, 0], final: 1, orig: 182, ver: 1, range: 1, type2: 49, hp: 45, hp2: 51, max_hp: 53, max_aa: 36, max_armor: 27, luck: 12, max_luck: 49, scout: 2, max_scout: 6, asw: 0, max_asw: 0, avoid: 10, max_avoid: 39 },
 	{ id: 184, api: 184, type: 20, name: "大鯨", slot: [2, 3, 3], final: 1, orig: 184, ver: 0, range: 1, type2: 50, hp: 39, hp2: 44, max_hp: 46, max_aa: 36, max_armor: 37, luck: 20, max_luck: 59, scout: 24, max_scout: 48, asw: 0, max_asw: 0, avoid: 24, max_avoid: 39 },
