@@ -7319,6 +7319,7 @@ function updateEnemyView() {
 	let sumAntiAirBonus = 0;
 	let battleIndex = 0;
 	let isAntiAirCutinEnabled = false;
+	let isContainUnknownEnemy = false;
 	let world = '';
 	const cells = [];
 	const shootDownTableHTML = [];
@@ -7340,6 +7341,10 @@ function updateEnemyView() {
 			// 対空CI可能艦がいるかどうか
 			if (!isAntiAirCutinEnabled && ANTIAIR_CUTIN_ENEMY.includes(enemy.id)) {
 				isAntiAirCutinEnabled = true;
+			}
+
+			if (!isContainUnknownEnemy && UNKNOWN_ENEMY.includes(enemy.id)) {
+				isContainUnknownEnemy = true;
 			}
 
 			// 表示戦闘でないので飛ばし
@@ -7453,6 +7458,16 @@ function updateEnemyView() {
 		}
 		else {
 			cutinAlert.classList.add('d-none');
+		}
+	}
+
+	const unknownAlert = document.getElementById('unknown_enemy_contain');
+	if (unknownAlert) {
+		if (isContainUnknownEnemy) {
+			unknownAlert.classList.remove('d-none');
+		}
+		else {
+			unknownAlert.classList.add('d-none');
 		}
 	}
 

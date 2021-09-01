@@ -1884,12 +1884,17 @@
 				<div class="mx-2 border-top"></div>
 				<div id="result_grid">
 					<div class="mt-2 px-lg-2 px-xl-3" id="shoot_down_table_content">
-						<div class="alert alert-info mb-0 px-2 py-2 font_size_12 no_capture" id="calculate_confirm">
+						<div class="alert alert-info mb-1 px-2 py-2 font_size_12 no_capture" id="calculate_confirm">
 							<span>出撃<span class="mx-1" id="prev_calculate_count"></span>回分の計算結果が表示されています。→</span>
 							<span class="dummy_a" id="btn_more_calc">再計算して精度を上げる</span>
 						</div>
-						<div class="alert alert-warning mb-0 px-2 py-2 font_size_12 no_capture d-none" id="enemy_cutin_contain">
-							<span>設定された敵艦隊に対空CIを発動できる敵艦が存在します。計算結果に表示された値を超える撃墜が発生する可能性があります。</span>
+						<div class="alert alert-warning mb-1 px-2 py-2 font_size_12 no_capture d-none" id="enemy_cutin_contain">
+							<span>設定された敵艦隊に、対空CIを発動できる敵艦が存在します。計算結果に表示された値を超える撃墜が発生する可能性があります。</span>
+						</div>
+						<div class="alert alert-danger mb-1 px-2 py-2 font_size_20 no_capture d-none" id="unknown_enemy_contain">
+							<div>設定された敵艦隊に、搭載数情報が不明な敵艦が存在します。</div>
+							<div>制空計算は行われますが、計算結果が実際の戦闘と大きく異なる可能性があります。</div>
+							<div class="font_size_14">※ 搭載数情報が不明な敵艦は、本サイト下部『敵艦管理』欄にて、搭載数を自由に設定できます。</div>
 						</div>
 						<div class="d-flex mt-2">
 							<div class="pl-1 align-self-center">
