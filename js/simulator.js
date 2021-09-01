@@ -4393,13 +4393,53 @@ function createItemTable(items, type) {
 
 		// ラップ
 		const $planeDiv = document.createElement('div');
-		$planeDiv.className = `plane plane_tr general_tr d-flex py-2 py-lg-1 ${planeDivClass}`;
+		$planeDiv.className = `plane plane_tr general_tr d-flex py-2 py-lg-1 ${planeDivClass} relative`;
 		$planeDiv.dataset.planeid = item.id;
 		$planeDiv.dataset.type = item.type;
 		$planeDiv.dataset.remodel = maxRemodelLevel;
 		if (dispInStock && dispEquipped && enabledCount <= 0) {
 			$planeDiv.classList.remove('plane_tr', 'plane', 'general_tr');
 			$planeDiv.classList.add('plane_tr_disabled');
+		}
+
+		// 2021夏イベ対応
+		if (PLANE_TYPE.includes(item.type)) {
+			if (SPECIAL_A.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'absolute A';
+				$specialDiv.textContent = 'A';
+				$planeDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_B.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'absolute B';
+				$specialDiv.textContent = 'B';
+				$planeDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C1.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'absolute C1';
+				$specialDiv.innerHTML = 'C<span class="font_size_14">1</span>';
+				$planeDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C2.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'absolute C2';
+				$specialDiv.innerHTML = 'C<span class="font_size_14">2</span>';
+				$planeDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C3.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'absolute C3';
+				$specialDiv.innerHTML = 'C<span class="font_size_14">3</span>';
+				$planeDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C4.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'absolute C4';
+				$specialDiv.innerHTML = 'C<span class="font_size_14">4</span>';
+				$planeDiv.appendChild($specialDiv);
+			}
 		}
 
 		// アイコン用ラッパー

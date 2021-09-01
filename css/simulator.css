@@ -188,7 +188,7 @@ input[type="number"] { text-align: right; }
 
 .dummy_a {
   cursor: pointer;
-  color: #006eff;
+  color: #888888;
 }
 .dark-theme .dummy_a { color: rgb(86, 180, 255); }
 .dummy_a:hover {
@@ -381,6 +381,10 @@ input[type="number"] { text-align: right; }
   border-radius: 0.25rem;
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
+  position: relative; /* 2021装備特効対応 */
+}
+.absolute.sum2021_sp {
+  left: 26px;
 }
 .dark-theme .ship_plane {
   text-shadow: 1px 1px 3px #000;
@@ -747,6 +751,91 @@ input[type="number"] { text-align: right; }
   border-color: #aaa;
   box-shadow: inset 0 0 15px rgba(240, 240, 240, 0.5), 0 0 15px rgba(240, 240, 240, 0.2);
   text-shadow: 2px 2px 3px #000;
+}
+
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+  top: -8px;
+  left: 4px;
+  display: inline-block;
+  font-size: 20px;
+}
+.absolute.A {
+  text-shadow:
+  1px  1px 0px #f59300,
+  -1px  1px 0px #f59300,
+  1px -1px 0px #f59300,
+  -1px -1px 0px #f59300,
+  1px  0px 0px #f59300,
+  0px  1px 0px #f59300,
+  -1px  0px 0px #f59300,
+  0px -1px 0px #f59300;
+}
+.absolute.B {
+  text-shadow:
+  1px  1px 0px #f70000,
+  -1px  1px 0px #f70000,
+  1px -1px 0px #f70000,
+  -1px -1px 0px #f70000,
+  1px  0px 0px #f70000,
+  0px  1px 0px #f70000,
+  -1px  0px 0px #f70000,
+  0px -1px 0px #f70000;
+}
+.absolute.C1 {
+  text-shadow:
+  1px  1px 0px #00773c,
+  -1px  1px 0px #009e4f,
+  1px -1px 0px #009e4f,
+  -1px -1px 0px #009e4f,
+  1px  0px 0px #009e4f,
+  0px  1px 0px #009e4f,
+  -1px  0px 0px #009e4f,
+  0px -1px 0px #009e4f;
+  color: #6effb4;
+}
+.absolute.C2 {
+  text-shadow:
+  1px  1px 0px #0077ff,
+  -1px  1px 0px #0077ff,
+  1px -1px 0px #0077ff,
+  -1px -1px 0px #0077ff,
+  1px  0px 0px #0077ff,
+  0px  1px 0px #0077ff,
+  -1px  0px 0px #0077ff,
+  0px -1px 0px #0077ff;
+  color: #91c4ff;
+}
+.absolute.C3 {
+  text-shadow:
+  1px  1px 0px #003dc2,
+  -1px  1px 0px #003dc2,
+  1px -1px 0px #003dc2,
+  -1px -1px 0px #003dc2,
+  1px  0px 0px #003dc2,
+  0px  1px 0px #003dc2,
+  -1px  0px 0px #003dc2,
+  0px -1px 0px #003dc2;
+  color: #9cbafc;
+}
+
+.absolute.C4 {
+  text-shadow:
+  1px  1px 0px #555555,
+  -1px  1px 0px #555555,
+  1px -1px 0px #555555,
+  -1px -1px 0px #555555,
+  1px  0px 0px #555555,
+  0px  1px 0px #555555,
+  -1px  0px 0px #555555,
+  0px -1px 0px #555555;
+  color: #d3d3d3;
+}
+:not(.dark-theme) .absolute {
+  color: #ffffff;
 }
 
 .plane_tr_disabled {
