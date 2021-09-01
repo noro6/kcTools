@@ -1658,6 +1658,7 @@ const ENEMY_DATA = [
 	{ id: 296, type: [1, 13], name: "戦艦水鬼改-壊[丙]", slot: [-1, -1, -1, 6, -1], eqp: [585, 585, 585, 525], orig: 296, hp: 800, aa: 98, armor: 220 },
 	{ id: 297, type: [1, 13], name: "戦艦水鬼改-壊[乙]", slot: [-1, -1, -1, 6, -1], eqp: [585, 585, 585, 525], orig: 297, hp: 800, aa: 108, armor: 250 },
 	{ id: 298, type: [1, 13], name: "戦艦水鬼改-壊[甲]", slot: [-1, -1, -1, 6, -1], eqp: [585, 585, 585, 525], orig: 298, hp: 800, aa: 108, armor: 290 },
+	{ id: 305, type: [1, 18], name: "潜水新棲姫 vac.flagship[丁]", slot: [-1, -1, -1, -1, -1], eqp: [570, 570, 570], orig: 0, hp: 188, aa: 0, armor: 18 },
 	{ id: 306, type: [1, 18], name: "潜水新棲姫 vac.flagship[丙]", slot: [-1, -1, -1, -1, -1], eqp: [570, 570, 570], orig: 1806, hp: 188, aa: 0, armor: 30 },
 	{ id: 307, type: [1, 18], name: "潜水新棲姫 vac.flagship[乙]", slot: [-1, -1, -1, 6, -1], eqp: [580, 580, 580], orig: 1807, hp: 288, aa: 0, armor: 42 },
 	{ id: 308, type: [1, 18], name: "潜水新棲姫 vac.flagship[甲]", slot: [-1, -1, -1, -1, -1], eqp: [580, 580, 580], orig: 308, hp: 388, aa: 0, armor: 54 },
