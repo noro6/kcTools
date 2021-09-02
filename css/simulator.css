@@ -163,7 +163,7 @@ input[type="number"] { text-align: right; }
   font-size: 11px;
   padding-top: .3rem;
   padding-bottom: .3rem;
-  z-index: 1;
+  z-index: 4;
 }
 .general_thead td{
   padding-top: .2rem;
@@ -383,8 +383,18 @@ input[type="number"] { text-align: right; }
   background-color: rgba(255, 255, 255, 0.8);
   position: relative; /* 2021装備特効対応 */
 }
-.absolute.sum2021_sp {
-  left: 26px;
+.ship_plane .item_special {
+  right: 72px;
+  z-index: 1;
+}
+.item_special.flash {
+  animation: flash 3s ease-in-out infinite;
+}
+@keyframes flash {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
 }
 .dark-theme .ship_plane {
   text-shadow: 1px 1px 3px #000;
@@ -640,7 +650,7 @@ input[type="number"] { text-align: right; }
 #landBase_target { width: 60px; }
 .enemy_content {
   cursor: pointer;
-  border-radius: .15rem; 
+  border-radius: .15rem;
 }
 .enemy_content:hover { background-color: rgba(128, 128, 128, 0.1); }
 .no_enemy { opacity: .3; }
@@ -756,86 +766,48 @@ input[type="number"] { text-align: right; }
 .relative {
   position: relative;
 }
-.absolute {
+.item_special {
   position: absolute;
-  top: -8px;
-  left: 4px;
+  right: 0px;
   display: inline-block;
-  font-size: 20px;
+  padding: 0.1rem 0.5rem;
+  font-size: 12px;
+  font-weight: bold;
+  color: #111;
+  background: rgba(255, 249, 198, 0.9);
+  border: 1px solid rgb(255, 230, 0);
+  border-radius: 0.2rem;
 }
-.absolute.A {
-  text-shadow:
-  1px  1px 0px #f59300,
-  -1px  1px 0px #f59300,
-  1px -1px 0px #f59300,
-  -1px -1px 0px #f59300,
-  1px  0px 0px #f59300,
-  0px  1px 0px #f59300,
-  -1px  0px 0px #f59300,
-  0px -1px 0px #f59300;
+.dark-theme .item_special {
+  text-shadow: none;
+  background: rgba(213, 242, 255, 0.9);
+  border: 1px solid rgb(0, 179, 255);
 }
-.absolute.B {
-  text-shadow:
-  1px  1px 0px #f70000,
-  -1px  1px 0px #f70000,
-  1px -1px 0px #f70000,
-  -1px -1px 0px #f70000,
-  1px  0px 0px #f70000,
-  0px  1px 0px #f70000,
-  -1px  0px 0px #f70000,
-  0px -1px 0px #f70000;
+.item_special:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  margin-top: -3px;
+  border: 3px solid transparent;
+  border-right: 3px solid rgba(255, 249, 198, 0.9);
+  z-index: 2;
 }
-.absolute.C1 {
-  text-shadow:
-  1px  1px 0px #00773c,
-  -1px  1px 0px #009e4f,
-  1px -1px 0px #009e4f,
-  -1px -1px 0px #009e4f,
-  1px  0px 0px #009e4f,
-  0px  1px 0px #009e4f,
-  -1px  0px 0px #009e4f,
-  0px -1px 0px #009e4f;
-  color: #6effb4;
+.item_special::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  margin-top: -4px;
+  border: 4px solid transparent;
+  border-right: 4px solid rgb(255, 230, 0);
+  z-index: 1;
 }
-.absolute.C2 {
-  text-shadow:
-  1px  1px 0px #0077ff,
-  -1px  1px 0px #0077ff,
-  1px -1px 0px #0077ff,
-  -1px -1px 0px #0077ff,
-  1px  0px 0px #0077ff,
-  0px  1px 0px #0077ff,
-  -1px  0px 0px #0077ff,
-  0px -1px 0px #0077ff;
-  color: #91c4ff;
+.dark-theme .item_special:before  {
+  border-right: 3px solid rgba(179, 232, 255, 0.9);
 }
-.absolute.C3 {
-  text-shadow:
-  1px  1px 0px #003dc2,
-  -1px  1px 0px #003dc2,
-  1px -1px 0px #003dc2,
-  -1px -1px 0px #003dc2,
-  1px  0px 0px #003dc2,
-  0px  1px 0px #003dc2,
-  -1px  0px 0px #003dc2,
-  0px -1px 0px #003dc2;
-  color: #9cbafc;
-}
-
-.absolute.C4 {
-  text-shadow:
-  1px  1px 0px #555555,
-  -1px  1px 0px #555555,
-  1px -1px 0px #555555,
-  -1px -1px 0px #555555,
-  1px  0px 0px #555555,
-  0px  1px 0px #555555,
-  -1px  0px 0px #555555,
-  0px -1px 0px #555555;
-  color: #d3d3d3;
-}
-:not(.dark-theme) .absolute {
-  color: #ffffff;
+.dark-theme .item_special::after  {
+  border-right: 4px solid rgb(0, 179, 255);
 }
 
 .plane_tr_disabled {

@@ -3855,6 +3855,7 @@ function clearPlaneDiv($div) {
 	$div.find('.remodel_select').prop('disabled', true).addClass('remodel_disabled');
 	$div.find('.remodel_value').text(0);
 	$div.find('.btn_remove_plane').addClass('opacity0');
+	$div.find('.item_special').addClass('d-none');
 
 	if ($div.hasClass('expanded_slot')) {
 		$div.find('.plane_name_span').text('補強増設');
@@ -3966,6 +3967,38 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 		// 改修値セット 基本は0
 		$remodelInput.removeClass('remodel_disabled');
 		$remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel, 10));
+	}
+
+	// 2021夏イベ対応 イベント後はそのまま消していい
+	if (PLANE_TYPE.includes(plane.type)) {
+		const $specialDiv = $div.find('.item_special');
+		if (SPECIAL_A.includes(plane.id)) {
+			$specialDiv.removeClass('d-none');
+			$specialDiv.html('A');
+		}
+		else if (SPECIAL_B.includes(plane.id)) {
+			$specialDiv.removeClass('d-none');
+			$specialDiv.html('B');
+		}
+		else if (SPECIAL_C1.includes(plane.id)) {
+			$specialDiv.removeClass('d-none');
+			$specialDiv.html('C<span class="font_size_8">1</span>');
+		}
+		else if (SPECIAL_C2.includes(plane.id)) {
+			$specialDiv.removeClass('d-none');
+			$specialDiv.html('C<span class="font_size_8">2</span>');
+		}
+		else if (SPECIAL_C3.includes(plane.id)) {
+			$specialDiv.removeClass('d-none');
+			$specialDiv.html('C<span class="font_size_8">3</span>');
+		}
+		else if (SPECIAL_C4.includes(plane.id)) {
+			$specialDiv.removeClass('d-none');
+			$specialDiv.html('C<span class="font_size_8">4</span>');
+		}
+		else {
+			$specialDiv.addClass('d-none');
+		}
 	}
 
 	// 熟練度初期値 陸偵熟練は||
@@ -4247,6 +4280,7 @@ function createItemTable(items, type) {
 	const favOnly = setting.favoriteOnly;
 	const sortKey = $('#plane_sort_select').val();
 	const usedTable = usedItems.concat();
+	const dispSpecialOnly = document.getElementById('disp_special')['checked'];
 
 	// ステータス表示を行うプロパティ名 カテゴリ、ソートキーによって可変
 	let displayLabels = ['antiAir', 'antiAirWeight', 'antiAirBonus', 'fire', 'accuracy'];
@@ -4393,53 +4427,13 @@ function createItemTable(items, type) {
 
 		// ラップ
 		const $planeDiv = document.createElement('div');
-		$planeDiv.className = `plane plane_tr general_tr d-flex py-2 py-lg-1 ${planeDivClass} relative`;
+		$planeDiv.className = `plane plane_tr general_tr d-flex py-2 py-lg-1 ${planeDivClass}`;
 		$planeDiv.dataset.planeid = item.id;
 		$planeDiv.dataset.type = item.type;
 		$planeDiv.dataset.remodel = maxRemodelLevel;
 		if (dispInStock && dispEquipped && enabledCount <= 0) {
 			$planeDiv.classList.remove('plane_tr', 'plane', 'general_tr');
 			$planeDiv.classList.add('plane_tr_disabled');
-		}
-
-		// 2021夏イベ対応
-		if (PLANE_TYPE.includes(item.type)) {
-			if (SPECIAL_A.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'absolute A';
-				$specialDiv.textContent = 'A';
-				$planeDiv.appendChild($specialDiv);
-			}
-			else if (SPECIAL_B.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'absolute B';
-				$specialDiv.textContent = 'B';
-				$planeDiv.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C1.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'absolute C1';
-				$specialDiv.innerHTML = 'C<span class="font_size_14">1</span>';
-				$planeDiv.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C2.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'absolute C2';
-				$specialDiv.innerHTML = 'C<span class="font_size_14">2</span>';
-				$planeDiv.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C3.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'absolute C3';
-				$specialDiv.innerHTML = 'C<span class="font_size_14">3</span>';
-				$planeDiv.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C4.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'absolute C4';
-				$specialDiv.innerHTML = 'C<span class="font_size_14">4</span>';
-				$planeDiv.appendChild($specialDiv);
-			}
 		}
 
 		// アイコン用ラッパー
@@ -4455,7 +4449,7 @@ function createItemTable(items, type) {
 
 		// 機体名 + α ラッパー
 		const nameWrapper = document.createElement('div');
-		nameWrapper.className = 'pl-1 d-flex align-self-center flex-grow-1';
+		nameWrapper.className = 'pl-1 d-flex align-self-center flex-grow-1 relative';
 
 		// 色付けるやつ　特殊高角砲だったりロケット戦闘機だったり...
 		let specialItem = false;
@@ -4476,6 +4470,54 @@ function createItemTable(items, type) {
 		$nameDiv.className = `pl-1 plane_td_name align-self-center${specialItem ? ' special_item' : ''}`;
 		$nameDiv.textContent = item.name;
 		nameWrapper.appendChild($nameDiv);
+
+		// 2021夏イベ対応 イベント後はそのまま消していい
+		if (PLANE_TYPE.includes(item.type)) {
+			if (SPECIAL_A.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash A';
+				$specialDiv.textContent = 'A';
+				nameWrapper.appendChild($specialDiv);
+			}
+			else if (SPECIAL_B.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash B';
+				$specialDiv.textContent = 'B';
+				nameWrapper.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C1.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C1';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">1</span>';
+				nameWrapper.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C2.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C2';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">2</span>';
+				nameWrapper.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C3.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C3';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">3</span>';
+				nameWrapper.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C4.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C4';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">4</span>';
+				nameWrapper.appendChild($specialDiv);
+			}
+			else if (dispSpecialOnly) {
+				// 突然の死
+				continue;
+			}
+		}
+		else if (dispSpecialOnly) {
+			// 突然の死
+			continue;
+		}
 
 		// 残り個数
 		const $stockDiv = document.createElement('div');
@@ -5138,7 +5180,8 @@ function loadPlanePreset() {
 		`;
 		let i = 0;
 		for (const plane of preset.planes) {
-			if (checkInvalidPlane(parentId, ITEM_DATA.find(v => v.id === plane.id), i)) {
+			if (plane.id <= 0) i += 1;
+			else if (checkInvalidPlane(parentId, ITEM_DATA.find(v => v.id === plane.id), i)) {
 				infoText = `
 				<div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window"
 					title="展開できない装備が含まれています。">
@@ -5191,15 +5234,15 @@ function drawPlanePresetPreview(preset) {
 	if (preset) {
 		$modal.find('.preset_name').val(preset.name);
 		for (const plane of preset.planes) {
-
-			const raw = ITEM_DATA.find(v => v.id === plane.id)
-			const presetPlane = {
-				id: plane.id,
-				type: raw.type,
-				itype: raw.itype,
-				name: raw.name,
-				remodel: plane.remodel
-			};
+			const raw = ITEM_DATA.find(v => v.id === plane.id);
+			const presetPlane = { id: 0, type: 0, itype: 0, name: '', remodel: 0 };
+			if (raw) {
+				presetPlane.id = plane.id;
+				presetPlane.type = raw.type;
+				presetPlane.itype = raw.itype;
+				presetPlane.name = raw.name;
+				presetPlane.remodel = plane.remodel;
+			}
 			planes.push(presetPlane);
 		}
 	}
@@ -5208,8 +5251,8 @@ function drawPlanePresetPreview(preset) {
 		$modal.find('.preset_name').val('');
 
 		$target.find('.' + ($target.attr('class').includes('lb_tab') ? 'lb_plane' : 'ship_plane')).each((i, e) => {
-			if ($(e).hasClass('d-none')) return;
 			const plane = ITEM_DATA.find(v => v.id === castInt($(e)[0].dataset.planeid));
+			// 装備なしは詰める動き
 			if (plane) {
 				const presetPlane = {
 					id: plane.id,
@@ -5232,15 +5275,23 @@ function drawPlanePresetPreview(preset) {
 	`;
 	let idx = 0;
 	for (const plane of planes) {
-		const needWarning = !checkInvalidPlane(parentId, plane, idx++);
-		text += `
-		<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="${plane.id}" data-remodel="${plane.remodel}">
-			<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/icon${plane.itype}.png"></div>
-			<div class="preset_preview_td_name ml-1 py-2">${plane.name}</div>
-			<div class="text_remodel">${plane.remodel ? '★' + plane.remodel : ''}</div>
-			` + (needWarning ? warningIcon : '') + `
-		</div>
-		`;
+		if (plane.id) {
+			const needWarning = !checkInvalidPlane(parentId, plane, idx++);
+			text += `
+			<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="${plane.id}" data-remodel="${plane.remodel}">
+				<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/icon${plane.itype}.png"></div>
+				<div class="preset_preview_td_name ml-1 py-2">${plane.name}</div>
+				<div class="text_remodel">${plane.remodel ? '★' + plane.remodel : ''}</div>
+				` + (needWarning ? warningIcon : '') + `
+			</div>`;
+		}
+		else {
+			text += `
+			<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="0" data-remodel="0">
+				<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/undefined.png"></div>
+				<div class="preset_preview_td_name ml-1 py-2">未装備</div>
+			</div>`;
+		}
 	}
 	$modal.find('.btn_expand_preset').prop('disabled', !preset);
 	$modal.find('.btn_delete_preset').prop('disabled', !preset);
@@ -5259,7 +5310,6 @@ function updatePlanePreset() {
 	const presetId = castInt($('.preset_selected').data('presetid'));
 	const planes = [];
 	$('.preset_preview_tr').each((i, e) => {
-
 		planes.push({ id: castInt($(e)[0].dataset.planeid), remodel: castInt($(e)[0].dataset.remodel) });
 	});
 
@@ -11395,8 +11445,12 @@ function showEnemyStatusToolTip($this) {
 				<div class="ml-2 align-self-center">${enm.name}</div>
 			</div>
 			<div class="d-flex mt-1">
-				${enemy.airPower ? `<div class="">制空値: ${enemy.airPower}</div>` : ''}
-				${!enemy.airPower && enemy.landBaseAirPower ? `<div class="">基地制空値: ${enemy.landBaseAirPower}</div>` : ''}
+				<div>HP: ${enemy.hp}</div>
+				<div class="ml-3">装甲: ${enemy.armor}</div>
+			</div>
+			<div class="d-flex mt-1">
+				${enemy.airPower ? `<div>制空値: ${enemy.airPower}</div>` : ''}
+				${!enemy.airPower && enemy.landBaseAirPower ? `<div>基地制空値: ${enemy.landBaseAirPower}</div>` : ''}
 			</div>
 			<div class="mt-1">
 				${itemText}
@@ -15581,6 +15635,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('click', '#disp_in_stock', disp_in_stock_Checked_Chenged);
 	$('#modal_plane_select').on('click', '#divide_stock', divide_stock_Checked_Chenged);
 	$('#modal_plane_select').on('click', '#disp_equipped', disp_equipped_Checked_Chenged);
+	$('#modal_plane_select').on('click', '#disp_special', function () { plane_type_select_Changed(); });
 	$('#modal_plane_select').on('input', '#plane_word', plane_word_TextChanged);
 	$('#modal_plane_select').on('change', '#plane_sort_select', function () { sort_Changed($(this)); });
 	$('#modal_plane_select').on('change', '#plane_filter_key_select', plane_filter_Changed);

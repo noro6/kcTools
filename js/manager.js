@@ -443,16 +443,31 @@ function initShipListTable() {
             const hpValue = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
             tdHP.textContent = hpValue;
             tr.dataset.hp = hpValue;
+            if (detail.st[5]) {
+               const bonus = createDiv('bonus_status_after');
+               bonus.innerHTML = `&uarr;${detail.st[5]}`;
+               tdHP.appendChild(bonus);
+            }
             tr.appendChild(tdHP);
 
             const tdLuck = createDiv('ship_table_td_status ' + (detail.st[4] ? 'status_up' : ''));
             tdLuck.textContent = luck;
+            if (detail.st[4]) {
+               const bonus = createDiv('bonus_status_after');
+               bonus.innerHTML = `&uarr;${detail.st[4]}`;
+               tdLuck.appendChild(bonus);
+            }
             tr.appendChild(tdLuck);
 
             const asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw);
             const tdAsw = createDiv('ship_table_td_status ' + (detail.st[6] ? 'status_up' : ''));
             tdAsw.textContent = asw + detail.st[6];
             tr.dataset.asw = asw + detail.st[6];
+            if (detail.st[6]) {
+               const bonus = createDiv('bonus_status_after');
+               bonus.innerHTML = `&uarr;${detail.st[6]}`;
+               tdAsw.appendChild(bonus);
+            }
             tr.appendChild(tdAsw);
 
             // 命中項(ステータス部分のみ)

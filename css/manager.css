@@ -572,6 +572,20 @@ input[type="number"] {
 }
 .ship_table_tr > .ship_table_td_status {
    text-align: right;
+   position: relative;
+}
+.ship_table_td_status .bonus_status_after {
+   position: absolute;
+   top: -14px;
+   right: -30px;
+   color: rgb(0, 139, 98);
+   font-size: 12px;
+   text-align: left;
+   width: 40px;
+   font-weight: normal;
+}
+.dark-theme .ship_table_td_status .bonus_status_after {
+   color: rgb(75, 255, 240);
 }
 .ship_table_tr.header > .ship_table_td_status {
    cursor: pointer;

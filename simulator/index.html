@@ -75,8 +75,8 @@
 			</div>
 			<div class="tool_item" id="btn_share" data-toggle="tooltip" title="デッキビルダー形式での入出力や、編成のURLの生成などが行えます。">
 				<i class="fas fa-share-alt"></i>
-				<span class="d-none d-md-inline">編成共有</span>
-				<span class="d-md-none">共有</span>
+				<span class="d-none d-lg-inline">編成共有</span>
+				<span class="d-lg-none">共有</span>
 			</div>
 			<div class="tool_item" id="btn_twitter" data-toggle="tooltip" title="現在表示されている編成をTwitterでつぶやいて共有できます。">
 				<i class="fab fa-twitter"></i>
@@ -90,8 +90,8 @@
 			</div>
 			<div class="tool_item" id="btn_goto_manager" data-toggle="tooltip" title="所持装備や艦娘情報の管理画面に移動します。">
 				<i class="fa-wrench"></i>
-				<span class="d-none d-md-inline">所持数管理</span>
-				<span class="d-md-none">所持管理</span>
+				<span class="d-none d-xl-inline">所持数管理</span>
+				<span class="d-xl-none">所持管理</span>
 			</div>
 			<div class="d-none tool_item" id="btn_auto_expand" data-toggle="tooltip" title="制空値を指定し、おまかせで艦載機を配備します。">
 				<i class="fas fa-bolt"></i>
@@ -1084,6 +1084,7 @@
 											<div class="plane_name drag_handle">
 												<span class="plane_name_span">装備を選択</span>
 											</div>
+											<div class="item_special no_capture d-none"></div>
 											<div class="ml-auto dropdown remodel_select_parent text_remodel">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
 													<span>★<span class="remodel_value">0</span></span>
@@ -1118,6 +1119,7 @@
 											<div class="plane_name drag_handle">
 												<span class="plane_name_span">装備を選択</span>
 											</div>
+											<div class="item_special no_capture d-none"></div>
 											<div class="ml-auto dropdown remodel_select_parent text_remodel">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
 													<span>★<span class="remodel_value">0</span></span>
@@ -1152,6 +1154,7 @@
 											<div class="plane_name drag_handle">
 												<span class="plane_name_span">装備を選択</span>
 											</div>
+											<div class="item_special no_capture d-none"></div>
 											<div class="ml-auto dropdown remodel_select_parent text_remodel">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
 													<span>★<span class="remodel_value">0</span></span>
@@ -1186,6 +1189,7 @@
 											<div class="plane_name drag_handle">
 												<span class="plane_name_span">装備を選択</span>
 											</div>
+											<div class="item_special no_capture d-none"></div>
 											<div class="ml-auto dropdown remodel_select_parent text_remodel">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
 													<span>★<span class="remodel_value">0</span></span>
@@ -1220,6 +1224,7 @@
 											<div class="plane_name drag_handle">
 												<span class="plane_name_span">装備を選択</span>
 											</div>
+											<div class="item_special no_capture d-none"></div>
 											<div class="ml-auto dropdown remodel_select_parent text_remodel">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
 													<span>★<span class="remodel_value">0</span></span>
@@ -2597,7 +2602,7 @@
 									<input type="checkbox" id="disp_in_stock">
 									<i class="fas fa-checkbox-unchecked"></i>
 									<i class="fas fa-checkbox-checked"></i>
-									<span>所持装備のみ</span>
+									<span>所持装備</span>
 								</label>
 							</div>
 							<div class="custom-check mx-2 mx-lg-3">
@@ -2616,6 +2621,14 @@
 									<i class="fas fa-checkbox-unchecked"></i>
 									<i class="fas fa-checkbox-checked"></i>
 									<span>配備済も表示</span>
+								</label>
+							</div>
+							<div class="custom-check mx-2 mx-lg-3">
+								<label>
+									<input type="checkbox" id="disp_special">
+									<i class="fas fa-checkbox-unchecked"></i>
+									<i class="fas fa-checkbox-checked"></i>
+									<span>特効装備のみ</span>
 								</label>
 							</div>
 						</div>
@@ -2686,7 +2699,7 @@
 								<input type="checkbox" id="display_final" checked>
 								<i class="fas fa-checkbox-unchecked"></i>
 								<i class="fas fa-checkbox-checked"></i>
-								<span>最終改造状態のみ</span>
+								<span>最終改造状態</span>
 							</label>
 						</div>
 						<div class="ml-2 mt-1 custom-check">
@@ -2703,7 +2716,7 @@
 									<input type="checkbox" id="fav_only_ship">
 									<i class="fas fa-checkbox-unchecked"></i>
 									<i class="fas fa-checkbox-checked"></i>
-									<span>お気に入りのみ</span>
+									<span>お気に入り</span>
 								</label>
 							</div>
 							<div class="ml-2 custom-check">
@@ -2711,7 +2724,7 @@
 									<input type="checkbox" id="disp_in_stock_ship">
 									<i class="fas fa-checkbox-unchecked"></i>
 									<i class="fas fa-checkbox-checked"></i>
-									<span>所持艦娘から選択</span>
+									<span>所持艦娘反映</span>
 								</label>
 							</div>
 							<div class="ml-2 custom-check">
@@ -2719,7 +2732,7 @@
 									<input type="checkbox" id="disp_equipped_ship">
 									<i class="fas fa-checkbox-unchecked"></i>
 									<i class="fas fa-checkbox-checked"></i>
-									<span>編成済艦娘も表示</span>
+									<span>編成済でも表示</span>
 								</label>
 							</div>
 						</div>
@@ -3100,7 +3113,7 @@
 							<input type="checkbox" id="without_disabled_ship">
 							<i class="fas fa-checkbox-unchecked"></i>
 							<i class="fas fa-checkbox-checked"></i>
-							<span id="stage3_all_slot_label">計算対象外の艦娘は出力しない</span>
+							<span>計算対象外の艦娘は出力しない</span>
 						</label>
 					</div>
 					<div class="d-flex px-2">
