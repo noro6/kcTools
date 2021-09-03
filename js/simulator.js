@@ -4438,7 +4438,7 @@ function createItemTable(items, type) {
 
 		// アイコン用ラッパー
 		const $iconDiv = document.createElement('div');
-		$iconDiv.className = 'align-self-center size-25';
+		$iconDiv.className = 'align-self-center size-25 relative';
 
 		// アイコン
 		const cvs = document.createElement('canvas');
@@ -4447,9 +4447,57 @@ function createItemTable(items, type) {
 		cvs.height = imgHeight;
 		ctx.drawImage(IMAGES['type' + item.itype], 0, 0, imgWidth, imgHeight);
 
+		// 2021夏イベ対応 イベント後はそのまま消していい
+		if (PLANE_TYPE.includes(item.type)) {
+			if (SPECIAL_A.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash A';
+				$specialDiv.textContent = 'A';
+				$iconDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_B.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash B';
+				$specialDiv.textContent = 'B';
+				$iconDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C1.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C1';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">1</span>';
+				$iconDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C2.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C2';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">2</span>';
+				$iconDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C3.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C3';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">3</span>';
+				$iconDiv.appendChild($specialDiv);
+			}
+			else if (SPECIAL_C4.includes(item.id)) {
+				const $specialDiv = document.createElement('div');
+				$specialDiv.className = 'item_special flash C4';
+				$specialDiv.innerHTML = 'C<span class="font_size_8">4</span>';
+				$iconDiv.appendChild($specialDiv);
+			}
+			else if (dispSpecialOnly) {
+				// 突然の死
+				continue;
+			}
+		}
+		else if (dispSpecialOnly) {
+			// 突然の死
+			continue;
+		}
+
 		// 機体名 + α ラッパー
 		const nameWrapper = document.createElement('div');
-		nameWrapper.className = 'pl-1 d-flex align-self-center flex-grow-1 relative';
+		nameWrapper.className = 'pl-1 d-flex align-self-center flex-grow-1';
 
 		// 色付けるやつ　特殊高角砲だったりロケット戦闘機だったり...
 		let specialItem = false;
@@ -4470,54 +4518,6 @@ function createItemTable(items, type) {
 		$nameDiv.className = `pl-1 plane_td_name align-self-center${specialItem ? ' special_item' : ''}`;
 		$nameDiv.textContent = item.name;
 		nameWrapper.appendChild($nameDiv);
-
-		// 2021夏イベ対応 イベント後はそのまま消していい
-		if (PLANE_TYPE.includes(item.type)) {
-			if (SPECIAL_A.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'item_special flash A';
-				$specialDiv.textContent = 'A';
-				nameWrapper.appendChild($specialDiv);
-			}
-			else if (SPECIAL_B.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'item_special flash B';
-				$specialDiv.textContent = 'B';
-				nameWrapper.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C1.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'item_special flash C1';
-				$specialDiv.innerHTML = 'C<span class="font_size_8">1</span>';
-				nameWrapper.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C2.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'item_special flash C2';
-				$specialDiv.innerHTML = 'C<span class="font_size_8">2</span>';
-				nameWrapper.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C3.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'item_special flash C3';
-				$specialDiv.innerHTML = 'C<span class="font_size_8">3</span>';
-				nameWrapper.appendChild($specialDiv);
-			}
-			else if (SPECIAL_C4.includes(item.id)) {
-				const $specialDiv = document.createElement('div');
-				$specialDiv.className = 'item_special flash C4';
-				$specialDiv.innerHTML = 'C<span class="font_size_8">4</span>';
-				nameWrapper.appendChild($specialDiv);
-			}
-			else if (dispSpecialOnly) {
-				// 突然の死
-				continue;
-			}
-		}
-		else if (dispSpecialOnly) {
-			// 突然の死
-			continue;
-		}
 
 		// 残り個数
 		const $stockDiv = document.createElement('div');
