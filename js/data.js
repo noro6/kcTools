@@ -681,6 +681,7 @@ const API_CTYPE = [
 	{ id: 64, name: "Zara級", sort: 999 },
 	{ id: 92, name: "L.d.S.D.d.Abruzzi級", sort: 999 },
 	{ id: 61, name: "Maestrale級", sort: 999 },
+	{ id: 113, name: "Conte di Cavour級", sort: 999 },
 
 	{ id: 93, name: "Colorado級", sort: 999 },
 	{ id: 107, name: "North Carolina級", sort: 999 },
@@ -718,8 +719,8 @@ const API_CTYPE = [
 ];
 
 const USA = [65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110];
-const ITA = [58, 61, 64, 68, 80, 92];
-const GBR = [67, 78, 82, 88, 108];
+const ITA = [58, 61, 64, 68, 80, 92, 113];
+const GBR = [67, 78, 82, 88, 108, 112];
 const DEU = [47, 48, 55, 57, 63];
 const FRA = [70, 79];
 const RUS = [73, 81];
