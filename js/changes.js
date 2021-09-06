@@ -1750,4 +1750,4 @@ let CHANGE_LOG = [
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/9/1";
+const LAST_UPDATE_DATE = "2021/9/7";
