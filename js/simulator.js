@@ -3560,12 +3560,14 @@ function initialize(callback) {
 		const ids = [];
 		let appendedIds = [];
 		const contents = [];
+		const $main_header = $('#main_header_info');
 		const $footer = $('#footer_info');
 		$main.find('.contents').each((i, e) => {
 			ids.push($(e).attr('id'));
 			contents.push($(e))
 		});
 		$main.empty();
+		$main.append($main_header);
 
 		// でてきたid順にアペンド
 		for (const id of setting.contentsOrder) {
