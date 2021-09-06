@@ -7046,7 +7046,7 @@ function updateLandBaseView() {
 		document.getElementById('ng_range').textContent = ngLandBaseIndex.join(', ');
 		if (ngLandBaseIndex.length) {
 			document.getElementById('lb_range_warning').classList.remove('d-none');
-			inform_warning(`第${ngLandBaseIndex.join(', ')}基地航空隊の半径が不足しています。`);
+			// inform_warning(`第${ngLandBaseIndex.join(', ')}基地航空隊の半径が不足しています。`);
 		}
 		else {
 			document.getElementById('lb_range_warning').classList.add('d-none');
