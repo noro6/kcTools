@@ -3993,9 +3993,17 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 		}
 		// E-3表示用
 		else {
-			if (SPECIAL_A3.includes(plane.id)) {
+			if (SPECIAL_A2.includes(plane.id)) {
+				$specialDiv.removeClass('d-none');
+				$specialDiv.html('A<span class="font_size_12">2</span>');
+			}
+			else if (SPECIAL_A3.includes(plane.id)) {
 				$specialDiv.removeClass('d-none');
 				$specialDiv.html('A<span class="font_size_12">3</span>');
+			}
+			else if (SPECIAL_A4.includes(plane.id)) {
+				$specialDiv.removeClass('d-none');
+				$specialDiv.html('A<span class="font_size_12">4</span>');
 			}
 			else if (SPECIAL_B1.includes(plane.id)) {
 				$specialDiv.removeClass('d-none');
@@ -4005,21 +4013,17 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 				$specialDiv.removeClass('d-none');
 				$specialDiv.html('B<span class="font_size_12">2</span>');
 			}
-			else if (SPECIAL_C1.includes(plane.id)) {
+			else if (SPECIAL_B3.includes(plane.id)) {
 				$specialDiv.removeClass('d-none');
-				$specialDiv.html('C<span class="font_size_12">1</span>');
+				$specialDiv.html('B<span class="font_size_12">3</span>');
 			}
-			else if (SPECIAL_C2.includes(plane.id)) {
+			else if (SPECIAL_B4.includes(plane.id)) {
 				$specialDiv.removeClass('d-none');
-				$specialDiv.html('C<span class="font_size_12">2</span>');
+				$specialDiv.html('B<span class="font_size_12">4</span>');
 			}
-			else if (SPECIAL_C3.includes(plane.id)) {
+			else if (SPECIAL_C4.includes(plane.id)) {
 				$specialDiv.removeClass('d-none');
-				$specialDiv.html('C<span class="font_size_12">3</span>');
-			}
-			else if (SPECIAL_D3.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('D<span class="font_size_12">3</span>');
+				$specialDiv.html('C<span class="font_size_12">4</span>');
 			}
 		}
 	}
@@ -4496,10 +4500,22 @@ function createItemTable(items, type) {
 			}
 			else {
 				// E-3表示
-				if (SPECIAL_A3.includes(item.id)) {
+				if (SPECIAL_A2.includes(item.id)) {
+					const $specialDiv = document.createElement('div');
+					$specialDiv.className = 'item_special flash';
+					$specialDiv.innerHTML = 'A<span class="font_size_12">2</span>';
+					$iconDiv.appendChild($specialDiv);
+				}
+				else if (SPECIAL_A3.includes(item.id)) {
 					const $specialDiv = document.createElement('div');
 					$specialDiv.className = 'item_special flash';
 					$specialDiv.innerHTML = 'A<span class="font_size_12">3</span>';
+					$iconDiv.appendChild($specialDiv);
+				}
+				else if (SPECIAL_A4.includes(item.id)) {
+					const $specialDiv = document.createElement('div');
+					$specialDiv.className = 'item_special flash';
+					$specialDiv.innerHTML = 'A<span class="font_size_12">4</span>';
 					$iconDiv.appendChild($specialDiv);
 				}
 				else if (SPECIAL_B1.includes(item.id)) {
@@ -4514,28 +4530,22 @@ function createItemTable(items, type) {
 					$specialDiv.innerHTML = 'B<span class="font_size_12">2</span>';
 					$iconDiv.appendChild($specialDiv);
 				}
-				else if (SPECIAL_C1.includes(item.id)) {
+				else if (SPECIAL_B3.includes(item.id)) {
 					const $specialDiv = document.createElement('div');
 					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'C<span class="font_size_12">1</span>';
+					$specialDiv.innerHTML = 'B<span class="font_size_12">3</span>';
 					$iconDiv.appendChild($specialDiv);
 				}
-				else if (SPECIAL_C2.includes(item.id)) {
+				else if (SPECIAL_B4.includes(item.id)) {
 					const $specialDiv = document.createElement('div');
 					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'C<span class="font_size_12">2</span>';
+					$specialDiv.innerHTML = 'B<span class="font_size_12">4</span>';
 					$iconDiv.appendChild($specialDiv);
 				}
-				else if (SPECIAL_C3.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash C3';
-					$specialDiv.innerHTML = 'C<span class="font_size_12">3</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_D3.includes(item.id)) {
+				else if (SPECIAL_C4.includes(item.id)) {
 					const $specialDiv = document.createElement('div');
 					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'D<span class="font_size_12">3</span>';
+					$specialDiv.innerHTML = 'C<span class="font_size_12">4</span>';
 					$iconDiv.appendChild($specialDiv);
 				}
 				else if (dispSpecialOnly) {
