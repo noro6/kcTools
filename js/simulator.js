@@ -3970,8 +3970,8 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	}
 
 	// 2021夏イベ対応 イベント後はそのまま消していい
+	const $specialDiv = $div.find('.item_special');
 	if (PLANE_TYPE.includes(plane.type)) {
-		const $specialDiv = $div.find('.item_special');
 		if (SPECIAL_A.includes(plane.id)) {
 			$specialDiv.removeClass('d-none');
 			$specialDiv.html('A');
@@ -3999,6 +3999,9 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 		else {
 			$specialDiv.addClass('d-none');
 		}
+	}
+	else {
+		$specialDiv.addClass('d-none');
 	}
 
 	// 熟練度初期値 陸偵熟練は||
