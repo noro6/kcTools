@@ -2636,10 +2636,14 @@ const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 4
 
 const SPECIAL_A = [64, 188, 233, 242, 248, 256, 257, 277, 305, 306, 316];
 const SPECIAL_B = [243, 244, 424, 425, 431, 405, 406];
-const SPECIAL_C1 = [197, 198, 205, 206, 254, 255, 422];
-const SPECIAL_C2 = [158, 159, 353];
-const SPECIAL_C3 = [184, 189, 249];
-const SPECIAL_C4 = [252, 423, 434, 435];
+
+const SPECIAL_A3 = [244, 424];
+const SPECIAL_B1 = [242, 256, 257, 233, 277, 197, 198, 205, 254];
+const SPECIAL_B2 = [158, 159, 353];
+const SPECIAL_C1 = [188, 243, 248, 316, 64, 305, 306, 422];
+const SPECIAL_C2 = [184, 249];
+const SPECIAL_C3 = [189];
+const SPECIAL_D3 = [252, 434, 423];
 
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
