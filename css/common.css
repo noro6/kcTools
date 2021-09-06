@@ -72,7 +72,8 @@ h1 {
 }
 
 .dark-theme .nav-tabs { border-color: #777 !important; }
-.dark-theme #main a.nav-link {
+.dark-theme #main a.nav-link,
+.dark-theme .modal a.nav-link {
   color: #555 !important;
   border-bottom-color: #777 !important;
   border-top-color: transparent !important;
@@ -80,26 +81,16 @@ h1 {
   border-right-color: transparent !important;
 }
 .dark-theme .modal a.nav-link {
-  color: #555 !important;
   background-color: transparent !important;
-  border-bottom-color: #777 !important;
 }
-.dark-theme #main a.nav-link:hover {
-  border-bottom: 2px solid;
-  border-color: transparent transparent #00aeff80 transparent !important;
-  color: #999 !important;
-}
+.dark-theme #main a.nav-link:hover,
 .dark-theme .modal a.nav-link:hover {
   border-bottom: 2px solid;
   border-color: transparent transparent #00aeff80 transparent !important;
   color: #999 !important;
 }
-.dark-theme #main a.nav-link.active {
-  border-bottom: 2px solid;
-  border-color: transparent transparent #00aeff transparent !important;
-  color: #eee !important;
-}
-.dark-theme .modal a.nav-link.active{
+.dark-theme #main a.nav-link.active,
+.dark-theme .modal a.nav-link.active {
   border-bottom: 2px solid;
   border-color: transparent transparent #00aeff transparent !important;
   color: #eee !important;
