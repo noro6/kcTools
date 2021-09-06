@@ -399,12 +399,7 @@ input[type="number"] { text-align: right; }
   border: 1px solid rgb(255, 230, 0);
   border-radius: 0.2rem;
 }
-
-.dark-theme .item_special {
-  text-shadow: none;
-  background: rgba(213, 242, 255, 0.9);
-  border: 1px solid rgb(0, 179, 255);
-}
+.lb_plane .item_special:before,
 .ship_plane .item_special:before {
   content: "";
   position: absolute;
@@ -415,6 +410,7 @@ input[type="number"] { text-align: right; }
   border-right: 3px solid rgba(255, 249, 198, 0.9);
   z-index: 2;
 }
+.lb_plane .item_special::after,
 .ship_plane .item_special::after {
   content: "";
   position: absolute;
@@ -425,6 +421,11 @@ input[type="number"] { text-align: right; }
   border-right: 4px solid rgb(255, 230, 0);
   z-index: 1;
 }
+.dark-theme .item_special {
+  text-shadow: none;
+  background: rgba(213, 242, 255, 0.9);
+  border: 1px solid rgb(0, 179, 255);
+}
 .dark-theme .item_special:before  {
   border-right: 3px solid rgba(179, 232, 255, 0.9);
 }
@@ -432,9 +433,10 @@ input[type="number"] { text-align: right; }
   border-right: 4px solid rgb(0, 179, 255);
 }
 
+.lb_plane .item_special,
 .ship_plane .item_special {
   top: inherit;
-  right: 72px;
+  right: 76px;
   padding: 0.1rem 0.5rem;
   z-index: 1;
 }

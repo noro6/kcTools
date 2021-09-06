@@ -12047,6 +12047,7 @@ function ship_plane_DragStart(ui) {
 	$(ui.helper).find('.btn_remove_plane').remove();
 	$(ui.helper).find('.plane_lock').remove();
 	$(ui.helper).find('.plane_unlock').remove();
+	$(ui.helper).find('.item_special').remove();
 	$(ui.helper).find('.prof_select_parent').addClass('mr-2');
 }
 
