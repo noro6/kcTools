@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?sqvnk9') format('truetype'),
-    url('fonts/icons.woff?sqvnk9') format('woff'),
-    url('fonts/icons.svg?sqvnk9#icons') format('svg');
+    url('fonts/icons.ttf?2lo3ry') format('truetype'),
+    url('fonts/icons.woff?2lo3ry') format('woff'),
+    url('fonts/icons.svg?2lo3ry#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -215,4 +215,10 @@
 }
 .fa-checkbox-unchecked:before {
   content: "\ea53";
+}
+.fa-radio-checked:before {
+  content: "\ea54";
+}
+.fa-radio-unchecked:before {
+  content: "\ea56";
 }
