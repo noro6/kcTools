@@ -4025,6 +4025,9 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 				$specialDiv.removeClass('d-none');
 				$specialDiv.html('C<span class="font_size_12">4</span>');
 			}
+			else {
+				$specialDiv.addClass('d-none');
+			}
 		}
 	}
 	else {
