@@ -9578,6 +9578,7 @@ function enemySlotDetailCalculate(enemyNo, slotNo, autoForcus = false) {
 	$('#detail_info').data('battle_no', mainBattle);
 	$('#detail_warning').text('※ グラフ内の航空戦火力はキャップ前でクリティカル、触接補正なし。小数切捨て');
 
+	document.getElementById('graph_title').textContent = '';
 	let planeText = '';
 	let index = 0;
 	let planeIndex = 0;
@@ -15832,7 +15833,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_stage2_detail').on('change', '#stage2_detail_avoid', calculateStage2Detail);
 	$('#modal_stage2_detail').on('input', '#free_anti_air_weight', function () { free_modify_input_Changed($(this)) });
 	$('#modal_stage2_detail').on('input', '#free_anti_air_bornus', function () { free_modify_input_Changed($(this)) });
-	$('#modal_contact_detail').on('change', '.custom-radio', contact_detail_redraw);
+	$('#modal_contact_detail').on('change', '.custom-check', contact_detail_redraw);
 	$('#modal_fleet_antiair_input').on('change', '#antiair_air_raid', updateFleetStage2Table);
 	$('#modal_fleet_antiair_input').on('change', '#fleet_antiair_formation', updateFleetStage2Table);
 	$('#modal_fleet_antiair_input').on('click', '.anti_air_cutin_toggle', function () { anti_air_cutin_toggle_Clicked($(this)); });

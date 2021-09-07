@@ -120,17 +120,23 @@
 	</div>
 	<main id="main" class="px-2 mx-2 mr-xl-2" role="main" style="display: none;">
 		<div class="mx-auto" id="main_header_info">
-			<div>2021夏イベント期間中は、各装備に特効カテゴリの表示を行っています。表示する特効形式を選択してください。</div>
+			<div>2021夏イベント期間中は、特効のある装備に特効カテゴリを表示しています。表示させる特効形式を選択してください。</div>
 			<div class="d-flex mt-2">
-				<div class="custom-control custom-radio align-self-center">
-					<input type="radio" id="display_special_e2" name="display_special_item_type"
-						class="custom-control-input">
-					<label class="custom-control-label" for="display_special_e2">特効表示(E-1 / E-2)</label>
+				<div class="custom-check align-self-center">
+					<label>
+						<input type="radio" id="display_special_e2" name="display_special_item_type">
+						<i class="fa-radio-checked"></i>
+						<i class="fa-radio-unchecked"></i>
+						<span>特効表示（E-1 / E-2）</span>
+					</label>
 				</div>
-				<div class="ml-4 custom-control custom-radio align-self-center">
-					<input type="radio" id="display_special_e3" name="display_special_item_type"
-						class="custom-control-input" checked>
-					<label class="custom-control-label" for="display_special_e3">特効表示(E-3)</label>
+				<div class="ml-3 custom-check align-self-center">
+					<label>
+						<input type="radio" id="display_special_e3" name="display_special_item_type" checked>
+						<i class="fa-radio-checked"></i>
+						<i class="fa-radio-unchecked"></i>
+						<span>特効表示（E-3）</span>
+					</label>
 				</div>
 			</div>
 		</div>
@@ -1462,16 +1468,22 @@
 					</div>
 
 					<div class="ml-auto d-flex" id="enemy_fleet_display">
-						<div class="align-self-center font_size_12 no_capture">表示:</div>
-						<div class="ml-1 custom-control custom-radio align-self-center no_capture">
-							<input type="radio" id="enemy_fleet_display_text" name="enemy_fleet_display_mode"
-								class="custom-control-input">
-							<label class="custom-control-label" for="enemy_fleet_display_text">文字</label>
+						<div class="align-self-center no_capture">表示:</div>
+						<div class="ml-2 custom-check sm align-self-center no_capture">
+							<label>
+								<input type="radio" id="enemy_fleet_display_text" name="enemy_fleet_display_mode">
+								<i class="fa-radio-checked"></i>
+								<i class="fa-radio-unchecked"></i>
+								<span>名称</span>
+							</label>
 						</div>
-						<div class="ml-1 custom-control custom-radio align-self-center no_capture">
-							<input type="radio" id="enemy_fleet_display_image" name="enemy_fleet_display_mode"
-								class="custom-control-input" checked>
-							<label class="custom-control-label" for="enemy_fleet_display_image">画像</label>
+						<div class="ml-2 custom-check sm align-self-center no_capture">
+							<label>
+								<input type="radio" id="enemy_fleet_display_image" name="enemy_fleet_display_mode" checked>
+								<i class="fa-radio-checked"></i>
+								<i class="fa-radio-unchecked"></i>
+								<span>画像</span>
+							</label>
 						</div>
 					</div>
 				</div>
@@ -2917,15 +2929,21 @@
 										</div>
 										<div class="d-none" id="enemy_display_mode_parent">
 											<div class="font_color_half">表示:</div>
-											<div class="custom-control custom-radio ml-1">
-												<input type="radio" id="enemy_display_image" name="enemy_display_mode"
-													class="custom-control-input" checked>
-												<label class="custom-control-label" for="enemy_display_image">画像</label>
+											<div class="ml-2 custom-check sm align-self-center">
+												<label>
+													<input type="radio" id="enemy_display_text" name="enemy_display_mode">
+													<i class="fa-radio-checked"></i>
+													<i class="fa-radio-unchecked"></i>
+													<span>名称</span>
+												</label>
 											</div>
-											<div class="ml-3 custom-control custom-radio">
-												<input type="radio" id="enemy_display_text" name="enemy_display_mode"
-													class="custom-control-input">
-												<label class="custom-control-label" for="enemy_display_text">文字</label>
+											<div class="ml-3 custom-check sm align-self-center">
+												<label>
+													<input type="radio" id="enemy_display_image" name="enemy_display_mode" checked>
+													<i class="fa-radio-checked"></i>
+													<i class="fa-radio-unchecked"></i>
+													<span>画像</span>
+												</label>
 											</div>
 										</div>
 									</div>
@@ -3358,13 +3376,21 @@
 									<span class="h6" id="graph_title"></span>
 								</div>
 								<div class="align-self-center mx-2 detail_fire">
-									<div class="custom-control custom-radio custom-control-inline">
-										<input type="radio" id="slot_detail" name="detail_display" checked class="custom-control-input">
-										<label class="custom-control-label" for="slot_detail">搭載数</label>
+									<div class="custom-check custom-radio">
+										<label>
+											<input type="radio" id="slot_detail" name="detail_display" checked>
+											<i class="fa-radio-checked"></i>
+											<i class="fa-radio-unchecked"></i>
+											<span>搭載数</span>
+										</label>
 									</div>
-									<div class="custom-control custom-radio custom-control-inline detail_fire">
-										<input type="radio" id="fire_detail" name="detail_display" class="custom-control-input">
-										<label class="custom-control-label" for="fire_detail">航空戦火力</label>
+									<div class="ml-3 custom-check custom-radio detail_fire">
+										<label>
+											<input type="radio" id="fire_detail" name="detail_display">
+											<i class="fa-radio-checked"></i>
+											<i class="fa-radio-unchecked"></i>
+											<span>航空戦火力</span>
+										</label>
 									</div>
 								</div>
 								<div class="ml-auto">
@@ -3596,14 +3622,21 @@
 													<span>連合艦隊</span>
 												</label>
 											</div>
-											<div class="ml-3 custom-control custom-radio align-self-center fleet_option">
-												<input type="radio" id="manual_union_main" name="manual_union" class="custom-control-input"
-													checked>
-												<label class="custom-control-label" for="manual_union_main">連合艦隊主力艦隊</label>
+											<div class="ml-3 custom-check custom-radio align-self-center fleet_option">
+												<label>
+													<input type="radio" id="manual_union_main" name="manual_union" checked>
+													<i class="fa-radio-checked"></i>
+													<i class="fa-radio-unchecked"></i>
+													<span>連合艦隊主力艦隊</span>
+												</label>
 											</div>
-											<div class="ml-3 custom-control custom-radio align-self-center fleet_option">
-												<input type="radio" id="manual_union_escort" name="manual_union" class="custom-control-input">
-												<label class="custom-control-label" for="manual_union_escort">連合艦隊護衛艦隊</label>
+											<div class="ml-3 custom-check custom-radio align-self-center fleet_option">
+												<label>
+													<input type="radio" id="manual_union_escort" name="manual_union">
+													<i class="fa-radio-checked"></i>
+													<i class="fa-radio-unchecked"></i>
+													<span>連合艦隊護衛艦隊</span>
+												</label>
 											</div>
 										</div>
 									</div>
@@ -3744,18 +3777,29 @@
 				<div class="modal-body pt-1">
 					<div class="my-1 d-flex">
 						<div class="align-self-center">制空状態：</div>
-						<div class="ml-2 custom-control custom-radio align-self-center">
-							<input type="radio" id="contact_detail_0" name="contact_detail_condition" class="custom-control-input"
-								checked>
-							<label class="custom-control-label" for="contact_detail_0">制空権確保</label>
+						<div class="ml-2 custom-check align-self-center">
+							<label>
+								<input type="radio" id="contact_detail_0" name="contact_detail_condition" checked>
+								<i class="fa-radio-checked"></i>
+								<i class="fa-radio-unchecked"></i>
+								<span>制空権確保</span>
+							</label>
 						</div>
-						<div class="ml-2 custom-control custom-radio align-self-center">
-							<input type="radio" id="contact_detail_1" name="contact_detail_condition" class="custom-control-input">
-							<label class="custom-control-label" for="contact_detail_1">航空優勢</label>
+						<div class="ml-3 custom-check align-self-center">
+							<label>
+								<input type="radio" id="contact_detail_1" name="contact_detail_condition">
+								<i class="fa-radio-checked"></i>
+								<i class="fa-radio-unchecked"></i>
+								<span>航空優勢</span>
+							</label>
 						</div>
-						<div class="ml-2 custom-control custom-radio align-self-center">
-							<input type="radio" id="contact_detail_2" name="contact_detail_condition" class="custom-control-input">
-							<label class="custom-control-label" for="contact_detail_2">航空劣勢</label>
+						<div class="ml-3 custom-check align-self-center">
+							<label>
+								<input type="radio" id="contact_detail_2" name="contact_detail_condition">
+								<i class="fa-radio-checked"></i>
+								<i class="fa-radio-unchecked"></i>
+								<span>航空劣勢</span>
+							</label>
 						</div>
 					</div>
 					<div class="border rounded">
