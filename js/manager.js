@@ -60,6 +60,11 @@ document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('btn_read_item').addEventListener('click', btn_read_item_Clicked);
    document.getElementById('btn_url_shorten').addEventListener('click', btn_url_shorten_Clicked);
 
+   $('#ships_reader').on('change', '#locked_only', function (e) { if (e.target.checked) changeJsCode(); });
+   $('#ships_reader').on('change', '#within_unlocked', function (e) { if (e.target.checked) changeJsCode(); });
+   $('#items_reader').on('change', '#locked_only_item', function (e) { if (e.target.checked) changeItemJsCode(); });
+   $('#items_reader').on('change', '#within_unlocked_item', function (e) { if (e.target.checked) changeItemJsCode(); });
+
    //　艦娘関連
    const levelSlider = document.getElementById('level_range');
    noUiSlider.create(levelSlider, {
@@ -171,6 +176,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
    $('#item_list').on('click', '.item_container', function () { item_container_Clicked($(this)); });
    $('#item_list').on('change', '.item_type_sort_container', function (e) { item_sort_Changed($(this), e); });
+   $('#item_list').on({
+      mouseenter: function () { initItemTooltip($(this)); },
+      mouseleave: function () { if ($(this).tooltip) $(this).tooltip('destroy'); }
+   }, '.item_container');
 
    $('#modal_item_edit').on('blur', 'input', function () { item_stock_Leaved($(this)); });
    $('#modal_item_edit').on('input', 'input', function () { item_stock_Changed($(this)); });
@@ -1578,6 +1587,53 @@ function item_sort_Changed($this, e) {
 }
 
 /**
+ * 装備ツールチップ内容初期化 & 表示
+ * @param {*} $this
+ */
+function initItemTooltip($this) {
+   const item = $this[0];
+   const itemId = castInt(item.dataset.itemId);
+   if (itemId) {
+      const raw = ITEM_DATA.find(v => v.id === itemId);
+      if (!raw) return;
+
+      const statusText = [];
+      statusText.push();
+      if (raw.fire) statusText.push(`火力 :<span class="status_value ${raw.fire < 0 ? 'bad_status' : ''}">${raw.fire}</span>`);
+      if (raw.torpedo) statusText.push(`雷装 :<span class="status_value ${raw.torpedo < 0 ? 'bad_status' : ''}">${raw.torpedo}</span>`);
+      if (raw.bomber) statusText.push(`爆装 :<span class="status_value ${raw.bomber < 0 ? 'bad_status' : ''}">${raw.bomber}</span>`);
+      if (raw.antiAir) statusText.push(`対空 :<span class="status_value ${raw.antiAir < 0 ? 'bad_status' : ''}">${raw.antiAir}</span>`);
+      if (raw.accuracy) statusText.push(`命中 :<span class="status_value ${raw.accuracy < 0 ? 'bad_status' : ''}">${raw.accuracy}</span>`);
+      if (raw.scout) statusText.push(`索敵 :<span class="status_value ${raw.scout < 0 ? 'bad_status' : ''}">${raw.scout}</span>`);
+      if (raw.asw) statusText.push(`対潜 :<span class="status_value ${raw.asw < 0 ? 'bad_status' : ''}">${raw.asw}</span>`);
+      if (raw.armor) statusText.push(`装甲 :<span class="status_value ${raw.armor < 0 ? 'bad_status' : ''}">${raw.armor}</span>`);
+      if (raw.avoid2) statusText.push(`回避 :<span class="status_value ${raw.avoid2 < 0 ? 'bad_status' : ''}">${raw.avoid2}</span>`);
+      if (raw.antiBomber) statusText.push(`対爆 :<span class="status_value ${raw.antiBomber < 0 ? 'bad_status' : ''}">${raw.antiBomber}</span>`);
+      if (raw.interception) statusText.push(`迎撃 :<span class="status_value ${raw.interception < 0 ? 'bad_status' : ''}">${raw.interception}</span>`);
+      if (raw.radius) statusText.push(`半径 :<span class="status_value ${raw.radius < 0 ? 'bad_status' : ''}">${raw.radius}</span>`);
+
+      let text = '';
+      for (let i = 0; i < statusText.length; i++) {
+         text += `<div>${statusText[i]}</div>`;
+      }
+      text = `<div class="item_tooltip_text">${text}</div>`;
+
+      if (raw.avoid) {
+         const avoid = AVOID_TYPE.find(v => v.id === raw.avoid);
+         text += avoid ? `<div class="item_tooltip_long_text">射撃回避 : <span class="status_value">${avoid.name}</span></div>` : '';
+      }
+
+      if (statusText.length) {
+         item.dataset.tooltip = text;
+      }
+      else {
+         item.dataset.tooltip = '装備ステータスなし';
+      }
+      $this.tooltip();
+   }
+}
+
+/**
  * 艦娘テーブル ヘッダークリック時(ソートする)
  * @param {*} $this
  */
@@ -1612,8 +1668,8 @@ function ship_header_table_tr_Clicked($this) {
 
 /**
  * 艦娘テーブルをソート
- * @param {string} sortKey 
- * @param {boolean} isAsc 
+ * @param {string} sortKey key
+ * @param {boolean} isAsc 昇順ならtrue
  */
 function sortShipTable(sortKey, isAsc) {
    const parent = document.getElementById('ship_table_tbody');
@@ -2181,6 +2237,32 @@ function setRemodelSlider() {
    const max = castInt(document.getElementById('remodel_max').value);
    document.getElementById('remodel_range').noUiSlider.set([min, min > max ? min : max]);
    filterItemList();
+}
+
+/**
+ * コピペ用JS変更
+ */
+function changeJsCode() {
+   const isLockedOnly = document.getElementById('locked_only')['checked'];
+   if (isLockedOnly) {
+      document.getElementById('code_ship_filter').textContent = '.filter(v=>v.locked)';
+   }
+   else {
+      document.getElementById('code_ship_filter').textContent = '';
+   }
+}
+
+/**
+ * コピペ用JS変更
+ */
+function changeItemJsCode() {
+   const isLockedOnly = document.getElementById('locked_only_item')['checked'];
+   if (isLockedOnly) {
+      document.getElementById('code_item_filter').textContent = '.filter(v=>v.locked)';
+   }
+   else {
+      document.getElementById('code_item_filter').textContent = '';
+   }
 }
 
 /**

@@ -2649,4 +2649,4 @@ const SPECIAL_C4 = [252, 434, 435, 423];
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.12';
+const LATEST_VERSION = '1.12.13';

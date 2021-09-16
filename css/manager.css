@@ -693,6 +693,29 @@ input[type="number"] {
    }
 }
 
+.item_tooltip_text {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   column-gap: 1.75rem;
+   row-gap: 0.25rem;
+   text-align: left;
+   font-size: 12px;
+}
+.item_tooltip_text .status_value {
+   display: inline-block;
+   text-align: right;
+   width: 20px;
+   color: #62d2ff;
+}
+.item_tooltip_text .status_value.bad_status {
+   color: #ff7979;
+}
+.item_tooltip_long_text {
+   font-size: 12px;
+   text-align: left;
+   margin-top: 0.25rem;
+}
+
 .item_type_img {
    height: 32px;
    width: auto;
