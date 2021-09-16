@@ -458,12 +458,27 @@
 						</div>
 						<div class="general_box">
 							<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
-							<div class="general_box px-2 py-2">
+							<div class="d-flex">
+								<div class="mx-2 align-self-center">
+									<label>
+										<input class="with-gap" id="locked_only" name="locked_status" type="radio" checked />
+										<span>ロック済みのみ</span>
+									</label>
+								</div>
+								<div class="mx-2 align-self-center">
+									<label>
+										<input class="with-gap" id="within_unlocked" name="locked_status" type="radio" />
+										<span>未ロックも含める</span>
+									</label>
+								</div>
+							</div>
+							<div class="general_box px-2 py-2" id="js_code_fleet">
 								copy(JSON.stringify(Object.entries(<span
 									class="text_warning">temp1</span>.model.ship._map).map(([,v])=>{return{'id':
 								v._o.api_ship_id,'lv':
 								v._o.api_lv,'locked': v._o.api_locked,'st':
-								v._o.api_kyouka,'exp':v._o.api_exp,'area':v._o.api_sally_area}}).filter(v=>v.locked),['id','lv','st','exp','area']))
+								v._o.api_kyouka,'exp':v._o.api_exp,'area':v._o.api_sally_area}})<span
+									id="code_ship_filter">.filter(v=>v.locked)</span>,['id','lv','st','exp','area']))
 							</div>
 							<div class="tutorial_img">
 								<img class="materialboxed" src="../img/tutorial/tutorial7.jpg">
@@ -566,11 +581,26 @@
 						</div>
 						<div class="general_box">
 							<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
+							<div class="d-flex">
+								<div class="mx-2 align-self-center">
+									<label>
+										<input class="with-gap" id="locked_only_item" name="locked_item_status" type="radio" checked />
+										<span>ロック済みのみ</span>
+									</label>
+								</div>
+								<div class="mx-2 align-self-center">
+									<label>
+										<input class="with-gap" id="within_unlocked_item" name="locked_item_status" type="radio" />
+										<span>未ロックも含める</span>
+									</label>
+								</div>
+							</div>
 							<div class="general_box px-2 py-2">
 								copy(JSON.stringify(Object.entries(<span
 									class="text_warning">temp1</span>.model.slot._map).map(([,v])=>{return
 								{'id':v._o.api_slotitem_id,'lv':
-								v._o.api_level,'locked':v._o.api_locked}}).filter(v=>v.locked),['id','lv']))
+								v._o.api_level,'locked':v._o.api_locked}})<span
+									id="code_item_filter">.filter(v=>v.locked)</span>,['id','lv']))
 							</div>
 							<div class="tutorial_img">
 								<img class="materialboxed" src="../img/tutorial/tutorial7_i.jpg">

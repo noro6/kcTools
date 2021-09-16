@@ -16022,13 +16022,51 @@ document.addEventListener('DOMContentLoaded', function () {
 			calculate(true, false, false);
 		}
 	});
+	Sortable.create(document.getElementById('fleet_tabs_container'), {
+		animation: 200,
+		onEnd: function () {
+
+			// そもそも入れ替わってるか？
+			if ($('#fleet_tabs_container a:first').attr('href') === '#friendFleet_item1') {
+				return;
+			}
+
+			// 現在展開中のタブhref
+			let tabId = 1;
+
+			$('#fleet_tabs_container a').each((i, e) => {
+				$(e).text(`第${i + 1}艦隊`);
+				$(e).attr('href', `#friendFleet_item${i + 1}`);
+				if ($(e).hasClass('active')) tabId = i + 1;
+			});
+
+			const border = getMaxShipCount();
+			const fleet = createFriendFleetPreset();
+
+			// 第1第2をそっくり入れ替え
+			for (const ship of fleet) {
+				ship[2] += ship[2] >= border ? -border : border;
+			}
+
+			// 手動でタブ切替え
+			$('.friendFleet_tab').removeClass('show active');
+			document.getElementById('friendFleet_item' + tabId).classList.add('show', 'active');
+
+			expandMainPreset([
+				[], fleet, [],
+				document.getElementById('adapt_stage2')['checked'] ? selectedFormations : null,
+				isDefMode,
+				createAirRaidEnemyFleetPreset(),
+				castInt($('#admin_lv').val())
+			], false, true, false);
+			calculate(false, true, false);
+		}
+	});
 	$('.ship_tab').draggable({
 		delay: 100,
 		helper: 'clone',
 		handle: '.sortable_handle',
 		zIndex: 1000,
-		start: function (e, ui) { },
-		stop: function () { }
 	});
 	$('.ship_tab').droppable({
 		accept: ".ship_tab",
