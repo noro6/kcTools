@@ -8294,8 +8294,12 @@ function doJetPhase(fleet, battleInfo) {
 			// 制空値の更新
 			let prevAp = plane.airPower;
 			plane.updateAirPower();
+
 			fleet.airPower -= prevAp - plane.airPower;
 			fleet.unionAirPower -= prevAp - plane.airPower;
+
+			if (fleet.airPower < 0) fleet.airPower = 0;
+			if (fleet.unionAirPower < 0) fleet.unionAirPower = 0;
 		}
 	}
 
@@ -11509,12 +11513,14 @@ function showEnemyStatusToolTip($this) {
 	const enemy = new Enemy(enm.id);
 
 	let itemText = '';
+	let sumArmor = 0;
 	for (let i = 0; i < enm.eqp.length; i++) {
 		const itemId = enm.eqp[i];
 		const slot = enm.slot[i];
 		const item = ENEMY_ITEM.find(v => v.id === itemId);
 		if (!item) continue;
 
+		sumArmor += item.armor;
 		itemText += `
 			<div class="d-flex">
 				<div class="align-self-center enemy_tool_slot">${slot > 0 ? slot : 0}</div>
@@ -11536,7 +11542,7 @@ function showEnemyStatusToolTip($this) {
 			</div>
 			<div class="d-flex mt-1">
 				<div>HP: ${enemy.hp}</div>
-				<div class="ml-3">装甲: ${enemy.armor}</div>
+				<div class="ml-3">装甲: ${enemy.armor + sumArmor}（${enemy.armor}）</div>
 			</div>
 			<div class="d-flex mt-1">
 				${enemy.airPower ? `<div>制空値: ${enemy.airPower}</div>` : ''}
