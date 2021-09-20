@@ -2190,7 +2190,7 @@ const ANTIAIR_CUTIN = [
 	{ id: 34, name: "34種", adj: [1.6, 7], rate: 60, remarks: "Fletcher級" },
 	{ id: 35, name: "35種", adj: [1.55, 6], rate: 55, remarks: "Fletcher級" },
 	{ id: 36, name: "36種", adj: [1.55, 6], rate: 50, remarks: "Fletcher級" },
-	{ id: 37, name: "37種", adj: [1.45, 4], rate: 50, remarks: "Fletcher級" },
+	{ id: 37, name: "37種", adj: [1.45, 4], rate: 40, remarks: "Fletcher級" },
 	{ id: 39, name: "39種", adj: [1.7, 10], rate: 60, remarks: "Atlanta" },
 	{ id: 40, name: "40種", adj: [1.7, 10], rate: 60, remarks: "Atlanta" },
 	{ id: 41, name: "41種", adj: [1.65, 9], rate: 60, remarks: "Atlanta" },
