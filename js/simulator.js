@@ -16029,6 +16029,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	Sortable.create(document.getElementById('fleet_tabs_container'), {
+		delay: 80,
 		animation: 200,
 		onEnd: function () {
 
