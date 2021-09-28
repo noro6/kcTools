@@ -389,6 +389,7 @@ const ITEM_DATA = [
 	{ id: 260, type: 14, itype: 18, name: "Type124 ASDIC", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 11, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 2, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 261, type: 14, itype: 18, name: "Type144/147 ASDIC", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 13, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 3, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 262, type: 14, itype: 18, name: "HF/DF + Type144/147 ASDIC", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 15, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 3, avoid2: 2, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
+	{ id: 438, type: 14, itype: 18, name: "三式水中探信儀改", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 1, asw: 11, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 44, type: 15, itype: 17, name: "九四式爆雷投射機", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 5, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 45, type: 15, itype: 17, name: "三式爆雷投射機", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 8, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 226, type: 15, itype: 17, name: "九五式爆雷", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 4, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -811,7 +812,7 @@ const SHIP_DATA = [
 	{ id: 13, api: 32, type: 2, name: "初雪", slot: [0, 0], final: 0, orig: 13, ver: 0, range: 1, type2: 12, hp: 15, hp2: 19, max_hp: 21, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 5, max_scout: 19, asw: 20, max_asw: 49, avoid: 40, max_avoid: 79 },
 	{ id: 1303, api: 203, type: 2, name: "初雪改", slot: [0, 0, 0], final: 1, orig: 13, ver: 1, range: 1, type2: 12, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 49, scout: 7, max_scout: 39, asw: 24, max_asw: 59, avoid: 45, max_avoid: 89 },
 	{ id: 14, api: 11, type: 2, name: "深雪", slot: [0, 0], final: 0, orig: 14, ver: 0, range: 1, type2: 12, hp: 15, hp2: 19, max_hp: 21, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 5, max_scout: 19, asw: 20, max_asw: 49, avoid: 40, max_avoid: 79 },
-	{ id: 1304, api: 204, type: 2, name: "深雪改", slot: [0, 0, 0], final: 1, orig: 14, ver: 1, range: 1, type2: 12, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 49, scout: 7, max_scout: 39, asw: 24, max_asw: 59, avoid: 45, max_avoid: 89 },
+	{ id: 1304, api: 204, type: 2, name: "深雪改", slot: [0, 0, 0], final: 1, orig: 14, ver: 1, range: 1, type2: 12, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 49, scout: 0, max_scout: 42, asw: 24, max_asw: 59, avoid: 45, max_avoid: 89 },
 	{ id: 15, api: 33, type: 2, name: "叢雲", slot: [0, 0], final: 0, orig: 15, ver: 0, range: 1, type2: 12, hp: 15, hp2: 19, max_hp: 21, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 5, max_scout: 19, asw: 20, max_asw: 49, avoid: 40, max_avoid: 79 },
 	{ id: 1305, api: 205, type: 2, name: "叢雲改", slot: [0, 0, 0], final: 1, orig: 15, ver: 1, range: 1, type2: 12, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 49, scout: 7, max_scout: 39, asw: 24, max_asw: 59, avoid: 45, max_avoid: 89 },
 	{ id: 220, api: 420, type: 2, name: "叢雲改二", slot: [0, 0, 0], final: 1, orig: 15, ver: 2, range: 1, type2: 12, hp: 31, hp2: 36, max_hp: 38, max_aa: 74, max_armor: 50, luck: 15, max_luck: 57, scout: 9, max_scout: 42, asw: 28, max_asw: 69, avoid: 50, max_avoid: 90 },
@@ -854,7 +855,7 @@ const SHIP_DATA = [
 	{ id: 297, api: 497, type: 2, name: "白露改二", slot: [0, 0, 0], final: 1, orig: 79, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 71, max_armor: 50, luck: 16, max_luck: 80, scout: 10, max_scout: 50, asw: 30, max_asw: 83, avoid: 50, max_avoid: 91 },
 	{ id: 80, api: 43, type: 2, name: "時雨", slot: [0, 0], final: 0, orig: 80, ver: 0, range: 1, type2: 23, hp: 16, hp2: 20, max_hp: 22, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 5, max_scout: 19, asw: 21, max_asw: 49, avoid: 43, max_avoid: 79 },
 	{ id: 1343, api: 243, type: 2, name: "時雨改", slot: [0, 0, 0], final: 0, orig: 80, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 59, scout: 7, max_scout: 39, asw: 24, max_asw: 59, avoid: 45, max_avoid: 89 },
-	{ id: 145, api: 145, type: 2, name: "時雨改二", slot: [0, 0, 0], final: 1, orig: 80, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 72, max_armor: 52, luck: 50, max_luck: 88, scout: 9, max_scout: 43, asw: 31, max_asw: 78, avoid: 62, max_avoid: 93 },
+	{ id: 145, api: 145, type: 2, name: "時雨改二", slot: [0, 0, 0], final: 1, orig: 80, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 72, max_armor: 52, luck: 50, max_luck: 88, scout: 20, max_scout: 48, asw: 35, max_asw: 80, avoid: 62, max_avoid: 93 },
 	{ id: 81, api: 44, type: 2, name: "村雨", slot: [0, 0], final: 0, orig: 81, ver: 0, range: 1, type2: 23, hp: 16, hp2: 20, max_hp: 22, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 5, max_scout: 19, asw: 21, max_asw: 49, avoid: 43, max_avoid: 79 },
 	{ id: 1344, api: 244, type: 2, name: "村雨改", slot: [0, 0, 0], final: 0, orig: 81, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 59, scout: 7, max_scout: 39, asw: 24, max_asw: 59, avoid: 45, max_avoid: 89 },
 	{ id: 298, api: 498, type: 2, name: "村雨改二", slot: [0, 0, 0], final: 1, orig: 81, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 70, max_armor: 51, luck: 17, max_luck: 77, scout: 9, max_scout: 47, asw: 29, max_asw: 77, avoid: 48, max_avoid: 90 },
@@ -870,6 +871,8 @@ const SHIP_DATA = [
 	{ id: 387, api: 587, type: 2, name: "海風改二", slot: [0, 0, 0], final: 1, orig: 258, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 69, max_armor: 51, luck: 20, max_luck: 85, scout: 11, max_scout: 51, asw: 28, max_asw: 82, avoid: 49, max_avoid: 90 },
 	{ id: 257, api: 457, type: 2, name: "山風", slot: [0, 0], final: 0, orig: 257, ver: 0, range: 1, type2: 23, hp: 16, hp2: 20, max_hp: 22, max_aa: 38, max_armor: 19, luck: 6, max_luck: 39, scout: 5, max_scout: 18, asw: 19, max_asw: 42, avoid: 42, max_avoid: 77 },
 	{ id: 1449, api: 369, type: 2, name: "山風改", slot: [0, 0, 0], final: 1, orig: 257, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 48, luck: 8, max_luck: 59, scout: 7, max_scout: 42, asw: 30, max_asw: 73, avoid: 44, max_avoid: 88 },
+	{ id: 388, api: 588, type: 2, name: "山風改二", slot: [0, 0, 0], final: 0, orig: -1, ver: 2, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 63, max_armor: 50, luck: 9, max_luck: 71, scout: 8, max_scout: 41, asw: 30, max_asw: 86, avoid: 50, max_avoid: 87 },
+	{ id: 467, api: 667, type: 2, name: "山風改二丁", slot: [0, 0, 0], final: 0, orig: -1, ver: 3, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 66, max_armor: 51, luck: 9, max_luck: 71, scout: 7, max_scout: 41, asw: 28, max_asw: 82, avoid: 49, max_avoid: 85 },
 	{ id: 259, api: 459, type: 2, name: "江風", slot: [0, 0], final: 0, orig: 259, ver: 0, range: 1, type2: 23, hp: 16, hp2: 20, max_hp: 22, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 6, max_scout: 19, asw: 21, max_asw: 49, avoid: 44, max_avoid: 79 },
 	{ id: 1431, api: 351, type: 2, name: "江風改", slot: [0, 0, 0], final: 0, orig: 259, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 59, scout: 8, max_scout: 40, asw: 24, max_asw: 59, avoid: 46, max_avoid: 89 },
 	{ id: 269, api: 469, type: 2, name: "江風改二", slot: [0, 0, 0], final: 1, orig: 259, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 64, max_armor: 51, luck: 19, max_luck: 75, scout: 13, max_scout: 53, asw: 25, max_asw: 63, avoid: 51, max_avoid: 89 },
@@ -1007,11 +1010,11 @@ const SHIP_DATA = [
 	{ id: 453, api: 653, type: 2, name: "Scirocco", slot: [0, 0], final: 0, orig: 453, ver: 0, range: 1, type2: 61, hp: 15, hp2: 19, max_hp: 21, max_aa: 41, max_armor: 18, luck: 9, max_luck: 49, scout: 7, max_scout: 20, asw: 29, max_asw: 60, avoid: 48, max_avoid: 81 },
 	{ id: 1707, api: 658, type: 2, name: "Scirocco改", slot: [0, 0, 0], final: 1, orig: 453, ver: 1, range: 1, type2: 61, hp: 28, hp2: 32, max_hp: 34, max_aa: 63, max_armor: 50, luck: 13, max_luck: 69, scout: 10, max_scout: 46, asw: 41, max_asw: 80, avoid: 46, max_avoid: 92 },
 	{ id: 271, api: 471, type: 2, name: "神風", slot: [0, 0], final: 0, orig: 271, ver: 0, range: 1, type2: 66, hp: 12, hp2: 16, max_hp: 18, max_aa: 26, max_armor: 17, luck: 30, max_luck: 79, scout: 5, max_scout: 18, asw: 20, max_asw: 60, avoid: 39, max_avoid: 80 },
-	{ id: 276, api: 476, type: 2, name: "神風改", slot: [0, 0, 0], final: 1, orig: 271, ver: 1, range: 1, type2: 66, hp: 23, hp2: 27, max_hp: 29, max_aa: 48, max_armor: 38, luck: 40, max_luck: 99, scout: 7, max_scout: 42, asw: 24, max_asw: 70, avoid: 60, max_avoid: 98 },
+	{ id: 276, api: 476, type: 2, name: "神風改", slot: [0, 0, 0], final: 1, orig: 271, ver: 1, range: 1, type2: 66, hp: 23, hp2: 27, max_hp: 29, max_aa: 48, max_armor: 39, luck: 40, max_luck: 99, scout: 7, max_scout: 42, asw: 24, max_asw: 77, avoid: 60, max_avoid: 98 },
 	{ id: 272, api: 472, type: 2, name: "朝風", slot: [0, 0], final: 0, orig: 272, ver: 0, range: 1, type2: 66, hp: 12, hp2: 16, max_hp: 18, max_aa: 27, max_armor: 17, luck: 13, max_luck: 72, scout: 6, max_scout: 19, asw: 17, max_asw: 55, avoid: 37, max_avoid: 72 },
 	{ id: 1450, api: 370, type: 2, name: "朝風改", slot: [0, 0, 0], final: 1, orig: 272, ver: 1, range: 1, type2: 66, hp: 23, hp2: 27, max_hp: 29, max_aa: 52, max_armor: 37, luck: 14, max_luck: 88, scout: 9, max_scout: 47, asw: 18, max_asw: 68, avoid: 50, max_avoid: 88 },
 	{ id: 273, api: 473, type: 2, name: "春風", slot: [0, 0], final: 0, orig: 273, ver: 0, range: 1, type2: 66, hp: 12, hp2: 16, max_hp: 18, max_aa: 28, max_armor: 17, luck: 25, max_luck: 74, scout: 4, max_scout: 17, asw: 18, max_asw: 56, avoid: 38, max_avoid: 74 },
-	{ id: 1443, api: 363, type: 2, name: "春風改", slot: [0, 0, 0], final: 1, orig: 273, ver: 1, range: 1, type2: 66, hp: 23, hp2: 27, max_hp: 29, max_aa: 56, max_armor: 38, luck: 30, max_luck: 89, scout: 8, max_scout: 45, asw: 22, max_asw: 72, avoid: 55, max_avoid: 90 },
+	{ id: 1443, api: 363, type: 2, name: "春風改", slot: [0, 0, 0], final: 1, orig: 273, ver: 1, range: 1, type2: 66, hp: 23, hp2: 27, max_hp: 29, max_aa: 56, max_armor: 38, luck: 30, max_luck: 89, scout: 8, max_scout: 46, asw: 22, max_asw: 75, avoid: 55, max_avoid: 90 },
 	{ id: 274, api: 474, type: 2, name: "松風", slot: [0, 0], final: 0, orig: 274, ver: 0, range: 1, type2: 66, hp: 12, hp2: 16, max_hp: 18, max_aa: 25, max_armor: 17, luck: 12, max_luck: 70, scout: 4, max_scout: 18, asw: 21, max_asw: 62, avoid: 36, max_avoid: 73 },
 	{ id: 1451, api: 371, type: 2, name: "松風改", slot: [0, 0, 0], final: 1, orig: 274, ver: 1, range: 1, type2: 66, hp: 23, hp2: 27, max_hp: 29, max_aa: 50, max_armor: 37, luck: 12, max_luck: 84, scout: 9, max_scout: 47, asw: 20, max_asw: 70, avoid: 49, max_avoid: 87 },
 	{ id: 275, api: 475, type: 2, name: "旗風", slot: [0, 0], final: 0, orig: 275, ver: 0, range: 1, type2: 66, hp: 12, hp2: 16, max_hp: 18, max_aa: 24, max_armor: 17, luck: 17, max_luck: 73, scout: 4, max_scout: 17, asw: 17, max_asw: 56, avoid: 37, max_avoid: 75 },
@@ -1021,7 +1024,7 @@ const SHIP_DATA = [
 	{ id: 319, api: 519, type: 2, name: "Jervis", slot: [0, 0], final: 0, orig: 319, ver: 0, range: 1, type2: 82, hp: 15, hp2: 19, max_hp: 21, max_aa: 44, max_armor: 18, luck: 50, max_luck: 100, scout: 10, max_scout: 22, asw: 40, max_asw: 82, avoid: 46, max_avoid: 79 },
 	{ id: 1474, api: 394, type: 2, name: "Jervis改", slot: [0, 0, 0], final: 1, orig: 319, ver: 1, range: 1, type2: 82, hp: 31, hp2: 36, max_hp: 38, max_aa: 70, max_armor: 50, luck: 55, max_luck: 110, scout: 12, max_scout: 52, asw: 55, max_asw: 92, avoid: 49, max_avoid: 90 },
 	{ id: 320, api: 520, type: 2, name: "Janus", slot: [0, 0], final: 0, orig: 320, ver: 0, range: 1, type2: 82, hp: 15, hp2: 19, max_hp: 21, max_aa: 42, max_armor: 18, luck: 17, max_luck: 67, scout: 10, max_scout: 20, asw: 40, max_asw: 83, avoid: 44, max_avoid: 76 },
-	{ id: 1493, api: 893, type: 2, name: "Janus改", slot: [0, 0, 0], final: 1, orig: 320, ver: 1, range: 1, type2: 82, hp: 31, hp2: 36, max_hp: 38, max_aa: 72, max_armor: 50, luck: 22, max_luck: 87, scout: 12, max_scout: 52, asw: 53, max_asw: 93, avoid: 46, max_avoid: 86 },
+	{ id: 1493, api: 893, type: 2, name: "Janus改", slot: [0, 0, 0], final: 1, orig: 320, ver: 1, range: 1, type2: 82, hp: 31, hp2: 36, max_hp: 38, max_aa: 72, max_armor: 50, luck: 22, max_luck: 87, scout: 12, max_scout: 52, asw: 53, max_asw: 93, avoid: 47, max_avoid: 86 },
 	{ id: 361, api: 561, type: 2, name: "Samuel B.Roberts", slot: [0, 0], final: 0, orig: 361, ver: 0, range: 1, type2: 87, hp: 14, hp2: 18, max_hp: 20, max_aa: 40, max_armor: 17, luck: 30, max_luck: 60, scout: 12, max_scout: 20, asw: 48, max_asw: 80, avoid: 38, max_avoid: 80 },
 	{ id: 1481, api: 681, type: 2, name: "Samuel B.Roberts改", slot: [0, 0, 0], final: 1, orig: 361, ver: 1, range: 1, type2: 87, hp: 27, hp2: 31, max_hp: 33, max_aa: 60, max_armor: 43, luck: 40, max_luck: 80, scout: 14, max_scout: 48, asw: 50, max_asw: 88, avoid: 48, max_avoid: 88 },
 	{ id: 396, api: 596, type: 2, name: "Fletcher", slot: [0, 0], final: 0, orig: 396, ver: 0, range: 1, type2: 91, hp: 18, hp2: 22, max_hp: 24, max_aa: 62, max_armor: 20, luck: 30, max_luck: 89, scout: 20, max_scout: 33, asw: 50, max_asw: 83, avoid: 45, max_avoid: 82 },
@@ -1060,7 +1063,7 @@ const SHIP_DATA = [
 	{ id: 1318, api: 218, type: 3, name: "長良改", slot: [1, 1, 1], final: 1, orig: 42, ver: 1, range: 2, type2: 20, hp: 43, hp2: 49, max_hp: 51, max_aa: 69, max_armor: 69, luck: 12, max_luck: 59, scout: 10, max_scout: 49, asw: 24, max_asw: 79, avoid: 40, max_avoid: 79 },
 	{ id: 43, api: 22, type: 3, name: "五十鈴", slot: [1, 1], final: 0, orig: 43, ver: 0, range: 2, type2: 20, hp: 26, hp2: 30, max_hp: 32, max_aa: 49, max_armor: 29, luck: 10, max_luck: 49, scout: 8, max_scout: 39, asw: 40, max_asw: 79, avoid: 37, max_avoid: 69 },
 	{ id: 1319, api: 219, type: 3, name: "五十鈴改", slot: [1, 1, 1], final: 0, orig: 43, ver: 1, range: 2, type2: 20, hp: 37, hp2: 42, max_hp: 44, max_aa: 59, max_armor: 59, luck: 12, max_luck: 59, scout: 10, max_scout: 49, asw: 48, max_asw: 79, avoid: 40, max_avoid: 79 },
-	{ id: 141, api: 141, type: 3, name: "五十鈴改二", slot: [0, 0, 0], final: 1, orig: 43, ver: 2, range: 1, type2: 20, hp: 44, hp2: 50, max_hp: 52, max_aa: 85, max_armor: 69, luck: 13, max_luck: 67, scout: 15, max_scout: 59, asw: 54, max_asw: 94, avoid: 42, max_avoid: 79 },
+	{ id: 141, api: 141, type: 3, name: "五十鈴改二", slot: [0, 0, 0], final: 1, orig: 43, ver: 2, range: 1, type2: 20, hp: 44, hp2: 50, max_hp: 52, max_aa: 85, max_armor: 69, luck: 13, max_luck: 70, scout: 15, max_scout: 59, asw: 54, max_asw: 94, avoid: 42, max_avoid: 80 },
 	{ id: 44, api: 53, type: 3, name: "名取", slot: [1, 1], final: 0, orig: 44, ver: 0, range: 2, type2: 20, hp: 26, hp2: 30, max_hp: 32, max_aa: 49, max_armor: 29, luck: 10, max_luck: 49, scout: 8, max_scout: 39, asw: 20, max_asw: 59, avoid: 37, max_avoid: 69 },
 	{ id: 1321, api: 221, type: 3, name: "名取改", slot: [1, 1, 1], final: 1, orig: 44, ver: 1, range: 2, type2: 20, hp: 43, hp2: 49, max_hp: 51, max_aa: 59, max_armor: 59, luck: 12, max_luck: 59, scout: 10, max_scout: 49, asw: 24, max_asw: 79, avoid: 40, max_avoid: 79 },
 	{ id: 45, api: 23, type: 3, name: "由良", slot: [1, 1], final: 0, orig: 45, ver: 0, range: 2, type2: 20, hp: 26, hp2: 30, max_hp: 32, max_aa: 49, max_armor: 29, luck: 10, max_luck: 49, scout: 8, max_scout: 39, asw: 40, max_asw: 79, avoid: 37, max_avoid: 69 },
@@ -1141,10 +1144,10 @@ const SHIP_DATA = [
 	{ id: 124, api: 124, type: 5, name: "鈴谷", slot: [2, 2, 2], final: 0, orig: 124, ver: 0, range: 2, type2: 9, hp: 40, hp2: 46, max_hp: 48, max_aa: 59, max_armor: 59, luck: 5, max_luck: 49, scout: 14, max_scout: 39, asw: 0, max_asw: 0, avoid: 31, max_avoid: 62 },
 	{ id: 125, api: 125, type: 5, name: "熊野", slot: [2, 2, 2], final: 0, orig: 125, ver: 0, range: 2, type2: 9, hp: 40, hp2: 46, max_hp: 48, max_aa: 59, max_armor: 59, luck: 5, max_luck: 49, scout: 14, max_scout: 39, asw: 0, max_asw: 0, avoid: 31, max_avoid: 62 },
 	{ id: 54, api: 61, type: 5, name: "青葉", slot: [2, 2, 2], final: 0, orig: 54, ver: 0, range: 2, type2: 13, hp: 37, hp2: 42, max_hp: 44, max_aa: 59, max_armor: 37, luck: 20, max_luck: 69, scout: 11, max_scout: 39, asw: 0, max_asw: 0, avoid: 33, max_avoid: 69 },
-	{ id: 1364, api: 264, type: 5, name: "青葉改", slot: [2, 2, 2, 2], final: 1, orig: 54, ver: 1, range: 2, type2: 13, hp: 49, hp2: 55, max_hp: 57, max_aa: 59, max_armor: 70, luck: 30, max_luck: 79, scout: 12, max_scout: 49, asw: 0, max_asw: 0, avoid: 38, max_avoid: 75 },
+	{ id: 1364, api: 264, type: 5, name: "青葉改", slot: [2, 2, 2, 2], final: 1, orig: 54, ver: 1, range: 2, type2: 13, hp: 49, hp2: 55, max_hp: 57, max_aa: 59, max_armor: 72, luck: 30, max_luck: 79, scout: 12, max_scout: 49, asw: 0, max_asw: 0, avoid: 38, max_avoid: 80 },
 	{ id: 120, api: 123, type: 5, name: "衣笠", slot: [2, 2, 2], final: 0, orig: 120, ver: 0, range: 2, type2: 13, hp: 37, hp2: 42, max_hp: 44, max_aa: 59, max_armor: 37, luck: 20, max_luck: 69, scout: 11, max_scout: 39, asw: 0, max_asw: 0, avoid: 33, max_avoid: 69 },
 	{ id: 1395, api: 295, type: 5, name: "衣笠改", slot: [2, 2, 2, 2], final: 0, orig: 120, ver: 1, range: 2, type2: 13, hp: 49, hp2: 55, max_hp: 57, max_aa: 59, max_armor: 64, luck: 10, max_luck: 59, scout: 12, max_scout: 49, asw: 0, max_asw: 0, avoid: 38, max_avoid: 75 },
-	{ id: 142, api: 142, type: 5, name: "衣笠改二", slot: [2, 2, 2, 2], final: 1, orig: 120, ver: 2, range: 2, type2: 13, hp: 53, hp2: 60, max_hp: 62, max_aa: 66, max_armor: 73, luck: 13, max_luck: 65, scout: 13, max_scout: 54, asw: 0, max_asw: 0, avoid: 38, max_avoid: 79 },
+	{ id: 142, api: 142, type: 5, name: "衣笠改二", slot: [2, 2, 2, 2], final: 1, orig: 120, ver: 2, range: 2, type2: 13, hp: 53, hp2: 60, max_hp: 62, max_aa: 66, max_armor: 73, luck: 13, max_luck: 65, scout: 13, max_scout: 58, asw: 0, max_asw: 0, avoid: 38, max_avoid: 79 },
 	{ id: 55, api: 62, type: 5, name: "妙高", slot: [2, 2, 2], final: 0, orig: 55, ver: 0, range: 2, type2: 29, hp: 44, hp2: 50, max_hp: 52, max_aa: 64, max_armor: 49, luck: 10, max_luck: 49, scout: 12, max_scout: 39, asw: 0, max_asw: 0, avoid: 34, max_avoid: 69 },
 	{ id: 1365, api: 265, type: 5, name: "妙高改", slot: [2, 2, 2, 2], final: 0, orig: 55, ver: 1, range: 2, type2: 29, hp: 55, hp2: 62, max_hp: 64, max_aa: 69, max_armor: 73, luck: 10, max_luck: 59, scout: 14, max_scout: 49, asw: 0, max_asw: 0, avoid: 39, max_avoid: 79 },
 	{ id: 191, api: 319, type: 5, name: "妙高改二", slot: [2, 2, 4, 4], final: 1, orig: 55, ver: 2, range: 2, type2: 29, hp: 56, hp2: 63, max_hp: 65, max_aa: 80, max_armor: 79, luck: 32, max_luck: 80, scout: 19, max_scout: 61, asw: 0, max_asw: 0, avoid: 47, max_avoid: 87 },
@@ -1174,7 +1177,7 @@ const SHIP_DATA = [
 	{ id: 400, api: 600, type: 5, name: "Houston改", slot: [1, 1, 1, 4], final: 1, orig: 395, ver: 1, range: 2, type2: 95, hp: 54, hp2: 61, max_hp: 63, max_aa: 75, max_armor: 73, luck: 20, max_luck: 65, scout: 16, max_scout: 53, asw: 0, max_asw: 0, avoid: 36, max_avoid: 76 },
 	{ id: 101, api: 73, type: 6, name: "最上改", slot: [5, 6, 5, 11], final: 0, orig: 51, ver: 1, range: 2, type2: 9, hp: 50, hp2: 57, max_hp: 59, max_aa: 64, max_armor: 71, luck: 10, max_luck: 69, scout: 22, max_scout: 59, asw: 0, max_asw: 0, avoid: 35, max_avoid: 69 },
 	{ id: 301, api: 501, type: 6, name: "最上改二", slot: [2, 2, 6, 14], final: 1, orig: 51, ver: 2, range: 2, type2: 9, hp: 60, hp2: 67, max_hp: 69, max_aa: 86, max_armor: 77, luck: 18, max_luck: 80, scout: 28, max_scout: 86, asw: 0, max_asw: 0, avoid: 39, max_avoid: 83 },
-	{ id: 306, api: 506, type: 6, name: "最上改二特", slot: [2, 2, 7, 3], final: 1, orig: 51, ver: 3, range: 2, type2: 9, hp: 61, hp2: 68, max_hp: 70, max_aa: 86, max_armor: 78, luck: 18, max_luck: 80, scout: 24, max_scout: 80, asw: 0, max_asw: 0, avoid: 0, max_avoid: 81 },
+	{ id: 306, api: 506, type: 6, name: "最上改二特", slot: [2, 2, 7, 3], final: 1, orig: 51, ver: 3, range: 2, type2: 9, hp: 61, hp2: 68, max_hp: 70, max_aa: 86, max_armor: 78, luck: 18, max_luck: 80, scout: 24, max_scout: 80, asw: 0, max_asw: 0, avoid: 39, max_avoid: 81 },
 	{ id: 117, api: 121, type: 6, name: "三隈改", slot: [5, 6, 5, 8], final: 1, orig: 116, ver: 1, range: 2, type2: 9, hp: 50, hp2: 57, max_hp: 59, max_aa: 59, max_armor: 71, luck: 10, max_luck: 69, scout: 22, max_scout: 59, asw: 0, max_asw: 0, avoid: 34, max_avoid: 69 },
 	{ id: 129, api: 129, type: 6, name: "鈴谷改", slot: [5, 6, 5, 6], final: 0, orig: 124, ver: 1, range: 2, type2: 9, hp: 50, hp2: 57, max_hp: 59, max_aa: 59, max_armor: 72, luck: 10, max_luck: 69, scout: 22, max_scout: 59, asw: 0, max_asw: 0, avoid: 34, max_avoid: 69 },
 	{ id: 303, api: 503, type: 6, name: "鈴谷改二", slot: [3, 3, 7, 11], final: 1, orig: 124, ver: 2, range: 2, type2: 9, hp: 61, hp2: 68, max_hp: 70, max_aa: 85, max_armor: 74, luck: 14, max_luck: 74, scout: 26, max_scout: 83, asw: 0, max_asw: 0, avoid: 41, max_avoid: 82 },
@@ -1253,7 +1256,7 @@ const SHIP_DATA = [
 	{ id: 407, api: 697, type: 8, name: "South Dakota改", slot: [0, 2, 3, 3], final: 1, orig: 402, ver: 1, range: 3, type2: 102, hp: 91, hp2: 100, max_hp: 100, max_aa: 108, max_armor: 108, luck: 36, max_luck: 98, scout: 18, max_scout: 60, asw: 0, max_asw: 0, avoid: 36, max_avoid: 65 },
 	{ id: 454, api: 654, type: 8, name: "Washington", slot: [0, 0, 3, 3], final: 0, orig: 454, ver: 0, range: 3, type2: 107, hp: 81, hp2: 89, max_hp: 91, max_aa: 91, max_armor: 91, luck: 24, max_luck: 89, scout: 14, max_scout: 46, asw: 0, max_asw: 0, avoid: 26, max_avoid: 59 },
 	{ id: 459, api: 659, type: 8, name: "Washington改", slot: [0, 2, 3, 3], final: 1, orig: 454, ver: 1, range: 3, type2: 107, hp: 93, hp2: 100, max_hp: 100, max_aa: 106, max_armor: 104, luck: 38, max_luck: 108, scout: 18, max_scout: 62, asw: 0, max_asw: 0, avoid: 35, max_avoid: 66 },
-	{ id: 478, api: 878, type: 8, name: "Conte di Cavour改", slot: [0, 0, 1, 1], final: 0, orig: 477, ver: 1, range: 3, type2: 113, hp: 73, hp2: 81, max_hp: 83, max_aa: 76, max_armor: 87, luck: 23, max_luck: 87, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 478, api: 878, type: 8, name: "Conte di Cavour改", slot: [0, 0, 1, 1], final: 0, orig: 477, ver: 1, range: 3, type2: 113, hp: 73, hp2: 81, max_hp: 83, max_aa: 76, max_armor: 87, luck: 23, max_luck: 87, scout: 11, max_scout: 40, asw: 0, max_asw: 0, avoid: 28, max_avoid: 67 },
 	{ id: 479, api: 879, type: 8, name: "Conte di Cavour nuovo", slot: [1, 1, 3, 4], final: 1, orig: 477, ver: 2, range: 3, type2: 113, hp: 78, hp2: 86, max_hp: 88, max_aa: 90, max_armor: 91, luck: 24, max_luck: 88, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
 	{ id: 3, api: 77, type: 9, name: "伊勢", slot: [3, 3, 3, 3], final: 0, orig: 3, ver: 0, range: 3, type2: 2, hp: 74, hp2: 82, max_hp: 84, max_aa: 79, max_armor: 89, luck: 15, max_luck: 69, scout: 10, max_scout: 36, asw: 0, max_asw: 0, avoid: 22, max_avoid: 49 },
 	{ id: 4, api: 87, type: 9, name: "日向", slot: [3, 3, 3, 3], final: 0, orig: 4, ver: 0, range: 3, type2: 2, hp: 74, hp2: 82, max_hp: 84, max_aa: 79, max_armor: 89, luck: 15, max_luck: 69, scout: 10, max_scout: 36, asw: 0, max_asw: 0, avoid: 22, max_avoid: 49 },
@@ -1276,7 +1279,7 @@ const SHIP_DATA = [
 	{ id: 376, api: 576, type: 9, name: "Nelson改", slot: [1, 1, 2, 2], final: 1, orig: 371, ver: 1, range: 3, type2: 88, hp: 93, hp2: 98, max_hp: 98, max_aa: 92, max_armor: 104, luck: 28, max_luck: 98, scout: 14, max_scout: 48, asw: 0, max_asw: 0, avoid: 23, max_avoid: 58 },
 	{ id: 401, api: 601, type: 9, name: "Colorado", slot: [0, 1, 1, 1], final: 0, orig: 401, ver: 0, range: 3, type2: 93, hp: 77, hp2: 85, max_hp: 87, max_aa: 90, max_armor: 90, luck: 30, max_luck: 99, scout: 9, max_scout: 37, asw: 0, max_asw: 0, avoid: 19, max_avoid: 43 },
 	{ id: 406, api: 1496, type: 9, name: "Colorado改", slot: [1, 1, 1, 2], final: 1, orig: 401, ver: 1, range: 3, type2: 93, hp: 91, hp2: 98, max_hp: 98, max_aa: 100, max_armor: 99, luck: 40, max_luck: 110, scout: 16, max_scout: 52, asw: 0, max_asw: 0, avoid: 22, max_avoid: 54 },
-	{ id: 477, api: 877, type: 9, name: "Conte di Cavour", slot: [1, 1, 1, 2], final: 0, orig: 477, ver: 0, range: 3, type2: 113, hp: 57, hp2: 64, max_hp: 66, max_aa: 49, max_armor: 67, luck: 22, max_luck: 77, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 477, api: 877, type: 9, name: "Conte di Cavour", slot: [1, 1, 1, 2], final: 0, orig: 477, ver: 0, range: 3, type2: 113, hp: 57, hp2: 64, max_hp: 66, max_aa: 49, max_armor: 67, luck: 22, max_luck: 77, scout: 6, max_scout: 29, asw: 0, max_asw: 0, avoid: 21, max_avoid: 40 },
 	{ id: 102, api: 82, type: 10, name: "伊勢改", slot: [11, 11, 11, 14], final: 0, orig: 3, ver: 1, range: 3, type2: 2, hp: 77, hp2: 85, max_hp: 87, max_aa: 92, max_armor: 92, luck: 30, max_luck: 79, scout: 24, max_scout: 60, asw: 0, max_asw: 0, avoid: 36, max_avoid: 77 },
 	{ id: 353, api: 553, type: 10, name: "伊勢改二", slot: [2, 2, 22, 22, 9], final: 1, orig: 3, ver: 2, range: 2, type2: 2, hp: 78, hp2: 86, max_hp: 88, max_aa: 85, max_armor: 94, luck: 40, max_luck: 92, scout: 30, max_scout: 72, asw: 0, max_asw: 0, avoid: 50, max_avoid: 82 },
 	{ id: 103, api: 88, type: 10, name: "日向改", slot: [11, 11, 11, 14], final: 0, orig: 4, ver: 1, range: 3, type2: 2, hp: 77, hp2: 85, max_hp: 87, max_aa: 92, max_armor: 92, luck: 30, max_luck: 79, scout: 24, max_scout: 60, asw: 0, max_asw: 0, avoid: 36, max_avoid: 77 },
@@ -1381,14 +1384,14 @@ const SHIP_DATA = [
 	{ id: 153, api: 153, type: 18, name: "大鳳", slot: [18, 18, 18, 7], final: 0, orig: 153, ver: 0, range: 1, type2: 43, hp: 67, hp2: 74, max_hp: 76, max_aa: 79, max_armor: 79, luck: 2, max_luck: 19, scout: 47, max_scout: 74, asw: 0, max_asw: 0, avoid: 33, max_avoid: 57 },
 	{ id: 156, api: 156, type: 18, name: "大鳳改", slot: [30, 24, 24, 8], final: 1, orig: 153, ver: 1, range: 1, type2: 43, hp: 70, hp2: 78, max_hp: 80, max_aa: 86, max_armor: 84, luck: 4, max_luck: 39, scout: 50, max_scout: 77, asw: 0, max_asw: 0, avoid: 34, max_avoid: 59 },
 	{ id: 350, api: 550, type: 18, name: "Saratoga Mk.II Mod.2", slot: [37, 24, 19, 13], final: 1, orig: 233, ver: 3, range: 2, type2: 69, hp: 89, hp2: 97, max_hp: 99, max_aa: 94, max_armor: 88, luck: 40, max_luck: 93, scout: 56, max_scout: 95, asw: 0, max_asw: 0, avoid: 26, max_avoid: 56 },
-	{ id: 485, api: 885, type: 18, name: "Victorious", slot: [14, 14, 12, 9], final: 0, orig: 485, ver: 0, range: 1, type2: 112, hp: 59, hp2: 66, max_hp: 68, max_aa: 77, max_armor: 80, luck: 10, max_luck: 90, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
-	{ id: 1713, api: 713, type: 18, name: "Victorious改", slot: [18, 18, 19, 2], final: 1, orig: 485, ver: 1, range: 2, type2: 112, hp: 74, hp2: 82, max_hp: 84, max_aa: 84, max_armor: 85, luck: 22, max_luck: 110, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 485, api: 885, type: 18, name: "Victorious", slot: [14, 14, 12, 9], final: 0, orig: 485, ver: 0, range: 1, type2: 112, hp: 59, hp2: 66, max_hp: 68, max_aa: 77, max_armor: 80, luck: 10, max_luck: 90, scout: 0, max_scout: 73, asw: 0, max_asw: 0, avoid: 0, max_avoid: 58 },
+	{ id: 1713, api: 713, type: 18, name: "Victorious改", slot: [18, 18, 19, 2], final: 1, orig: 485, ver: 1, range: 2, type2: 112, hp: 74, hp2: 82, max_hp: 84, max_aa: 84, max_armor: 85, luck: 22, max_luck: 110, scout: 45, max_scout: 85, asw: 0, max_asw: 0, avoid: 31, max_avoid: 67 },
 	{ id: 182, api: 182, type: 19, name: "明石", slot: [0, 0, 0], final: 0, orig: 182, ver: 0, range: 1, type2: 49, hp: 39, hp2: 44, max_hp: 46, max_aa: 24, max_armor: 19, luck: 10, max_luck: 39, scout: 1, max_scout: 5, asw: 0, max_asw: 0, avoid: 8, max_avoid: 29 },
 	{ id: 187, api: 187, type: 19, name: "明石改", slot: [0, 0, 0, 0], final: 1, orig: 182, ver: 1, range: 1, type2: 49, hp: 45, hp2: 51, max_hp: 53, max_aa: 36, max_armor: 27, luck: 12, max_luck: 49, scout: 2, max_scout: 6, asw: 0, max_asw: 0, avoid: 10, max_avoid: 39 },
 	{ id: 184, api: 184, type: 20, name: "大鯨", slot: [2, 3, 3], final: 1, orig: 184, ver: 0, range: 1, type2: 50, hp: 39, hp2: 44, max_hp: 46, max_aa: 36, max_armor: 37, luck: 20, max_luck: 59, scout: 24, max_scout: 48, asw: 0, max_asw: 0, avoid: 24, max_avoid: 39 },
 	{ id: 434, api: 634, type: 20, name: "迅鯨", slot: [1, 1], final: 0, orig: 434, ver: 0, range: 2, type2: 100, hp: 32, hp2: 37, max_hp: 39, max_aa: 32, max_armor: 28, luck: 11, max_luck: 50, scout: 20, max_scout: 38, asw: 0, max_asw: 0, avoid: 13, max_avoid: 28 },
 	{ id: 439, api: 639, type: 20, name: "迅鯨改", slot: [2, 2, 2], final: 1, orig: 434, ver: 1, range: 2, type2: 100, hp: 38, hp2: 43, max_hp: 45, max_aa: 34, max_armor: 34, luck: 16, max_luck: 60, scout: 22, max_scout: 44, asw: 0, max_asw: 0, avoid: 15, max_avoid: 39 },
-	{ id: 435, api: 635, type: 20, name: "長鯨", slot: [1, 1], final: 0, orig: 435, ver: 0, range: 2, type2: 100, hp: 31, hp2: 36, max_hp: 38, max_aa: 33, max_armor: 28, luck: 17, max_luck: 77, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 435, api: 635, type: 20, name: "長鯨", slot: [1, 1], final: 0, orig: 435, ver: 0, range: 2, type2: 100, hp: 31, hp2: 36, max_hp: 38, max_aa: 33, max_armor: 28, luck: 17, max_luck: 77, scout: 20, max_scout: 37, asw: 0, max_asw: 0, avoid: 12, max_avoid: 30 },
 	{ id: 440, api: 640, type: 20, name: "長鯨改", slot: [2, 2, 2], final: 1, orig: 435, ver: 1, range: 2, type2: 100, hp: 37, hp2: 42, max_hp: 44, max_aa: 36, max_armor: 34, luck: 20, max_luck: 97, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
 	{ id: 154, api: 154, type: 21, name: "香取", slot: [1, 1, 1], final: 0, orig: 154, ver: 0, range: 2, type2: 56, hp: 36, hp2: 41, max_hp: 43, max_aa: 42, max_armor: 27, luck: 10, max_luck: 49, scout: 10, max_scout: 38, asw: 12, max_asw: 42, avoid: 24, max_avoid: 49 },
 	{ id: 1423, api: 343, type: 21, name: "香取改", slot: [2, 2, 2, 2], final: 1, orig: 154, ver: 1, range: 2, type2: 56, hp: 40, hp2: 46, max_hp: 48, max_aa: 48, max_armor: 39, luck: 12, max_luck: 54, scout: 12, max_scout: 48, asw: 22, max_asw: 62, avoid: 26, max_avoid: 52 },
@@ -2008,7 +2011,6 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
-	{ world: 51, name: "増援輸送作戦！地中海の戦い(2021夏イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -2021,6 +2023,7 @@ const WORLD_DATA = [
 	{ world: 48, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
 	{ world: 49, name: "護衛せよ！船団輸送作戦(2020秋イベ)" },
 	{ world: 50, name: "激突！ルンガ沖夜戦(2021春イベ)" },
+	{ world: 51, name: "増援輸送作戦！地中海の戦い(2021夏イベ)" }
 ];
 const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
@@ -2555,6 +2558,7 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 581, itemType: [1, 2, 4, 10, 11, 12, 13, 16, 17, 20, 21, 22, 23, 24, 27, 29, 30, 33, 34, 35, 36, 37, 39, 43, 45, 50] },
 	{ apiShip: 586, itemType: [1, 2, 4, 10, 11, 12, 13, 14, 16, 17, 20, 21, 22, 23, 24, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43, 45, 46, 50] },
 	{ apiShip: 587, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 24, 29, 30, 33, 34, 36, 37, 39, 43, 46] },
+	{ apiShip: 588, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 29, 30, 33, 36, 37, 39, 43, 46] },
 	{ apiShip: 591, itemType: [3, 4, 5, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 23, 28, 29, 33, 34, 36, 37, 39, 40, 42, 43, 93] },
 	{ apiShip: 592, itemType: [3, 4, 5, 10, 12, 13, 14, 16, 17, 18, 19, 20, 21, 23, 28, 29, 33, 34, 36, 37, 39, 40, 42, 43, 45, 93] },
 	{ apiShip: 605, itemType: [5, 14, 17, 23, 30, 32, 37, 43, 46, 50, 51] },
@@ -2580,6 +2584,7 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 657, itemType: [1, 2, 4, 12, 13, 14, 15, 17, 20, 21, 22, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 43, 46] },
 	{ apiShip: 662, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 43, 46] },
 	{ apiShip: 663, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 43, 46] },
+	{ apiShip: 667, itemType: [1, 5, 12, 14, 15, 17, 20, 21, 23, 24, 29, 30, 33, 34, 36, 37, 39, 43, 46] },
 	{ apiShip: 668, itemType: [1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 17, 20, 21, 22, 23, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 43, 45, 46] },
 	{ apiShip: 690, itemType: [1, 2, 4, 10, 11, 12, 13, 14, 16, 17, 20, 21, 22, 23, 24, 25, 27, 29, 30, 33, 34, 35, 36, 37, 39, 40, 41, 43, 45, 46, 50] },
 	{ apiShip: 699, itemType: [12, 13, 14, 15, 17, 20, 21, 23, 24, 27, 29, 30, 33, 34, 36, 37, 39, 43, 44, 50] },
@@ -2634,17 +2639,17 @@ const UNKNOWN_ENEMY = [472, 475, 541, 542, 543, 544, 545, 546, 547, 548];
 const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484, 498, 512, 513, 514];
 
 
-const SPECIAL_A = [64, 188, 233, 242, 248, 256, 257, 277, 305, 306, 316];
-const SPECIAL_B = [243, 244, 424, 425, 431, 405, 406];
+const SPECIAL_A = [];
+const SPECIAL_B = [];
 
-const SPECIAL_A2 = [242, 256, 257, 233, 277, 197, 198, 205, 206, 254];
-const SPECIAL_A3 = [243, 188, 422];
-const SPECIAL_A4 = [244, 424, 425];
-const SPECIAL_B1 = [316, 248, 64, 305, 306];
-const SPECIAL_B2 = [158, 159, 353];
-const SPECIAL_B3 = [184, 249];
-const SPECIAL_B4 = [189];
-const SPECIAL_C4 = [252, 434, 435, 423];
+const SPECIAL_A2 = [];
+const SPECIAL_A3 = [];
+const SPECIAL_A4 = [];
+const SPECIAL_B1 = [];
+const SPECIAL_B2 = [];
+const SPECIAL_B3 = [];
+const SPECIAL_B4 = [];
+const SPECIAL_C4 = [];
 
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
