@@ -1763,7 +1763,19 @@ let CHANGE_LOG = [
 				content: "装備一覧の各装備にカーソルを合わせると簡易的なステータスが表示されるようになりました。"
 			},
 		],
+	},
+	{
+		id: "1.12.13.1", changes: [
+			{
+				type: 0, title: "新対空CIに対応しました。",
+				content: "Atlanta級による38種対空カットインを追加しました。"
+			},
+			{
+				type: 0, title: "データを更新しました。",
+				content: "山風改二、山風改二丁、三式水中探信儀改、その他ステータス更新を行いました。"
+			},
+		],
 	}
 ];
 
-const LAST_UPDATE_DATE = "2021/9/28";
+const LAST_UPDATE_DATE = "2021/9/30";

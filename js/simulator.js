@@ -261,7 +261,7 @@ class Fleet {
 				else generalCutin.push(cutin);
 			}
 		}
-		// 特殊CIソート => (性能順, 39種以降)
+		// 特殊CIソート => (性能順, 38種以降)
 		specialCutin.sort((a, b) => a.rateCorr !== b.rateCorr ? b.rateCorr - a.rateCorr : b.fixCorr - a.fixCorr);
 		// 通常CIソート => (種別の降順)
 		generalCutin.sort((a, b) => b.id - a.id);
@@ -798,14 +798,21 @@ class Ship {
 		else {
 			// Atlanta
 			if (shipId === 397 || shipId === 1496) {
+				// GFCS Mk.37+5inch連装両用砲(集中配備) × 2
+				if (items.filter(v => v.id === 363).length >= 2) {
+					// 38種
+					cutin.push(38);
+					if (hasGFCS) cutin.push(40);
+					cutin.push(41);
+				}
 				// GFCS Mk.37+5inch連装両用砲(集中配備), 5inch連装両用砲(集中配備)
 				if (items.some(v => v.id === 363) && items.some(v => v.id === 362)) {
 					// 39種
 					cutin.push(39);
 					// 40種 (GFCS Mk.37)
-					if (hasGFCS) cutin.push(40);
+					if (hasGFCS && !cutin.includes(40)) cutin.push(40);
 					// 41種
-					cutin.push(41);
+					if (!cutin.includes(41)) cutin.push(41);
 				}
 				// 5inch連装両用砲(集中配備) * 2
 				if (items.filter(v => v.id === 362).length >= 2) {
