@@ -262,7 +262,7 @@ const ITEM_DATA = [
 	{ id: 271, type: 6, itype: 6, name: "紫電改四", abbr: "", fire: 0, antiAir: 10, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 1, avoid2: 3, radius: 4, cost: 7, avoid: 0, range2: 0, grow: 6 },
 	{ id: 335, type: 6, itype: 6, name: "烈風改(試製艦載型)", abbr: "", fire: 1, antiAir: 10, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 3, radius: 4, cost: 10, avoid: 0, range2: 0, grow: 4 },
 	{ id: 336, type: 6, itype: 6, name: "烈風改二", abbr: "", fire: 1, antiAir: 13, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 5, cost: 10, avoid: 0, range2: 0, grow: 4 },
-//	{ id: 337, type: 6, itype: 6, name: "烈風改二(一航戦/熟練)", abbr: "", fire: 2, antiAir: 14, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 6, cost: 10, avoid: 0, range2: 0, grow: 0 },
+	//	{ id: 337, type: 6, itype: 6, name: "烈風改二(一航戦/熟練)", abbr: "", fire: 2, antiAir: 14, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 6, cost: 10, avoid: 0, range2: 0, grow: 0 },
 	{ id: 338, type: 6, itype: 45, name: "烈風改二戊型", abbr: "", fire: 2, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 2, radius: 5, cost: 11, avoid: 0, range2: 0, grow: 3 },
 	{ id: 339, type: 6, itype: 45, name: "烈風改二戊型(一航戦/熟練)", abbr: "烈風改二戊(1航戦/熟練)", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 3, radius: 6, cost: 11, avoid: 0, range2: 0, grow: 2 },
 	{ id: 353, type: 6, itype: 6, name: "Fw190 A-5改(熟練)", abbr: "", fire: 2, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 1, avoid2: 3, radius: 4, cost: 7, avoid: 0, range2: 0, grow: 6 },
@@ -870,9 +870,9 @@ const SHIP_DATA = [
 	{ id: 1430, api: 350, type: 2, name: "海風改", slot: [0, 0, 0], final: 0, orig: 258, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 50, max_armor: 49, luck: 13, max_luck: 64, scout: 8, max_scout: 40, asw: 27, max_asw: 63, avoid: 46, max_avoid: 89 },
 	{ id: 387, api: 587, type: 2, name: "海風改二", slot: [0, 0, 0], final: 1, orig: 258, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 69, max_armor: 51, luck: 20, max_luck: 85, scout: 11, max_scout: 51, asw: 28, max_asw: 82, avoid: 49, max_avoid: 90 },
 	{ id: 257, api: 457, type: 2, name: "山風", slot: [0, 0], final: 0, orig: 257, ver: 0, range: 1, type2: 23, hp: 16, hp2: 20, max_hp: 22, max_aa: 38, max_armor: 19, luck: 6, max_luck: 39, scout: 5, max_scout: 18, asw: 19, max_asw: 42, avoid: 42, max_avoid: 77 },
-	{ id: 1449, api: 369, type: 2, name: "山風改", slot: [0, 0, 0], final: 1, orig: 257, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 48, luck: 8, max_luck: 59, scout: 7, max_scout: 42, asw: 30, max_asw: 73, avoid: 44, max_avoid: 88 },
-	{ id: 388, api: 588, type: 2, name: "山風改二", slot: [0, 0, 0], final: 0, orig: -1, ver: 2, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 63, max_armor: 50, luck: 9, max_luck: 71, scout: 8, max_scout: 41, asw: 30, max_asw: 86, avoid: 50, max_avoid: 87 },
-	{ id: 467, api: 667, type: 2, name: "山風改二丁", slot: [0, 0, 0], final: 0, orig: -1, ver: 3, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 66, max_armor: 51, luck: 9, max_luck: 71, scout: 7, max_scout: 41, asw: 28, max_asw: 82, avoid: 49, max_avoid: 85 },
+	{ id: 1449, api: 369, type: 2, name: "山風改", slot: [0, 0, 0], final: 0, orig: 257, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 48, luck: 8, max_luck: 59, scout: 7, max_scout: 42, asw: 30, max_asw: 73, avoid: 44, max_avoid: 88 },
+	{ id: 388, api: 588, type: 2, name: "山風改二", slot: [0, 0, 0], final: 1, orig: 257, ver: 2, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 63, max_armor: 50, luck: 9, max_luck: 71, scout: 8, max_scout: 41, asw: 30, max_asw: 86, avoid: 50, max_avoid: 87 },
+	{ id: 467, api: 667, type: 2, name: "山風改二丁", slot: [0, 0, 0], final: 1, orig: 257, ver: 3, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 66, max_armor: 51, luck: 9, max_luck: 71, scout: 7, max_scout: 41, asw: 28, max_asw: 82, avoid: 49, max_avoid: 85 },
 	{ id: 259, api: 459, type: 2, name: "江風", slot: [0, 0], final: 0, orig: 259, ver: 0, range: 1, type2: 23, hp: 16, hp2: 20, max_hp: 22, max_aa: 39, max_armor: 19, luck: 10, max_luck: 49, scout: 6, max_scout: 19, asw: 21, max_asw: 49, avoid: 44, max_avoid: 79 },
 	{ id: 1431, api: 351, type: 2, name: "江風改", slot: [0, 0, 0], final: 0, orig: 259, ver: 1, range: 1, type2: 23, hp: 30, hp2: 35, max_hp: 37, max_aa: 49, max_armor: 49, luck: 12, max_luck: 59, scout: 8, max_scout: 40, asw: 24, max_asw: 59, avoid: 46, max_avoid: 89 },
 	{ id: 269, api: 469, type: 2, name: "江風改二", slot: [0, 0, 0], final: 1, orig: 259, ver: 2, range: 1, type2: 23, hp: 31, hp2: 36, max_hp: 38, max_aa: 64, max_armor: 51, luck: 19, max_luck: 75, scout: 13, max_scout: 53, asw: 25, max_asw: 63, avoid: 51, max_avoid: 89 },
@@ -2194,6 +2194,7 @@ const ANTIAIR_CUTIN = [
 	{ id: 35, name: "35種", adj: [1.55, 6], rate: 55, remarks: "Fletcher級" },
 	{ id: 36, name: "36種", adj: [1.55, 6], rate: 50, remarks: "Fletcher級" },
 	{ id: 37, name: "37種", adj: [1.45, 4], rate: 40, remarks: "Fletcher級" },
+	{ id: 38, name: "38種", adj: [1.85, 10], rate: 60, remarks: "Atlanta" },
 	{ id: 39, name: "39種", adj: [1.7, 10], rate: 60, remarks: "Atlanta" },
 	{ id: 40, name: "40種", adj: [1.7, 10], rate: 60, remarks: "Atlanta" },
 	{ id: 41, name: "41種", adj: [1.65, 9], rate: 60, remarks: "Atlanta" },
@@ -2654,4 +2655,4 @@ const SPECIAL_C4 = [];
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.13';
+const LATEST_VERSION = '1.12.13.1';
