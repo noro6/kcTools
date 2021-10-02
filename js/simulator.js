@@ -140,8 +140,49 @@ class InputData {
 /** @type {InputData} */
 let inputItems = new InputData();
 
-// 2021夏イベ対応 表示形式
-let displaySpecialE2 = false;
+class SpecialOperator {
+	constructor() {
+		/** @type {string} 選択されている特効区分 */
+		this.selectedMode = '';
+		/** @type {SpecialItemInfo[]} 特効情報クラスリスト */
+		this.specialInfo = [];
+		/** @type {boolean} 特効装備あるかどうか */
+		this.enabled = false;
+	}
+
+	/**
+	 * 特効表示更新
+	 * @param {string} mode 特効区分 見つからなければデータクリア
+	 * @memberof SpecialOperator
+	 */
+	update(mode) {
+		this.selectedMode = mode;
+		this.specialInfo = [];
+		this.enabled = false;
+
+		const sp = SPECIAL_DATA.find(v => v.mode === mode);
+		if (sp) {
+			this.enabled = true;
+			for (const s of sp.special) {
+				this.specialInfo.push(new SpecialItemInfo(s.name, s.remarks, s.items));
+			}
+		}
+	}
+}
+
+class SpecialItemInfo {
+	constructor(name, remarks, items) {
+		/** @type {string} 特効名 */
+		this.name = name;
+		/** @type {string} 特効名サブ */
+		this.remarks = remarks;
+		/** @type {number[]} 該当装備id */
+		this.items = items;
+	}
+}
+
+/** @type {SpecialOperator} 特効表示情報管理変数 */
+const specialOperator = new SpecialOperator();
 
 /**
  * 艦隊入力情報クラス
@@ -3981,64 +4022,17 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 		$remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel, 10));
 	}
 
-	// 2021夏イベ対応 イベント後はそのまま消していい
+	// 特効表示
 	const $specialDiv = $div.find('.item_special');
-	if (PLANE_TYPE.includes(plane.type)) {
-		// E-2用表示
-		if (displaySpecialE2) {
-			if (SPECIAL_A.includes(plane.id)) {
+	$specialDiv.addClass('d-none');
+	if (specialOperator.enabled) {
+		for (const info of specialOperator.specialInfo) {
+			if (info.items.includes(plane.id)) {
 				$specialDiv.removeClass('d-none');
-				$specialDiv.html('A');
-			}
-			else if (SPECIAL_B.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('B');
-			}
-			else {
-				$specialDiv.addClass('d-none');
+				$specialDiv.html(`${info.name}<span class="font_size_12">${info.remarks}</span>`);
+				break;
 			}
 		}
-		// E-3表示用
-		else {
-			if (SPECIAL_A2.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('A<span class="font_size_12">2</span>');
-			}
-			else if (SPECIAL_A3.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('A<span class="font_size_12">3</span>');
-			}
-			else if (SPECIAL_A4.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('A<span class="font_size_12">4</span>');
-			}
-			else if (SPECIAL_B1.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('B<span class="font_size_12">1</span>');
-			}
-			else if (SPECIAL_B2.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('B<span class="font_size_12">2</span>');
-			}
-			else if (SPECIAL_B3.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('B<span class="font_size_12">3</span>');
-			}
-			else if (SPECIAL_B4.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('B<span class="font_size_12">4</span>');
-			}
-			else if (SPECIAL_C4.includes(plane.id)) {
-				$specialDiv.removeClass('d-none');
-				$specialDiv.html('C<span class="font_size_12">4</span>');
-			}
-			else {
-				$specialDiv.addClass('d-none');
-			}
-		}
-	}
-	else {
-		$specialDiv.addClass('d-none');
 	}
 
 	// 熟練度初期値 陸偵熟練は||
@@ -4487,86 +4481,24 @@ function createItemTable(items, type) {
 		cvs.height = imgHeight;
 		ctx.drawImage(IMAGES['type' + item.itype], 0, 0, imgWidth, imgHeight);
 
-		// 2021夏イベ対応 イベント後はそのまま消していい
-		if (PLANE_TYPE.includes(item.type)) {
-			if (displaySpecialE2) {
-				// E-2表示
-				if (SPECIAL_A.includes(item.id)) {
+		// 特効表示用
+		if (specialOperator.enabled) {
+			let isSpecial = false;
+			for (const info of specialOperator.specialInfo) {
+				if (info.items.includes(item.id)) {
 					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash A';
-					$specialDiv.textContent = 'A';
+					$specialDiv.className = 'item_special flash';
+					$specialDiv.innerHTML = `${info.name}<span class="font_size_12">${info.remarks}</span>`;
 					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_B.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash B';
-					$specialDiv.textContent = 'B';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (dispSpecialOnly) {
-					// 突然の死
-					continue;
+					isSpecial = true;
+					break;
 				}
 			}
-			else {
-				// E-3表示
-				if (SPECIAL_A2.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'A<span class="font_size_12">2</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_A3.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'A<span class="font_size_12">3</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_A4.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'A<span class="font_size_12">4</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_B1.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'B<span class="font_size_12">1</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_B2.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'B<span class="font_size_12">2</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_B3.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'B<span class="font_size_12">3</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_B4.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'B<span class="font_size_12">4</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (SPECIAL_C4.includes(item.id)) {
-					const $specialDiv = document.createElement('div');
-					$specialDiv.className = 'item_special flash';
-					$specialDiv.innerHTML = 'C<span class="font_size_12">4</span>';
-					$iconDiv.appendChild($specialDiv);
-				}
-				else if (dispSpecialOnly) {
-					// 突然の死
-					continue;
-				}
+
+			if (dispSpecialOnly && !isSpecial) {
+				// 突然の死
+				continue;
 			}
-		}
-		else if (dispSpecialOnly) {
-			// 突然の死
-			continue;
 		}
 
 		// 機体名 + α ラッパー
@@ -5464,6 +5396,16 @@ function createMapSelect() {
 }
 
 /**
+ * マップ画像拡大ボタンクリック
+ */
+function btn_zoom_map_Clicked() {
+	// 今開いている海域マップを拡大
+	const area = castInt($('#map_select').val());
+	document.getElementById('big_map_img').src = `../img/map/detail/${area}.png`;
+	$('#modal_big_map').modal('show');
+}
+
+/**
  * マス情報を生成
  */
 function createNodeSelect() {
@@ -5479,6 +5421,13 @@ function createNodeSelect() {
 
 	// マップ設定
 	$('#map_img').attr('src', '../img/map/' + area + '.png');
+	// マップ拡大鏡対応 2021夏以降
+	if (area > 510 || [11, 65].includes(area)) {
+		document.getElementById('btn_zoom_map').classList.remove('d-none');
+	}
+	else {
+		document.getElementById('btn_zoom_map').classList.add('d-none');
+	}
 
 	let patterns = ENEMY_PATTERN.filter(v => v.a === area && v.l === lv);
 	// 重複は切る
@@ -5497,8 +5446,9 @@ function createNodeSelect() {
 	for (let index = 0; index < len; index++) {
 		const nodeName = patterns[index].n;
 		const coords = patterns[index].c;
+		const isNight = patterns[index].t === CELL_TYPE.night;
 		text += `
-		<div class="d-flex node_tr general_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
+		<div class="d-flex node_tr ${isNight ? 'is_night' : ''} general_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
 			<div class="align-self-center">${nodeName}</div>
 		</div>
 	`;
@@ -5602,9 +5552,14 @@ function createEnemyPattern(patternNo = 0) {
 	$('#enemy_pattern_status1').text(borders[1]);
 	$('#enemy_pattern_status2').text(borders[2]);
 	$('#enemy_pattern_status3').text(borders[3]);
-	$('#btn_expand_enemies').prop('disabled', false);
-	$('#btn_continue_expand').prop('disabled', false);
-
+	if (pattern.t === CELL_TYPE.night) {
+		$('#btn_expand_enemies').prop('disabled', true);
+		$('#btn_continue_expand').prop('disabled', true);
+	}
+	else {
+		$('#btn_expand_enemies').prop('disabled', false);
+		$('#btn_continue_expand').prop('disabled', false);
+	}
 
 	// 表示形式切り替えの有効無効と表示形式
 	if (enemiesLength > 6) {
@@ -10780,14 +10735,20 @@ function btn_ex_setting_Clicked($this) {
 }
 
 /**
- * 2021夏イベ対応　特効表示形式変更時 呼び出し元も消す
+ * 特効表示形式変更時
  */
 function display_special_Changed($this) {
-	if ($this[0] === document.getElementById('display_special_e2')) {
-		displaySpecialE2 = true;
+	if ($this[0] === document.getElementById('display_special_A')) {
+		specialOperator.update('A');
+		document.getElementById('disp_special_parent').classList.remove('d-none');
+	}
+	else if ($this[0] === document.getElementById('display_special_B')) {
+		specialOperator.update('B');
+		document.getElementById('disp_special_parent').classList.remove('d-none');
 	}
 	else {
-		displaySpecialE2 = false;
+		specialOperator.update('');
+		document.getElementById('disp_special_parent').classList.add('d-none');
 	}
 	// いったん全部装備しなおすイメージ
 	expandMainPreset([
@@ -13521,6 +13482,8 @@ function node_Clicked($this) {
 function node_DoubleClicked() {
 	// 選択マスがなければ何もしない(例外回避)
 	if (!$('.node_tr').hasClass('node_selected')) return;
+	// 夜戦マスが選択されていたら中断
+	if ($('.node_selected').hasClass('is_night')) return;
 	if ($('#btn_expand_enemies').hasClass('d-none')) {
 		btn_continue_expand_Clicked();
 		$('.node_tr').removeClass('node_selected');
@@ -13534,6 +13497,9 @@ function node_DoubleClicked() {
  * 敵編成展開クリック時
  */
 function btn_expand_enemies() {
+	// 夜戦マスが選択されていたら中断
+	if ($('.node_selected').hasClass('is_night')) return;
+
 	expandEnemy();
 	$('#modal_enemy_pattern').modal('hide');
 }
@@ -13542,6 +13508,9 @@ function btn_expand_enemies() {
  * 連続展開
  */
 function btn_continue_expand_Clicked() {
+	// 夜戦マスが選択されていたら中断
+	if ($('.node_selected').hasClass('is_night')) return;
+
 	let currentBattle = castInt($('#expand_target').text());
 	// 1戦目を入れた時点でクリアかける
 	if (currentBattle === 1) {
@@ -15025,7 +14994,25 @@ function fleet_name_input_Changed($this) {
 		}
 	}
 	else {
-		inform_warning('保存されていないデータの名称変更はできません。');
+		// 一時保存枠から検索
+		const activePreset = getActivePreset();
+		let newName = $this.val().trim();
+		if (newName && activePreset) {
+
+			// 50文字超えてたら切る
+			if (newName.length > 50) {
+				newName = newName.slice(0, 50);
+				$this.val(newName);
+			}
+			// タブ情報の更新
+			activePreset.name = newName;
+			updateActivePreset(activePreset);
+			setTab();
+			inform_success('編成名が更新されました。');
+		}
+		else {
+			inform_warning('編成名称変更に失敗しました。');
+		}
 	}
 }
 
@@ -15662,8 +15649,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
 	$('#main').on('click', '.btn_commit_trade', commit_content_order);
 	$('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
-	$('#main').on('click', '#display_special_e2', function () { display_special_Changed($(this)); });
-	$('#main').on('click', '#display_special_e3', function () { display_special_Changed($(this)); });
+	$('#main_header_info').on('click', 'input', function () { display_special_Changed($(this)); });
 	$('#site_warning').on('click', '.cur_pointer', () => { $('#site_warning').removeClass('d-flex').addClass('d-none'); });
 	$('#landBase').on('click', '.btn_air_raid', btn_air_raid_Clicked);
 	$('#landBase').on('click', '#alert_air_raid_button', btn_air_raid_Clicked);
@@ -15771,6 +15757,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_select').on('input', '#enemy_word', enemy_word_TextChanged);
 	$('#modal_enemy_pattern').on('show.bs.modal', modal_enemy_pattern_Shown);
 	$('#modal_enemy_pattern').on('click', '.node_tr', function () { node_tr_Clicked($(this)); });
+	$('#modal_enemy_pattern').on('click', '#btn_zoom_map', btn_zoom_map_Clicked);
 	$('#modal_enemy_pattern').on('change', '#map_select', createNodeSelect);
 	$('#modal_enemy_pattern').on('change', '#node_select', createEnemyPattern);
 	$('#modal_enemy_pattern').on('change', '#select_difficulty', createNodeSelect);
@@ -15782,6 +15769,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_pattern').on('dblclick', '.node', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '.node_tr', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '#enemy_pattern_select .nav-link.active', node_DoubleClicked);
+	$('#modal_big_map').on('hidden.bs.modal', function () { $(document.body).addClass('modal-open'); });
 	$('#modal_main_preset').on('show.bs.modal', modal_main_preset_Shown);
 	$('#modal_main_preset').on('change', '#select_preset_category', select_preset_category_Changed);
 	$('#modal_main_preset').on('click', '.btn_commit_preset', btn_commit_main_preset_Clicked);
@@ -15970,6 +15958,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		mouseenter: function () { showEnemyPlaneToolTip($(this)); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '.img-size-36');
+	$('#enemy_pattern_tbody').on({
+		mouseenter: function () { showEnemyStatusToolTip($(this)); },
+		mouseleave: function () { hideTooltip($(this)[0]); }
+	}, '.enemy_pattern_tr');
 	$('#modal_plane_select').on({
 		mouseenter: function () {
 			const $this = $(this);
