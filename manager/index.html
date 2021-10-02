@@ -154,10 +154,18 @@
 												<span>未着任艦非表示</span>
 											</label>
 											<label class="filter_checkbox mr-4">
+												<input type="checkbox" id="no_ship_only" />
+												<span>未着任艦のみ</span>
+											</label>
+											<label class="filter_checkbox mr-4">
+												<input type="checkbox" id="hp_4n" />
+												<span>耐久値4n</span>
+											</label>
+											<label class="filter_checkbox mr-4">
 												<input type="checkbox" id="ok_daihatsu" />
 												<span>大発搭載可</span>
 											</label>
-											<label class="filter_checkbox">
+											<label class="filter_checkbox mr-4">
 												<input type="checkbox" id="ok_naikatei" />
 												<span>内火艇搭載可</span>
 											</label>
@@ -397,7 +405,7 @@
 								</div>
 								<div class="text-center font_size_11">&uarr;クリックで表示/非表示切り替え</div>
 							</div>
-							<div class="general_box">
+							<div class="general_box" id="ship_exp_ranking_table_container">
 								<div class="text-center mb-4">経験値取得艦娘ランキング</div>
 								<table id="ship_exp_ranking_table">
 									<thead>
@@ -527,9 +535,13 @@
 									<div class="collapsible-header"><i class="fa-filter"></i>フィルタ</div>
 									<div class="collapsible-body" id="items_filter">
 										<div class="border-top mb-4 ml-2 pl-1 pt-4">
-											<label class="filter_checkbox">
+											<label class="filter_checkbox mr-4">
 												<input type="checkbox" id="no_item_invisible" />
-												<span>未所持の装備を非表示にする</span>
+												<span>未所持装備を非表示</span>
+											</label>
+											<label class="filter_checkbox">
+												<input type="checkbox" id="no_item_only" />
+												<span>未所持装備のみ表示</span>
 											</label>
 										</div>
 										<div class="row">

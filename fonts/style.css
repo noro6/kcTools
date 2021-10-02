@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?2lo3ry') format('truetype'),
-    url('fonts/icons.woff?2lo3ry') format('woff'),
-    url('fonts/icons.svg?2lo3ry#icons') format('svg');
+    url('fonts/icons.ttf?ahnj2p') format('truetype'),
+    url('fonts/icons.woff?ahnj2p') format('woff'),
+    url('fonts/icons.svg?ahnj2p#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -203,6 +203,9 @@
 }
 .fa-folder-upload:before {
   content: "\e934";
+}
+.fa-zoom-in:before {
+  content: "\e987";
 }
 .fa-menu2:before {
   content: "\e9be";

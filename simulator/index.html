@@ -119,23 +119,31 @@
 		<script>setTab()</script>
 	</div>
 	<main id="main" class="px-2 mx-2 mr-xl-2" role="main" style="display: none;">
-		<div class="mx-auto d-none" id="main_header_info">
-			<div>2021夏イベント期間中は、特効のある装備に特効カテゴリを表示しています。表示させる特効形式を選択してください。</div>
+		<div class="mx-auto" id="main_header_info">
+			<div>表示させる特効形式を選択してください。</div>
 			<div class="d-flex mt-2">
 				<div class="custom-check align-self-center">
 					<label>
-						<input type="radio" id="display_special_e2" name="display_special_item_type">
+						<input type="radio" id="display_special_none" name="display_special_item_type" checked>
 						<i class="fa-radio-checked"></i>
 						<i class="fa-radio-unchecked"></i>
-						<span>特効表示（E-1 / E-2）</span>
+						<span>表示なし</span>
 					</label>
 				</div>
 				<div class="ml-3 custom-check align-self-center">
 					<label>
-						<input type="radio" id="display_special_e3" name="display_special_item_type" checked>
+						<input type="radio" id="display_special_A" name="display_special_item_type">
 						<i class="fa-radio-checked"></i>
 						<i class="fa-radio-unchecked"></i>
-						<span>特効表示（E-3）</span>
+						<span>2021夏 E-2</span>
+					</label>
+				</div>
+				<div class="ml-3 custom-check align-self-center">
+					<label>
+						<input type="radio" id="display_special_B" name="display_special_item_type">
+						<i class="fa-radio-checked"></i>
+						<i class="fa-radio-unchecked"></i>
+						<span>2021夏 E-3</span>
 					</label>
 				</div>
 			</div>
@@ -2662,7 +2670,7 @@
 									<span>配備済も表示</span>
 								</label>
 							</div>
-							<div class="custom-check mx-2 mx-lg-3">
+							<div class="custom-check mx-2 mx-lg-3 d-none" id="disp_special_parent">
 								<label>
 									<input type="checkbox" id="disp_special">
 									<i class="fas fa-checkbox-unchecked"></i>
@@ -2877,9 +2885,10 @@
 						</div>
 					</div>
 					<div id="enemy_pattern_content">
-						<div class="text-center">
+						<div class="text-center position-relative">
 							<img id="map_img" src="../img/map/11.png" usemap="#clickable_map">
 							<map name="clickable_map" id="clickable_nodes"></map>
+							<i class="fas fa-zoom-in" id="btn_zoom_map"></i>
 						</div>
 						<div class="d-flex">
 							<div class="mx-1 mt-1">
@@ -2965,6 +2974,15 @@
 					<button type="button" class="btn btn-sm btn-primary d-none" id="btn_continue_expand">敵艦隊展開</button>
 					<button type="button" class="btn btn-sm btn-primary" id="btn_expand_enemies">敵艦隊展開</button>
 					<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modal_big_map" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-body p-2">
+					<img id="big_map_img" src="../img/map/11.png">
 				</div>
 			</div>
 		</div>
