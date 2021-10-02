@@ -619,24 +619,28 @@ input[type="number"] {
 }
 
 .ship_table_tr .ship_table_td_name {
-   width: 44%;
+   width: 36%;
    min-width: 200px;
 }
 .ship_table_tr .no_ship_area {
    padding-left: 1rem;
    padding-right: 1rem;
-   width: 32%;
+   width: 40%;
 }
 @media (min-width: 992px) {
-   .ship_table_tr > div {
-      width: 10%;
-   }
-   .ship_table_tr .ship_table_td_name {
-      width: 30%;
-   }
-   .ship_table_tr .no_ship_area {
-      width: 40%;
-   }
+   .ship_table_tr > div { width: 9%; }
+   .ship_table_tr .ship_table_td_name { width: 28%; }
+   .ship_table_tr .no_ship_area { width: 45%; }
+}
+@media (min-width: 1400px) {
+   .ship_table_tr > div { width: 10%; }
+   .ship_table_tr .ship_table_td_name { width: 20%; }
+   .ship_table_tr .no_ship_area { width: 50%; }
+}
+.ship_table_tr .name_body {
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
 }
 
 .ship_table_tr .no_ship_area .ship_table_td_line {
@@ -941,7 +945,11 @@ input[type="number"] {
       width: 49.5%;
    }
 }
+#ship_exp_ranking_table_container {
+   max-height: 666px;
+   overflow-y: scroll;
 
+}
 #ship_exp_ranking_table td {
    text-align: right;
 }

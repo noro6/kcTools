@@ -381,7 +381,7 @@ input[type="number"] { text-align: right; }
   border-radius: 0.25rem;
   text-shadow: 1px 1px 3px #fff;
   background-color: rgba(255, 255, 255, 0.8);
-  position: relative; /* 2021装備特効対応 */
+  position: relative;
 }
 .relative {
   position: relative;
@@ -1061,6 +1061,39 @@ input[type="number"] { text-align: right; }
   height: 267px;
   user-select: none;
 }
+#btn_zoom_map {
+  position: absolute;
+  cursor: pointer;
+  bottom: 20px;
+  left: 30px;
+  opacity: 0.6;
+  transition: 0.2s;
+  font-size: 36px;
+  color: #000;
+  text-shadow: 0px 0px 4px #fff;
+}
+@media (max-width: 600px) {
+  #btn_zoom_map {
+    display: none !important;
+  }
+}
+#btn_zoom_map:hover {
+  opacity: 1;
+  text-shadow: 0px 0px 15px #fff;
+}
+#modal_big_map {
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+#modal_big_map .modal-lg {
+  max-width: 1178px;
+}
+#big_map_img {
+  width: 100%;
+  max-width: 1160px;
+  height: auto;
+}
+
 #node_tbody{
   height: 352px;
   width: 80px;

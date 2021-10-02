@@ -100,8 +100,10 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
    $('#ships_filter').on('change', 'select', filterShipList);
    $('#ships_filter').on('change', '#no_ship_invisible', filterShipList);
+   $('#ships_filter').on('change', '#hp_4n', filterShipList);
    $('#ships_filter').on('change', '#ok_daihatsu', filterShipList);
    $('#ships_filter').on('change', '#ok_naikatei', filterShipList);
+   $('#ships_filter').on('change', '#no_ship_only', filterShipList);
    $('#ships_filter').on('click', '.filter_area', function () { filter_area_Clicked($(this)); });
    $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
    $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
@@ -173,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#items_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
    $('#items_filter').on('change', '#enabled_types_container', filterItemList);
    $('#items_filter').on('change', '#no_item_invisible', filterItemList);
+   $('#items_filter').on('change', '#no_item_only', filterItemList);
 
    $('#item_list').on('click', '.item_container', function () { item_container_Clicked($(this)); });
    $('#item_list').on('change', '.item_type_sort_container', function (e) { item_sort_Changed($(this), e); });
@@ -311,7 +314,7 @@ function initShipList() {
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_hp.png"></div>
-                     <div class="detail_ship_status remodel_hp ${(detail.st[5] ? 'status_up' : '')}" data-remodel-hp="${detail.st[5]}">
+                     <div class="detail_ship_status remodel_hp ${(detail.st[5] ? 'status_up' : '')}" data-hp="${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}" data-remodel-hp="${detail.st[5]}">
                         ${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}
                      </div>
                   </div>
@@ -340,7 +343,7 @@ function initShipList() {
                detailContainer.dataset.uniqueId = -1;
                detailContainer.innerHTML = `<div>新規登録</div>
                <div class="ship_lv d-none" data-level="1"></div>
-               <div class="remodel_hp d-none" data-remodel-hp="0"></div>
+               <div class="remodel_hp d-none" data-hp="${ver.hp}" data-remodel-hp="0"></div>
                <div class="remodel_asw d-none" data-remodel-asw="0"></div>
                <div class="remodel_luck d-none" data-luck="${ver.luck}"></div>
                <div class="sally_area d-none" data-area="0"></div>
@@ -388,6 +391,7 @@ function initShipListTable() {
    <div class="ship_table_td_status" data-sortkey="hp">耐久</div>
    <div class="ship_table_td_status" data-sortkey="luck">運</div>
    <div class="ship_table_td_status" data-sortkey="asw">対潜</div>
+   <div class="ship_table_td_status" data-sortkey="scout">索敵</div>
    <div class="ship_table_td_status" data-sortkey="accuracy">命中項</div>
    <div class="ship_table_td_status" data-sortkey="avoid">回避項</div>
    <div class="ship_table_td_status" data-sortkey="ci">CI項</div>`;
@@ -435,13 +439,13 @@ function initShipListTable() {
             else if (detail.lv > 99) tr.classList.add('lv100');
             else if (detail.lv === 99) tr.classList.add('lv99');
 
-            const tdImage = createDiv('ship_table_td_name d-flex flex-wrap');
+            const tdImage = createDiv('ship_table_td_name d-flex');
             tdImage.innerHTML = `
                <div class="align-self-center ship_table_td_image mr-1">
                   <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
                   ${detail.area > 0 && detail.area <= MAX_AREA ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
                </div>
-               <div class="align-self-center">${ship.name}</div>`;
+               <div class="align-self-center name_body">${ship.name}</div>`;
             tr.appendChild(tdImage);
 
             const tdLevel = createDiv('ship_table_td_status');
@@ -478,6 +482,13 @@ function initShipListTable() {
                tdAsw.appendChild(bonus);
             }
             tr.appendChild(tdAsw);
+
+            // 索敵
+            const scout = getLevelStatus(detail.lv, ship.max_scout, ship.scout);
+            const tdScout = createDiv('ship_table_td_status');
+            tdScout.textContent = !scout ? '-' : scout;
+            tr.dataset.scout = scout;
+            tr.appendChild(tdScout);
 
             // 命中項(ステータス部分のみ)
             const tdAccuracy = createDiv('ship_table_td_status');
@@ -541,12 +552,12 @@ function initShipListTable() {
          tr.dataset.orig = ship.id;
          tr.dataset.index = defaultIndex++;
 
-         const tdImage = createDiv('ship_table_td_name d-flex flex-wrap');
+         const tdImage = createDiv('ship_table_td_name d-flex');
          tdImage.innerHTML = `
             <div class="align-self-center ship_table_td_image mr-1">
                <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
             </div>
-            <div class="align-self-center">${ship.name}</div>`;
+            <div class="align-self-center name_body">${ship.name}</div>`;
          tr.appendChild(tdImage);
 
          const tdLevel = createDiv('ship_table_td_status');
@@ -579,6 +590,11 @@ function initShipListTable() {
          tr.dataset.asw = ship.asw ? ship.asw : 0;
          tr.appendChild(tdAsw);
 
+         const tdScout = createDiv('ship_table_td_status d-none');
+         tdScout.textContent = '';
+         tr.dataset.scout = ship.scout ? ship.scout : 0;
+         tr.appendChild(tdScout);
+
          const tdAccuracy = createDiv('ship_table_td_status d-none');
          tdAccuracy.textContent = '';
          tr.dataset.accuracy = 0;
@@ -605,7 +621,7 @@ function initShipListTable() {
 }
 
 /**
- * 艦娘フィルターによる表示物変更
+ * 艦娘フィルタによる表示物変更
  */
 function filterShipList() {
    if (document.getElementById('ship_table')['checked']) {
@@ -625,8 +641,10 @@ function filterShipList() {
    $('.filter_area.selected').each((i, e) => {
       areas.push(castInt($(e)[0].dataset.area));
    });
+   const hp4nOnly = document.getElementById('hp_4n')['checked'];
    const okDaihatsu = document.getElementById('ok_daihatsu')['checked'];
    const okNaikatei = document.getElementById('ok_naikatei')['checked'];
+   const noShipOnly = document.getElementById('no_ship_only')['checked'];
    const visibleCountries = $('#enabled_ship_country').formSelect('getSelectedValues').map(v => castInt(v));
 
    const containers = document.getElementsByClassName('ship_type_container');
@@ -661,6 +679,11 @@ function filterShipList() {
             }
 
             for (const detail of verParent.getElementsByClassName('detail_container')) {
+
+               if (noShipOnly && !detail.classList.contains('no_ship')) {
+                  detail.classList.add('d-none');
+                  continue;
+               }
                if (noShipInvisible && detail.classList.contains('no_ship')) {
                   detail.classList.add('d-none');
                   continue;
@@ -683,6 +706,10 @@ function filterShipList() {
                }
                // 耐久改修条件
                else if (remodelHps.length && !remodelHps.includes(remodelHp)) {
+                  detail.classList.add('d-none');
+               }
+               // 耐久4n条件
+               else if (hp4nOnly && (castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.hp) % 4) !== 0) {
                   detail.classList.add('d-none');
                }
                // 対潜改修条件
@@ -737,7 +764,7 @@ function filterShipList() {
 }
 
 /**
- * 艦娘フィルターによる表示物変更
+ * 艦娘フィルタによる表示物変更
  */
 function filterShipListTable() {
    // 表示条件
@@ -757,8 +784,10 @@ function filterShipListTable() {
       areas.push(area);
       if (area === 0) areas.push(-1);
    });
+   const hp4nOnly = document.getElementById('hp_4n')['checked'];
    const okDaihatsu = document.getElementById('ok_daihatsu')['checked'];
    const okNaikatei = document.getElementById('ok_naikatei')['checked'];
+   const noShipOnly = document.getElementById('no_ship_only')['checked'];
 
    const trs = document.getElementsByClassName('ship_table_tr');
    for (const tr of trs) {
@@ -774,7 +803,10 @@ function filterShipListTable() {
       const remodelAsw = castInt(tr.dataset.remodelAsw);
       const area = castInt(tr.dataset.area);
 
-      if (visibleTypes.length && !visibleTypes.includes(shipType)) {
+      if (noShipOnly && !tr.classList.contains('no_ship')) {
+         tr.classList.add('d-none');
+      }
+      else if (visibleTypes.length && !visibleTypes.includes(shipType)) {
          tr.classList.add('d-none');
       }
       // Lv条件
@@ -783,6 +815,10 @@ function filterShipListTable() {
       }
       // 運改修条件
       else if (luck < luckMin || luck > luckMax) {
+         tr.classList.add('d-none');
+      }
+      // 耐久4n条件
+      else if (hp4nOnly && castInt(tr.dataset.hp) % 4 !== 0) {
          tr.classList.add('d-none');
       }
       // 耐久改修条件
@@ -1238,14 +1274,23 @@ function initExpTable() {
    const expRankingFragment = document.createDocumentFragment();
    expRanking.sort((a, b) => b.sumExp - a.sumExp);
 
+   let prevExp = 0;
+
+   let rankText = 0;
    for (let rank = 0; rank < expRanking.length; rank++) {
-      if (rank === 10) break;
+      if (rank === 50) break;
+
       const data = expRanking[rank];
       const tr = document.createElement('tr');
 
+      if (prevExp !== data.sumExp) {
+         prevExp = data.sumExp;
+         rankText = rank + 1;
+      }
+
       const tdRank = document.createElement('td');
       tdRank.className = 'td_name';
-      tdRank.textContent = rank + 1;
+      tdRank.textContent = rankText;
       tr.appendChild(tdRank);
 
       const tdName = document.createElement('td');
@@ -1509,11 +1554,12 @@ function initItemList() {
 }
 
 /**
- * 艦娘フィルターによる表示物変更
+ * 艦娘フィルタによる表示物変更
  */
 function filterItemList() {
    // 表示条件
    const noItemInvisible = document.getElementById('no_item_invisible')['checked'];
+   const noItemOnly = document.getElementById('no_item_only')['checked'];
    const remodelMin = castInt(document.getElementById('remodel_min').value);
    const remodelMax = castInt(document.getElementById('remodel_max').value);
    const visibleTypes = $('#enabled_types').formSelect('getSelectedValues').map(v => castInt(v));
@@ -1530,6 +1576,10 @@ function filterItemList() {
 
       for (const itemContainer of container.getElementsByClassName('item_container')) {
          if (noItemInvisible && itemContainer.classList.contains('no_item')) {
+            itemContainer.classList.add('d-none');
+            continue;
+         }
+         if (noItemOnly && !itemContainer.classList.contains('no_item')) {
             itemContainer.classList.add('d-none');
             continue;
          }
