@@ -2216,8 +2216,8 @@ function item_stock_Leaved($this) {
    if (input <= 0) {
       $this.val('');
    }
-   else if (input >= 99) {
-      $this.val(99);
+   else if (input >= 999) {
+      $this.val(999);
    }
 
    let sumStock = 0;
@@ -2237,8 +2237,8 @@ function item_stock_Changed($this) {
    if (input < 0) {
       $this.val(0);
    }
-   else if (input >= 99) {
-      $this.val(99);
+   else if (input >= 999) {
+      $this.val(999);
    }
 
    let sumStock = 0;
