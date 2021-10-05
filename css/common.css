@@ -412,7 +412,7 @@ h1 {
 
 #fleet_tab_container {
   min-height: 30px;
-  background-color: rgb(40, 40, 42);
+  background-color: rgb(10, 10, 12);
   border-top: 1px solid rgb(30, 30, 32);
 }
 #fleet_tab_container .fleet_tab {
@@ -423,17 +423,17 @@ h1 {
   max-width: 200px;
   min-width: 60px;
   padding: 0.25rem 0.25rem 0.25rem 0.5rem;
-  background-color: rgb(40, 40, 42);
+  background-color: rgb(20, 20, 24);
   border-color: rgb(30, 30, 32);
 }
 #fleet_tab_container .fleet_tab:hover {
   color: #ccc;
-  background-color: rgb(55, 55, 58);
+  background-color: rgb(50, 50, 52);
 }
 #fleet_tab_container .fleet_tab.active {
   cursor: default;
   color: #fff !important;
-  background-color: rgb(75, 75, 78);
+  background-color: rgb(60, 60, 62);
 }
 #fleet_tab_container .fleet_tab .fleet_name {
   font-size: 12px;
@@ -480,6 +480,24 @@ h1 {
 #fleet_tab_container .btn_close_tab:hover {
   background-color: rgb(95, 95, 100);
   color: #eee;
+}
+#fleet_tab_container .fleet_tab:nth-child(n + 2)::before {
+  content: "";
+  position: relative;
+  left: -0.5rem;
+  border-left: 1px solid rgb(82, 82, 82);
+  transition: 0.2s;
+}
+#fleet_tab_container .fleet_tab:hover::before,
+#fleet_tab_container .fleet_tab:hover+::before,
+#fleet_tab_container .fleet_tab.active::before,
+#fleet_tab_container .fleet_tab.active+::before {
+  border-left-color:transparent !important;
+}
+#fleet_tab_container #add_new_tab::before {
+  left: 0px;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 #add_new_tab {
