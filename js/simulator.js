@@ -3678,8 +3678,6 @@ function initialize(callback) {
 	// 空スロット表示
 	$('#empty_slot_invisible').prop('checked', setting.emptySlotInvisible);
 	// 機体のみ表示
-	$('#plane_only').prop('checked', setting.planeOnly);
-	// 機体のみ表示
 	$('#has_slot_only').prop('checked', setting.hasSlotOnly);
 	// お気に入りのみ表示
 	$('#fav_only').prop('checked', setting.favoriteOnly);
@@ -4738,7 +4736,7 @@ function createShipTable() {
 
 			const baseShip = ships[index];
 			const baseLv = stock.details[0].lv;
-			const baseArea = stock.details[0].area <= MAX_AREA ? stock.details[0].area : 0;
+			const baseArea = stock.details[0].area <= MAX_AREA && stock.details[0].area >= 0 ? stock.details[0].area : 0;
 
 			baseShip.lv = baseLv;
 			baseShip.area = baseArea;
@@ -4749,7 +4747,7 @@ function createShipTable() {
 			if (stock.details.length >= 2) {
 				for (let i = 1; i < stock.details.length; i++) {
 					const lv = stock.details[i].lv;
-					const area = stock.details[i].area <= MAX_AREA ? stock.details[i].area : 0;
+					const area = stock.details[i].area <= MAX_AREA && stock.details[i].area >= 0 ? stock.details[i].area : 0;
 					// 同じレベルかつ札の艦はまとめるため追加不要
 					if (doneLv.find(v => v.lv === lv && v.area === area)) continue;
 
@@ -12233,16 +12231,6 @@ function changeFormationSelectOption($formation, cellType) {
 }
 
 /**
- * 航空機のみチェック
- */
-function plane_only_Clicked() {
-	setting.planeOnly = $('#plane_only').prop('checked');
-	saveSetting();
-
-	plane_type_select_Changed();
-}
-
-/**
  * 列ヘッダークリック時
  * @param {JQuery} $this 押された列ヘッダー
  */
@@ -12342,11 +12330,6 @@ function plane_type_select_Changed($this = null) {
 
 				exSpecialItems.push(spItem);
 			}
-		}
-
-		// 機体のみモードなら機体に絞る
-		if (setting.planeOnly) {
-			dispType = dispType.filter(v => PLANE_TYPE.includes(v));
 		}
 
 		// スロット番号制限チェック
@@ -15733,7 +15716,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_plane_select').on('change', '#plane_filter_key_select', plane_filter_Changed);
 	$('#modal_plane_select').on('change', '#plane_filter_value', plane_filter_Changed);
 	$('#modal_plane_select').on('click', '.toggle_display_type', function () { plane_type_select_Changed(); });
-	$('#modal_plane_select').on('click', '#plane_only', plane_only_Clicked);
 	$('#modal_plane_select').on('click', '#plane_table_thead .sortable_td', function () { sortable_td_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.preset_tr', function () { plane_preset_tr_Clicked($(this)); });
 	$('#modal_plane_preset').on('click', '.btn_commit_preset', function () { btn_commit_plane_preset_Clicked($(this)); });

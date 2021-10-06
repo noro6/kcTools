@@ -2716,7 +2716,7 @@ const DEFAULT_PLANE_PRESET = [
 	},
 ];
 
-const MAX_AREA = 7;
+const MAX_AREA = 0;
 
 const UNKNOWN_ENEMY = [472, 475];
 const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 414, 465, 466, 467, 468, 469, 470, 479, 480, 481, 482, 483, 484, 498, 512, 513, 514];
@@ -2725,6 +2725,7 @@ const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 4
 const SPECIAL_DATA = [
 	{
 		mode: "A", special: [
+			// { name: '漁', remarks: '+', items: [44, 45, 47, 69, 70, 74, 129, 138, 140, 178, 242, 243, 244, 258, 259, 260, 261, 262, 412, 438, 25, 59, 102, 115, 118, 163, 171, 238, 239, 304, 370, 371, 414, 415, 26, 62, 79, 80, 81, 194, 207, 208, 237, 322, 323, 367, 368, 369] },
 			{ name: 'A', remarks: '', items: [64, 188, 233, 242, 248, 256, 257, 277, 305, 306, 316] },
 			{ name: 'B', remarks: '', items: [243, 244, 424, 425, 431, 405, 406] },
 		]
@@ -2746,4 +2747,4 @@ const SPECIAL_DATA = [
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.14';
+const LATEST_VERSION = '1.12.14.1';
