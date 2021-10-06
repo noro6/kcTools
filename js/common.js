@@ -119,7 +119,6 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
-	if (!setting.hasOwnProperty('planeOnly')) setting.planeOnly = true;
 	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
 	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
 	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
@@ -330,10 +329,16 @@ function adaptUpdater() {
 			setting.visibleAntiAirStatus = true;
 		}
 
-		// ～　v1.12.9
+		// ～ v1.12.9
 		if (major <= 11 || minor < 9) {
 			// 所持艦娘情報破棄
 			deleteLocalStorage('shipStock');
+		}
+
+		// ～ v1.12.14.1
+		if (major <= 11 || minor < 14 || patch < 1) {
+			// 航空機のみチェックオプション削除
+			if (setting.hasOwnProperty('planeOnly')) delete setting.planeOnly;
 		}
 	}
 

@@ -330,7 +330,7 @@ function initShipList() {
                         ${ver.luck + detail.st[4]}
                      </div>
                   </div>
-                  ${detail.area < 1 || detail.area > MAX_AREA ? '<div class="sally_area no_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>`}`;
+                  ${detail.area > 0 || detail.area <= MAX_AREA ? '<div class="sally_area no_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>`}`;
                   verContainer.appendChild(detailContainer);
                }
                done = true;
