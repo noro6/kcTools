@@ -119,7 +119,6 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('confirmTabClosing')) setting.confirmTabClosing = true;
 	if (!setting.hasOwnProperty('presetsOrder')) setting.presetsOrder = 1;
 	if (!setting.hasOwnProperty('uploadUserName')) setting.uploadUserName = '';
-	if (!setting.hasOwnProperty('hasSlotOnly')) setting.hasSlotOnly = true;
 	if (!setting.hasOwnProperty('visibleEmptyFolder')) setting.visibleEmptyFolder = false;
 	if (!setting.hasOwnProperty('visibleAntiAirStatus')) setting.visibleAntiAirStatus = false;
 	if (!setting.hasOwnProperty('visibleFixedMenu')) setting.visibleFixedMenu = true;
@@ -336,10 +335,14 @@ function adaptUpdater() {
 		}
 
 		// ～ v1.12.14.1
-		if (major <= 11 || minor < 14 || patch < 1) {
-			// 航空機のみチェックオプション削除
-			if (setting.hasOwnProperty('planeOnly')) delete setting.planeOnly;
-		}
+		// if (major <= 11 || minor < 14 || patch < 1) {
+
+		// }
+
+		// 航空機のみチェックオプション削除
+		if (setting.hasOwnProperty('planeOnly')) delete setting.planeOnly;
+		// スロットありのみチェックオプション削除
+		if (setting.hasOwnProperty('hasSlotOnly')) delete setting.hasSlotOnly;
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;
