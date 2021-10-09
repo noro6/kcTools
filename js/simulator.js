@@ -3677,8 +3677,6 @@ function initialize(callback) {
 	$('#clipboard_mode').prop('checked', setting.copyToClipboard);
 	// 空スロット表示
 	$('#empty_slot_invisible').prop('checked', setting.emptySlotInvisible);
-	// 機体のみ表示
-	$('#has_slot_only').prop('checked', setting.hasSlotOnly);
 	// お気に入りのみ表示
 	$('#fav_only').prop('checked', setting.favoriteOnly);
 	$('#fav_only_ship').prop('checked', setting.favoriteOnlyShip);
@@ -4069,8 +4067,9 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
  * @param {number} id 艦娘id
  * @param {number} [level=99] 練度 デフォルト99
  * @param {number} [area=0] 出撃海域 デフォ0
+ * @param {number} [luck=0] 運 デフォ0
  */
-function setShipDiv($div, id, level = 99, area = 0) {
+function setShipDiv($div, id, level = 99, area = 0, luck = 0) {
 	const ship = SHIP_DATA.find(v => v.id === id);
 	if (!ship) return;
 	$div[0].dataset.shipid = ship.id;
@@ -4085,7 +4084,7 @@ function setShipDiv($div, id, level = 99, area = 0) {
 	}
 	else {
 		$div.find('.ship_area_img').addClass('d-none');
-		$div.find('.area').text(0);
+		$div.find('.area').text(-1);
 	}
 	$div.find('.sortable_handle').removeClass('d-none');
 	$div.find('.ship_name_span').text(ship.name);
@@ -4128,8 +4127,13 @@ function setShipDiv($div, id, level = 99, area = 0) {
 		$div.find('.min_scout').text(-1);
 	}
 	$div.find('.scout').text(0);
-	// 素運
-	$div.find('.ship_luck').text(ship.luck);
+	// 運
+	if (luck > 0) {
+		$div.find('.ship_luck').text(luck);
+	}
+	else {
+		$div.find('.ship_luck').text(ship.luck);
+	}
 	// 噴進弾幕の表示可否
 	if ([6, 7, 10, 11, 16, 18].includes(ship.type)) {
 		$div.find('.hunshin').removeClass('disabled');
@@ -4713,11 +4717,6 @@ function createShipTable() {
 		return dispType.includes(v.type) && (visibleFinal ? v.final > 0 : true)
 	});
 
-	// 搭載数ありのみ表示
-	if (setting.hasSlotOnly) {
-		ships = ships.filter(v => v.slot.some(sl => sl > 0));
-	}
-
 	// お気に入りにないものは削除
 	if (favOnly) {
 		const favorites = setting.favoriteShip;
@@ -4736,10 +4735,12 @@ function createShipTable() {
 
 			const baseShip = ships[index];
 			const baseLv = stock.details[0].lv;
-			const baseArea = stock.details[0].area <= MAX_AREA && stock.details[0].area >= 0 ? stock.details[0].area : 0;
+			const baseUpLuck = stock.details[0].st[4];
+			const baseArea = stock.details[0].area <= MAX_AREA && stock.details[0].area > 0 ? stock.details[0].area : -1;
 
 			baseShip.lv = baseLv;
 			baseShip.area = baseArea;
+			baseShip.upLuck = baseUpLuck;
 			baseShip.stock = stock.details.filter(v => v.lv === baseLv && v.area === baseArea).length;
 
 			let doneLv = [{ lv: baseLv, area: baseArea }];
@@ -4747,7 +4748,8 @@ function createShipTable() {
 			if (stock.details.length >= 2) {
 				for (let i = 1; i < stock.details.length; i++) {
 					const lv = stock.details[i].lv;
-					const area = stock.details[i].area <= MAX_AREA && stock.details[i].area >= 0 ? stock.details[i].area : 0;
+					const upLuck = stock.details[i].st[4];
+					const area = stock.details[i].area <= MAX_AREA && stock.details[i].area > 0 ? stock.details[i].area : -1;
 					// 同じレベルかつ札の艦はまとめるため追加不要
 					if (doneLv.find(v => v.lv === lv && v.area === area)) continue;
 
@@ -4756,6 +4758,7 @@ function createShipTable() {
 					newShip.lv = lv;
 					newShip.area = area;
 					newShip.stock = stock.details.filter(v => v.lv === lv && v.area === area).length;
+					newShip.upLuck = upLuck;
 					ships.splice(index, 0, newShip);
 
 					// このレベルは配置済み
@@ -4833,6 +4836,7 @@ function createShipTable() {
 		$shipDiv.dataset.shipid = ship.id;
 		$shipDiv.dataset.level = ship.lv ? ship.lv : 99;
 		$shipDiv.dataset.area = ship.area > 0 ? ship.area : 0;
+		$shipDiv.dataset.luck = ship.luck + ship.upLuck;
 		$shipDiv.id = 'ship_tr_' + ship.id;
 
 		// アイコンラッパー
@@ -5785,20 +5789,22 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 	try {
 		// 基地航空隊展開
 		const landBase = preset[0];
+		let hasLandBaseData = false;
 		$('.lb_plane').each((i, e) => {
 			if (!landBase || landBase.length === 0) return;
 			const raw = landBase[0].find(v => v[4] === i);
 			if (raw && raw.length !== 0) {
 				const plane = { id: raw[0], prof: raw[1], remodel: raw[2], slot: raw[3] };
 				setLBPlaneDiv($(e), plane);
+				hasLandBaseData = true;
 			}
 			else if (isResetLandBase) setLBPlaneDiv($(e));
 		});
 		$('.ohuda_select').each((i, e) => {
 			// disabled 解除
 			$(e).find('option').prop('disabled', false);
-			// 取得した札値
-			if (landBase && landBase.length >= 2) {
+			// 取得した札値 そもそも基地データがないならリセットはせずそのまま
+			if (hasLandBaseData && landBase && landBase.length >= 2) {
 				const huda = castInt(landBase[1][i], -1);
 				$(e).val(huda === 1 ? 2 : huda);
 			}
@@ -13096,17 +13102,6 @@ function ship_type_select_Changed($this) {
 	createShipTable();
 }
 
-
-/**
- * 搭載アリ艦娘のみチェック
- */
-function has_slot_only_Clicked() {
-	setting.hasSlotOnly = $('#has_slot_only').prop('checked');
-	saveSetting();
-
-	createShipTable();
-}
-
 /**
  * 艦娘一覧モーダル 艦娘クリック時
  * @param {JQuery} $this
@@ -13115,7 +13110,8 @@ function modal_ship_Selected($this) {
 	const shipId = castFloat($this[0].dataset.shipid);
 	const level = castInt($this[0].dataset.level);
 	const area = castInt($this[0].dataset.area);
-	setShipDiv($target, shipId, level, area);
+	const luck = castInt($this[0].dataset.luck);
+	setShipDiv($target, shipId, level, area, luck);
 
 	updateShipSelectedHistory(shipId);
 	$('#modal_ship_select').modal('hide');
@@ -15614,6 +15610,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('.modal').on('click', '.toggle_display_type', function () { toggle_display_type_Clicked($(this)); });
 	$('.modal').on('input', '.preset_name', function () { preset_name_Changed($(this)); });
 	$('.modal').on('blur', '.preset_name', function () { preset_name_Changed($(this)); });
+	$('.modal.sub_modal').on('hidden.bs.modal', function () { $(document.body).addClass('modal-open'); });
 	$('.slot_select_parent').on('show.bs.dropdown', function () { slot_select_parent_Show($(this)); });
 	$('.slot_select_parent').on('hide.bs.dropdown', function () { slot_select_parent_Close($(this)); });
 	$('.remodel_select_parent').on('hide.bs.dropdown', function () { remodelSelect_Changed($(this)); });
@@ -15729,7 +15726,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_ship_select').on('click', '#disp_in_stock_ship', createShipTable);
 	$('#modal_ship_select').on('click', '#disp_equipped_ship', createShipTable);
 	$('#modal_ship_select').on('click', '#ship_type_select .ship_type', function () { ship_type_select_Changed($(this)) });
-	$('#modal_ship_select').on('click', '#has_slot_only', has_slot_only_Clicked);
 	$('#modal_ship_select').on('click', '.toggle_display_type', createShipTable);
 	$('#modal_ship_select').on('input', '#ship_word', ship_word_TextChanged);
 	$('#modal_enemy_select').on('click', '.modal-body .enemy', function () { modal_enemy_Selected($(this)); });
@@ -15751,7 +15747,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_enemy_pattern').on('dblclick', '.node', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '.node_tr', node_DoubleClicked);
 	$('#modal_enemy_pattern').on('dblclick', '#enemy_pattern_select .nav-link.active', node_DoubleClicked);
-	$('#modal_big_map').on('hidden.bs.modal', function () { $(document.body).addClass('modal-open'); });
 	$('#modal_main_preset').on('show.bs.modal', modal_main_preset_Shown);
 	$('#modal_main_preset').on('change', '#select_preset_category', select_preset_category_Changed);
 	$('#modal_main_preset').on('click', '.btn_commit_preset', btn_commit_main_preset_Clicked);
