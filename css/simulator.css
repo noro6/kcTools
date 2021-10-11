@@ -757,6 +757,16 @@ input[type="number"] { text-align: right; }
   text-align: right;
 }
 
+.battle_content.is_night {
+  background-color: rgba(180, 120, 255, 0.12);
+}
+.dark-theme .battle_content.is_night {
+  background-color: rgba(142, 85, 212, 0.18);
+}
+.battle_content.is_night .custom-select {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 /* -----------------------------------
   艦載機選択モーダル #modal_plane_select
 ----------------------------------- */

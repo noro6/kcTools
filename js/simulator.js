@@ -5448,9 +5448,8 @@ function createNodeSelect() {
 	for (let index = 0; index < len; index++) {
 		const nodeName = patterns[index].n;
 		const coords = patterns[index].c;
-		const isNight = patterns[index].t === CELL_TYPE.night;
 		text += `
-		<div class="d-flex node_tr ${isNight ? 'is_night' : ''} general_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
+		<div class="d-flex node_tr general_tr justify-content-center py-1 w-100 cur_pointer" data-node="${nodeName}">
 			<div class="align-self-center">${nodeName}</div>
 		</div>
 	`;
@@ -8291,8 +8290,8 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 		// 制空に関係ない艦娘はスキップ
 		if (ship.ignoreSlot) continue;
 		let shipAp = 0;
-		// 通常戦闘の場合、第2艦隊スキップ ただし搭載数の記録は必要なのでここでcontinueはしない
-		const isSkip = !battleInfo.isUnion && ship.isEscort;
+		// 通常戦闘の場合、第2艦隊スキップ または夜戦　ただし搭載数の記録は必要なのでここでcontinueはしない
+		const isSkip = (!battleInfo.isUnion && ship.isEscort) || battleInfo.cellType === 4;
 		const planeLen = ship.items.length;
 		for (let j = 0; j < planeLen; j++) {
 			const plane = ship.items[j];
@@ -12208,6 +12207,13 @@ function cell_type_Changed($this, calc = true) {
 		else $(e).removeClass('d-none').addClass('d-flex');
 	});
 
+	if (cellType === CELL_TYPE.night) {
+		$parentContent.addClass('is_night');
+	}
+	else {
+		$parentContent.removeClass('is_night');
+	}
+
 	const $formation = $parentContent.find('.formation');
 	changeFormationSelectOption($formation, cellType);
 
@@ -13461,8 +13467,6 @@ function node_Clicked($this) {
 function node_DoubleClicked() {
 	// 選択マスがなければ何もしない(例外回避)
 	if (!$('.node_tr').hasClass('node_selected')) return;
-	// 夜戦マスが選択されていたら中断
-	if ($('.node_selected').hasClass('is_night')) return;
 	if ($('#btn_expand_enemies').hasClass('d-none')) {
 		btn_continue_expand_Clicked();
 		$('.node_tr').removeClass('node_selected');
@@ -13476,9 +13480,6 @@ function node_DoubleClicked() {
  * 敵編成展開クリック時
  */
 function btn_expand_enemies() {
-	// 夜戦マスが選択されていたら中断
-	if ($('.node_selected').hasClass('is_night')) return;
-
 	expandEnemy();
 	$('#modal_enemy_pattern').modal('hide');
 }
@@ -13487,9 +13488,6 @@ function btn_expand_enemies() {
  * 連続展開
  */
 function btn_continue_expand_Clicked() {
-	// 夜戦マスが選択されていたら中断
-	if ($('.node_selected').hasClass('is_night')) return;
-
 	let currentBattle = castInt($('#expand_target').text());
 	// 1戦目を入れた時点でクリアかける
 	if (currentBattle === 1) {
