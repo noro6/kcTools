@@ -262,7 +262,7 @@ const ITEM_DATA = [
 	{ id: 271, type: 6, itype: 6, name: "紫電改四", abbr: "", fire: 0, antiAir: 10, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 1, avoid2: 3, radius: 4, cost: 7, avoid: 0, range2: 0, grow: 6 },
 	{ id: 335, type: 6, itype: 6, name: "烈風改(試製艦載型)", abbr: "", fire: 1, antiAir: 10, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 3, radius: 4, cost: 10, avoid: 0, range2: 0, grow: 4 },
 	{ id: 336, type: 6, itype: 6, name: "烈風改二", abbr: "", fire: 1, antiAir: 13, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 5, cost: 10, avoid: 0, range2: 0, grow: 4 },
-	//	{ id: 337, type: 6, itype: 6, name: "烈風改二(一航戦/熟練)", abbr: "", fire: 2, antiAir: 14, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 6, cost: 10, avoid: 0, range2: 0, grow: 0 },
+	// { id: 337, type: 6, itype: 6, name: "烈風改二(一航戦/熟練)", abbr: "", fire: 2, antiAir: 14, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 1, radius: 6, cost: 10, avoid: 0, range2: 0, grow: 0 },
 	{ id: 338, type: 6, itype: 45, name: "烈風改二戊型", abbr: "", fire: 2, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 2, radius: 5, cost: 11, avoid: 0, range2: 0, grow: 3 },
 	{ id: 339, type: 6, itype: 45, name: "烈風改二戊型(一航戦/熟練)", abbr: "烈風改二戊(1航戦/熟練)", fire: 2, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 0, avoid2: 3, radius: 6, cost: 11, avoid: 0, range2: 0, grow: 2 },
 	{ id: 353, type: 6, itype: 6, name: "Fw190 A-5改(熟練)", abbr: "", fire: 2, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 1, avoid2: 3, radius: 4, cost: 7, avoid: 0, range2: 0, grow: 6 },
@@ -2728,13 +2728,12 @@ const ANTIAIR_CUTIN_ENEMY = [128, 129, 130, 166, 167, 409, 410, 411, 412, 413, 4
 const SPECIAL_DATA = [
 	{
 		mode: "A", special: [
-			// { name: '漁', remarks: '+', items: [44, 45, 47, 69, 70, 74, 129, 138, 140, 178, 242, 243, 244, 258, 259, 260, 261, 262, 412, 438, 25, 59, 102, 115, 118, 163, 171, 238, 239, 304, 370, 371, 414, 415, 26, 62, 79, 80, 81, 194, 207, 208, 237, 322, 323, 367, 368, 369] },
-			{ name: 'A', remarks: '', items: [64, 188, 233, 242, 248, 256, 257, 277, 305, 306, 316] },
-			{ name: 'B', remarks: '', items: [243, 244, 424, 425, 431, 405, 406] },
+			{ name: '漁', remarks: '+', items: [44, 45, 47, 69, 70, 74, 129, 138, 140, 178, 242, 243, 244, 258, 259, 260, 261, 262, 412, 438, 25, 59, 102, 115, 118, 163, 171, 238, 239, 304, 370, 371, 414, 415, 26, 62, 79, 80, 81, 194, 207, 208, 237, 322, 323, 367, 368, 369] },
 		]
 	},
 	{
 		mode: "B", special: [
+			// { name: '漁', remarks: '+', items: [44, 45, 47, 69, 70, 74, 129, 138, 140, 178, 242, 243, 244, 258, 259, 260, 261, 262, 412, 438, 25, 59, 102, 115, 118, 163, 171, 238, 239, 304, 370, 371, 414, 415, 26, 62, 79, 80, 81, 194, 207, 208, 237, 322, 323, 367, 368, 369] },
 			{ name: 'A', remarks: '2', items: [242, 256, 257, 233, 277, 197, 198, 205, 206, 254] },
 			{ name: 'A', remarks: '3', items: [243, 188, 422] },
 			{ name: 'A', remarks: '4', items: [244, 424, 425] },
@@ -2750,4 +2749,4 @@ const SPECIAL_DATA = [
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.14.1';
+const LATEST_VERSION = '1.12.15';

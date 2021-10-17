@@ -715,6 +715,9 @@ input[type="number"] { text-align: right; }
   -ms-flex-item-align: center !important;
   align-self: center !important;
 }
+.enemy_content.is_dead {
+  opacity: 0.4;
+}
 
 .enemy_index {
   margin-left: .25rem;
@@ -755,6 +758,16 @@ input[type="number"] { text-align: right; }
 .enemy_tool_slot {
   width: 30px;
   text-align: right;
+}
+
+.battle_content.is_night {
+  background-color: rgba(180, 120, 255, 0.12);
+}
+.dark-theme .battle_content.is_night {
+  background-color: rgba(142, 85, 212, 0.18);
+}
+.battle_content.is_night .custom-select {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* -----------------------------------
@@ -2162,4 +2175,44 @@ img[src *= "prof3"]:hover, img[src *= "prof2"]:hover, img[src *= "prof1"]:hover 
 #simulator_loading {
   margin-top: 40vh;
   height: 100vh;
+}
+
+/* さんま */
+#sanma_parent {
+  position: relative;
+  cursor: pointer;
+  z-index: 1020;
+  text-align: center;
+  user-select: none;
+  animation: 0.5s;
+}
+#sanma_parent.avoid {
+  position: absolute;
+}
+.fadeUp {
+  animation-name: fadeUpAnime;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+.fadeUp2 {
+  animation-name: fadeUpAnime2;
+  animation-duration: 0.25s;
+}
+@keyframes fadeUpAnime {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUpAnime2 {
+  from { opacity: 0; transform: translateY(-60px); }
+  to { opacity: 1; transform: translateY(-20px); }
+}
+.fadeOut {
+  animation-name: fadeOutAnime;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+@keyframes fadeOutAnime {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: scale(3.0, 3.0); }
 }

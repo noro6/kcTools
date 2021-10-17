@@ -124,6 +124,7 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('visibleFixedMenu')) setting.visibleFixedMenu = true;
 	if (!setting.hasOwnProperty('managerViewMode')) setting.managerViewMode = 'table';
 	if (!setting.hasOwnProperty('createdURLs')) setting.createdURLs = [];
+	if (!setting.hasOwnProperty('displaySumCount')) setting.displaySumCount = true;
 	if (!setting.hasOwnProperty('defaultProf')) {
 		setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);

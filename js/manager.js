@@ -31,6 +31,7 @@ let isAscShip = false;
 document.addEventListener('DOMContentLoaded', function () {
    document.getElementById('ship_legacy')['checked'] = setting.managerViewMode !== 'table';
    document.getElementById('ship_table')['checked'] = setting.managerViewMode === 'table';
+   document.getElementById('display_sum_count')['checked'] = setting.displaySumCount;
 
    // モーダル初期化
    $('.modal').modal();
@@ -174,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#items_filter').on('input', 'input[type="number"]', setRemodelSlider);
    $('#items_filter').on('click', 'input[type="number"]', function () { $(this).select(); });
    $('#items_filter').on('change', '#enabled_types_container', filterItemList);
+   $('#items_filter').on('change', '#display_sum_count', filterItemList);
    $('#items_filter').on('change', '#no_item_invisible', filterItemList);
    $('#items_filter').on('change', '#no_item_only', filterItemList);
 
@@ -1495,6 +1497,7 @@ function initItemList() {
          const item_header = createDiv('item_header');
          const img = document.createElement('img');
          img.className = 'item_icon';
+         img.alt = item.itype;
          img.src = `../img/type/icon${item.itype}.png`;
          item_header.appendChild(img);
 
@@ -1512,9 +1515,7 @@ function initItemList() {
                const count = stock.num[remodel];
                if (count) {
                   sumCount += count;
-
                   const item_detail = createDiv('item_detail');
-
                   const remodel_div = createDiv('text_remodel item_remodel');
                   remodel_div.textContent = '★+' + remodel;
                   remodel_div.dataset.remodel = remodel;
@@ -1528,10 +1529,29 @@ function initItemList() {
                }
             }
          }
-
          const count_div = createDiv('sum_count');
-         count_div.textContent = sumCount;
+         count_div.textContent = sumCount ? sumCount : '';
          item_header.appendChild(count_div);
+
+         // 明細行最上部に装備名も持っておく(総所持数非表示対応)
+         if (item_container.childNodes.length) {
+            const first = item_container.firstElementChild;
+            first.classList.add('top_detail');
+
+            const item_header2 = createDiv('item_header');
+            const img = document.createElement('img');
+            img.alt = item.itype;
+            img.className = 'item_icon';
+            img.src = `../img/type/icon${item.itype}.png`;
+
+            const nameSpan = createDiv('item_name');
+            nameSpan.textContent = item.name;
+
+            item_header2.appendChild(img);
+            item_header2.appendChild(nameSpan);
+
+            first.prepend(item_header2);
+         }
 
          if (!sumCount) {
             item_container.classList.add('no_item');
@@ -1558,11 +1578,17 @@ function initItemList() {
  */
 function filterItemList() {
    // 表示条件
+   const displaySumCount = document.getElementById('display_sum_count')['checked'];
    const noItemInvisible = document.getElementById('no_item_invisible')['checked'];
    const noItemOnly = document.getElementById('no_item_only')['checked'];
    const remodelMin = castInt(document.getElementById('remodel_min').value);
    const remodelMax = castInt(document.getElementById('remodel_max').value);
    const visibleTypes = $('#enabled_types').formSelect('getSelectedValues').map(v => castInt(v));
+
+   const enabledRemodelFilter = remodelMin > 0 || remodelMax < 10;
+
+   setting.displaySumCount = displaySumCount;
+   saveSetting();
 
    const containers = document.getElementsByClassName('type_content');
    for (const container of containers) {
@@ -1575,7 +1601,7 @@ function filterItemList() {
       }
 
       for (const itemContainer of container.getElementsByClassName('item_container')) {
-         if (noItemInvisible && itemContainer.classList.contains('no_item')) {
+         if ((noItemInvisible || enabledRemodelFilter) && itemContainer.classList.contains('no_item')) {
             itemContainer.classList.add('d-none');
             continue;
          }
@@ -1583,6 +1609,17 @@ function filterItemList() {
             itemContainer.classList.add('d-none');
             continue;
          }
+
+         // 総所持数の表示有無制御 チェックボックスまたは改修値フィルタによって制御
+         if (displaySumCount && !enabledRemodelFilter) {
+            // 総所持数を描画する
+            itemContainer.classList.remove('invisible_count');
+         }
+         else {
+            // 総所持数を描画しない
+            itemContainer.classList.add('invisible_count');
+         }
+
          for (const detail of itemContainer.getElementsByClassName('item_detail')) {
             const remodel = castInt(detail.getElementsByClassName('item_remodel')[0].dataset.remodel);
             if (remodel < remodelMin || remodel > remodelMax) {

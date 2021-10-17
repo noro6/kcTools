@@ -135,16 +135,19 @@
 						<input type="radio" id="display_special_A" name="display_special_item_type">
 						<i class="fa-radio-checked"></i>
 						<i class="fa-radio-unchecked"></i>
-						<span>2021夏 E-2</span>
+						<span>秋刀魚漁特効(2019年)</span>
 					</label>
 				</div>
-				<div class="ml-3 custom-check align-self-center">
+				<div class="ml-3 custom-check align-self-center d-none">
 					<label>
 						<input type="radio" id="display_special_B" name="display_special_item_type">
 						<i class="fa-radio-checked"></i>
 						<i class="fa-radio-unchecked"></i>
-						<span>2021夏 E-3</span>
+						<span>秋刀魚漁特効(2021年)</span>
 					</label>
+				</div>
+				<div class="ml-1 align-self-center d-none" style="height: 28px;">
+					<div id="sanma_parent"></div>
 				</div>
 			</div>
 		</div>
@@ -174,11 +177,23 @@
 			</div>
 			<div class="collapse show collapse_content" id="landBase_content">
 				<div class="border-top"></div>
-				<div class="my-2 ml-1 custom-control custom-switch no_capture">
-					<input type="checkbox" class="custom-control-input" id="toggle_def_mode">
-					<label class="custom-control-label" for="toggle_def_mode">防空計算モード</label>
+				<div class="d-flex my-2 ml-1 ">
+					<div class="align-self-center custom-control custom-switch no_capture">
+						<input type="checkbox" class="custom-control-input" id="toggle_def_mode">
+						<label class="custom-control-label" for="toggle_def_mode">防空計算モード</label>
+					</div>
+					<div class="ml-3 align-self-center no_capture">
+						<button class="btn btn-sm btn-outline-success btn_lb_target">基地派遣設定</button>
+					</div>
+					<div class="ml-2 align-self-center d-none no_capture lb_target_alert">
+						<span class="text-danger font_size_12">基地航空隊の派遣先を確認してください。</span>
+					</div>
 				</div>
-				<div class="alert alert-warning px-2 py-2 font_size_12 no_capture" id="air_raid_alert">
+				<div class="alert alert-warning p-2 font_size_12 mb-1 d-none no_capture lb_range_warning">
+					<span>第<span class="ng_range">1</span>基地航空隊の半径が不足しています。計算は通常通り行います。→</span>
+					<span class="dummy_a lb_target_button">基地派遣先を変更する</span>
+				</div>
+				<div class="alert alert-warning p-2 font_size_12 no_capture" id="air_raid_alert">
 					<span>基地への空襲が発生します。編成完了後、空襲による地上撃破を考慮してください。→</span>
 					<span class="dummy_a" id="alert_air_raid_button">基地空襲を発生させる</span>
 				</div>
@@ -1301,6 +1316,7 @@
 											<div class="plane_name drag_handle">
 												<span class="plane_name_span">補強増設</span>
 											</div>
+											<div class="item_special d-none"></div>
 											<div class="ml-auto dropdown remodel_select_parent text_remodel">
 												<div class="remodel_select remodel_disabled" data-toggle="dropdown" data-remodel="0">
 													<span>★<span class="remodel_value">0</span></span>
@@ -1469,9 +1485,9 @@
 					</select>
 					<div class="ml-1 align-self-center">戦</div>
 					<div class="ml-3 align-self-center no_capture">
-						<button class="btn btn-sm btn-outline-success" id="btn_lb_target">基地派遣設定</button>
+						<button class="btn btn-sm btn-outline-success btn_lb_target">基地派遣設定</button>
 					</div>
-					<div class="ml-2 align-self-center d-none no_capture" id="lb_target_alert">
+					<div class="ml-2 align-self-center d-none no_capture lb_target_alert">
 						<span class="text-danger font_size_12">基地航空隊の派遣先を確認してください。</span>
 					</div>
 
@@ -1495,8 +1511,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="alert alert-warning py-2 mb-1 d-none no_capture" id="lb_range_warning">
-					第<span id="ng_range">1</span>基地航空隊の半径が不足しています。<span class="font_size_12">計算は通常通り行います。</span>
+				<div class="alert alert-warning py-2 mb-1 d-none no_capture lb_range_warning">
+					<span>第<span class="ng_range">1</span>基地航空隊の半径が不足しています。計算は通常通り行います。→</span>
+					<span class="dummy_a lb_target_button">基地派遣先を変更する</span>
 				</div>
 				<div id="normal_enemies">
 					<div class="d-flex flex-wrap" id="battle_container">
@@ -1523,6 +1540,7 @@
 										<option value="1" selected>通常</option>
 										<option value="2">連合</option>
 										<option value="3">空襲</option>
+										<option value="4">夜戦</option>
 										<option value="6">航空戦</option>
 									</optgroup>
 								</select>
