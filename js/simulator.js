@@ -2528,6 +2528,8 @@ class Battle {
 		for (let i = 0; i < enemyCount; i++) {
 			const enm = this.enemies[i];
 			if (enm.id === 0) continue;
+			// 途中で死ぬ設定の敵を飛ばす
+			if (enm.isDead) continue;
 
 			// 連合艦隊補正
 			const unionFactor = this.isUnion && enm.isEscort ? 0.48 : this.isUnion && !enm.isEscort ? 0.8 : 1.0;
@@ -2624,6 +2626,8 @@ class Enemy {
 		this.equipmentsAAWeight = 0;
 		/** @type {boolean} */
 		this.isEscort = false;
+		/** @type {boolean} 途中で死ぬ想定 */
+		this.isDead = false;
 
 		const raw = ENEMY_DATA.find(v => v.id === id);
 		if (raw) {
@@ -4208,7 +4212,7 @@ function setEnemyDiv($div, id, ap = 0) {
 	if (enemy.id === 0) return;
 
 	$div[0].dataset.enemyid = enemy.id;
-	$div.removeClass('d-none no_enemy').addClass('d-flex');
+	$div.removeClass('d-none no_enemy is_dead').addClass('d-flex');
 	$div.find('.enemy_name_text').html(drawEnemyGradeColor(enemy.name));
 	$div.find('.enemy_name_img').attr('src', `../img/enemy/${enemy.id}.png`);
 
@@ -4237,7 +4241,7 @@ function setEnemyDiv($div, id, ap = 0) {
 function clearEnemyDiv($div) {
 	$div[0].dataset.enemyid = 0;
 	$div.addClass('no_enemy');
-	$div.addClass('py-0_5').removeClass('pb-0_1 min-h-31px');
+	$div.addClass('py-0_5').removeClass('pb-0_1 min-h-31px is_dead');
 	$div.find('.enemy_name_img_parent').addClass('d-none').removeClass('d-flex');
 	$div.find('.enemy_name_img').attr('src', `../img/enemy/-1.png`);
 	$div.find('.enemy_name_text').removeClass('d-none');
@@ -6778,7 +6782,10 @@ function calculateInit() {
 		document.getElementById('shoot_down_table_content').classList.add('d-none');
 		// 基地空襲敵欄表示
 		document.getElementById('air_raid_enemies').classList.remove('d-none');
-
+		document.getElementsByClassName('btn_lb_target')[0].classList.add('d-none');
+		document.getElementsByClassName('btn_lb_target')[1].classList.add('d-none');
+		document.getElementsByClassName('lb_target_alert')[0].classList.add('d-none');
+		document.getElementsByClassName('lb_target_alert')[1].classList.add('d-none');
 		// 対空砲火アレコレ全部非表示
 		document.getElementById('result_stage2_setting').classList.add('d-none');
 
@@ -6796,7 +6803,8 @@ function calculateInit() {
 
 		// 基地空襲敵欄非表示
 		document.getElementById('air_raid_enemies').classList.add('d-none');
-
+		document.getElementsByClassName('btn_lb_target')[0].classList.remove('d-none');
+		document.getElementsByClassName('btn_lb_target')[1].classList.remove('d-none');
 		// 対空砲火のアレコレ表示
 		document.getElementById('result_stage2_setting').classList.remove('d-none');
 		if (document.getElementById('adapt_stage2')['checked']) {
@@ -7072,13 +7080,16 @@ function updateLandBaseView() {
 		}
 
 		// 半径足りませんよ表示
-		document.getElementById('ng_range').textContent = ngLandBaseIndex.join(', ');
+		document.getElementsByClassName('ng_range')[0].textContent = ngLandBaseIndex.join(', ');
+		document.getElementsByClassName('ng_range')[1].textContent = ngLandBaseIndex.join(', ');
 		if (ngLandBaseIndex.length) {
-			document.getElementById('lb_range_warning').classList.remove('d-none');
+			document.getElementsByClassName('lb_range_warning')[0].classList.remove('d-none');
+			document.getElementsByClassName('lb_range_warning')[1].classList.remove('d-none');
 			// inform_warning(`第${ngLandBaseIndex.join(', ')}基地航空隊の半径が不足しています。`);
 		}
 		else {
-			document.getElementById('lb_range_warning').classList.add('d-none');
+			document.getElementsByClassName('lb_range_warning')[0].classList.add('d-none');
+			document.getElementsByClassName('lb_range_warning')[1].classList.add('d-none');
 		}
 
 		// 防空部隊がない
@@ -7093,7 +7104,8 @@ function updateLandBaseView() {
 		}
 	}
 	else {
-		document.getElementById('lb_range_warning').classList.add('d-none');
+		document.getElementsByClassName('lb_range_warning')[0].classList.add('d-none');
+		document.getElementsByClassName('lb_range_warning')[1].classList.add('d-none');
 	}
 
 	// 基地入力欄の半径、触接表示有無
@@ -8079,6 +8091,8 @@ function updateEnemyFleetInfo() {
 			if (isAllSubmarine && enemy.id && !enemy.type.includes(18)) {
 				isAllSubmarine = false;
 			}
+			// 途中で死ぬフラグ
+			enemy.isDead = node_enemy_content.classList.contains('is_dead');
 
 			// 連合かつ7番目以降で随伴フラグ
 			enemy.isEscort = battle.isUnion && enemyIndex > 6;
@@ -13145,9 +13159,9 @@ function battle_count_Changed($this) {
 	// なんらかの出撃基地があれば基地派遣設定ボタンを目立たせる
 	$('#lb_tab_parent').find('.ohuda_select').each((i, e) => {
 		if (castInt($(e).val()) === 2) {
-			$('#btn_lb_target').removeClass('btn-outline-success');
-			$('#btn_lb_target').addClass('btn-outline-danger');
-			$('#lb_target_alert').removeClass('d-none');
+			$('.btn_lb_target').removeClass('btn-outline-success');
+			$('.btn_lb_target').addClass('btn-outline-danger');
+			$('.lb_target_alert').removeClass('d-none');
 			needAlert = true;
 		}
 	});
@@ -13200,9 +13214,9 @@ function btn_lb_target_Clicked() {
 	}
 
 	// 基地派遣設定ボタンの色を戻す
-	$('#btn_lb_target').removeClass('btn-outline-danger');
-	$('#btn_lb_target').addClass('btn-outline-success');
-	$('#lb_target_alert').addClass('d-none');
+	$('.btn_lb_target').removeClass('btn-outline-danger');
+	$('.btn_lb_target').addClass('btn-outline-success');
+	$('.lb_target_alert').addClass('d-none');
 
 	$('#modal_lb_target').modal('show');
 }
@@ -13247,6 +13261,20 @@ function btn_reset_battle_Clicked($this) {
 function enemy_word_TextChanged() {
 	if (timer !== false) clearTimeout(timer);
 	timer = setTimeout(function () { createEnemyTable(); }, 250);
+}
+
+/**
+ * 敵艦インデックスクリック時
+ * @param {JQuery} $this
+ */
+function enemy_index_Clicked($this) {
+	if ($this.closest('.enemy_content').hasClass('is_dead')) {
+		$this.closest('.enemy_content').removeClass('is_dead');
+	}
+	else {
+		$this.closest('.enemy_content').addClass('is_dead');
+	}
+	calculate(false, false, true);
 }
 
 /**
@@ -13358,7 +13386,7 @@ function free_modify_input_Changed($this) {
 function calculateStage2Detail() {
 	const battleNo = castInt($('#modal_stage2_detail').data('battleno'));
 	const formationId = castInt($('#modal_stage2_detail').data('formationid'));
-	const all = updateEnemyFleetInfo(false);
+	const all = updateEnemyFleetInfo();
 	const battleData = all.battles[battleNo];
 	const slot = castInt($('#stage2_detail_slot').val());
 	const avoid = castInt($('#stage2_detail_avoid').val());
@@ -13376,7 +13404,7 @@ function calculateStage2Detail() {
 	let idx = 0;
 	for (let index = 0; index < battleData.enemies.length; index++) {
 		const enemy = battleData.enemies[index];
-		if (enemy.id === 0) continue;
+		if (enemy.id === 0 || enemy.isDead) continue;
 		const rate = Math.floor(slot * battleData.stage2[avoid][0][idx]);
 		const fix = battleData.stage2[avoid][1][idx];
 		const sum = rate + fix;
@@ -13513,9 +13541,9 @@ function btn_continue_expand_Clicked() {
 	// なんらかの出撃基地があれば基地派遣設定ボタンを目立たせる
 	$('#lb_tab_parent').find('.ohuda_select').each((i, e) => {
 		if (castInt($(e).val()) === 2) {
-			$('#btn_lb_target').removeClass('btn-outline-success');
-			$('#btn_lb_target').addClass('btn-outline-danger');
-			$('#lb_target_alert').removeClass('d-none');
+			$('.btn_lb_target').removeClass('btn-outline-success');
+			$('.btn_lb_target').addClass('btn-outline-danger');
+			$('.lb_target_alert').removeClass('d-none');
 		}
 	});
 
@@ -15627,6 +15655,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#main').on('click', '.btn_content_trade', function () { btn_content_trade_Clicked($(this)); });
 	$('#main').on('click', '.btn_commit_trade', commit_content_order);
 	$('#main').on('click', '.btn_ex_setting', function () { btn_ex_setting_Clicked($(this)); });
+	$('#main').on('click', '.btn_lb_target', btn_lb_target_Clicked);
+	$('#main').on('click', '.lb_target_button', btn_lb_target_Clicked);
 	$('#main_header_info').on('click', 'input', function () { display_special_Changed($(this)); });
 	$('#site_warning').on('click', '.cur_pointer', () => { $('#site_warning').removeClass('d-flex').addClass('d-none'); });
 	$('#landBase').on('click', '.btn_air_raid', btn_air_raid_Clicked);
@@ -15667,13 +15697,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#friendFleet_content').on('input', '#admin_lv', admin_lv_Changed);
 	$('#enemyFleet_content').on('change', '.cell_type', function () { cell_type_Changed($(this)); });
 	$('#enemyFleet_content').on('change', '.formation', function () { calculate(false, false, true); });
-	$('#enemyFleet_content').on('click', '.enemy_content', function () { enemy_name_Clicked($(this)); });
+	$('#enemyFleet_content').on('click', '.enemy_index', function () { enemy_index_Clicked($(this)); });
+	$('#enemyFleet_content').on('click', '.enemy_name', function () { enemy_name_Clicked($(this)); });
 	$('#enemyFleet_content').on('click', '.btn_reset_battle', function () { btn_reset_battle_Clicked($(this)); });
 	$('#enemyFleet_content').on('click', '#btn_world_expand', btn_world_expand_Clicked);
 	$('#enemyFleet_content').on('click', '.btn_enemy_preset', function () { btn_enemy_preset_Clicked($(this)); });
 	$('#enemyFleet_content').on('click', '.btn_stage2', function () { btn_stage2_Clicked($(this)); });
 	$('#enemyFleet_content').on('change', '#battle_count', function () { battle_count_Changed($(this)); });
-	$('#enemyFleet_content').on('click', '#btn_lb_target', btn_lb_target_Clicked);
 	$('#enemyFleet_content').on('click', 'input[name="enemy_fleet_display_mode"]', function () { enemy_fleet_display_mode_Changed($(this)); });
 	$('#result').on('click', '#btn_calculate', function () { calculate(false, false, false); });
 	$('#result_content').on('click', '#btn_more_calc', btn_more_calc_Clicked);
@@ -15996,9 +16026,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				$(e).find('.btn_show_contact_rate_lb')[0].dataset.lb = (i + 1);
 			});
 			inform_warning('基地航空隊の入れ替えが行われました。基地航空隊の派遣先を確認してください。');
-			$('#btn_lb_target').removeClass('btn-outline-success');
-			$('#btn_lb_target').addClass('btn-outline-danger');
-			$('#lb_target_alert').removeClass('d-none');
+			$('.btn_lb_target').removeClass('btn-outline-success');
+			$('.btn_lb_target').addClass('btn-outline-danger');
+			$('.lb_target_alert').removeClass('d-none');
 			calculate(true, false, false);
 		}
 	});
@@ -16151,4 +16181,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	$('#main').fadeIn();
 	$('#simulator_loading').remove();
+
+	// さんまくん
+	initSanma = setting.sanma ? castInt(setting.sanma) : 0;
+	const sanmaParent = document.getElementById('sanma_parent');
+	const newY = () => { return Math.max(Math.floor(Math.random() * (document.getElementById('main').clientHeight - 50)), 60) };
+	const newX = () => { return Math.max(Math.floor(Math.random() * (window.innerWidth - 30)), 30) };
+	const sanma = document.createElement('img');
+	sanma.src = '../img/util/ammo.png';
+	sanmaParent.appendChild(sanma);
+	sanmaParent.onclick = () => {
+		if (!sanmaParent.classList.contains('avoid') || Math.floor(Math.random() * 11) < 8) {
+			sanmaParent.classList.add('avoid');
+			$(sanmaParent).animate({ 'top': newY() + 'px', 'left': newX() + 'px' }, 100);
+		}
+		else {
+			const bonus = document.createElement('div');
+			sanma.classList.add('fadeOut');
+			bonus.className = 'fadeUp fadeUp2';
+			bonus.innerHTML = '+1';
+			sanmaParent.appendChild(bonus);
+
+			inform_success('捕まえた秋刀魚: ' + (initSanma + 1));
+			setting.sanma = initSanma + 1;
+			initSanma++;
+			saveSetting();
+
+			setTimeout(() => {
+				sanma.classList.remove('fadeOut');
+				sanmaParent.removeChild(bonus);
+				sanmaParent.style.top = '';
+				sanmaParent.style.left = '';
+				sanmaParent.classList.remove('avoid');
+			}, 1000);
+		}
+	}
 });

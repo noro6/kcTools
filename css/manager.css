@@ -776,10 +776,11 @@ input[type="number"] {
 
 .item_header {
    display: flex;
-   padding-right: 0.5rem;
+   padding-right: 0.2rem;
 }
+
 .item_name {
-   margin-left: 0.25rem;
+   margin-left: 0.2rem;
    -ms-flex-positive: 1!important;
    flex-grow: 1!important;
    width: 1px;
@@ -793,21 +794,43 @@ input[type="number"] {
    margin-left: auto;
    width: 100px;
    border-top: 1px solid rgba(128, 128, 128, 0.25);
-   padding-right: 0.5rem;
+   padding-right: 0.2rem;
 }
-.dark-theme .item_detail{
+.dark-theme .item_detail {
    border-top: 1px solid rgba(204, 204, 204, 0.25);
 }
+.item_detail.top_detail {
+   margin-left: 0rem;
+   width: 100%;
+}
+.top_detail .item_header {
+   display: flex !important;
+   -ms-flex-positive: 1!important;
+   flex-grow: 1!important;
+   opacity: 0;
+}
+.top_detail .item_icon { height: 10px; }
+
+/* 総所持数非表示時 */
+.invisible_count.no_item {
+   padding-top: 0rem;
+   padding-bottom: 0rem;
+}
+.invisible_count:not(.no_item) .item_header {display: none; }
+.invisible_count .top_detail { border-top: none; }
+.invisible_count .top_detail .item_header { opacity: 1; }
+.invisible_count .top_detail .item_icon ,
+.invisible_count .item_detail { height: 28px;}
 
 .text_remodel {
    color: rgb(0, 175, 175);
 }
 .item_remodel {
    margin-left: auto;
-   width: 40px;
+   width: 36px;
 }
 .text_count {
-   width: 36px;
+   width: 28px;
    text-align: right;
    color: rgb(0, 102, 255);
 }
@@ -815,6 +838,7 @@ input[type="number"] {
    color: rgb(0, 162, 255);
 }
 .sum_count {
+   margin-left: 0.1rem;
    opacity: 0.6;
 }
 
