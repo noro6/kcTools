@@ -199,11 +199,16 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#others').on('click', '#btn_kantai_sarashi', outputKantaiSarashiCode);
 
    $('#readonly_mode').on('click', 'button', quitReadonlyMode);
+
+   // 共有ページ
    $('#content_tabs').on('click', 'a[href="#others"]', initURLs);
    $('#created_url_list').on('click', '.btn_link', function () { location.href = $(this)[0].dataset.url; });
    $('#created_url_list').on('click', '.btn_delete_url', function () { btn_delete_url_Clicked($(this)); });
    $('#modal_url_remove_confirm').on('click', '#btn_delete_url_commit', btn_delete_url_commit_Clicked);
    $('#modal_url_remove_confirm').on('click', '.cancel', () => { $('#modal_url_remove_confirm').modal('close'); });
+
+   // 比較ページ
+   $('#content_tabs').on('click', 'a[href="#compare"]', initCompareShip);
 
    const params = getUrlParams();
    if (params.hasOwnProperty("id")) {
@@ -228,7 +233,6 @@ function initShipList() {
    enabledShareButton();
 
    if (document.getElementById('ship_table')['checked']) {
-      // document.getElementById('ships_sort_container').classList.remove('d-none');
       initShipListTable();
       filterShipListTable();
       setting.managerViewMode = 'table';
@@ -242,8 +246,6 @@ function initShipList() {
 
    setting.managerViewMode = 'legacy';
    saveSetting();
-
-   document.getElementById('ships_sort_container').classList.add('d-none');
 
    // 所持装備
    const stockShips = readOnlyMode ? readOnlyShips : loadShipStock();
@@ -381,7 +383,6 @@ function initShipList() {
  * 現在登録されている艦娘情報から所持艦娘一覧を再構築　テーブル形式
  */
 function initShipListTable() {
-   const sortKey = document.getElementById('ships_sort').value;
    // 所持装備
    const stockShips = readOnlyMode ? readOnlyShips : loadShipStock();
    const fragment = document.createDocumentFragment();
@@ -400,18 +401,8 @@ function initShipListTable() {
    fragment.appendChild(header);
 
    let baseShips = [];
-
-   switch (sortKey) {
-      case "port":
-         for (const ctype of API_CTYPE) {
-            baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
-         }
-         break;
-      default:
-         for (const ctype of API_CTYPE) {
-            baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
-         }
-         break;
+   for (const ctype of API_CTYPE) {
+      baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
    }
 
    const tbody = document.createElement('div');
@@ -2831,6 +2822,7 @@ function readURLData(id) {
          else {
             document.getElementById('readonly_mode').classList.remove('d-none');
             document.getElementById('btn_exit_readonly').classList.remove('d-none');
+            // $('.readonly_mode_tab').removeClass('d-none');
             readOnlyMode = true;
          }
 
@@ -2873,12 +2865,14 @@ function getLevelStatus(lv, max, min) {
 function quitReadonlyMode() {
    document.getElementById('readonly_mode').classList.add('d-none');
    document.getElementById('btn_exit_readonly').classList.add('d-none');
+   $('.readonly_mode_tab').addClass('d-none');
    readOnlyMode = false;
    readOnlyShips = null;
    readOnlyItems = null;
    initShipList();
    initItemList();
    initExpTable();
+   $('#content_tabs').tabs('select', 'ships_content');
    inform_success('閲覧モードを終了しました');
 }
 
@@ -2928,4 +2922,227 @@ function ship_fav_Clicked($this) {
    }
 
    saveSetting();
+}
+
+/**
+ * 艦娘比較モード初期化
+ */
+function initCompareShip() {
+   // 一応防御
+   if (!readOnlyMode || !readOnlyShips.length) {
+      inform_warning('比較先のデータがありません。');
+   }
+   // 比較元は閲覧中の編成
+   const data1 = loadShipStock();
+   // 比較先は任意
+   const data2 = readOnlyShips;
+
+   let baseShips = SHIP_DATA.concat();
+   baseShips = [];
+   for (const ctype of API_CTYPE) {
+      baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
+   }
+
+   /** @type {{types: number[], name: string, exps: number[]}[]} */
+   const typeData = [];
+   for (const type of SHIP_TYPE_REV2) {
+      // 艦種拡張
+      let dispType = [];
+      switch (type.id) {
+         case 103:
+            // 軽巡級
+            dispType = [3, 4, 21];
+            break;
+         case 105:
+            // 重巡級
+            dispType = [5, 6];
+            break;
+         case 114:
+            // 潜水艦
+            dispType = [13, 14];
+            break;
+         case 11:
+            // 正規空母
+            dispType = [11, 18];
+            break;
+         case 108:
+            // 戦艦
+            dispType = [8, 9, 10];
+            break;
+         case 116:
+            // 補助艦艇
+            dispType = [1, 16, 17, 19, 20, 22];
+            break;
+         default:
+            dispType.push(type.id);
+            break;
+      }
+
+      typeData.push({ types: dispType.concat(), name: type.name, exps: [0, 0] });
+   }
+
+   const fragment = document.createDocumentFragment();
+   const tbody = document.createElement('div');
+   for (const ship of baseShips) {
+      const stock1 = data1.find(v => v.id === ship.id);
+      const stock2 = data2.find(v => v.id === ship.id);
+
+      let exist = false;
+      if (stock1) {
+         stock1.details.sort((a, b) => {
+            if (a.lv !== b.lv) return b.lv - a.lv;
+            return b.exp - a.exp;
+         });
+         exist = true;
+      }
+      if (stock2) {
+         stock2.details.sort((a, b) => {
+            if (a.lv !== b.lv) return b.lv - a.lv;
+            return b.exp - a.exp;
+         });
+         exist = true;
+      }
+
+      if (!exist) {
+         // 両方所持無しでスキップ
+         continue;
+      }
+
+      // でか枠組み
+      const diffShipTr = createDiv('diff_ship_tr d-flex justify-content-between');
+      // 比較元用div
+      const diffOrig = createDiv('diff_original_div');
+      // 比較先用div
+      const diffTar = createDiv('diff_target_div');
+
+      const count1 = stock1 ? stock1.details.length : 0;
+      const count2 = stock2 ? stock2.details.length : 0;
+
+      // 経験値データ更新用
+      const expData = typeData.find(v => v.types.includes(ship.type));
+
+      // 多い方に合わせる
+      const needRowsCount = Math.max(count1, count2);
+      for (let i = 0; i < needRowsCount; i++) {
+
+         const d1 = { lv: 0, exp: 1, luck: ship.luck, hp: ship.hp, asw: ship.asw };
+         if (i < count1) {
+            const detail = stock1.details[i];
+            d1.lv = detail.lv;
+            d1.exp = detail.exp;
+            d1.luck += detail.st[4];
+            d1.hp = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
+            d1.asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw) + detail.st[6];
+         }
+
+         const d2 = { lv: 0, exp: 1, luck: ship.luck, hp: ship.hp, asw: ship.asw };
+         if (i < count2) {
+            const detail = stock2.details[i];
+            d2.lv = detail.lv;
+            d2.exp = detail.exp;
+            d2.luck += detail.st[4];
+            d2.hp = (detail.lv > 99 ? ship.hp2 : ship.hp) + detail.st[5];
+            d2.asw = getLevelStatus(detail.lv, ship.max_asw, ship.asw) + detail.st[6];
+         }
+
+         if (d1.lv) {
+            diffOrig.appendChild(createDiffTr(ship, d1, d2));
+            expData.exps[0] += d1.exp;
+         }
+         else if (d2.lv) {
+            // 対応する相手がいない
+            diffOrig.appendChild(createDiv('diff_tr diff_none'));
+         }
+
+         if (d2.lv) {
+            diffTar.appendChild(createDiffTr(ship, d2, d1));
+            expData.exps[1] += d2.exp;
+         }
+         else if (d1.lv) {
+            // 対応する相手がいるなら赤差分
+            diffTar.appendChild(createDiv('diff_tr diff_none'));
+         }
+      }
+
+      diffShipTr.appendChild(diffOrig);
+      diffShipTr.appendChild(diffTar);
+
+      if (diffOrig.innerHTML || diffTar.innerHTML) {
+         tbody.appendChild(diffShipTr);
+      }
+   }
+
+   fragment.appendChild(tbody);
+   document.getElementById('compare_ships').innerHTML = '';
+   document.getElementById('compare_ships').appendChild(fragment);
+
+   // 経験値テーブル作成
+   const expTbody = document.getElementById('diff_exp_tbody');
+   const frag = document.createDocumentFragment();
+   let sum1 = 0;
+   let sum2 = 0;
+   for (const data of typeData) {
+      const exp0 = data.exps[0];
+      const exp1 = data.exps[1];
+      sum1 += exp0;
+      sum2 += exp1;
+
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.className = 'td_name';
+      tdName.textContent = data.name;
+      const tdSum1 = document.createElement('td');
+      tdSum1.textContent = Number(data.exps[0]).toLocaleString();
+      const tdSub1 = document.createElement('td');
+      tdSub1.textContent = Number(exp0 - exp1).toLocaleString();
+      tdSub1.className = exp0 > exp1 ? 'more' : '';
+
+      const tdSum2 = document.createElement('td');
+      tdSum2.textContent = Number(data.exps[1]).toLocaleString();
+      const tdSub2 = document.createElement('td');
+      tdSub2.textContent = Number(exp1 - exp0).toLocaleString();
+      tdSub2.className = exp1 > exp0 ? 'more' : '';
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdSum1);
+      tr.appendChild(tdSub1);
+      tr.appendChild(tdSum2);
+      tr.appendChild(tdSub2);
+
+      frag.appendChild(tr);
+   }
+
+   document.getElementById('diff_sum_exp_0').textContent = Number(sum1).toLocaleString();
+   document.getElementById('diff_sum_exp_sub0').textContent = Number(sum1 - sum2).toLocaleString();
+   document.getElementById('diff_sum_exp_sub0').className = sum1 > sum2 ? 'more' : '';
+
+   document.getElementById('diff_sum_exp_1').textContent = Number(sum2).toLocaleString();
+   document.getElementById('diff_sum_exp_sub1').textContent = Number(sum2 - sum1).toLocaleString();
+   document.getElementById('diff_sum_exp_sub1').className = sum2 > sum1 ? 'more' : '';
+
+   expTbody.innerHTML = '';
+   expTbody.appendChild(frag);
+}
+
+/**
+ *
+ * @param {*} d1 detail
+ * @param {*} d2 detail
+ * @return {HTMLDivElement} div要素
+ */
+function createDiffTr(ship, d1, d2) {
+   const tr = createDiv(`d-flex diff_tr ${d2.lv ? d1.lv > d2.lv ? 'more' : d1.lv < d2.lv ? 'less' : '' : 'diff_add'}`);
+   const nameDiv = document.createElement('img');
+   nameDiv.src = '../img/ship/' + ship.id + '.png';
+   nameDiv.className = 'diff_td_name';
+   tr.appendChild(nameDiv);
+   const statusTds = createDiv('d-flex flex-grow-1 diff_td_status');
+   statusTds.appendChild(createDiv(`diff_td`, '', d1.lv));
+   statusTds.appendChild(createDiv(`diff_td`, '', d1.exp ? d1.exp : '0'));
+   statusTds.appendChild(createDiv(`diff_td`, '', d1.luck));
+   statusTds.appendChild(createDiv(`diff_td`, '', d1.hp));
+   statusTds.appendChild(createDiv(`diff_td`, '', d1.asw ? d1.asw : '-'));
+   tr.appendChild(statusTds);
+
+   return tr;
 }
