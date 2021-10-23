@@ -4,7 +4,7 @@ let ITEM_TYPES_LIST = [];
 let timer = null;
 
 let readOnlyMode = false;
-/** @type {{id: number, details: {id: number, lv: number, exp: number, st: number[], area: number }[]}[]} */
+/** @type {{id: number, details: {id: number, lv: number, exp: number, ex: number, st: number[], area: number }[]}[]} */
 let readOnlyShips = [];
 /** @type {{id: number, num: number[]}[]} */
 let readOnlyItems = [];
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('change', '#ok_daihatsu', filterShipList);
    $('#ships_filter').on('change', '#ok_naikatei', filterShipList);
    $('#ships_filter').on('change', '#no_ship_only', filterShipList);
+   $('#ships_filter').on('change', '#slot_ex_only', filterShipList);
    $('#ships_filter').on('click', '.filter_area', function () { filter_area_Clicked($(this)); });
    $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
    $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
@@ -304,6 +305,7 @@ function initShipList() {
                   detailContainer.dataset.shipId = ver.id;
                   detailContainer.dataset.shipApi = ver.api;
                   detailContainer.dataset.uniqueId = detail.id;
+                  detailContainer.dataset.slotEx = detail.ex ? detail.ex : 0;
 
                   if (detail.lv === 175) detailContainer.classList.add('lv_max2');
                   else if (detail.lv > 99) detailContainer.classList.add('lv_100');
@@ -334,7 +336,8 @@ function initShipList() {
                         ${ver.luck + detail.st[4]}
                      </div>
                   </div>
-                  ${detail.area > 0 || detail.area <= MAX_AREA ? '<div class="sally_area no_area"></div>' : `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>`}`;
+                  ${detail.area > 0 && detail.area <= MAX_AREA ? `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>` : '<div class="sally_area no_area"></div>'}
+                  ${detail.ex ? `<div class="slot_ex_container"><img class="slot_ex" src="../img/util/slot_ex.png" alt="ex"></div>` : ''}`;
                   verContainer.appendChild(detailContainer);
                }
                done = true;
@@ -345,6 +348,7 @@ function initShipList() {
                const detailContainer = createDiv('detail_container no_ship');
                detailContainer.dataset.shipId = ver.id;
                detailContainer.dataset.uniqueId = -1;
+               detailContainer.dataset.slotEx = 0;
                detailContainer.innerHTML = `<div>新規登録</div>
                <div class="ship_lv d-none" data-level="1"></div>
                <div class="remodel_hp d-none" data-hp="${ver.hp}" data-remodel-hp="0"></div>
@@ -425,6 +429,7 @@ function initShipListTable() {
             tr.dataset.luck = luck;
             tr.dataset.remodelHp = detail.st[5];
             tr.dataset.remodelAsw = detail.st[6];
+            tr.dataset.slotEx = detail.ex ? detail.ex : 0;
             tr.dataset.area = detail.area;
             tr.dataset.index = defaultIndex++;
 
@@ -437,6 +442,7 @@ function initShipListTable() {
                <div class="align-self-center ship_table_td_image mr-1">
                   <img src="../img/ship/${ship.id}.png" alt="${ship.name}">
                   ${detail.area > 0 && detail.area <= MAX_AREA ? `<img class="area_banner" src="../img/util/area${detail.area}.png" alt="${detail.area}">` : ''}
+                  ${detail.ex ? `<img class="slot_ex" src="../img/util/slot_ex.png" alt="ex">` : ''}
                </div>
                <div class="align-self-center name_body">${ship.name}</div>`;
             tr.appendChild(tdImage);
@@ -542,6 +548,7 @@ function initShipListTable() {
          tr.dataset.remodelHp = 0;
          tr.dataset.remodelAsw = 0;
          tr.dataset.area = 0;
+         tr.dataset.slotEx = 0;
          tr.dataset.orig = ship.id;
          tr.dataset.index = defaultIndex++;
 
@@ -637,6 +644,7 @@ function filterShipList() {
    const hp4nOnly = document.getElementById('hp_4n')['checked'];
    const okDaihatsu = document.getElementById('ok_daihatsu')['checked'];
    const okNaikatei = document.getElementById('ok_naikatei')['checked'];
+   const slotExOnly = document.getElementById('slot_ex_only')['checked'];
    const noShipOnly = document.getElementById('no_ship_only')['checked'];
    const visibleCountries = $('#enabled_ship_country').formSelect('getSelectedValues').map(v => castInt(v));
 
@@ -688,6 +696,7 @@ function filterShipList() {
                const remodelHp = castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.remodelHp);
                const remodelAsw = castInt(detail.getElementsByClassName('remodel_asw')[0].dataset.remodelAsw);
                const area = castInt(detail.getElementsByClassName('sally_area')[0].dataset.area);
+               const slotEx = castInt(detail.dataset.slotEx);
 
                // Lv条件
                if (lv < levelMin || lv > levelMax) {
@@ -719,6 +728,9 @@ function filterShipList() {
                }
                // 内火艇条件
                else if (okNaikatei && !OK_NAIKATEI_TYPE.includes(typeId) && !OK_NAIKATEI_SHIP.includes(api)) {
+                  detail.classList.add('d-none');
+               }
+               else if (slotExOnly && !slotEx) {
                   detail.classList.add('d-none');
                }
                else {
@@ -781,6 +793,7 @@ function filterShipListTable() {
    const okDaihatsu = document.getElementById('ok_daihatsu')['checked'];
    const okNaikatei = document.getElementById('ok_naikatei')['checked'];
    const noShipOnly = document.getElementById('no_ship_only')['checked'];
+   const slotExOnly = document.getElementById('slot_ex_only')['checked'];
 
    const trs = document.getElementsByClassName('ship_table_tr');
    for (const tr of trs) {
@@ -795,6 +808,7 @@ function filterShipListTable() {
       const remodelHp = castInt(tr.dataset.remodelHp);
       const remodelAsw = castInt(tr.dataset.remodelAsw);
       const area = castInt(tr.dataset.area);
+      const slotEx = castInt(tr.dataset.slotEx);
 
       if (noShipOnly && !tr.classList.contains('no_ship')) {
          tr.classList.add('d-none');
@@ -835,6 +849,10 @@ function filterShipListTable() {
       }
       // 内火艇条件
       else if (okNaikatei && !OK_NAIKATEI_TYPE.includes(shipType) && !OK_NAIKATEI_SHIP.includes(api)) {
+         tr.classList.add('d-none');
+      }
+      // 補強増設条件
+      else if (slotExOnly && !slotEx) {
          tr.classList.add('d-none');
       }
       else if (visibleCountries.length) {
@@ -2537,8 +2555,8 @@ async function requestURLKey() {
          }
          const postShip = [data.id, []];
          for (const detail of data.details) {
-            // id, Lv, 経験値, 改修値, 海域の順
-            postShip[1].push([detail.id, detail.lv, detail.exp, detail.st, detail.area]);
+            // id, Lv, 経験値, 改修値, 海域, 増設の順
+            postShip[1].push([detail.id, detail.lv, detail.exp, detail.st, detail.area, detail.ex]);
          }
          postShips.push(postShip);
       }
@@ -2779,7 +2797,7 @@ function readURLData(id) {
                // 圧縮状態から展開
                for (const ship of ships) {
                   const details = ship[1];
-                  if (!details.length || details.find(v => v.length !== 5)) {
+                  if (!details.length || details.find(v => v.length < 5)) {
                      // データ形式があわないためスキップ
                      continue;
                   }
@@ -2787,7 +2805,7 @@ function readURLData(id) {
                   readOnlyShips.push({
                      id: ship[0],
                      details: details.map(v => {
-                        return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4] }
+                        return { id: v[0], lv: v[1], exp: v[2], st: v[3], area: v[4], ex: (v.length >= 6 ? v[5] : 0) }
                      })
                   });
                }
