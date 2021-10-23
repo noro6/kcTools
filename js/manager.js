@@ -2840,7 +2840,7 @@ function readURLData(id) {
          else {
             document.getElementById('readonly_mode').classList.remove('d-none');
             document.getElementById('btn_exit_readonly').classList.remove('d-none');
-            // $('.readonly_mode_tab').removeClass('d-none');
+            $('.readonly_mode_tab').removeClass('d-none');
             readOnlyMode = true;
          }
 
