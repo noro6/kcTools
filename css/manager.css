@@ -666,6 +666,25 @@ input[type="number"] {
    height: 60px;
    width: auto;
 }
+.ship_table_td_image .slot_ex {
+   position: absolute;
+   bottom: 0px;
+   right: 0px;
+   height: 36px;
+   width: auto;
+}
+.slot_ex_container {
+   position: relative;
+   -ms-flex-item-align: end!important;
+   align-self: flex-end!important;
+}
+.slot_ex_container .slot_ex {
+   position: absolute;
+   bottom: 0px;
+   right: -0.2rem;
+   height: 24px;
+   width: auto;
+}
 
 /* ------------------------------
   装備一覧

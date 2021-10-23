@@ -170,6 +170,10 @@
 												<input type="checkbox" id="ok_naikatei" />
 												<span>内火艇搭載可</span>
 											</label>
+											<label class="filter_checkbox mr-4">
+												<input type="checkbox" id="slot_ex_only" />
+												<span>補強増設あり</span>
+											</label>
 										</div>
 										<div class="row">
 											<div class="input-field col s12 l6">
@@ -477,8 +481,8 @@
 									class="text_warning">temp1</span>.model.ship._map).map(([,v])=>{return{'id':
 								v._o.api_ship_id,'lv':
 								v._o.api_lv,'locked': v._o.api_locked,'st':
-								v._o.api_kyouka,'exp':v._o.api_exp,'area':v._o.api_sally_area}})<span
-									id="code_ship_filter">.filter(v=>v.locked)</span>,['id','lv','st','exp','area']))
+								v._o.api_kyouka,'exp':v._o.api_exp,'ex':v._o.api_slot_ex,'area':v._o.api_sally_area}})<span
+									id="code_ship_filter">.filter(v=>v.locked)</span>,['id','lv','st','exp','ex','area']))
 							</div>
 							<div class="tutorial_img">
 								<img class="materialboxed" src="../img/tutorial/tutorial7.jpg">

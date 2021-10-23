@@ -550,7 +550,7 @@ function readShipJson(input) {
 		let uniqueId = 1;
 		for (const obj of jsonData) {
 			let id = 0;
-			const detail = { id: uniqueId++, lv: 0, exp: 0, st: [], area: -1 };
+			const detail = { id: uniqueId++, lv: 0, exp: 0, st: [], ex: 0, area: -1 };
 
 			// 艦娘データかチェック
 			if (obj.hasOwnProperty('api_ship_id') && obj.hasOwnProperty('api_lv') && obj.hasOwnProperty('api_exp') && obj.hasOwnProperty('api_kyouka')) {
@@ -572,6 +572,14 @@ function readShipJson(input) {
 			else {
 				// データ形式があってない
 				return false;
+			}
+
+			// 補強増設
+			if (obj.hasOwnProperty('api_slot_ex')) {
+				detail.ex = obj.api_slot_ex ? 1 : 0;
+			}
+			else if (obj.hasOwnProperty('ex')) {
+				detail.ex = obj.ex ? 1 : 0;
 			}
 
 			// 札
@@ -706,7 +714,7 @@ function loadPlaneStock() {
 
 /**
  * 艦娘在庫読み込み　未定義の場合は空の配列
- * @returns {[{id: number, details: {id: number, lv: number, exp: number, st: number[], area: number}[]}]}
+ * @returns {[{id: number, details: {id: number, lv: number, exp: number, ex: number, st: number[], area: number}[]}]}
  */
 function loadShipStock() {
 	let shipStock = loadLocalStorage('shipStock') || [];
