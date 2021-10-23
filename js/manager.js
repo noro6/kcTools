@@ -363,6 +363,8 @@ function initShipList() {
                shipContainer.classList.add('no_ship');
                verContainer.appendChild(detailContainer);
                shipContainer.appendChild(verContainer);
+
+               allCount++;
             }
          }
 
@@ -379,7 +381,7 @@ function initShipList() {
          fragment.appendChild(container);
       }
    }
-   
+
    // 総隻数
    const resultCountDiv = createDiv('d-flex w-100');
    const resultDiv = createDiv('', 'filter_result_count', `${allCount}`);
@@ -624,6 +626,8 @@ function initShipListTable() {
          tr.appendChild(tdCI);
 
          tbody.appendChild(tr);
+
+         allCount++;
       }
    }
 
@@ -676,7 +680,7 @@ function filterShipList() {
    const containers = document.getElementsByClassName('ship_type_container');
    for (const container of containers) {
       for (const origParent of container.getElementsByClassName('ship_container')) {
-         for (const verParent of container.getElementsByClassName('version_container')) {
+         for (const verParent of origParent.getElementsByClassName('version_container')) {
             const typeId = castInt(verParent.dataset.shipType);
             const shipType2 = castInt(verParent.dataset.shipType2);
             if (visibleTypes.length && !visibleTypes.includes(typeId)) {
@@ -793,7 +797,7 @@ function filterShipList() {
       }
    }
 
-   document.getElementById('filter_result_count').textContent = $('#ship_list .detail_container:not(.d-none):not(.no_ship)').length;
+   document.getElementById('filter_result_count').textContent = views;
 }
 
 /**
@@ -907,7 +911,7 @@ function filterShipListTable() {
       }
    }
 
-   document.getElementById('filter_result_count').textContent = $('#ship_table_tbody .ship_table_tr:not(.d-none):not(.no_ship)').length;
+   document.getElementById('filter_result_count').textContent = views;
 }
 
 /**
