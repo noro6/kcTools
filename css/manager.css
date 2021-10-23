@@ -161,6 +161,7 @@ body {
 .border-top {
    border-top: 1px solid #dee2e6;
 }
+.w-100 { width: 100%; }
 
 input[type="number"] {
    text-align: right;

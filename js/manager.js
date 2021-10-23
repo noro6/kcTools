@@ -253,6 +253,8 @@ function initShipList() {
    //　もう表示した艦娘
    const doneShipId = [];
 
+   let allCount = 0;
+
    const fragment = document.createDocumentFragment();
    for (const ctype of API_CTYPE) {
       const container = createDiv('my-2 px-2 py-2 general_box ship_type_container');
@@ -339,6 +341,8 @@ function initShipList() {
                   ${detail.area > 0 && detail.area <= MAX_AREA ? `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>` : '<div class="sally_area no_area"></div>'}
                   ${detail.ex ? `<div class="slot_ex_container"><img class="slot_ex" src="../img/util/slot_ex.png" alt="ex"></div>` : ''}`;
                   verContainer.appendChild(detailContainer);
+
+                  allCount++;
                }
                done = true;
                shipContainer.appendChild(verContainer);
@@ -375,6 +379,14 @@ function initShipList() {
          fragment.appendChild(container);
       }
    }
+   
+   // 総隻数
+   const resultCountDiv = createDiv('d-flex w-100');
+   const resultDiv = createDiv('', 'filter_result_count', `${allCount}`);
+   resultCountDiv.appendChild(resultDiv);
+   const sumDiv = createDiv('ml-1', '', `隻 / ${allCount} 隻`);
+   resultCountDiv.appendChild(sumDiv);
+   fragment.insertBefore(resultCountDiv, fragment.children[0]);
 
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').appendChild(fragment);
@@ -402,13 +414,13 @@ function initShipListTable() {
    <div class="ship_table_td_status" data-sortkey="accuracy">命中項</div>
    <div class="ship_table_td_status" data-sortkey="avoid">回避項</div>
    <div class="ship_table_td_status" data-sortkey="ci">CI項</div>`;
-   fragment.appendChild(header);
 
    let baseShips = [];
    for (const ctype of API_CTYPE) {
       baseShips = baseShips.concat(SHIP_DATA.filter(v => v.type2 === ctype.id));
    }
 
+   let allCount = 0;
    const tbody = document.createElement('div');
    tbody.id = 'ship_table_tbody';
    for (const ship of baseShips) {
@@ -525,8 +537,9 @@ function initShipListTable() {
             tr.dataset.ci = ciValue;
             tr.appendChild(tdCI);
 
-
             tbody.appendChild(tr);
+
+            allCount++;
          }
       }
       else if (ship.ver === 0) {
@@ -614,6 +627,17 @@ function initShipListTable() {
       }
    }
 
+   // 総隻数
+   const resultCountDiv = createDiv('ml-3 d-flex');
+   const resultDiv = createDiv('', 'filter_result_count', `${allCount}`);
+   resultCountDiv.appendChild(resultDiv);
+   const sumDiv = createDiv('ml-1', '', `隻 / ${allCount} 隻`);
+   resultCountDiv.appendChild(sumDiv);
+   fragment.appendChild(resultCountDiv);
+
+   // ヘッダ
+   fragment.appendChild(header);
+
    fragment.appendChild(tbody);
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').classList.remove('d-flex');
@@ -648,6 +672,7 @@ function filterShipList() {
    const noShipOnly = document.getElementById('no_ship_only')['checked'];
    const visibleCountries = $('#enabled_ship_country').formSelect('getSelectedValues').map(v => castInt(v));
 
+   let views = 0;
    const containers = document.getElementsByClassName('ship_type_container');
    for (const container of containers) {
       for (const origParent of container.getElementsByClassName('ship_container')) {
@@ -735,6 +760,7 @@ function filterShipList() {
                }
                else {
                   detail.classList.remove('d-none');
+                  views++;
                }
             }
             if ($(verParent).find('.detail_container:not(.d-none)').length) {
@@ -766,6 +792,8 @@ function filterShipList() {
          container.classList.add('d-none');
       }
    }
+
+   document.getElementById('filter_result_count').textContent = $('#ship_list .detail_container:not(.d-none):not(.no_ship)').length;
 }
 
 /**
@@ -795,6 +823,7 @@ function filterShipListTable() {
    const noShipOnly = document.getElementById('no_ship_only')['checked'];
    const slotExOnly = document.getElementById('slot_ex_only')['checked'];
 
+   let views = 0;
    const trs = document.getElementsByClassName('ship_table_tr');
    for (const tr of trs) {
       if (tr.classList.contains('header')) {
@@ -866,6 +895,7 @@ function filterShipListTable() {
 
          if (exist) {
             tr.classList.remove('d-none');
+            views++;
          }
          else {
             tr.classList.add('d-none');
@@ -873,8 +903,11 @@ function filterShipListTable() {
       }
       else {
          tr.classList.remove('d-none');
+         views++;
       }
    }
+
+   document.getElementById('filter_result_count').textContent = $('#ship_table_tbody .ship_table_tr:not(.d-none):not(.no_ship)').length;
 }
 
 /**
