@@ -601,14 +601,17 @@ input[type="number"] { text-align: right; }
 .remodel_select_parent { width: 34px; }
 .remodel_select{
   cursor: pointer;
-  transition: 0.4s;
+  transition: 0.2s;
 }
 .remodel_disabled {
-  cursor: default;
-  color: rgb(172, 172, 172) !important;
+  color: rgb(255, 120, 120) !important;
 }
-.remodel_select:hover { filter: drop-shadow(0px 0px 6px #0ff); }
-.remodel_disabled:hover { filter: drop-shadow(0px 0px 0px #fff); }
+.remodel_disabled.zero { opacity: 0; }
+.remodel_select:hover { filter: drop-shadow(0px 0px 6px rgba(0, 255, 255, 0.7)); }
+.remodel_disabled:hover {
+  opacity: 1;
+  filter: drop-shadow(0px 0px 4px rgba(255, 120, 120, 0.7));
+}
 .remodel_select_parent .dropdown-menu {
   min-width: 62px;
   box-shadow: 0 .1rem 1rem rgba(0,0,0,.3);

@@ -2683,6 +2683,15 @@ const SPECIAL_LINK_SHIP_ITEM = [
 	{ apiShip: 885, itemType: [4, 6, 7, 8, 9, 12, 13, 14, 16, 17, 20, 21, 23, 25, 28, 34, 35, 36, 40, 43, 50, 94] },
 ];
 
+// 大発OK
+const OK_DAIHATSU_TYPE = LINK_SHIP_ITEM.filter(v => v.e_type.includes(24)).map(v => v.type);
+// カミ車OK
+const OK_NAIKATEI_TYPE = LINK_SHIP_ITEM.filter(v => v.e_type.includes(46)).map(v => v.type);
+// 大発OK
+const OK_DAIHATSU_SHIP = SPECIAL_LINK_SHIP_ITEM.filter(v => v.itemType.includes(24)).map(v => v.apiShip);
+// カミ車OK
+const OK_NAIKATEI_SHIP = SPECIAL_LINK_SHIP_ITEM.filter(v => v.itemType.includes(46)).map(v => v.apiShip);
+
 /** デフォ機体プリセット */
 const DEFAULT_PLANE_PRESET = [
 	{

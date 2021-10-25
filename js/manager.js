@@ -18,11 +18,6 @@ const FIRST_SHIPS = SHIP_DATA.filter(v => v.ver === 0).map(v => {
    return { id: v.id, versions: SHIP_DATA.filter(x => x.orig === v.id).map(y => y.id) }
 });
 
-const OK_DAIHATSU_TYPE = LINK_SHIP_ITEM.filter(v => v.e_type.includes(24)).map(v => v.type);
-const OK_NAIKATEI_TYPE = LINK_SHIP_ITEM.filter(v => v.e_type.includes(46)).map(v => v.type);
-const OK_DAIHATSU_SHIP = SPECIAL_LINK_SHIP_ITEM.filter(v => v.itemType.includes(24)).map(v => v.apiShip);
-const OK_NAIKATEI_SHIP = SPECIAL_LINK_SHIP_ITEM.filter(v => v.itemType.includes(46)).map(v => v.apiShip);
-
 const COUNTRY_ARRAY = [[], DEU, ITA, USA, GBR, FRA, RUS, SWE, NLD, AUS];
 
 let shipSortKey = '';
@@ -1889,6 +1884,10 @@ function ship_detail_container_Clicked($this) {
          if (detail.st[5]) document.getElementById('ship_remodel_hp').value = detail.st[5];
          if (detail.st[6]) document.getElementById('ship_remodel_asw').value = detail.st[6];
 
+         document.getElementById('none_slot_ex')['checked'] = !detail.ex;
+         document.getElementById('slot_ex_released')['checked'] = detail.ex;
+
+
          document.getElementById('modal_ship_edit').dataset.editShipId = uniqueId;
 
          if ($(`.selectable_area_banner[data-area="${detail.area}"`).length) {
@@ -1901,6 +1900,8 @@ function ship_detail_container_Clicked($this) {
       else {
          document.getElementById('ship_luck').value = raw.luck;
          document.getElementById('ship_luck_range').value = raw.luck;
+         document.getElementById('none_slot_ex')['checked'] = true;
+         document.getElementById('slot_ex_released')['checked'] = false;
 
          document.getElementById('btn_update_ship')['disabled'] = true;
          document.getElementById('btn_delete_ship')['disabled'] = true;
@@ -1909,6 +1910,8 @@ function ship_detail_container_Clicked($this) {
    else {
       document.getElementById('ship_luck').value = raw.luck;
       document.getElementById('ship_luck_range').value = raw.luck;
+      document.getElementById('none_slot_ex')['checked'] = true;
+      document.getElementById('slot_ex_released')['checked'] = false;
 
       document.getElementById('btn_update_ship')['disabled'] = true;
       document.getElementById('btn_delete_ship')['disabled'] = true;
@@ -2051,6 +2054,7 @@ function btn_create_ship_Clicked() {
    const luck = castInt(document.getElementById('ship_luck').value) - raw.luck;
    const hp = castInt(document.getElementById('ship_remodel_hp').value);
    const asw = castInt(document.getElementById('ship_remodel_asw').value);
+   const slotEx = document.getElementById('slot_ex_released')['checked'] ? 1 : 0;
    const selectedArea = $('.selectable_area_banner.selected');
    const area = selectedArea.length ? castInt(selectedArea[0].dataset.area) : -1;
 
@@ -2065,7 +2069,7 @@ function btn_create_ship_Clicked() {
    }, 0);
 
    const newStock = stockShips.find(v => v.id === shipId);
-   const newDetail = { id: newUniqueId, lv: lv, exp: exp, st: [0, 0, 0, 0, luck, hp, asw], area: area };
+   const newDetail = { id: newUniqueId, lv: lv, exp: exp, ex: slotEx, st: [0, 0, 0, 0, luck, hp, asw], area: area };
 
    if (newStock) {
       newStock.details.push(newDetail);
@@ -2097,6 +2101,7 @@ function btn_update_ship_Clicked() {
    const hp = castInt(document.getElementById('ship_remodel_hp').value);
    const asw = castInt(document.getElementById('ship_remodel_asw').value);
    const selectedArea = $('.selectable_area_banner.selected');
+   const slotEx = document.getElementById('slot_ex_released')['checked'] ? 1 : 0;
    const area = selectedArea.length ? castInt(selectedArea[0].dataset.area) : -1;
 
    let stockShips = loadShipStock();
@@ -2126,7 +2131,7 @@ function btn_update_ship_Clicked() {
 
          // 新しい方のヘッダーがあるかチェック
          const newStock = stockShips.find(v => v.id === shipId);
-         const newDetail = { id: newUniqueId, lv: lv, exp: exp, st: [0, 0, 0, 0, luck, hp, asw], area: area };
+         const newDetail = { id: newUniqueId, lv: lv, exp: exp, ex: slotEx, st: [0, 0, 0, 0, luck, hp, asw], area: area };
          if (newStock) {
             newStock.details.push(newDetail);
          }
@@ -2144,6 +2149,7 @@ function btn_update_ship_Clicked() {
          oldDetail.st[4] = luck;
          oldDetail.st[5] = hp;
          oldDetail.st[6] = asw;
+         oldDetail.ex = slotEx;
          oldDetail.area = area;
       }
 

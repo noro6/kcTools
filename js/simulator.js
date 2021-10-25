@@ -1471,7 +1471,7 @@ class Item {
 			this.isJet = raw.type === 57;
 			this.canBattle = this.isFighter || this.isAttacker;
 			this.isPlane = this.canBattle || this.isRecon;
-			this.remodel = raw.canRemodel ? remodel : 0;
+			this.remodel = remodel;
 			this.level = level;
 
 			// 以下、機体のみ
@@ -3905,7 +3905,7 @@ function clearPlaneDiv($div) {
 	$div[0].dataset.type = '';
 	$div.find('.plane_img').attr('src', '../img/type/undefined.png').attr('alt', '');
 	$div.find('.plane_name_span').text('装備を選択');
-	$div.find('.remodel_select').prop('disabled', true).addClass('remodel_disabled');
+	$div.find('.remodel_select').prop('disabled', true).addClass('remodel_disabled zero');
 	$div.find('.remodel_value').text(0);
 	$div.find('.btn_remove_plane').addClass('opacity0');
 	$div.find('.item_special').addClass('d-none');
@@ -4010,17 +4010,24 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 
 	// 改修の有効無効設定
 	const $remodelInput = $div.find('.remodel_select');
-	$remodelInput.prop('disabled', !plane.canRemodel)
+	$remodelInput.prop('disabled', false);
 	if (!plane.canRemodel) {
 		// 改修無効の機体
 		$remodelInput.addClass('remodel_disabled');
-		$remodelInput.find('.remodel_value').text(0);
 	}
 	else {
 		// 改修値セット 基本は0
 		$remodelInput.removeClass('remodel_disabled');
-		$remodelInput.find('.remodel_value').text(Math.min(inputPlane.remodel, 10));
 	}
+
+	const putRemodel = Math.min(inputPlane.remodel, 10);
+	if (!putRemodel) {
+		$remodelInput.addClass('zero');
+	}
+	else {
+		$remodelInput.removeClass('zero');
+	}
+	$remodelInput.find('.remodel_value').text(putRemodel);
 
 	// 特効表示
 	const $specialDiv = $div.find('.item_special');
@@ -4646,6 +4653,9 @@ function createShipTable() {
 	const isFrequent = document.getElementById('frequent_ship')['checked'];
 	const dispInStock = document.getElementById('disp_in_stock_ship')['checked'];
 	const dispEquipped = document.getElementById('disp_equipped_ship')['checked'];
+	const dispDaihatsu = document.getElementById('disp_daihatsu_ship')['checked'];
+	const dispKamisha = document.getElementById('disp_kamisha_ship')['checked'];
+	const dispSlotEx = document.getElementById('disp_slot_ex_ship')['checked'];
 	const favOnly = document.getElementById('fav_only_ship')['checked'];
 	const shipStock = loadShipStock();
 	let type = 0;
@@ -4710,8 +4720,14 @@ function createShipTable() {
 	setting.favoriteOnlyShip = favOnly;
 	saveSetting();
 
-	if (dispInStock) $('#disp_equipped_ship').closest('div').removeClass('d-none');
-	else $('#disp_equipped_ship').closest('div').addClass('d-none');
+	if (dispInStock) {
+		$('#disp_equipped_ship').closest('div').removeClass('d-none');
+		$('#disp_slot_ex_ship').closest('div').removeClass('d-none');
+	}
+	else {
+		$('#disp_equipped_ship').closest('div').addClass('d-none');
+		$('#disp_slot_ex_ship').closest('div').addClass('d-none');
+	}
 
 	// 指定艦種の艦娘を取得 検索文字列があれば最優先。最終改造状態もここで絞る
 	let ships = SHIP_DATA.filter(v => {
@@ -4730,30 +4746,34 @@ function createShipTable() {
 	// 所持数モード　複数いるなら所持艦娘情報のステータスを付与して増殖
 	if (dispInStock) {
 		for (const stock of shipStock) {
-			if (stock.details.length <= 0) continue;
 
-			stock.details.sort((a, b) => { return a.lv - b.lv });
+			// 増設条件
+			const details = dispSlotEx ? stock.details.filter(v => v.ex !== 0) : stock.details;
+
+			if (details.length <= 0) continue;
+
+			details.sort((a, b) => { return a.lv - b.lv });
 			const index = ships.findIndex(v => v.id === stock.id);
 			// 保険
 			if (index < 0) continue;
 
 			const baseShip = ships[index];
-			const baseLv = stock.details[0].lv;
-			const baseUpLuck = stock.details[0].st[4];
-			const baseArea = stock.details[0].area <= MAX_AREA && stock.details[0].area > 0 ? stock.details[0].area : -1;
+			const baseLv = details[0].lv;
+			const baseUpLuck = details[0].st[4];
+			const baseArea = details[0].area <= MAX_AREA && details[0].area > 0 ? details[0].area : -1;
 
 			baseShip.lv = baseLv;
 			baseShip.area = baseArea;
 			baseShip.upLuck = baseUpLuck;
-			baseShip.stock = stock.details.filter(v => v.lv === baseLv && v.area === baseArea).length;
+			baseShip.stock = details.filter(v => v.lv === baseLv && v.area === baseArea).length;
 
 			let doneLv = [{ lv: baseLv, area: baseArea }];
 
-			if (stock.details.length >= 2) {
-				for (let i = 1; i < stock.details.length; i++) {
-					const lv = stock.details[i].lv;
-					const upLuck = stock.details[i].st[4];
-					const area = stock.details[i].area <= MAX_AREA && stock.details[i].area > 0 ? stock.details[i].area : -1;
+			if (details.length >= 2) {
+				for (let i = 1; i < details.length; i++) {
+					const lv = details[i].lv;
+					const upLuck = details[i].st[4];
+					const area = details[i].area <= MAX_AREA && details[i].area > 0 ? details[i].area : -1;
 					// 同じレベルかつ札の艦はまとめるため追加不要
 					if (doneLv.find(v => v.lv === lv && v.area === area)) continue;
 
@@ -4761,7 +4781,7 @@ function createShipTable() {
 					const newShip = Object.assign({}, baseShip);
 					newShip.lv = lv;
 					newShip.area = area;
-					newShip.stock = stock.details.filter(v => v.lv === lv && v.area === area).length;
+					newShip.stock = details.filter(v => v.lv === lv && v.area === area).length;
 					newShip.upLuck = upLuck;
 					ships.splice(index, 0, newShip);
 
@@ -4805,6 +4825,15 @@ function createShipTable() {
 	let prevType = 0;
 	let prevType2 = 0;
 	for (const ship of ships) {
+		// 大発チェック
+		if (dispDaihatsu && !OK_DAIHATSU_TYPE.includes(ship.type) && !OK_DAIHATSU_SHIP.includes(ship.api)) {
+			continue;
+		}
+		// カミ車チェック
+		if (dispKamisha && !OK_NAIKATEI_TYPE.includes(ship.type) && !OK_NAIKATEI_SHIP.includes(ship.api)) {
+			continue;
+		}
+
 		// 残り隻数
 		let shipCount = 1;
 		// 使用済みチェック
@@ -11158,6 +11187,12 @@ function remodelSelect_Changed($this) {
 		const remodel = Math.min(castInt($this.find('.remodel_item_selected').data('remodel')), 10);
 		$this.removeClass('remodel_item_selected');
 		$this.find('.remodel_value').text(remodel);
+		if (remodel) {
+			$this.find('.remodel_select').removeClass('zero');
+		}
+		else {
+			$this.find('.remodel_select').addClass('zero');
+		}
 		calculate(true, true, false);
 	}
 }
@@ -12038,7 +12073,8 @@ function lb_plane_Drop($this, ui) {
 		prof: castInt($this.find('.prof_select')[0].dataset.prof),
 		slot: castInt($this.find('.slot').text())
 	};
-
+	$original.find('.remodel_select').addClass('zero');
+	$this.find('.remodel_select').addClass('zero');
 	TradeHTMLWithAnimation($original[0], $this[0], () => {
 		setLBPlaneDiv($this, insertPlane);
 		// 交換
@@ -12188,6 +12224,9 @@ function ship_plane_Drop($this, ui) {
 			remodel: castInt($this.find('.remodel_value')[0].textContent),
 			prof: castInt($this.find('.prof_select')[0].dataset.prof)
 		};
+		
+		$original.find('.remodel_select').addClass('zero');
+		$this.find('.remodel_select').addClass('zero');
 
 		// ドロップされた装備が空でないなら
 		if (insertPlane.id > 0) {
@@ -15753,6 +15792,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#modal_ship_select').on('click', '#fav_only_ship', createShipTable);
 	$('#modal_ship_select').on('click', '#disp_in_stock_ship', createShipTable);
 	$('#modal_ship_select').on('click', '#disp_equipped_ship', createShipTable);
+	$('#modal_ship_select').on('click', '#disp_daihatsu_ship', createShipTable);
+	$('#modal_ship_select').on('click', '#disp_kamisha_ship', createShipTable);
+	$('#modal_ship_select').on('click', '#disp_slot_ex_ship', createShipTable);
 	$('#modal_ship_select').on('click', '#ship_type_select .ship_type', function () { ship_type_select_Changed($(this)) });
 	$('#modal_ship_select').on('click', '.toggle_display_type', createShipTable);
 	$('#modal_ship_select').on('input', '#ship_word', ship_word_TextChanged);
