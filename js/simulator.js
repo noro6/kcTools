@@ -16247,7 +16247,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	sanma.src = '../img/util/sanma.png';
 	sanmaParent.appendChild(sanma);
 	sanmaParent.onclick = () => {
-		if (!sanmaParent.classList.contains('avoid') || Math.floor(Math.random() * 11) < 8) {
+		if (!sanmaParent.classList.contains('avoid') || Math.floor(Math.random() * 11) < 9) {
 			sanmaParent.classList.add('avoid');
 			$(sanmaParent).animate({ 'top': newY() + 'px', 'left': newX() + 'px' }, 100);
 		}
