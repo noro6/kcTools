@@ -15662,6 +15662,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			setTab();
 		}
+
+		specialOperator.update('A');
 		calculate();
 		showDeckSelector();
 	});
