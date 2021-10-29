@@ -400,6 +400,7 @@ const ITEM_DATA = [
 	{ id: 347, type: 15, itype: 17, name: "二式12cm迫撃砲改 集中配備", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: -1, asw: 7, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 377, type: 15, itype: 17, name: "RUR-4A Weapon Alpha改", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 1, asw: 17, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 1, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 378, type: 15, itype: 17, name: "対潜短魚雷(試作初期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 2, bomber: 0, armor: 0, asw: 20, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
+	{ id: 439, type: 15, itype: 17, name: "Hedgehog(初期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: -1, asw: 18, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 33, type: 17, itype: 19, name: "改良型艦本式タービン", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 6, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 34, type: 17, itype: 19, name: "強化型艦本式缶", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 10, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 87, type: 17, itype: 19, name: "新型高温高圧缶", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 13, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -2094,6 +2095,7 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
+	{ world: 52, name: "帰ってきた鎮守府秋刀魚祭り(2021秋イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -2106,7 +2108,7 @@ const WORLD_DATA = [
 	{ world: 48, name: "侵攻阻止！島嶼防衛強化作戦(2020梅雨イベ)" },
 	{ world: 49, name: "護衛せよ！船団輸送作戦(2020秋イベ)" },
 	{ world: 50, name: "激突！ルンガ沖夜戦(2021春イベ)" },
-	{ world: 51, name: "増援輸送作戦！地中海の戦い(2021夏イベ)" }
+	{ world: 51, name: "増援輸送作戦！地中海の戦い(2021夏イベ)" },
 ];
 const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
@@ -2169,6 +2171,7 @@ const MAP_DATA = [
 	{ area: 511, name: "アレクサンドリア沖/クレタ島沖" },
 	{ area: 512, name: "地中海/マルタ島沖/ティレニア海" },
 	{ area: 513, name: "ジブラルタル沖/地中海/マルタ島沖" },
+	{ area: 521, name: "三陸沖/北海道根室半島沖" },
 ];
 
 // 基地空襲のある海域
