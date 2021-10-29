@@ -16244,7 +16244,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const newY = () => { return Math.max(Math.floor(Math.random() * (document.getElementById('main').clientHeight - 50)), 60) };
 	const newX = () => { return Math.max(Math.floor(Math.random() * (window.innerWidth - 30)), 30) };
 	const sanma = document.createElement('img');
-	sanma.src = '../img/util/ammo.png';
+	sanma.src = '../img/util/sanma.png';
 	sanmaParent.appendChild(sanma);
 	sanmaParent.onclick = () => {
 		if (!sanmaParent.classList.contains('avoid') || Math.floor(Math.random() * 11) < 8) {
