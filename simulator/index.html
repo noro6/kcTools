@@ -2647,7 +2647,7 @@
 								<div class="ml-4 d-none d-lg-flex flex-grow-1">
 									<div class="align-self-center mr-2"><i class="fa-search"></i></div>
 									<input type="text" class="align-self-center form-control form-control-sm" id="plane_word"
-										maxlength="30">
+										placeholder="図鑑id, 装備名" maxlength="30">
 								</div>
 							</div>
 						</div>
@@ -2729,6 +2729,11 @@
 				<div class="modal-header">
 					<h5 class="modal-title">艦娘選択</h5>
 					<div class="d-flex">
+						<div class="d-none d-lg-flex flex-grow-1 mr-4">
+							<div class="align-self-center mr-2"><i class="fa-search"></i></div>
+							<input type="text" class="align-self-center form-control form-control-sm" id="ship_word"
+								placeholder="図鑑id, 艦娘名" maxlength="30">
+						</div>
 						<div class="align-self-center mr-2">
 							表示形式：
 						</div>
@@ -2745,12 +2750,6 @@
 				</div>
 				<div class="modal-body pt-1">
 					<div class="d-flex flex-wrap mb-1">
-						<div class="d-flex search_basic">
-							<div class="my-1 mx-2 input-group input-group-sm d-none">
-								<div class="input-group-prepend"><span class="input-group-text">検索</span></div>
-								<input type="text" class="form-control form-control-sm" id="ship_word" maxlength="30">
-							</div>
-						</div>
 						<div class="mr-3 mt-2 custom-check sm">
 							<label>
 								<input type="checkbox" id="display_final" checked>
@@ -2858,7 +2857,8 @@
 							</div>
 							<div class="my-1 mx-2 input-group input-group-sm">
 								<div class="input-group-prepend"><span class="input-group-text">検索</span></div>
-								<input type="text" class="form-control form-control-sm" id="enemy_word" maxlength="30">
+								<input type="text" class="form-control form-control-sm" id="enemy_word" placeholder="id, 敵艦名"
+									maxlength="30">
 							</div>
 						</div>
 						<div class="d-flex">
