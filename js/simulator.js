@@ -4625,7 +4625,7 @@ function createItemTable(items, type) {
 }
 
 /**
- * 引数で渡された艦種の艦娘を展開
+ * 艦娘一覧テーブル構築
  */
 function createShipTable() {
 	const modal = document.getElementById('modal_ship_select').getElementsByClassName('modal-dialog')[0];
@@ -4714,9 +4714,7 @@ function createShipTable() {
 
 	// 指定艦種の艦娘を取得 検索文字列があれば最優先。最終改造状態もここで絞る
 	let ships = SHIP_DATA.filter(v => {
-		if (searchWord) {
-			return v.name.includes(searchWord);
-		}
+		if (searchWord) return v.id == searchWord || v.name.includes(searchWord);
 		return dispType.includes(v.type) && (visibleFinal ? v.final > 0 : true)
 	});
 
@@ -5140,14 +5138,25 @@ function createEnemyTable() {
 		if (displayMode === "multi") tr.classList.add('enemy_tr_multi');
 		else tr.classList.remove('enemy_tr_multi');
 
-		// 艦種で絞る
-		if ((type !== 0 && !enemy.type.includes(type)) || (searchWord && !enemy.name.includes(searchWord))) {
-			tr.classList.add('d-none');
-			tr.classList.remove('d-flex');
+		if (searchWord) {
+			if ((enemy.id + 1500) == searchWord || enemy.name.includes(searchWord)) {
+				tr.classList.add('d-flex');
+				tr.classList.remove('d-none');
+			}
+			else {
+				tr.classList.add('d-none');
+				tr.classList.remove('d-flex');
+			}
+			continue;
 		}
-		else {
+
+		if ((type === 0 || enemy.type.includes(type))) {
 			tr.classList.add('d-flex');
 			tr.classList.remove('d-none');
+		}
+		else {
+			tr.classList.add('d-none');
+			tr.classList.remove('d-flex');
 		}
 	}
 
@@ -11496,9 +11505,12 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 
 	const text = `
 	<div class="text-left m-1 item_tooltip">
-		<div>
-			<img src="../img/type/icon${raw.itype}.png" alt="${raw.itype}" class="img-size-25">
-			<span>${raw.name}</span>${remodelText}
+		<div class="d-flex">
+			<img src="../img/type/icon${raw.itype}.png" alt="${raw.itype}" class="img-size-36 align-self-center">
+			<div class="ml-1 align-self-center">
+				<div class="font_size_11 text-primary">id: ${raw.id}</div>
+				<div><span>${raw.name}</span>${remodelText}</div>
+			</div>
 		</div>
 		<div class="d-flex flex-wrap my-1">
 			${item.slot ? `<div class="mr-3">制空値: ${item.airPower}</div>` : ''}
@@ -12497,7 +12509,7 @@ function plane_type_select_Changed($this = null) {
 
 	if (searchWord) {
 		searchWord = replaceKnji(searchWord);
-		org = org.filter(v => v.name.includes(searchWord));
+		org = org.filter(v => v.name.includes(searchWord) || v.id == searchWord);
 	}
 
 	// フィルタ反映
@@ -16249,18 +16261,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	sanmaParent.onclick = () => {
 		if (!sanmaParent.classList.contains('avoid') || Math.floor(Math.random() * 11) < 9) {
 			sanmaParent.classList.add('avoid');
-			$(sanmaParent).animate({ 'top': newY() + 'px', 'left': newX() + 'px' }, 100);
+			const $sanma = $(sanmaParent);
+			$sanma.find('img').css({ transform: `rotate(${Math.random() * 360}deg)` });
+			$sanma.animate({ 'top': newY() + 'px', 'left': newX() + 'px' }, 100);
 		}
 		else {
+			const getCount = sanmaParent.classList.contains('gold') ? 10 : 1;
 			const bonus = document.createElement('div');
 			sanma.classList.add('fadeOut');
-			bonus.className = 'fadeUp fadeUp2';
-			bonus.innerHTML = '+1';
+			bonus.className = 'fadeUp fadeUp2 ' + (getCount > 1 ? 'text-warning' : '');
+			bonus.innerHTML = '+' + getCount;
 			sanmaParent.appendChild(bonus);
 
-			inform_success('捕まえた秋刀魚: ' + (initSanma + 1));
-			setting.sanma = initSanma + 1;
-			initSanma++;
+			sanmaParent.classList.remove('gold');
+
+			inform_success('捕まえた秋刀魚: ' + (initSanma + getCount));
+			setting.sanma = initSanma + getCount;
+			initSanma += getCount;
 			saveSetting();
 
 			setTimeout(() => {
@@ -16269,6 +16286,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				sanmaParent.style.top = '';
 				sanmaParent.style.left = '';
 				sanmaParent.classList.remove('avoid');
+
+				// 黄金化 5%
+				if (Math.floor(Math.random() * 101) < 6) {
+					sanmaParent.classList.add('gold');
+				}
 			}, 1000);
 		}
 	}
