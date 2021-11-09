@@ -11508,7 +11508,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 		<div class="d-flex">
 			<img src="../img/type/icon${raw.itype}.png" alt="${raw.itype}" class="img-size-36 align-self-center">
 			<div class="ml-1 align-self-center">
-				<div class="font_size_11 text-primary">id: ${raw.id}</div>
+				<div class="font_size_11 text-info">id: ${raw.id}</div>
 				<div><span>${raw.name}</span>${remodelText}</div>
 			</div>
 		</div>
@@ -12640,7 +12640,7 @@ function plane_name_Clicked($this) {
 	$('#plane_type_select').find('.item_type').each((i, e) => { $(e).removeClass('disabled d-none'); });
 
 	// 艦娘用装備選択モード
-	if ($target.attr('class').includes('ship_plane')) {
+	if ($target.hasClass('ship_plane')) {
 		// カテゴリ：陸上機 が選択されていたら全てにする
 		if (LB_PLANE_TYPE.includes(activeTypeId)) {
 			activeTypeId = 0;
