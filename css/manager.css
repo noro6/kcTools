@@ -495,6 +495,9 @@ input[type="number"] {
    border-bottom: 1px solid rgba(128, 128, 128, 0.5);
    z-index: 2;
 }
+.ship_table_tr.skipped {
+   display: none!important;
+}
 .dark-theme .ship_table_tr.header {
    background-color: #3c3c44;
 }
@@ -685,6 +688,34 @@ input[type="number"] {
    right: -0.2rem;
    height: 24px;
    width: auto;
+}
+
+.ship_tooltip_text {
+   display: grid;
+   grid-template-columns: 1fr 1fr 10px 24px;
+   column-gap: 0.25rem;
+   row-gap: 0.2rem;
+   text-align: right;
+   font-size: 12px;
+}
+.ship_tooltip_text .status_value.bad_status {
+   color: #ff7979;
+}
+.status_value_color {
+   color: #62d2ff;
+}
+
+.pagination i {
+   font-size: 1em !important;
+   display: inline-block;
+   transform: rotate(-90deg);
+}
+.dark-theme .pagination a { color: #fff; }
+.dark-theme .pagination .disabled a { color: #666; }
+.dark-theme .pagination li.active { background-color: #0084ff; }
+
+.dark-theme .waves-effect.waves-general .waves-ripple{
+   background-color: rgba(200, 200, 200, 0.7);
 }
 
 /* ------------------------------
