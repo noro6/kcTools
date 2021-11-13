@@ -146,7 +146,8 @@
 							<ul class="collapsible">
 								<li>
 									<div class="collapsible-header">
-										<i class="fa-filter"></i>フィルタ / 表示設定
+										<i class="fa-filter"></i>
+										フィルタ（<span id="filter_ship_count">0</span>隻 /<span id="filter_ship_all">0</span>隻）
 									</div>
 									<div class="collapsible-body" id="ships_filter">
 										<div class="border-top mb-4 mx-2 pl-1 pt-4">
@@ -288,29 +289,29 @@
 												</div>
 											</div>
 										</div>
-										<div class="border-top mb-2"></div>
-										<div class="d-flex">
-											<div class="align-self-center pb-4">
-												<div>表示形式</div>
-												<div class="d-flex">
-													<div class="mx-3 align-self-center">
-														<label>
-															<input class="with-gap" id="ship_table" name="display" type="radio" checked />
-															<span>一覧表示</span>
-														</label>
-													</div>
-													<div class="mx-3 align-self-center">
-														<label>
-															<input class="with-gap" id="ship_legacy" name="display" type="radio" />
-															<span>艦隊分析</span>
-														</label>
-													</div>
-												</div>
-											</div>
-										</div>
 									</div>
 								</li>
 							</ul>
+						</div>
+						<div class="d-flex justify-content-between">
+							<div id="pagination_header"></div>
+							<div class="align-self-center">
+								<div class="d-flex">
+									<div class="align-self-center">表示形式 :</div>
+									<div class="mx-3 align-self-center">
+										<label>
+											<input class="with-gap" id="ship_table" name="display" type="radio" checked />
+											<span>一覧表示形式</span>
+										</label>
+									</div>
+									<div class="mx-3 align-self-center">
+										<label>
+											<input class="with-gap" id="ship_legacy" name="display" type="radio" />
+											<span>艦隊分析形式</span>
+										</label>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="d-flex flex-wrap" id="ship_list">
 							<div class="mx-auto" id="pre_loader">
@@ -461,7 +462,7 @@
 							</div>
 						</div>
 						<div class="general_box">
-							<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下</div>
+							<div>7. 下記のJavaScriptコードをconsoleに貼り付け、Enterを押下。※ 押下後、『undefined』と表示されればOKです</div>
 							<div class="d-flex">
 								<div class="mx-2 align-self-center">
 									<label>

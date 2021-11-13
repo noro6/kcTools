@@ -102,12 +102,21 @@ document.addEventListener('DOMContentLoaded', function () {
    $('#ships_filter').on('change', '#no_ship_only', filterShipList);
    $('#ships_filter').on('change', '#slot_ex_only', filterShipList);
    $('#ships_filter').on('click', '.filter_area', function () { filter_area_Clicked($(this)); });
-   $('#ships_filter').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
-   $('#ships_filter').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
+   $('#ship_view').on('change', '#ship_table', function (e) { if (e.target.checked) initShipList(); });
+   $('#ship_view').on('change', '#ship_legacy', function (e) { if (e.target.checked) initShipList(); });
 
    $('#ship_list').on('click', '.detail_container', function () { ship_detail_container_Clicked($(this)); });
    $('#ship_list').on('click', '.ship_table_tr:not(.header)', function () { ship_detail_container_Clicked($(this)); });
    $('#ship_list').on('click', '.header .ship_table_td_status', function () { ship_header_table_tr_Clicked($(this)); });
+   $('#ship_list').on({
+      mouseenter: function () { initShipTooltip($(this)); },
+      mouseleave: function () { if ($(this).tooltip) $(this).tooltip('destroy'); }
+   }, '.ship_table_tr:not(.header)');
+   $('#ship_list').on({
+      mouseenter: function () { initShipTooltip($(this)); },
+      mouseleave: function () { if ($(this).tooltip) $(this).tooltip('destroy'); }
+   }, '.detail_container');
+   $('#ship_view').on('click', '.pagination li', function () { return ship_list_pager_Clicked($(this)); });
 
    $('#modal_ship_edit').on('change', '.version_radio', version_Changed);
    $('#modal_ship_edit').on('blur', '#ship_level', function () { ship_input_Leaved($(this)); });
@@ -242,6 +251,7 @@ function initShipList() {
 
    setting.managerViewMode = 'legacy';
    saveSetting();
+   $('.pagination_container').remove();
 
    // 所持装備
    const stockShips = readOnlyMode ? readOnlyShips : loadShipStock();
@@ -303,6 +313,12 @@ function initShipList() {
                   detailContainer.dataset.shipApi = ver.api;
                   detailContainer.dataset.uniqueId = detail.id;
                   detailContainer.dataset.slotEx = detail.ex ? detail.ex : 0;
+                  detailContainer.dataset.level = detail.lv;
+                  detailContainer.dataset.hp = (detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5];
+                  detailContainer.dataset.luck = ver.luck + detail.st[4];
+                  detailContainer.dataset.remodelHp = detail.st[5];
+                  detailContainer.dataset.remodelAsw = detail.st[6];
+                  detailContainer.dataset.area = detail.area > 0 && detail.area <= MAX_AREA ? detail.area : 0;
 
                   if (detail.lv === 175) detailContainer.classList.add('lv_max2');
                   else if (detail.lv > 99) detailContainer.classList.add('lv_100');
@@ -313,27 +329,27 @@ function initShipList() {
 
                   detailContainer.innerHTML = `
                   <div class="d-flex">
-                     <div class="ship_lv" data-level="${detail.lv}">${detail.lv}</div>
+                     <div class="ship_lv">${detail.lv}</div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_hp.png"></div>
-                     <div class="detail_ship_status remodel_hp ${(detail.st[5] ? 'status_up' : '')}" data-hp="${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}" data-remodel-hp="${detail.st[5]}">
+                     <div class="detail_ship_status remodel_hp ${(detail.st[5] ? 'status_up' : '')}">
                         ${(detail.lv > 99 ? ver.hp2 : ver.hp) + detail.st[5]}
                      </div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_asw.png"></div>
-                     <div class="detail_ship_status remodel_asw ${(detail.st[6] ? 'status_up' : '')}" data-remodel-asw="${detail.st[6]}">
+                     <div class="detail_ship_status remodel_asw ${(detail.st[6] ? 'status_up' : '')}">
                         ${asw > 0 ? asw + detail.st[6] : '-'}
                      </div>
                   </div>
                   <div class="d-flex">
                      <div class="detail_ship_label_img"><img src="../img/util/status_luck.png"></div>
-                     <div class="detail_ship_status remodel_luck ${(detail.st[4] ? 'status_up' : '')}" data-luck="${ver.luck + detail.st[4]}">
+                     <div class="detail_ship_status remodel_luck ${(detail.st[4] ? 'status_up' : '')}">
                         ${ver.luck + detail.st[4]}
                      </div>
                   </div>
-                  ${detail.area > 0 && detail.area <= MAX_AREA ? `<div class="sally_area" data-area="${detail.area}"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>` : '<div class="sally_area no_area"></div>'}
+                  ${detail.area > 0 && detail.area <= MAX_AREA ? `<div class="sally_area"><img src="../img/util/area${detail.area}_min.png" alt="area${detail.area}"></div>` : '<div class="sally_area no_area"></div>'}
                   ${detail.ex ? `<div class="slot_ex_container"><img class="slot_ex" src="../img/util/slot_ex.png" alt="ex"></div>` : ''}`;
                   verContainer.appendChild(detailContainer);
 
@@ -348,12 +364,18 @@ function initShipList() {
                detailContainer.dataset.shipId = ver.id;
                detailContainer.dataset.uniqueId = -1;
                detailContainer.dataset.slotEx = 0;
+               detailContainer.dataset.level = 1;
+               detailContainer.dataset.hp = ver.hp;
+               detailContainer.dataset.luck = ver.luck;
+               detailContainer.dataset.remodelHp = 0;
+               detailContainer.dataset.remodelAsw = 0;
+               detailContainer.dataset.area = 0;
                detailContainer.innerHTML = `<div>新規登録</div>
-               <div class="ship_lv d-none" data-level="1"></div>
-               <div class="remodel_hp d-none" data-hp="${ver.hp}" data-remodel-hp="0"></div>
-               <div class="remodel_asw d-none" data-remodel-asw="0"></div>
-               <div class="remodel_luck d-none" data-luck="${ver.luck}"></div>
-               <div class="sally_area d-none" data-area="0"></div>
+               <div class="ship_lv d-none"></div>
+               <div class="remodel_hp d-none"></div>
+               <div class="remodel_asw d-none"></div>
+               <div class="remodel_luck d-none"></div>
+               <div class="sally_area d-none"></div>
                `;
                shipContainer.classList.add('no_ship');
                verContainer.appendChild(detailContainer);
@@ -378,12 +400,7 @@ function initShipList() {
    }
 
    // 総隻数
-   const resultCountDiv = createDiv('d-flex w-100');
-   const resultDiv = createDiv('', 'filter_result_count', `${allCount}`);
-   resultCountDiv.appendChild(resultDiv);
-   const sumDiv = createDiv('ml-1', '', `隻 / ${allCount} 隻`);
-   resultCountDiv.appendChild(sumDiv);
-   fragment.insertBefore(resultCountDiv, fragment.children[0]);
+   document.getElementById('filter_ship_all').textContent = allCount;
 
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').appendChild(fragment);
@@ -627,12 +644,7 @@ function initShipListTable() {
    }
 
    // 総隻数
-   const resultCountDiv = createDiv('ml-3 d-flex');
-   const resultDiv = createDiv('', 'filter_result_count', `${allCount}`);
-   resultCountDiv.appendChild(resultDiv);
-   const sumDiv = createDiv('ml-1', '', `隻 / ${allCount} 隻`);
-   resultCountDiv.appendChild(sumDiv);
-   fragment.appendChild(resultCountDiv);
+   document.getElementById('filter_ship_all').textContent = allCount;
 
    // ヘッダ
    fragment.appendChild(header);
@@ -641,6 +653,100 @@ function initShipListTable() {
    document.getElementById('ship_list').innerHTML = '';
    document.getElementById('ship_list').classList.remove('d-flex');
    document.getElementById('ship_list').appendChild(fragment);
+}
+
+/**
+ * ページャーの生成
+ * @param {number} [count=1] 総ページ数
+ */
+function generatePager(count = 1) {
+   // ページャー 100隻ごとに
+   const maxPage = count === 0 ? 1 : Math.ceil(count / 100);
+
+   // なにがなくともまずは消す
+   $('.pagination_container').remove();
+
+   const pager = document.createElement('div');
+   pager.className = 'pagination_container';
+   pager.dataset.maxPage = maxPage;
+
+   const pages = document.createElement('ul');
+   pages.className = 'pagination';
+   const prevPage = document.createElement('li');
+   prevPage.dataset.page = 0;
+   prevPage.className = 'prev_page disabled waves-effect waves-general';
+   prevPage.innerHTML = '<a href="#!"><i class="font_size_12 fa-chevron-up"></i></a>';
+   pages.appendChild(prevPage);
+
+   for (let i = 0; i < maxPage; i++) {
+      const page = document.createElement('li');
+      page.dataset.page = i;
+      page.className = `page${i} waves-effect waves-general ${i === 0 ? 'active' : ''}`;
+      page.innerHTML = `<a href="#!">${i + 1}</a>`;
+      pages.appendChild(page);
+   }
+
+   const nextPage = document.createElement('li');
+   nextPage.dataset.page = maxPage > 1 ? 1 : 0;
+   nextPage.className = 'next_page disabled waves-effect waves-general';
+   nextPage.innerHTML = '<a href="#!"><i class="font_size_12 fa-chevron-down"></i></a>';
+   pages.appendChild(nextPage);
+   pager.appendChild(pages);
+
+   document.getElementById('pagination_header').appendChild(pager);
+   document.getElementById('ship_list').appendChild(pager.cloneNode(true));
+}
+
+
+/**
+ * ページャークリック
+ * @param {JQuery} $this
+ */
+function ship_list_pager_Clicked($this) {
+   if ($this.hasClass('disabled')) {
+      // 何もせず。
+      return false;
+   }
+   const page = castInt($this[0].dataset.page);
+   const maxPage = castInt(document.getElementsByClassName('pagination_container')[0].dataset.maxPage);
+   // 前後ページの処理
+   const prevPage = $('.pagination .prev_page');
+   const nextPage = $('.pagination .next_page');
+
+   if (page === 0) {
+      prevPage.addClass('disabled');
+   }
+   else {
+      prevPage.removeClass('disabled');
+      prevPage[0].dataset.page = page - 1;
+      prevPage[1].dataset.page = page - 1;
+   }
+
+   if (page === maxPage - 1) {
+      nextPage.addClass('disabled');
+   }
+   else {
+      nextPage.removeClass('disabled');
+      nextPage[0].dataset.page = page + 1;
+      nextPage[1].dataset.page = page + 1;
+   }
+
+   $('.pagination li').removeClass('active');
+   $('.pagination li.page' + page).addClass('active');
+
+   let skip = 100 * page;
+   let rem = 100;
+   // ページ表示対象となる範囲以外を消す
+   const trs = document.querySelectorAll('.ship_table_tr:not(.header):not(.d-none)');
+   for (const tr of trs) {
+      tr.classList.remove('skipped');
+      if (skip || rem === 0) {
+         tr.classList.add('skipped');
+         skip--;
+      }
+      else rem--;
+   }
+   return false;
 }
 
 /**
@@ -715,11 +821,11 @@ function filterShipList() {
                }
 
                const api = castInt(detail.dataset.shipApi);
-               const lv = castInt(detail.getElementsByClassName('ship_lv')[0].dataset.level);
-               const luck = castInt(detail.getElementsByClassName('remodel_luck')[0].dataset.luck);
-               const remodelHp = castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.remodelHp);
-               const remodelAsw = castInt(detail.getElementsByClassName('remodel_asw')[0].dataset.remodelAsw);
-               const area = castInt(detail.getElementsByClassName('sally_area')[0].dataset.area);
+               const lv = castInt(detail.dataset.level);
+               const luck = castInt(detail.dataset.luck);
+               const remodelHp = castInt(detail.dataset.remodelHp);
+               const remodelAsw = castInt(detail.dataset.remodelAsw);
+               const area = castInt(detail.dataset.area);
                const slotEx = castInt(detail.dataset.slotEx);
 
                // Lv条件
@@ -735,7 +841,7 @@ function filterShipList() {
                   detail.classList.add('d-none');
                }
                // 耐久4n条件
-               else if (hp4nOnly && (castInt(detail.getElementsByClassName('remodel_hp')[0].dataset.hp) % 4) !== 0) {
+               else if (hp4nOnly && (castInt(detail.dataset.hp) % 4) !== 0) {
                   detail.classList.add('d-none');
                }
                // 対潜改修条件
@@ -792,7 +898,7 @@ function filterShipList() {
       }
    }
 
-   document.getElementById('filter_result_count').textContent = views;
+   document.getElementById('filter_ship_count').textContent = views;
 }
 
 /**
@@ -837,6 +943,7 @@ function filterShipListTable() {
       const remodelAsw = castInt(tr.dataset.remodelAsw);
       const area = castInt(tr.dataset.area);
       const slotEx = castInt(tr.dataset.slotEx);
+      tr.classList.remove('skipped');
 
       if (noShipOnly && !tr.classList.contains('no_ship')) {
          tr.classList.add('d-none');
@@ -906,7 +1013,9 @@ function filterShipListTable() {
       }
    }
 
-   document.getElementById('filter_result_count').textContent = views;
+   document.getElementById('filter_ship_count').textContent = views;
+   generatePager(views);
+   ship_list_pager_Clicked($('.pagination li.page0:first'));
 }
 
 /**
@@ -1652,13 +1761,21 @@ function filterItemList() {
          }
 
          // 総所持数の表示有無制御 チェックボックスまたは改修値フィルタによって制御
+         const remodel0 = itemContainer.querySelector('.item_remodel[data-remodel="0"]');
          if (displaySumCount && !enabledRemodelFilter) {
             // 総所持数を描画する
             itemContainer.classList.remove('invisible_count');
+            if (remodel0) {
+               remodel0.classList.remove('opacity0');
+            }
          }
          else {
             // 総所持数を描画しない
             itemContainer.classList.add('invisible_count');
+            // ★0の表示を消す
+            if (remodel0) {
+               remodel0.classList.add('opacity0');
+            }
          }
 
          for (const detail of itemContainer.getElementsByClassName('item_detail')) {
@@ -1762,6 +1879,63 @@ function initItemTooltip($this) {
 }
 
 /**
+ * 装備ツールチップ内容初期化 & 表示
+ * @param {*} $this
+ */
+function initShipTooltip($this) {
+   const ship = $this[0];
+   const shipId = castInt(ship.dataset.shipId);
+   if (shipId) {
+      const raw = SHIP_DATA.find(v => v.id === shipId);
+      let text = '';
+      if (raw) {
+         const level = castInt(ship.dataset.level);
+         const hp = level > 99 ? raw.hp2 : raw.hp;
+         const uHp = castInt(ship.dataset.remodelHp);
+         const maxHp = level > 99 ? raw.max_hp : raw.hp + 2;
+         const curHP = hp + uHp;
+         const uLuck = castInt(ship.dataset.luck) - raw.luck;
+         const asw = getLevelStatus(level, raw.max_asw, raw.asw);
+         const uAsw = castInt(ship.dataset.remodelAsw);
+         const maxASW = getLevelStatus((level > 99 ? 175 : 99), raw.max_asw, raw.asw) + 9;
+
+         // ワンパン大破率
+         let count1 = 0;
+         let count2 = 0;
+         let sum = 0;
+         for (let i = 0; i < curHP; i++) {
+            sum++;
+            const damage = Math.floor(curHP * 0.5 + i * 0.3);
+            if ((curHP - damage) <= Math.floor(curHP / 4)) {
+               count1++;
+            }
+            else if ((curHP - damage) <= Math.floor(curHP / 2)) {
+               count2++;
+            }
+         }
+
+         let statusText = [];
+         statusText = statusText.concat([`運 : `, `${raw.luck}${uLuck ? ` ( <span class="status_value_color">+${uLuck}</span> )` : ''}`, '/', `${raw.max_luck}`]);
+         if (asw) statusText = statusText.concat([`対潜 : `, `${asw}${uAsw ? ` ( <span class="status_value_color">+${uAsw}</span> )` : ''}`, '/', `${maxASW}`]);
+         statusText = statusText.concat([`耐久 : `, `${hp}${uHp ? ` ( <span class="status_value_color">+${uHp}</span> )` : ''}`, '/', `${maxHp}`]);
+
+         for (let i = 0; i < statusText.length; i++) {
+            text += `<div class="status_value">${statusText[i]}</div>`;
+         }
+         text = `<div class="ship_tooltip_text">${text}</div>`;
+         text += `<div class="d-flex mt-1 font_size_12"><div>一撃大破 :</div><div class="ml-auto">${(100 * count1 / sum).toFixed(1)} %</div></div>`;
+         text += `<div class="d-flex mt-1 font_size_12"><div>一撃中破 :</div><div class="ml-auto">${(100 * count2 / sum).toFixed(1)} %</div></div>`;
+      }
+      else {
+         text = 'データ取得失敗';
+      }
+
+      ship.dataset.tooltip = text;
+      $this.tooltip();
+   }
+}
+
+/**
  * 艦娘テーブル ヘッダークリック時(ソートする)
  * @param {*} $this
  */
@@ -1811,6 +1985,8 @@ function sortShipTable(sortKey, isAsc) {
    for (var i = 0; i < containers.length; i++) {
       parent.appendChild(parent.removeChild(containers[i]))
    }
+
+   ship_list_pager_Clicked($('.pagination li.active:first'));
 }
 
 /**
