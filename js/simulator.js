@@ -5487,7 +5487,14 @@ function createNodeSelect() {
 
 		// クリック座標設定
 		if (coords !== '') {
-			text2 += `<area class="node" title="${nodeName}" coords="${coords}" shape="rect">`;
+			if (coords.split(',').length === 2) {
+				const x = castInt(coords.split(',')[0]);
+				const y = castInt(coords.split(',')[1]);
+				text2 += `<area class="node" title="${nodeName}" coords="${x},${y},${x + 20},${y + 20}" shape="rect">`;
+			}
+			else {
+				text2 += `<area class="node" title="${nodeName}" coords="${coords}" shape="rect">`;
+			}
 		}
 	}
 
@@ -11508,7 +11515,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 		<div class="d-flex">
 			<img src="../img/type/icon${raw.itype}.png" alt="${raw.itype}" class="img-size-36 align-self-center">
 			<div class="ml-1 align-self-center">
-				<div class="font_size_11 text-info">id: ${raw.id}</div>
+				<div class="font_size_12">id: ${raw.id}</div>
 				<div><span>${raw.name}</span>${remodelText}</div>
 			</div>
 		</div>
