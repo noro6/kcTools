@@ -453,6 +453,16 @@ class Fleet {
 			this.scoutScores.push(Math.floor(value * 100) / 100);
 		}
 	}
+
+	/**
+	 * 航空戦ボーナス雷装値を更新
+	 * @memberof Fleet
+	 */
+	updateBonusTorpedo() {
+		for (const ship of this.ships) {
+			ship.updateAttackerBonus();
+		}
+	}
 }
 
 /**
@@ -466,13 +476,13 @@ class Ship {
 	 * @memberof Ship
 	 */
 	constructor(shipNo) {
-		/** @type {number} */
+		/** @type {number} 図鑑id */
 		this.id = 0;
-		/** @type {number} */
+		/** @type {number} 艦種 */
 		this.type = 0;
-		/** @type {number} */
+		/** @type {number} 艦型 */
 		this.type2 = 0;
-		/** @type {string} */
+		/** @type {string} 艦名称 */
 		this.name = '';
 		/** @type {number} */
 		this.shipNo = shipNo;
@@ -484,7 +494,7 @@ class Ship {
 		this.airPower = 0;
 		/** @type {number} */
 		this.fullAirPower = 0;
-		/** @type {boolean} */
+		/** @type {boolean} 搭載がないため無視してもいいフラグ */
 		this.ignoreSlot = true;
 		/** @type {number} */
 		this.level = 99;
@@ -526,6 +536,10 @@ class Ship {
 		this.scout = 0;
 		/** @type {number} */
 		this.bonusScout = 0;
+		/** @type {number} 適用ボーナス雷装値 */
+		this.bonusTorpedo = 0;
+		/** @type {string} 警告文 あれば警告マークがでる */
+		this.warningText = ''
 	}
 
 	/**
@@ -751,6 +765,33 @@ class Ship {
 		}
 
 		this.bonusScout = sumBonus;
+	}
+
+	/**
+	 * 装備されている装備から航空戦雷装値を算出
+	 * @memberof Ship
+	 */
+	updateAttackerBonus() {
+		this.warningText = '';
+		if (this.ignoreSlot) return;
+
+		const bonus = [];
+		for (const item of this.items) {
+			if (item.isAttacker) {
+				const value = ShipItem.getAttackerBonus(item, this);
+				if (value) {
+					bonus.push(value);
+				}
+			}
+		}
+
+		// 適用するボーナス 一番ひくいやつ
+		this.bonusTorpedo = getArrayMin(bonus);
+
+		// 警告文発生
+		if (this.bonusTorpedo < getArrayMax(bonus)) {
+			this.warningText = '雷装ボーナス値が低下する艦載機構成です。装備構成の見直しを検討してください。';
+		}
 	}
 
 	/**
@@ -2046,6 +2087,88 @@ class ShipItem extends Item {
 
 		// キャップ値を適用したものを返却
 		return fire.map(v => Math.floor(softCap(v, AS_CAP)));
+	}
+
+
+	/**
+	 * 装備と艦娘から航空戦雷装ボーナスを返却する
+	 * @static
+	 * @param {Item} item
+	 * @param {Ship} ship
+	 * @memberof ShipItem
+	 */
+	static getAttackerBonus(item, ship) {
+		if (item.id === 372) {
+			// 天山一二型甲
+			if (ship.id === 483 || ship.id === 488) {
+				// 龍鳳改二 / 戊
+				return 2;
+			}
+			else if ([33, 43].includes(ship.type2)) {
+				// 翔鶴型 大鳳
+				return 1;
+			}
+		}
+		else if (item.id === 373) {
+			// 天山一二型甲改(空六号電探改装備機)
+			if (ship.id === 483) {
+				// 龍鳳改二戊
+				return 3;
+			}
+			else if (ship.id === 488 || [9, 33, 43].includes(ship.type2)) {
+				// 龍鳳改二 最上型 翔鶴型 大鳳
+				return 2;
+			}
+			else if ([24, 51].includes(ship.type2) || [1391, 1392, 121, 122, 1382, 355, 360].includes(ship.id)) {
+				// 飛鷹型 龍鳳型　祥鳳と千歳型の改以降っぽいかんじ
+				return 1;
+			}
+		}
+		else if (item.id === 374) {
+			// 天山一二型甲改(熟練/空六号電探改装備機)
+			if ([261, 262, 266, 267, 156, 153].includes(ship.id)) {
+				// 鶴改二 / 改二甲 大鳳
+				return 3;
+			}
+			else if ([483, 488, 308, 309, 1383, 208].includes(ship.id)) {
+				// 龍鳳改二 最上型改二 飛鷹改 隼鷹改二
+				return 2;
+			}
+			else if ([121, 122, 1382, 355, 360, 190].includes(ship.id)) {
+				// 祥鳳と千歳型最終 龍鳳改
+				return 1;
+			}
+		}
+		else if (item.id === 424) {
+			// Barracuda Mk.II
+			if ([315, 1473, 485, 1713].includes(ship.id)) {
+				// Ark Vict
+				return 3;
+			}
+		}
+		else if (item.id === 425) {
+			// Barracuda Mk.III
+			if ([315, 1473, 485, 1713].includes(ship.id)) {
+				// Ark Vict
+				return 1;
+			}
+		}
+		else if (item.id === 368) {
+			// Swordfish Mk.III改(水上機型)
+			if (ship.id === 430) {
+				// Got andra
+				return 2;
+			}
+		}
+		else if (item.id === 369) {
+			// Swordfish Mk.III改(水上機型/熟練)
+			if (ship.id === 430) {
+				// Got andra
+				return 3;
+			}
+		}
+
+		return 0;
 	}
 }
 
@@ -5591,14 +5714,8 @@ function createEnemyPattern(patternNo = 0) {
 	$('#enemy_pattern_status1').text(borders[1]);
 	$('#enemy_pattern_status2').text(borders[2]);
 	$('#enemy_pattern_status3').text(borders[3]);
-	if (pattern.t === CELL_TYPE.night) {
-		$('#btn_expand_enemies').prop('disabled', true);
-		$('#btn_continue_expand').prop('disabled', true);
-	}
-	else {
-		$('#btn_expand_enemies').prop('disabled', false);
-		$('#btn_continue_expand').prop('disabled', false);
-	}
+	$('#btn_expand_enemies').prop('disabled', false);
+	$('#btn_continue_expand').prop('disabled', false);
 
 	// 表示形式切り替えの有効無効と表示形式
 	if (enemiesLength > 6) {
@@ -7228,6 +7345,8 @@ function updateFleetView() {
 		const node_hunshin = ship_tab.getElementsByClassName('hunshin')[0];
 		// 噴進弾幕 発動率
 		const node_hunshin_rate = ship_tab.getElementsByClassName('hunshin_rate')[0];
+		// 警告文
+		const node_hint = ship_tab.getElementsByClassName('has_warning')[0];
 
 		// 撃墜テーブルに表示する数
 		let planeCount = 0
@@ -7265,6 +7384,15 @@ function updateFleetView() {
 		}
 		else {
 			node_hunshin.classList.add('d-none');
+		}
+
+		// 警告文　あれば。
+		if (ship.warningText) {
+			node_hint.classList.remove('d-none');
+			node_hint.dataset.originalTitle = ship.warningText;
+		}
+		else {
+			node_hint.classList.add('d-none');
 		}
 
 		// マスタから取得
@@ -8010,6 +8138,9 @@ function createFleetInstance() {
 	// 索敵スコアの計算
 	fleet.updateScoutScores();
 
+	// 航空戦ボーナス雷装値の計算
+	fleet.updateBonusTorpedo()
+
 	return fleet;
 }
 
@@ -8204,9 +8335,9 @@ function shootDownEnemy(index, enemyFleet, adaptStage2 = false, stage2Tables = [
 				// 迎撃担当選出
 				const table = stage2[Math.floor(Math.random() * range)];
 				// 割合撃墜　50% で失敗
-				if (Math.floor(Math.random() * 2)) slot -= Math.floor(table.rateDown * slot);
+				if (Math.random() >= 0.5) slot -= Math.floor(table.rateDown * slot);
 				// 固定撃墜　50% で失敗
-				if (Math.floor(Math.random() * 2)) slot -= table.fixDown;
+				if (Math.random() >= 0.5) slot -= table.fixDown;
 				// 最低保証
 				slot -= table.minimumDown;
 				// 0未満になったら修正
@@ -8250,7 +8381,7 @@ function getShootDownSlotFF(index, slot) {
 }
 
 /**
- * 噴式強襲
+ * 基地噴式強襲
  * @param {LandBase} landBase 基地
  * @param {Battle} battleInfo 敵艦隊
  */
@@ -8278,9 +8409,9 @@ function doLandBaseJetPhase(landBase, battleInfo) {
 		// 迎撃担当インデックス
 		const index = Math.floor(Math.random() * range);
 		// 割合撃墜 50% で失敗
-		if (Math.floor(Math.random() * 2)) plane.slot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * plane.slot);
+		if (Math.random() >= 0.5) plane.slot -= Math.floor(battleInfo.stage2[plane.avoid][0][index] * plane.slot);
 		// 固定撃墜 50% で失敗
-		if (Math.floor(Math.random() * 2)) plane.slot -= battleInfo.stage2[plane.avoid][1][index];
+		if (Math.random() >= 0.5) plane.slot -= battleInfo.stage2[plane.avoid][1][index];
 
 		plane.updateAirPower();
 		sumAp += plane.airPower;
@@ -8322,9 +8453,9 @@ function doJetPhase(fleet, battleInfo) {
 			// 迎撃担当インデックス
 			const index = Math.floor(Math.random() * range);
 			// 割合撃墜 50% で失敗
-			if (Math.floor(Math.random() * 2)) plane.slot -= Math.floor(stage2[0][index] * plane.slot);
+			if (Math.random() >= 0.5) plane.slot -= Math.floor(stage2[0][index] * plane.slot);
 			// 固定撃墜 50% で失敗
-			if (Math.floor(Math.random() * 2)) plane.slot -= stage2[1][index];
+			if (Math.random() >= 0.5) plane.slot -= stage2[1][index];
 
 			// 制空値の更新
 			let prevAp = plane.airPower;
@@ -8384,9 +8515,9 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 				const index = Math.floor(Math.random() * range);
 				const stage2Table = battleInfo.stage2[plane.avoid];
 				// 割合撃墜 50% で失敗
-				if (Math.floor(Math.random() * 2)) plane.slot -= Math.floor(stage2Table[0][index] * plane.slot);
+				if (Math.random() >= 0.5) plane.slot -= Math.floor(stage2Table[0][index] * plane.slot);
 				// 固定撃墜 50% で失敗
-				if (Math.floor(Math.random() * 2)) plane.slot -= stage2Table[1][index];
+				if (Math.random() >= 0.5) plane.slot -= stage2Table[1][index];
 			}
 
 			// 制空値再計算 偵察機以外
@@ -8412,7 +8543,7 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
 }
 
 /**
- * 自陣被撃墜
+ * 基地被撃墜
  * @param {number} asIndex 制空状態
  * @param {LandBase} landBase 味方艦隊
  * @param {Battle} battleInfo 戦闘情報
@@ -8442,9 +8573,9 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 			const index = Math.floor(Math.random() * range);
 			const stage2Table = battleInfo.stage2[plane.avoid];
 			// 割合撃墜 50% で失敗
-			if (Math.floor(Math.random() * 2)) plane.slot -= Math.floor(stage2Table[0][index] * plane.slot);
+			if (Math.random() >= 0.5) plane.slot -= Math.floor(stage2Table[0][index] * plane.slot);
 			// 固定撃墜 50% で失敗
-			if (Math.floor(Math.random() * 2)) plane.slot -= stage2Table[1][index];
+			if (Math.random() >= 0.5) plane.slot -= stage2Table[1][index];
 		}
 
 		// この機体の制空値を再計算
@@ -11428,7 +11559,11 @@ function ship_luck_range_Changed($this) {
  */
 function showItemToolTip($this, isLandBase = false) {
 	const $parent = $this.closest(isLandBase ? '.lb_plane' : '.ship_plane');
+	let shipId = 0;
 	if (!$parent.length || !$parent[0].dataset.planeid || $parent.hasClass('ui-draggable-dragging')) return;
+	else if ($parent.closest('.ship_tab').length) {
+		shipId = castInt($parent.closest('.ship_tab')[0].dataset.shipid);
+	}
 
 	// 機体情報オブジェクト取得
 	const id = castInt($parent[0].dataset.planeid);
@@ -11436,7 +11571,7 @@ function showItemToolTip($this, isLandBase = false) {
 	const remodel = castInt($parent[0].getElementsByClassName('remodel_value')[0].textContent);
 	const level = castInt($parent[0].getElementsByClassName('prof_select')[0].dataset.prof);
 
-	const text = getItemTooltipContext(id, $parent[0].classList.contains('lb_plane'), slot, remodel, level);
+	const text = getItemTooltipContext(id, $parent[0].classList.contains('lb_plane'), slot, remodel, level, shipId);
 
 	showTooltip($this[0], text, 'right');
 }
@@ -11446,18 +11581,18 @@ function showItemToolTip($this, isLandBase = false) {
  * @param {JQuery} $this
  */
 function showPlaneBasicToolTip($this) {
-	// 機体情報オブジェクト取得
-	const plane = ITEM_DATA.find(v => v.id === castInt($this[0].dataset.planeid));
-	if (!plane) return;
-
 	let remodel = 0;
 	if ($this.find('.plane_td_remodel').length) {
 		remodel = castInt($this.find('.plane_td_remodel')[0].dataset.remodel);
 	}
 
+	let shipId = 0;
 	// いま開いている装備一覧の親が基地？
 	const isLandBase = $target && !$target.hasClass('ship_plane');
-	const text = getItemTooltipContext(castInt($this[0].dataset.planeid), isLandBase, 0, remodel);
+	if ($target && $target.closest('.ship_tab').length) {
+		shipId = castInt($target.closest('.ship_tab')[0].dataset.shipid);
+	}
+	const text = getItemTooltipContext(castInt($this[0].dataset.planeid), isLandBase, 0, remodel, 0, shipId);
 
 	showTooltip($this[0], text, 'bottom', 'window');
 }
@@ -11469,9 +11604,10 @@ function showPlaneBasicToolTip($this) {
  * @param {number} [slot=0] 搭載数
  * @param {number} [remodel=0] 改修値
  * @param {number} [level=0] 熟練度
+ * @param {number} [ship=null] 艦娘データ あれば
  * @returns {string} 装備ツールチップのHTMLテキスト
  */
-function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0, level = 0) {
+function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0, level = 0, shipId = 0) {
 	/** @type {Item}} */
 	let item = null;
 	if (isLandBase) {
@@ -11490,7 +11626,18 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 	const bAntiAir = item.bonusAntiAir;
 	const bFire = Item.getBonusFire(type, remodel);
 	const bScout = Item.getBonusScout(type, remodel);
-	const bTorpedo = Item.getBonusTorpedo(type, remodel);
+	let bTorpedo = Item.getBonusTorpedo(type, remodel);
+	if (shipId) {
+		const shipRaw = SHIP_DATA.find(v => v.id === shipId);
+		if (shipRaw) {
+			const ship = new Ship();
+			ship.id = shipRaw.id;
+			ship.name = shipRaw.name;
+			ship.type = shipRaw.type;
+			ship.type2 = shipRaw.type2;
+			bTorpedo += ShipItem.getAttackerBonus(item, ship);
+		}
+	}
 	const bAccuracy = Item.getBonusAccuracy(itemId, type, remodel);
 	const bBomber = Item.getBonusBomber(itemId, type, remodel);
 	const bASW = Item.getBonusASW(itemId, type, remodel, raw.antiAir);
@@ -13016,7 +13163,7 @@ function reserve_ship_Clicked($this) {
 	const key = $this[0].dataset.reservedId;
 
 	const ship = reserveList.find(v => v.shipNo === key);
-	if (ship && $target.hasClass('ship_tab')) {
+	if (ship && $target && $target.hasClass('ship_tab')) {
 		// クリックされた情報を復帰して閉じる
 		setShipDiv($target, ship.id, ship.level);
 
@@ -16256,49 +16403,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	$('#main').fadeIn();
 	$('#simulator_loading').remove();
-
-	// さんまくん
-	initSanma = setting.sanma ? castInt(setting.sanma) : 0;
-	const sanmaParent = document.getElementById('sanma_parent');
-	const newY = () => { return Math.max(Math.floor(Math.random() * (document.getElementById('main').clientHeight - 50)), 60) };
-	const newX = () => { return Math.max(Math.floor(Math.random() * (window.innerWidth - 30)), 30) };
-	const sanma = document.createElement('img');
-	sanma.src = '../img/util/sanma.png';
-	sanmaParent.appendChild(sanma);
-	sanmaParent.onclick = () => {
-		if (!sanmaParent.classList.contains('avoid') || Math.floor(Math.random() * 11) < 9) {
-			sanmaParent.classList.add('avoid');
-			const $sanma = $(sanmaParent);
-			$sanma.find('img').css({ transform: `rotate(${Math.random() * 360}deg)` });
-			$sanma.animate({ 'top': newY() + 'px', 'left': newX() + 'px' }, 100);
-		}
-		else {
-			const getCount = sanmaParent.classList.contains('gold') ? 10 : 1;
-			const bonus = document.createElement('div');
-			sanma.classList.add('fadeOut');
-			bonus.className = 'fadeUp fadeUp2 ' + (getCount > 1 ? 'text-warning' : '');
-			bonus.innerHTML = '+' + getCount;
-			sanmaParent.appendChild(bonus);
-
-			sanmaParent.classList.remove('gold');
-
-			inform_success('捕まえた秋刀魚: ' + (initSanma + getCount));
-			setting.sanma = initSanma + getCount;
-			initSanma += getCount;
-			saveSetting();
-
-			setTimeout(() => {
-				sanma.classList.remove('fadeOut');
-				sanmaParent.removeChild(bonus);
-				sanmaParent.style.top = '';
-				sanmaParent.style.left = '';
-				sanmaParent.classList.remove('avoid');
-
-				// 黄金化 5%
-				if (Math.floor(Math.random() * 101) < 6) {
-					sanmaParent.classList.add('gold');
-				}
-			}, 1000);
-		}
-	}
 });
