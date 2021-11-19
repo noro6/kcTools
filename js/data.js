@@ -2095,7 +2095,7 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
-	{ world: 52, name: "帰ってきた鎮守府秋刀魚祭り(2021秋イベ)" },
+	{ world: 52, name: "海上護衛！本土近海航路の防衛(2021秋イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -2172,6 +2172,8 @@ const MAP_DATA = [
 	{ area: 512, name: "地中海/マルタ島沖/ティレニア海" },
 	{ area: 513, name: "ジブラルタル沖/地中海/マルタ島沖" },
 	{ area: 521, name: "三陸沖/北海道根室半島沖" },
+	{ area: 522, name: "昭南方面～本土航路" },
+	{ area: 523, name: "第3海域" },
 ];
 
 // 基地空襲のある海域
