@@ -335,15 +335,12 @@ function adaptUpdater() {
 			deleteLocalStorage('shipStock');
 		}
 
-		// ～ v1.12.14.1
-		// if (major <= 11 || minor < 14 || patch < 1) {
-
-		// }
-
 		// 航空機のみチェックオプション削除
 		if (setting.hasOwnProperty('planeOnly')) delete setting.planeOnly;
 		// スロットありのみチェックオプション削除
 		if (setting.hasOwnProperty('hasSlotOnly')) delete setting.hasSlotOnly;
+		// サンマ削除
+		if (setting.hasOwnProperty('sanma')) delete setting.sanma;
 	}
 
 	setting.adaptedVersion = LATEST_VERSION;
