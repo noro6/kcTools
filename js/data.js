@@ -457,9 +457,9 @@ const ITEM_DATA = [
 	{ id: 214, type: 32, itype: 5, name: "熟練聴音員+後期型艦首魚雷(6門)", abbr: "", fire: 0, antiAir: 0, torpedo: 15, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 5, avoid2: 4, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
 	{ id: 383, type: 32, itype: 5, name: "後期型53cm艦首魚雷(8門)", abbr: "", fire: 0, antiAir: 0, torpedo: 19, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 3, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
 	{ id: 440, type: 32, itype: 5, name: "21inch艦首魚雷発射管6門(初期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 10, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 2, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
-	{ id: 441, type: 32, itype: 5, name: "21inch艦首魚雷発射管6門(後期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 14, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 3, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
+	{ id: 441, type: 32, itype: 5, name: "21inch艦首魚雷発射管6門(後期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 14, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 3, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
 	{ id: 442, type: 32, itype: 5, name: "潜水艦後部魚雷発射管4門(初期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 6, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 1, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
-	{ id: 443, type: 32, itype: 5, name: "潜水艦後部魚雷発射管4門(後期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 9, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 2, avoid2: 2, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
+	{ id: 443, type: 32, itype: 5, name: "潜水艦後部魚雷発射管4門(後期型)", abbr: "", fire: 0, antiAir: 0, torpedo: 9, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 2, avoid2: 2, radius: 0, cost: 0, avoid: 0, range2: 1, grow: 0 },
 	{ id: 101, type: 33, itype: 27, name: "照明弾", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 107, type: 34, itype: 28, name: "艦隊司令部施設", abbr: "", fire: 0, antiAir: 1, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 1, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 272, type: 34, itype: 28, name: "遊撃部隊 艦隊司令部", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 1, avoid2: 1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -2196,7 +2196,7 @@ const MAP_DATA = [
 ];
 
 // 基地空襲のある海域
-const AIR_RAID_MAP = [65, 464, 465, 466, 471, 483, 484, 485, 486, 487, 493, 494, 504, 505, 512, 513];
+const AIR_RAID_MAP = [65, 464, 465, 466, 471, 483, 484, 485, 486, 487, 493, 494, 504, 505, 512, 513, 522, 523];
 
 // 制空状態
 const AIR_STATUS = [
