@@ -15829,7 +15829,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			setTab();
 		}
 
-		specialOperator.update('A');
+		// specialOperator.update('A');
 		calculate();
 		showDeckSelector();
 	});
