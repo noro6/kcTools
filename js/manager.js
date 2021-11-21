@@ -456,7 +456,7 @@ function initShipListTable() {
             tr.dataset.remodelHp = detail.st[5];
             tr.dataset.remodelAsw = detail.st[6];
             tr.dataset.slotEx = detail.ex ? detail.ex : 0;
-            tr.dataset.area = detail.area;
+            tr.dataset.area = detail.area > 0 && detail.area <= MAX_AREA ? detail.area : 0;
             tr.dataset.index = defaultIndex++;
 
             if (detail.lv === 175) tr.classList.add('lv175');
