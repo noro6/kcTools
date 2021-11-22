@@ -2822,7 +2822,7 @@ class Enemy {
 		}
 		this.landBaseAirPower = sumAp;
 
-		if (!this.onlyScout) {
+		if (!this.onlyScout || isDefMode) {
 			this.airPower = sumAp;
 		}
 	}
@@ -7661,11 +7661,14 @@ function updateEnemyView() {
 		}
 
 		// 戦闘情報表示欄
-		const battle_tab = document.getElementsByClassName('battle_content')[battleIndex++];
+		const battle_tab = !isDefMode ? document.getElementsByClassName('battle_content')[battleIndex++] : document.getElementById('battle_content_def_mode');
 		// 制空値
 		battle_tab.getElementsByClassName('enemy_sum_ap')[0].textContent = battle.getAirPower();
 		// 基地制空値
 		battle_tab.getElementsByClassName('enemy_sum_lbap')[0].textContent = battle.getLandBaseAirPower();
+		if (isDefMode) {
+
+		}
 		// 半径(既に値が入っているので、0なら非表示)
 		const node_range = battle_tab.getElementsByClassName('enemy_range')[0];
 		if (!castInt(node_range.textContent)) node_range.parentNode.classList.add('d-none');
