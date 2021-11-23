@@ -1975,7 +1975,7 @@ const ENEMY_DATA = [
 	{ id: 547, type: [1, 2], name: "飛行場姫 鳥黒 弱", slot: [16, 12, 12, 8, -1], eqp: [574, 574, 617, 571], orig: 2047, hp: 480, aa: 120, armor: 120 },
 	{ id: 548, type: [1, 2], name: "飛行場姫 鳥黒 強", slot: [20, 16, 16, 12, -1], eqp: [575, 575, 617, 571], orig: 2048, hp: 480, aa: 120, armor: 120 },
 	{ id: 549, type: [1, 18], name: "潜水新棲姫", slot: [-1, -1, -1, -1, -1], eqp: [580, 580, 580], orig: 2049, hp: 1, aa: 0, armor: 1 },
-	{ id: 550, type: [16], name: "駆逐ナ級IIe(量産型)", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 60, aa: 59, armor: 57 },
+	{ id: 550, type: [16], name: "駆逐ナ級IIe(量産型)", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 63, aa: 63, armor: 61 },
 	{ id: 551, type: [16], name: "駆逐ナ級IIe(量産型)elite", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 66, aa: 69, armor: 67 },
 	{ id: 552, type: [16], name: "駆逐ナ級IIe(量産型)flagship", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 69, aa: 79, armor: 77 },
 	{ id: 553, type: [1, 18], name: "潜水鮫水鬼[丙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 2053, hp: 277, aa: 0, armor: 19 },
@@ -1983,7 +1983,7 @@ const ENEMY_DATA = [
 	{ id: 555, type: [1, 18], name: "潜水鮫水鬼[甲]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2055, hp: 577, aa: 0, armor: 79 },
 	{ id: 556, type: [1, 18], name: "潜水鮫水鬼-壊[丙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 2056, hp: 277, aa: 0, armor: 29 },
 	{ id: 557, type: [1, 18], name: "潜水鮫水鬼-壊[乙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2057, hp: 277, aa: 0, armor: 19 },
-	{ id: 558, type: [1, 18], name: "潜水鮫水鬼-壊[甲]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2058, hp: 577, aa: 0, armor: 74 },
+	{ id: 558, type: [1, 18], name: "潜水鮫水鬼-壊[甲]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2058, hp: 577, aa: 0, armor: 89 },
 ];
 const ENEMY_ITEM = [
 	{ id: 501, type: 1, itype: 1, name: "5inch単装砲", antiAir: 0, torpedo: 0, bomber: 0, armor: 0 },
