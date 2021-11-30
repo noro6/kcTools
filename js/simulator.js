@@ -2271,10 +2271,11 @@ class LandBaseItem extends Item {
 	 * @param {number} remodel 改修値
 	 * @param {boolean} isCritical 改修値
 	 * @param {number} criticalBonus 熟練度クリティカル補正値
+	 * @param {number} beforCapBonus キャップ前補正
+	 * @param {number} torpedoBonus 雷装値補正
 	 * @returns {number[]} 攻撃力(クリティカル, 陸攻補正のみ適用したもの)
-	 * @memberof LandBaseItem
 	 */
-	static getFirePower(id, slot, remodel, isCritical = false, criticalBonus = 1) {
+	static getFirePower(id, slot, remodel, isCritical = false, criticalBonus = 1, beforCapBonus = 1, torpedoBonus = 1) {
 		const plane = ITEM_DATA.find(v => v.id === id);
 		if (!plane || slot <= 0) return 0;
 
@@ -2283,38 +2284,42 @@ class LandBaseItem extends Item {
 		let fire = 0;
 		// ※種別倍率：艦攻・艦爆・水爆 = 1.0、陸攻 = 0.8、噴式機 = 0.7071 (≒1.0/√2)　そのた0
 		let adj = 0;
+		// 搭載数補正
+		let adj2 = 1.8;
 		switch (type) {
 			case 8:
 				// 艦攻
-				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo;
+				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo * torpedoBonus;
 				adj = 1.0;
 				break;
 			case 7:
 			case 11:
 				// 艦爆 水爆
-				fire = Item.getBonusBomber(id, type, remodel) + plane.bomber;
+				fire = Item.getBonusBomber(id, type, remodel) + plane.bomber * torpedoBonus;
 				adj = 1.0;
 				break;
 			case 57:
-				fire = Item.getBonusBomber(id, type, remodel) + plane.bomber;
+				// 噴式機
+				fire = Item.getBonusBomber(id, type, remodel) + plane.bomber * torpedoBonus;
 				adj = 0.7071;
 				break;
 			case 47:
 				// 陸上攻撃機
-				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo;
+				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo * torpedoBonus;
 				adj = 0.8;
 				break;
 			case 53:
 				// 大型陸上機
-				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo;
-				adj = 0.8;
+				fire = Item.getBonusTorpedo(type, remodel) + plane.torpedo * torpedoBonus;
+				adj = 1.0;
+				adj2 = 1.0;
 				break;
 			default:
 				break;
 		}
 
-		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
-		let p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
+		// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(搭載数補正 × 搭載数) + 25} * キャップ前ボーナス
+		let p = Math.floor(adj * (fire * Math.sqrt(adj2 * slot) + 25) * beforCapBonus);
 
 		// キャップ
 		p = softCap(p, AS_CAP);
@@ -2434,38 +2439,6 @@ class LandBaseItem extends Item {
 			fire = item.torpedo + Item.getBonusTorpedo(item.type, item.remodel);
 			// キャップ前 1.08倍
 			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25) * 1.08);
-		}
-
-		// キャップ
-		p = softCap(p, AS_CAP);
-		if (isCritical) p = Math.floor(p * 1.5 * criticalBonus);
-		// 陸攻補正
-		const landBaseBonus = 1.8;
-		return p * landBaseBonus;
-	}
-
-	/**
-	 * 戦艦時のダメージ個別対応
-	 * @static
-	 * @param {LandBaseItem} item
-	 * @param {number} slot
-	 * @param {boolean} isCritical
-	 * @param {number} criticalBonus
-	 * @returns {number} 火力
-	 * @memberof LandBaseItem
-	 */
-	static getFirePower_SP2(item, slot, isCritical, criticalBonus) {
-		if (slot <= 0) return 0;
-
-		let fire = 0;
-		let adj = 0.8;
-
-		let p = 0;
-		if (item.id === 406) {
-			// Do 217 K-2 + Fritz-X
-			fire = item.torpedo + Item.getBonusTorpedo(item.type, item.remodel);
-			// キャップ前 1.35倍
-			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25) * 1.35);
 		}
 
 		// キャップ
@@ -10106,10 +10079,6 @@ function drawStage3Result() {
 	const isLandBase = plane.hasOwnProperty('defenseAirPower');
 	// 陸攻チェック
 	const isLandBaseAttacker = plane.type === 47;
-	// 駆逐特効チェック
-	const hasKuchikuBonus = plane.id === 224 || plane.id === 405;
-	// Fritzチェック
-	const isFritz = plane.id === 406;
 	// 対潜攻撃チェック
 	const enabledASW = isLandBase && enemies.some(v => v.type.includes(18)) && plane.asw >= 7;
 	// 搭載数指定
@@ -10145,15 +10114,7 @@ function drawStage3Result() {
 
 		// 基地航空隊ダメージ計算
 		if (isLandBase) {
-			if (hasKuchikuBonus && enemy.type.includes(16)) {
-				// 基地航空隊 対駆逐艦特効
-				lastPowers = getLandBaseAerialPowersMod(slotDist);
-			}
-			else if (isFritz && enemy.type.includes(13)) {
-				// 基地航空隊 対戦艦特効
-				lastPowers = getLandBaseAerialPowersMod2(slotDist);
-			}
-			else if (enemy.type.includes(2)) {
+			if (enemy.type.includes(2)) {
 				// 基地航空隊 対地攻撃
 				lastPowers = getLandBaseAerialPowersLandBase(slotDist, enemy);
 			}
@@ -10163,11 +10124,47 @@ function drawStage3Result() {
 			}
 			else if (isLandBaseAttacker && (enemy.id === 86 || enemy.id === 120)) {
 				// 基地航空隊 陸攻 空母棲姫特効(キャップ後3.2倍)
-				lastPowers = getLandBaseAerialPowers(slotDist, 3.2);
+				lastPowers = getLandBaseAerialPowers(slotDist, 1, 3.2);
 			}
 			else {
-				// 基地航空隊 対水上 通常
-				lastPowers = getLandBaseAerialPowers(slotDist);
+				// 基地航空隊 対水上
+				if (enemy.type.includes(16)) {
+					// 駆逐
+					if (plane.id === 224) {
+						// 65戦隊
+					}
+					else if (plane.id === 405) {
+						// Do 217 E-5+Hs293 雷装1.1倍
+						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1.1);
+					}
+					else if (plane.id === 444) {
+						// 四式重爆 飛龍+イ号一型甲 誘導弾 雷装1.15倍
+						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1.15);
+					}
+				}
+				else if (enemy.type.includes(13)) {
+					// 戦艦
+					if (plane.id === 406) {
+						// Do 217 K-2 + Fritz-X 1.35倍
+						lastPowers = getLandBaseAerialPowers(slotDist, 1.35);
+					}
+					else if (plane.id === 444) {
+						// 四式重爆 飛龍+イ号一型甲 誘導弾 雷装1.15倍
+						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1.15);
+					}
+				}
+				else if (enemy.type.includes(12) || enemy.type.includes(15) || enemy.type.includes(17)) {
+					// 順に 軽空母 軽巡 雷巡
+					if (plane.id === 444) {
+						// 四式重爆 飛龍+イ号一型甲 誘導弾 雷装1.15倍
+						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1.15);
+					}
+				}
+
+				if (!lastPowers.length) {
+					// それ以外
+					lastPowers = getLandBaseAerialPowers(slotDist);
+				}
 			}
 		}
 		else if (isFleet) {
@@ -10278,10 +10275,12 @@ function drawStage3Result() {
 /**
  * 基地航空隊 対水上艦航空戦火力分布を返却
  * @param {{slot: number, rate: number}[]} slotDist
+ * @param {number} [beforCapBonus=1] キャップ前補正(あれば)
  * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
+ * @param {number} [torpedoBpnus=1] 雷装値補正(あれば)
  * @returns 
  */
-function getLandBaseAerialPowers(slotDist, afterCapBonus = 1) {
+function getLandBaseAerialPowers(slotDist, beforCapBonus = 1, afterCapBonus = 1, torpedoBpnus = 1) {
 	/** @type {LandBaseItem} */
 	const plane = aerialSetting.item;
 	const isCritical = aerialSetting.isCritical;
@@ -10295,79 +10294,9 @@ function getLandBaseAerialPowers(slotDist, afterCapBonus = 1) {
 		// 調査搭載数
 		const slot = isAllSlot ? dist.slot : manualSlot;
 		// クリティカル & 陸攻補正を行った攻撃力
-		const basePower = LandBaseItem.getFirePower(plane.id, slot, plane.remodel, isCritical, crBonus);
+		const basePower = LandBaseItem.getFirePower(plane.id, slot, plane.remodel, isCritical, crBonus, beforCapBonus, torpedoBpnus);
 		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
 		const rate = isAllSlot ? dist.rate : 1;
-		// 陸偵補正 * 触接補正 * 敵連合補正を付与
-		const a = basePower * allBonus;
-		// 火力とその確率を格納
-		const p = powers.find(v => v.power === a);
-		if (p) p.rate += rate;
-		else powers.push({ power: a, rate: rate });
-
-		// 搭載数指定モードの場合は1回で抜ける
-		if (!isAllSlot) break;
-	}
-	return powers;
-}
-
-/**
- * 基地航空隊 対駆逐艦 航空戦火力分布を返却
- * @param {{slot: number, rate: number}[]} slotDist
- * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
- */
-function getLandBaseAerialPowersMod(slotDist, afterCapBonus = 1) {
-	/** @type {LandBaseItem} */
-	const plane = aerialSetting.item;
-	const isCritical = aerialSetting.isCritical;
-	const crBonus = aerialSetting.levelCriticalBonus;
-	const isAllSlot = aerialSetting.isAllSlot;
-	const manualSlot = aerialSetting.manualSlot;
-	// キャップ後補正まとめ (二式陸偵補正 * 触接補正 * 対連合補正 * キャップ後特殊補正)
-	const allBonus = aerialSetting.nishikiBonus * aerialSetting.contactBonus * aerialSetting.unionBonus * afterCapBonus;
-	const powers = [];
-	for (const ad of slotDist) {
-		// 調査搭載数
-		const slot = isAllSlot ? ad.slot : manualSlot;
-		// クリティカル & 陸攻補正を行った攻撃力
-		const basePower = LandBaseItem.getFirePower_SP(plane, slot, isCritical, crBonus);
-		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-		const rate = isAllSlot ? ad.rate : 1;
-		// 陸偵補正 * 触接補正 * 敵連合補正を付与
-		const a = basePower * allBonus;
-		// 火力とその確率を格納
-		const p = powers.find(v => v.power === a);
-		if (p) p.rate += rate;
-		else powers.push({ power: a, rate: rate });
-
-		// 搭載数指定モードの場合は1回で抜ける
-		if (!isAllSlot) break;
-	}
-	return powers;
-}
-
-/**
- * 基地航空隊 対戦艦 航空戦火力分布を返却
- * @param {{slot: number, rate: number}[]} slotDist
- * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
- */
-function getLandBaseAerialPowersMod2(slotDist, afterCapBonus = 1) {
-	/** @type {LandBaseItem} */
-	const plane = aerialSetting.item;
-	const isCritical = aerialSetting.isCritical;
-	const crBonus = aerialSetting.levelCriticalBonus;
-	const isAllSlot = aerialSetting.isAllSlot;
-	const manualSlot = aerialSetting.manualSlot;
-	// キャップ後補正まとめ (二式陸偵補正 * 触接補正 * 対連合補正 * キャップ後特殊補正)
-	const allBonus = aerialSetting.nishikiBonus * aerialSetting.contactBonus * aerialSetting.unionBonus * afterCapBonus;
-	const powers = [];
-	for (const ad of slotDist) {
-		// 調査搭載数
-		const slot = isAllSlot ? ad.slot : manualSlot;
-		// クリティカル & 陸攻補正を行った攻撃力
-		const basePower = LandBaseItem.getFirePower_SP2(plane, slot, isCritical, crBonus);
-		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
-		const rate = isAllSlot ? ad.rate : 1;
 		// 陸偵補正 * 触接補正 * 敵連合補正を付与
 		const a = basePower * allBonus;
 		// 火力とその確率を格納
