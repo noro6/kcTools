@@ -2412,7 +2412,7 @@ class LandBaseItem extends Item {
 
 
 	/**
-	 * 駆逐時のダメージ個別対応
+	 * 65戦隊 かつ駆逐用火力計算
 	 * @static
 	 * @param {LandBaseItem} item
 	 * @param {number} slot
@@ -2433,12 +2433,6 @@ class LandBaseItem extends Item {
 			fire = 25 + Item.getBonusTorpedo(item.type, item.remodel);
 			// 基本攻撃力 = 種別倍率 × {(雷装 or 爆装) × √(1.8 × 搭載数) + 25}
 			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25));
-		}
-		else if (item.id === 405) {
-			// Do 217 E-5+Hs293 
-			fire = item.torpedo + Item.getBonusTorpedo(item.type, item.remodel);
-			// キャップ前 1.08倍
-			p = Math.floor(adj * (fire * Math.sqrt(1.8 * slot) + 25) * 1.08);
 		}
 
 		// キャップ
@@ -10131,7 +10125,8 @@ function drawStage3Result() {
 				if (enemy.type.includes(16)) {
 					// 駆逐
 					if (plane.id === 224) {
-						// 65戦隊
+						// 65戦隊特殊
+						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1, true);
 					}
 					else if (plane.id === 405) {
 						// Do 217 E-5+Hs293 雷装1.1倍
@@ -10278,9 +10273,10 @@ function drawStage3Result() {
  * @param {number} [beforCapBonus=1] キャップ前補正(あれば)
  * @param {number} [afterCapBonus=1] キャップ後補正(あれば)
  * @param {number} [torpedoBpnus=1] 雷装値補正(あれば)
+ * @param {boolean} [isSpecial=false] 65戦隊特殊
  * @returns 
  */
-function getLandBaseAerialPowers(slotDist, beforCapBonus = 1, afterCapBonus = 1, torpedoBpnus = 1) {
+function getLandBaseAerialPowers(slotDist, beforCapBonus = 1, afterCapBonus = 1, torpedoBpnus = 1, isSpecial = false) {
 	/** @type {LandBaseItem} */
 	const plane = aerialSetting.item;
 	const isCritical = aerialSetting.isCritical;
@@ -10294,7 +10290,8 @@ function getLandBaseAerialPowers(slotDist, beforCapBonus = 1, afterCapBonus = 1,
 		// 調査搭載数
 		const slot = isAllSlot ? dist.slot : manualSlot;
 		// クリティカル & 陸攻補正を行った攻撃力
-		const basePower = LandBaseItem.getFirePower(plane.id, slot, plane.remodel, isCritical, crBonus, beforCapBonus, torpedoBpnus);
+		const basePower = isSpecial ? LandBaseItem.getFirePower_SP(plane, slot, isCritical, crBonus) :
+			LandBaseItem.getFirePower(plane.id, slot, plane.remodel, isCritical, crBonus, beforCapBonus, torpedoBpnus);
 		// 全事象(isAllSlot)なら各搭載数の取り得る確率を使用する
 		const rate = isAllSlot ? dist.rate : 1;
 		// 陸偵補正 * 触接補正 * 敵連合補正を付与
