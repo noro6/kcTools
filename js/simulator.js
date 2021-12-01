@@ -10148,8 +10148,8 @@ function drawStage3Result() {
 						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1.15);
 					}
 				}
-				else if (enemy.type.includes(12) || enemy.type.includes(15) || enemy.type.includes(17)) {
-					// 順に 軽空母 軽巡 雷巡
+				else if (enemy.type.includes(12) || enemy.type.includes(14) || enemy.type.includes(15) || enemy.type.includes(17)) {
+					// 順に 軽空母 軽巡 重巡 雷巡
 					if (plane.id === 444) {
 						// 四式重爆 飛龍+イ号一型甲 誘導弾 雷装1.15倍
 						lastPowers = getLandBaseAerialPowers(slotDist, 1, 1, 1.15);
