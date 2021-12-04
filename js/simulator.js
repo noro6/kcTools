@@ -922,16 +922,16 @@ class Ship {
 			// 五十鈴改二
 			else if (shipId === 141) {
 				// 14種 (高角砲, 対空機銃, 対空電探)
-				if (hasKoukaku && kjCount > 0 && arCount > 0) cutin.push(14);
+				if (hasKoukaku && (kjCount > 0 || tkjCount > 0) && arCount > 0) cutin.push(14);
 				// 15種 (高角砲, 対空機銃)
-				if (hasKoukaku && kjCount > 0) cutin.push(15);
+				if (hasKoukaku && (kjCount > 0 || tkjCount > 0)) cutin.push(15);
 			}
 			// 霞改二乙 夕張改二
 			else if (shipId === 270 || shipId === 422) {
 				// 16種 (高角砲, 対空機銃, 対空電探)
-				if (hasKoukaku && kjCount > 0 && arCount > 0) cutin.push(16);
+				if (hasKoukaku && (kjCount > 0 || tkjCount > 0) && arCount > 0) cutin.push(16);
 				// 17種 (高角砲, 対空機銃)
-				if (hasKoukaku && kjCount > 0) cutin.push(17);
+				if (hasKoukaku && (kjCount > 0 || tkjCount > 0)) cutin.push(17);
 			}
 			// 鬼怒改二
 			else if (shipId === 287) {
