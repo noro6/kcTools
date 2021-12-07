@@ -840,8 +840,6 @@ class Ship {
 	setAntiAirCutIn() {
 		// 発動できる種別群　pushした順番は厳守！！！
 		const cutin = [];
-		// 英国 / 金剛型改二
-		const bl = [149, 150, 151, 152, 239, 314, 315, 319, 320, 371, 376, 391, 392, 1444, 1473, 1474, 1493, 1705];
 		// 艦娘id
 		const shipId = this.id;
 		// 装備一覧
@@ -866,7 +864,7 @@ class Ship {
 		const hasGFCS = items.some(v => v.id === 307);
 
 		// 秋月型
-		if ([221, 222, 223, 332, 1422, 1426, 1437, 337].includes(shipId) && hasKoukaku) {
+		if (this.type2 === 54 && hasKoukaku) {
 			// 1種 (高角砲2, 電探)
 			if ((tkCount + kCount) >= 2 && rCount > 0) cutin.push(1);
 			// 2種 (高角砲, 電探) 共存なし
@@ -1034,7 +1032,7 @@ class Ship {
 				if ((tkCount + kCount) >= 3) cutin.push(30);
 			}
 			// 英国艦艇 / 金剛型改二
-			else if (bl.includes(shipId)) {
+			else if (isGBR(this.type2) || [149, 150, 151, 152, 391, 392].includes(this.id)) {
 				// 32種 (16inch Mk.I三連装砲改+FCR type284, QF 2ポンド8連装ポンポン砲)
 				if (items.some(v => v.id === 300) && items.some(v => v.id === 191)) cutin.push(32);
 				// 32種 (20連装7inch UP Rocket Launchers, QF 2ポンド8連装ポンポン砲)
