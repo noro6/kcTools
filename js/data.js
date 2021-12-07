@@ -2783,4 +2783,4 @@ const SPECIAL_DATA = [
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.18';
+const LATEST_VERSION = '1.12.18.1';

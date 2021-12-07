@@ -3399,7 +3399,7 @@ function replaceKnji(word) {
  * @param {number} [slotIndex=0] スロット番号 未指定ならこの要素でチェックしない
  * @returns {boolean} 装備できるなら true
  */
-function checkInvalidPlane(shipID, item, slotIndex = -1) {
+function checkInvalidItem(shipID, item, slotIndex = -1) {
 	// なんだろうこれ
 	if (shipID === -1) return true;
 	// 艦娘指定なし　基地機体 => 絶対無理！
@@ -3424,6 +3424,11 @@ function checkInvalidPlane(shipID, item, slotIndex = -1) {
 		// 補強増設 特別枠
 		const specialItem = EXPANDED_SPECIAL_ITEM.find(v => v.itemId === item.id);
 		if (specialItem && specialItem.shipApiIds.includes(ship.api)) {
+			return true;
+		}
+
+		// 潜水艦 & 後部魚雷
+		if ([442, 443].includes(item.id) && (ship.type === 13 || ship.type === 14)) {
 			return true;
 		}
 	}
@@ -4058,7 +4063,7 @@ function setPlaneDiv($div, inputPlane = { id: 0, remodel: 0, prof: -1 }, canEdit
 	if ($div.closest('.ship_tab').length > 0) {
 		// 搭載先が艦娘の場合、機体が装備できるのかどうかチェック
 		let shipId = castInt($div.closest('.ship_tab')[0].dataset.shipid);
-		if (!checkInvalidPlane(shipId, plane, castInt($div.index()))) {
+		if (!checkInvalidItem(shipId, plane, castInt($div.index()))) {
 			clearPlaneDiv($div);
 			return false;
 		}
@@ -5308,7 +5313,7 @@ function loadPlanePreset() {
 		let i = 0;
 		for (const plane of preset.planes) {
 			if (plane.id <= 0) i += 1;
-			else if (checkInvalidPlane(parentId, ITEM_DATA.find(v => v.id === plane.id), i)) {
+			else if (checkInvalidItem(parentId, ITEM_DATA.find(v => v.id === plane.id), i)) {
 				infoText = `
 				<div class="preset_td preset_td_info text-warning cur_help ml-auto" data-toggle="tooltip" data-boundary="window"
 					title="展開できない装備が含まれています。">
@@ -5403,7 +5408,7 @@ function drawPlanePresetPreview(preset) {
 	let idx = 0;
 	for (const plane of planes) {
 		if (plane.id) {
-			const needWarning = !checkInvalidPlane(parentId, plane, idx++);
+			const needWarning = !checkInvalidItem(parentId, plane, idx++);
 			text += `
 			<div class="preset_preview_tr d-flex justify-content-start border-bottom" data-planeid="${plane.id}" data-remodel="${plane.remodel}">
 				<div class="preset_preview_td_type"><img class="img-size-25" src="../img/type/icon${plane.itype}.png"></div>
@@ -12298,7 +12303,7 @@ function ship_plane_DragOver($this, ui) {
 	const $original = ui.draggable.closest('.ship_plane');
 	const shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
 	const planeID = castInt($original[0].dataset.planeid);
-	if (planeID !== 0 && !checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === planeID), castInt($this.index()))) {
+	if (planeID !== 0 && !checkInvalidItem(shipID, ITEM_DATA.find(v => v.id === planeID), castInt($this.index()))) {
 		// 挿入先が装備不可だった場合暗くする
 		ui.helper.stop().animate({ 'opacity': '0.2' }, 100);
 		$this.removeClass('plane_draggable_hover');
@@ -12337,7 +12342,7 @@ function ship_plane_Drop($this, ui) {
 		if (insertPlane.id > 0) {
 			// 挿入先が装備不可だった場合中止
 			let shipID = castInt($this.closest('.ship_tab')[0].dataset.shipid);
-			if (!checkInvalidPlane(shipID, ITEM_DATA.find(v => v.id === insertPlane.id), castInt($this.index()))) return;
+			if (!checkInvalidItem(shipID, ITEM_DATA.find(v => v.id === insertPlane.id), castInt($this.index()))) return;
 		}
 
 		TradeHTMLWithAnimation($original[0], $this[0], () => {
@@ -12499,6 +12504,13 @@ function plane_type_select_Changed($this = null) {
 				}
 
 				exSpecialItems.push(spItem);
+			}
+
+			// 潜水艦後部魚雷
+			if (ship.type === 13 || ship.type === 14) {
+				exSpecialItems.push(ITEM_LIST.find(v => v.id === 442));
+				exSpecialItems.push(ITEM_LIST.find(v => v.id === 443));
+				dispType.push(32);
 			}
 		}
 
