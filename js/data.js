@@ -532,6 +532,8 @@ const ITEM_DATA = [
 	{ id: 416, type: 48, itype: 38, name: "零式艦戦21型(台南空)", abbr: "", fire: 0, antiAir: 11, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0, range2: 0, grow: 6 },
 	{ id: 417, type: 48, itype: 38, name: "零式艦戦32型(台南空)", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 4, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 5, cost: 4, avoid: 0, range2: 0, grow: 5 },
 	{ id: 418, type: 48, itype: 38, name: "零式艦戦22型(251空)", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0, range2: 0, grow: 6 },
+	{ id: 445, type: 48, itype: 44, name: "二式複戦 屠龍", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 4, interception: 1, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0, range2: 0, grow: 0 },
+	{ id: 446, type: 48, itype: 44, name: "二式複戦 屠龍 丙型", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 2, asw: 0, antiBomber: 6, interception: 2, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 9, avoid: 0, range2: 0, grow: 0 },
 	{ id: 311, type: 49, itype: 9, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0, range2: 0, grow: 0 },
 	{ id: 312, type: 49, itype: 9, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0, range2: 0, grow: 0 },
 	{ id: 209, type: 50, itype: 41, name: "彩雲(輸送用分解済)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -2115,7 +2117,6 @@ const DIFFICULTY = [
 	{ id: 4, name: "甲" },
 ];
 const WORLD_DATA = [
-	{ world: 52, name: "海上護衛！本土近海航路の防衛(2021秋イベ)" },
 	{ world: 1, name: "鎮守府海域" },
 	{ world: 2, name: "南西諸島海域" },
 	{ world: 3, name: "北方海域" },
@@ -2129,6 +2130,7 @@ const WORLD_DATA = [
 	{ world: 49, name: "護衛せよ！船団輸送作戦(2020秋イベ)" },
 	{ world: 50, name: "激突！ルンガ沖夜戦(2021春イベ)" },
 	{ world: 51, name: "増援輸送作戦！地中海の戦い(2021夏イベ)" },
+	{ world: 52, name: "海上護衛！本土近海航路の防衛(2021秋イベ)" },
 ];
 const MAP_DATA = [
 	{ area: 11, name: "鎮守府正面海域" },
