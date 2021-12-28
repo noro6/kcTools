@@ -5548,7 +5548,7 @@ function createNodeSelect() {
 	// マップ設定
 	$('#map_img').attr('src', '../img/map/' + area + '.png');
 	// マップ拡大鏡対応 2021夏以降
-	if (area > 510 || [11, 65].includes(area)) {
+	if (area > 510 || [11, 65, 74].includes(area)) {
 		document.getElementById('btn_zoom_map').classList.remove('d-none');
 	}
 	else {
