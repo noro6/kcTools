@@ -1993,8 +1993,8 @@ const ENEMY_DATA = [
 	{ id: 558, type: [1, 18], name: "潜水鮫水鬼-壊[甲]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2058, hp: 577, aa: 0, armor: 89 },
 	{ id: 559, type: [1, 12], name: "ヒ船団棲姫 弱", slot: [14, 13, 2, 2, -1], eqp: [621, 619, 617, 621], orig: 2059, hp: 500, aa: 72, armor: 155 },
 	{ id: 560, type: [1, 12], name: "ヒ船団棲姫 強", slot: [14, 13, 2, 2, -1], eqp: [621, 619, 617, 621], orig: 2060, hp: 500, aa: 84, armor: 185 },
-	{ id: 561, type: [1, 12], name: "ヒ船団棲姫-壊 弱", slot: [14, 13, 2, 2, -1], eqp: [621, 619, 617, 621], orig: 2061, hp: 500, aa: 84, armor: 185 },
-	{ id: 562, type: [1, 12], name: "ヒ船団棲姫-壊 強", slot: [14, 13, 2, 2, -1], eqp: [621, 619, 617, 621], orig: 2062, hp: 500, aa: 84, armor: 185 },
+	{ id: 561, type: [1, 12], name: "ヒ船団棲姫-壊 弱", slot: [27, 27, 8, 8, -1], eqp: [621, 619, 617, 621], orig: 2061, hp: 500, aa: 84, armor: 185 },
+	{ id: 562, type: [1, 12], name: "ヒ船団棲姫-壊 強", slot: [27, 27, 8, 8, -1], eqp: [621, 619, 617, 621], orig: 2062, hp: 500, aa: 84, armor: 185 },
 ];
 const ENEMY_ITEM = [
 	{ id: 501, type: 1, itype: 1, name: "5inch単装砲", antiAir: 0, torpedo: 0, bomber: 0, armor: 0 },
