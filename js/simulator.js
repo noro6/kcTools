@@ -14763,7 +14763,7 @@ async function btn_url_shorten_Clicked() {
 			inform_success('所持装備の反映に成功しました。');
 		}
 		else if (readShipJson(url)) {
-			inform_success('所持艦娘の反映に成功しました。');
+			inform_success('在籍艦娘の反映に成功しました。');
 		}
 		else {
 			inform_danger('入力値の読み込みに失敗しました。');
@@ -16049,7 +16049,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#input_url').click(function () { $(this).select(); });
 	$('#btn_url_shorten').click(btn_url_shorten_Clicked);
 	$('#tool_bar').on({
-		mouseenter: function () { showTooltip($(this)[0], "デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や所持艦娘情報の反映が可能です。"); },
+		mouseenter: function () { showTooltip($(this)[0], "デッキビルダー形式の編成の読み込みや、URLの短縮、所持装備や在籍艦娘情報の反映が可能です。"); },
 		mouseleave: function () { hideTooltip($(this)[0]); }
 	}, '#btn_url_shorten');
 	$('#landBase_content').on({

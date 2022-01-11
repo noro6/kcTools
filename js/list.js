@@ -1582,7 +1582,7 @@ async function btn_url_shorten_Clicked() {
       inform_success('所持装備の反映に成功しました。');
     }
     else if (readShipJson(url)) {
-      inform_success('所持艦娘の反映に成功しました。');
+      inform_success('在籍艦娘の反映に成功しました。');
     }
     else {
       inform_danger('入力値の読み込みに失敗しました。');

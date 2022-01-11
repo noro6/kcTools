@@ -2593,7 +2593,7 @@ function btn_read_ship_Clicked() {
    else if (readShipJson(inputData)) {
       initShipList();
       textBox.value = '';
-      inform_success('所持艦娘情報を更新しました');
+      inform_success('在籍艦娘情報を更新しました');
    }
    else {
       inform_danger('艦娘情報の読み込みに失敗しました。入力されたデータ形式が正しくない可能性があります');
@@ -2639,7 +2639,7 @@ function btn_url_shorten_Clicked() {
    else if (readShipJson(url)) {
       initShipList();
       initExpTable();
-      inform_success('所持艦娘の反映に成功しました');
+      inform_success('在籍艦娘の反映に成功しました');
       textbox.value = "";
    }
    else {
