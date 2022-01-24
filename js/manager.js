@@ -295,7 +295,7 @@ function initShipList() {
             verHeader.innerHTML = `
             <div class="d-flex">
                <div class="version_ship_name">${ver.name}</div>
-               <div class="version_ship_stock">所持: ${stock && stock.details.length ? stock.details.length : '-'}</div>
+               <div class="version_ship_stock">在籍: ${stock && stock.details.length ? stock.details.length : '-'}</div>
             </div>`;
 
             const shipImage = createDiv('ship_img_div');
