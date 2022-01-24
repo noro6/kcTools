@@ -1744,7 +1744,7 @@ class Item {
 	static getBonusBomber(id, type, remodel) {
 		let bonus = 0;
 		// 艦爆 (爆戦以外)
-		if (type === 7 && id !== 60 && id !== 154 && id !== 219) {
+		if (type === 7 && id !== 60 && id !== 154 && id !== 219 && id !== 447) {
 			bonus = 0.2 * remodel;
 		}
 		// 水爆
