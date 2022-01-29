@@ -1643,18 +1643,21 @@ function initItemList() {
                item_container.dataset[key] = item[key];
             }
          }
-
-         const item_header = createDiv('item_header');
+         
+         // itemのお名前部分
          const img = document.createElement('img');
          img.className = 'item_icon';
          img.alt = item.itype;
          img.src = `../img/type/icon${item.itype}.png`;
-         item_header.appendChild(img);
-
-         const nameSpan = createDiv('item_name');
+         const nameSpan = createDiv('item_name mt-1');
          nameSpan.textContent = item.name;
-         item_header.appendChild(nameSpan);
 
+         const nameContainer = createDiv('d-flex');
+         nameContainer.appendChild(img);
+         nameContainer.appendChild(nameSpan);
+         item_container.appendChild(nameContainer);
+
+         const item_header = createDiv('');
          // 登録済み個数
          let sumCount = 0;
 
@@ -1675,39 +1678,19 @@ function initItemList() {
                   count_div.textContent = count;
                   item_detail.appendChild(count_div);
 
-                  item_container.appendChild(item_detail);
+                  item_header.appendChild(item_detail);
                }
             }
          }
          const count_div = createDiv('sum_count');
          count_div.textContent = sumCount ? sumCount : '';
-         item_header.appendChild(count_div);
-
-         // 明細行最上部に装備名も持っておく(総所持数非表示対応)
-         if (item_container.childNodes.length) {
-            const first = item_container.firstElementChild;
-            first.classList.add('top_detail');
-
-            const item_header2 = createDiv('item_header');
-            const img = document.createElement('img');
-            img.alt = item.itype;
-            img.className = 'item_icon';
-            img.src = `../img/type/icon${item.itype}.png`;
-
-            const nameSpan = createDiv('item_name');
-            nameSpan.textContent = item.name;
-
-            item_header2.appendChild(img);
-            item_header2.appendChild(nameSpan);
-
-            first.prepend(item_header2);
-         }
+         item_header.prepend(count_div);
 
          if (!sumCount) {
             item_container.classList.add('no_item');
          }
 
-         item_container.prepend(item_header);
+         item_container.appendChild(item_header);
 
          container.appendChild(item_container);
       }
