@@ -1684,12 +1684,13 @@ class Item {
 	/**
 	 * カテゴリ、改修値からボーナス火力を返却
 	 * @static
+	 * @param {number} id id
 	 * @param {number} type カテゴリコード
 	 * @param {number} remodel 改修値
 	 * @returns {number} ボーナス
 	 * @memberof Item
 	 */
-	static getBonusFire(type, remodel) {
+	static getBonusFire(id, type, remodel) {
 		let bonus = 0;
 
 		// 大口径主砲
@@ -1698,7 +1699,14 @@ class Item {
 		}
 		// 主砲 / 副砲 / 徹甲弾 / 機銃 / 探照灯 / 高射装置 / 大発
 		else if ([1, 2, 4, 19, 21, 24, 29, 36, 42].includes(type)) {
-			bonus = Math.sqrt(remodel);
+			// 一部副砲
+			if ([10, 66, 220, 275].includes(id)) {
+				bonus = 0.2 * remodel;
+			} else if ([12, 234, 247]) {
+				bonus = 0.3 * remodel;
+			} else {
+				bonus = Math.sqrt(remodel);
+			}
 		}
 		// ソナー 爆雷
 		else if ([14, 15].includes(type)) {
@@ -2498,7 +2506,7 @@ class ItemDetail extends Item {
 		// 各種改修値によるボーナスを設定
 		if (this.remodel) {
 			// ボーナス火力
-			this.fire += Item.getBonusFire(this.type, this.remodel);
+			this.fire += Item.getBonusFire(this.id, this.type, this.remodel);
 			// ボーナス雷装
 			this.torpedo += Item.getBonusTorpedo(this.type, this.remodel);
 			// ボーナス爆装
@@ -4606,6 +4614,9 @@ function createItemTable(items, type) {
 		}
 		else if (item.id === 350 || item.id === 351 || item.id === 352) {
 			// ロケ戦
+			specialItem = true;
+		} else if (TAICHI.includes(item.id)) {
+			// 対地艦爆
 			specialItem = true;
 		}
 
@@ -11556,7 +11567,7 @@ function getItemTooltipContext(itemId, isLandBase = false, slot = 0, remodel = 0
 	const type = raw.type;
 	// 改修値によるボーナスの設定
 	const bAntiAir = item.bonusAntiAir;
-	const bFire = Item.getBonusFire(type, remodel);
+	const bFire = Item.getBonusFire(item.id, type, remodel);
 	const bScout = Item.getBonusScout(type, remodel);
 	let bTorpedo = Item.getBonusTorpedo(type, remodel);
 	if (shipId) {
