@@ -1702,7 +1702,7 @@ class Item {
 			// 一部副砲
 			if ([10, 66, 220, 275].includes(id)) {
 				bonus = 0.2 * remodel;
-			} else if ([12, 234, 247]) {
+			} else if ([12, 234, 247].includes(id)) {
 				bonus = 0.3 * remodel;
 			} else {
 				bonus = Math.sqrt(remodel);
