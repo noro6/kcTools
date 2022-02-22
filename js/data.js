@@ -1432,8 +1432,8 @@ const SHIP_DATA = [
 	{ id: 408, api: 699, type: 22, name: "宗谷", slot: [0, 0, 0], final: 1, orig: 408, ver: 0, range: 1, type2: 111, hp: 22, hp2: 26, max_hp: 28, max_aa: 32, max_armor: 35, luck: 55, max_luck: 110, scout: 2, max_scout: 12, asw: 8, max_asw: 32, avoid: 27, max_avoid: 77 },
 	{ id: 445, api: 645, type: 22, name: "宗谷", slot: [0, 0], final: 1, orig: 408, ver: 1, range: 1, type2: 111, hp: 23, hp2: 27, max_hp: 29, max_aa: 0, max_armor: 40, luck: 65, max_luck: 130, scout: 14, max_scout: 18, asw: 0, max_asw: 2, avoid: 26, max_avoid: 79 },
 	{ id: 450, api: 650, type: 22, name: "宗谷", slot: [1, 2, 3], final: 1, orig: 408, ver: 2, range: 1, type2: 111, hp: 26, hp2: 30, max_hp: 32, max_aa: 0, max_armor: 62, luck: 77, max_luck: 155, scout: 15, max_scout: 32, asw: 0, max_asw: 4, avoid: 27, max_avoid: 88 },
-	{ id: 500, api: 900, type: 22, name: "山汐丸", slot: [6, 2], final: 0, orig: 500, ver: 0, range: 1, type2: 115, hp: 36, hp2: 41, max_hp: 43, max_aa: 30, max_armor: 19, luck: 3, max_luck: 33, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
-	{ id: 1717, api: 717, type: 22, name: "山汐丸改", slot: [8, 6, 2], final: 1, orig: 500, ver: 1, range: 1, type2: 115, hp: 39, hp2: 44, max_hp: 46, max_aa: 38, max_armor: 28, luck: 7, max_luck: 47, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	// { id: 500, api: 900, type: 22, name: "山汐丸", slot: [6, 2], final: 0, orig: 500, ver: 0, range: 1, type2: 115, hp: 36, hp2: 41, max_hp: 43, max_aa: 30, max_armor: 19, luck: 3, max_luck: 33, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	// { id: 1717, api: 717, type: 22, name: "山汐丸改", slot: [8, 6, 2], final: 1, orig: 500, ver: 1, range: 1, type2: 115, hp: 39, hp2: 44, max_hp: 46, max_aa: 38, max_armor: 28, luck: 7, max_luck: 47, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
 ];
 
 const ENEMY_TYPE = [
