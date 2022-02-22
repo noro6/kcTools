@@ -1950,4 +1950,4 @@ let CHANGE_LOG = [
 	}
 ];
 
-const LAST_UPDATE_DATE = "2022/2/9";
+const LAST_UPDATE_DATE = "2022/2/22";
