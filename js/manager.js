@@ -1643,7 +1643,7 @@ function initItemList() {
                item_container.dataset[key] = item[key];
             }
          }
-         
+
          // itemのお名前部分
          const img = document.createElement('img');
          img.className = 'item_icon';
@@ -2243,7 +2243,12 @@ function btn_create_ship_Clicked() {
 
    saveLocalStorage('shipStock', stockShips);
    inform_success(raw.name + 'が着任しました');
+   // 現在ページ
+   const currentPage = $('#pagination_header li.active').data('page');
    initShipList();
+   if (!document.getElementById('ship_legacy')['checked']) {
+      ship_list_pager_Clicked($(`.pagination li.page${currentPage}:first`));
+   }
 }
 
 /**
@@ -2314,8 +2319,13 @@ function btn_update_ship_Clicked() {
 
       saveLocalStorage('shipStock', stockShips);
       inform_success('更新されました');
+      // 現在ページ
+      const currentPage = $('#pagination_header li.active').data('page');
       // 再描画
       initShipList();
+      if (!document.getElementById('ship_legacy')['checked']) {
+         ship_list_pager_Clicked($(`.pagination li.page${currentPage}:first`));
+      }
    }
 }
 
@@ -2341,8 +2351,13 @@ function btn_delete_ship_Clicked() {
 
       saveLocalStorage('shipStock', stockShips);
       inform_success('除籍されました');
+      // 現在ページ
+      const currentPage = $('#pagination_header li.active').data('page');
       // 再描画
       initShipList();
+      if (!document.getElementById('ship_legacy')['checked']) {
+         ship_list_pager_Clicked($(`.pagination li.page${currentPage}:first`));
+      }
    }
    else {
       inform_success('除籍に失敗しました。既に除籍されています');
