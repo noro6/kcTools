@@ -373,7 +373,7 @@ const ITEM_DATA = [
 	{ id: 240, type: 12, itype: 11, name: "22号対水上電探改四(後期調整型)", abbr: "", fire: 1, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 2, antiBomber: 0, interception: 0, scout: 7, canRemodel: 1, accuracy: 9, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 307, type: 12, itype: 11, name: "GFCS Mk.37", abbr: "", fire: 2, antiAir: 7, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 6, canRemodel: 1, accuracy: 9, avoid2: 2, radius: 0, cost: 0, avoid: 0, range2: 2, grow: 0 },
 	{ id: 315, type: 12, itype: 11, name: "SG レーダー(初期型)", abbr: "", fire: 1, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 3, antiBomber: 0, interception: 0, scout: 8, canRemodel: 1, accuracy: 8, avoid2: 6, radius: 0, cost: 0, avoid: 0, range2: 2, grow: 0 },
-	{ id: 450, type: 12, itype: 11, name: "13号対空電探改(後期型)", abbr: "", fire: 0, antiAir: 6, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 0, accuracy: 2, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
+	{ id: 450, type: 12, itype: 11, name: "13号対空電探改(後期型)", abbr: "", fire: 0, antiAir: 6, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 1, accuracy: 2, avoid2: 3, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 30, type: 13, itype: 11, name: "21号対空電探", abbr: "", fire: 0, antiAir: 4, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, accuracy: 2, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 31, type: 13, itype: 11, name: "32号対水上電探", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 10, canRemodel: 1, accuracy: 8, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 32, type: 13, itype: 11, name: "42号対空電探", abbr: "", fire: 0, antiAir: 6, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 5, canRemodel: 1, accuracy: 4, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -445,7 +445,7 @@ const ITEM_DATA = [
 	{ id: 326, type: 25, itype: 21, name: "S-51J", abbr: "", fire: 2, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 12, antiBomber: 0, interception: 0, scout: 3, canRemodel: 1, accuracy: 2, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 327, type: 25, itype: 21, name: "S-51J改", abbr: "", fire: 2, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 13, antiBomber: 0, interception: 0, scout: 4, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 70, type: 26, itype: 22, name: "三式指揮連絡機(対潜)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 7, antiBomber: 0, interception: 0, scout: 1, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
-	{ id: 451, type: 26, itype: 22, name: "三式指揮連絡機改", abbr: "", fire: 1, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 9, antiBomber: 0, interception: 0, scout: 2, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
+	{ id: 451, type: 26, itype: 22, name: "三式指揮連絡機改", abbr: "", fire: 1, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 9, antiBomber: 0, interception: 0, scout: 2, canRemodel: 1, accuracy: 2, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 72, type: 27, itype: 23, name: "増設バルジ(中型艦)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 7, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: -2, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 203, type: 27, itype: 23, name: "艦本新設計 増設バルジ(中型艦)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 8, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: -1, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
 	{ id: 268, type: 27, itype: 23, name: "北方迷彩(+北方装備)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 2, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 2, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -538,7 +538,7 @@ const ITEM_DATA = [
 	{ id: 418, type: 48, itype: 38, name: "零式艦戦22型(251空)", abbr: "", fire: 0, antiAir: 12, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 1, interception: 3, scout: 1, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 7, cost: 4, avoid: 0, range2: 0, grow: 6 },
 	{ id: 445, type: 48, itype: 44, name: "二式複戦 屠龍", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 4, interception: 1, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 8, avoid: 0, range2: 0, grow: 0 },
 	{ id: 446, type: 48, itype: 44, name: "二式複戦 屠龍 丙型", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 2, asw: 0, antiBomber: 6, interception: 2, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 9, avoid: 0, range2: 0, grow: 0 },
-	{ id: 452, type: 48, itype: 44, name: "キ96", abbr: "", fire: 0, antiAir: 5, torpedo: 0, bomber: 0, armor: 2, asw: 0, antiBomber: 5, interception: 4, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 3, cost: 10, avoid: 0, range2: 0, grow: 0 },
+	{ id: 452, type: 48, itype: 44, name: "キ96", abbr: "", fire: 0, antiAir: 5, torpedo: 0, bomber: 0, armor: 2, asw: 0, antiBomber: 5, interception: 4, scout: 0, canRemodel: 1, accuracy: 0, avoid2: 0, radius: 3, cost: 10, avoid: 0, range2: 0, grow: 0 },
 	{ id: 311, type: 49, itype: 9, name: "二式陸上偵察機", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 8, canRemodel: 0, accuracy: 2, avoid2: 0, radius: 8, cost: 7, avoid: 0, range2: 0, grow: 0 },
 	{ id: 312, type: 49, itype: 9, name: "二式陸上偵察機(熟練)", abbr: "", fire: 0, antiAir: 3, torpedo: 0, bomber: 0, armor: 1, asw: 0, antiBomber: 0, interception: 0, scout: 9, canRemodel: 1, accuracy: 3, avoid2: 0, radius: 9, cost: 7, avoid: 0, range2: 0, grow: 0 },
 	{ id: 209, type: 50, itype: 41, name: "彩雲(輸送用分解済)", abbr: "", fire: 0, antiAir: 0, torpedo: 0, bomber: 0, armor: 0, asw: 0, antiBomber: 0, interception: 0, scout: 0, canRemodel: 0, accuracy: 0, avoid2: 0, radius: 0, cost: 0, avoid: 0, range2: 0, grow: 0 },
@@ -1432,8 +1432,8 @@ const SHIP_DATA = [
 	{ id: 408, api: 699, type: 22, name: "宗谷", slot: [0, 0, 0], final: 1, orig: 408, ver: 0, range: 1, type2: 111, hp: 22, hp2: 26, max_hp: 28, max_aa: 32, max_armor: 35, luck: 55, max_luck: 110, scout: 2, max_scout: 12, asw: 8, max_asw: 32, avoid: 27, max_avoid: 77 },
 	{ id: 445, api: 645, type: 22, name: "宗谷", slot: [0, 0], final: 1, orig: 408, ver: 1, range: 1, type2: 111, hp: 23, hp2: 27, max_hp: 29, max_aa: 0, max_armor: 40, luck: 65, max_luck: 130, scout: 14, max_scout: 18, asw: 0, max_asw: 2, avoid: 26, max_avoid: 79 },
 	{ id: 450, api: 650, type: 22, name: "宗谷", slot: [1, 2, 3], final: 1, orig: 408, ver: 2, range: 1, type2: 111, hp: 26, hp2: 30, max_hp: 32, max_aa: 0, max_armor: 62, luck: 77, max_luck: 155, scout: 15, max_scout: 32, asw: 0, max_asw: 4, avoid: 27, max_avoid: 88 },
-	// { id: 500, api: 900, type: 22, name: "山汐丸", slot: [6, 2], final: 0, orig: 500, ver: 0, range: 1, type2: 115, hp: 36, hp2: 41, max_hp: 43, max_aa: 30, max_armor: 19, luck: 3, max_luck: 33, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
-	// { id: 1717, api: 717, type: 22, name: "山汐丸改", slot: [8, 6, 2], final: 1, orig: 500, ver: 1, range: 1, type2: 115, hp: 39, hp2: 44, max_hp: 46, max_aa: 38, max_armor: 28, luck: 7, max_luck: 47, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 500, api: 900, type: 22, name: "山汐丸", slot: [6, 2], final: 0, orig: 500, ver: 0, range: 1, type2: 115, hp: 36, hp2: 41, max_hp: 43, max_aa: 30, max_armor: 19, luck: 3, max_luck: 33, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
+	{ id: 1717, api: 717, type: 22, name: "山汐丸改", slot: [8, 6, 2], final: 1, orig: 500, ver: 1, range: 1, type2: 115, hp: 39, hp2: 44, max_hp: 46, max_aa: 38, max_armor: 28, luck: 7, max_luck: 47, scout: 0, max_scout: 0, asw: 0, max_asw: 0, avoid: 0, max_avoid: 0 },
 ];
 
 const ENEMY_TYPE = [
@@ -2013,10 +2013,10 @@ const ENEMY_DATA = [
 	{ id: 566, type: [1, 16], name: "深海梅棲姫-壊[丙]", slot: [-1, -1, -1, -1, -1], eqp: [606, 607, 622, 603], orig: 2066, hp: 600, aa: 107, armor: 222 },
 	{ id: 567, type: [1, 16], name: "深海梅棲姫-壊[乙]", slot: [-1, -1, -1, -1, -1], eqp: [606, 607, 622, 603], orig: 2067, hp: 700, aa: 137, armor: 272 },
 	{ id: 568, type: [1, 16], name: "深海梅棲姫-壊[甲]", slot: [-1, -1, -1, -1, -1], eqp: [606, 607, 622, 603], orig: 2068, hp: 800, aa: 167, armor: 323 },
-	{ id: 569, type: [1, 2], name: "横浜岸壁棲姫", slot: [-1, -1, -1, -1, -1], eqp: [], orig: 2069, hp: 1, aa: 0, armor: 1 },
-	{ id: 570, type: [1, 2], name: "横浜岸壁棲姫", slot: [-1, -1, -1, -1, -1], eqp: [], orig: 2070, hp: 1, aa: 0, armor: 1 },
-	{ id: 571, type: [1, 2], name: "横浜岸壁棲姫-壊", slot: [-1, -1, -1, -1, -1], eqp: [], orig: 2071, hp: 1, aa: 0, armor: 1 },
-	{ id: 572, type: [1, 2], name: "横浜岸壁棲姫-壊", slot: [-1, -1, -1, -1, -1], eqp: [], orig: 2072, hp: 1, aa: 0, armor: 1 },
+	{ id: 569, type: [1, 12], name: "横浜岸壁棲姫", slot: [-1, -1, -1, -1, -1], eqp: [621, 619, 617, 621], orig: 2069, hp: 740, aa: 70, armor: 252 },
+	{ id: 570, type: [1, 12], name: "横浜岸壁棲姫", slot: [-1, -1, -1, -1, -1], eqp: [621, 619, 617, 621], orig: 2070, hp: 840, aa: 65, armor: 292 },
+	{ id: 571, type: [1, 12], name: "横浜岸壁棲姫-壊", slot: [-1, -1, -1, -1, -1], eqp: [621, 619, 617, 621], orig: 2071, hp: 740, aa: 70, armor: 252 },
+	{ id: 572, type: [1, 12], name: "横浜岸壁棲姫-壊", slot: [-1, -1, -1, -1, -1], eqp: [621, 619, 617, 621], orig: 2072, hp: 840, aa: 85, armor: 333 },
 ];
 const ENEMY_ITEM = [
 	{ id: 501, type: 1, itype: 1, name: "5inch単装砲", antiAir: 0, torpedo: 0, bomber: 0, armor: 0 },
@@ -2233,7 +2233,7 @@ const MAP_DATA = [
 	{ area: 523, name: "八丈島沖/房総半島東方沖" },
 	{ area: 531, name: "九州沖/南西諸島方面" },
 	{ area: 532, name: "高雄警備府～比島北部沖" },
-	{ area: 533, name: "第三作戦海域" },
+	{ area: 533, name: "関東/太平洋沖" },
 ];
 
 // 基地空襲のある海域
