@@ -2277,7 +2277,7 @@ const RECONNAISSANCES = [9, 10, 41, 49];
 const LB_ATTACKERS = [47, 53];
 
 // ロケット戦闘機 api_id 配列
-const ROCKETS = [350, 351, 352];
+const ROCKETS = [350, 351, 352, 446, 452];
 
 // 対地可能
 const TAICHI = [64, 148, 233, 277, 305, 306, 319, 320, 391, 392, 420, 421];

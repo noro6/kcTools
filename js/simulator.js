@@ -4612,7 +4612,7 @@ function createItemTable(items, type) {
 			// 特殊機銃
 			specialItem = true;
 		}
-		else if (item.id === 350 || item.id === 351 || item.id === 352) {
+		else if (ROCKETS.includes(item.id)) {
 			// ロケ戦
 			specialItem = true;
 		} else if (TAICHI.includes(item.id)) {
