@@ -8104,6 +8104,9 @@ function createFleetInstance() {
 
 		// 伊勢日向飛龍蒼龍の改二 二式艦上偵察機で射程バフ+1
 		if ([353, 354, 196, 197].includes(shipInstance.id) && shipInstance.items.some(v => v.id === 61)) {
+			if ([353, 354].includes(shipInstance.id) && shipInstance.range < 2) {
+				shipInstance.range = 2;
+			}
 			if (shipInstance.range < 1) shipInstance.range += 1;
 			shipInstance.range += 1;
 		}
