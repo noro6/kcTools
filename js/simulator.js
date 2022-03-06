@@ -2851,6 +2851,11 @@ class EnemyItem {
 			this.isAttacker = ATTACKERS.includes(raw.type);
 			this.isScout = RECONNAISSANCES.includes(raw.type);
 
+			// 2022冬より 陸攻は基地のみ参加？
+			if (LB_ATTACKERS.includes(raw.type)) {
+				this.isScout = true;
+			}
+
 			// 加重対空値部品 => 装備対空値 * 装備倍率
 			if (this.itype === 16) {
 				// 高角砲
