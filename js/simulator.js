@@ -15080,7 +15080,7 @@ function open_Jervis() {
 	const fleet = createFriendFleetPreset();
 	const landBase = createLandBasePreset();
 	const withoutDisabledShip = document.getElementById('without_disabled_ship')['checked'];
-	window.open('https://kcjervis.github.io/jervis/?operation-json=' + convertToDeckBuilder_j(fleet, landBase, withoutDisabledShip));
+	window.open('https://jervis.vercel.app/?predeck=' + convertToDeckBuilder(fleet, landBase, withoutDisabledShip));
 }
 
 /**
