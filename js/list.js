@@ -1801,7 +1801,7 @@ function open_Jervis() {
     const decodedPreset = decodePreset(preset[2]);
     const landBase = decodedPreset[0];
     const fleet = decodedPreset[1];
-    window.open('https://kcjervis.github.io/jervis/?operation-json=' + convertToDeckBuilder_j(fleet, landBase));
+    window.open('https://jervis.vercel.app/?predeck=' + convertToDeckBuilder(fleet, landBase));
   }
 }
 
