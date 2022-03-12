@@ -1470,7 +1470,10 @@ function initializeFB() {
 		イベント
 ==================================*/
 document.addEventListener('DOMContentLoaded', function () {
-
+	const gangs = SHIP_DATA.filter(v => v.orig === 311);
+	for (const data of gangs) {
+		data.type = 9;
+	}
 	// 設定データ読み込み
 	initializeSetting();
 
