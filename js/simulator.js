@@ -4859,7 +4859,7 @@ function createShipTable() {
 			baseShip.lv = baseLv;
 			baseShip.area = baseArea;
 			baseShip.upLuck = baseUpLuck;
-			baseShip.stock = details.filter(v => v.lv === baseLv && v.area === baseArea).length;
+			baseShip.stock = details.filter(v => v.lv === baseLv && (v.area === baseArea || (baseArea < 1 && v.area < 1))).length;
 			baseShip.ex = details[0].ex;
 
 			let doneLv = [{ lv: baseLv, area: baseArea }];
@@ -4876,7 +4876,7 @@ function createShipTable() {
 					const newShip = Object.assign({}, baseShip);
 					newShip.lv = lv;
 					newShip.area = area;
-					newShip.stock = details.filter(v => v.lv === lv && v.area === area).length;
+					newShip.stock = details.filter(v => v.lv === lv && (v.area === area || (area < 1 && v.area < 1))).length;
 					newShip.upLuck = upLuck;
 					newShip.ex = details[i].ex;
 					ships.splice(index, 0, newShip);
