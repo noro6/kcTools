@@ -215,6 +215,8 @@ class Fleet {
 		this.antiAirBonus = 0;
 		// /** @type {number} */
 		// this.antiAirBonus_kai = 0;
+		/** @type {number} TP */
+		this.tp = 0;
 	}
 
 	/**
@@ -463,6 +465,17 @@ class Fleet {
 			ship.updateAttackerBonus();
 		}
 	}
+
+	/**
+	 * TP合計
+	 * @memberof Fleet
+	 */
+	updateTransportPower() {
+		this.tp = 0;
+		for (const ship of this.ships) {
+			this.tp += ship.tp;
+		}
+	}
 }
 
 /**
@@ -540,6 +553,8 @@ class Ship {
 		this.bonusTorpedo = 0;
 		/** @type {string} 警告文 あれば警告マークがでる */
 		this.warningText = ''
+		/** @type {number} TP */
+		this.tp = 0;
 	}
 
 	/**
@@ -1120,6 +1135,63 @@ class Ship {
 				this.hunshinRate += 0.25;
 			}
 		}
+	}
+
+	/**
+	 * 艦種 艦娘毎によるTPを返却
+	 * @private
+	 * @returns {number}
+	 * @memberof Ship
+	 */
+	getTransportPower() {
+
+		let tp = 0;
+		for (const item of this.items) {
+			tp += item.tp;			
+		}
+
+		// 艦種固定値
+		switch (this.type) {
+			case 2:
+				tp += 5;
+				break;
+			case 3:
+				// 鬼怒改二
+				if (this.id === 287) {
+					tp += 10;
+					break;
+				}
+				tp += 2;
+				break;
+			case 21:
+				tp += 6;
+				break;
+			case 6:
+				tp += 4;
+				break;
+			case 10:
+				tp += 7;
+				break;
+			case 22:
+			case 15:
+				tp += 15;
+				break;
+			case 16:
+				tp += 9;
+				break;
+			case 17:
+				tp += 12;
+				break;
+			case 14:
+				tp += 1;
+				break;
+			case 20:
+				tp += 7;
+				break;
+			default:
+				tp += 0;
+		}
+		return tp;
 	}
 }
 
@@ -2020,6 +2092,7 @@ class ShipItem extends Item {
 		this.antiAirBonus = 0;
 		// /** @type {number} */
 		// this.antiAirWeight_kai = 0;
+		this.tp = this.getTransportPower();
 
 		// ボーナス対空値抜きで
 		const rawAntiAir = this.antiAir - this.bonusAntiAir;
@@ -2175,6 +2248,31 @@ class ShipItem extends Item {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * 輸送量を返却
+	 * @private
+	 * @returns {number}
+	 * @memberof Item
+	 */
+	getTransportPower() {
+		switch (this.type) {
+			case 24:
+				// 上陸用舟艇
+				return 8;
+			case 30:
+				// 簡易輸送部材
+				return 5;
+			case 43:
+				// おにぎり
+				return 1;
+			case 46:
+				// 特型内火艇
+				return 2;
+			default:
+				return 0;
+		}
 	}
 }
 
@@ -7502,6 +7600,12 @@ function updateFleetView() {
 		fleetScout2.textContent = fleet.scoutScores[i - 1];
 	}
 
+	// TP
+	document.getElementsByClassName('tp_S')[0].textContent = fleet.tp;
+	document.getElementsByClassName('tp_S')[1].textContent = fleet.tp;
+	document.getElementsByClassName('tp_A')[0].textContent = Math.floor(fleet.tp * 0.7);
+	document.getElementsByClassName('tp_A')[1].textContent = Math.floor(fleet.tp * 0.7);
+
 	// 触接テーブルより、制空権確保時の合計触接率を取得
 	const contactRate = createContactTable(planes)[0][4];
 	const contactRateN = Math.floor(fleet.nightContactRate() * 1000) / 10;
@@ -8081,6 +8185,9 @@ function createFleetInstance() {
 		// 対空砲火情報の更新
 		shipInstance.updateAntiAirStatus();
 
+		// TP
+		shipInstance.tp += shipInstance.getTransportPower();
+
 		// 連合設定 かつ 6番目以降
 		shipInstance.isEscort = isUnionFleet && shipNo > maxShipCount;
 
@@ -8131,7 +8238,10 @@ function createFleetInstance() {
 	fleet.updateScoutScores();
 
 	// 航空戦ボーナス雷装値の計算
-	fleet.updateBonusTorpedo()
+	fleet.updateBonusTorpedo();
+
+	// TP計算
+	fleet.updateTransportPower();
 
 	return fleet;
 }
