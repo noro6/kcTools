@@ -1998,15 +1998,15 @@ const ENEMY_DATA = [
 	{ id: 546, type: [1, 11], name: "欧州装甲空母棲姫-壊[甲]", slot: [21, 20, 20, 20, -1], eqp: [617, 618, 619, 619], orig: 2046, hp: 1080, aa: 220, armor: 392 },
 	{ id: 547, type: [1, 2], name: "飛行場姫 鳥黒 弱", slot: [16, 12, 12, 8, -1], eqp: [574, 574, 617, 571], orig: 2047, hp: 480, aa: 120, armor: 120 },
 	{ id: 548, type: [1, 2], name: "飛行場姫 鳥黒 強", slot: [20, 16, 16, 12, -1], eqp: [575, 575, 617, 571], orig: 2048, hp: 480, aa: 120, armor: 120 },
-	{ id: 549, type: [1, 18], name: "潜水新棲姫", slot: [-1, -1, -1, -1, -1], eqp: [580, 580, 580], orig: 2049, hp: 1, aa: 0, armor: 1 },
+	{ id: 549, type: [1, 18], name: "潜水新棲姫[丁]", slot: [-1, -1, -1, -1, -1], eqp: [580, 580, 580], orig: 2049, hp: 133, aa: 0, armor: 33 },
 	{ id: 550, type: [16], name: "駆逐ナ級IIe(量産型)", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 63, aa: 63, armor: 61 },
 	{ id: 551, type: [16], name: "駆逐ナ級IIe(量産型)elite", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 66, aa: 69, armor: 67 },
 	{ id: 552, type: [16], name: "駆逐ナ級IIe(量産型)flagship", slot: [-1, -1, -1, -1, -1], eqp: [591, 591, 541], orig: 1739, hp: 69, aa: 79, armor: 77 },
 	{ id: 553, type: [1, 18], name: "潜水鮫水鬼[丙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 2053, hp: 277, aa: 0, armor: 19 },
-	{ id: 554, type: [1, 18], name: "潜水鮫水鬼[乙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 2054, hp: 277, aa: 0, armor: 49 },
+	{ id: 554, type: [1, 18], name: "潜水鮫水鬼[乙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 2054, hp: 477, aa: 0, armor: 39 },
 	{ id: 555, type: [1, 18], name: "潜水鮫水鬼[甲]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2055, hp: 577, aa: 0, armor: 79 },
 	{ id: 556, type: [1, 18], name: "潜水鮫水鬼-壊[丙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580], orig: 2056, hp: 277, aa: 0, armor: 29 },
-	{ id: 557, type: [1, 18], name: "潜水鮫水鬼-壊[乙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2057, hp: 277, aa: 0, armor: 19 },
+	{ id: 557, type: [1, 18], name: "潜水鮫水鬼-壊[乙]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2057, hp: 477, aa: 0, armor: 49 },
 	{ id: 558, type: [1, 18], name: "潜水鮫水鬼-壊[甲]", slot: [-1, -1, -1, -1, -1], eqp: [593, 593, 580, 580], orig: 2058, hp: 577, aa: 0, armor: 89 },
 	{ id: 559, type: [1, 12], name: "ヒ船団棲姫 弱", slot: [11, 16, 2, 2, -1], eqp: [621, 619, 617, 620], orig: 2059, hp: 500, aa: 72, armor: 155 },
 	{ id: 560, type: [1, 12], name: "ヒ船団棲姫 強", slot: [11, 16, 2, 2, -1], eqp: [621, 619, 617, 621], orig: 2060, hp: 500, aa: 84, armor: 185 },
@@ -2039,7 +2039,7 @@ const ENEMY_DATA = [
 	{ id: 587, type: [1, 2], name: "集積地棲姫III-壊[乙]", slot: [-1, -1, -1, -1, -1], eqp: [579, 553, 553, 580], orig: 2087, hp: 2000, aa: 83, armor: 188 },
 	{ id: 588, type: [1, 2], name: "集積地棲姫III[甲]", slot: [-1, -1, 52, 52, -1], eqp: [565, 565, 562, 562], orig: 2088, hp: 6000, aa: 93, armor: 188 },
 	{ id: 589, type: [1, 2], name: "集積地棲姫III-壊[甲]", slot: [-1, -1, -1, -1, -1], eqp: [579, 553, 553, 580], orig: 2089, hp: 6000, aa: 103, armor: 222 },
-
+	{ id: 590, type: [14], name: "重巡ネ級改[丁]", slot: [-1, -1, -1, 4, -1], eqp: [600, 600, 593, 564], orig: 0, hp: 330, aa: 68, armor: 88 },
 ];
 const ENEMY_ITEM = [
 	{ id: 501, type: 1, itype: 1, name: "5inch単装砲", antiAir: 0, torpedo: 0, bomber: 0, armor: 0 },
@@ -2863,4 +2863,4 @@ const SPECIAL_DATA = [
 const WIKIURL = 'https://wikiwiki.jp/kancolle/';
 const MYURL = 'https://noro6.github.io/kcTools/';
 
-const LATEST_VERSION = '1.12.18.1';
+const LATEST_VERSION = '1.12.19';
