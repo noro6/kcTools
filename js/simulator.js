@@ -1147,7 +1147,7 @@ class Ship {
 
 		let tp = 0;
 		for (const item of this.items) {
-			tp += item.tp;			
+			tp += item.tp;
 		}
 
 		// 艦種固定値
@@ -1258,6 +1258,8 @@ class LandBaseAll {
 		this.defense2AirPower = 0;
 		/** @type {number} */
 		this.rocketBonus = 0;
+		/** @type {number} 通常時手動補正 */
+		this.manualCorr = 1;
 	}
 
 	/**
@@ -1278,7 +1280,7 @@ class LandBaseAll {
 
 		// 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
 		this.rocketBonus = rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2;
-		this.defenseAirPower = sumAp;
+		this.defenseAirPower = Math.floor(this.manualCorr * sumAp);
 		this.defense2AirPower = Math.floor(this.rocketBonus * sumAp);
 	}
 
@@ -3668,7 +3670,9 @@ function initialize(callback) {
 		for (const enemy of manualEnemies) {
 			if (UNKNOWN_ENEMY.includes(enemy.id)) {
 				const index = ENEMY_DATA.findIndex(v => v.id === enemy.id);
-				ENEMY_DATA[index] = enemy;
+				ENEMY_DATA[index].aa = enemy.aa;
+				ENEMY_DATA[index].eqp = enemy.eqp;
+				ENEMY_DATA[index].slot = enemy.slot;
 			}
 		}
 	}
@@ -3687,6 +3691,8 @@ function initialize(callback) {
 
 	$('#plane_filter_key_select').val('radius');
 	$('#plane_filter_value').val(0);
+
+	$('#defense_ap_c').val(1);
 
 	// 艦種初期化
 	setShipType();
@@ -7313,7 +7319,7 @@ function updateLandBaseView() {
 
 			// 重爆時の全体的な制空値と補正値
 			drawChangeValue(def_sum_ap, castInt(def_sum_ap.textContent), sumAp);
-			drawChangeValue(def_sum_ap_ex, castInt(def_sum_ap.textContent), sumAp_ex);
+			drawChangeValue(def_sum_ap_ex, castInt(def_sum_ap_ex.textContent), sumAp_ex);
 			rocket_c.textContent = landBaseAll.rocketBonus.toString();
 		}
 
@@ -7857,6 +7863,14 @@ function updateEnemyView() {
 function createLandBaseInstance() {
 	const tmpLbPlanes = [];
 	const landBaseAll = new LandBaseAll();
+
+	if (isDefMode) {
+		const c = castFloat(document.getElementById('defense_ap_c').value)
+		landBaseAll.manualCorr = Math.min(Math.max(c, 0), 10);
+		if (c > 10) {
+			document.getElementById('defense_ap_c').value = 10;
+		}
+	}
 	const nodes_lb_tab = document.getElementsByClassName('lb_tab');
 	for (let index = 0; index < nodes_lb_tab.length; index++) {
 		const node_lb_tab = nodes_lb_tab[index];
@@ -14263,7 +14277,7 @@ function manul_enemy_Clicked($this) {
 	const enemy = ENEMY_DATA.find(v => v.id === castInt($this[0].dataset.virtualid));
 	if (enemy) {
 		document.getElementById('manual_enemy_img').src = `../img/enemy/${enemy.id}.png`;
-		document.getElementById('manual_enemy_id').textContent = enemy.id;
+		document.getElementById('manual_enemy_status_id').textContent = enemy.id + 1500;
 		document.getElementById('manual_enemy_name').textContent = enemy.name;
 		setEnemyPlaneCombobox(enemy);
 
@@ -14354,6 +14368,7 @@ function setEnemyPlaneCombobox(enemy) {
  */
 function calculateVirtualEnemy() {
 	let sumAp = 0;
+	let sumSlot = 0;
 	for (let i = 0; i < 4; i++) {
 		const slots = castInt(document.getElementsByClassName('enemy_slot')[i].value);
 		const planeId = castInt(document.getElementsByClassName('enemy_planes')[i].value);
@@ -14363,6 +14378,7 @@ function calculateVirtualEnemy() {
 			apLabel.textContent = 0;
 			continue;
 		}
+		sumSlot += slots;
 		const plane = ENEMY_ITEM.find(v => v.id === planeId);
 		if (!plane) {
 			apLabel.textContent = 0;
@@ -14374,6 +14390,7 @@ function calculateVirtualEnemy() {
 		apLabel.textContent = ap;
 		sumAp += ap;
 	}
+	document.getElementById('enemy_slot_sum').textContent = sumSlot;
 	document.getElementById('manual_enemy_sumAP').textContent = sumAp;
 }
 
@@ -14381,7 +14398,7 @@ function calculateVirtualEnemy() {
  * 敵艦手動更新
  */
 function commit_enemy_Clicked() {
-	const enemyId = castInt(document.getElementById('manual_enemy_id').textContent);
+	const enemyId = castInt(document.getElementById('manual_enemy_status_id').textContent) - 1500;
 
 	if (UNKNOWN_ENEMY.includes(enemyId)) {
 		const old = ENEMY_DATA.find(v => v.id === enemyId);
@@ -14419,7 +14436,9 @@ function commit_enemy_Clicked() {
 		}
 
 		const enemyIndex = ENEMY_DATA.findIndex(v => v.id === enemy.id);
-		ENEMY_DATA[enemyIndex] = enemy;
+		ENEMY_DATA[enemyIndex].aa = enemy.aa;
+		ENEMY_DATA[enemyIndex].eqp = enemy.eqp;
+		ENEMY_DATA[enemyIndex].slot = enemy.slot;
 		saveLocalStorage('manual_enemies', manualEnemies);
 
 		drawManualEnemies();
@@ -14434,7 +14453,7 @@ function commit_enemy_Clicked() {
  */
 function rollback_enemy_Clicked() {
 	let manualEnemies = loadLocalStorage('manual_enemies');
-	const enemyId = castInt(document.getElementById('manual_enemy_id').textContent);
+	const enemyId = castInt(document.getElementById('manual_enemy_status_id').textContent) - 1500;
 	if (manualEnemies) {
 		manualEnemies = manualEnemies.filter(v => v.id !== enemyId);
 		saveLocalStorage('manual_enemies', manualEnemies);
@@ -15959,6 +15978,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('#landBase_content').on('click', '.simple_lb_progress', function () { simple_lb_progress_Clicked($(this)) });
 	$('#landBase_content').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#landBase_content').on('touchend', '.plane_name', function () { plane_name_Clicked($(this)); });
+	$('#landBase_content').on('input', '#defense_ap_c', function () { calculate(true, false, false); });
 	$('#friendFleet_content').on('click', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#friendFleet_content').on('touchend', '.plane_name', function () { plane_name_Clicked($(this)); });
 	$('#friendFleet_content').on('click', '.btn_ship_create', function () { btn_ship_create_Clicked($(this)); });
