@@ -1274,6 +1274,8 @@ class LandBaseAll {
 		this.sumSuperCorr = 1;
 		/** @type {number} */
 		this.defense3AirPower = 0;
+		/** @type {number} */
+		this.fullDefense3AirPower = 0;
 	}
 
 	/**
@@ -1384,7 +1386,7 @@ class LandBaseAll {
 		this.sumSuperCorr = (this.superDefenseCorrA + this.superDefenseCorrB + this.superDefenseCorrC) * this.superRocketCorr1 + this.superRocketCorr2;
 		// 超重爆最終制空値
 		this.defense3AirPower = Math.floor(sumAp * this.sumSuperCorr);
-
+		this.fullDefense3AirPower = this.defense3AirPower;
 	}
 
 	/**
@@ -1422,7 +1424,7 @@ class LandBase {
 		/** @type {number} */
 		this.defenseAirPower = 0;
 		/** @type {number} */
-		this.reconCorr = 0;
+		this.reconCorr = 1;
 		/** @type {number} */
 		this.defenseCorr = 1.0;
 		/** @type {AirStatusResult[]} */
@@ -5954,7 +5956,12 @@ function expandEnemy() {
 	}
 
 	// 戦闘マス情報
-	const cellType = isDefMode && pattern.t === CELL_TYPE.highAirRaid || pattern.t === CELL_TYPE.superHighAirRaid ? pattern.t : CELL_TYPE.airRaid;
+	let cellType = pattern.t;
+	if (isDefMode && [CELL_TYPE.highAirRaid, CELL_TYPE.superHighAirRaid].includes(pattern.t)) {
+		cellType = pattern.t;
+	} else if (isDefMode) {
+		cellType = CELL_TYPE.airRaid;
+	}
 	$target.find('.cell_type').val(cellType);
 	cell_type_Changed($target.find('.cell_type'), false);
 	// 陣形
@@ -6365,7 +6372,7 @@ function expandMainPreset(preset, isResetLandBase = true, isResetFriendFleet = t
 
 				// 戦闘種別復帰
 				const cellType = castInt(enemyFleet[1]);
-				$container.find('.cell_type').val([0, 5].includes(cellType) ? 5 : 3);
+				$container.find('.cell_type').val([0, 5].includes(cellType) ? 5 : cellType === 7 ? 7 : 3);
 				cell_type_Changed($container.find('.cell_type'), false);
 
 				// 陣形復帰
@@ -6688,7 +6695,7 @@ function drawResult() {
 		const eap = enemyAirPowers[i];
 		const rates = rateList[i];
 		const border = getAirStatusBorder(eap);
-		let status = isDefMode ? getAirStatusIndex(ap, eap) : rates.indexOf(getArrayMax(rates));
+		let status = rates.indexOf(getArrayMax(rates));
 		let width = 0;
 		let visible = false;
 
@@ -6736,8 +6743,7 @@ function drawResult() {
 		let sumRate = 100;
 		for (let j = 0; j < rates.length; j++) {
 			$target_tr.find('.rate_td_status' + j).text('-');
-			if (isDefMode) $target_tr.find('.rate_td_status' + status).text('100 %');
-			else if (rates[j] > 0) {
+			if (rates[j] > 0) {
 				// 小数点2桁以降を切り捨て。
 				const rate = Math.floor(rates[j] * 1000) / 10;
 				// 次の制空状態の確率に何か値があるなら、総確率から引く
@@ -8798,8 +8804,9 @@ function shootDownFleet(asIndex, fleet, battleInfo, battle, isFirst = true) {
  * @param {number} asIndex 制空状態
  * @param {LandBase} landBase 味方艦隊
  * @param {Battle} battleInfo 戦闘情報
+ * @param {boolean} withoutStage2 stage2不要？基本false
  */
-function shootDownLandBase(asIndex, landBase, battleInfo) {
+function shootDownLandBase(asIndex, landBase, battleInfo, isSuperDefense = false) {
 	const range = battleInfo.stage2[0][0].length;
 
 	// 敵艦なしの場合スキップ
@@ -8819,7 +8826,7 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 		plane.slot -= Math.floor(plane.isJet ? 0.6 * downNumber : downNumber);
 
 		// st2撃墜
-		if (plane.isAttacker) {
+		if (!isSuperDefense && plane.isAttacker) {
 			// 迎撃担当
 			const index = Math.floor(Math.random() * range);
 			const stage2Table = battleInfo.stage2[plane.avoid];
@@ -8830,12 +8837,22 @@ function shootDownLandBase(asIndex, landBase, battleInfo) {
 		}
 
 		// この機体の制空値を再計算
-		plane.updateAirPower();
-		sumAp += plane.airPower;
+		if (isSuperDefense) {
+			plane.updateDefenseAirPower();
+			sumAp += plane.defenseAirPower;
+		}
+		else {
+			plane.updateAirPower();
+			sumAp += plane.airPower;
+		}
 	}
 
 	// この航空隊の制空値を再計算
-	landBase.airPower = Math.floor(sumAp * landBase.reconCorr);
+	if (isSuperDefense) {
+		landBase.defenseAirPower = Math.floor(sumAp * landBase.reconCorr);
+	} else {
+		landBase.airPower = Math.floor(sumAp * landBase.reconCorr);
+	}
 }
 
 /**
@@ -8930,7 +8947,9 @@ function rateCalculate() {
 	}
 
 	let defEnemyAp = 0;
+	let isSuperDefense = false;
 	if (isDefMode || battleInfo[0]) {
+		isSuperDefense = battleInfo[0].cellType === CELL_TYPE.superHighAirRaid;
 		defEnemyAp = battleInfo[0].getAirPower();
 	}
 
@@ -8966,6 +8985,14 @@ function rateCalculate() {
 			// 基地戦闘 trueが帰ってきたら敵機が減っているので補給必要
 			needSupply = calculateLandBase(landBaseData, thisBattleInfo, battle);
 
+			if (isSuperDefense) {
+				// 超重爆対応 3派計算
+				landBaseData.defense3AirPower = landBaseData.fullDefense3AirPower;
+				calculateSuperDefense(landBaseData, thisBattleInfo);
+				fleet.unionAirPower = landBaseData.defense3AirPower;
+				fleet.airPower = landBaseData.defense3AirPower;
+				needSupply = true;
+			}
 			// 本隊噴式強襲フェーズ 返り値として鋼材消費
 			sumUsedSteels += doJetPhase(fleet, thisBattleInfo);
 
@@ -9056,10 +9083,6 @@ function rateCalculate() {
 		// 基地の補給
 		for (let i = 0; i < 3; i++) {
 			const landBase = landBaseData.landBases[i];
-			if (landBase.mode === 0) {
-				continue;
-			}
-
 			for (let j = 0; j < landBase.planes.length; j++) {
 				const plane = landBase.planes[j];
 				plane.slot = plane.fullSlot;
@@ -9150,6 +9173,8 @@ function rateCalculate() {
 
 	if (!isDefMode) {
 		resultData.fleetAirPower = Math.round(avgMainAps[mainBattle] / maxCount)
+	} else if (isSuperDefense) {
+		resultData.defenseAirPower = Math.round(avgMainAps[0] / maxCount)
 	}
 
 	// 表示戦闘における各航空隊の状態を取得
@@ -9263,6 +9288,37 @@ function calculateLandBase(landBaseData, battleInfo, battleIndex) {
 	}
 
 	return enemyShootDown;
+}
+
+/**
+ * 超重爆計算 専らstage1を起こしまくるだけ
+ * @param {LandBaseAll} landBaseData 基地航空隊オブジェクト
+ * @param {Battke} battleInfo 敵制空値固定
+ */
+function calculateSuperDefense(landBaseData, battleInfo) {
+	// 敵制空値は固定
+	const eap = battleInfo.getLandBaseAirPower();
+
+	// 2波分の計算
+	for (let wave = 0; wave < 2; wave++) {
+		// 制空値
+		let resultAp = 0;
+		for (let j = 0; j < 3; j++) {
+			const landBase = landBaseData.landBases[j];
+			if (landBase.mode !== 0) {
+				// 防空じゃないなら飛ばす
+				continue;
+			}
+			// 敵制空値0の場合は確保扱い
+			let airStatusIndex = eap === 0 ? 0 : getAirStatusIndex(landBaseData.defense3AirPower, eap);
+
+			// stage2を除く撃墜を発生させ、機体毎の防空制空値を再計算
+			shootDownLandBase(airStatusIndex, landBase, battleInfo, true);
+			resultAp += landBase.defenseAirPower;
+		}
+		// 全ての航空隊の計算が終わったら、全体の制空値を再度更新
+		landBaseData.defense3AirPower = Math.floor(resultAp * landBaseData.sumSuperCorr);
+	}
 }
 
 /**
