@@ -2028,7 +2028,7 @@ const ENEMY_DATA = [
 	{ id: 576, type: [1, 16], name: "深海玉棲姫-壊 強", slot: [-1, -1, -1, -1, -1], eqp: [623, 623, 622, 603], orig: 2076, hp: 830, aa: 108, armor: 366 },
 	{ id: 577, type: [1, 2], name: "超重爆飛行場姫 A", slot: [16, 12, 12, 8, -1], eqp: [630, 630, 630, 630], orig: 2077, hp: 600, aa: 110, armor: 130 },
 	{ id: 578, type: [1, 2], name: "超重爆飛行場姫 B", slot: [24, 20, 14, 8, -1], eqp: [631, 630, 630, 630], orig: 2078, hp: 600, aa: 110, armor: 130 },
-	{ id: 579, type: [1, 2], name: "超重爆飛行場姫 C", slot: [32, 24, 16, 12, -1], eqp: [631, 631, 630, 630], orig: 2079, hp: 600, aa: 110, armor: 130 },
+	{ id: 579, type: [1, 2], name: "超重爆飛行場姫 C", slot: [40, 20, 16, 8, -1], eqp: [631, 631, 630, 630], orig: 2079, hp: 600, aa: 110, armor: 130 },
 	{ id: 580, type: [1, 16], name: "防空埋護冬姫 弱", slot: [-1, -1, -1, -1, -1], eqp: [553, 553, 624], orig: 2080, hp: 830, aa: 222, armor: 220 },
 	{ id: 581, type: [1, 16], name: "防空埋護冬姫 強", slot: [-1, -1, -1, -1, -1], eqp: [553, 553, 624, 603], orig: 2081, hp: 930, aa: 244, armor: 320 },
 	{ id: 582, type: [1, 16], name: "防空埋護冬姫-壊 弱", slot: [-1, -1, -1, -1, -1], eqp: [553, 553, 624, 603], orig: 2082, hp: 830, aa: 244, armor: 290 },
@@ -2279,7 +2279,7 @@ const AIR_STATUS = [
 ];
 
 // セル種別
-const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5, aerialCombat: 6 };
+const CELL_TYPE = { normal: 1, grand: 2, airRaid: 3, night: 4, highAirRaid: 5, aerialCombat: 6, superHighAirRaid: 7 };
 
 // 実装されている機体カテゴリ
 const PLANE_TYPE = [6, 7, 8, 9, 10, 11, 41, 45, 47, 48, 49, 53, 57];

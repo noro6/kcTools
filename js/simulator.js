@@ -1260,6 +1260,20 @@ class LandBaseAll {
 		this.rocketBonus = 0;
 		/** @type {number} 通常時手動補正 */
 		this.manualCorr = 1;
+		/** @type {number} 超重爆補正A */
+		this.superDefenseCorrA = 0;
+		/** @type {number} 超重爆補正B */
+		this.superDefenseCorrB = 0;
+		/** @type {number} 超重爆補正C */
+		this.superDefenseCorrC = 0;
+		/** @type {number} 超重爆ロケ戦補正1 */
+		this.superRocketCorr1 = 1;
+		/** @type {number} 超重爆ロケ戦補正2 */
+		this.superRocketCorr2 = 0;
+		/** @type {number} 超重爆最終補正 */
+		this.sumSuperCorr = 1;
+		/** @type {number} */
+		this.defense3AirPower = 0;
 	}
 
 	/**
@@ -1271,17 +1285,106 @@ class LandBaseAll {
 		// ロケット戦闘機の数を取得
 		let rocketCount = 0;
 		let sumAp = 0;
+
+		// 超重爆補正B or C該当機の数
+		let planeBcount = 0;
+		let planeCcount = 0;
 		for (const v of this.landBases) {
 			// 防空札になってないのはノーカン
 			if (v.mode !== 0) continue;
 			sumAp += v.defenseAirPower;
-			for (const plane of v.planes) if (ROCKETS.includes(plane.id)) rocketCount += 1;
+			for (const plane of v.planes) {
+				if (ROCKETS.includes(plane.id)) {
+					// ロケ戦の数加算
+					rocketCount += 1;
+				}
+
+				// 超重爆A補正 => 屠龍(445) / 雷電(175) / 烈風改(333) / 飛燕244(177)
+				if ([445, 175, 177, 333].includes(plane.id)) {
+					this.superDefenseCorrA += 0.07;
+				}
+
+				// 超重爆補正B該当機の数加算 => 紫電343(263) / Fw190(354)
+				if ([263, 354].includes(plane.id)) {
+					planeBcount += 1;
+				}
+
+				// 超重爆補正C該当機の数加算 => 烈風改(三五二/熟練)(334) / キ96(452) /　屠龍丙(446)
+				if ([334, 452, 446].includes(plane.id)) {
+					planeCcount += 1;
+				}
+			}
 		}
 
 		// 対重爆時補正 ロケット0機:0.5、1機:0.8、2機:1.1、3機異常:1.2
 		this.rocketBonus = rocketCount === 0 ? 0.5 : rocketCount === 1 ? 0.8 : rocketCount === 2 ? 1.1 : 1.2;
 		this.defenseAirPower = Math.floor(this.manualCorr * sumAp);
 		this.defense2AirPower = Math.floor(this.rocketBonus * sumAp);
+
+		// 超重爆補正B
+		switch (planeBcount) {
+			case 0:
+				this.superDefenseCorrB = 0;
+				break;
+			case 1:
+				this.superDefenseCorrB = 0.11;
+				break;
+			case 2:
+				this.superDefenseCorrB = 0.14;
+				break;
+			default:
+				// 3以上、不明
+				this.superDefenseCorrB = 0.287;
+				break;
+		}
+
+		// 超重爆補正C
+		switch (planeCcount) {
+			case 0:
+				this.superDefenseCorrC = 0;
+				break;
+			case 1:
+				this.superDefenseCorrC = 0.177;
+				break;
+			case 2:
+				this.superDefenseCorrC = 0.287;
+				break;
+			default:
+				// 3以上、不明
+				this.superDefenseCorrC = 0.287;
+				break;
+		}
+
+		// 超重爆補正
+		switch (rocketCount) {
+			case 0:
+				this.superRocketCorr1 = 1; // 不明				
+				this.superRocketCorr2 = 0.3;
+				break;
+			case 1:
+				this.superRocketCorr1 = 1; // 不明				
+				this.superRocketCorr2 = 0.55;
+				break;
+			case 2:
+				this.superRocketCorr1 = 1; // 不明
+				this.superRocketCorr2 = 0.85;
+				break;
+			case 3:
+				this.superRocketCorr1 = 1;
+				this.superRocketCorr2 = 1;
+				break;
+			default:
+				// 4以上
+				this.superRocketCorr1 = 1; // 不明	
+				this.superRocketCorr2 = 1.07;
+				break;
+		}
+
+		// 補正合計
+		this.sumSuperCorr = (this.superDefenseCorrA + this.superDefenseCorrB + this.superDefenseCorrC) * this.superRocketCorr1 + this.superRocketCorr2;
+		// 超重爆最終制空値
+		this.defense3AirPower = Math.floor(sumAp * this.sumSuperCorr);
+
 	}
 
 	/**
@@ -5851,7 +5954,7 @@ function expandEnemy() {
 	}
 
 	// 戦闘マス情報
-	const cellType = isDefMode && pattern.t !== 5 ? 3 : pattern.t;
+	const cellType = isDefMode && pattern.t === CELL_TYPE.highAirRaid || pattern.t === CELL_TYPE.superHighAirRaid ? pattern.t : CELL_TYPE.airRaid;
 	$target.find('.cell_type').val(cellType);
 	cell_type_Changed($target.find('.cell_type'), false);
 	// 陣形
@@ -7306,21 +7409,53 @@ function updateLandBaseView() {
 
 	// 待機以外の札があるかどうか
 	const exists = landBaseAll.landBases.some(v => v.mode !== -1);
-	if (exists) {
+	if (exists || isDefMode) {
 		if (isDefMode) {
-
 			const def_sum_ap = document.getElementById('def_sum_ap_all');
 			const def_sum_ap_ex = document.getElementById('def_sum_ex_ap_all');
+			const def_sum_ap_ex2 = document.getElementById('def_sum_ex2_ap_all');
 			const rocket_c = document.getElementById('rocket_c');
+			const rocket_c_sum = document.getElementById('rocket_c_sum');
 			// 総制空値合計
 			landBaseAll.updateDefenseAirPower();
 			const sumAp = landBaseAll.defenseAirPower;
 			const sumAp_ex = landBaseAll.defense2AirPower;
+			const sumAp_ex2 = landBaseAll.defense3AirPower;
 
 			// 重爆時の全体的な制空値と補正値
 			drawChangeValue(def_sum_ap, castInt(def_sum_ap.textContent), sumAp);
 			drawChangeValue(def_sum_ap_ex, castInt(def_sum_ap_ex.textContent), sumAp_ex);
+			drawChangeValue(def_sum_ap_ex2, castInt(def_sum_ap_ex2.textContent), sumAp_ex2);
 			rocket_c.textContent = landBaseAll.rocketBonus.toString();
+			rocket_c_sum.textContent = Math.floor(1000 * landBaseAll.sumSuperCorr) / 1000;
+			$('#super_defense_container').tooltip('dispose');
+			document.getElementById('super_defense_container').title = `
+			<div class="py-2 px-2">
+				<div class="mb-2 text-left">補正 = (A + B + C) &times; D1 + D2</div>
+				<div class="container text-left">
+					<div class="row">
+						<div class="col">補正A</div>
+						<div class="col text-right" id="superCorrA">${landBaseAll.superDefenseCorrA}</div>
+					</div>
+					<div class="row">
+						<div class="col">補正B</div>
+						<div class="col text-right" id="superCorrB">${landBaseAll.superDefenseCorrB}</div>
+					</div>
+					<div class="row">
+						<div class="col">補正C</div>
+						<div class="col text-right" id="superCorrC">${landBaseAll.superDefenseCorrC}</div>
+					</div>
+					<div class="row">
+						<div class="col">補正D1</div>
+						<div class="col text-right" id="superCorrD1">${landBaseAll.superRocketCorr1}</div>
+					</div>
+					<div class="row">
+						<div class="col">補正D2</div>
+						<div class="col text-right" id="superCorrD2">${landBaseAll.superRocketCorr2}</div>
+					</div>
+				</div>
+			</div>`;
+			$('#super_defense_container').tooltip();
 		}
 
 		// 半径足りませんよ表示
@@ -8779,7 +8914,12 @@ function rateCalculate() {
 	}
 
 	// 1戦目の戦闘形態で重爆かどうか判定 (1戦は絶対なんかデータあるのでnullがくるこたないはず)
-	const defAp = battleInfo[0].cellType === CELL_TYPE.highAirRaid ? landBaseData.defense2AirPower : landBaseData.defenseAirPower;
+	let defAp = landBaseData.defenseAirPower;
+	if (battleInfo[0].cellType === CELL_TYPE.highAirRaid) {
+		defAp = landBaseData.defense2AirPower;
+	} else if (battleInfo[0].cellType === CELL_TYPE.superHighAirRaid) {
+		defAp = landBaseData.defense3AirPower;
+	}
 	resultData.defenseAirPower = defAp;
 	if (isDefMode) {
 		// 本隊制空値を書き換えてしまう => ループ中に防空かどうかを判定しなくてよくなる
