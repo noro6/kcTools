@@ -197,23 +197,29 @@
 					<span>基地への空襲が発生します。編成完了後、空襲による地上撃破を考慮してください。→</span>
 					<span class="dummy_a" id="alert_air_raid_button">基地空襲を発生させる</span>
 				</div>
-				<div class="my-2 ml-1 d-flex" id="defense_summary">
+				<div class="my-2 ml-1" id="defense_summary">
 					<div>
 						<span>総制空値: </span>
 						<span id="def_sum_ap_all"></span>
 					</div>
-					<div class="d-flex ml-3">
+					<div class="d-none">
 						<div class="align-self-center font_color_half font_size_12">手動補正: &times;</div>
 						<div class="align-self-center ml-2">
 							<input type="number" min="0" max="10" value="1" step="0.01" class="form-control form-control-sm"
 								id="defense_ap_c">
 						</div>
 					</div>
-					<div>
-						<span class="ml-3">対重爆時: </span>
+					<div class="ml-4">
+						<span>対重爆: </span>
 						<span id="def_sum_ex_ap_all"></span>
 						<span class="ml-1 font_color_half font_size_12">対重爆補正: &times;</span>
 						<span id="rocket_c" class="font_color_half font_size_12"></span>
+					</div>
+					<div class="ml-4" id="super_defense_container" data-toggle="tooltip" data-html="true" data-placement="bottom">
+						<span>対超重爆: </span>
+						<span id="def_sum_ex2_ap_all"></span>
+						<span class="ml-1 font_color_half font_size_12">対超重爆補正: &times;</span>
+						<span id="rocket_c_sum" class="font_color_half font_size_12"></span>
 					</div>
 				</div>
 				<div class="my-2" id="landBase_content_main">
@@ -1821,6 +1827,7 @@
 								<optgroup label="基地空襲形式">
 									<option value="3" selected>通常</option>
 									<option value="5">重爆</option>
+									<option value="7">超重爆</option>
 								</optgroup>
 							</select>
 							<div class="ml-auto align-self-center font_size_12 font_color_half">
