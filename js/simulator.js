@@ -1452,7 +1452,7 @@ class LandBase {
 		const baseAP = sum;
 		let resultAP = baseAP;
 
-		if (this.reconCorr < 1.0) {
+		if (this.reconCorr <= 1.0) {
 			// 最低保証
 			this.reconCorr = 1.0;
 
@@ -6779,7 +6779,14 @@ function drawResult() {
 				.css({ 'width': `${width}%`, })
 				.data('airstatus', status);
 			// 制空状態を表記
-			$bar.find('.simple_label').text(AIR_STATUS.find(v => v.id === status).abbr);
+			let resultText = AIR_STATUS.find(v => v.id === status).abbr + `(${Math.floor(1000 * rates[status]) / 10}%)`;
+			if (rates.filter(v => v > 0).length) {
+				// 複数状態を取りうる場合
+				resultText = rates
+					.map((v, i) => (i < AIR_STATUS.length && v > 0) ? AIR_STATUS[i].abbr + `(${Math.floor(1000 * v) / 10}%)` : "")
+					.filter(v => !!v).join(' / ');
+			}
+			$bar.find('.simple_label').text(resultText);
 			// 表示させる
 			$bar.removeClass('d-none');
 		}
