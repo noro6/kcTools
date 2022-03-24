@@ -1352,19 +1352,19 @@ class LandBaseAll {
 				this.superDefenseCorrC = 0.287;
 				break;
 			default:
-				// 3以上、不明
-				this.superDefenseCorrC = 0.287;
+				// 3以上
+				this.superDefenseCorrC = 0.397;
 				break;
 		}
 
 		// 超重爆補正
 		switch (rocketCount) {
 			case 0:
-				this.superRocketCorr1 = 1; // 不明				
+				this.superRocketCorr1 = 0.5;
 				this.superRocketCorr2 = 0.3;
 				break;
 			case 1:
-				this.superRocketCorr1 = 1; // 不明				
+				this.superRocketCorr1 = 0.95;
 				this.superRocketCorr2 = 0.55;
 				break;
 			case 2:
@@ -1375,10 +1375,14 @@ class LandBaseAll {
 				this.superRocketCorr1 = 1;
 				this.superRocketCorr2 = 1;
 				break;
-			default:
-				// 4以上
-				this.superRocketCorr1 = 1; // 不明	
+			case 4:
+				this.superRocketCorr1 = 1;
 				this.superRocketCorr2 = 1.07;
+				break;
+			default:
+				// 5以上
+				this.superRocketCorr1 = 1;
+				this.superRocketCorr2 = 1.11;
 				break;
 		}
 
