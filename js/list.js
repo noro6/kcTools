@@ -20,6 +20,11 @@ function initialize() {
     // みんなの編成を初期表示
     $('#public_preset_tab').tab('show');
   }
+
+  // 新バージョンのお知らせ
+  if (!setting.checkedNewVersion) {
+    $('#modal_inform_newversion').modal('show');
+  }
 }
 
 
@@ -1965,7 +1970,15 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#modal_share').on('click', '#output_deck', function () { output_data_Clicked($(this)); });
   $('#modal_share').on('click', '#open_deckBuilder', open_deckBuilder);
   $('#modal_share').on('click', '#open_jervis', open_Jervis);
-
+  $('#modal_inform_newversion').on('hide.bs.modal', function () {
+    const checked = document.getElementById('read_new_version').checked;
+    if (checked) {
+      setting.checkedNewVersion = true;
+    } else {
+      setting.checkedNewVersion = false;
+    }
+    saveSetting();
+  });
 });
 
 window.onpageshow = function () {
