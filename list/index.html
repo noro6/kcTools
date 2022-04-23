@@ -122,6 +122,12 @@
 				<button class="btn btn-sm btn-outline-info btn_site_manual ml-1 text-nowrap">使い方</button>
 			</div>
 		</div>
+		<div class="mx-auto my-4 alert alert-danger h6 p-4">
+			<span class="cur_pointer" data-toggle="modal" data-target="#modal_inform_newversion">
+				(2022/4/23) 本サイトの更新は停止しました。今後は新verにて開発を行っていきます。
+			</span>
+			<a href="https://noro6.github.io/kc-web/#/" class="alert-link" target="_blank">新verはこちら</a>
+		</div>
 		<div class="contents my-4 mx-auto px-2 py-1 pt-2" id="presets_content">
 			<div>
 				<ul class="nav nav-tabs">
@@ -791,6 +797,39 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-sm btn-secondary btn_cancel" data-dismiss="modal">閉じる</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modal_inform_newversion" data-backdrop="static" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content mt-5">
+				<div class="modal-header">
+					<h5 class="modal-title">新verのおしらせ</h5>
+				</div>
+				<div class="modal-body">
+					<div class="mt-2">開発環境を一新した新しいバージョンを公開しました。</div>
+					<div>今後、こちらでの更新は停止し、下記新verでの更新を予定しています。</div>
+					<div class="my-4 h4">
+						<a href="https://noro6.github.io/kc-web/#/" target="_blank">制空権シミュレータ v2</a>
+					</div>
+					<div class="mt-2">作成した編成、装備、艦娘情報等は新verにて引継ぎ可能です。</div>
+				</div>
+				<div class="modal-footer">
+					<div class="d-flex ml-2 mr-auto">
+						<div class="align-self-center custom-check">
+							<label>
+								<input type="checkbox" id="read_new_version">
+								<i class="fas fa-checkbox-unchecked"></i>
+								<i class="fas fa-checkbox-checked"></i>
+								<span>次回以降表示しない</span>
+							</label>
+						</div>
+					</div>
+					<div class="ml-2">
+						<button type="button" class="btn btn-sm btn-info px-3" data-dismiss="modal">OK</button>
+					</div>
 				</div>
 			</div>
 		</div>

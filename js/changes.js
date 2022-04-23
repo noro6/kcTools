@@ -1987,6 +1987,10 @@ let CHANGE_LOG = [
 	{
 		id: "1.12.20", changes: [
 			{
+				type: 0, title: "サイト更新停止しました。",
+				content: "今後は新verにて開発を行っていきます。"
+			},
+			{
 				type: 0, title: "超重爆防空システムに一部対応しました。",
 				content: "補正が判明している機体について、超重爆時の補正を自動で計算できるようになりました。"
 			},
@@ -1998,4 +2002,4 @@ let CHANGE_LOG = [
 	}
 ];
 
-const LAST_UPDATE_DATE = "2022/3/23";
+const LAST_UPDATE_DATE = "2022/4/23";

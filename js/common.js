@@ -126,7 +126,8 @@ function initializeSetting() {
 	if (!setting.hasOwnProperty('createdURLs')) setting.createdURLs = [];
 	if (!setting.hasOwnProperty('displaySumCount')) setting.displaySumCount = true;
 	if (!setting.hasOwnProperty('defaultProf')) {
-		setting.defaultProf = [];
+	if (!setting.hasOwnProperty('checkedNewVersion')) setting.checkedNewVersion = false;
+	setting.defaultProf = [];
 		const types = PLANE_TYPE.filter(v => v.id > 0 && v.id !== 49);
 		// 熟練を最初からMaxにする機体カテゴリ
 		const maxLevels = [6, 9, 10, 41, 45, 48];
